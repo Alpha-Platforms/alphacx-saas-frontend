@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React,{useEffect} from 'react';
+import { Route, Switch,BrowserRouter } from 'react-router-dom';
+import DefaultLayoutRoute from './components/DefaultLayout/DefaultLayoutRoute';
+import { NotificationContainer } from 'react-notifications';
+import { LayoutProvider } from './context/layoutContext'
+import { UserDataProvider } from './context/userContext'
+import { AuthProvider } from './context/authContext';
+import Login from './components/pages/auth/login.jsx';
+import Register from './components/pages/auth/register.jsx';
+import Reset from './components/pages/auth/forgotPassword';
+import Home from './home'
+import Conversation from './components/pages/conersations/conversation'
 
-function App() {
+function App(props) {
+  //DisableInspect()
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <React.Fragment>
+      <NotificationContainer />
+      <LayoutProvider>
+        <BrowserRouter>
+      <Switch>
+        <Route exact path="/login" component={Conversation} />
+        <Route exact path="/" component={Conversation} />
+        <Route exact path="/resetpassword" component={Reset} />
+        <DefaultLayoutRoute exact path="/home" component={Conversation} />
+        
+      </Switch>
+      </BrowserRouter>
+      </LayoutProvider>
+    </React.Fragment>
   );
 }
 
 export default App;
+

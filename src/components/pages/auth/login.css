@@ -1,0 +1,106 @@
+.login-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100vw;
+  height: 100vh;
+}
+
+.login-wrapper-item1 {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  /* align-items: center; */
+}
+
+.login-wrapper-item1 .container {
+  margin-top: 45px;
+  width: 70%;
+  /* display: flex;
+    flex-direction: column; */
+}
+.title-container {
+  margin: 50px 0;
+}
+
+.login-wrapper-item1 .container h1 {
+  font-size: 25px;
+  line-height: 27px;
+  color: var(--mainColor);
+}
+
+.title-container p {
+  font-size: 12.5px;
+  color: #14274e;
+  line-height: 22px;
+}
+
+.input-label {
+  font-family: semiBold;
+  color: var(--appBlack);
+  font-size: 15px;
+}
+
+input {
+  background: var(--appInputFill);
+  border-radius: 5px;
+  height: 50px;
+  /* padding: 12px 20px; */
+  width: 100%;
+  font-size: 15px !important;
+}
+
+input::placeholder {
+  font-family: semiBold;
+  font-size: 15px;
+  color: var(--appPlaceholderFill);
+}
+
+.forgotPass {
+  font-size: 15px;
+  cursor: pointer;
+  color: #edb538;
+}
+
+.login-wrapper-item2 {
+  flex: 1;
+  padding: 10px;
+}
+
+.img-bg-container {
+  height: 100%;
+  width: 100%;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.cont-btn {
+  /* padding: 10px; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--mainColor);
+  border-radius: 10px;
+  height: 50px;
+  cursor: pointer;
+}
+
+.cont-btn:hover {
+  box-shadow: 1px 1px #888888;
+}
+
+.cont-btn h2 {
+  font-family: semiBold !important;
+  font-size: 16px;
+  margin: 0;
+  color: #fff;
+}
+
+.img-bg {
+  background-image: url("../../../assets/images/hand_holding_phone.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  /* background-attachment: fixed; */
+  height: 100%;
+  width: 100%;
+}
