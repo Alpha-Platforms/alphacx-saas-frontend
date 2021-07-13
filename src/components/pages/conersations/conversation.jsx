@@ -3,6 +3,7 @@ import "./conversation.css";
 import MessageList from "./messageList";
 import searchIcon from "../../../assets/imgF/Search.png";
 import NoChatFound from "./noChatFound";
+import SingleChatOpen from "./sigleChat";
 export default function Conversation() {
   const [userMsg, setUsermsg] = useState([
     {
@@ -52,7 +53,8 @@ export default function Conversation() {
         </div>
 
         <div className="conversation-layout-col-two">
-          <NoChatFound />
+          <SingleChatOpen />
+          {/* <NoChatFound /> */}
         </div>
       </div>
     </div>

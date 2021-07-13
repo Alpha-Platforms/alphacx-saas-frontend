@@ -22,7 +22,6 @@
 .conversation-layout .conversation-layout-col-two {
   width: calc(100% - 300px);
   height: 100%;
-  padding: 15px 27px 20px 20px;
 }
 
 .message-toggles {
@@ -200,4 +199,90 @@
   text-align: center;
 
   color: rgba(0, 0, 0, 0.5);
+}
+
+.single-chat-home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 11px;
+  padding: 25px 27px 0px 20px;
+}
+
+.singleChat-Sender-img {
+  display: flex;
+  align-items: center;
+}
+
+.singleChat-Sender-img img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.single-chat-user-name {
+  padding-left: 7px;
+}
+
+.single-chat-user-name p:first-child {
+  color: #040930;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.single-chat-user-name p:last-child {
+  color: #919191;
+  font-size: 11px;
+}
+
+.alignt-action-right-single {
+  display: flex;
+  align-items: center;
+}
+
+.action-on-d-single-chat select {
+  background: #edeef1;
+  border-radius: 5px;
+  padding: 7px 20px 7px 20px;
+  font-size: 12px;
+  color: #676767;
+}
+
+.alignt-action-right-single .single-chat-swap-icon {
+  padding-left: 18px;
+}
+
+.alignt-action-right-single .single-chat-swap-icon svg {
+  width: 17px;
+  cursor: pointer;
+}
+
+.singleChat-line-br {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(0, 98, 152, 0.1);
+  margin-top: 15px;
+}
+
+.singleChatMessage {
+  margin-top: 15px;
+  padding: 0px 27px 0px 20px;
+}
+.singleChatMessage h3 {
+  color: #343434;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.singleChatMessage .singleChatMessage-tiketId {
+  color: #656565;
+  font-size: 13px;
+}
+
+.sender-full-message-body {
+  padding: 10px 27px 0px 20px;
+  word-spacing: 1px;
+  line-height: 25px;
+  font-size: 15px;
+  color: #656565;
 }

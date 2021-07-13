@@ -2136,3 +2136,61 @@ export const NoChatSvg = () => {
 
   );
 };
+
+
+export const Swap = () => {
+  return (
+    <svg width="15" height="20" viewBox="0 0 18 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.1647 5.15929L3.54688 5.15929" stroke="#8A8A8A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M13.0664 1.08273L17.1631 5.1605L13.0664 9.23828" stroke="#8A8A8A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M0.832031 15.089H14.4498" stroke="#8A8A8A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M4.9287 19.166L0.832031 15.0882L4.9287 11.0105" stroke="#8A8A8A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    
+
+  );
+};
+
+
+export const AddToChat = () => {
+  return (
+    <svg width="17" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14.5938 3.25H19.0938" stroke="#8A8A8A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M16.8438 1V5.5" stroke="#8A8A8A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M1 18.2491C1.92209 16.6531 3.24795 15.3278 4.84439 14.4064C6.44083 13.485 8.25163 13 10.0949 13C11.9381 13 13.7489 13.4851 15.3454 14.4065C16.9418 15.3279 18.2676 16.6533 19.1897 18.2493" stroke="#8A8A8A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M15.7259 9.07964C15.3248 10.1625 14.6196 11.1066 13.695 11.7984C12.7704 12.4902 11.6658 12.9004 10.5137 12.9796C9.36166 13.0588 8.21124 12.8037 7.20066 12.245C6.19007 11.6862 5.3623 10.8476 4.81679 9.82976C4.27128 8.81197 4.03123 7.65831 4.12548 6.5074C4.21973 5.35648 4.64427 4.25726 5.34811 3.34177C6.05194 2.42629 7.00512 1.73348 8.09315 1.34659C9.18118 0.959701 10.3578 0.895175 11.4816 1.16077" stroke="#8A8A8A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    
+
+    
+
+  );
+};
+
+export const UserChatIcon = () => {
+  return (
+ 
+    <svg width="19" height="20" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11 21C16.5228 21 21 16.5228 21 11C21 5.47715 16.5228 1 11 1C5.47715 1 1 5.47715 1 11C1 16.5228 5.47715 21 11 21Z" stroke="#8A8A8A" stroke-width="1.5" stroke-miterlimit="10"/>
+<path d="M10.9987 14.3333C13.2999 14.3333 15.1654 12.4679 15.1654 10.1667C15.1654 7.86548 13.2999 6 10.9987 6C8.69751 6 6.83203 7.86548 6.83203 10.1667C6.83203 12.4679 8.69751 14.3333 10.9987 14.3333Z" stroke="#8A8A8A" stroke-width="1.5" stroke-miterlimit="10"/>
+<path d="M4.3125 18.4354C4.94022 17.2013 5.89721 16.1649 7.07753 15.441C8.25785 14.7171 9.61547 14.334 11.0001 14.334C12.3847 14.334 13.7423 14.7171 14.9226 15.441C16.103 16.1649 17.06 17.2013 17.6877 18.4354" stroke="#8A8A8A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+
+  );
+};
+
+
+export const CheclkChat = () => {
+  return (
+ 
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16.125 9.75L10.625 15L7.875 12.375" stroke="#006298" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="#006298" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    
+
+
+  );
+};
+
