@@ -174,14 +174,19 @@
   opacity: 0 !important;
 }
 
-.scrollbar-hidden::-webkit-scrollbar {
+.message-list-container::-webkit-scrollbar {
+  opacity: 0 !important;
+}
+
+.conversation-layout-col-two::-webkit-scrollbar {
+  opacity: 0 !important;
+}
+
+.conversation-layout-col-two::-webkit-scrollbar {
   opacity: 0 !important;
 }
 
 /* Hide scrollbar for IE, Edge add Firefox */
-.scrollbar-hidden {
-  opacity: 0 !important;
-}
 
 .no-chant-found-container {
   display: flex;
