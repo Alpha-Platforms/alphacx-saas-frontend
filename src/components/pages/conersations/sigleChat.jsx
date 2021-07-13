@@ -6,10 +6,13 @@ import {
   UserChatIcon,
   CheclkChat,
 } from "../../../assets/images/svgs";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import MyCustomUploadAdapterPlugin from "./UploadAdapter";
 export default function SigleChat() {
   return (
     <div>
-      <div className="single-chat-home-header">
+      <div className="single-chat-home-header fixed-header-singleChat">
         <div className="singleChat-Sender-img" style={{ position: "relative" }}>
           <img src={pic} alt="" />
 
@@ -50,13 +53,78 @@ export default function SigleChat() {
         <div className="singleChatMessage-tiketId">Ticket ID: #53467</div>
       </div>
       <div className="singleChat-line-br"></div>
-      <div className="sender-full-message-body">
-        Hi there, <br />I need a refund for the headphones that I purchased last
-        week. My order ID is #53467. The product was <br />
-        damaged when I received it. Can you please tell me how I can get a
-        refund? <br />
-        Best,
-        <br /> Jerome.
+      <div className="chats-body">
+        <div className="sender-full-message-body">
+          Hi there, <br />I need a refund for the headphones that I purchased
+          last week. My order ID is #53467. The product was <br />
+          damaged when I received it. Can you please tell me how I can get a
+          refund? <br />
+          Best,
+          <br /> Jerome.
+        </div>
+        <div className="msgTime-single">13 Mar 2021 </div>
+
+        <div className="siglechat-hr"></div>
+
+        <div className="chat-response" style={{ marginTop: "20px" }}>
+          <div className="single-msg-container">
+            <div
+              className="singleChat-Sender-img"
+              style={{ position: "relative" }}
+            >
+              <img src={pic} alt="" />
+
+              <div className="single-chat-user-name">
+                <p style={{ color: "#006298" }}>
+                  Hammed Daudu <span style={{ color: "#656565" }}>replied</span>
+                </p>
+                <p>Via email (Sat, 13 Mar 2021 at 10:54 AM)</p>
+              </div>
+            </div>
+            <div className="single-chat-response">
+              Amet minim mollit non deserunt ullamco est sit aliqua dolor do
+              amet sint. Velit officia consequat duis enim velit mollit.
+              Exercitation veniam consequat sunt nostrud amet.
+            </div>
+          </div>
+
+          <div className="single-msg-container">
+            <div
+              className="singleChat-Sender-img"
+              style={{ position: "relative" }}
+            >
+              <img src={pic} alt="" />
+
+              <div className="single-chat-user-name">
+                <p style={{ color: "#006298" }}>
+                  Hammed Daudu <span style={{ color: "#656565" }}>replied</span>
+                </p>
+                <p>Via email (Sat, 13 Mar 2021 at 10:54 AM)</p>
+              </div>
+            </div>
+            <div className="single-chat-response">
+              Amet minim mollit non deserunt ullamco est sit aliqua dolor do
+              amet sint. Velit officia consequat duis enim velit mollit.
+              Exercitation veniam consequat sunt nostrud amet.
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-3 single-chat-ckeditor">
+          <CKEditor
+            editor={ClassicEditor}
+            onInit={(editor) => {}}
+            config={{
+              extraPlugins: [MyCustomUploadAdapterPlugin],
+              //  ckfinder:{uploadUrl: "https://ckeditor.com/apps/ckfinder/3.5.0/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json"}
+              // ckfinder:{uploadUrl: "https://api.cloudinary.com/v1_1/lms-center/upload"}
+            }}
+            onChange={(e, editor) => {
+              //   setArticleBody(editor.getData());
+              //   console.log(editor.getData());
+            }}
+          />
+        </div>
       </div>
     </div>
   );

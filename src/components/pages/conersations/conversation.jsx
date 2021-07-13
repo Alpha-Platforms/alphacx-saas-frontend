@@ -52,7 +52,10 @@ export default function Conversation() {
           <MessageList />
         </div>
 
-        <div className="conversation-layout-col-two">
+        <div
+          className="conversation-layout-col-two"
+          style={{ position: "relative" }}
+        >
           <SingleChatOpen />
           {/* <NoChatFound /> */}
         </div>
