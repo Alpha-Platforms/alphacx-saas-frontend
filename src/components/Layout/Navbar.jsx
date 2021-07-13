@@ -6,6 +6,7 @@ import { LayoutContext } from "../../context/layoutContext";
 import { SearchIconNavbr, BellIconNavbar } from "../../assets/images/svgs";
 import { useHistory } from "react-router-dom";
 import userIcon from "../../assets/images/user.png";
+import pic from "../../assets/imgF/codeuiandyimg.png";
 //import GoBack from './../helpers/GoBack';
 
 export default function Navbar({ browserRouter, routeType, fullProps }) {
@@ -120,7 +121,7 @@ export default function Navbar({ browserRouter, routeType, fullProps }) {
                   <BellIconNavbar />
                 </span>
                 <span className="navbar-user-image">
-                  <img src={userIcon} alt="" />
+                  <img src={pic} alt="" />
                 </span>
               </div>
             </div>

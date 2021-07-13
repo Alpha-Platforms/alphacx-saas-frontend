@@ -202,7 +202,7 @@
   width: 100%;
 }
 .navbar-content {
-  padding: 0px 50px 50px;
+  padding: 0px 50px 0px 50px;
   width: 100%;
 }
 .navbar-content {
@@ -213,8 +213,8 @@
   margin: auto;
 }
 .pageTitle {
-  font-size: normal;
-  font-size: 18px;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .navbar-content .navbar-right-content span {
@@ -226,8 +226,9 @@
 }
 
 .navbar-user-image img {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
 }
 .app-logo-wrap-layout-page {
   margin-right: auto;

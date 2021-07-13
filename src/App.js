@@ -19,9 +19,7 @@ function App(props) {
       <LayoutProvider>
         <BrowserRouter>
       <Switch>
-        <Route exact path="/login" component={Conversation} />
-        <Route exact path="/" component={Conversation} />
-        <Route exact path="/resetpassword" component={Reset} />
+      <DefaultLayoutRoute exact path="/" component={Conversation} />
         <DefaultLayoutRoute exact path="/home" component={Conversation} />
         
       </Switch>
