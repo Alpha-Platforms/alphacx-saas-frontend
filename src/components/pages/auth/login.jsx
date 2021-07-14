@@ -61,12 +61,14 @@ const Login = ({ history }) => {
     if (res.status == "success") {
       setLoading(false);
       console.log(res?.status);
+      localStorage.setItem("user", JSON.stringify(res.data));
       // NotificationManager.success(
       //   "Account created successfully",
       //   "Success",
       //   4000
       // );
-      window.location.href = `http://${res.data.domain}`;
+      // window.location.href = `http://${res.data.domain}`;
+      history.push("/home");
     } else {
       console.log(res);
       setLoading(false);

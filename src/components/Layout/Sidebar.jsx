@@ -98,7 +98,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                 />
               }
             </span>
-            Home
+            Dashboard
           </li>
 
           <li
@@ -120,7 +120,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                 }
               />
             </span>
-            Chats
+            Conversations
           </li>
 
           <li
@@ -140,7 +140,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                 activeRoute={currentRoute === "/user_cards" ? true : false}
               />
             </span>
-            Starts
+            Tickets
           </li>
 
           <li
@@ -160,7 +160,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                 activeRoute={currentRoute === "/more" ? "#e3b451" : null}
               />
             </span>
-            Profile
+            Customer
           </li>
 
           <li
@@ -180,7 +180,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                 activeRoute={currentRoute === "/more" ? "#e3b451" : null}
               />
             </span>
-            Graph
+            Reports
           </li>
 
           <li

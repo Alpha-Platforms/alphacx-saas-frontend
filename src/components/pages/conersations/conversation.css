@@ -326,3 +326,17 @@
 .single-msg-container {
   margin-top: 20px;
 }
+.sendMsg {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  margin-top: 25px;
+}
+.sendMsg button {
+  width: 140px;
+  height: 40px;
+  background-color: #006298;
+  border-radius: 4px;
+  color: white;
+  font-size: 16px;
+}

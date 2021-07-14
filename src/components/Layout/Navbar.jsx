@@ -25,8 +25,8 @@ export default function Navbar({ browserRouter, routeType, fullProps }) {
       setLoginUser(false);
     } else {
       setLoginUser(true);
-      let res = JSON.parse(getLocalItem("user"));
-      setUserData(res);
+      // let res = JSON.parse(getLocalItem("user"));
+      // setUserData(res);
     }
   };
   let [useUserContextData, setUseUserContext] = useState(null);

@@ -124,6 +124,10 @@ export default function SigleChat() {
               //   console.log(editor.getData());
             }}
           />
+
+          <div className="sendMsg">
+            <button>Send</button>
+          </div>
         </div>
       </div>
     </div>
