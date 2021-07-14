@@ -2,8 +2,8 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 
 import jwtDecode from "jwt-decode";
 import { NotificationManager } from "react-notifications";
-import { httpPost } from "../components/helpers/httpMethods";
 import { hideLoader, showLoader } from "./../components/helpers/loader";
+import { httpPost } from "../helpers/httpMethods";
 
 export const AuthContext = createContext();
 

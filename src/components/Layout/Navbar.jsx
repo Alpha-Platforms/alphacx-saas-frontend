@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import { getLocalItem } from "../../components/helpers/authService";
 import { AuthContext } from "../../context/authContext";
 import { LayoutContext } from "../../context/layoutContext";
 import { SearchIconNavbr, BellIconNavbar } from "../../assets/images/svgs";
@@ -11,7 +10,7 @@ import pic from "../../assets/imgF/codeuiandyimg.png";
 
 export default function Navbar({ browserRouter, routeType, fullProps }) {
   // let [initsidebarState, setinitsidebarState] = useContext(LayoutContext);
-
+  const getLocalItem = "h";
   let [LoginUser, setLoginUser] = useState(false);
   let [navDrop, setnavDrop] = useState(false);
   let [userData, setUserData] = useState();
