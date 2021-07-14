@@ -11,15 +11,13 @@ import {
   ValidateEmail,
   validatePassword,
 } from "../../../helpers/validateInput";
-import { httpPostMain } from "../../../helpers/httpMethods";
+import { httpPost } from "../../../helpers/httpMethods";
 import { css } from "@emotion/react";
 import ClipLoader from "react-spinners/ClipLoader";
 const override = css``;
 
-const Login = ({ match, history }) => {
+const Login = ({ history }) => {
   const [userInput, setUserInput] = useState({
-    email: "",
-    password: "",
     domain: "",
   });
 
@@ -33,40 +31,27 @@ const Login = ({ match, history }) => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validateEmail = ValidateEmail(userInput.email);
-    if (validateEmail == false) {
+    if (userInput.domain == "") {
       return NotificationManager.warning(
-        "Invalid email address",
-        "Validation Warning",
-        4000
-      );
-    }
-
-    const validatepassword = validatePassword(userInput.password);
-    if (validatepassword != "Looks Good!") {
-      return NotificationManager.warning(
-        validatepassword,
+        "Domain is required",
         "Validation Warning",
         4000
       );
     }
     const data = {
-      email: userInput.email,
-      password: userInput.password,
-      domain: match.params.domain,
+      //   domain: "techpoint",
+      domain: userInput.domain,
     };
-
     setLoading(true);
-    const res = await httpPostMain("auth/login", data);
+    const res = await httpPost(`auth/login`, data);
     if (res.status == "success") {
       setLoading(false);
       console.log(res?.status);
       localStorage.setItem("user", JSON.stringify(res.data));
       localStorage.setItem("token", res.data.token);
-
-      NotificationManager.success(res.data.message, "Success", 4000);
-
-      history.push("/home");
+      NotificationManager.success("Login", "Success", 4000);
+      // window.location.href = `http://${res.data.domain}`;
+      window.location.href = `/login/${userInput.domain}`;
     } else {
       console.log(res);
       setLoading(false);
@@ -85,38 +70,19 @@ const Login = ({ match, history }) => {
 
       <div className="login-container">
         <form>
-          <div className="Auth-header" style={{ marginBottom: "30px" }}>
+          <div className="Auth-header" style={{ marginBottom: "10px" }}>
             <h3>Welcome Back</h3>
             <p>Sign in to get started</p>
           </div>
 
-          <div className="input-main-wrap">
-            <div className="input-wrap">
-              <label htmlFor="">Email Address</label>
-              <input
-                type="text"
-                onChange={handleChange}
-                name="email"
-                value={userInput.email}
-              />
-            </div>
-          </div>
-
           <div className="input-wrap">
-            <label htmlFor="">Password</label>
+            <label htmlFor="">Domain Name</label>
             <input
-              type={`${showPassword ? "text" : "password"}`}
+              type="text"
               onChange={handleChange}
-              name="password"
-              value={userInput.password}
+              name="domain"
+              value={userInput.domain}
             />
-            <div className="passworEye">
-              <img
-                src={showPasswordImg}
-                alt=""
-                onClick={() => setShowPassword(!showPassword)}
-              />
-            </div>
           </div>
 
           <div className="haveAnAccou">
@@ -134,7 +100,7 @@ const Login = ({ match, history }) => {
                   size={30}
                 />
               ) : (
-                "Login"
+                "Continue"
               )}
             </button>
           </div>

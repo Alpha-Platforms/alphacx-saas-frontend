@@ -48,9 +48,9 @@ export const validatePassword=(pw)=>{
 if (pw.search(/[a-z]/i) < 0) {
  return error="Your password must contain at least one letter.";
 }
-if (pw.search(/[0-9]/) < 0) {
- return  error="Your password must contain at least one digit."; 
-}
+// if (pw.search(/[0-9]/) < 0) {
+//  return  error="Your password must contain at least one digit."; 
+// }
 
 
  

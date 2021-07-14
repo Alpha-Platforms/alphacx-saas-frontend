@@ -180,3 +180,9 @@
 .symbol-wrap img {
   width: 300px;
 }
+
+@media (max-width: 526px) {
+  .login-container {
+    width: 90vw;
+  }
+}

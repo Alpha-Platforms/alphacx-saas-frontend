@@ -16,41 +16,27 @@ export default function Navbar({ browserRouter, routeType, fullProps }) {
   let [userData, setUserData] = useState();
   const [UserProfilePage, setUserProfilePage] = useState("Profile");
   const IsUserValidated = () => {
-    const lastUsedToken = localStorage.getItem("token");
-    if (
-      lastUsedToken === null ||
-      lastUsedToken === undefined ||
-      lastUsedToken === ""
-    ) {
-      setLoginUser(false);
-    } else {
-      setLoginUser(true);
-      // let res = JSON.parse(getLocalItem("user"));
-      // setUserData(res);
-    }
+    // const lastUsedToken = localStorage.getItem("token");
+    // if (
+    //   lastUsedToken === null ||
+    //   lastUsedToken === undefined ||
+    //   lastUsedToken === ""
+    // ) {
+    //   setLoginUser(false);
+    // } else {
+    //   setLoginUser(true);
+    //   let res = JSON.parse(getLocalItem("user"));
+    //   setUserData(res);
+    // }
   };
   let [useUserContextData, setUseUserContext] = useState(null);
 
   const { appReduceSidebarWidth } = useContext(LayoutContext);
   const [sp, setSp] = useState(window.pageYOffset);
   useEffect(() => {
-    IsUserValidated();
-    var prevScrollpos = sp;
-    window.onscroll = function () {
-      var currentScrollPos = window.pageYOffset;
+    //IsUserValidated();
+  }, []);
 
-      if (prevScrollpos > currentScrollPos) {
-        document.getElementById("navbar").style.opacity = "1";
-      } else {
-        document.getElementById("navbar").style.opacity = "0";
-      }
-      prevScrollpos = currentScrollPos;
-    };
-  }, [sp]);
-  const GobackFun = () => {
-    console.log("A step back");
-    fullProps.history.goBack();
-  };
   return (
     <React.Fragment>
       <div

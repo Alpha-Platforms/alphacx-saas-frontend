@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./conversation.css";
 import MessageList from "./messageList";
 import searchIcon from "../../../assets/imgF/Search.png";
 import NoChatFound from "./noChatFound";
 import SingleChatOpen from "./sigleChat";
+import { httpGetMain } from "../../../helpers/httpMethods";
 export default function Conversation() {
   const [userMsg, setUsermsg] = useState([
     {
@@ -15,6 +16,14 @@ export default function Conversation() {
       badge1: "",
     },
   ]);
+
+  useEffect(() => {
+    getTickets();
+  }, []);
+
+  const getTickets = async () => {
+    const res = await httpGetMain("tickets");
+  };
   return (
     <div className="conversation-wrap">
       <div className="conversation-layout">

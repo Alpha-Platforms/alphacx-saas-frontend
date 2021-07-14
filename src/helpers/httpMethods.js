@@ -2,14 +2,17 @@ import axios from 'axios';
 // import { hideLoader } from '../helpers/loader';
 import { NotificationManager } from 'react-notifications';
 
-
 export let baseUrl ="http://kustormar-auth.herokuapp.com/v1";
+export let baseUrlMain ="https://kustormar-staging.herokuapp.com/v1";
 //export let baseUrl = "https://api-dev.thenewspaperstand.com";
 // export let baseUrl = process.env.REACT_APP_BASE_URL;
 // export let baseUrl = "http://d3898537932a.ngrok.io";
+// let getToken = localStorage.getItem("token")
+let token = localStorage.getItem("token")
+// const token = localStorage.getItem("DomainToken")
 
 
-export const httpPost = async (url, postBody) => {
+export const httpPostMain = async (url, postBody) => {
   if (!navigator.onLine) {
     return NotificationManager.error(
       'Please check your internet',
@@ -18,8 +21,8 @@ export const httpPost = async (url, postBody) => {
     );
   }
   try {
-    const res = await axios.post(`${baseUrl}/${url}`, postBody, {
-      headers: { Authorization: `Bearer ${localStorage.token}` },
+    const res = await axios.post(`${baseUrlMain}/${url}`, postBody, {
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   } catch (error) {
@@ -45,6 +48,42 @@ export const httpPost = async (url, postBody) => {
   }
 };
 
+export const httpPost = async (url, postBody) => {
+    if (!navigator.onLine) {
+      return NotificationManager.error(
+        'Please check your internet',
+        'Opps!',
+        3000
+      );
+    }
+    try {
+      const res = await axios.post(`${baseUrl}/${url}`, postBody, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return res.data;
+    } catch (error) {
+      // hideLoader();
+  
+      if (
+        error.response.data.message ===
+        'Unauthorized, Your token is invalid or expired'
+      ) {
+        NotificationManager.error(
+          'Your token is invalid or expired, please login',
+          'Opps!',
+          5000
+        );
+      }
+      if (error.response.data.message === 'Validation Error!') {
+        NotificationManager.error(
+          Object.values(error.response.data.data).join('  ')
+        );
+        return;
+      }
+      return { er: error.response.data };
+    }
+  };
+
 export const httpPostData = async (url, postBody) => {
   if (!navigator.onLine) {
     return NotificationManager.error(
@@ -57,7 +96,7 @@ export const httpPostData = async (url, postBody) => {
   try {
     const res = await axios.post(`${baseUrl}/api${url}`, postBody, {
       headers: {
-        Authorization: `Bearer ${localStorage.token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'multipart/form-data',
       },
     });
@@ -78,6 +117,40 @@ export const httpPostData = async (url, postBody) => {
   }
 };
 
+export const httpGetMain = async (url) => {
+    if (!navigator.onLine) {
+      return NotificationManager.error(
+        'Please check your internet',
+        'Opps!',
+        3000
+      );
+    }
+    try {
+      const res = await axios.get(`${baseUrlMain}/${url}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return res.data;
+    } catch (error) {
+      // hideLoader();
+      console.log('eeeeeeee', error.response.data.message);
+      if (
+        error.response.data.message ===
+        'Unauthorized, Your token is invalid or expired'
+      ) {
+       
+        return { er: error.response.data.message };
+      }
+      if (error.response.data.message === 'Validation Error!') {
+        NotificationManager.error(
+          Object.values(error.response.data.data).join('  ')
+        );
+        return;
+      }
+      return { er: error.response.data };
+    }
+  };
+  
+
 export const httpGet = async (url) => {
   if (!navigator.onLine) {
     return NotificationManager.error(
@@ -88,7 +161,7 @@ export const httpGet = async (url) => {
   }
   try {
     const res = await axios.get(`${baseUrl}/api/${url}`, {
-      headers: { Authorization: `Bearer ${localStorage.token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   } catch (error) {
@@ -98,8 +171,7 @@ export const httpGet = async (url) => {
       error.response.data.message ===
       'Unauthorized, Your token is invalid or expired'
     ) {
-      localStorage.setItem('expiredToken', 'true');
-      localStorage.setItem('showModal', 'true');
+     
       return { er: error.response.data.message };
     }
     if (error.response.data.message === 'Validation Error!') {
