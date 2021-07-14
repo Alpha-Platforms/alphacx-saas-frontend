@@ -5,6 +5,7 @@ import searchIcon from "../../../assets/imgF/Search.png";
 import NoChatFound from "./noChatFound";
 import SingleChatOpen from "./sigleChat";
 import { httpGetMain } from "../../../helpers/httpMethods";
+import { NotificationManager } from "react-notifications";
 export default function Conversation() {
   const [userMsg, setUsermsg] = useState([
     {
@@ -16,13 +17,21 @@ export default function Conversation() {
       badge1: "",
     },
   ]);
-
+  const [tickets, setTickets] = useState([]);
+  const [LoadingTick, setLoadingTicks] = useState(true);
   useEffect(() => {
     getTickets();
   }, []);
 
   const getTickets = async () => {
     const res = await httpGetMain("tickets");
+    if (res.status == "success") {
+      setTickets(res.data.tickets);
+      setLoadingTicks(false);
+    } else {
+      setLoadingTicks(false);
+      return NotificationManager.error(res.message, "Error", 4000);
+    }
   };
   return (
     <div className="conversation-wrap">
@@ -58,7 +67,7 @@ export default function Conversation() {
               </div>
             </form>
           </div>
-          <MessageList />
+          <MessageList tickets={tickets} LoadingTick={LoadingTick} />
         </div>
 
         <div
