@@ -1,106 +1,182 @@
-.login-wrapper {
-  display: flex;
-  justify-content: space-between;
+.auth-container {
   width: 100vw;
   height: 100vh;
-}
-
-.login-wrapper-item1 {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  /* align-items: center; */
-}
-
-.login-wrapper-item1 .container {
-  margin-top: 45px;
-  width: 70%;
-  /* display: flex;
-    flex-direction: column; */
-}
-.title-container {
-  margin: 50px 0;
-}
-
-.login-wrapper-item1 .container h1 {
-  font-size: 25px;
-  line-height: 27px;
-  color: var(--mainColor);
-}
-
-.title-container p {
-  font-size: 12.5px;
-  color: #14274e;
-  line-height: 22px;
-}
-
-.input-label {
-  font-family: semiBold;
-  color: var(--appBlack);
-  font-size: 15px;
-}
-
-input {
-  background: var(--appInputFill);
-  border-radius: 5px;
-  height: 50px;
-  /* padding: 12px 20px; */
-  width: 100%;
-  font-size: 15px !important;
-}
-
-input::placeholder {
-  font-family: semiBold;
-  font-size: 15px;
-  color: var(--appPlaceholderFill);
-}
-
-.forgotPass {
-  font-size: 15px;
-  cursor: pointer;
-  color: #edb538;
-}
-
-.login-wrapper-item2 {
-  flex: 1;
-  padding: 10px;
-}
-
-.img-bg-container {
-  height: 100%;
-  width: 100%;
-  border-radius: 5px;
   overflow: hidden;
+  background-color: #0d4166;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 50px;
+  overflow-y: scroll;
+  position: relative;
 }
 
-.cont-btn {
-  /* padding: 10px; */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: var(--mainColor);
+.auth-container::-webkit-scrollbar {
+  opacity: 0 !important;
+}
+
+.login-logo {
+}
+
+.login-logo img:first-child {
+  width: 100px;
+}
+
+.login-logo img:last-child {
+  width: 50px;
+}
+
+.login-container {
+  background: #ffffff;
+  border: 0.5px solid #c5c7cd;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 24px rgba(11, 58, 92, 0.1);
   border-radius: 10px;
-  height: 50px;
+  width: 450px;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  margin-top: 30px;
+  padding: 40px 30px 30px 40px;
+}
+
+.Auth-header {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 12px;
+}
+
+.Auth-header h3 {
+  letter-spacing: 0.03em;
+  color: #595959;
+  font-weight: 600;
+  font-size: 24px;
+}
+
+.Auth-header p {
+  color: rgba(89, 89, 89, 0.6);
+  font-size: 15px;
+  padding-top: 7px;
+}
+
+.input-main-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  margin-top: 10px;
+}
+.input-wrap:first-child {
+  padding-top: 0;
+}
+.input-wrap {
+  padding-top: 15px;
+}
+
+.input-wrap {
+  position: relative;
+}
+.input-wrap input {
+  width: 100%;
+  background: rgba(214, 214, 214, 0.3);
+  border: 0.5px solid #d6d6d6;
+  border-radius: 5px;
+  height: 45px;
+  color: rgba(0, 0, 0, 0.5);
+  margin-top: 5px !important;
+  font-size: 13px;
+}
+.input-wrap-with-two-inputes {
+  display: flex;
+  justify-content: space-between;
+}
+
+.inputWrapTwo {
+  width: 100%;
+}
+
+.inputWrapTwo input {
+  width: 96%;
+  background: rgba(214, 214, 214, 0.3);
+  border: 0.5px solid #d6d6d6;
+  border-radius: 5px;
+  height: 45px;
+  color: rgba(0, 0, 0, 0.5);
+  margin-top: 5px !important;
+  font-size: 13px;
+}
+.input-wrap label {
+  font-size: 14px;
+  line-height: 19px;
+  padding-bottom: 10px;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.inputWrapTwo label {
+  font-size: 14px;
+  line-height: 19px;
+  padding-bottom: 10px;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.passworEye {
+  position: relative;
+}
+
+.passworEye img {
+  width: 15px;
+  position: absolute;
+  right: 0;
+  top: -30px;
+  right: 20px;
   cursor: pointer;
 }
 
-.cont-btn:hover {
-  box-shadow: 1px 1px #888888;
+.haveAnAccou {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  margin-top: 6px;
+  font-size: 19px;
 }
 
-.cont-btn h2 {
-  font-family: semiBold !important;
-  font-size: 16px;
-  margin: 0;
-  color: #fff;
+.haveAnAccou a {
+  color: #0067dd;
+  font-size: 20px;
 }
 
-.img-bg {
-  background-image: url("../../../assets/images/hand_holding_phone.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  /* background-attachment: fixed; */
-  height: 100%;
+.submit-auth-btn {
   width: 100%;
+  padding-bottom: 20px;
+}
+
+.submit-auth-btn button {
+  width: 100%;
+  background: #0796f7;
+  border-radius: 5px;
+  height: 45.8px;
+  color: white;
+  font-size: 18px;
+  margin-top: 40px;
+  cursor: pointer;
+}
+
+.symbol-wrap {
+  position: fixed;
+  bottom: 0;
+  right: 0px;
+}
+
+.symbol-wrap2 {
+  position: fixed;
+  top: 0;
+  left: 0px;
+}
+
+.symbol-wrap2 img {
+  width: 200px;
+}
+.symbol-wrap img {
+  width: 300px;
 }
