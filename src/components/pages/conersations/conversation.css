@@ -37,6 +37,7 @@
 
 .message-toggles select {
   border: none;
+  background-color: transparent !important;
 }
 
 .search-chat-con {
