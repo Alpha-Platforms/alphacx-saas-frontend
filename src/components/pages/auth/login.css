@@ -141,13 +141,13 @@
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  margin-top: 6px;
+  margin-top: 3px;
   font-size: 19px;
 }
 
 .haveAnAccou a {
   color: #0067dd;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .submit-auth-btn {
@@ -188,5 +188,19 @@
 @media (max-width: 526px) {
   .login-container {
     width: 90vw;
+  }
+  .input-wrap-with-two-inputes {
+    flex-direction: column;
+  }
+
+  .inputWrapTwo {
+    padding-bottom: 8px;
+  }
+
+  .inputWrapTwo input {
+    width: 100%;
+  }
+  .login-container {
+    padding: 40px 25px 30px 25px;
   }
 }
