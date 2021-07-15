@@ -29,11 +29,11 @@ export default function MessageList({ tickets, LoadingTick }) {
                 <p className="senderMSG">
                   {data.customer.description == null
                     ? ""
-                    : truncateWithEllipses(data.customer.description, 20)}
+                    : truncateWithEllipses(data.customer.description, 30)}
                 </p>
                 <div className="msg-badges">
                   <span>Whatsapp</span>
-                  <span>Open</span>
+                  <span>{data.status.status}</span>
                 </div>
               </div>
               <div className="message-user-time">

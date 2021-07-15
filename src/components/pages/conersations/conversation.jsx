@@ -30,7 +30,7 @@ export default function Conversation() {
       setLoadingTicks(false);
     } else {
       setLoadingTicks(false);
-      return NotificationManager.error(res.message, "Error", 4000);
+      return NotificationManager.error(res.er.message, "Error", 4000);
     }
   };
   return (
