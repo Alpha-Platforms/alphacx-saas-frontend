@@ -66,7 +66,7 @@ const Login = ({ match, history }) => {
 
       NotificationManager.success(res.data.message, "Success", 4000);
 
-      history.push("/home");
+      window.location.href = `/home`;
     } else {
       console.log(res);
       setLoading(false);
