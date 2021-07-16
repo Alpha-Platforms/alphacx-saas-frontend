@@ -9,7 +9,7 @@ import {
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import MyCustomUploadAdapterPlugin from "./UploadAdapter";
-export default function SigleChat() {
+export default function SigleChat({ ticket }) {
   return (
     <div>
       <div className="single-chat-home-header fixed-header-singleChat">
@@ -67,47 +67,34 @@ export default function SigleChat() {
         <div className="siglechat-hr"></div>
 
         <div className="chat-response" style={{ marginTop: "20px" }}>
-          <div className="single-msg-container">
-            <div
-              className="singleChat-Sender-img"
-              style={{ position: "relative" }}
-            >
-              <img src={pic} alt="" />
+          {ticket?.map((data) => {
+            {
+              console.log(JSON.parse(data.response));
+            }
+            return (
+              <div className="single-msg-container">
+                <div
+                  className="singleChat-Sender-img"
+                  style={{ position: "relative" }}
+                >
+                  <img src={data.user.avatar} alt="" />
 
-              <div className="single-chat-user-name">
-                <p style={{ color: "#006298" }}>
-                  Hammed Daudu <span style={{ color: "#656565" }}>replied</span>
-                </p>
-                <p>Via email (Sat, 13 Mar 2021 at 10:54 AM)</p>
+                  <div className="single-chat-user-name">
+                    <p style={{ color: "#006298" }}>
+                      {`${data.user.firstname} ${data.user.lastname}`}{" "}
+                      <span style={{ color: "#656565" }}>replied</span>
+                    </p>
+                    <p>Via email (Sat, 13 Mar 2021 at 10:54 AM)</p>
+                  </div>
+                </div>
+                <div className="single-chat-response">
+                  {/* {JSON.parse(data.response).map((t) => {
+                  t.insert;
+                })} */}
+                </div>
               </div>
-            </div>
-            <div className="single-chat-response">
-              Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-              amet sint. Velit officia consequat duis enim velit mollit.
-              Exercitation veniam consequat sunt nostrud amet.
-            </div>
-          </div>
-
-          <div className="single-msg-container">
-            <div
-              className="singleChat-Sender-img"
-              style={{ position: "relative" }}
-            >
-              <img src={pic} alt="" />
-
-              <div className="single-chat-user-name">
-                <p style={{ color: "#006298" }}>
-                  Hammed Daudu <span style={{ color: "#656565" }}>replied</span>
-                </p>
-                <p>Via email (Sat, 13 Mar 2021 at 10:54 AM)</p>
-              </div>
-            </div>
-            <div className="single-chat-response">
-              Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-              amet sint. Velit officia consequat duis enim velit mollit.
-              Exercitation veniam consequat sunt nostrud amet.
-            </div>
-          </div>
+            );
+          })}
         </div>
 
         <div className="mt-3 single-chat-ckeditor">

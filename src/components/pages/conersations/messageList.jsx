@@ -2,7 +2,11 @@ import React from "react";
 import pic from "../../../assets/imgF/codeuiandyimg.png";
 import truncateWithEllipses from "../../helpers/truncate";
 import ClipLoader from "react-spinners/ClipLoader";
-export default function MessageList({ tickets, LoadingTick }) {
+export default function MessageList({
+  tickets,
+  LoadingTick,
+  loadSingleMessage,
+}) {
   return (
     <div className="message-list-container">
       {LoadingTick ? (
@@ -19,7 +23,10 @@ export default function MessageList({ tickets, LoadingTick }) {
       ) : (
         tickets.map((data) => {
           return (
-            <div className="message-listmain">
+            <div
+              className="message-listmain"
+              onClick={() => loadSingleMessage(data)}
+            >
               <div className="message-user-img">
                 <img src={data.customer.avatar} alt="" />
                 <div className="user-status-online"></div>

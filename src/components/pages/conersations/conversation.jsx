@@ -6,6 +6,7 @@ import NoChatFound from "./noChatFound";
 import SingleChatOpen from "./sigleChat";
 import { httpGetMain } from "../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
+import ClipLoader from "react-spinners/ClipLoader";
 export default function Conversation() {
   const [userMsg, setUsermsg] = useState([
     {
@@ -17,8 +18,12 @@ export default function Conversation() {
       badge1: "",
     },
   ]);
+
+  const [loadSelectedMsg, setloadSelectedMsg] = useState("");
   const [tickets, setTickets] = useState([]);
+  const [ticket, setTicket] = useState([]);
   const [LoadingTick, setLoadingTicks] = useState(true);
+  const [loadSingleTicket, setLoadSingleTicket] = useState(false);
   useEffect(() => {
     getTickets();
   }, []);
@@ -30,6 +35,20 @@ export default function Conversation() {
       setLoadingTicks(false);
     } else {
       setLoadingTicks(false);
+      return NotificationManager.error(res.er.message, "Error", 4000);
+    }
+  };
+
+  const loadSingleMessage = async ({ id }) => {
+    setLoadSingleTicket(true);
+    setTicket([]);
+    const res = await httpGetMain(`tickets/${id}`);
+    if (res.status == "success") {
+      setTicket(res?.data[0]?.history);
+      console.log("his>>>", res?.data[0]?.history);
+      setLoadSingleTicket(false);
+    } else {
+      setLoadSingleTicket(false);
       return NotificationManager.error(res.er.message, "Error", 4000);
     }
   };
@@ -67,15 +86,45 @@ export default function Conversation() {
               </div>
             </form>
           </div>
-          <MessageList tickets={tickets} LoadingTick={LoadingTick} />
+          <MessageList
+            tickets={tickets}
+            LoadingTick={LoadingTick}
+            loadSingleMessage={loadSingleMessage}
+          />
         </div>
 
         <div
           className="conversation-layout-col-two"
           style={{ position: "relative" }}
         >
-          <SingleChatOpen />
-          {/* <NoChatFound /> */}
+          {/* {loadSingleTicket ? (
+           
+          ) : ticket.length === 0 ? ( */}
+          {loadSingleTicket ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "50px",
+              }}
+            >
+              {" "}
+              <ClipLoader
+                color="#0d4166"
+                loading={loadSingleTicket}
+                size={35}
+              />
+            </div>
+          ) : typeof ticket !== "undefined" && ticket.length === 0 ? (
+            <NoChatFound />
+          ) : (
+            <SingleChatOpen ticket={ticket} />
+          )}
+
+          {/* ) : ( */}
+
+          {/* )} */}
         </div>
       </div>
     </div>
