@@ -4,13 +4,18 @@ import MessageList from "./messageList";
 import searchIcon from "../../../assets/imgF/Search.png";
 import NoChatFound from "./noChatFound";
 import SingleChatOpen from "./sigleChat";
-import { httpGetMain, httpPostMain } from "../../../helpers/httpMethods";
+import {
+  httpGetMain,
+  httpPostMain,
+  httpPatchMain,
+} from "../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import ClipLoader from "react-spinners/ClipLoader";
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
+import BackArrow from "../../../assets/imgF/back.png";
 export default function Conversation() {
   const initialState = EditorState.createWithContent(
     ContentState.createFromText("")
@@ -37,12 +42,23 @@ export default function Conversation() {
   const [editorState, setEditorState] = useState(initialState);
   const [firstTimeLoad, setfirstTimeLoad] = useState(true);
   const [MessageSenderId, setMessageSenderId] = useState("");
+  const [TicketId, setTicketId] = useState("");
   const [ReplyTicket, setReplyTicket] = useState({
     plainText: "",
     richText: "",
   });
+  const [Statues, setStatues] = useState([]);
+
+  const [ChatCol, setChatCol] = useState({
+    col1: "",
+    col2: "",
+  });
   useEffect(() => {
     getTickets();
+  }, []);
+
+  useEffect(() => {
+    getStatues();
   }, []);
 
   const onEditorStateChange = (editorState) => {
@@ -57,6 +73,7 @@ export default function Conversation() {
   const getTickets = async () => {
     const res = await httpGetMain("tickets");
     if (res?.status == "success") {
+      setLoadingTicks(true);
       setTickets(res?.data?.tickets);
       setLoadingTicks(false);
     } else {
@@ -90,6 +107,7 @@ export default function Conversation() {
 
   const ReloadloadSingleMessage = async () => {
     setLoadSingleTicket(true);
+
     const res = await httpGetMain(`tickets/${MessageSenderId}`);
     if (res.status == "success") {
       setTicket(res?.data);
@@ -100,7 +118,33 @@ export default function Conversation() {
     }
   };
 
+  const getStatues = async () => {
+    const res = await httpGetMain(`statuses`);
+    if (res.status == "success") {
+      getTickets();
+      setStatues(res?.data?.statuses);
+    } else {
+      return NotificationManager.error(res.er.message, "Error", 4000);
+    }
+  };
+
+  const upTicketStatus = async (id) => {
+    const data = { statusId: id };
+    const res = await httpPatchMain(`tickets/${TicketId}`, data);
+    if (res.status == "success") {
+      // setStatues(res?.data?.statuses);
+      return NotificationManager.success(
+        "Ticket status update successfully",
+        "Success",
+        4000
+      );
+    } else {
+      return NotificationManager.error(res.er.message, "Error", 4000);
+    }
+  };
+
   const loadSingleMessage = async ({ id, customer, subject }) => {
+    setChatCol({ col1: "hideColOne", col2: "showColTwo" });
     setSenderInfo({ customer, subject });
     setMessageSenderId(id);
     setLoadSingleTicket(true);
@@ -119,7 +163,7 @@ export default function Conversation() {
   return (
     <div className="conversation-wrap">
       <div className="conversation-layout">
-        <div className="conversation-layout-col-one">
+        <div className={`conversation-layout-col-one ${ChatCol.col1}`}>
           <div className="message-toggles">
             <div className="messageType">
               <select name="" id="">
@@ -133,9 +177,9 @@ export default function Conversation() {
             <div className="messageOpenClose">
               <select name="" id="">
                 <option value="">All</option>
-                <option value="">Open</option>
-                <option value="">In Progress</option>
-                <option value="">Closed</option>
+                {Statues?.map((data) => {
+                  return <option value={data.id}>{data.status}</option>;
+                })}
               </select>
             </div>
           </div>
@@ -155,11 +199,12 @@ export default function Conversation() {
             LoadingTick={LoadingTick}
             loadSingleMessage={loadSingleMessage}
             setTingleTicketFullInfo={setTingleTicketFullInfo}
+            setTicketId={setTicketId}
           />
         </div>
 
         <div
-          className="conversation-layout-col-two"
+          className={`conversation-layout-col-two ${ChatCol.col2}`}
           style={{ position: "relative" }}
         >
           {loadSingleTicket ? (
@@ -182,10 +227,20 @@ export default function Conversation() {
             <NoChatFound value="Click on a ticket to get started" />
           ) : (
             <div className="single-chat-ckeditor">
+              <div
+                className="showBackArrowOnMobile"
+                onClick={() =>
+                  setChatCol({ col1: "showColOne", col2: "hideColTwo" })
+                }
+              >
+                <img src={BackArrow} alt="" />
+              </div>
               <SingleChatOpen
                 ticket={ticket}
                 SenderInfo={SenderInfo}
                 setMessageSenderId={setMessageSenderId}
+                Statues={Statues}
+                upTicketStatus={upTicketStatus}
               />
 
               <Editor
