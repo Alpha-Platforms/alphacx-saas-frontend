@@ -332,6 +332,7 @@
   justify-content: flex-end;
   align-items: flex-end;
   margin-top: 25px;
+  margin-right: 25px;
 }
 .sendMsg button {
   width: 140px;

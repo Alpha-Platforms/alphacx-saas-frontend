@@ -461,28 +461,15 @@ hr {
 input {
   width: 0px;
 }
-
-.single-chat-ckeditor .ck.ck-editor__editable_inline > :last-child {
-  margin-bottom: var(--ck-spacing-large);
-  height: 232px !important;
-}
-
 .single-chat-ckeditor {
-  margin-top: 15px;
+  border: 1px solid #f1f1f1;
+  padding-bottom: 30px;
 }
 
-.single-chat-ckeditor
-  .ck.ck-editor__main
-  > .ck-editor__editable:not(.ck-focused) {
-  border: 1px solid rgba(0, 98, 152, 0.15) !important;
+.public-DraftStyleDefault-ltr {
+  padding: 10px 15px 10px 26px !important;
 }
 
-.single-chat-ckeditor .ck-editor__top {
-  border: 1px solid rgba(0, 98, 152, 0.15) !important;
-}
-
-.ck-button {
-  background-color: transparent !important;
-  color: #006298 !important;
-  fill: #006298 !important;
+.rdw-editor-toolbar {
+  padding-left: 16px !important ;
 }

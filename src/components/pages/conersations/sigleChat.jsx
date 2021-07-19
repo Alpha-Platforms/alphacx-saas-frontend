@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import pic from "../../../assets/imgF/codeuiandyimg.png";
 import {
   Swap,
@@ -9,15 +9,41 @@ import {
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import MyCustomUploadAdapterPlugin from "./UploadAdapter";
-export default function SigleChat({ ticket }) {
+import NoChatFound from "./noChatFound";
+export default function SigleChat({ ticket, SenderInfo, replyTicket }) {
+  useEffect(() => {
+    // getTicketMsg();
+    checkRes();
+  }, []);
+  // const getTicketMsg = () => {
+  //   console.log("user>>>>>", ticket);
+  //   const getJson = ticket.map((data) => {
+  //     const parseData = JSON.parse(data?.response);
+  //     console.log(">>>FROMfUN>>>>", parseData?.ops);
+  //     setResponse(parseData?.ops);
+  //   });
+  // };
+  const [noResponseFound, setNoResponseFound] = useState(true);
+  function createMarkup(data) {
+    return { __html: data };
+  }
+  const checkRes = () => {
+    let a = ticket?.map((data) => {
+      if (data.history.length === 0) {
+        setNoResponseFound(true);
+      } else {
+        setNoResponseFound(false);
+      }
+    });
+  };
   return (
     <div>
       <div className="single-chat-home-header fixed-header-singleChat">
         <div className="singleChat-Sender-img" style={{ position: "relative" }}>
-          <img src={pic} alt="" />
+          <img src={SenderInfo?.customer?.avatar} alt="" />
 
           <div className="single-chat-user-name">
-            <p>Okeke Andrew</p>
+            <p>{`${SenderInfo?.customer?.firstname} ${SenderInfo?.customer?.lastname}`}</p>
             <p>Via email (Sat, 13 Mar 2021 at 10:54 AM)</p>
           </div>
         </div>
@@ -49,73 +75,62 @@ export default function SigleChat({ ticket }) {
       </div>
 
       <div className="singleChatMessage">
-        <h3>How can I get a refund for my order?</h3>
+        <h3>{SenderInfo?.subject}</h3>
         <div className="singleChatMessage-tiketId">Ticket ID: #53467</div>
       </div>
       <div className="singleChat-line-br"></div>
       <div className="chats-body">
         <div className="sender-full-message-body">
-          Hi there, <br />I need a refund for the headphones that I purchased
-          last week. My order ID is #53467. The product was <br />
-          damaged when I received it. Can you please tell me how I can get a
-          refund? <br />
-          Best,
-          <br /> Jerome.
+          {SenderInfo?.customer?.description}
         </div>
         <div className="msgTime-single">13 Mar 2021 </div>
 
         <div className="siglechat-hr"></div>
+        {noResponseFound ? (
+          <p
+            style={{
+              textAlign: "center",
+              paddingTop: "30px",
+              paddingBottom: "30px",
+            }}
+          >
+            <NoChatFound value="No response found " />
+          </p>
+        ) : (
+          <div className="chat-response" style={{ marginTop: "20px" }}>
+            {ticket?.map((data) => {
+              return (
+                <div className="single-msg-container">
+                  <div
+                    className="singleChat-Sender-img"
+                    style={{ position: "relative" }}
+                  >
+                    <img src={data?.customer?.avatar} alt="" />
 
-        <div className="chat-response" style={{ marginTop: "20px" }}>
-          {ticket?.map((data) => {
-            {
-              console.log(JSON.parse(data.response));
-            }
-            return (
-              <div className="single-msg-container">
-                <div
-                  className="singleChat-Sender-img"
-                  style={{ position: "relative" }}
-                >
-                  <img src={data.user.avatar} alt="" />
-
-                  <div className="single-chat-user-name">
-                    <p style={{ color: "#006298" }}>
-                      {`${data.user.firstname} ${data.user.lastname}`}{" "}
-                      <span style={{ color: "#656565" }}>replied</span>
-                    </p>
-                    <p>Via email (Sat, 13 Mar 2021 at 10:54 AM)</p>
+                    <div className="single-chat-user-name">
+                      <p style={{ color: "#006298" }}>
+                        {`${data?.customer?.firstname} ${data?.customer?.lastname}`}{" "}
+                        <span style={{ color: "#656565" }}>replied</span>
+                      </p>
+                      <p>Via email (Sat, 13 Mar 2021 at 10:54 AM)</p>
+                    </div>
+                  </div>
+                  <div className="single-chat-response">
+                    {data?.history.map((history) => {
+                      return (
+                        <div
+                          dangerouslySetInnerHTML={createMarkup(
+                            history?.response
+                          )}
+                        />
+                      );
+                    })}
                   </div>
                 </div>
-                <div className="single-chat-response">
-                  {/* {JSON.parse(data.response).map((t) => {
-                  t.insert;
-                })} */}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="mt-3 single-chat-ckeditor">
-          <CKEditor
-            editor={ClassicEditor}
-            onInit={(editor) => {}}
-            config={{
-              extraPlugins: [MyCustomUploadAdapterPlugin],
-              //  ckfinder:{uploadUrl: "https://ckeditor.com/apps/ckfinder/3.5.0/core/connector/php/connector.php?command=QuickUpload&type=Files&responseType=json"}
-              // ckfinder:{uploadUrl: "https://api.cloudinary.com/v1_1/lms-center/upload"}
-            }}
-            onChange={(e, editor) => {
-              //   setArticleBody(editor.getData());
-              //   console.log(editor.getData());
-            }}
-          />
-
-          <div className="sendMsg">
-            <button>Send</button>
+              );
+            })}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

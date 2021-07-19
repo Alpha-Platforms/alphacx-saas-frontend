@@ -6,6 +6,7 @@ export default function MessageList({
   tickets,
   LoadingTick,
   loadSingleMessage,
+  setTingleTicketFullInfo,
 }) {
   return (
     <div className="message-list-container">
@@ -25,7 +26,10 @@ export default function MessageList({
           return (
             <div
               className="message-listmain"
-              onClick={() => loadSingleMessage(data)}
+              onClick={() => {
+                loadSingleMessage(data);
+                setTingleTicketFullInfo(data);
+              }}
             >
               <div className="message-user-img">
                 <img src={data.customer.avatar} alt="" />
