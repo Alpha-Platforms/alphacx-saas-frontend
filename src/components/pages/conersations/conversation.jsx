@@ -36,6 +36,7 @@ export default function Conversation() {
   const [Response, setResponse] = useState([]);
   const [editorState, setEditorState] = useState(initialState);
   const [firstTimeLoad, setfirstTimeLoad] = useState(true);
+  const [MessageSenderId, setMessageSenderId] = useState("");
   const [ReplyTicket, setReplyTicket] = useState({
     plainText: "",
     richText: "",
@@ -78,16 +79,30 @@ export default function Conversation() {
       data
     );
     if (res?.status == "success") {
-      // setTickets(res?.data?.tickets);
-      // setLoadingTicks(false);
+      ReloadloadSingleMessage();
+      setEditorState(initialState);
+      setReplyTicket({ plainText: "", richText: "" });
     } else {
       // setLoadingTicks(false);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
 
+  const ReloadloadSingleMessage = async () => {
+    setLoadSingleTicket(true);
+    const res = await httpGetMain(`tickets/${MessageSenderId}`);
+    if (res.status == "success") {
+      setTicket(res?.data);
+      setLoadSingleTicket(false);
+    } else {
+      setLoadSingleTicket(false);
+      return NotificationManager.error(res.er.message, "Error", 4000);
+    }
+  };
+
   const loadSingleMessage = async ({ id, customer, subject }) => {
     setSenderInfo({ customer, subject });
+    setMessageSenderId(id);
     setLoadSingleTicket(true);
     setTingleTicketFullInfo();
     setTicket([]);
@@ -170,7 +185,7 @@ export default function Conversation() {
               <SingleChatOpen
                 ticket={ticket}
                 SenderInfo={SenderInfo}
-                replyTicket={replyTicket}
+                setMessageSenderId={setMessageSenderId}
               />
 
               <Editor

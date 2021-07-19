@@ -10,7 +10,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import MyCustomUploadAdapterPlugin from "./UploadAdapter";
 import NoChatFound from "./noChatFound";
-export default function SigleChat({ ticket, SenderInfo, replyTicket }) {
+export default function SigleChat({ ticket, SenderInfo, setMessageSenderId }) {
   useEffect(() => {
     // getTicketMsg();
     checkRes();
@@ -94,40 +94,39 @@ export default function SigleChat({ ticket, SenderInfo, replyTicket }) {
               paddingBottom: "30px",
             }}
           >
-            <NoChatFound value="No response found " />
+            <NoChatFound value="No response found" />
           </p>
         ) : (
           <div className="chat-response" style={{ marginTop: "20px" }}>
             {ticket?.map((data) => {
-              return (
-                <div className="single-msg-container">
-                  <div
-                    className="singleChat-Sender-img"
-                    style={{ position: "relative" }}
-                  >
-                    <img src={data?.customer?.avatar} alt="" />
+              {
+                setMessageSenderId(data.id);
+              }
+              return data.history.map((e) => {
+                return (
+                  <div className="single-msg-container">
+                    <div
+                      className="singleChat-Sender-img"
+                      style={{ position: "relative" }}
+                    >
+                      <img src={e?.user?.avatar} alt="" />
 
-                    <div className="single-chat-user-name">
-                      <p style={{ color: "#006298" }}>
-                        {`${data?.customer?.firstname} ${data?.customer?.lastname}`}{" "}
-                        <span style={{ color: "#656565" }}>replied</span>
-                      </p>
-                      <p>Via email (Sat, 13 Mar 2021 at 10:54 AM)</p>
+                      <div className="single-chat-user-name">
+                        <p style={{ color: "#006298" }}>
+                          {`${e.user.firstname} ${e?.user?.lastname}`}{" "}
+                          <span style={{ color: "#656565" }}>replied</span>
+                        </p>
+                        <p>Via email (Sat, 13 Mar 2021 at 10:54 AM)</p>
+                      </div>
+                    </div>
+                    <div className="single-chat-response">
+                      <div
+                        dangerouslySetInnerHTML={createMarkup(e?.response)}
+                      />
                     </div>
                   </div>
-                  <div className="single-chat-response">
-                    {data?.history.map((history) => {
-                      return (
-                        <div
-                          dangerouslySetInnerHTML={createMarkup(
-                            history?.response
-                          )}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
-              );
+                );
+              });
             })}
           </div>
         )}

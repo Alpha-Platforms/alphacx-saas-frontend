@@ -326,6 +326,7 @@
 
 .single-msg-container {
   margin-top: 20px;
+  margin-bottom: -9px !important;
 }
 .sendMsg {
   display: flex;
