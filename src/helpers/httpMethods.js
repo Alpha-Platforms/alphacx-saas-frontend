@@ -4,6 +4,7 @@ import { NotificationManager } from 'react-notifications';
 
 export let baseUrl ="https://kustormar-auth.herokuapp.com/v1";
 export let baseUrlMain ="https://kustormar-staging.herokuapp.com/v1";
+// export let baseUrlMain ="https://e42b1bf085ff.ngrok.io/v1";
 //export let baseUrl = "https://api-dev.thenewspaperstand.com";
 // export let baseUrl = process.env.REACT_APP_BASE_URL;
 // export let baseUrl = "http://d3898537932a.ngrok.io";
@@ -213,7 +214,7 @@ export const httpPut = async (url, postBody) => {
   }
 };
 
-export const httpPatch = async (url, postBody) => {
+export const httpPatchMain = async (url, postBody) => {
   if (!navigator.onLine) {
     return NotificationManager.error(
       'Please check your internet',
@@ -222,7 +223,7 @@ export const httpPatch = async (url, postBody) => {
     );
   }
   try {
-    const res = await axios.patch(`${baseUrl}/api/${url}`, postBody, {
+    const res = await axios.patch(`${baseUrlMain}/${url}`, postBody, {
       headers: { Authorization: `Bearer ${localStorage.token}` },
     });
     return res.data;

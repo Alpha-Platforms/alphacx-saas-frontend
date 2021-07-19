@@ -473,3 +473,33 @@ input {
 .rdw-editor-toolbar {
   padding-left: 16px !important ;
 }
+
+.rdw-editor-wrapper {
+  margin-top: 20px !important;
+}
+
+@media (max-width: 539px) {
+  .section-wrap {
+    padding-left: 15px;
+  }
+
+  .navbar-content {
+    padding: 0px 16px 0 16px !important;
+  }
+  .app-container {
+    width: calc(100vw - 65px) !important;
+  }
+}
+
+@media (max-width: 414px) {
+  .section-wrap {
+    padding-left: 15px;
+  }
+
+  .navbar-content {
+    padding: 0px 36px 0 16px !important;
+  }
+  .app-container {
+    width: calc(100vw - 85px) !important;
+  }
+}

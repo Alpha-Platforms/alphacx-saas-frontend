@@ -10,7 +10,13 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import MyCustomUploadAdapterPlugin from "./UploadAdapter";
 import NoChatFound from "./noChatFound";
-export default function SigleChat({ ticket, SenderInfo, setMessageSenderId }) {
+export default function SigleChat({
+  ticket,
+  SenderInfo,
+  setMessageSenderId,
+  Statues,
+  upTicketStatus,
+}) {
   useEffect(() => {
     // getTicketMsg();
     checkRes();
@@ -49,11 +55,15 @@ export default function SigleChat({ ticket, SenderInfo, setMessageSenderId }) {
         </div>
         <div className="alignt-action-right-single">
           <div className="action-on-d-single-chat">
-            <select name="" id="">
-              <option value="">All</option>
-              <option value="">Open</option>
-              <option value="">In Progress</option>
-              <option value="">Closed</option>
+            <select
+              name=""
+              id=""
+              onChange={(e) => upTicketStatus(e.target.value)}
+            >
+              <option value="">Mark As</option>
+              {Statues?.map((data) => {
+                return <option value={data.id}>{data.status}</option>;
+              })}
             </select>
           </div>
           <div className="single-chat-swap-icon">

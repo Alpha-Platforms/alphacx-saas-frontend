@@ -7,6 +7,7 @@ export default function MessageList({
   LoadingTick,
   loadSingleMessage,
   setTingleTicketFullInfo,
+  setTicketId,
 }) {
   return (
     <div className="message-list-container">
@@ -29,6 +30,7 @@ export default function MessageList({
               onClick={() => {
                 loadSingleMessage(data);
                 setTingleTicketFullInfo(data);
+                setTicketId(data.id);
               }}
             >
               <div className="message-user-img">
@@ -44,7 +46,14 @@ export default function MessageList({
                 </p>
                 <div className="msg-badges">
                   <span>Whatsapp</span>
-                  <span>{data.status.status}</span>
+                  <span
+                    style={{
+                      background: data.status.background_color,
+                      color: data.status.forecolor,
+                    }}
+                  >
+                    {data.status.status}
+                  </span>
                 </div>
               </div>
               <div className="message-user-time">
