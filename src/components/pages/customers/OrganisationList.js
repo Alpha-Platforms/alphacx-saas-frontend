@@ -98,7 +98,7 @@ const OrganisationList = () => {
                             <input
                                 type="text"
                                 className="form-control bg-transparent border-start-0 pe-4"
-                                placeholder="Search all contacts"
+                                placeholder="Search all organisations"
                                 required=""/>
 
                         </div>
@@ -139,7 +139,7 @@ const OrganisationList = () => {
                             <th className="text-center">
                                 <input type="checkbox" className="form-check-input customer-select-all"/>
                             </th>
-                            <th>Company</th>
+                            <th>Organisation</th>
                             <th>Email Address</th>
                             <th>Work Phone</th>
                             <th>Location</th>
@@ -147,7 +147,6 @@ const OrganisationList = () => {
                             <th>LinkedIn</th>
                             <th>Facebook</th>
                             <th>Twitter</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -180,29 +179,6 @@ const OrganisationList = () => {
                                 <td>{linkedin}</td>
                                 <td>{facebook}</td>
                                 <td>{twitter}</td>
-                                <td>
-                                    <Dropdown>
-                                        <Dropdown.Toggle
-                                            className="btn dropdown-toggle no-caret bg-transparent border-0 pt-0"
-                                            variant=""
-                                            id="dropdown-basic">
-                                            <MoreSvg/>
-                                        </Dropdown.Toggle>
-
-                                        <Dropdown.Menu
-                                            className="mw-auto"
-                                            style={{
-                                            minWidth: '0',
-                                            boxShadow: '-3px 3px 15px 7px rgba(0, 0, 0, 0.1)'
-                                        }}>
-                                            <Dropdown.Item as="button" onClick={() => setEditModalShow(true)}><EditSvg/>&nbsp;&nbsp;<span>Edit</span>
-                                            </Dropdown.Item>
-                                            <Dropdown.Item as="button"><DeleteSvg/>&nbsp;&nbsp;<span className="d-inline-block mb-0 pb-0">Delete</span>
-                                            </Dropdown.Item>
-                                        </Dropdown.Menu>
-                                    </Dropdown>
-
-                                </td>
                             </tr>
                         ))}
 

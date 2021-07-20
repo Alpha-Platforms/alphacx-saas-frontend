@@ -32,11 +32,16 @@
     --acx--purple-6: rgba(108, 65, 129, 6%);
 }
 
+html {
+    height: 100% !important;
+}
+
 body {
     background-color: #f0f0f2 !important;
     font-family: Cabin !important;
     line-height: 1.4;
     font-size: .9rem !important;
+    height: 100% !important;
 }
 
 a {

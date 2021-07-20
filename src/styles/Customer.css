@@ -1,6 +1,6 @@
 .cust-grey-circle {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.0rem;
+    height: 2.0rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -50,7 +50,7 @@
 .timeline-tree li {
     list-style: none;
     display: grid;
-    grid-template-columns: 10rem 1fr;
+    grid-template-columns: 11rem 1fr;
 }
 
 .timeline-tree li:not(:last-child) > div:nth-child(1) {
@@ -90,4 +90,17 @@
     left: 50%;
     transform: translate(-50%, -50%);
     font-style: italic;
+}
+
+#customerTable a {
+    font-size: 0.9rem !important;
+}
+
+#customerTable input {
+    
+}
+
+#pills-tab .nav-link.nav-active {
+    color: var(--at-blue-light) !important;
+    text-shadow: 0px 0px 1px var(--at-blue-light);
 }

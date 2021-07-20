@@ -28,28 +28,28 @@ const Customer = () => {
 
     const customers = [
         {
-            date: '02-07-2021',
+            date: '02 Jul, 2021',
             ticket_id: '0721115',
             subject: 'How do I get a refund?',
             category: 'Enquiry',
             agent_assigned: 'Munachi',
             status: 'Pending'
         }, {
-            date: '02-07-2021',
+            date: '02 Jul, 2021',
             ticket_id: '0721115',
             subject: 'How do I get a refund?',
             category: 'Enquiry',
             agent_assigned: 'Munachi',
             status: 'Closed'
         }, {
-            date: '02-07-2021',
+            date: '02 Jul, 2021',
             ticket_id: '0721115',
             subject: 'How do I get a refund?',
             category: 'Enquiry',
             agent_assigned: 'Munachi',
             status: 'Overdue'
         }, {
-            date: '02-07-2021',
+            date: '02 Jul, 2021',
             ticket_id: '0721115',
             subject: 'How do I get a refund?',
             category: 'Enquiry',
@@ -168,16 +168,16 @@ const Customer = () => {
                         className="bg-light px-4 py-3 d-flex justify-content-between">
                         <div>
                             <ul className="nav nav-pills" id="pills-tab" role="tablist">
-                                <li className="nav-item" role="presentation">
+                                <li className="nav-item " role="presentation">
                                     <button
-                                        className="nav-link text-muted ps-0"
+                                        className={`nav-link ${tabKey === 'ticket-history' && 'nav-active'} text-muted ps-0`}
                                         id="pills-profile-tab"
                                         type="button"
                                         onClick={() => setTabKey('ticket-history')}>Ticket History</button>
                                 </li>
                                 <li className="nav-item" role="presentation">
                                     <button
-                                        className="nav-link text-muted"
+                                        className={`nav-link ${tabKey === 'notes' && 'nav-active'} text-muted`}
                                         id="pills-notes-tab"
                                         type="button"
                                         onClick={() => setTabKey('notes')}>Notes</button>
@@ -185,14 +185,14 @@ const Customer = () => {
 
                                 <li className="nav-item" role="presentation">
                                     <button
-                                        className="nav-link text-muted"
+                                        className={`nav-link ${tabKey === 'integrations' && 'nav-active'} text-muted`}
                                         id="pills-integrations-tab"
                                         type="button"
                                         onClick={() => setTabKey('integrations')}>Integrations</button>
                                 </li>
                                 <li className="nav-item" role="presentation">
                                     <button
-                                        className="nav-link text-muted"
+                                        className={`nav-link ${tabKey === 'timeline' && 'nav-active'} text-muted`}
                                         id="pills-timeline-tab"
                                         type="button"
                                         onClick={() => setTabKey('timeline')}>Timeline</button>
@@ -253,7 +253,7 @@ const Customer = () => {
                                                         <input type="checkbox" className="form-check-input customer-select"/>
                                                     </td>
                                                     <td>{date}</td>
-                                                    <td>{ticket_id}</td>
+                                                    <td><Link to="#">{ticket_id}</Link></td>
                                                     <td>{subject}</td>
                                                     <td>{category}</td>
                                                     <td>{agent_assigned}</td>

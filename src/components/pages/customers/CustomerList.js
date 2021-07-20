@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 import {ReactComponent as UploadSvg} from '../../../assets/svgicons//Upload.svg';
 import {ReactComponent as EditSvg} from '../../../assets/svgicons//Edit.svg';
 import {ReactComponent as MoreSvg} from '../../../assets/svgicons//more.svg';
@@ -22,9 +22,11 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
         setUploadModalShow] = useState(false);
     const [editModalShow,
         setEditModalShow] = useState(false);
-    const [custLoading, setCustLoading] = useState(false);
+    const [custLoading,
+        setCustLoading] = useState(false);
 
     const getUserInitials = (name) => {
+            name = name.toUpperCase();
             const nameArr = name.split(' ');
             const firstInitial = nameArr[0] && nameArr[0][0];
             const secondInitial = nameArr[1] && nameArr[1][0];
@@ -67,11 +69,13 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
 
         useEffect(() => {
             setCustLoading(!isCustomersLoaded);
-        }, [isCustomersLoaded])
+        }, [isCustomersLoaded]);
+
+        const themes = ['red', 'blue', 'yellow', 'purple'];
 
         return (
             <SideNavBar navbarTitle="Customer List" parentCap="container-fluid">
-                <div className="cust-table-loader"><ScaleLoader loading={custLoading} color={"#006298"} /></div>
+                <div className="cust-table-loader"><ScaleLoader loading={custLoading} color={"#006298"}/></div>
 
                 <div className="m-4">
 
@@ -112,8 +116,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                             </button>
 
                             {meta && <div className="px-4 pt-2">{firstItemNo}
-                                - {lastItemNo}
-                                of {totalItems}</div>}
+                                - {lastItemNo}&nbsp;of {totalItems}</div>}
 
                             {meta && <div className="btn-group me-2">
                                 <button
@@ -143,73 +146,59 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                                 <th className="text-center">
                                     <input type="checkbox" className="form-check-input customer-select-all"/>
                                 </th>
-                                <th>Contact</th>
                                 <th>Title</th>
-                                <th>Company</th>
+                                <th>Contact</th>
+                                <th>Organisation</th>
                                 <th>Email Address</th>
                                 <th>Work Phone</th>
                                 <th>Facebook</th>
                                 <th>Twitter</th>
-                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
 
                             {isCustomersLoaded && customers.map(({
-                                    firstname,
-                                    lastname,
-                                    title,
-                                    company,
-                                    email,
-                                    phone_number,
-                                    facebook,
-                                    twitter,
-                                    theme
-                                }, idx) => (
-                                    <tr key={idx}>
-                                        <td>
-                                            <input type="checkbox" className="form-check-input customer-select"/>
-                                        </td>
-                                        <td>
-                                            <div className="d-flex user-initials-sm">
-                                                <div
-                                                    className={`user-initials ${theme
-                                                    ? theme
-                                                    : 'red'}`}>{getUserInitials(`${firstname} ${lastname}`)}</div>
-                                                <div className="ms-2 mt-1"><Link to="#">{`${firstname} ${lastname}`}</Link></div>
+                                firstname,
+                                lastname,
+                                title,
+                                company,
+                                email,
+                                phone_number,
+                                facebook,
+                                twitter,
+                                theme
+                            }, idx) => (
+                                <tr key={idx}>
+                                    <td>
+                                        <input type="checkbox" className="form-check-input customer-select"/>
+                                    </td>
+                                    <td>{title
+                                            ? title
+                                            : 'Mr.'}</td>
+                                    <td>
+                                        <div className="d-flex user-initials-sm">
+                                            <div
+                                                className={`user-initials ${theme
+                                                ? theme
+                                                : themes[Math.floor(Math.random() * 4)]}`}>{getUserInitials(`${firstname} ${lastname}`)}</div>
+                                            <div className="ms-2 mt-1">
+                                                <Link to="#">{`${firstname} ${lastname}`}</Link>
                                             </div>
-                                        </td>
-                                        <td>{title ? title : 'Mr.'}</td>
-                                        <td>{company ? company : 'Gillete'}</td>
-                                        <td>{email && email}</td>
-                                        <td>{phone_number && phone_number}</td>
-                                        <td>{facebook ? facebook : 'sadwolf227'}</td>
-                                        <td>{twitter ? twitter : 'silverfrog195'}</td>
-                                        <td>
-                                            <Dropdown>
-                                                <Dropdown.Toggle
-                                                    className="btn dropdown-toggle no-caret bg-transparent border-0 pt-0"
-                                                    variant=""
-                                                    id="dropdown-basic">
-                                                    <MoreSvg/>
-                                                </Dropdown.Toggle>
-
-                                                <Dropdown.Menu
-                                                    className="mw-auto"
-                                                    style={{
-                                                    minWidth: '0',
-                                                    boxShadow: '-3px 3px 15px 7px rgba(0, 0, 0, 0.1)'
-                                                }}>
-                                                    <Dropdown.Item as="button" onClick={() => setEditModalShow(true)}><EditSvg/>&nbsp;&nbsp;<span>Edit</span>
-                                                    </Dropdown.Item>
-                                                    <Dropdown.Item as="button"><DeleteSvg/>&nbsp;&nbsp;<span className="d-inline-block mb-0 pb-0">Delete</span>
-                                                    </Dropdown.Item>
-                                                </Dropdown.Menu>
-                                            </Dropdown>
-
-                                        </td>
-                                    </tr>
-                                ))}
+                                        </div>
+                                    </td>
+                                    <td><Link to="#">{company
+                                            ? company
+                                            : 'Gillete'}</Link></td>
+                                    <td>{email && email}</td>
+                                    <td>{phone_number && phone_number}</td>
+                                    <td>{facebook
+                                            ? facebook
+                                            : 'sadwolf227'}</td>
+                                    <td>{twitter
+                                            ? twitter
+                                            : 'silverfrog195'}</td>
+                                </tr>
+                            ))}
 
                         </tbody>
                     </table>
@@ -262,7 +251,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                                     </div>
 
                                     <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Company</label>
+                                        <label htmlFor="title" className="form-label">Organisation</label>
                                         <input type="text" className="form-control"/>
                                     </div>
 
@@ -361,7 +350,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                                     </div>
 
                                     <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Company</label>
+                                        <label htmlFor="title" className="form-label">Organisation</label>
                                         <input type="text" className="form-control"/>
                                     </div>
 

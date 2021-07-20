@@ -33,23 +33,6 @@ const TicketList = () => {
                         </div>
                     </div>
 
-                    <div>
-                        <label for="" class="text-muted">Sort by:</label>
-                        <select
-                            name=""
-                            id="orderSelector"
-                            class="bg-transparent border-0 form-select-sm px-0">
-                            <option>Name</option>
-                            <option>Email</option>
-                            <option>Category</option>
-                            <option>Ticket ID</option>
-                            <option>State</option>
-                            <option>Priority</option>
-                            <option>Status</option>
-                            <option>Created</option>
-                        </select>
-                    </div>
-
                     <div className="btn-toolbar mb-md-0">
                         <button
                             type="button"
