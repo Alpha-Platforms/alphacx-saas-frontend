@@ -25,9 +25,13 @@ function App(props) {
             <Route exact path="/" component={Domain} />
             <Route exact path="/login/:domain" component={Login} />
             <Route exact path="/register" component={Register} />
-            {/* dashboard route */}
-            <Route exact path="/dashboard" component={Dashboard} />
-            <DefaultLayoutRoute exact path="/home" component={Conversation} />
+
+            <DefaultLayoutRoute exact path="/home" component={Dashboard} />
+            <DefaultLayoutRoute
+              exact
+              path="/conversation"
+              component={Conversation}
+            />
           </Switch>
         </BrowserRouter>
       </LayoutProvider>

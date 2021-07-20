@@ -6,14 +6,19 @@ import { SearchIconNavbr, BellIconNavbar } from "../../assets/images/svgs";
 import { useHistory } from "react-router-dom";
 import userIcon from "../../assets/images/user.png";
 import pic from "../../assets/imgF/codeuiandyimg.png";
+import { useLocation } from "react-router-dom";
 //import GoBack from './../helpers/GoBack';
 
 export default function Navbar({ browserRouter, routeType, fullProps }) {
   // let [initsidebarState, setinitsidebarState] = useContext(LayoutContext);
   const getLocalItem = "h";
+  const router = useLocation();
   let [LoginUser, setLoginUser] = useState(false);
   let [navDrop, setnavDrop] = useState(false);
   let [userData, setUserData] = useState();
+  const [currentPath, setCurrentPath] = useState(
+    router.pathname.replace("/", "")
+  );
   const [UserProfilePage, setUserProfilePage] = useState("Profile");
   const IsUserValidated = () => {
     // const lastUsedToken = localStorage.getItem("token");
@@ -33,8 +38,10 @@ export default function Navbar({ browserRouter, routeType, fullProps }) {
 
   const { appReduceSidebarWidth } = useContext(LayoutContext);
   const [sp, setSp] = useState(window.pageYOffset);
+
   useEffect(() => {
     //IsUserValidated();
+    console.log("page", router);
   }, []);
 
   return (
@@ -96,7 +103,9 @@ export default function Navbar({ browserRouter, routeType, fullProps }) {
             </div> */}
             <div className="navbar-content">
               <div className="pageTitle">
-                <span>Conversations</span>
+                <span style={{ textTransform: "capitalize" }}>
+                  {currentPath}
+                </span>
               </div>
               <div className="navbar-right-content">
                 <span>

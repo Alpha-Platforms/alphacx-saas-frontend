@@ -1,10 +1,10 @@
 .dashboard {
   // background-color: #e5e5e5;
   min-height: 100vh;
-  min-width: 100vw;
-  padding-top: 150px;
-  padding-left: 118px;
-  padding-right: 50px;
+  width: 100%;
+  padding-top: 30px;
+  // padding-left: 118px;
+  // padding-right: 50px;
   display: flex;
   justify-content: space-between;
   position: relative;
@@ -20,11 +20,11 @@
   }
   .greeting {
     position: absolute;
-    top: 110px;
+    top: 0px;
     color: #000080;
   }
   .charts {
-    width: 70%;
+    width: 65%;
     box-sizing: border-box;
     .top {
       width: 100%;
@@ -39,7 +39,7 @@
     }
   }
   .sidebar {
-    width: 30%;
+    width: 35%;
     padding-left: 2%;
     display: flex;
     flex-direction: column;

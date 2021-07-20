@@ -6,7 +6,7 @@ import { useScrollDetect } from "../../../helpers/helpers";
 import Sidebar from "../../../Layout/Sidebar";
 import Navbar from "../../../Layout/Navbar";
 
-const Navigation = () => {
+const Navigation = ({ page }) => {
   const { shadow } = useScrollDetect();
   return (
     <div className="dashboard-navigation">
@@ -20,7 +20,7 @@ const Navigation = () => {
           </div>
         </div>
       </div> */}
-      <Navbar />
+      <Navbar page={page} />
       <Sidebar />
       {/* <div className="sidebar">
         <div className="logo">

@@ -9,7 +9,7 @@ import AgentDashboard from "./agentDashboard";
 const Dashboard = () => {
   return (
     <>
-      <Navigation />
+      {/* <Navigation page="Dashboard" /> */}
       <AgentDashboard />
     </>
   );
