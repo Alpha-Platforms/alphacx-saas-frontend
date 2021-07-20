@@ -1,0 +1,25 @@
+.dashboard {
+  background-color: #e5e5e5;
+  min-height: 100vh;
+  min-width: 100vw;
+  padding-top: 120px;
+  padding-left: 118px;
+  padding-right: 50px;
+  display: flex;
+
+  .charts {
+    width: 70%;
+    box-sizing: border-box;
+    .top {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      box-sizing: border-box;
+      margin-bottom: 30px;
+    }
+    .pie-chart {
+      width: 49%;
+      height: 100%;
+    }
+  }
+}

@@ -1,0 +1,19 @@
+@import "../../styleHelpers.scss";
+
+.welcome-card {
+  background-color: $primary;
+  width: 100%;
+  height: 120px;
+  border-radius: 8px;
+  padding: 0 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .sub-title {
+    color: white;
+  }
+  .message {
+    color: white;
+  }
+}
