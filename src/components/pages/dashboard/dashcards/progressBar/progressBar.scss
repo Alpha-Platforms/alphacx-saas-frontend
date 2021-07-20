@@ -1,0 +1,21 @@
+.progress-bar {
+  margin-bottom: 30px;
+  .top {
+    display: flex;
+    justify-content: space-between;
+  }
+  .track {
+    height: 7px;
+    width: 100%;
+    background-color: blue;
+    border-radius: 10px;
+    overflow: hidden;
+
+    .bar {
+      height: 100%;
+      width: 50%;
+      background-color: red;
+      border-radius: 10px;
+    }
+  }
+}

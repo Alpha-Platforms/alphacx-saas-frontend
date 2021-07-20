@@ -1,12 +1,28 @@
 .dashboard {
-  background-color: #e5e5e5;
+  // background-color: #e5e5e5;
   min-height: 100vh;
   min-width: 100vw;
-  padding-top: 120px;
+  padding-top: 150px;
   padding-left: 118px;
   padding-right: 50px;
   display: flex;
-
+  justify-content: space-between;
+  position: relative;
+  .progress {
+    margin-bottom: 30px;
+    padding: 35px;
+    background: #f9fcff;
+    border: 1px solid #dadada80;
+    border-radius: 10.4866px;
+    .topbar {
+      margin-bottom: 30px;
+    }
+  }
+  .greeting {
+    position: absolute;
+    top: 110px;
+    color: #000080;
+  }
   .charts {
     width: 70%;
     box-sizing: border-box;
@@ -19,7 +35,13 @@
     }
     .pie-chart {
       width: 49%;
-      height: 100%;
+      min-height: 100%;
     }
+  }
+  .sidebar {
+    width: 30%;
+    padding-left: 2%;
+    display: flex;
+    flex-direction: column;
   }
 }

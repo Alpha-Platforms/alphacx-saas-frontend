@@ -25,15 +25,15 @@ import {
   Gradient,
 } from "rumble-charts";
 
-const PieChartCard = () => {
+const PieChartCard = ({ values, colors, labels }) => {
   const data = {
     // labels: ["Open", "Pending", "Closed", "In Progress"],
     datasets: [
       {
         // label: "# of Votes",
-        data: [25, 5, 20, 18],
-        backgroundColor: ["#133759", "#ECBA41", "#51B74F", "#FD7289"],
-        borderColor: ["#133759", "#ECBA41", "#51B74F", "#FD7289"],
+        data: values,
+        backgroundColor: colors,
+        borderColor: colors,
         borderWidth: 1,
       },
     ],
@@ -86,11 +86,14 @@ const PieChartCard = () => {
         }}
       />
       <div className="details">
-        <div className="detail">
-          <div className="dot"></div>
-          <p>Open</p>
-        </div>
-        <div className="detail">
+        {labels.map((label, i) => (
+          <div className="detail" key={i}>
+            <div className="dot" style={{ backgroundColor: colors[i] }}></div>
+            <p>{label}</p>
+          </div>
+        ))}
+
+        {/* <div className="detail">
           <div className="dot"></div>
           <p>In Progress</p>
         </div>
@@ -101,7 +104,7 @@ const PieChartCard = () => {
         <div className="detail">
           <div className="dot"></div>
           <p>Closed</p>
-        </div>
+        </div> */}
       </div>
       {/* <div className="details">
         <div className="detail">

@@ -15,11 +15,8 @@ import {
   AppLogo,
 } from "../../assets/images/svgs";
 export default function Sidebar({ browserRouter, currentRoute }) {
-  const {
-    setreduceSidebarWidth,
-    appReduceSidebarWidth,
-    reduceSidebarWidth,
-  } = useContext(LayoutContext);
+  const { setreduceSidebarWidth, appReduceSidebarWidth, reduceSidebarWidth } =
+    useContext(LayoutContext);
 
   const [PublicationShow, SetPublicationShow] = useState(true);
   const [CategoriesShow, SetCategoriesShow] = useState(false);

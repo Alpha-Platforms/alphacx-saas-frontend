@@ -6,6 +6,8 @@
   display: flex;
   align-items: center;
   padding: 0 50px;
+  margin-bottom: 30px;
+  box-shadow: 0px 0px 24px #0062981a;
   .icon {
     height: 45px;
     width: 45px;
@@ -18,10 +20,10 @@
   .details {
     .title {
       font-size: 18px;
-      margin-bottom: -5px;
+      margin-bottom: 0px;
     }
     .value {
-      font-size: 25px;
+      font-size: 20px;
       font-weight: bold;
     }
   }
