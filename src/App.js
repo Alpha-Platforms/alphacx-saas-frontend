@@ -10,6 +10,7 @@ import Domain from './components/pages/auth/domain';
 import Register from './components/pages/auth/register.jsx';
 import Reset from './components/pages/auth/forgotPassword';
 import Home from './home'
+import 'react-responsive-modal/styles.css';
 
 import Conversation from './components/pages/conersations/conversation'
 
