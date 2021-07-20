@@ -503,3 +503,13 @@ input {
     width: calc(100vw - 85px) !important;
   }
 }
+
+.react-responsive-modal-modal {
+  background-color: white !important;
+}
+
+.react-responsive-modal-overlay {
+  background: rgba(0, 98, 152, 0.2) !important;
+  -webkit-filter: blur(5px);
+  filter: blur(5px);
+}
