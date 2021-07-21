@@ -1,0 +1,66 @@
+.dashboard {
+  // background-color: #e5e5e5;
+  max-height: 100vh;
+  width: 100%;
+  padding-top: 30px;
+  // padding-left: 118px;
+  // padding-right: 50px;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  p {
+    margin: 0px;
+  }
+
+  .greeting {
+    position: absolute;
+    top: -10px;
+    color: #000080;
+  }
+  .charts {
+    width: 65%;
+    box-sizing: border-box;
+    .top {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+    }
+    .pie-chart {
+      &:first-child {
+        .circular-progress {
+          transform: translateY(10px);
+        }
+      }
+      width: 49%;
+      min-height: 100%;
+    }
+  }
+  .side-bar {
+    width: 35%;
+    padding-left: 2%;
+    display: flex;
+    flex-direction: column !important;
+    .progress-bars {
+      // margin-bottom: 30px;
+      padding: 20px 35px;
+      background: #f9fcff;
+      border: 1px solid #dadada80;
+      border-radius: 10.4866px;
+      .top-bar {
+        margin-bottom: 10px;
+        h3 {
+          font-size: 18px;
+        }
+      }
+    }
+    // .progress-bars {
+    //   width: 100%;
+    //   height: fit-content;
+    // }
+    .top-bar {
+      width: 100%;
+    }
+  }
+}

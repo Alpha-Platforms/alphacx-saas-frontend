@@ -365,6 +365,7 @@ a {
   top: 10px;
 }
 .app-container {
+  background-color: #e5e5e5;
   position: relative;
   left: 0px;
   width: calc(100vw - 50px);
