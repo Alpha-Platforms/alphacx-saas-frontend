@@ -1,0 +1,12 @@
+
+#ticketsTable .MuiPaper-elevation2 {
+    box-shadow: none !important;
+}
+
+#ticketsTable .MuiPaper-rounded {
+    border-radius: 0rem !important;
+}
+
+#ticket-status-select {
+    border: none !important;
+}
