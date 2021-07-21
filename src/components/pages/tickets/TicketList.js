@@ -69,7 +69,7 @@ const TicketList = ({isTicketsLoaded, tickets}) => {
                     <div className="btn-toolbar mb-md-0">
                         <button
                             type="button"
-                            class="btn btn-sm bg-at-blue px-md-3 mx-1"
+                            class="btn btn-sm bg-at-blue-light px-md-3 mx-1"
                             data-bs-toggle="modal"
                             data-bs-target="#createNewTicket">
                             <img src={TicketStarIcon} alt=""/>&nbsp;New Ticket
