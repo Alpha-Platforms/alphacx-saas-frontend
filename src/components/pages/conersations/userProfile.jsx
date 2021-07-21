@@ -13,18 +13,31 @@ export default function UserProfile({ setshowUserProfile, UserInfo }) {
         </div>
 
         <div className="userProfilePicCon">
-          <img src={UserInfo?.avatar} alt="" />
+          {UserInfo?.avatar ? (
+            <img src={UserInfo?.avatar} alt="" />
+          ) : (
+            <div className="userProfilePicConNoImg">
+              <p>{`${UserInfo?.firstname?.slice(
+                0,
+                1
+              )} ${UserInfo?.lastname?.slice(0, 1)}`}</p>
+            </div>
+          )}
+
           <p>{`${UserInfo?.firstname} ${UserInfo?.lastname}`}</p>
         </div>
         <div className="userProfileAboutCovers">
           <div className="aboutUserColConv">
             <p>Email Address</p>
-            <p>{UserInfo?.email}</p>
+
+            <p>{UserInfo?.email ? UserInfo?.email : "unavailable"}</p>
           </div>
 
           <div className="aboutUserColConv">
             <p>Work Phone</p>
-            <p>{UserInfo?.phoneNumber}</p>
+            <p>
+              {UserInfo?.phoneNumber ? UserInfo?.phoneNumber : "unavailable"}
+            </p>
           </div>
 
           <div className="aboutUserColConv">

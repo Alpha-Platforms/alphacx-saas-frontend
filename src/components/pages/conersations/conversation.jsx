@@ -35,6 +35,7 @@ export default function Conversation() {
 
   const [loadSelectedMsg, setloadSelectedMsg] = useState("");
   const [tickets, setTickets] = useState([]);
+  const [filterTicketsState, setFilterTicketsState] = useState([]);
   const [ticket, setTicket] = useState([]);
   const [LoadingTick, setLoadingTicks] = useState(true);
   const [loadSingleTicket, setLoadSingleTicket] = useState(false);
@@ -57,6 +58,7 @@ export default function Conversation() {
     col2: "",
   });
   const [openSaveTicketModal, setopenSaveTicketModal] = useState(false);
+  const [filterChat, setFilterChat] = useState("system");
   useEffect(() => {
     getTickets();
   }, []);
@@ -84,6 +86,15 @@ export default function Conversation() {
       setLoadingTicks(false);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
+  };
+
+  const filterTicket = (value) => {
+    setFilterChat(value);
+    let filterTickets = tickets.filter((data) => {
+      return data.channel == value;
+    });
+    setFilterTicketsState(filterTickets);
+    console.log(filterTickets);
   };
 
   const replyTicket = async (reply, attachment) => {
@@ -181,17 +192,23 @@ export default function Conversation() {
     setopenSaveTicketModal(!openSaveTicketModal);
   };
   return (
-    <div className="conversation-wrap">
+    <div className="conversation-wrap codei-ui-andy-setDefaults">
       <div className="conversation-layout">
         <div className={`conversation-layout-col-one ${ChatCol.col1}`}>
           <div className="message-toggles">
             <div className="messageType">
-              <select name="" id="">
-                <option value="">All</option>
-                <option value="">Facebook</option>
-                <option value="">Whatsapp</option>
-                <option value="">Email</option>
-                <option value="">Live Chat</option>
+              <select
+                name=""
+                id=""
+                onChange={(e) => {
+                  filterTicket(e.target.value);
+                }}
+              >
+                <option value="system">All</option>
+                <option value="facebook">Facebook</option>
+                <option value="whatsapp">Whatsapp</option>
+                <option value="email">Email</option>
+                <option value="liveChat">Live Chat</option>
               </select>
             </div>
             <div className="messageOpenClose">
@@ -220,12 +237,14 @@ export default function Conversation() {
             loadSingleMessage={loadSingleMessage}
             setTingleTicketFullInfo={setTingleTicketFullInfo}
             setTicketId={setTicketId}
+            filterChat={filterChat}
+            filterTicketsState={filterTicketsState}
           />
         </div>
 
         <div
           className={`conversation-layout-col-two ${ChatCol.col2}`}
-          style={{ position: "relative" }}
+          style={showUserProfile ? { width: "calc(100% - 636px)" } : {}}
         >
           {loadSingleTicket ? (
             <div
@@ -330,7 +349,6 @@ export default function Conversation() {
         />
       </div>
       <div>
-        <button onClick={closeSaveTicketModal}>Open modal</button>
         <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal}>
           <div className="saveTicketWrapModal">
             <div className="modalHeaderSaveT">
@@ -377,7 +395,6 @@ export default function Conversation() {
           </div>
         </Modal>
       </div>
-      ) : ( ""
     </div>
   );
 }
