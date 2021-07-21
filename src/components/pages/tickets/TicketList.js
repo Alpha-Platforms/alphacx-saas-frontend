@@ -221,7 +221,8 @@ const TicketList = ({isTicketsLoaded, tickets}) => {
                         [
                             {
                                 title: 'Name',
-                                field: 'name'
+                                field: 'name',
+                                render: rowData => <Link>{rowData.name}</Link>
                             }, {
                                 title: 'Subject',
                                 field: 'subject'
@@ -230,7 +231,8 @@ const TicketList = ({isTicketsLoaded, tickets}) => {
                                 field: 'category'
                             }, {
                                 title: 'Ticket ID',
-                                field: 'ticketId'
+                                field: 'ticketId',
+                                render: rowData => <Link>{rowData.ticketId}</Link>
                             }, {
                                 title: 'State',
                                 field: 'state',
