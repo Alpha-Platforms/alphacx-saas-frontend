@@ -3,8 +3,12 @@ import * as types from '../types';
 import { config } from '../../config/keys';
 import { returnErrors } from './errorActions';
 import {userTokenConfig} from '../../helper';
+import {NotificationManager} from 'react-notifications';
 
 export const getCustomers = (currentPage) => (dispatch, getState) => {
+	if (!navigator.onLine) {
+		return NotificationManager.error('Please check your internet', 'Opps!', 3000);
+	}
 	dispatch(setCustomersLoading());
 	axios.get(`${config.stagingBaseUrl}/users?role=Customer&per_page=${config.customersPerPage}&page=${currentPage}`, userTokenConfig(getState))
 		.then(res => dispatch({

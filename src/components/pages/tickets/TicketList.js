@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import SideNavBar from '../../Layout/SideNavBar';
 import {connect} from 'react-redux';
 import {ReactComponent as EditSvg} from '../../../assets/svgicons//Edit.svg';
@@ -6,11 +7,51 @@ import FilterIcon from '../../../assets/svgicons//Filter3.svg';
 import {ReactComponent as ImportSvg} from '../../../assets/svgicons//import.svg';
 import ShowIcon from '../../../assets/svgicons//Show.svg';
 import TicketStarIcon from '../../../assets/svgicons//Ticket-Star.svg';
+import MaterialTable from 'material-table';
+import {TablePagination} from '@material-ui/core';
+import tableIcons from '../../../assets/materialicons/tableIcons';
+import '../../../styles/Ticket.css';
+import ScaleLoader from 'react-spinners/ScaleLoader';
 
-const TicketList = () => {
+const TicketPagination = props => {
+    const {
+      ActionsComponent,
+      onChangePage,
+      onChangeRowsPerPage,
+      ...tablePaginationProps
+    } = props;
+  
+    return (
+      <TablePagination
+        {...tablePaginationProps}
+        onPageChange={onChangePage}
+        onRowsPerPageChange={onChangeRowsPerPage}
+        ActionsComponent={(subprops) => {
+          const { onPageChange, ...actionsComponentProps } = subprops;
+          return (
+            <ActionsComponent
+              {...actionsComponentProps}
+              onChangePage={onPageChange}
+            />
+          );
+        }}
+      />
+    );
+  }
+
+const TicketList = ({isTicketsLoaded, tickets}) => {
+    const [ticketLoading,
+        setTicketLoading] = useState(false);
+
+    useEffect(() => {
+        setTicketLoading(!isTicketsLoaded);
+    }, [isTicketsLoaded]);
+
+    console.log(tickets);
 
     return (
         <SideNavBar navbarTitle="Ticket List" parentCap="container-fluid">
+            <div className="cust-table-loader"><ScaleLoader loading={ticketLoading} color={"#006298"}/></div>
             <div className="m-4">
                 <div
                     className="d-flex justify-content-between flex-wrap bg-light rounded-top-big flex-md-nowrap align-items-center p-4">
@@ -66,7 +107,7 @@ const TicketList = () => {
 
                 </div>
 
-                <table
+                {/* <table
                     id="usersTable"
                     className="table table-responsive bg-white rounded-bottom-big table-striped__ table-hover__ w-100 p-0 pt-0">
                     <thead className="bg-light">
@@ -167,7 +208,63 @@ const TicketList = () => {
                         </tr>
 
                     </tbody>
-                </table>
+                </table> */}
+
+                <div id="ticketsTable" className="pb-5">
+                    {isTicketsLoaded && <MaterialTable
+                    title = ""
+                    icons = {
+                        tableIcons
+                    }
+                    columns = {
+                        [
+                            {
+                                title: 'Name',
+                                field: 'name'
+                            }, {
+                                title: 'Email',
+                                field: 'email'
+                            }, {
+                                title: 'Category',
+                                field: 'category'
+                            }, {
+                                title: 'Ticket ID',
+                                field: 'ticketId'
+                            }, {
+                                title: 'Email',
+                                field: 'email'
+                            }, {
+                                title: 'State',
+                                field: 'state'
+                            }, {
+                                title: 'Priority',
+                                field: 'priority'
+                            }, {
+                                title: 'Status',
+                                field: 'status'
+                            }, {
+                                title: 'Created',
+                                field: 'created'
+                            }, {
+                                title: '',
+                                field: 'action'
+                            }
+                        ]
+                    }
+                    data = {tickets.map(({customer}) => ({
+                        name: `${customer.firstname} ${customer.lastname}`,
+                        email: customer.email
+                    }))
+                    }
+                    options = {{
+                        search: true,
+                        selection: true
+                    }}
+                    components={{ 
+                        Pagination: TicketPagination
+                     }}
+                    />}
+                </div>
             </div>
 
         </SideNavBar>
@@ -175,6 +272,6 @@ const TicketList = () => {
     )
 }
 
-const mapStateToProps = (state, ownProps) => ({customers: state.customer.customers, isCustomersLoaded: state.customer.isCustomersLoaded, meta: state.customer.meta})
+const mapStateToProps = (state, ownProps) => ({tickets: state.ticket.tickets, isTicketsLoaded: state.ticket.isTicketsLoaded, meta: state.ticket.meta})
 
 export default connect(mapStateToProps, null)(TicketList);
