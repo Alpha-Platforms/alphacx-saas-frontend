@@ -1,44 +1,790 @@
-.App {
-  text-align: center;
+@import url( 'https://fonts.googleapis.com/css2?family=Arimo&family=Cabin&display=swap');
+@font-face {
+    font-family: Cabin;
+    src: url("./assets//fonts/Cabin-Regular.ttf");
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* text-anchor: middle;
+        user-select: none; */
+:root {
+    --at-red: #FF4D35;
+    /* rgb(255 77 53) */
+    --at-green: #51B74F;
+    /* rgb(81 183 79) */
+    --at-blue: #103e65;
+    /* rgb(16 62 101) */
+    --at-yellow: #eeb64a;
+    /* rgb(238 182 74) */
+    --at-blue-light: #006298;
+    --at-blue-lighter: rgba(206, 225, 255, 50%);
+    --at-purple: #6C4181;
+
+    --sidebar-width: 60px;
+    --text-color: rgba(43, 48, 77, 70%);
+    /* 70% of base #2B304D (rgb(43 48 77)) */
+    --at-blue-10: rgba(43, 48, 77, 10%);
+    /* 10% of base #2B304D (rgb(43 48 77)) */
+
+    --acx--red-6: rgba(255, 77, 53, 6%);
+    --acx--green-6: rgba(81, 183, 79, 6%);
+    --acx--blue-6: rgba(16, 62, 101, 6%);
+    --acx--yellow-6: rgba(238, 182, 74, 6%);
+    --acx--purple-6: rgba(108, 65, 129, 6%);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+html {
+    height: 100% !important;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+body {
+    background-color: #f0f0f2 !important;
+    font-family: Cabin !important;
+    line-height: 1.4;
+    font-size: .9rem !important;
+    height: 100% !important;
 }
 
-.App-link {
-  color: #61dafb;
+a {
+  text-decoration: none !important;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.btn,
+body,
+table {
+    color: var(--text-color) !important;
 }
 
-td {
-  display: flex !important;
-  align-self: flex-start !important;
-  justify-self: flex-start !important;
+.bg-at-red {
+    background-color: var(--at-red) !important;
+}
+
+.bg-at-red,
+.bg-at-red a {
+    color: #FFF !important;
+}
+
+.text-at-red {
+    color: var(--at-red) !important;
+}
+
+.bg-at-blue {
+    background-color: var(--at-blue) !important;
+}
+
+.bg-at-blue,
+.bg-at-blue a {
+    color: #FFF !important;
+}
+
+.text-at-blue {
+    color: var(--at-blue) !important;
+}
+
+.bg-at-green {
+    background-color: var(--at-green) !important;
+}
+
+.bg-at-green,
+.bg-at-green a {
+    color: #FFF !important;
+}
+
+.text-at-green {
+    color: var(--at-green) !important;
+}
+
+.bg-at-yellow {
+    background-color: var(--at-yellow) !important;
+}
+
+.bg-at-yellow,
+.bg-at-yellow a {
+    color: #FFF !important;
+}
+
+.text-at-yellow {
+    color: var(--at-yellow) !important;
+}
+
+.bg-at-blue-light {
+    background-color: var(--at-blue-light) !important;
+}
+
+.bg-at-blue-light,
+.bg-at-blue-light a {
+    color: #FFF !important;
+}
+
+.bg-at-blue-lighter {
+    background-color: var(--at-blue-lighter);
+}
+
+.text-at-blue-light {
+    color: var(--at-blue-light) !important;
+}
+
+.acx-text-red {
+    color: var(--at-red) !important;
+}
+
+.acx-text-green {
+    color: var(--at-green) !important;
+}
+
+.acx-text-blue {
+    color: var(--at-green) !important;
+}
+
+.acx-text-yellow {
+    color: var(--at-yellow) !important;
+}
+
+/* background with opacity and border, plus text color */
+.acx-bg-red-30 {
+    background-color: rgba(255, 77, 53, 6%) !important;
+    color: var(--at-red) !important;
+    border-color: rgba(255, 77, 53, 30%) !important;
+}
+
+.acx-bg-green-30 {
+    background-color: rgba(81, 183, 79, 6%) !important;
+    color: var(--at-green) !important;
+    border-color: rgba(81, 183, 79, 30%) !important;
+}
+
+.acx-bg-blue-30 {
+    background-color: rgba(16, 62, 101, 6%) !important;
+    color: var(--at-blue) !important;
+    border-color: rgba(16, 62, 101, 30%) !important;
+}
+
+.acx-bg-yellow-30 {
+    background-color: rgba(238, 182, 74, 6%) !important;
+    color: var(--at-yellow) !important;
+    border-color: rgba(238, 182, 74, 30%) !important;
+}
+
+main {
+    margin-left: var(--sidebar-width) !important;
+    width: calc(100% - var(--sidebar-width)) !important;
+
+    /* min-height: 100vh; */
+    /* hope nothing breaks */
+}
+
+#sidebarMenu {
+    width: var(--sidebar-width) !important;
+}
+
+.wide-modal {
+    width: 45% !important;
+    min-width: 500px !important;
+    max-width: 600px !important;
+}
+
+.dropdown-toggle.no-caret::after {
+    content: none !important;
+    display: none !important;
+}
+
+#sidebarMenu .nav-item a.nav-link {
+    /* background-color: #1C62A7; */
+}
+#sidebarMenu .nav-item a.nav-link:hover {
+    background-color: #1C62A7;
+}
+
+/* button object  */
+a > object,
+button > object {
+    pointer-events: none !important;
+}
+
+a object.sm-align,
+button object.sm-align,
+object.sm-align {
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    margin-bottom: 2px;
+}
+
+object.icon-sm {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    margin-bottom: 1px;
+}
+
+object.icon-md {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-bottom: 2px;
+}
+
+object.icon-lg {
+    width: 6rem;
+}
+
+.table tr td,
+.table tr th {
+    padding: 1rem 0.5rem;
+}
+
+/* increase table's left padding */
+.table tbody tr td:nth-child(1) {
+    /* padding-left: 1.5rem; */
+    text-align: center;
+}
+
+/* .table > thead > tr > th { */
+.table > :not(:last-child) > :last-child > * {
+    border-bottom-color: #f0f0f2;
+}
+
+.btn-group-sm > .btn,
+.btn-sm {
+    font-size: 0.8rem;
+}
+
+.dropdown-menu {
+    font-size: inherit;
+    min-width: inherit;
+    border: none;
+}
+.dropdown-item:focus,
+.dropdown-item:hover {
+    background-color: rgba(255, 255, 255, .1);
+}
+
+.user-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: solid 2px #CCC;
+    overflow: hidden;
+}
+
+.user-avatar img {
+    width: 100%;
+    border: solid 1px #FFF;
+    border-radius: 50%;
+}
+
+/* to add magnifying glass to search field */
+.magnifying-glass {
+    /* background-image: url('/assets/alphatickets/icons/search.svg'); */
+    background-repeat: no-repeat;
+    background-size: 16px;
+    background-position: 1rem 50%;
+    padding-left: 2.5rem !important;
+}
+
+/* --------------- redefine bootstrap ------------- */
+.page-item .page-link {
+    color: var(--at-blue-light) !important;
+}
+
+.page-item.active .page-link {
+    background-color: var(--at-blue-light) !important;
+    border-color: var(--at-blue-light) !important;
+    color: white !important;
+}
+
+/* ------------ ---------------- UTILITIES CLASSES -------------- --------------- */
+
+.acx-box-10 {
+    width: 10px !important;
+    height: 10px !important;
+    line-height: normal !important;
+}
+
+.acx-box-12 {
+    width: 12px !important;
+    height: 12px !important;
+    line-height: normal !important;
+}
+
+.acx-box-14 {
+    width: 14px !important;
+    height: 14px !important;
+    line-height: normal !important;
+}
+
+.acx-box-16 {
+    width: 16px !important;
+    height: 16px !important;
+    line-height: normal !important;
+}
+
+.acx-box-18 {
+    width: 18px !important;
+    height: 18px !important;
+    line-height: normal !important;
+}
+
+.acx-box-20 {
+    width: 20px !important;
+    height: 20px !important;
+    line-height: normal !important;
+}
+
+.w-third {
+    width: 33% !important;
+}
+
+.w-60 {
+    width: 60% !important;
+}
+
+.h-60 {
+    height: 60% !important;
+}
+
+.f-basis-30 {
+    flex-basis: 30%;
+}
+
+/* tiny font sizes to bs fs-6 -> fs-1 */
+.acx-fs-6 {
+    font-size: 0.6rem !important;
+}
+
+.acx-fs-8 {
+    font-size: 0.8rem !important;
+}
+
+.rounded-top-big {
+    border-top-left-radius: 0.8rem !important;
+    border-top-right-radius: 0.8rem !important;
+}
+
+.rounded-bottom-big {
+    border-bottom-left-radius: 0.8rem !important;
+    border-bottom-right-radius: 0.8rem !important;
+}
+
+.at-radio-red {
+    box-shadow: 0 0 0 1px var(--at-red) !important;
+}
+
+.at-radio-green {
+    box-shadow: 0 0 0 1px var(--at-green) !important;
+}
+
+.acx-ring {
+    /* outline around form fields and others. Requires .border, uses text color */
+    box-shadow: 0 0 0 1px !important;
+    border-color: #FFF !important;
+}
+
+/* --------------  file input and drag n drop styling -------------- */
+[type="file"] {
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute !important;
+    white-space: nowrap;
+    width: 1px;
+}
+
+[type="file"]+label {
+    border-radius: 4px;
+    color: blue;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0.5rem;
+    border: dashed #ced4da 1px;
+    text-align: center;
+}
+[type="file"]:focus+label {
+    border: solid #86b7fe 1px;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, .25);
+}
+
+label.file-picker object {
+    width: 12px;
+    margin-top: 2px;
+}
+
+label.file-picker object.lg-icon {
+    width: 24px;
+}
+
+[for=file-picker] {
+    background-color: rgb(0 98 152 / 4%) !important;
+}
+
+/* ------------ ----------- -------------- */
+
+/* opacity utility classes */
+.op-1 {
+    opacity: 0.1 !important;
+}
+
+.op-2 {
+    opacity: 0.2 !important;
+}
+
+.op-3 {
+    opacity: 0.3 !important;
+}
+
+.op-4 {
+    opacity: 0.4 !important;
+}
+
+.op-5 {
+    opacity: 0.5 !important;
+}
+
+.op-6 {
+    opacity: 0.6 !important;
+}
+
+.op-7 {
+    opacity: 0.7 !important;
+}
+
+.op-8 {
+    opacity: 0.8 !important;
+}
+
+.op-9 {
+    opacity: 0.9 !important;
+}
+
+.op-10 {
+    opacity: 1 !important;
+}
+
+/* z-index (0 - 10) utitility classes*/
+.zindex-0 {
+    z-index: 0 !important;
+}
+
+.zindex-1 {
+    z-index: 1 !important;
+}
+
+.zindex-2 {
+    z-index: 2 !important;
+}
+
+.zindex-3 {
+    z-index: 3 !important;
+}
+
+.zindex-4 {
+    z-index: 4 !important;
+}
+
+.zindex-5 {
+    z-index: 5 !important;
+}
+
+.zindex-6 {
+    z-index: 6 !important;
+}
+
+.zindex-7 {
+    z-index: 7 !important;
+}
+
+.zindex-8 {
+    z-index: 8 !important;
+}
+
+.zindex-9 {
+    z-index: 9 !important;
+}
+
+.zindex-10 {
+    z-index: 1 !important;
+}
+
+/*  -------- USER NAME INITIALS -----------   */
+
+.user-initials {
+    border-radius: 50%;
+    color: #FFF;
+    text-align: center;
+}
+
+.user-initials-sm .user-initials {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.user-initials-lg .user-initials {
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+    font-size: 2rem;
+}
+
+.user-initials.red {
+    background-color: var(--at-red);
+}
+
+.user-initials.green {
+    background-color: var(--at-green);
+}
+
+.user-initials.blue {
+    background-color: var(--at-blue);
+}
+
+.user-initials.yellow {
+    background-color: var(--at-yellow);
+}
+
+.user-initials.purple {
+    background-color: var(--at-purple);
+}
+
+/* * Size Utility classes */
+.max-w-700 {
+    max-width: 700px !important;
+}
+
+/* * Font Size Utility classes  */
+.f-16 {
+    font-size: 16px !important;
+}
+
+.f-10 {
+    font-size: 10px !important;
+}
+
+.f-14 {
+    font-size: 14px !important;
+}
+
+.f-12 {
+    font-size: 12px !important;
+}
+
+.f-13 {
+    font-size: 12px !important;
+}
+
+.f-18 {
+    font-size: 18px !important;
+}
+
+.fw-500 {
+    font-weight: 500;
+}
+
+.height-off-header {
+    height: calc(100vh - 75px) !important;
+}
+
+.text-custom {
+    color: #006298 !important;
+}
+
+.bg-custom {
+    background-color: #006298;
+    color: #fff !important;
+}
+
+.assign .form-control {
+    width: 188px;
+}
+
+.close {
+    cursor: pointer;
+}
+
+.ticket-bg {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+}
+
+.bg-assign {
+    background-color: #F1F6F9;
+}
+
+.bg-overdue {
+    background-color: #FEF7F8;
+}
+
+.text-overdue {
+    color: #FD7289 !important;
+}
+
+.tk-wt {
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.tk-text {
+    font-size: 18px;
+    margin-bottom: -5px;
+}
+
+.text-resolve {
+    color: #6C4181 !important;
+}
+
+.bg-resolve {
+    background-color: #F2F7FA !important;
+}
+
+/* ** FROM STYLE.CSS */
+
+/* * placeholder sytling */
+::-webkit-input-placeholder {
+    margin-left: -500px;
+}
+
+::-moz-placeholder {
+    margin-left: -500px;
+}
+
+:-ms-input-placeholder {
+    margin-left: -500px;
+}
+
+::-ms-input-placeholder {
+    margin-left: -500px;
+}
+
+::placeholder {
+    margin-left: -500px;
+}
+
+/** end of placeholder styling */
+
+/** << These BS styles are not overriding and main BS classes styling*/
+
+.form-check-label,
+.form-label {
+    font-size: 0.9rem;
+}
+
+/** >> */
+
+/** << These styles are overiding default DOM element styles */
+a {
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+}
+
+a object {
+    position: relative;
+    z-index: -1;
+}
+
+/** >> */
+/** << These styles are overiding main BS classes stlying */
+.text-black {
+    color: rgba(0, 0, 0, 0.78);
+}
+
+.up {
+    z-index: 1;
+}
+
+.down {
+    z-index: -1;
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+.mh {
+    margin-left: 25px;
+}
+
+/** >> */
+.table > :not(:last-child) > :last-child > * {
+    border-bottom-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 
+* TICKET MODULE CSS
+*/
+/* ticket module */
+
+.ticket-state.red .btn {
+    border: solid 1px rgb(255 77 53 / 30%);
+    background-color: rgb(255 77 53 / 6%);
+    color: var(--at-red) !important;
+}
+.ticket-state.green .btn {
+    border: solid 1px rgb(81 183 79 / 30%);
+    background-color: rgb(81 183 79 / 6%);
+    color: #51B74F !important;
+}
+.ticket-state.yellow .btn {
+    border: solid 1px rgb(238 182 74 / 30%);
+    background-color: rgb(238 182 74 / 6%);
+    color: #EEB64a !important;
+}
+
+.ticket-priority button span::before,
+.ticket-status button span::before {
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2.5px;
+    margin-right: 3px;
+}
+
+.ticket-priority.red button span::before,
+.ticket-status.red button span::before {
+    background-color: #FF4D35;
+}
+
+.ticket-priority.green button span::before,
+.ticket-status.green button span::before {
+    background-color: #51B74F;
+}
+
+.ticket-priority.blue button span::before,
+.ticket-status.blue button span::before {
+    background-color: #0074B3;
+}
+
+.ticket-priority.yellow button span::before,
+.ticket-status.yellow button span::before {
+    background-color: #EEB64a;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 0.5rem;
+	height: 0.5rem;
+	opacity: 0.7;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0);
+	border-radius: 1rem;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--at-blue-light);
+	border-radius: 1rem;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--at-blue);
 }

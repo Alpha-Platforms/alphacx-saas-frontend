@@ -344,6 +344,265 @@
   font-size: 16px;
 }
 
+.user-profile-conversation-page {
+  width: 260px;
+  height: 100%;
+  border-left: 1px solid rgba(0, 98, 152, 0.1);
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding-top: 25px;
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-bottom: 20px;
+  overflow: hidden;
+  background-color: white;
+  overflow-y: scroll;
+  z-index: 44;
+}
+
+.user-profile-conversation-page::-webkit-scrollbar {
+  width: 1px;
+}
+
+.user-profile-conversation-page::-webkit-scrollbar {
+  /*Chrome, Safari, Edge*/
+  opacity: 0;
+}
+
+.cancelIconCovP {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.cancelIconCovP svg {
+  cursor: pointer;
+}
+
+.userProfilePicCon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 15px;
+  border-bottom: 1px solid rgba(0, 98, 152, 0.1);
+  padding-bottom: 25px;
+}
+
+.userProfilePicCon img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+}
+
+.userProfilePicCon p {
+  color: #040930;
+  font-size: 14.5px;
+  font-weight: 600;
+  padding-top: 7px;
+}
+
+.userProfileAboutCovers {
+  border-bottom: 1px solid rgba(0, 98, 152, 0.1);
+  padding-top: 20px;
+  padding-bottom: 7px;
+}
+
+.userProfileAboutCovers .aboutUserColConv {
+  padding-bottom: 15px;
+}
+
+.userProfileAboutCovers .aboutUserColConv p:first-child {
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 17px;
+}
+
+.userProfileAboutCovers .aboutUserColConv p:last-child {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 15px;
+  padding-top: 3px;
+}
+
+.userTopActivities {
+  display: flex;
+  flex-direction: column;
+}
+
+.activityConPRcov {
+  display: flex;
+  padding-top: 20px;
+  justify-content: space-between;
+  margin-top: 70px;
+}
+
+.userTopActivities .activityConPRcov:first-child {
+  margin-top: 0px;
+}
+
+/* .userTopActivities .activityCountconvers .lineactivitivy:last-child {
+  display: none;
+} */
+
+.userTopActivities {
+  margin-left: -4px;
+}
+
+.activityConPRcov .activityCountconvers {
+  background-color: #006298;
+  color: white;
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 45px;
+  text-align: center;
+  display: block;
+  /* flex: 1; */
+}
+
+.activityConPRcov .lineactivitivy {
+  content: "";
+  display: block;
+  background-color: rgba(0, 98, 152, 0.4);
+  position: relative;
+  top: -5px;
+  left: 21px;
+  height: 100px;
+  width: 2.6px;
+}
+
+.activityCountconversText {
+  font-size: 16px;
+  width: 75%;
+  font-size: 13px;
+  line-height: 17px;
+  padding-top: 5px;
+  color: #353535;
+}
+
+.viewAllUserActivity {
+  text-align: center;
+  margin-top: 36px;
+  color: #006298;
+  font-size: 17px;
+  cursor: pointer;
+  padding-bottom: 30px;
+}
+
+.saveTicketWrapModal {
+  width: 520px;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+  background-color: white;
+  padding: 35px 30px 20px 30px;
+}
+.modalHeaderSaveT {
+  color: #2d3250;
+  font-size: 17px;
+}
+
+.saveTicketModalForm {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.ticketmodalInput-twoCol {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.ticketmodalInput-OneCol {
+  display: flex;
+  width: 100%;
+}
+
+.ticketmodalInputWrapMain {
+  width: 48%;
+  margin-top: 20px;
+}
+
+.ticketmodalInputWrapMainOne {
+  width: 100%;
+  margin-top: 15px;
+}
+
+.ticketmodalInputWrapMain input,
+select {
+  width: 100%;
+  border: 1px solid rgba(45, 50, 80, 0.22);
+  box-sizing: border-box;
+  border-radius: 2px;
+  height: 40px;
+  margin-top: 4px;
+  color: rgba(101, 101, 101, 0.7);
+}
+
+.ticketmodalInputWrapMainOne input,
+select {
+  width: 100%;
+  border: 1px solid rgba(45, 50, 80, 0.22);
+  box-sizing: border-box;
+  border-radius: 2px;
+  height: 40px;
+  margin-top: 4px;
+  color: rgba(101, 101, 101, 0.7);
+}
+
+.ticketmodalInputWrapMain label {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 14px;
+}
+
+.ticketmodalInputWrapMainOne label {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 14px;
+}
+
+.descriptionWrap {
+  display: flex;
+  flex-direction: column;
+  margin-top: 18px;
+}
+
+.descriptionWrap label {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 14px;
+}
+
+.descriptionWrap textarea {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 14px;
+  width: 100%;
+  border: 1px solid rgba(45, 50, 80, 0.22);
+  box-sizing: border-box;
+  border-radius: 2px;
+  height: 40px;
+  margin-top: 4px;
+  color: rgba(101, 101, 101, 0.7);
+  height: 140px;
+}
+
+.closeTicketModdalj {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  margin-top: 25px;
+  padding-bottom: 20px;
+}
+
+.closeTicketModdalj select {
+  width: 120px;
+  border-radius: 4px;
+  height: 40px;
+  background: #006298;
+  color: white;
+  cursor: pointer;
+}
 /* RESPONSIVE CHAT */
 
 @media (max-width: 917px) {

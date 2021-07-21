@@ -40,14 +40,14 @@ const AgentDashboard = () => {
           </div>
           <LineChartCard />
         </div>
-        <div className="sidebar">
+        <div className="side-bar">
           <TotalCard title="Total Tickets" value={57} color={"#662D91"} />
           <TotalCard title="Assigned Tickets" value={57} color={"#51B74F"} />
           <TotalCard title="Overdue Tickets" value={50} color={"#F40D0D"} />
 
           {/* sidebar progress bars */}
-          <div className="progress">
-            <div className="topbar">
+          <div className="progress-bars">
+            <div className="top-bar">
               <h3>Ticket Category</h3>
             </div>
             <ProgressBar title="Complaints" value={10} color={"#000080"} />

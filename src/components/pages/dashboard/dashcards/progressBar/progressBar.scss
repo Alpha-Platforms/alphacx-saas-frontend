@@ -1,8 +1,11 @@
-.progress-bar {
+.progressbar {
   margin-bottom: 30px;
-  .top {
+  .top-details {
     display: flex;
     justify-content: space-between;
+    p {
+      margin: 0;
+    }
   }
   .track {
     height: 7px;

@@ -8,16 +8,10 @@
   display: flex;
   justify-content: space-between;
   position: relative;
-  .progress {
-    margin-bottom: 30px;
-    padding: 35px;
-    background: #f9fcff;
-    border: 1px solid #dadada80;
-    border-radius: 10.4866px;
-    .topbar {
-      margin-bottom: 30px;
-    }
+  p {
+    margin: 0;
   }
+
   .greeting {
     position: absolute;
     top: 0px;
@@ -38,10 +32,27 @@
       min-height: 100%;
     }
   }
-  .sidebar {
+  .side-bar {
     width: 35%;
     padding-left: 2%;
     display: flex;
-    flex-direction: column;
+    flex-direction: column !important;
+    .progress-bars {
+      margin-bottom: 30px;
+      padding: 35px;
+      background: #f9fcff;
+      border: 1px solid #dadada80;
+      border-radius: 10.4866px;
+      .top-bar {
+        margin-bottom: 30px;
+      }
+    }
+    // .progress-bars {
+    //   width: 100%;
+    //   height: fit-content;
+    // }
+    .top-bar {
+      width: 100%;
+    }
   }
 }

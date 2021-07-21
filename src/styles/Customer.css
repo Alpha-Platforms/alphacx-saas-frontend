@@ -1,0 +1,106 @@
+.cust-grey-circle {
+    width: 2.0rem;
+    height: 2.0rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 98, 152, 0.1);
+    border-radius: 6.25rem;
+}
+
+.cust-profile-info {
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.cust-profile-info li {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 3.25rem 1fr;
+    margin: 0 0.625rem 0.875rem;
+}
+.cust-profile-info li:last-child {
+    margin-bottom: 0 !important;
+}
+
+.update-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1039;
+    width: 100vw;
+    height: 100vh;
+    content: "";
+    background-color: rgba(0,0,0,.5);
+}
+
+.update-close-wrap {
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    border-radius: 10rem;
+    width: 34px;
+    height: 34px;
+    transform: scale(0.8);
+}
+
+.timeline-tree {
+    padding-left: 0;
+    margin: 1.5rem 0 0;
+}
+
+.timeline-tree li {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 11rem 1fr;
+}
+
+.timeline-tree li:not(:last-child) > div:nth-child(1) {
+    border-right: 2px solid rgba(0, 0, 0, 0.4);
+    padding-bottom: 2rem;
+}
+
+.timeline-tree li > div:nth-child(1) {
+    position: relative;
+}
+
+.timeline-tree li > div:nth-child(1)::after {
+    content: '';
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    position: absolute;
+    top: 0;
+    right: -0.5rem;
+    border-radius: 10rem;
+    background-color: white;
+
+}
+
+
+.timeline-tree li > div:nth-child(2) {
+    padding-left: 1rem;
+}
+
+#customerTable tbody {
+    position: relative;
+}
+
+.cust-table-loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-style: italic;
+}
+
+#customerTable a {
+    font-size: 0.9rem !important;
+}
+
+#customerTable input {
+    
+}
+
+#pills-tab .nav-link.nav-active {
+    color: var(--at-blue-light) !important;
+    text-shadow: 0px 0px 1px var(--at-blue-light);
+}

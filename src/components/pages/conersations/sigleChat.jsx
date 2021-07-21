@@ -16,6 +16,9 @@ export default function SigleChat({
   setMessageSenderId,
   Statues,
   upTicketStatus,
+  setshowUserProfile,
+  setopenSaveTicketModal,
+  openSaveTicketModal,
 }) {
   useEffect(() => {
     // getTicketMsg();
@@ -74,11 +77,17 @@ export default function SigleChat({
             <AddToChat />
           </div>
 
-          <div className="single-chat-swap-icon">
+          <div
+            className="single-chat-swap-icon"
+            onClick={() => setshowUserProfile(true)}
+          >
             <UserChatIcon />
           </div>
 
-          <div className="single-chat-swap-icon">
+          <div
+            className="single-chat-swap-icon"
+            onClick={() => setopenSaveTicketModal(!openSaveTicketModal)}
+          >
             <CheclkChat />
           </div>
         </div>

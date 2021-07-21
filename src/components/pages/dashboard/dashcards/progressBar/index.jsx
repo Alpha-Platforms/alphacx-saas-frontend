@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 
 const ProgressBar = ({ title, value, color }) => {
   return (
-    <div className="progress-bar">
-      <div className="top">
+    <div className="progressbar">
+      <div className="top-details">
         <p className="title">{title}</p>
         <p className="value" style={{ color: color }}>
           {value}

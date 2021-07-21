@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./conversation.css";
+import { Modal } from "react-responsive-modal";
 import MessageList from "./messageList";
 import searchIcon from "../../../assets/imgF/Search.png";
 import NoChatFound from "./noChatFound";
@@ -16,6 +17,7 @@ import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
 import BackArrow from "../../../assets/imgF/back.png";
+import UserProfile from "./userProfile";
 export default function Conversation() {
   const initialState = EditorState.createWithContent(
     ContentState.createFromText("")
@@ -43,16 +45,18 @@ export default function Conversation() {
   const [firstTimeLoad, setfirstTimeLoad] = useState(true);
   const [MessageSenderId, setMessageSenderId] = useState("");
   const [TicketId, setTicketId] = useState("");
+  const [showUserProfile, setshowUserProfile] = useState(false);
   const [ReplyTicket, setReplyTicket] = useState({
     plainText: "",
     richText: "",
   });
   const [Statues, setStatues] = useState([]);
-
+  const [UserInfo, setUserInfo] = useState({});
   const [ChatCol, setChatCol] = useState({
     col1: "",
     col2: "",
   });
+  const [openSaveTicketModal, setopenSaveTicketModal] = useState(false);
   useEffect(() => {
     getTickets();
   }, []);
@@ -146,6 +150,7 @@ export default function Conversation() {
   const loadSingleMessage = async ({ id, customer, subject }) => {
     setChatCol({ col1: "hideColOne", col2: "showColTwo" });
     setSenderInfo({ customer, subject });
+    getUser(customer.id);
     setMessageSenderId(id);
     setLoadSingleTicket(true);
     setTingleTicketFullInfo();
@@ -159,6 +164,21 @@ export default function Conversation() {
       setLoadSingleTicket(false);
       return NotificationManager.error(res.er.message, "Error", 4000);
     }
+  };
+
+  const getUser = async (id) => {
+    const res = await httpGetMain(`users/${id}`);
+    setfirstTimeLoad(false);
+    if (res.status == "success") {
+      setUserInfo(res.data);
+    } else {
+      setLoadSingleTicket(false);
+      return NotificationManager.error(res.er.message, "Error", 4000);
+    }
+  };
+
+  const closeSaveTicketModal = () => {
+    setopenSaveTicketModal(!openSaveTicketModal);
   };
   return (
     <div className="conversation-wrap">
@@ -241,6 +261,9 @@ export default function Conversation() {
                 setMessageSenderId={setMessageSenderId}
                 Statues={Statues}
                 upTicketStatus={upTicketStatus}
+                setshowUserProfile={setshowUserProfile}
+                setopenSaveTicketModal={setopenSaveTicketModal}
+                openSaveTicketModal={openSaveTicketModal}
               />
 
               <Editor
@@ -300,6 +323,61 @@ export default function Conversation() {
           )}
         </div>
       </div>
+      <div style={showUserProfile ? { display: "block" } : { display: "none" }}>
+        <UserProfile
+          setshowUserProfile={setshowUserProfile}
+          UserInfo={UserInfo}
+        />
+      </div>
+      <div>
+        <button onClick={closeSaveTicketModal}>Open modal</button>
+        <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal}>
+          <div className="saveTicketWrapModal">
+            <div className="modalHeaderSaveT">
+              Kindly update ticket before closing the chat
+            </div>
+
+            <div className="saveTicketModalForm">
+              <div className="ticketmodalInput-twoCol">
+                <div className="ticketmodalInputWrapMain">
+                  <label htmlFor="">Custormer</label>
+                  <input type="text" />
+                </div>
+
+                <div className="ticketmodalInputWrapMain">
+                  <label htmlFor="">Category</label>
+                  <select name="" id="">
+                    <option value="">Complaints</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="ticketmodalInput-OneCol">
+                <div className="ticketmodalInputWrapMainOne">
+                  <label htmlFor="">Subjects</label>
+                  <input type="text" />
+                </div>
+              </div>
+
+              <div className="descriptionWrap">
+                <label htmlFor="">Description</label>
+                <textarea name="" id=""></textarea>
+              </div>
+
+              <div className="closeTicketModdalj">
+                <select name="" id="">
+                  <option value="">Close chat</option>
+                  <option value="Save as in progress">
+                    Save as in progress
+                  </option>
+                  <option value="Save as closed">Save as closed</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </Modal>
+      </div>
+      ) : ( ""
     </div>
   );
 }
