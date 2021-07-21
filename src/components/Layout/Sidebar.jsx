@@ -134,6 +134,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
             className={`${
               appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
             }`}
+            onClick={() => browserRouter(`/tickets`)}
           >
             {" "}
             <span style={{ marginRight: "20px", marginTop: "-4px" }}>
@@ -153,7 +154,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
             className={`${
               appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
             }`}
-            onClick={() => browserRouter(`/home`)}
+            onClick={() => browserRouter(`/customers`)}
           >
             {" "}
             <span style={{ marginRight: "20px", marginTop: "-4px" }}>
@@ -193,7 +194,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
             className={`${
               appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
             }`}
-            onClick={() => browserRouter(`/home`)}
+            onClick={() => browserRouter(`/settings`)}
           >
             {" "}
             <span style={{ marginRight: "20px", marginTop: "-4px" }}>

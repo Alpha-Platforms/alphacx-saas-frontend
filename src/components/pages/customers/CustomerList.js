@@ -74,7 +74,8 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
         const themes = ['red', 'blue', 'yellow', 'purple'];
 
         return (
-            <SideNavBar navbarTitle="Customer List" parentCap="container-fluid">
+            // <SideNavBar navbarTitle="Customer List" parentCap="container-fluid">
+            <div>
                 <div className="cust-table-loader"><ScaleLoader loading={custLoading} color={"#006298"}/></div>
 
                 <div className="m-4">
@@ -393,8 +394,8 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
 
                     </Modal.Body>
                 </Modal>
-
-            </SideNavBar>
+</div>
+        
 
         )
     }
