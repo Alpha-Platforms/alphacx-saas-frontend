@@ -93,7 +93,7 @@ const SiteRouter = connect(mapStateToProps, {
           <Route exact path="/organisations" component={OrganisationList} />
           <Route exact path="/customers/customer" component={Customer} />
           <DefaultLayoutRoute exact path="/tickets" component={TicketList} />
-          {/* <DefaultLayoutRoute exact path="/settings" component={SettingsHome} /> */}
+          <DefaultLayoutRoute exact path="/settings" component={SettingsHome} />
           <Route>
             <div
               style={{
