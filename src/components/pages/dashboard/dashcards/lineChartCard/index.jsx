@@ -267,7 +267,7 @@ const LineChartCard = () => {
   // }, []);
   return (
     <div className="line-chart">
-      <Line data={data} options={options} />
+      <Line data={data} options={options} height={130} />
     </div>
   );
 };

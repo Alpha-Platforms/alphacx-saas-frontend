@@ -20,7 +20,10 @@ const AgentDashboard = () => {
               <div className="top-bar">
                 <p>Customer Satisfaction (CSAT)</p>
               </div>
-              <div style={{ width: 175, height: 175 }}>
+              <div
+                style={{ width: 130, height: 130 }}
+                className="circular-progress"
+              >
                 <CircularProgressbar
                   value={62.5}
                   text={`${62.5}%`}

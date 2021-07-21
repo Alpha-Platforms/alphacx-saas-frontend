@@ -70,8 +70,8 @@ const PieChartCard = ({ values, colors, labels }) => {
 
       <Pie
         data={data}
-        width={175}
-        height={175}
+        width={130}
+        height={130}
         options={{
           maintainAspectRatio: false,
           legend: { display: true, position: "right" },
