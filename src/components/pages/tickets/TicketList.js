@@ -12,6 +12,7 @@ import {TablePagination} from '@material-ui/core';
 import tableIcons from '../../../assets/materialicons/tableIcons';
 import '../../../styles/Ticket.css';
 import ScaleLoader from 'react-spinners/ScaleLoader';
+import moment from 'moment';
 
 const TicketPagination = props => {
     const {
@@ -222,8 +223,8 @@ const TicketList = ({isTicketsLoaded, tickets}) => {
                                 title: 'Name',
                                 field: 'name'
                             }, {
-                                title: 'Email',
-                                field: 'email'
+                                title: 'Subject',
+                                field: 'subject'
                             }, {
                                 title: 'Category',
                                 field: 'category'
@@ -231,17 +232,21 @@ const TicketList = ({isTicketsLoaded, tickets}) => {
                                 title: 'Ticket ID',
                                 field: 'ticketId'
                             }, {
-                                title: 'Email',
-                                field: 'email'
-                            }, {
                                 title: 'State',
-                                field: 'state'
-                            }, {
-                                title: 'Priority',
-                                field: 'priority'
+                                field: 'state',
+                                render: rowData => <div className="ticket-state yellow"><Link to="#" className="btn btn-sm" style={{ backgroundColor: rowData.state.background_color, color: rowData.state.foreground_color }}>{rowData.state.status}</Link></div>
                             }, {
                                 title: 'Status',
-                                field: 'status'
+                                field: 'status',
+                                render: rowData => (<select name="ticket-status-select" id="ticket-status-select">
+                                                        <option value="open">Open</option>
+                                                        <option value="pending">Pending</option>
+                                                        <option value="resolved">Resolved</option>
+                                                        <option value="closed">Closed</option>
+                                                    </select>)
+                            }, {
+                                title: 'Tags',
+                                field: 'tags'
                             }, {
                                 title: 'Created',
                                 field: 'created'
@@ -251,9 +256,15 @@ const TicketList = ({isTicketsLoaded, tickets}) => {
                             }
                         ]
                     }
-                    data = {tickets.map(({customer}) => ({
+                    data = {tickets.map(({customer, subject, id, category, created_at, status}) => ({
                         name: `${customer.firstname} ${customer.lastname}`,
-                        email: customer.email
+                        email: customer.email,
+                        subject: `${subject.substr(0, 25)}...`,
+                        ticketId: id.slice(-8),
+                        category: category.name,
+                        created: moment(created_at).format('DD MMM, YYYY'),
+                        state: status
+
                     }))
                     }
                     options = {{
