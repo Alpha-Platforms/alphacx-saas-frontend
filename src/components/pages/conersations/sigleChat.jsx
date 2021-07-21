@@ -10,6 +10,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import MyCustomUploadAdapterPlugin from "./UploadAdapter";
 import NoChatFound from "./noChatFound";
+import { dateFormater, timeFormater } from "../../helpers/dateFormater";
 export default function SigleChat({
   ticket,
   SenderInfo,
@@ -49,11 +50,20 @@ export default function SigleChat({
     <div>
       <div className="single-chat-home-header fixed-header-singleChat">
         <div className="singleChat-Sender-img" style={{ position: "relative" }}>
-          <img src={SenderInfo?.customer?.avatar} alt="" />
+          {SenderInfo?.customer?.avatar ? (
+            <img src={SenderInfo?.customer?.avatar} alt="" />
+          ) : (
+            <div className="singleChatSenderImg">
+              <p>{`${SenderInfo?.customer?.firstname?.slice(
+                0,
+                1
+              )} ${SenderInfo?.customer?.lastname?.slice(0, 1)}`}</p>
+            </div>
+          )}
 
           <div className="single-chat-user-name">
             <p>{`${SenderInfo?.customer?.firstname} ${SenderInfo?.customer?.lastname}`}</p>
-            <p>Via email (Sat, 13 Mar 2021 at 10:54 AM)</p>
+            <p>{`Via email (${dateFormater(ticket[0].updated_at)})`}</p>
           </div>
         </div>
         <div className="alignt-action-right-single">
@@ -94,15 +104,17 @@ export default function SigleChat({
       </div>
 
       <div className="singleChatMessage">
-        <h3>{SenderInfo?.subject}</h3>
+        <h3> {ticket[0]?.subject}</h3>
         <div className="singleChatMessage-tiketId">Ticket ID: #53467</div>
       </div>
       <div className="singleChat-line-br"></div>
       <div className="chats-body">
         <div className="sender-full-message-body">
-          {SenderInfo?.customer?.description}
+          {ticket[0]?.plain_description}
         </div>
-        <div className="msgTime-single">13 Mar 2021 </div>
+        <div className="msgTime-single">
+          {dateFormater(ticket[0].updated_at)}
+        </div>
 
         <div className="siglechat-hr"></div>
         {noResponseFound ? (

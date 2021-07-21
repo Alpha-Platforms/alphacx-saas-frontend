@@ -1,14 +1,29 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import pic from "../../../assets/imgF/codeuiandyimg.png";
 import truncateWithEllipses from "../../helpers/truncate";
 import ClipLoader from "react-spinners/ClipLoader";
+import { timeFormater } from "../../helpers/dateFormater";
 export default function MessageList({
   tickets,
   LoadingTick,
   loadSingleMessage,
   setTingleTicketFullInfo,
   setTicketId,
+  filterChat,
+  filterTicketsState,
 }) {
+  const [activeChat, setActiveChat] = useState(1);
+  const [renderTicket, setRenderTicket] = useState([]);
+  useEffect(() => {
+    checkRender();
+  }, [filterChat, tickets, filterTicketsState]);
+  const checkRender = () => {
+    if (filterChat == "system") {
+      setRenderTicket(tickets);
+    } else {
+      setRenderTicket(filterTicketsState);
+    }
+  };
   return (
     <div className="message-list-container">
       {LoadingTick ? (
@@ -22,30 +37,55 @@ export default function MessageList({
           {" "}
           <ClipLoader color="#0d4166" loading={LoadingTick} size={35} />
         </div>
+      ) : renderTicket.length == 0 ? (
+        <p
+          style={{ textAlign: "center", paddingTop: "20px", fontSize: "15px" }}
+        >
+          No ticket found
+        </p>
       ) : (
-        tickets.map((data) => {
+        renderTicket.map((data, index) => {
           return (
             <div
-              className="message-listmain"
+              key={index}
+              className={`message-listmain ${
+                index + 1 == activeChat ? "message-listmain-active" : ""
+              }`}
               onClick={() => {
                 loadSingleMessage(data);
                 setTingleTicketFullInfo(data);
                 setTicketId(data.id);
+                setActiveChat(index + 1);
               }}
             >
               <div className="message-user-img">
-                <img src={data.customer.avatar} alt="" />
+                {data.customer.avatar == null ? (
+                  <div className="message-user-noimg">
+                    <span>{`${data?.customer?.firstname?.slice(
+                      0,
+                      1
+                    )} ${data?.customer?.lastname?.slice(0, 1)}`}</span>
+                  </div>
+                ) : (
+                  <img src={data?.customer?.avatar} alt="" />
+                )}
                 <div className="user-status-online"></div>
               </div>
               <div className="message-user-body">
-                <p className="senderName">{`${data.customer.firstname} ${data.customer.lastname}`}</p>
+                <p className="senderName">{`${
+                  data?.customer?.firstname?.charAt(0).toUpperCase() +
+                  data?.customer?.firstname?.slice(1)
+                } ${
+                  data?.customer?.lastname?.charAt(0).toUpperCase() +
+                  data?.customer?.lastname?.slice(1)
+                }`}</p>
                 <p className="senderMSG">
                   {data.customer.description == null
                     ? ""
                     : truncateWithEllipses(data.customer.description, 30)}
                 </p>
                 <div className="msg-badges">
-                  <span>Whatsapp</span>
+                  <span>{data.channel}</span>
                   <span
                     style={{
                       background: data.status.background_color,
@@ -57,7 +97,7 @@ export default function MessageList({
                 </div>
               </div>
               <div className="message-user-time">
-                <p className="msGtime">05:51</p>
+                <p className="msGtime">{timeFormater(data.updated_at)}</p>
                 <p className="msgCountCon">4</p>
               </div>
             </div>

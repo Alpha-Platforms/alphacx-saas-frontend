@@ -274,17 +274,17 @@ input[type="radio"]:after {
 
 @font-face {
   font-family: generalFont;
-  src: url(./assets/fonts/Nunito/Nunito-Regular.ttf);
+  src: url(./assets/fonts/Roboto/Roboto-Regular.ttf);
 }
 
 @font-face {
   font-family: boldFont;
-  src: url(./assets/fonts/Nunito/Nunito-Bold.ttf);
+  src: url(./assets/fonts/Roboto/Roboto-Bold.ttf);
 }
 
 @font-face {
   font-family: semiBold;
-  src: url(./assets/fonts/Nunito/Nunito-SemiBold.ttf);
+  src: url(./assets/fonts/Roboto/Roboto-Medium.ttf);
 }
 
 * {

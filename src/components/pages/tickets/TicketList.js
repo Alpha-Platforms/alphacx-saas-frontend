@@ -56,7 +56,8 @@ const TicketList = ({isTicketsLoaded, tickets}) => {
     console.log(tickets);
 
     return (
-        <SideNavBar navbarTitle="Ticket List" parentCap="container-fluid">
+        // <SideNavBar navbarTitle="Ticket List" parentCap="container-fluid">
+<div>
             <div className="cust-table-loader"><ScaleLoader loading={ticketLoading} color={"#006298"}/></div>
             <div className="m-4">
                 <div
@@ -153,8 +154,8 @@ const TicketList = ({isTicketsLoaded, tickets}) => {
                     />}
                 </div>
             </div>
-
-        </SideNavBar>
+</div>
+      //  </SideNavBar>
 
     )
 }

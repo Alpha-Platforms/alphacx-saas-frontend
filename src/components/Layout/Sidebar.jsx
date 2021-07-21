@@ -15,8 +15,11 @@ import {
   AppLogo,
 } from "../../assets/images/svgs";
 export default function Sidebar({ browserRouter, currentRoute }) {
-  const { setreduceSidebarWidth, appReduceSidebarWidth, reduceSidebarWidth } =
-    useContext(LayoutContext);
+  const {
+    setreduceSidebarWidth,
+    appReduceSidebarWidth,
+    reduceSidebarWidth,
+  } = useContext(LayoutContext);
 
   const [PublicationShow, SetPublicationShow] = useState(true);
   const [CategoriesShow, SetCategoriesShow] = useState(false);
@@ -82,6 +85,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
             className={`${
               appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
             }`}
+            onClick={() => browserRouter(`/home`)}
           >
             {" "}
             <span style={{ marginRight: "20px", marginTop: "-4px" }}>
@@ -104,7 +108,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                 ? { color: "#e3b451" }
                 : { color: "white" }
             }
-            // onClick={() => browserRouter("/user_transations")}
+            onClick={() => browserRouter(`/conversation`)}
             className={`${
               appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
             }`}
@@ -130,6 +134,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
             className={`${
               appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
             }`}
+            onClick={() => browserRouter(`/tickets`)}
           >
             {" "}
             <span style={{ marginRight: "20px", marginTop: "-4px" }}>
@@ -149,7 +154,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
             className={`${
               appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
             }`}
-            // onClick={() => browserRouter("/more")}
+            onClick={() => browserRouter(`/customers`)}
           >
             {" "}
             <span style={{ marginRight: "20px", marginTop: "-4px" }}>
@@ -169,7 +174,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
             className={`${
               appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
             }`}
-            // onClick={() => browserRouter("/more")}
+            onClick={() => browserRouter(`/home`)}
           >
             {" "}
             <span style={{ marginRight: "20px", marginTop: "-4px" }}>
@@ -189,7 +194,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
             className={`${
               appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
             }`}
-            // onClick={() => browserRouter("/more")}
+            onClick={() => browserRouter(`/settings`)}
           >
             {" "}
             <span style={{ marginRight: "20px", marginTop: "-4px" }}>
@@ -210,7 +215,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
             className={`${
               appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
             }`}
-            // onClick={() => browserRouter("/more")}
+            onClick={() => browserRouter(`/home`)}
           >
             {" "}
             <span style={{ marginRight: "20px", marginTop: "-4px" }}>
