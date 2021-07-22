@@ -16,7 +16,7 @@
 
 #ticketsTable .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-5.MuiToolbar-gutters {
     position: absolute;
-    z-index: 55;
+    z-index: 1;
     top: -4.5rem;
     padding: 0
 }
