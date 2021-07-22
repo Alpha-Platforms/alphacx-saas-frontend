@@ -66,7 +66,6 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
         let firstItemNo,
             lastItemNo;
 
-        console.log("meta", meta);
         const {totalItems, itemsPerPage, currentPage, totalPages} = meta;
 
         if (meta) {
@@ -76,7 +75,6 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                 : ((firstItemNo + itemsPerPage) - 1);
         }
 
-        console.log(firstItemNo, lastItemNo);
 
         const getNextCustomers = () => {
             if (!navigator.onLine) {
@@ -162,7 +160,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                     </div>
 
                     <div id="ticketsTable" className="pb-5">
-                    {isCustomersLoaded && <MuiThemeProvider theme={tableTheme}>
+                    {customers && <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""
                             icons = {
@@ -172,7 +170,10 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                                 [
                                     {
                                         title: 'Title',
-                                        field: 'title'
+                                        field: 'title',
+                                        width: '4%',
+                                        headerStyle: {
+                                        }
                                     }, {
                                         title: 'Contact',
                                         field: 'contact',
@@ -182,7 +183,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                                                 ? contact.theme
                                                 : themes[Math.floor(Math.random() * 4)]}`}>{getUserInitials(`${contact.firstname} ${contact.lastname}`)}</div>
                                             <div className="ms-2 mt-1">
-                                                <Link to="#">{`${contact.firstname} ${contact.lastname}`}</Link>
+                                                <Link to="#" style={{ textTransform: 'capitalize' }}>{`${contact.firstname} ${contact.lastname}`}</Link>
                                             </div>
                                         </div>)
                                     }, {
@@ -219,6 +220,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                                 search: true,
                                 selection: true,
                                 exportButton: true,
+                                tableLayout: 'auto'
                                 // filtering: true
                             }}
                             components={{ 

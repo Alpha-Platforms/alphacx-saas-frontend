@@ -96,7 +96,7 @@ const TicketList = ({isTicketsLoaded, tickets}) => {
 
 
                 <div id="ticketsTable" className="pb-5">
-                    {isTicketsLoaded && <MuiThemeProvider theme={tableTheme}>
+                    {tickets && <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""
                             icons = {
@@ -110,7 +110,8 @@ const TicketList = ({isTicketsLoaded, tickets}) => {
                                         render: rowData => <Link to="#" style={{ textTransform: 'capitalize' }}>{rowData.name}</Link>
                                     }, {
                                         title: 'Subject',
-                                        field: 'subject'
+                                        field: 'subject',
+                                        width: '40%'
                                     }, {
                                         title: 'Category',
                                         field: 'category'
@@ -155,6 +156,7 @@ const TicketList = ({isTicketsLoaded, tickets}) => {
                                 search: true,
                                 selection: true,
                                 exportButton: true,
+                                tableLayout: 'auto'
                                 // filtering: true
                             }}
                             components={{ 

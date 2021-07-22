@@ -90,6 +90,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     font-style: italic;
+    z-index: 10;
 }
 
 #customerTable a {
