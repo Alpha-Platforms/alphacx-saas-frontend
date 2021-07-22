@@ -3,14 +3,13 @@ import * as types from '../types';
 import { config } from '../../config/keys';
 import { returnErrors } from './errorActions';
 import {userTokenConfig} from '../../helper';
-import {NotificationManager} from 'react-notifications';
 
-export const getCustomers = (currentPage) => (dispatch, getState) => {
+export const getCustomers = () => (dispatch, getState) => {
 	if (!navigator.onLine) {
-		return NotificationManager.error('Please check your internet', 'Opps!', 3000);
+		return;
 	}
 	dispatch(setCustomersLoading());
-	axios.get(`${config.stagingBaseUrl}/users?role=Customer&per_page=${config.customersPerPage}&page=${currentPage}`, userTokenConfig(getState))
+	axios.get(`${config.stagingBaseUrl}/users`, userTokenConfig(getState))
 		.then(res => dispatch({
 			type: types.GET_CUSTOMERS,
 			payload: res.data && res.data.status === "success" ? res.data.data : {}

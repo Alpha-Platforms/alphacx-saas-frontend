@@ -135,26 +135,6 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                                 className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3 reset-btn-outline">
                                 <ImportSvg/>&nbsp;Export
                             </button>
-
-                            {meta && <div className="px-4 pt-2">{firstItemNo}
-                                - {lastItemNo}&nbsp;of {totalItems}</div>}
-
-                            {meta && <div className="btn-group me-2">
-                                <button
-                                    type="button"
-                                    onClick={getPreviousCustomers}
-                                    disabled={currentPage <= 1}
-                                    className="btn btn-sm btn-outline-secondary reset-btn-outline">
-                                    <i className="bi-chevron-left"></i>
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={getNextCustomers}
-                                    disabled={currentPage >= totalPages}
-                                    className="btn btn-sm btn-outline-secondary reset-btn-outline">
-                                    <i className="bi-chevron-right"></i>
-                                </button>
-                            </div>}
                         </div>
 
                     </div>
@@ -171,9 +151,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                                     {
                                         title: 'Title',
                                         field: 'title',
-                                        width: '4%',
-                                        headerStyle: {
-                                        }
+                                        width: '10%'
                                     }, {
                                         title: 'Contact',
                                         field: 'contact',

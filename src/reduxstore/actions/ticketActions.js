@@ -5,6 +5,9 @@ import { returnErrors } from './errorActions';
 import {userTokenConfig} from '../../helper';
 
 export const getTickets = () => (dispatch, getState) => {
+	if (!navigator.onLine) {
+		return;
+	}
 	dispatch(setTicketsLoading());
 	axios.get(`${config.stagingBaseUrl}/tickets`, userTokenConfig(getState))
 		.then(res => dispatch({
