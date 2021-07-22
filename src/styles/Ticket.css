@@ -16,11 +16,18 @@
     padding-left: 0;
 }
 
-#ticketsTable .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-5.MuiToolbar-gutters {
+#ticketsTable .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-59.MuiToolbar-gutters,
+#ticketsTable .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-41.MuiToolbar-gutters {
     position: absolute;
     z-index: 1;
     top: -4.5rem;
-    padding: 0
+    padding: 0 0 0 1rem;
+    flex-direction: flex-start;
+}
+
+#ticketsTable .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-59.MuiToolbar-gutters > div:nth-child(1),
+#ticketsTable .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-41.MuiToolbar-gutters > div:nth-child(1) {
+    flex: none !important;
 }
 
 #ticketsTable .MTableToolbar-spacer-7 {
@@ -30,4 +37,15 @@
 #ticketsTable .MuiInputBase-root.MuiInput-root.MuiInput-underline.MuiInputBase-formControl.MuiInput-formControl.MuiInputBase-adornedStart.MuiInputBase-adornedEnd {
     border: 1px solid rgba(0, 0, 0, 0.5);
     border-bottom: 0px solid rgba(0, 0, 0, 0.3);
+}
+
+#ticketsTable .MTableToolbar-searchField-46 {
+    padding-left: 0 !important;
+}
+
+@media (min-width: 600px) {
+    #ticketTable .MuiToolbar-gutters {
+        /* padding-left: 0 !important; */
+        padding-right: 24px;
+    }
 }

@@ -169,13 +169,6 @@ table {
     border-color: rgba(238, 182, 74, 30%) !important;
 }
 
-main {/* 
-    margin-left: var(--sidebar-width) !important;
-    width: calc(100% - var(--sidebar-width)) !important; */
-
-    /* min-height: 100vh; */
-    /* hope nothing breaks */
-}
 
 #sidebarMenu {
     width: var(--sidebar-width) !important;
