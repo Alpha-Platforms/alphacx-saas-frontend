@@ -107,7 +107,7 @@ const tableTheme = createTheme({
                                     {
                                         title: 'Name',
                                         field: 'name',
-                                        render: rowData => <Link to="#">{rowData.name}</Link>
+                                        render: rowData => <Link to="#" style={{ textTransform: 'capitalize' }}>{rowData.name}</Link>
                                     }, {
                                         title: 'Subject',
                                         field: 'subject'
@@ -117,7 +117,7 @@ const tableTheme = createTheme({
                                     }, {
                                         title: 'Ticket ID',
                                         field: 'ticketId',
-                                        render: rowData => <Link to="#">{rowData.ticketId}</Link>
+                                        render: rowData => <Link to="#" style={{ textTransform: 'uppercase' }}>{rowData.ticketId}</Link>
                                     }, {
                                         title: 'State',
                                         field: 'state',

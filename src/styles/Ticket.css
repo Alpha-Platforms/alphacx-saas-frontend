@@ -43,9 +43,7 @@
     padding-left: 0 !important;
 }
 
-@media (min-width: 600px) {
-    #ticketTable .MuiToolbar-gutters {
-        /* padding-left: 0 !important; */
-        padding-right: 24px;
-    }
+
+#ticketsTable .MuiSvgIcon-root.MuiSvgIcon-fontSizeSmall {
+    margin-left: 0.8rem;
 }
