@@ -42,7 +42,7 @@ const TicketPagination = props => {
 
   const handleExportBtn = () => {
       const exportBtn = document.querySelector('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit');
-      exportBtn.click();
+      exportBtn && exportBtn.click();
   }
 
 const TicketList = ({isTicketsLoaded, tickets}) => {
@@ -79,7 +79,7 @@ const TicketList = ({isTicketsLoaded, tickets}) => {
                         <button
                             onClick={handleExportBtn}
                             type="button"
-                            className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3">
+                            className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3 reset-btn-outline">
                             <ImportSvg/>&nbsp;Export
                         </button>
                     </div>
@@ -98,7 +98,7 @@ const TicketList = ({isTicketsLoaded, tickets}) => {
                             {
                                 title: 'Name',
                                 field: 'name',
-                                render: rowData => <Link>{rowData.name}</Link>
+                                render: rowData => <Link to="#">{rowData.name}</Link>
                             }, {
                                 title: 'Subject',
                                 field: 'subject'
@@ -108,7 +108,7 @@ const TicketList = ({isTicketsLoaded, tickets}) => {
                             }, {
                                 title: 'Ticket ID',
                                 field: 'ticketId',
-                                render: rowData => <Link>{rowData.ticketId}</Link>
+                                render: rowData => <Link to="#">{rowData.ticketId}</Link>
                             }, {
                                 title: 'State',
                                 field: 'state',

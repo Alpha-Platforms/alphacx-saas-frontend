@@ -54,6 +54,11 @@ table {
     color: var(--text-color) !important;
 }
 
+.reset-btn-outline:hover {
+    background-color: transparent !important;
+    box-shadow: 0 0 1px 4px rgba(0, 98, 152, 0.1);
+}
+
 .bg-at-red {
     background-color: var(--at-red) !important;
 }
