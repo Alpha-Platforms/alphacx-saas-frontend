@@ -60,11 +60,11 @@ code {
   font-size: 15px !important;
   font-weight: 500 !important;
 }
-
+/* 
 button:focus {
   border: none;
   outline: none;
-}
+} */
 
 .react-responsive-modal-closeButton {
   display: none !important;
@@ -102,20 +102,23 @@ button:focus {
   display: block;
   font-style: italic;
 }
-
+/* 
 select,
 input,
 button {
   outline: none !important;
   border: none;
-}
-
+} */
+/* 
 select,
 input {
   padding-left: 10px;
-}
+} */
 
 @supports (-webkit-appearance: none) or (-moz-appearance: none) {
+/* 
+  use classes to style DOM elements
+
   input[type="checkbox"],
   input[type="radio"] {
     --active: #ee7f0d;
@@ -258,10 +261,10 @@ input[type="radio"] {
   height: 15px !important;
 }
 
-/* input[type="checkbox"] {
+input[type="checkbox"] {
   width: 20px !important;
   height: 15px !important;
-} */
+}
 
 input[type="radio"]:after {
   width: 14px !important;
@@ -270,21 +273,21 @@ input[type="radio"]:after {
   background: var(--active-inner);
   opacity: 0;
   transform: scale(var(--s, 0.7));
-}
+} */
 
 @font-face {
   font-family: generalFont;
-  src: url(./assets/fonts/Nunito/Nunito-Regular.ttf);
+  src: url(./assets/fonts/Roboto/Roboto-Regular.ttf);
 }
 
 @font-face {
   font-family: boldFont;
-  src: url(./assets/fonts/Nunito/Nunito-Bold.ttf);
+  src: url(./assets/fonts/Roboto/Roboto-Bold.ttf);
 }
 
 @font-face {
   font-family: semiBold;
-  src: url(./assets/fonts/Nunito/Nunito-SemiBold.ttf);
+  src: url(./assets/fonts/Roboto/Roboto-Medium.ttf);
 }
 
 * {
@@ -512,4 +515,5 @@ input {
   background: rgba(0, 98, 152, 0.2) !important;
   -webkit-filter: blur(5px);
   filter: blur(5px);
+}
 }

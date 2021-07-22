@@ -1,8 +1,8 @@
-@import url( 'https://fonts.googleapis.com/css2?family=Arimo&family=Cabin&display=swap');
+/* @import url("https://fonts.googleapis.com/css2?family=Arimo&family=Cabin&display=swap");
 @font-face {
-    font-family: Cabin;
-    src: url("./assets//fonts/Cabin-Regular.ttf");
-}
+  font-family: Cabin;
+  src: url("./assets//fonts/Cabin-Regular.ttf");
+} */
 
 /* text-anchor: middle;
         user-select: none; */
@@ -52,6 +52,11 @@ a {
 body,
 table {
     color: var(--text-color) !important;
+}
+
+.reset-btn-outline:hover {
+    background-color: transparent !important;
+    box-shadow: 0 0 1px 4px rgba(0, 98, 152, 0.1);
 }
 
 .bg-at-red {
@@ -164,13 +169,6 @@ table {
     border-color: rgba(238, 182, 74, 30%) !important;
 }
 
-main {
-    margin-left: var(--sidebar-width) !important;
-    width: calc(100% - var(--sidebar-width)) !important;
-
-    /* min-height: 100vh; */
-    /* hope nothing breaks */
-}
 
 #sidebarMenu {
     width: var(--sidebar-width) !important;

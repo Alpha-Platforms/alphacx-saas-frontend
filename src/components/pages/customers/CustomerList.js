@@ -74,7 +74,8 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
         const themes = ['red', 'blue', 'yellow', 'purple'];
 
         return (
-            <SideNavBar navbarTitle="Customer List" parentCap="container-fluid">
+            // <SideNavBar navbarTitle="Customer List" parentCap="container-fluid">
+            <div>
                 <div className="cust-table-loader"><ScaleLoader loading={custLoading} color={"#006298"}/></div>
 
                 <div className="m-4">
@@ -104,14 +105,14 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
 
                             <button
                                 type="button"
-                                className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3"
+                                className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3 reset-btn-outline"
                                 onClick={() => setUploadModalShow(true)}>
                                 <UploadSvg/>&nbsp;Import
                             </button>
 
                             <button
                                 type="button"
-                                className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3">
+                                className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3 reset-btn-outline">
                                 <ImportSvg/>&nbsp;Export
                             </button>
 
@@ -123,14 +124,14 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                                     type="button"
                                     onClick={getPreviousCustomers}
                                     disabled={currentPage <= 1}
-                                    className="btn btn-sm btn-outline-secondary">
+                                    className="btn btn-sm btn-outline-secondary reset-btn-outline">
                                     <i className="bi-chevron-left"></i>
                                 </button>
                                 <button
                                     type="button"
                                     onClick={getNextCustomers}
                                     disabled={currentPage >= totalPages}
-                                    className="btn btn-sm btn-outline-secondary">
+                                    className="btn btn-sm btn-outline-secondary reset-btn-outline">
                                     <i className="bi-chevron-right"></i>
                                 </button>
                             </div>}
@@ -393,8 +394,8 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
 
                     </Modal.Body>
                 </Modal>
-
-            </SideNavBar>
+</div>
+        
 
         )
     }
