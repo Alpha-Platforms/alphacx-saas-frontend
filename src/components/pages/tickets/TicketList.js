@@ -38,31 +38,31 @@ const {
     );
 }
 
-const handleExportBtn = () => {
-    const exportBtn = document.querySelector('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit');
-    exportBtn && exportBtn.click();
-}
 
 const TicketList = ({isTicketsLoaded, tickets}) => {
     const [ticketLoading,
         setTicketLoading] = useState(false);
-
-    useEffect(() => {
-        setTicketLoading(!isTicketsLoaded);
+        
+        useEffect(() => {
+            setTicketLoading(!isTicketsLoaded);
     }, [isTicketsLoaded]);
-
-const tableTheme = createTheme({
-    palette: {
-        primary: {
-        main: 'rgba(0, 98, 152)',
-        },
-        secondary: {
-        main: 'rgba(0, 98, 152)',
-        },
-    },
-
-    });
     
+    const tableTheme = createTheme({
+        palette: {
+            primary: {
+            main: 'rgba(0, 98, 152)',
+            },
+            secondary: {
+                main: 'rgba(0, 98, 152)',
+            },
+        },
+        
+    });
+
+    const handleExportBtn = () => {
+        const exportBtn = document.querySelector('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit');
+        exportBtn && exportBtn.click();
+    }
 
     return (
         <div>

@@ -15,16 +15,17 @@
     width: auto;
     padding-left: 0;
 }
-
+#ticketsTable > div:nth-child(1) > div:nth-child(1),
 #ticketsTable .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-59.MuiToolbar-gutters,
 #ticketsTable .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-41.MuiToolbar-gutters {
     position: absolute;
     z-index: 1;
     top: -4.5rem;
-    padding: 0 0 0 1rem;
+    padding: 0 1rem;
     flex-direction: flex-start;
 }
 
+#ticketsTable > div:nth-child(1) > div:nth-child(1) > div:nth-child(1),
 #ticketsTable .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-59.MuiToolbar-gutters > div:nth-child(1),
 #ticketsTable .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-41.MuiToolbar-gutters > div:nth-child(1) {
     flex: none !important;
@@ -46,4 +47,9 @@
 
 #ticketsTable .MuiSvgIcon-root.MuiSvgIcon-fontSizeSmall {
     margin-left: 0.8rem;
+}
+
+#ticketsTable  tr > td:nth-child(1),
+#ticketsTable  tr > th:nth-child(1) {
+    padding-left: 0.8rem !important;
 }
