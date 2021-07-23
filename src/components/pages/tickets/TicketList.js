@@ -175,7 +175,10 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                                 exportButton: true,
                                 tableLayout: 'auto',
                                 paging: true,
-                                pageSize: meta.itemsPerPage
+                                pageSize: meta.itemsPerPage,
+                                headerStyle: {
+                                    backgroundColor: '#f8f9fa'
+                                }
                             }}
                             components={{ 
                                 Pagination: TicketPagination

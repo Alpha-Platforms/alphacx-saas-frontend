@@ -173,7 +173,10 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                                 search: true,
                                 selection: true,
                                 exportButton: true,
-                                tableLayout: 'auto'
+                                tableLayout: 'auto',
+                                headerStyle: {
+                                    backgroundColor: '#f8f9fa'
+                                }
                                 // filtering: true
                             }}
                             components={{ 
