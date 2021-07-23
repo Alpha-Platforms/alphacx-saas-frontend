@@ -10,9 +10,10 @@ import '../../../styles/Ticket.css';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import moment from 'moment';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
+import {getPaginatedTickets} from '../../../reduxstore/actions/ticketActions';
 
 
-const TicketPagination = props => {
+/* const TicketPagination = props => {
 const {
     ActionsComponent,
     onChangePage,
@@ -36,16 +37,20 @@ const {
             }}
         />
     );
-}
+} */
 
 
-const TicketList = ({isTicketsLoaded, tickets}) => {
+
+const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
     const [ticketLoading,
         setTicketLoading] = useState(false);
+    const [perPage, setPerPage] = useState(5);
+    // const [, forceUpdate] = useState();
         
         useEffect(() => {
             setTicketLoading(!isTicketsLoaded);
     }, [isTicketsLoaded]);
+
     
     const tableTheme = createTheme({
         palette: {
@@ -63,6 +68,53 @@ const TicketList = ({isTicketsLoaded, tickets}) => {
         const exportBtn = document.querySelector('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit');
         exportBtn && exportBtn.click();
     }
+
+    const TicketPagination = props => {
+
+        const {
+            ActionsComponent,
+            onChangePage,
+            onChangeRowsPerPage,
+            ...tablePaginationProps
+        } = props;
+        console.log("TicketPagination Props: ", props);
+        
+        return (
+        <TablePagination
+            {...tablePaginationProps}
+            rowsPerPageOptions={[5, 10, 20, 30]}
+            rowsPerPage={meta.itemsPerPage}
+            count={Number(meta.totalItems)}
+            page={meta.currentPage - 1}
+            onPageChange={onChangePage}
+            // onRowsPerPageChange={onChangeRowsPerPage}
+            onRowsPerPageChange={event => {
+                        // this.handleChangeRowPerPage(event.target.value);
+                        console.log('rows per page changed from somebody', event.target.value);
+                        // setPerPage(event.target.value);
+                        getPaginatedTickets(event.target.value, meta.currentPage);
+                        }}
+            ActionsComponent={(subprops) => {
+                const { onPageChange, ...actionsComponentProps } = subprops;
+                return (
+                    <ActionsComponent
+                    {...actionsComponentProps}
+                    onChangePage={(event, newPage) => {
+                        console.log(meta, event, newPage)
+                        getPaginatedTickets(meta.itemsPerPage, newPage + 1);
+                        }}
+                    onRowsPerPageChange={event => {
+                    // this.handleChangeRowPerPage(event.target.value);
+                    console.log('rows per page changed from somebody', event.target.value);
+                    // setPerPage(event.target.value);
+                    getPaginatedTickets(event.target.value, meta.currentPage);
+                    }}
+                    />
+                );
+                }}
+        />
+    )}
+    
 
     return (
         <div>
@@ -96,7 +148,7 @@ const TicketList = ({isTicketsLoaded, tickets}) => {
 
 
                 <div id="ticketsTable" className="pb-5">
-                    {tickets && <MuiThemeProvider theme={tableTheme}>
+                    {isTicketsLoaded && <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""
                             icons = {
@@ -156,7 +208,9 @@ const TicketList = ({isTicketsLoaded, tickets}) => {
                                 search: true,
                                 selection: true,
                                 exportButton: true,
-                                tableLayout: 'auto'
+                                tableLayout: 'auto',
+                                paging: true,
+                                pageSize: meta.itemsPerPage,
                                 // filtering: true
                             }}
                             components={{ 
@@ -173,4 +227,4 @@ const TicketList = ({isTicketsLoaded, tickets}) => {
 
 const mapStateToProps = (state, ownProps) => ({tickets: state.ticket.tickets, isTicketsLoaded: state.ticket.isTicketsLoaded, meta: state.ticket.meta})
 
-export default connect(mapStateToProps, null)(TicketList);
+export default connect(mapStateToProps, {getPaginatedTickets})(TicketList);

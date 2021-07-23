@@ -10,7 +10,7 @@ import ticketReducer from './ticketReducer';
 const persistConfig = {
     key: 'alphacx_platform',
     storage,
-    whitelist: ['error', 'tenantAuth', 'userAuth', 'customer', 'ticket']
+    whitelist: ['error', 'tenantAuth', 'userAuth', 'customer']
 }
 
 const rootReducer = combineReducers({

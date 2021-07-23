@@ -20,7 +20,7 @@ import store, {persistor} from "./reduxstore/store";
 import {loginTenant} from "./reduxstore/actions/tenantAuthActions";
 import {loginUser} from "./reduxstore/actions/userAuthActions";
 import {getCustomers} from "./reduxstore/actions/customerActions";
-import {getTickets} from "./reduxstore/actions/ticketActions";
+import {getTickets, getPaginatedTickets} from "./reduxstore/actions/ticketActions";
 import CustomerList from "./components/pages/customers/CustomerList";
 import CustomersNull from "./components/pages/customers/CustomersNull";
 import Customer from "./components/pages/customers/Customer";
@@ -32,14 +32,15 @@ import "./App.css";
 
 const mapStateToProps = (state, ownProps) => ({tenantToken: state.tenantAuth.tenantToken, isTenantAuthenticated: state.tenantAuth.isTenantAuthenticated, isUserAuthenticated: state.userAuth.isUserAuthenticated});
 
-const SiteRouter = connect(mapStateToProps, {loginTenant, loginUser, getCustomers, getTickets})(({
+const SiteRouter = connect(mapStateToProps, {loginTenant, loginUser, getCustomers, getTickets, getPaginatedTickets})(({
     loginTenant,
     loginUser,
     isTenantAuthenticated,
     tenantToken,
     isUserAuthenticated,
     getCustomers,
-    getTickets
+    getTickets,
+    getPaginatedTickets
 }) => {
     useEffect(() => {
         loginTenant({domain: "techpoint"});
@@ -58,7 +59,8 @@ const SiteRouter = connect(mapStateToProps, {loginTenant, loginUser, getCustomer
     useEffect(() => {
         if (isUserAuthenticated) {
             getCustomers();
-            getTickets();
+            // getTickets();
+            getPaginatedTickets(5, 1);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
@@ -70,7 +72,7 @@ const SiteRouter = connect(mapStateToProps, {loginTenant, loginUser, getCustomer
                 <Route exact path="/register" component={Register}/>
                 <DefaultLayoutRoute exact path="/home" component={Dashboard}/>
                 <DefaultLayoutRoute exact path="/conversation" component={Conversation}/>
-                <Route exact path="/customers-null" component={CustomersNull}/>
+                <DefaultLayoutRoute exact path="/customers-null" component={CustomersNull}/>
                 <DefaultLayoutRoute exact path="/customers" component={CustomerList}/>
                 <DefaultLayoutRoute exact path="/organisations" component={OrganisationList}/>
                 <DefaultLayoutRoute exact path="/customers/customer" component={Customer}/>
