@@ -63,32 +63,6 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
             return <span>{result}</span>;
         }
 
-        let firstItemNo,
-            lastItemNo;
-
-        const {totalItems, itemsPerPage, currentPage, totalPages} = meta;
-
-        if (meta) {
-            firstItemNo = ((currentPage - 1) * itemsPerPage) + 1;
-            lastItemNo = ((firstItemNo + itemsPerPage) - 1) > Number(totalItems)
-                ? Number(totalItems)
-                : ((firstItemNo + itemsPerPage) - 1);
-        }
-
-
-        const getNextCustomers = () => {
-            if (!navigator.onLine) {
-                return NotificationManager.error('Please check your internet', 'Opps!', 3000);
-            }
-            getCustomers(currentPage + 1);
-        }
-
-        const getPreviousCustomers = () => {
-            if (!navigator.onLine) {
-                return NotificationManager.error('Please check your internet', 'Opps!', 3000);
-            }
-            getCustomers(currentPage - 1);
-        }
 
         useEffect(() => {
             setCustLoading(!isCustomersLoaded);
@@ -111,7 +85,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
         return (
             // <SideNavBar navbarTitle="Customer List" parentCap="container-fluid">
             <div>
-                <div className="cust-table-loader"><ScaleLoader loading={custLoading} color={"#006298"}/></div>
+                {custLoading && <div className="cust-table-loader"><ScaleLoader loading={custLoading} color={"#006298"}/></div>}
 
                 <div className="m-4">
 

@@ -54,3 +54,8 @@
 #ticketsTable  tr > th:nth-child(1) {
     padding-left: 0.8rem !important;
 }
+
+#ticketsTable  tr > td:nth-child(1) > span,
+#ticketsTable  tr > th:nth-child(1) > span {
+    transform: scale(0.8);
+}
