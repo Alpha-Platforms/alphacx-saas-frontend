@@ -1,18 +1,33 @@
 .help-center {
   background-color: #ffffff;
+  button,
+  input {
+    border: none !important;
+  }
   .search-container {
     width: 100%;
-    height: 350px;
+    height: 60vh;
     background: linear-gradient(180deg, #6c4181 0%, #006298 100%);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    position: relative;
+
+    .logo-bg {
+      position: absolute;
+      height: 100%;
+      top: 0;
+      right: 0;
+      z-index: 0;
+    }
     h3 {
       color: white;
       font-size: 48px;
+      z-index: 5;
     }
     .searchbar {
+      z-index: 6;
       margin-top: 30px;
       width: 40%;
       background-color: white;
@@ -31,6 +46,10 @@
           margin-left: 20px;
           width: 100%;
           font-size: 16px;
+          &:focus,
+          &:active {
+            outline: none !important;
+          }
         }
         button {
           height: 35px;

@@ -2427,8 +2427,8 @@ export const HelpNavIcon = ({ size, name }) => {
     </svg>
   ) : name === "account" ? (
     <svg
-      width={60}
-      height={60}
+      width={size || 60}
+      height={size || 60}
       viewBox="0 0 60 60"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -2482,8 +2482,8 @@ export const HelpNavIcon = ({ size, name }) => {
     </svg>
   ) : name === "subscription" ? (
     <svg
-      width={60}
-      height={60}
+      width={size || 60}
+      height={size || 60}
       viewBox="0 0 60 60"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -2509,8 +2509,8 @@ export const HelpNavIcon = ({ size, name }) => {
     </svg>
   ) : name === "users" ? (
     <svg
-      width={60}
-      height={60}
+      width={size || 60}
+      height={size || 60}
       viewBox="0 0 60 60"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -2553,8 +2553,8 @@ export const HelpNavIcon = ({ size, name }) => {
     </svg>
   ) : name === "settings" ? (
     <svg
-      width={60}
-      height={60}
+      width={size || 60}
+      height={size || 60}
       viewBox="0 0 60 60"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -2591,8 +2591,8 @@ export const HelpNavIcon = ({ size, name }) => {
     </svg>
   ) : name === "document" ? (
     <svg
-      width={60}
-      height={60}
+      width={size || 60}
+      height={size || 60}
       viewBox="0 0 60 60"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

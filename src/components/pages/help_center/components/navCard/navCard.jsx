@@ -5,8 +5,8 @@ import "./navCard.scss";
 const NavCard = ({ title, icon, items }) => {
   return (
     <div className="nav-card">
-      <div>
-        <HelpNavIcon name={icon} />
+      <div className="nav-icon">
+        <HelpNavIcon name={icon} size={50} />
       </div>
       <p className="title">{title}</p>
       <div className="description">
