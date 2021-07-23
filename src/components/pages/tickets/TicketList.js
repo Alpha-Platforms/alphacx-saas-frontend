@@ -150,7 +150,8 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                                                             </select>)
                                     }, {
                                         title: 'Tags',
-                                        field: 'tags'
+                                        field: 'tags',
+                                        render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1">Customer Data</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1">Billing</span><span className="badge rounded-pill text-muted border px-2 py-1">+2</span></div>)
                                     }, {
                                         title: 'Created',
                                         field: 'created'
