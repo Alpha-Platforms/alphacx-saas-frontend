@@ -150,6 +150,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                                     }, {
                                         title: 'Tags',
                                         field: 'tags',
+                                        render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1">+2</span></div>)
                                     }
                                 ]
                             }
