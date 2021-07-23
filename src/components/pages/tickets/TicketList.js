@@ -11,12 +11,13 @@ import ScaleLoader from 'react-spinners/ScaleLoader';
 import moment from 'moment';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import {getPaginatedTickets} from '../../../reduxstore/actions/ticketActions';
+import {Modal, Form, Row, Col, Button} from 'react-bootstrap';
 
 
 const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
     const [ticketLoading,
         setTicketLoading] = useState(false);
-    // const [, forceUpdate] = useState();
+    const [createModalShow, setCreateModalShow] = useState(false);
         
         useEffect(() => {
             setTicketLoading(!isTicketsLoaded);
@@ -95,9 +96,8 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                         <button
                             type="button"
                             className="btn btn-sm bg-at-blue-light px-md-3 mx-1"
-                            data-bs-toggle="modal"
-                            data-bs-target="#createNewTicket">
-                            <img src={TicketStarIcon} alt=""/>&nbsp;New Ticket
+                            onClick={() => setCreateModalShow(true)}>
+                            <img src={TicketStarIcon} style={{ transform: 'scale(0.8)', display: 'inline-block' }} alt=""/>&nbsp;New Ticket
                         </button>
 
                         <button
@@ -187,6 +187,81 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                     </MuiThemeProvider>}
                 </div>
             </div>
+
+            {/* Create new customer modal */}
+            <Modal
+                    show={createModalShow}
+                    onHide={() => setCreateModalShow(false)}
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                    size="lg"
+                    >
+                    <Modal.Body>
+                        <div className="col-12 p-4">
+                            <h5 className="mb-3">Create Ticket</h5>
+                            <form className="needs-validation mb-5" noValidate>
+                                <div className="row">
+                                    <div className="col-6 mt-2 position-relative">
+                                        <label htmlFor="customer" className="form-label">Customer</label>
+                                        <input type="text" name="customer" className="form-control"/>
+                                        <span className="text-at-blue-light f-12 d-inline-block w-100 text-end">Add Customer</span>
+                                    </div>
+
+                                    <div className="col-6 mt-2">
+                                        <label htmlFor="category" className="form-label">Category</label>
+                                        <select class="form-select" name="category" aria-label="Category select">
+                                            <option selected></option>
+                                            <option value="1">--</option>
+                                            <option value="2">--</option>
+                                            <option value="3">--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="row g-3 ">
+                                    <div className="col-12 mt-3">
+                                        <label htmlFor="subject" className="form-label">Subject</label>
+                                        <input type="text" name="subject" id="subject" className="form-control"/>
+                                    </div>
+
+                                    <div className="col-12 mt-3">
+                                        <label htmlFor="description" className="form-label">Description</label>
+                                        <textarea name="description" id="description" className="form-control"></textarea>
+                                    </div>
+
+                                    <div className="col-12 mt-3">
+                                        <label htmlFor="priority" className="form-label">Priority</label>
+                                        <select class="form-select" name="priority" aria-label="Category select">
+                                            <option selected></option>
+                                            <option value="1">--</option>
+                                            <option value="2">--</option>
+                                            <option value="3">--</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="col-12 mt-3">
+                                        <label htmlFor="title" className="form-label">Tags</label>
+                                        <input type="text" className="form-control"/>
+                                    </div>
+
+                                    <div className="col-12 mt-3">
+                                        <label htmlFor="title" className="form-label">Attachment (If Any)</label>
+                                        <input type="text" className="form-control"/>
+                                    </div>
+
+                                </div>
+
+                                <button
+                                    className="btn btn-sm bg-at-blue-light mt-1 mt-sm-3 float-end pt-1 pe-3 ps-3"
+                                    type="submit"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#contactCreated"
+                                    data-bs-dismiss="modal">Create</button>
+
+                            </form>
+                        </div>
+                    </Modal.Body>
+                </Modal>
+
         </div>
 
     )
