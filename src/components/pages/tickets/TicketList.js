@@ -13,38 +13,9 @@ import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/cor
 import {getPaginatedTickets} from '../../../reduxstore/actions/ticketActions';
 
 
-/* const TicketPagination = props => {
-const {
-    ActionsComponent,
-    onChangePage,
-    onChangeRowsPerPage,
-    ...tablePaginationProps
-} = props;
-
-    return (
-        <TablePagination
-            {...tablePaginationProps}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-            ActionsComponent={(subprops) => {
-            const { onPageChange, ...actionsComponentProps } = subprops;
-            return (
-                <ActionsComponent
-                {...actionsComponentProps}
-                onChangePage={onPageChange}
-                />
-            );
-            }}
-        />
-    );
-} */
-
-
-
 const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
     const [ticketLoading,
         setTicketLoading] = useState(false);
-    const [perPage, setPerPage] = useState(5);
     // const [, forceUpdate] = useState();
         
         useEffect(() => {
@@ -70,14 +41,12 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
     }
 
     const TicketPagination = props => {
-
         const {
             ActionsComponent,
             onChangePage,
             onChangeRowsPerPage,
             ...tablePaginationProps
         } = props;
-        console.log("TicketPagination Props: ", props);
         
         return (
         <TablePagination
@@ -87,11 +56,8 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
             count={Number(meta.totalItems)}
             page={meta.currentPage - 1}
             onPageChange={onChangePage}
-            // onRowsPerPageChange={onChangeRowsPerPage}
+            // when the number of rows per page changes
             onRowsPerPageChange={event => {
-                        // this.handleChangeRowPerPage(event.target.value);
-                        console.log('rows per page changed from somebody', event.target.value);
-                        // setPerPage(event.target.value);
                         getPaginatedTickets(event.target.value, meta.currentPage);
                         }}
             ActionsComponent={(subprops) => {
@@ -100,14 +66,12 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                     <ActionsComponent
                     {...actionsComponentProps}
                     onChangePage={(event, newPage) => {
-                        console.log(meta, event, newPage)
+                        // fetch tickets with new current page
                         getPaginatedTickets(meta.itemsPerPage, newPage + 1);
                         }}
                     onRowsPerPageChange={event => {
-                    // this.handleChangeRowPerPage(event.target.value);
-                    console.log('rows per page changed from somebody', event.target.value);
-                    // setPerPage(event.target.value);
-                    getPaginatedTickets(event.target.value, meta.currentPage);
+                        // fetch tickets with new rows per page
+                        getPaginatedTickets(event.target.value, meta.currentPage);
                     }}
                     />
                 );
@@ -118,10 +82,10 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
 
     return (
         <div>
-            <div className="cust-table-loader"><ScaleLoader loading={ticketLoading} color={"#006298"}/></div>
+            { ticketLoading && <div className={`cust-table-loader ${ticketLoading && 'add-loader-opacity'}`}><ScaleLoader loading={ticketLoading} color={"#006298"}/></div>}
             <div className="m-4">
                 <div
-                    className="d-flex justify-content-between flex-wrap bg-light rounded-top-big flex-md-nowrap align-items-center p-4 px-3">
+                    className={`d-flex justify-content-between flex-wrap bg-light rounded-top-big flex-md-nowrap align-items-center p-4 px-3 ${ticketLoading && 'rounded-bottom-big'}`}>
 
                     <div>
                         
@@ -210,8 +174,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                                 exportButton: true,
                                 tableLayout: 'auto',
                                 paging: true,
-                                pageSize: meta.itemsPerPage,
-                                // filtering: true
+                                pageSize: meta.itemsPerPage
                             }}
                             components={{ 
                                 Pagination: TicketPagination
@@ -225,6 +188,6 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
     )
 }
 
-const mapStateToProps = (state, ownProps) => ({tickets: state.ticket.tickets, isTicketsLoaded: state.ticket.isTicketsLoaded, meta: state.ticket.meta})
+const mapStateToProps = (state, ownProps) => ({tickets: state.ticket.tickets, isTicketsLoaded: state.ticket.isTicketsLoaded, meta: state.ticket.meta, isTicketsFullyLoaded: state.ticket.isTicketsFullyLoaded})
 
 export default connect(mapStateToProps, {getPaginatedTickets})(TicketList);
