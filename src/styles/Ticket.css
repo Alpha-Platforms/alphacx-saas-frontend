@@ -52,7 +52,7 @@
 
 #ticketsTable  tr > td:nth-child(1),
 #ticketsTable  tr > th:nth-child(1) {
-    padding-left: 0.8rem !important;
+    padding-left: 0.5rem !important;
 }
 
 #ticketsTable  tr > td:nth-child(1) > span,
