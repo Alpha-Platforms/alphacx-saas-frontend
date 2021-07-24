@@ -88,7 +88,7 @@ const CreateTicketModal = ({createModalShow, setCreateModalShow}) => {
                                             'Pharmaceuticals',
                                             'Telecommunications',
                                             'Technology'
-                                        ].map(x => <span
+                                        ].map((x, idx) => <span key={idx}
                                             className={`badge rounded-pill ${selectedTags.includes(x)
                                             ? 'acx-bg-blue-light-30-bg-25'
                                             : 'acx-bg-blue-light-30'} px-3 py-2 my-1 me-1`}

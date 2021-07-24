@@ -23,6 +23,7 @@ import {getCustomers} from "./reduxstore/actions/customerActions";
 import {getTickets, getPaginatedTickets} from "./reduxstore/actions/ticketActions";
 import {getPriorities} from './reduxstore/actions/priorityActions';
 import {getCategories} from './reduxstore/actions/categoryActions';
+import {getStatuses} from './reduxstore/actions/statusActions';
 import CustomerList from "./components/pages/customers/CustomerList";
 import CustomersNull from "./components/pages/customers/CustomersNull";
 import Customer from "./components/pages/customers/Customer";
@@ -34,7 +35,7 @@ import "./App.css";
 
 const mapStateToProps = (state, ownProps) => ({tenantToken: state.tenantAuth.tenantToken, isTenantAuthenticated: state.tenantAuth.isTenantAuthenticated, isUserAuthenticated: state.userAuth.isUserAuthenticated});
 
-const SiteRouter = connect(mapStateToProps, {loginTenant, loginUser, getCustomers, getTickets, getPaginatedTickets, getPriorities, getCategories})(({
+const SiteRouter = connect(mapStateToProps, {loginTenant, loginUser, getCustomers, getTickets, getPaginatedTickets, getPriorities, getCategories, getStatuses})(({
     loginTenant,
     loginUser,
     isTenantAuthenticated,
@@ -43,7 +44,8 @@ const SiteRouter = connect(mapStateToProps, {loginTenant, loginUser, getCustomer
     getCustomers,
     getPaginatedTickets,
     getPriorities,
-    getCategories
+    getCategories,
+    getStatuses
 }) => {
     useEffect(() => {
         loginTenant({domain: "techpoint"});
@@ -66,6 +68,7 @@ const SiteRouter = connect(mapStateToProps, {loginTenant, loginUser, getCustomer
             getPaginatedTickets(5, 1);
             getPriorities();
             getCategories();
+            getStatuses();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);

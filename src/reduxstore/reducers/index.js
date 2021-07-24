@@ -8,6 +8,7 @@ import customerReducer from './customerReducer';
 import ticketReducer from './ticketReducer';
 import priorityReducer from './priorityReducer';
 import categoryReducer from './categoryReducer';
+import statusReducer from './statusReducer';
 
 const persistConfig = {
     key: 'alphacx_platform',
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
     customer: customerReducer,
     ticket: ticketReducer,
     priority: priorityReducer,
-    category: categoryReducer
+    category: categoryReducer,
+    status: statusReducer
 });
 
 export default persistReducer(persistConfig, rootReducer);
