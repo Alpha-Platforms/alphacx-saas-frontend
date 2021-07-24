@@ -64,3 +64,8 @@ export const STATUSES_LOADING = "STATUSES_LOADING";
 export const GET_GROUPS = "GET_GROUPS";
 export const ADD_GROUP = "ADD_GROUP";
 export const GROUPS_LOADING = "GROUPS_LOADING";
+
+// AGENTS
+export const GET_AGENTS = "GET_AGENTS";
+export const ADD_AGENT = "ADD_AGENT";
+export const AGENTS_LOADING = "AGENTS_LOADING";

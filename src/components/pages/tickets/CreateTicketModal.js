@@ -3,7 +3,15 @@ import {Modal} from 'react-bootstrap';
 import PinIcon from '../../../assets/icons/pin.svg';
 import {connect} from 'react-redux';
 
-const CreateTicketModal = ({createModalShow, setCreateModalShow}) => {
+const CreateTicketModal = ({
+    createModalShow,
+    setCreateModalShow,
+    categories,
+    priorities,
+    statuses,
+    agents,
+    groups
+}) => {
     const [selectedTags,
         setSelectedTags] = useState([]);
 
@@ -41,9 +49,7 @@ const CreateTicketModal = ({createModalShow, setCreateModalShow}) => {
                                 <label htmlFor="category" className="form-label">Category</label>
                                 <select className="form-select" name="category" aria-label="Category select">
                                     <option value=""></option>
-                                    <option value="1">--</option>
-                                    <option value="2">--</option>
-                                    <option value="3">--</option>
+                                    {categories && categories.map(({id, name}) => <option value={id}>{name}</option>)}
                                 </select>
                             </div>
                         </div>
@@ -52,9 +58,7 @@ const CreateTicketModal = ({createModalShow, setCreateModalShow}) => {
                                 <label htmlFor="priority" className="form-label">Priority</label>
                                 <select className="form-select" name="priority" aria-label="Priority select">
                                     <option value=""></option>
-                                    <option value="1">--</option>
-                                    <option value="2">--</option>
-                                    <option value="3">--</option>
+                                    {priorities && priorities.map(({id, name}) => <option value={id}>{name}</option>)}
                                 </select>
                             </div>
 
@@ -62,9 +66,7 @@ const CreateTicketModal = ({createModalShow, setCreateModalShow}) => {
                                 <label htmlFor="status" className="form-label">Status</label>
                                 <select className="form-select" name="category" aria-label="Status select">
                                     <option value=""></option>
-                                    <option value="1">--</option>
-                                    <option value="2">--</option>
-                                    <option value="3">--</option>
+                                    {statuses && statuses.map(({id, status}) => <option value={id}>{status}</option>)}
                                 </select>
                             </div>
                         </div>
@@ -88,20 +90,14 @@ const CreateTicketModal = ({createModalShow, setCreateModalShow}) => {
                                 <label htmlFor="priority" className="form-label">Assignee</label>
                                 <select className="form-select" name="priority" aria-label="Category select">
                                     <option value=""></option>
-                                    <option value="low">Low</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="high">High</option>
-                                    <option value="urgent">Urgent</option>
+                                    {agents && agents.map(({id, firstname, lastname}) => <option value={id}>{`${firstname} ${lastname}`}</option>)}
                                 </select>
                             </div>
                             <div className="col-6 mt-3">
                                 <label htmlFor="priority" className="form-label">Group</label>
                                 <select className="form-select" name="priority" aria-label="Category select">
                                     <option value=""></option>
-                                    <option value="low">Low</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="high">High</option>
-                                    <option value="urgent">Urgent</option>
+                                    {groups && groups.map(({id, name}) => <option value={id}>{name}</option>)}
                                 </select>
                             </div>
                         </div>
@@ -158,6 +154,6 @@ const CreateTicketModal = ({createModalShow, setCreateModalShow}) => {
         </Modal>
     )
 }
-const mapStateToProps = (state, ownProps) => ({priorities: state.priority.priorities})
+const mapStateToProps = (state, ownProps) => ({priorities: state.priority.priorities, categories: state.category.categories, statuses: state.status.statuses, agents: state.agent.agents, groups: state.group.groups})
 
 export default connect(mapStateToProps, null)(CreateTicketModal);

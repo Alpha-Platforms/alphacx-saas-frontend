@@ -10,6 +10,7 @@ import priorityReducer from './priorityReducer';
 import categoryReducer from './categoryReducer';
 import statusReducer from './statusReducer';
 import groupReducer from './groupReducer';
+import agentReducer from './agentReducer';
 
 const persistConfig = {
     key: 'alphacx_platform',
@@ -26,7 +27,8 @@ const rootReducer = combineReducers({
     priority: priorityReducer,
     category: categoryReducer,
     status: statusReducer,
-    group: groupReducer
+    group: groupReducer,
+    agent: agentReducer
 });
 
 export default persistReducer(persistConfig, rootReducer);
