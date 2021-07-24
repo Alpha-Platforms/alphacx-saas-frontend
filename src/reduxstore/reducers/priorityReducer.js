@@ -13,7 +13,7 @@ const priorityReducer = (state = initialState, action) => {
 		case types.GET_PRIORITIES:
 			return {
 				...state,
-				priorities: action.payload.users,
+				priorities: action.payload.priorities,
                 meta: action.payload.meta,
 				isPrioritiesLoading: false,
 				isPrioritiesLoaded: true
