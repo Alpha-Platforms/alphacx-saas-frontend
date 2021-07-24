@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {Modal} from 'react-bootstrap';
 import PinIcon from '../../../assets/icons/pin.svg';
+import {connect} from 'react-redux';
 
 const CreateTicketModal = ({createModalShow, setCreateModalShow}) => {
     const [selectedTags,
@@ -46,6 +47,27 @@ const CreateTicketModal = ({createModalShow, setCreateModalShow}) => {
                                 </select>
                             </div>
                         </div>
+                        <div className="row mb-3">
+                            <div className="col-6 mt-2 position-relative">
+                                <label htmlFor="priority" className="form-label">Priority</label>
+                                <select className="form-select" name="priority" aria-label="Priority select">
+                                    <option value=""></option>
+                                    <option value="1">--</option>
+                                    <option value="2">--</option>
+                                    <option value="3">--</option>
+                                </select>
+                            </div>
+
+                            <div className="col-6 mt-2">
+                                <label htmlFor="status" className="form-label">Status</label>
+                                <select className="form-select" name="category" aria-label="Status select">
+                                    <option value=""></option>
+                                    <option value="1">--</option>
+                                    <option value="2">--</option>
+                                    <option value="3">--</option>
+                                </select>
+                            </div>
+                        </div>
                         <div className="row g-3 ">
                             <div className="col-12 mt-3">
                                 <label htmlFor="subject" className="form-label">Subject</label>
@@ -59,9 +81,11 @@ const CreateTicketModal = ({createModalShow, setCreateModalShow}) => {
                                     id="description"
                                     className="form-control ct-description"></textarea>
                             </div>
+                        </div>
 
-                            <div className="col-12 mt-3">
-                                <label htmlFor="priority" className="form-label">Priority</label>
+                        <div className="row">
+                            <div className="col-6 mt-3">
+                                <label htmlFor="priority" className="form-label">Assignee</label>
                                 <select className="form-select" name="priority" aria-label="Category select">
                                     <option value=""></option>
                                     <option value="low">Low</option>
@@ -70,7 +94,19 @@ const CreateTicketModal = ({createModalShow, setCreateModalShow}) => {
                                     <option value="urgent">Urgent</option>
                                 </select>
                             </div>
+                            <div className="col-6 mt-3">
+                                <label htmlFor="priority" className="form-label">Group</label>
+                                <select className="form-select" name="priority" aria-label="Category select">
+                                    <option value=""></option>
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="urgent">Urgent</option>
+                                </select>
+                            </div>
+                        </div>
 
+                        <div>
                             <div className="col-12 mt-3">
                                 <label htmlFor="title" className="form-label">Tags</label>
                                 <div className="border rounded-2 p-3 py-2">
@@ -88,7 +124,8 @@ const CreateTicketModal = ({createModalShow, setCreateModalShow}) => {
                                             'Pharmaceuticals',
                                             'Telecommunications',
                                             'Technology'
-                                        ].map((x, idx) => <span key={idx}
+                                        ].map((x, idx) => <span
+                                            key={idx}
                                             className={`badge rounded-pill ${selectedTags.includes(x)
                                             ? 'acx-bg-blue-light-30-bg-25'
                                             : 'acx-bg-blue-light-30'} px-3 py-2 my-1 me-1`}
@@ -121,5 +158,6 @@ const CreateTicketModal = ({createModalShow, setCreateModalShow}) => {
         </Modal>
     )
 }
+const mapStateToProps = (state, ownProps) => ({priorities: state.priority.priorities})
 
-export default CreateTicketModal;
+export default connect(mapStateToProps, null)(CreateTicketModal);
