@@ -39,7 +39,7 @@ const CreateTicketModal = ({createModalShow, setCreateModalShow}) => {
                             <div className="col-6 mt-2">
                                 <label htmlFor="category" className="form-label">Category</label>
                                 <select className="form-select" name="category" aria-label="Category select">
-                                    <option selected></option>
+                                    <option value=""></option>
                                     <option value="1">--</option>
                                     <option value="2">--</option>
                                     <option value="3">--</option>
@@ -63,7 +63,7 @@ const CreateTicketModal = ({createModalShow, setCreateModalShow}) => {
                             <div className="col-12 mt-3">
                                 <label htmlFor="priority" className="form-label">Priority</label>
                                 <select className="form-select" name="priority" aria-label="Category select">
-                                    <option selected></option>
+                                    <option value=""></option>
                                     <option value="low">Low</option>
                                     <option value="medium">Medium</option>
                                     <option value="high">High</option>
