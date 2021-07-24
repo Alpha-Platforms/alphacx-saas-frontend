@@ -1,10 +1,10 @@
-import React, {useEffect} from "react";
-import {Route, Switch, BrowserRouter} from "react-router-dom";
+import React, { useEffect } from "react";
+import { Route, Switch, BrowserRouter } from "react-router-dom";
 import DefaultLayoutRoute from "./components/DefaultLayout/DefaultLayoutRoute";
-import {NotificationContainer} from "react-notifications";
-import {LayoutProvider} from "./context/layoutContext";
-import {UserDataProvider} from "./context/userContext";
-import {AuthProvider} from "./context/authContext";
+import { NotificationContainer } from "react-notifications";
+import { LayoutProvider } from "./context/layoutContext";
+import { UserDataProvider } from "./context/userContext";
+import { AuthProvider } from "./context/authContext";
 import Login from "./components/pages/auth/login.jsx";
 import Domain from "./components/pages/auth/domain";
 import Register from "./components/pages/auth/register.jsx";
@@ -12,6 +12,7 @@ import Reset from "./components/pages/auth/forgotPassword";
 import Home from "./home";
 import "react-responsive-modal/styles.css";
 
+import HelpCenter from "./components/pages/help_center/helpCenter";
 import Dashboard from "./components/pages/dashboard/dashboard";
 import Conversation from "./components/pages/conersations/conversation";
 import {Provider, connect} from "react-redux";
@@ -35,7 +36,13 @@ import "./App.css";
 
 const mapStateToProps = (state, ownProps) => ({tenantToken: state.tenantAuth.tenantToken, isTenantAuthenticated: state.tenantAuth.isTenantAuthenticated, isUserAuthenticated: state.userAuth.isUserAuthenticated});
 
-const SiteRouter = connect(mapStateToProps, {loginTenant, loginUser, getCustomers, getTickets, getPaginatedTickets, getPriorities, getCategories, getStatuses})(({
+const SiteRouter = connect(mapStateToProps, {
+  loginTenant,
+  loginUser,
+  getCustomers,
+  getTickets,
+})(
+  ({
     loginTenant,
     loginUser,
     isTenantAuthenticated,
@@ -73,32 +80,38 @@ const SiteRouter = connect(mapStateToProps, {loginTenant, loginUser, getCustomer
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
     return (
-        <BrowserRouter>
-            <Switch>
-                <Route exact path="/" component={Domain}/>
-                <Route exact path="/login/:domain" component={Login}/>
-                <Route exact path="/register" component={Register}/>
-                <DefaultLayoutRoute exact path="/home" component={Dashboard}/>
-                <DefaultLayoutRoute exact path="/conversation" component={Conversation}/>
-                <DefaultLayoutRoute exact path="/customers-null" component={CustomersNull}/>
-                <DefaultLayoutRoute exact path="/customers" component={CustomerList}/>
-                <DefaultLayoutRoute exact path="/organisations" component={OrganisationList}/>
-                <DefaultLayoutRoute exact path="/customers/customer" component={Customer}/>
-                <DefaultLayoutRoute exact path="/tickets" component={TicketList}/>
-                <DefaultLayoutRoute exact path="/settings" component={SettingsHome}/>
-                <Route>
-                    <div
-                        style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        height: "100vh"
-                    }}>
-                        <h1>404 - Not Found</h1>
-                    </div>
-                </Route>
-            </Switch>
-        </BrowserRouter>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/" component={Domain} />
+          <Route exact path="/login/:domain" component={Login} />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/help" component={HelpCenter} />
+          <DefaultLayoutRoute exact path="/home" component={Dashboard} />
+          <DefaultLayoutRoute
+            exact
+            path="/conversation"
+            component={Conversation}
+          />
+          <Route exact path="/customers-null" component={CustomersNull} />
+          <DefaultLayoutRoute exact path="/customers" component={CustomerList} />
+          <Route exact path="/organisations" component={OrganisationList} />
+          <Route exact path="/customers/customer" component={Customer} />
+          <DefaultLayoutRoute exact path="/tickets" component={TicketList} />
+          <DefaultLayoutRoute exact path="/settings" component={SettingsHome} />
+          <Route>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+              }}
+            >
+              <h1>404 - Not Found</h1>
+            </div>
+          </Route>
+        </Switch>
+      </BrowserRouter>
     );
 });
 

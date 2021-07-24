@@ -1,0 +1,96 @@
+.help-center {
+  background-color: #ffffff;
+  button,
+  input {
+    border: none !important;
+  }
+  .search-container {
+    width: 100%;
+    height: 60vh;
+    background: linear-gradient(180deg, #6c4181 0%, #006298 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    .logo-bg {
+      position: absolute;
+      height: 100%;
+      top: 0;
+      right: 0;
+      z-index: 0;
+    }
+    h3 {
+      color: white;
+      font-size: 48px;
+      z-index: 5;
+    }
+    .searchbar {
+      z-index: 6;
+      margin-top: 30px;
+      width: 40%;
+      background-color: white;
+      padding: 10px 25px;
+      border-radius: 50px;
+      display: flex;
+      .icon {
+        display: flex;
+        align-items: center;
+      }
+      form {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        input {
+          margin-left: 20px;
+          width: 100%;
+          font-size: 16px;
+          &:focus,
+          &:active {
+            outline: none !important;
+          }
+        }
+        button {
+          height: 35px;
+          min-width: 35px;
+          background-color: #0074b3;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+  .navigation-cards {
+    padding: 60px 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .nav-cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      position: relative;
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: -30px;
+        width: 70%;
+        height: 1px;
+        background: #0000001a;
+      }
+    }
+
+    .popular-questions {
+      width: 60%;
+      margin-top: 100px;
+
+      h3 {
+        font-size: 25px;
+        text-align: center;
+      }
+      .accordions {
+        margin-top: 50px;
+      }
+    }
+  }
+}
