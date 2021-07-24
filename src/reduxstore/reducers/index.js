@@ -6,6 +6,7 @@ import tenantAuthReducer from './tenantAuthReducer';
 import userAuthReducer from './userAuthReducer';
 import customerReducer from './customerReducer';
 import ticketReducer from './ticketReducer';
+import priorityReducer from './priorityReducer';
 
 const persistConfig = {
     key: 'alphacx_platform',
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
     tenantAuth: tenantAuthReducer,
     userAuth: userAuthReducer,
     customer: customerReducer,
-    ticket: ticketReducer
+    ticket: ticketReducer,
+    priority: priorityReducer
 });
 
 export default persistReducer(persistConfig, rootReducer);

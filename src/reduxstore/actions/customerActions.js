@@ -9,7 +9,7 @@ export const getCustomers = () => (dispatch, getState) => {
 		return;
 	}
 	dispatch(setCustomersLoading());
-	axios.get(`${config.stagingBaseUrl}/users`, userTokenConfig(getState))
+	axios.get(`${config.stagingBaseUrl}/users?role=Customer`, userTokenConfig(getState))
 		.then(res => dispatch({
 			type: types.GET_CUSTOMERS,
 			payload: res.data && res.data.status === "success" ? res.data.data : {}
@@ -22,7 +22,7 @@ export const addCustomer = (newCustomer) => (dispatch, getState) => {
 	//Request body
 	const body = JSON.stringify(newCustomer);
 
-	axios.post(`${config.stagingBaseUrl}/api/customers/addnewcustomer`, body, userTokenConfig(getState))
+	axios.post(`${config.stagingBaseUrl}/customers`, body, userTokenConfig(getState))
 		.then(res => dispatch({
 			type: types.ADD_CUSTOMER,
 			payload: res.data
