@@ -169,6 +169,24 @@ table {
     border-color: rgba(238, 182, 74, 30%) !important;
 }
 
+.acx-bg-purple-30 {
+    background: rgba(102, 45, 145, 6%) !important;
+    color: var(--at-purple) !important;
+    border-color: rgba(102, 45, 145, 60%) !important;
+}
+
+.acx-bg-blue-light-30 {
+    background: rgba(0, 98, 152, 6%) !important;
+    color: var(--at-blue-light) !important;
+    border-color: rgba(0, 98, 152, 30%) !important;
+}
+
+.acx-bg-blue-light-30-bg-25 {
+    background: rgba(0, 98, 152, 25%) !important;
+    color: var(--at-blue-light) !important;
+    border-color: rgba(0, 98, 152, 30%) !important;
+}
+
 
 #sidebarMenu {
     width: var(--sidebar-width) !important;
