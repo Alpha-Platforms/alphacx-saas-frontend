@@ -181,6 +181,12 @@ table {
     border-color: rgba(0, 98, 152, 30%) !important;
 }
 
+.acx-bg-blue-light-30-bg-25 {
+    background: rgba(0, 98, 152, 25%) !important;
+    color: var(--at-blue-light) !important;
+    border-color: rgba(0, 98, 152, 30%) !important;
+}
+
 
 #sidebarMenu {
     width: var(--sidebar-width) !important;

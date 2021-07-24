@@ -59,3 +59,12 @@
 #ticketsTable  tr > th:nth-child(1) > span {
     transform: scale(0.8);
 }
+
+#ticket-ath-box {
+    border: 2px dashed rgba(0, 0, 0, 0.2) !important;
+    cursor: pointer;
+}
+
+.ct-description {
+    min-height: 8rem !important;
+}
