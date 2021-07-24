@@ -41,6 +41,10 @@ const SiteRouter = connect(mapStateToProps, {
   loginUser,
   getCustomers,
   getTickets,
+  getPaginatedTickets,
+  getPriorities,
+  getCategories,
+  getStatuses
 })(
   ({
     loginTenant,
