@@ -12,6 +12,7 @@ import Reset from "./components/pages/auth/forgotPassword";
 import Home from "./home";
 import "react-responsive-modal/styles.css";
 
+import HelpCenter from "./components/pages/help_center/helpCenter";
 import Dashboard from "./components/pages/dashboard/dashboard";
 import Conversation from "./components/pages/conersations/conversation";
 import { Provider, connect } from "react-redux";
@@ -82,6 +83,7 @@ const SiteRouter = connect(mapStateToProps, {
           <Route exact path="/" component={Domain} />
           <Route exact path="/login/:domain" component={Login} />
           <Route exact path="/register" component={Register} />
+          <Route exact path="/help" component={HelpCenter} />
           <DefaultLayoutRoute exact path="/home" component={Dashboard} />
           <DefaultLayoutRoute
             exact
