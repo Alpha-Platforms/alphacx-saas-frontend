@@ -5,10 +5,10 @@ import AlphaLogo from "../../assets/imgF/alpha.png";
 import "./helpnav.scss";
 import { Link } from "react-router-dom";
 
-const HelpNavBar = () => {
+const HelpNavBar = ({ activeBG }) => {
   const { shadow: scroll } = useScrollDetect();
   return (
-    <div className={`help-nav ${scroll ? "onScroll" : ""}`}>
+    <div className={`help-nav  ${scroll || activeBG ? "onScroll" : ""}`}>
       <div className="logo">
         <img src={AlphaLogo} alt="" />
         <img src={Logo} alt="" />
