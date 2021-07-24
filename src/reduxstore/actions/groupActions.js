@@ -12,7 +12,7 @@ export const getGroups = () => (dispatch, getState) => {
 	axios.get(`${config.stagingBaseUrl}/groups`, userTokenConfig(getState))
 		.then(res => dispatch({
 			type: types.GET_GROUPS,
-			payload: (res.data && res.data.status === "success") ? res.data.data : {}
+			payload: (res.data && res.data.status === "Success") ? res.data.data : []
 		}))
 		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 }

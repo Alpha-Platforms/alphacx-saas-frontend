@@ -58,3 +58,9 @@ export const CATEGORIES_LOADING = "CATEGORIES_LOADING";
 export const GET_STATUSES = "GET_STATUSES";
 export const ADD_STATUS = "ADD_STATUS";
 export const STATUSES_LOADING = "STATUSES_LOADING";
+
+
+// GROUPS
+export const GET_GROUPS = "GET_GROUPS";
+export const ADD_GROUP = "ADD_GROUP";
+export const GROUPS_LOADING = "GROUPS_LOADING";
