@@ -9,7 +9,7 @@ const CustomersNull = () => {
     const [createModalShow,
         setCreateModalShow] = useState(false);
     return (
-        <SideNavBar navbarTitle="Customers" parentCap="container">
+        <>
 
             <div className="card card-body bg-white border-0 p-5 mt-4">
 
@@ -99,7 +99,7 @@ const CustomersNull = () => {
                     </div>
                 </Modal.Body>
             </Modal>
-        </SideNavBar>
+        </>
 
     )
 }

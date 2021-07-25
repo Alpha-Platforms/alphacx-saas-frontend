@@ -76,7 +76,7 @@ const Customer = () => {
     }
 
     return (
-        <SideNavBar navbarTitle="Customer" parentCap="container">
+        <>
             <div
                 style={{
                 gridTemplateColumns: "280px 1fr"
@@ -530,7 +530,7 @@ const Customer = () => {
 
             {/* <!-- end of profile update canvas --> */}
 
-        </SideNavBar>
+        </>
     )
 }
 
