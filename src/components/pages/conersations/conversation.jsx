@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./conversation.css";
 import { Modal } from "react-responsive-modal";
 import MessageList from "./messageList";
@@ -17,7 +17,17 @@ import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
 import BackArrow from "../../../assets/imgF/back.png";
+import editorImg from "../../../assets/imgF/editorImg.png";
+import Smiley from "../../../assets/imgF/Smiley.png";
+import boldB from "../../../assets/imgF/boldB.png";
+import TextItalic from "../../../assets/imgF/TextItalic.png";
+import TextUnderline from "../../../assets/imgF/TextUnderline.png";
+import TextAlignLeft from "../../../assets/imgF/TextAlignLeft.png";
+import TextAlignCenter from "../../../assets/imgF/TextAlignCenter.png";
+import TextAlignRight from "../../../assets/imgF/TextAlignRight.png";
 import UserProfile from "./userProfile";
+import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
+import { SocketDataContext } from "../../../context/socket";
 export default function Conversation() {
   const initialState = EditorState.createWithContent(
     ContentState.createFromText("")
@@ -33,6 +43,7 @@ export default function Conversation() {
     },
   ]);
 
+  const { AppSocket, wsTickets } = useContext(SocketDataContext);
   const [loadSelectedMsg, setloadSelectedMsg] = useState("");
   const [tickets, setTickets] = useState([]);
   const [filterTicketsState, setFilterTicketsState] = useState([]);
@@ -41,7 +52,7 @@ export default function Conversation() {
   const [loadSingleTicket, setLoadSingleTicket] = useState(false);
   const [SenderInfo, setSenderInfo] = useState(false);
   const [singleTicketFullInfo, setTingleTicketFullInfo] = useState(false);
-  const [Response, setResponse] = useState([]);
+  const [Category, setCategory] = useState([]);
   const [editorState, setEditorState] = useState(initialState);
   const [firstTimeLoad, setfirstTimeLoad] = useState(true);
   const [MessageSenderId, setMessageSenderId] = useState("");
@@ -59,14 +70,29 @@ export default function Conversation() {
   });
   const [openSaveTicketModal, setopenSaveTicketModal] = useState(false);
   const [filterChat, setFilterChat] = useState("system");
+  const [saveTicket, setSaveTicket] = useState({
+    customer: "",
+    subject: "",
+    description: [],
+    category: "",
+  });
+  const [sendingReply, setsendingReply] = useState(false);
   useEffect(() => {
-    getTickets();
+    // getTickets();
   }, []);
 
   useEffect(() => {
     getStatues();
+    getCategories();
+  }, []);
+  useEffect(() => {
+    AppSocket.createConnection();
   }, []);
 
+  useEffect(() => {
+    setTickets(wsTickets);
+    setLoadingTicks(false);
+  }, [wsTickets]);
   const onEditorStateChange = (editorState) => {
     // handleDescriptionValidation(editorState);
 
@@ -77,7 +103,7 @@ export default function Conversation() {
     console.log(">>>>", richText, richText);
   };
   const getTickets = async () => {
-    const res = await httpGetMain("tickets");
+    const res = await httpGetMain("tickets?channel=whatsapp");
     if (res?.status == "success") {
       setLoadingTicks(true);
       setTickets(res?.data?.tickets);
@@ -106,16 +132,19 @@ export default function Conversation() {
       // attachment: "",
     };
     console.log(data);
+    setsendingReply(true);
     const res = await httpPostMain(
       `tickets/${singleTicketFullInfo.id}/replies`,
       data
     );
     if (res?.status == "success") {
+      setsendingReply(false);
       ReloadloadSingleMessage();
       setEditorState(initialState);
       setReplyTicket({ plainText: "", richText: "" });
     } else {
       // setLoadingTicks(false);
+      setsendingReply(false);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
@@ -136,8 +165,17 @@ export default function Conversation() {
   const getStatues = async () => {
     const res = await httpGetMain(`statuses`);
     if (res.status == "success") {
-      getTickets();
+      // getTickets();
       setStatues(res?.data?.statuses);
+    } else {
+      return NotificationManager.error(res.er.message, "Error", 4000);
+    }
+  };
+
+  const getCategories = async () => {
+    const res = await httpGetMain(`categories`);
+    if (res.status == "success") {
+      setCategory(res?.data?.categories);
     } else {
       return NotificationManager.error(res.er.message, "Error", 4000);
     }
@@ -170,6 +208,13 @@ export default function Conversation() {
     setfirstTimeLoad(false);
     if (res.status == "success") {
       setTicket(res?.data);
+      setSaveTicket({
+        ...saveTicket,
+        customer: "",
+        subject: res?.data[0].subject,
+        description: res?.data[0].history,
+      });
+      console.log(res?.data[0]?.history);
       setLoadSingleTicket(false);
     } else {
       setLoadSingleTicket(false);
@@ -190,7 +235,67 @@ export default function Conversation() {
 
   const closeSaveTicketModal = () => {
     setopenSaveTicketModal(!openSaveTicketModal);
+    setSaveTicket({
+      customer: "",
+      subject: "",
+      description: [],
+      category: "",
+    });
   };
+
+  // const _uploadImageCallBack = (file) => {
+  //   // long story short, every time we upload an image, we
+  //   // need to save it to the state so we can get it's data
+  //   // later when we decide what to do with it.
+
+  //   // Make sure you have a uploadImages: [] as your default state
+  //   let uploadedImages = uploadImgS;
+
+  //   const imageObject = {
+  //     file: file,
+  //     localSrc: URL.createObjectURL(file),
+  //   };
+
+  //   setUploadIMGs(imageObject);
+
+  //   uploadImgS(uploadedImages);
+
+  //   // We need to return a promise with the image src
+  //   // the img src we will use here will be what's needed
+  //   // to preview it in the browser. This will be different than what
+  //   // we will see in the index.md file we generate.
+  //   return new Promise((resolve, reject) => {
+  //     resolve({ data: { link: imageObject.localSrc } });
+  //   });
+  // };
+
+  const _uploadImageCallBack = (file) => {
+    // long story short, every time we upload an image, we
+    // need to save it to the state so we can get it's data
+    // later when we decide what to do with it.
+
+    // Make sure you have a uploadImages: [] as your default state
+    let uploadedImages = [];
+
+    const imageObject = {
+      file: file,
+      localSrc: URL.createObjectURL(file),
+    };
+
+    uploadedImages.push(imageObject);
+    console.log(imageObject);
+
+    //this.setState(uploadedImages: uploadedImages)
+
+    // We need to return a promise with the image src
+    // the img src we will use here will be what's needed
+    // to preview it in the browser. This will be different than what
+    // we will see in the index.md file we generate.
+    return new Promise((resolve, reject) => {
+      resolve({ data: { link: imageObject.localSrc } });
+    });
+  };
+
   return (
     <div className="conversation-wrap codei-ui-andy-setDefaults">
       <div className="conversation-layout">
@@ -289,24 +394,54 @@ export default function Conversation() {
                 editorState={editorState}
                 toolbar={{
                   options: [
+                    "emoji",
                     "inline",
-                    "blockType",
-                    "fontSize",
-                    "fontFamily",
-                    "list",
+                    // "blockType",
+
+                    // "list",
                     "textAlign",
-                    "colorPicker",
-                    "link",
-                    "embedded",
+                    // "colorPicker",
+                    // "link",
+                    // "embedded",
                     "image",
-                    "remove",
-                    "history",
                   ],
+                  // inline: {
+                  //   inDropdown: false,
+                  //   icon: boldB,
+                  //   options: ["bold", "underline", "italic"],
+                  // },
+
                   inline: {
-                    inDropdown: true,
+                    inDropdown: false,
+                    className: undefined,
+                    component: undefined,
+                    dropdownClassName: undefined,
+                    options: ["bold", "italic", "underline"],
+                    bold: { icon: boldB, className: undefined },
+                    italic: { icon: TextItalic, className: undefined },
+                    underline: { icon: TextUnderline, className: undefined },
                   },
+
                   image: {
+                    icon: editorImg,
+                    className: undefined,
+                    component: undefined,
+                    popupClassName: undefined,
+                    urlEnabled: true,
+                    uploadEnabled: true,
+                    alignmentEnabled: true,
+                    uploadCallback: _uploadImageCallBack,
                     previewImage: true,
+                    inputAccept:
+                      "image/gif,image/jpeg,image/jpg,image/png,image/svg",
+                    alt: { present: false, mandatory: false },
+                    defaultSize: {
+                      height: "auto",
+                      width: "auto",
+                    },
+                  },
+                  emoji: {
+                    icon: Smiley,
                   },
                   blockType: {
                     inDropdown: true,
@@ -316,7 +451,15 @@ export default function Conversation() {
                     inDropdown: true,
                   },
                   textAlign: {
-                    inDropdown: true,
+                    inDropdown: false,
+                    className: undefined,
+                    component: undefined,
+                    dropdownClassName: undefined,
+                    options: ["left", "center", "right"],
+                    left: { icon: TextAlignLeft, className: undefined },
+                    center: { icon: TextAlignCenter, className: undefined },
+                    right: { icon: TextAlignRight, className: undefined },
+                    // justify: { icon: TextAlignCenter, className: undefined },
                   },
 
                   link: {
@@ -334,7 +477,10 @@ export default function Conversation() {
               />
 
               <div className="sendMsg">
-                <button onClick={() => replyTicket(ReplyTicket, "attachment")}>
+                <button
+                  disabled={sendingReply}
+                  onClick={() => replyTicket(ReplyTicket, "attachment")}
+                >
                   Send
                 </button>
               </div>
@@ -349,7 +495,7 @@ export default function Conversation() {
         />
       </div>
       <div>
-        <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal}>
+        <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal} center>
           <div className="saveTicketWrapModal">
             <div className="modalHeaderSaveT">
               Kindly update ticket before closing the chat
@@ -358,28 +504,53 @@ export default function Conversation() {
             <div className="saveTicketModalForm">
               <div className="ticketmodalInput-twoCol">
                 <div className="ticketmodalInputWrapMain">
-                  <label htmlFor="">Custormer</label>
-                  <input type="text" />
+                  <label htmlFor="">Customer</label>
+                  <input
+                    value={`${capitalizeFirstLetter(
+                      ticket[0]?.customer?.firstname
+                    )} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
+                    type="text"
+                    disabled
+                  />
                 </div>
 
                 <div className="ticketmodalInputWrapMain">
                   <label htmlFor="">Category</label>
                   <select name="" id="">
-                    <option value="">Complaints</option>
+                    <option value="">Select Category</option>
+                    {Category?.map((data) => {
+                      return (
+                        <option key={data.id} value={data?.id}>
+                          {data?.name}
+                        </option>
+                      );
+                    })}
                   </select>
                 </div>
               </div>
 
               <div className="ticketmodalInput-OneCol">
                 <div className="ticketmodalInputWrapMainOne">
-                  <label htmlFor="">Subjects</label>
-                  <input type="text" />
+                  <label htmlFor="">Subject</label>
+                  <input
+                    type="text"
+                    value={`${saveTicket.subject} `}
+                    type="text"
+                    disabled
+                  />
                 </div>
               </div>
 
               <div className="descriptionWrap">
                 <label htmlFor="">Description</label>
-                <textarea name="" id=""></textarea>
+                <textarea
+                  style={{ padding: "10px" }}
+                  name=""
+                  id=""
+                  value={`${saveTicket?.description?.map((data) => {
+                    return data?.plain_response;
+                  })} `}
+                ></textarea>
               </div>
 
               <div className="closeTicketModdalj">
