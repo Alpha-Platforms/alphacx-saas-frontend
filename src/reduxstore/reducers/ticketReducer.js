@@ -5,7 +5,8 @@ const initialState = {
     meta: null,
 	isTicketsLoading: false, //will be true when fetching data and back to false when the fetch is done
 	isTicketsLoaded: false,
-	isTicketsFullyLoaded: false
+	isTicketsFullyLoaded: false,
+	isTicketCreated: false
 }
 
 //export the post reducer
@@ -28,7 +29,13 @@ const ticketReducer = (state = initialState, action) => {
 			}
 		case types.ADD_TICKET:
 			return {
-				...state
+				...state,
+				isTicketCreated: true
+			}
+		case types.RESET_TICKET_CREATED:
+			return {
+				...state,
+				isTicketCreated: false
 			}
 		default:
 			return state;
