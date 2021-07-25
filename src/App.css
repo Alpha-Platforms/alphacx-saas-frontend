@@ -781,25 +781,25 @@ a object {
 }
 
 /* width */
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
   width: 0.5rem;
   height: 0.5rem;
   opacity: 0.7;
-}
+} */
 
 /* Track */
-::-webkit-scrollbar-track {
+/* ::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0);
   border-radius: 1rem;
-}
+} */
 
 /* Handle */
-::-webkit-scrollbar-thumb {
+/* ::-webkit-scrollbar-thumb {
   background: var(--at-blue-light);
   border-radius: 1rem;
-}
+} */
 
 /* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
+/* ::-webkit-scrollbar-thumb:hover {
   background: var(--at-blue);
-}
+} */
