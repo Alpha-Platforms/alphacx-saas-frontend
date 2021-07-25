@@ -12,7 +12,16 @@
   align-items: center;
   transition: all 0.3s ease-in-out;
   margin-bottom: 40px;
-
+  a {
+    color: unset;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    &:hover {
+      color: unset;
+    }
+  }
   &:hover {
     box-shadow: 0px 0px 24px rgba(0, 99, 152, 0.308);
     cursor: pointer;

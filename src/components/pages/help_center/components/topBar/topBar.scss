@@ -1,0 +1,67 @@
+.top-bar {
+  height: 70px;
+  width: 100vw;
+  background-color: #f8f7f7;
+  padding: 0 8%;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  p {
+    margin: 0;
+  }
+
+  .breadcrumbs {
+    display: flex;
+    a {
+      color: unset;
+    }
+    .link {
+      padding-left: 25px;
+      background-image: url(../../../../../assets/imgF/arrow_right.png);
+      background-repeat: no-repeat;
+      background-position-x: 0;
+      margin-right: 10px;
+      text-transform: capitalize;
+      cursor: pointer;
+
+      &:hover {
+        color: #006298;
+      }
+
+      &:first-child {
+        padding-left: 0;
+        background-image: none;
+      }
+    }
+    .active {
+      color: #006298;
+    }
+  }
+
+  .search-bar {
+    display: flex;
+    width: 25%;
+    background-color: white;
+    border-radius: 20px;
+    padding: 10px 25px;
+
+    form {
+      width: 100%;
+
+      input {
+        width: 100%;
+        border: none;
+        padding-left: 20px;
+        height: 100%;
+
+        &:active,
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+}
