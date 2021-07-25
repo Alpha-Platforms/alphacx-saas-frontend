@@ -53,14 +53,17 @@ export const addTicket = (newTicket) => (dispatch, getState) => {
 	//Request body
 	const body = JSON.stringify(newTicket);
 
-	axios.post(`${config.stagingBaseUrl}/api/Tickets/addnewTicket`, body, userTokenConfig(getState))
-		.then(res => dispatch({
-			type: types.ADD_TICKET,
-			payload: res.data
-		}))
+	axios.post(`${config.stagingBaseUrl}/tickets`, body, userTokenConfig(getState))
+		.then(res => {
+			dispatch({
+				type: types.ADD_TICKET,
+				payload: res.data
+			})
+		})
 		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
-
 }
+
+export const resetTicketCreated = () => ({type: types.RESET_TICKET_CREATED});
 
 
 export const setTicketsLoading = () => {

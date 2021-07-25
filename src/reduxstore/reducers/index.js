@@ -9,11 +9,13 @@ import ticketReducer from './ticketReducer';
 import priorityReducer from './priorityReducer';
 import categoryReducer from './categoryReducer';
 import statusReducer from './statusReducer';
+import groupReducer from './groupReducer';
+import agentReducer from './agentReducer';
 
 const persistConfig = {
     key: 'alphacx_platform',
     storage,
-    whitelist: ['error', 'tenantAuth', 'userAuth', 'customer']
+    whitelist: ['error', 'tenantAuth', 'userAuth', 'customer', 'priority', 'category', 'status', 'group']
 }
 
 const rootReducer = combineReducers({
@@ -24,7 +26,9 @@ const rootReducer = combineReducers({
     ticket: ticketReducer,
     priority: priorityReducer,
     category: categoryReducer,
-    status: statusReducer
+    status: statusReducer,
+    group: groupReducer,
+    agent: agentReducer
 });
 
 export default persistReducer(persistConfig, rootReducer);
