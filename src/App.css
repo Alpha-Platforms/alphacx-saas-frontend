@@ -41,7 +41,7 @@ body {
   font-family: Cabin !important;
   line-height: 1.4;
   font-size: 0.9rem !important;
-  height: 100% !important;
+  min-height: 100% !important;
 }
 
 a {
@@ -52,6 +52,11 @@ a {
 body,
 table {
   color: var(--text-color) !important;
+}
+
+.reset-btn-outline:hover {
+  background-color: transparent !important;
+  box-shadow: 0 0 1px 4px rgba(0, 98, 152, 0.1);
 }
 
 .bg-at-red {
@@ -164,12 +169,22 @@ table {
   border-color: rgba(238, 182, 74, 30%) !important;
 }
 
-main {
-  margin-left: var(--sidebar-width) !important;
-  width: calc(100% - var(--sidebar-width)) !important;
+.acx-bg-purple-30 {
+  background: rgba(102, 45, 145, 6%) !important;
+  color: var(--at-purple) !important;
+  border-color: rgba(102, 45, 145, 60%) !important;
+}
 
-  /* min-height: 100vh; */
-  /* hope nothing breaks */
+.acx-bg-blue-light-30 {
+  background: rgba(0, 98, 152, 6%) !important;
+  color: var(--at-blue-light) !important;
+  border-color: rgba(0, 98, 152, 30%) !important;
+}
+
+.acx-bg-blue-light-30-bg-25 {
+  background: rgba(0, 98, 152, 25%) !important;
+  color: var(--at-blue-light) !important;
+  border-color: rgba(0, 98, 152, 30%) !important;
 }
 
 #sidebarMenu {
@@ -766,25 +781,25 @@ a object {
 }
 
 /* width */
-/* ::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 0.5rem;
-	height: 0.5rem;
-	opacity: 0.7;
-} */
+  height: 0.5rem;
+  opacity: 0.7;
+}
 
 /* Track */
-/* ::-webkit-scrollbar-track {
-	background: rgba(0, 0, 0, 0);
-	border-radius: 1rem;
-} */
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0);
+  border-radius: 1rem;
+}
 
 /* Handle */
-/* ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: var(--at-blue-light);
-	border-radius: 1rem;
-} */
+  border-radius: 1rem;
+}
 
 /* Handle on hover */
-/* ::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background: var(--at-blue);
-} */
+}

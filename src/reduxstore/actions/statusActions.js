@@ -4,27 +4,27 @@ import { config } from '../../config/keys';
 import { returnErrors } from './errorActions';
 import {userTokenConfig} from '../../helper';
 
-export const getCustomers = () => (dispatch, getState) => {
+export const getStatuses = () => (dispatch, getState) => {
 	if (!navigator.onLine) {
 		return;
 	}
-	dispatch(setCustomersLoading());
-	axios.get(`${config.stagingBaseUrl}/users?role=Customer`, userTokenConfig(getState))
+	dispatch(setStatusesLoading());
+	axios.get(`${config.stagingBaseUrl}/statuses?per_page=50`, userTokenConfig(getState))
 		.then(res => dispatch({
-			type: types.GET_CUSTOMERS,
+			type: types.GET_STATUSES,
 			payload: res.data && res.data.status === "success" ? res.data.data : {}
 		}))
 		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 }
 
-export const addCustomer = (newCustomer) => (dispatch, getState) => {
+export const addStatus = (newStatus) => (dispatch, getState) => {
 
 	//Request body
-	const body = JSON.stringify(newCustomer);
+	const body = JSON.stringify(newStatus);
 
-	axios.post(`${config.stagingBaseUrl}/customers`, body, userTokenConfig(getState))
+	axios.post(`${config.stagingBaseUrl}/statuses`, body, userTokenConfig(getState))
 		.then(res => dispatch({
-			type: types.ADD_CUSTOMER,
+			type: types.ADD_STATUS,
 			payload: res.data
 		}))
 		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
@@ -32,8 +32,8 @@ export const addCustomer = (newCustomer) => (dispatch, getState) => {
 }
 
 
-export const setCustomersLoading = () => {
+export const setStatusesLoading = () => {
 	return {
-		type: types.CUSTOMERS_LOADING
+		type: types.STATUSES_LOADING
 	}
 }

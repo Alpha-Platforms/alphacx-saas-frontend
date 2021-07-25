@@ -1,0 +1,67 @@
+.nav-card {
+  height: 250px;
+  width: 30%;
+  background: #ffffff;
+  border: 0.5px solid #dadada;
+  box-sizing: border-box;
+  box-shadow: 0px 0px 24px rgba(0, 98, 152, 0.1);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease-in-out;
+  margin-bottom: 40px;
+  a {
+    color: unset;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    &:hover {
+      color: unset;
+    }
+  }
+  &:hover {
+    box-shadow: 0px 0px 24px rgba(0, 99, 152, 0.308);
+    cursor: pointer;
+  }
+
+  .nav-icon {
+    margin-bottom: 20px;
+  }
+  .title {
+    color: rgba(43, 48, 77, 0.7);
+    font-size: 24px;
+    font-weight: bold;
+  }
+  .description {
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 90%;
+    p {
+      width: fit-content;
+      margin: 0;
+      padding-left: 15px;
+      position: relative;
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 10px;
+        left: 8px;
+        height: 5px;
+        width: 5px;
+        background: #2b304db3;
+        border-radius: 5px;
+      }
+      &:first-child {
+        padding-left: 0;
+        &::after {
+          background: unset !important;
+        }
+      }
+    }
+  }
+}

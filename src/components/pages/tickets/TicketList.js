@@ -1,11 +1,7 @@
 import { useState, useEffect } from 'react';
-import SideNavBar from '../../Layout/SideNavBar';
 import {connect} from 'react-redux';
-import {ReactComponent as EditSvg} from '../../../assets/svgicons//Edit.svg';
 import {Link} from 'react-router-dom';
-import FilterIcon from '../../../assets/svgicons//Filter3.svg';
-import {ReactComponent as ImportSvg} from '../../../assets/svgicons//import.svg';
-import ShowIcon from '../../../assets/svgicons//Show.svg';
+import {ReactComponent as ImportSvg} from '../../../assets/svgicons/import.svg';
 import TicketStarIcon from '../../../assets/svgicons//Ticket-Star.svg';
 import MaterialTable from 'material-table';
 import {TablePagination} from '@material-ui/core';
@@ -13,279 +9,192 @@ import tableIcons from '../../../assets/materialicons/tableIcons';
 import '../../../styles/Ticket.css';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import moment from 'moment';
+import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
+import {getPaginatedTickets} from '../../../reduxstore/actions/ticketActions';
+import CreateTicketModal from './CreateTicketModal';
 
-const TicketPagination = props => {
-    const {
-      ActionsComponent,
-      onChangePage,
-      onChangeRowsPerPage,
-      ...tablePaginationProps
-    } = props;
-  
-    return (
-      <TablePagination
-        {...tablePaginationProps}
-        onPageChange={onChangePage}
-        onRowsPerPageChange={onChangeRowsPerPage}
-        ActionsComponent={(subprops) => {
-          const { onPageChange, ...actionsComponentProps } = subprops;
-          return (
-            <ActionsComponent
-              {...actionsComponentProps}
-              onChangePage={onPageChange}
-            />
-          );
-        }}
-      />
-    );
-  }
 
-const TicketList = ({isTicketsLoaded, tickets}) => {
+
+const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
     const [ticketLoading,
         setTicketLoading] = useState(false);
-
-    useEffect(() => {
-        setTicketLoading(!isTicketsLoaded);
+    const [createModalShow, setCreateModalShow] = useState(false);
+        
+        useEffect(() => {
+            setTicketLoading(!isTicketsLoaded);
     }, [isTicketsLoaded]);
 
-    console.log(tickets);
+    
+    const tableTheme = createTheme({
+        palette: {
+            primary: {
+            main: 'rgba(0, 98, 152)',
+            },
+            secondary: {
+                main: 'rgba(0, 98, 152)',
+            },
+        },
+        
+    });
+
+    const handleExportBtn = () => {
+        const exportBtn = document.querySelector('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit');
+        exportBtn && exportBtn.click();
+    }
+
+    const TicketPagination = props => {
+        const {
+            ActionsComponent,
+            onChangePage,
+            onChangeRowsPerPage,
+            ...tablePaginationProps
+        } = props;
+        
+        return (
+        <TablePagination
+            {...tablePaginationProps}
+            rowsPerPageOptions={[5, 10, 20, 30]}
+            rowsPerPage={meta.itemsPerPage}
+            count={Number(meta.totalItems)}
+            page={meta.currentPage - 1}
+            onPageChange={onChangePage}
+            // when the number of rows per page changes
+            onRowsPerPageChange={event => {
+                        getPaginatedTickets(event.target.value, 1);
+                        }}
+            ActionsComponent={(subprops) => {
+                const { onPageChange, ...actionsComponentProps } = subprops;
+                return (
+                    <ActionsComponent
+                    {...actionsComponentProps}
+                    onChangePage={(event, newPage) => {
+                        // fetch tickets with new current page
+                        getPaginatedTickets(meta.itemsPerPage, newPage + 1);
+                        }}
+                    onRowsPerPageChange={event => {
+                        // fetch tickets with new rows per page
+                        getPaginatedTickets(event.target.value, meta.currentPage);
+                    }}
+                    />
+                );
+                }}
+        />
+    )}
 
     return (
-        // <SideNavBar navbarTitle="Ticket List" parentCap="container-fluid">
-<div>
-            <div className="cust-table-loader"><ScaleLoader loading={ticketLoading} color={"#006298"}/></div>
+        <div>
+            { ticketLoading && <div className={`cust-table-loader ${ticketLoading && 'add-loader-opacity'}`}><ScaleLoader loading={ticketLoading} color={"#006298"}/></div>}
             <div className="m-4">
                 <div
-                    className="d-flex justify-content-between flex-wrap bg-light rounded-top-big flex-md-nowrap align-items-center p-4">
+                    className={`d-flex justify-content-between flex-wrap bg-light rounded-top-big flex-md-nowrap align-items-center p-4 px-3 ${ticketLoading && 'rounded-bottom-big'}`}>
 
                     <div>
-                        <div className="input-group input-group-sm has-validation">
-
-                            <span className="input-group-text bg-transparent border-end-0">
-
-                                <i className="bi-search"></i>
-
-                            </span>
-
-                            <input
-                                type="text"
-                                className="form-control bg-transparent border-start-0 pe-4"
-                                placeholder="Search all contacts"
-                                required=""/>
-
-                        </div>
+                        
                     </div>
 
                     <div className="btn-toolbar mb-md-0">
                         <button
                             type="button"
-                            class="btn btn-sm bg-at-blue px-md-3 mx-1"
-                            data-bs-toggle="modal"
-                            data-bs-target="#createNewTicket">
-                            <img src={TicketStarIcon} alt=""/>
-                            New Ticket
+                            className="btn btn-sm bg-at-blue-light px-md-3 mx-1"
+                            onClick={() => setCreateModalShow(true)}>
+                            <img src={TicketStarIcon} style={{ transform: 'scale(0.8)', display: 'inline-block' }} alt=""/>&nbsp;New Ticket
                         </button>
 
                         <button
+                            onClick={handleExportBtn}
                             type="button"
-                            className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3">
+                            className="btn btn-sm btn-outline-secondary ps-md-3 ms-md-3 reset-btn-outline">
                             <ImportSvg/>&nbsp;Export
                         </button>
-                        <div className="btn-group me-2">
-                            <button
-                                type="button"
-                                disabled={false}
-                                className="btn btn-sm btn-outline-secondary">
-                                <i className="bi-chevron-left"></i>
-                            </button>
-                            <button
-                                type="button"
-                                disabled={false}
-                                className="btn btn-sm btn-outline-secondary">
-                                <i className="bi-chevron-right"></i>
-                            </button>
-                        </div>
                     </div>
 
                 </div>
 
-                {/* <table
-                    id="usersTable"
-                    className="table table-responsive bg-white rounded-bottom-big table-striped__ table-hover__ w-100 p-0 pt-0">
-                    <thead className="bg-light">
-                        <tr>
-                            <th className="text-center">
-                                <input type="checkbox" className="form-check-input ticket-select-all" id=""/>
-                            </th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Category</th>
-                            <th>Ticket ID</th>
-                            <th>State</th>
-                            <th>Priority</th>
-                            <th>Status</th>
-                            <th>Created</th>
-                            <th>
-
-                                <EditSvg/>
-
-                                <img src={FilterIcon} alt=""/>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <input type="checkbox" className="form-check-input ticket-select" id=""/>
-                            </td>
-                            <td className="text-at-blue-light">Jerome Bell</td>
-                            <td>debra.holt@example.com</td>
-                            <td>whitefish664</td>
-                            <td className="text-at-blue-light">3398</td>
-
-                            <td className="ticket-state yellow">
-                                <Link href="#" className="btn btn-sm ">Pending</Link>
-                            </td>
-                            <td className="ticket-priority green">
-
-                                <div className="dropdown">
-                                    <button
-                                        className="btn btn-sm dropdown-toggle pt-0"
-                                        type="button"
-                                        id="dropdownMenuButtonSM"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                        <span>Low</span>
-                                    </button>
-                                    <ul className="dropdown-menu bg-at-blue" aria-labelledby="dropdownMenuButtonSM">
-                                        <li>
-                                            <Link className="dropdown-item" href="#">Low</Link>
-                                        </li>
-                                        <li>
-                                            <Link className="dropdown-item" href="#">Medium</Link>
-                                        </li>
-                                        <li>
-                                            <Link className="dropdown-item" href="#">High</Link>
-                                        </li>
-                                        <li>
-                                            <Link className="dropdown-item" href="#">Urgent</Link>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                            </td>
-
-                            <td className="ticket-status green">
-
-                                <div className="dropdown">
-                                    <button
-                                        className="btn btn-sm dropdown-toggle pt-0"
-                                        type="button"
-                                        id="dropdownMenuButtonSM"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                        <span>Resolved</span>
-                                    </button>
-                                    <ul className="dropdown-menu bg-at-blue" aria-labelledby="dropdownMenuButtonSM">
-                                        <li>
-                                            <Link className="dropdown-item" href="#">Open</Link>
-                                        </li>
-                                        <li>
-                                            <Link className="dropdown-item" href="#">Pending</Link>
-                                        </li>
-                                        <li>
-                                            <Link className="dropdown-item" href="#">Resolved</Link>
-                                        </li>
-                                        <li>
-                                            <Link className="dropdown-item" href="#">Closed</Link>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>
-                            <td>5/27/15</td>
-                            <td>
-                                <img src={ShowIcon} alt=""/>
-                            </td>
-
-                        </tr>
-
-                    </tbody>
-                </table> */}
 
                 <div id="ticketsTable" className="pb-5">
-                    {isTicketsLoaded && <MaterialTable
-                    title = ""
-                    icons = {
-                        tableIcons
-                    }
-                    columns = {
-                        [
-                            {
-                                title: 'Name',
-                                field: 'name',
-                                render: rowData => <Link>{rowData.name}</Link>
-                            }, {
-                                title: 'Subject',
-                                field: 'subject'
-                            }, {
-                                title: 'Category',
-                                field: 'category'
-                            }, {
-                                title: 'Ticket ID',
-                                field: 'ticketId',
-                                render: rowData => <Link>{rowData.ticketId}</Link>
-                            }, {
-                                title: 'State',
-                                field: 'state',
-                                render: rowData => <div className="ticket-state yellow"><Link to="#" className="btn btn-sm" style={{ backgroundColor: rowData.state.background_color, color: rowData.state.foreground_color }}>{rowData.state.status}</Link></div>
-                            }, {
-                                title: 'Status',
-                                field: 'status',
-                                render: rowData => (<select name="ticket-status-select" id="ticket-status-select">
-                                                        <option value="open">Open</option>
-                                                        <option value="pending">Pending</option>
-                                                        <option value="resolved">Resolved</option>
-                                                        <option value="closed">Closed</option>
-                                                    </select>)
-                            }, {
-                                title: 'Tags',
-                                field: 'tags'
-                            }, {
-                                title: 'Created',
-                                field: 'created'
-                            }, {
-                                title: '',
-                                field: 'action'
+                    {isTicketsLoaded && <MuiThemeProvider theme={tableTheme}>
+                        <MaterialTable
+                            title = ""
+                            icons = {
+                                tableIcons
                             }
-                        ]
-                    }
-                    data = {tickets.map(({customer, subject, id, category, created_at, status}) => ({
-                        name: `${customer.firstname} ${customer.lastname}`,
-                        email: customer.email,
-                        subject: `${subject.substr(0, 25)}...`,
-                        ticketId: id.slice(-8),
-                        category: category.name,
-                        created: moment(created_at).format('DD MMM, YYYY'),
-                        state: status
+                            columns = {
+                                [
+                                    {
+                                        title: 'Name',
+                                        field: 'name',
+                                        render: rowData => <Link to="#" style={{ textTransform: 'capitalize' }}>{rowData.name}</Link>
+                                    }, {
+                                        title: 'Subject',
+                                        field: 'subject',
+                                        width: '40%'
+                                    }, {
+                                        title: 'Category',
+                                        field: 'category'
+                                    }, {
+                                        title: 'Ticket ID',
+                                        field: 'ticketId',
+                                        render: rowData => <Link to="#" style={{ textTransform: 'uppercase' }}>{rowData.ticketId}</Link>
+                                    }, {
+                                        title: 'State',
+                                        field: 'state',
+                                        render: rowData => <div className="ticket-state yellow"><Link to="#" className="btn btn-sm" style={{ color: rowData.state.foreground_color }}>{rowData.state.status}</Link></div>
+                                    }, {
+                                        title: 'Status',
+                                        field: 'status',
+                                        render: rowData => (<select name="ticket-status-select" id="ticket-status-select">
+                                                                <option value="open">Open</option>
+                                                                <option value="pending">Pending</option>
+                                                                <option value="resolved">Resolved</option>
+                                                                <option value="closed">Closed</option>
+                                                            </select>)
+                                    }, {
+                                        title: 'Tags',
+                                        field: 'tags',
+                                        render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1">Customer Data</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1">Billing</span><span className="badge rounded-pill text-muted border px-2 py-1">+2</span></div>)
+                                    }, {
+                                        title: 'Created',
+                                        field: 'created'
+                                    }
+                                ]
+                            }
+                            data = {tickets.map(({customer, subject, id, category, created_at, status}) => ({
+                                name: `${customer.firstname} ${customer.lastname}`,
+                                email: customer.email,
+                                subject: `${subject.substr(0, 25)}...`,
+                                ticketId: id.slice(-8),
+                                category: category.name,
+                                created: moment(created_at).format('DD MMM, YYYY'),
+                                state: status
 
-                    }))
-                    }
-                    options = {{
-                        search: true,
-                        selection: true
-                    }}
-                    components={{ 
-                        Pagination: TicketPagination
-                     }}
-                    />}
+                            }))
+                            }
+                            options = {{
+                                search: true,
+                                selection: true,
+                                exportButton: true,
+                                tableLayout: 'auto',
+                                paging: true,
+                                pageSize: meta.itemsPerPage,
+                                headerStyle: {
+                                    backgroundColor: '#f8f9fa'
+                                }
+                            }}
+                            components={{ 
+                                Pagination: TicketPagination
+                            }}
+                        />
+                    </MuiThemeProvider>}
                 </div>
             </div>
-</div>
-      //  </SideNavBar>
 
-    )
+            <CreateTicketModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} />
+
+            
+        </div>
+    );
 }
 
-const mapStateToProps = (state, ownProps) => ({tickets: state.ticket.tickets, isTicketsLoaded: state.ticket.isTicketsLoaded, meta: state.ticket.meta})
+const mapStateToProps = (state, ownProps) => ({tickets: state.ticket.tickets, isTicketsLoaded: state.ticket.isTicketsLoaded, meta: state.ticket.meta, isTicketsFullyLoaded: state.ticket.isTicketsFullyLoaded})
 
-export default connect(mapStateToProps, null)(TicketList);
+export default connect(mapStateToProps, {getPaginatedTickets})(TicketList);

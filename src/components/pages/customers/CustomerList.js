@@ -1,11 +1,7 @@
 import {useState, useEffect} from 'react';
-import {ReactComponent as UploadSvg} from '../../../assets/svgicons//Upload.svg';
-import {ReactComponent as EditSvg} from '../../../assets/svgicons//Edit.svg';
-import {ReactComponent as MoreSvg} from '../../../assets/svgicons//more.svg';
-import {ReactComponent as ImportSvg} from '../../../assets/svgicons//import.svg';
-import {ReactComponent as DeleteSvg} from '../../../assets/svgicons//Delete.svg';
-import SideNavBar from '../../Layout/SideNavBar';
-import {Modal, Dropdown} from 'react-bootstrap';
+import {ReactComponent as UploadSvg} from '../../../assets/svgicons/Upload.svg';
+import {ReactComponent as ImportSvg} from '../../../assets/svgicons/import.svg';
+import {Modal} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -13,7 +9,38 @@ import '../../../styles/Customer.css'
 import {getCustomers} from '../../../reduxstore/actions/customerActions';
 import {NotificationManager} from 'react-notifications';
 import ScaleLoader from 'react-spinners/ScaleLoader';
-// import { config } from './../../config/keys';
+import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
+import tableIcons from '../../../assets/materialicons/tableIcons';
+import MaterialTable from 'material-table';
+import {TablePagination} from '@material-ui/core';
+import {ReactComponent as ProfileSvg} from '../../../assets/svgicons/Profile.svg';
+import CreateCustomerModal from './CreateCustomerModal';
+
+const TicketPagination = props => {
+    const {
+        ActionsComponent,
+        onChangePage,
+        onChangeRowsPerPage,
+        ...tablePaginationProps
+    } = props;
+    
+        return (
+            <TablePagination
+                {...tablePaginationProps}
+                onPageChange={onChangePage}
+                onRowsPerPageChange={onChangeRowsPerPage}
+                ActionsComponent={(subprops) => {
+                const { onPageChange, ...actionsComponentProps } = subprops;
+                return (
+                    <ActionsComponent
+                    {...actionsComponentProps}
+                    onChangePage={onPageChange}
+                    />
+                );
+                }}
+            />
+        );
+    }
 
 const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
     const [createModalShow,
@@ -38,34 +65,6 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
             return <span>{result}</span>;
         }
 
-        let firstItemNo,
-            lastItemNo;
-
-        console.log("meta", meta);
-        const {totalItems, itemsPerPage, currentPage, totalPages} = meta;
-
-        if (meta) {
-            firstItemNo = ((currentPage - 1) * itemsPerPage) + 1;
-            lastItemNo = ((firstItemNo + itemsPerPage) - 1) > Number(totalItems)
-                ? Number(totalItems)
-                : ((firstItemNo + itemsPerPage) - 1);
-        }
-
-        console.log(firstItemNo, lastItemNo);
-
-        const getNextCustomers = () => {
-            if (!navigator.onLine) {
-                return NotificationManager.error('Please check your internet', 'Opps!', 3000);
-            }
-            getCustomers(currentPage + 1);
-        }
-
-        const getPreviousCustomers = () => {
-            if (!navigator.onLine) {
-                return NotificationManager.error('Please check your internet', 'Opps!', 3000);
-            }
-            getCustomers(currentPage - 1);
-        }
 
         useEffect(() => {
             setCustLoading(!isCustomersLoaded);
@@ -73,10 +72,22 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
 
         const themes = ['red', 'blue', 'yellow', 'purple'];
 
+        const tableTheme = createTheme({
+            palette: {
+                primary: {
+                main: 'rgba(0, 98, 152)',
+                },
+                secondary: {
+                main: 'rgba(0, 98, 152)',
+                },
+            },
+        
+            });
+
         return (
             // <SideNavBar navbarTitle="Customer List" parentCap="container-fluid">
             <div>
-                <div className="cust-table-loader"><ScaleLoader loading={custLoading} color={"#006298"}/></div>
+                {custLoading && <div className="cust-table-loader"><ScaleLoader loading={custLoading} color={"#006298"}/></div>}
 
                 <div className="m-4">
 
@@ -84,125 +95,104 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                         className="d-flex justify-content-between flex-wrap bg-light rounded-top-big flex-md-nowrap align-items-center p-4">
 
                         <div>
-                            <div className="input-group input-group-sm has-validation">
-
-                                <span className="input-group-text bg-transparent border-end-0">
-
-                                    <i className="bi-search"></i>
-
-                                </span>
-
-                                <input
-                                    type="text"
-                                    className="form-control bg-transparent border-start-0 pe-4"
-                                    placeholder="Search all contacts"
-                                    required=""/>
-
-                            </div>
                         </div>
 
                         <div className="btn-toolbar mb-md-0">
+                            <button
+                                type="button"
+                                className="btn btn-sm bg-at-blue-light px-md-3 mx-1"
+                                onClick={() => setCreateModalShow(true)}>
+                                <span style={{ transform: 'scale(0.8)', display: 'inline-block' }}><ProfileSvg/></span>&nbsp;Add New Customer
+                            </button>
 
                             <button
                                 type="button"
-                                className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3"
+                                className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3 reset-btn-outline"
                                 onClick={() => setUploadModalShow(true)}>
                                 <UploadSvg/>&nbsp;Import
                             </button>
 
                             <button
                                 type="button"
-                                className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3">
+                                className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3 reset-btn-outline">
                                 <ImportSvg/>&nbsp;Export
                             </button>
-
-                            {meta && <div className="px-4 pt-2">{firstItemNo}
-                                - {lastItemNo}&nbsp;of {totalItems}</div>}
-
-                            {meta && <div className="btn-group me-2">
-                                <button
-                                    type="button"
-                                    onClick={getPreviousCustomers}
-                                    disabled={currentPage <= 1}
-                                    className="btn btn-sm btn-outline-secondary">
-                                    <i className="bi-chevron-left"></i>
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={getNextCustomers}
-                                    disabled={currentPage >= totalPages}
-                                    className="btn btn-sm btn-outline-secondary">
-                                    <i className="bi-chevron-right"></i>
-                                </button>
-                            </div>}
                         </div>
 
                     </div>
 
-                    <table
-                        id="customerTable"
-                        className="table bg-white rounded-bottom-big overflow-hidden">
-                        <thead className="bg-light border-0">
-                            <tr className="border-0">
-                                <th className="text-center">
-                                    <input type="checkbox" className="form-check-input customer-select-all"/>
-                                </th>
-                                <th>Title</th>
-                                <th>Contact</th>
-                                <th>Organisation</th>
-                                <th>Email Address</th>
-                                <th>Work Phone</th>
-                                <th>Facebook</th>
-                                <th>Twitter</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            {isCustomersLoaded && customers.map(({
-                                firstname,
+                    <div id="ticketsTable" className="pb-5">
+                    {customers && <MuiThemeProvider theme={tableTheme}>
+                        <MaterialTable
+                            title = ""
+                            icons = {
+                                tableIcons
+                            }
+                            columns = {
+                                [
+                                    {
+                                        title: 'Title',
+                                        field: 'title',
+                                        width: '10%'
+                                    }, {
+                                        title: 'Contact',
+                                        field: 'contact',
+                                        render: ({contact}) => (<div className="d-flex user-initials-sm">
+                                            <div
+                                                className={`user-initials ${contact.theme
+                                                ? contact.theme
+                                                : themes[Math.floor(Math.random() * 4)]}`}>{getUserInitials(`${contact.firstname} ${contact.lastname}`)}</div>
+                                            <div className="ms-2 mt-1">
+                                                <Link to="#" style={{ textTransform: 'capitalize' }}>{`${contact.firstname} ${contact.lastname}`}</Link>
+                                            </div>
+                                        </div>)
+                                    }, {
+                                        title: 'Organisation',
+                                        field: 'organisation'
+                                    }, {
+                                        title: 'Email Address',
+                                        field: 'emailAddress'
+                                    }, {
+                                        title: 'Workphone',
+                                        field: 'workphone'
+                                    }, {
+                                        title: 'Tags',
+                                        field: 'tags',
+                                        render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1">+2</span></div>)
+                                    }
+                                ]
+                            }
+                            data = {customers.map(({firstname,
                                 lastname,
                                 title,
                                 company,
                                 email,
                                 phone_number,
-                                facebook,
-                                twitter,
-                                theme
-                            }, idx) => (
-                                <tr key={idx}>
-                                    <td>
-                                        <input type="checkbox" className="form-check-input customer-select"/>
-                                    </td>
-                                    <td>{title
-                                            ? title
-                                            : 'Mr.'}</td>
-                                    <td>
-                                        <div className="d-flex user-initials-sm">
-                                            <div
-                                                className={`user-initials ${theme
-                                                ? theme
-                                                : themes[Math.floor(Math.random() * 4)]}`}>{getUserInitials(`${firstname} ${lastname}`)}</div>
-                                            <div className="ms-2 mt-1">
-                                                <Link to="#">{`${firstname} ${lastname}`}</Link>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td><Link to="#">{company
-                                            ? company
-                                            : 'Gillete'}</Link></td>
-                                    <td>{email && email}</td>
-                                    <td>{phone_number && phone_number}</td>
-                                    <td>{facebook
-                                            ? facebook
-                                            : 'sadwolf227'}</td>
-                                    <td>{twitter
-                                            ? twitter
-                                            : 'silverfrog195'}</td>
-                                </tr>
-                            ))}
-
-                        </tbody>
-                    </table>
+                                theme}) => ({
+                                title: title ? title :`Mr.`,
+                                contact: {firstname, lastname, theme},
+                                organisation: company ? company : 'Gillete',
+                                emailAddress: email,
+                                workphone: phone_number,
+                                tags: ''
+                            }))
+                            }
+                            options = {{
+                                search: true,
+                                selection: true,
+                                exportButton: true,
+                                tableLayout: 'auto',
+                                headerStyle: {
+                                    backgroundColor: '#f8f9fa'
+                                }
+                                // filtering: true
+                            }}
+                            components={{ 
+                                Pagination: TicketPagination
+                            }}
+                        />
+                    </MuiThemeProvider>}
+                </div>
                 </div>
 
                 {/* <div className="card card-body bg-white border-0 p-5 mt-4">
@@ -229,71 +219,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                 </div>
             </div> */}
 
-                {/* Create new customer modal */}
-                <Modal
-                    show={createModalShow}
-                    onHide={() => setCreateModalShow(false)}
-                    aria-labelledby="contained-modal-title-vcenter"
-                    centered>
-                    <Modal.Body>
-                        <div className="col-12 p-4">
-                            <h5 className="mb-3">Create Customer</h5>
-                            <form className="needs-validation mb-5" noValidate>
-                                <div className="row g-3 pt-3">
-
-                                    <div className="col-12 mt-2">
-                                        <label htmlFor="title" className="form-label">Full Name</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Title</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Organisation</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Email Address</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Work Phone</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Facebook</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Twitter</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="description" className="form-label">Address</label>
-                                        <textarea name="description" className="form-control"></textarea>
-                                    </div>
-
-                                </div>
-
-                                <button
-                                    className="btn btn-sm bg-at-blue-light mt-1 mt-sm-3 float-end pt-1 pe-3 ps-3"
-                                    type="submit"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#contactCreated"
-                                    data-bs-dismiss="modal">Create</button>
-
-                            </form>
-                        </div>
-                    </Modal.Body>
-                </Modal>
+               <CreateCustomerModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} />
 
                 {/* Upload csv modal */}
                 <Modal

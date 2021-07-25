@@ -79,8 +79,7 @@ const OrganisationList = () => {
     }
 
     return (
-        <SideNavBar navbarTitle="Customer List" parentCap="container-fluid">
-
+        <>
             <div className="m-4">
 
                 <div
@@ -376,7 +375,7 @@ const OrganisationList = () => {
                 </Modal.Body>
             </Modal>
 
-        </SideNavBar>
+        </>
 
     )
 }
