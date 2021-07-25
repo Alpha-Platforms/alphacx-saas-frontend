@@ -15,25 +15,24 @@ import "react-responsive-modal/styles.css";
 import HelpCenter from "./components/pages/help_center/helpCenter";
 import Dashboard from "./components/pages/dashboard/dashboard";
 import Conversation from "./components/pages/conersations/conversation";
-import { Provider, connect } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-import store, { persistor } from "./reduxstore/store";
-import { loginTenant } from "./reduxstore/actions/tenantAuthActions";
-import { loginUser } from "./reduxstore/actions/userAuthActions";
-import { getCustomers } from "./reduxstore/actions/customerActions";
-import {
-  getTickets,
-  getPaginatedTickets,
-} from "./reduxstore/actions/ticketActions";
-import { getPriorities } from "./reduxstore/actions/priorityActions";
-import { getCategories } from "./reduxstore/actions/categoryActions";
-import { getStatuses } from "./reduxstore/actions/statusActions";
+import {Provider, connect} from "react-redux";
+import {PersistGate} from "redux-persist/integration/react";
+import store, {persistor} from "./reduxstore/store";
+import {loginTenant} from "./reduxstore/actions/tenantAuthActions";
+import {loginUser} from "./reduxstore/actions/userAuthActions";
+import {getCustomers} from "./reduxstore/actions/customerActions";
+import {getTickets, getPaginatedTickets} from "./reduxstore/actions/ticketActions";
+import {getPriorities} from './reduxstore/actions/priorityActions';
+import {getCategories} from './reduxstore/actions/categoryActions';
+import {getStatuses} from './reduxstore/actions/statusActions';
+import {getGroups} from './reduxstore/actions/groupActions';
+import {getAgents} from './reduxstore/actions/agentActions';
 import CustomerList from "./components/pages/customers/CustomerList";
 import CustomersNull from "./components/pages/customers/CustomersNull";
 import Customer from "./components/pages/customers/Customer";
 import OrganisationList from "./components/pages/customers/OrganisationList";
 import TicketList from "./components/pages/tickets/TicketList";
-import SettingsHome from "./components/pages/settings";
+import SettingsHome from './components/pages/settings';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import ArticleList from "./components/pages/help_center/help_pages/articleList";
@@ -53,6 +52,8 @@ const SiteRouter = connect(mapStateToProps, {
   getPriorities,
   getCategories,
   getStatuses,
+  getGroups,
+  getAgents
 })(
   ({
     loginTenant,
@@ -65,7 +66,9 @@ const SiteRouter = connect(mapStateToProps, {
     getPriorities,
     getCategories,
     getStatuses,
-  }) => {
+    getGroups,
+    getAgents
+}) => {
     useEffect(() => {
       loginTenant({ domain: "techpoint" });
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,15 +88,17 @@ const SiteRouter = connect(mapStateToProps, {
     }, [isTenantAuthenticated]);
 
     useEffect(() => {
-      if (isUserAuthenticated) {
-        getCustomers();
-        // getTickets();
-        getPaginatedTickets(5, 1);
-        getPriorities();
-        getCategories();
-        getStatuses();
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+        if (isUserAuthenticated) {
+            getCustomers();
+            // getTickets();
+            getPaginatedTickets(5, 1);
+            getPriorities();
+            getCategories();
+            getStatuses();
+            getGroups();
+            getAgents();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
     return (
       <BrowserRouter>
