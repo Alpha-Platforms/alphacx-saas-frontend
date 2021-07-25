@@ -60,7 +60,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
             onPageChange={onChangePage}
             // when the number of rows per page changes
             onRowsPerPageChange={event => {
-                        getPaginatedTickets(event.target.value, meta.currentPage);
+                        getPaginatedTickets(event.target.value, 1);
                         }}
             ActionsComponent={(subprops) => {
                 const { onPageChange, ...actionsComponentProps } = subprops;
