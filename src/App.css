@@ -380,6 +380,16 @@ object.icon-lg {
   border-bottom-right-radius: 0.8rem !important;
 }
 
+.rounded-top-04 {
+  border-top-left-radius: 4px !important;
+  border-top-right-radius: 4px !important;
+}
+
+.rounded-bottom-04 {
+  border-bottom-left-radius: 4px !important;
+  border-bottom-right-radius: 4px !important;
+}
+
 .at-radio-red {
   box-shadow: 0 0 0 1px var(--at-red) !important;
 }

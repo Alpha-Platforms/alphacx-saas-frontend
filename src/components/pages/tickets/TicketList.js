@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {ReactComponent as ImportSvg} from '../../../assets/svgicons/import.svg';
+import {ReactComponent as UploadSvg} from '../../../assets/svgicons/Upload.svg';
 import TicketStarIcon from '../../../assets/svgicons//Ticket-Star.svg';
 import MaterialTable from 'material-table';
 import {TablePagination} from '@material-ui/core';
@@ -40,7 +41,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
 
     const handleExportBtn = () => {
         const exportBtn = document.querySelector('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit');
-        exportBtn && exportBtn.click();
+        // exportBtn && exportBtn.click();
     }
 
     const TicketPagination = props => {
@@ -102,9 +103,9 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
     return (
         <div>
             { ticketLoading && <div className={`cust-table-loader ${ticketLoading && 'add-loader-opacity'}`}><ScaleLoader loading={ticketLoading} color={"#006298"}/></div>}
-            <div className="m-4">
+            <div>
                 <div
-                    className={`d-flex justify-content-between flex-wrap bg-light rounded-top-big flex-md-nowrap align-items-center p-4 px-3 ${ticketLoading && 'rounded-bottom-big'}`}>
+                    className={`d-flex justify-content-between flex-wrap bg-light rounded-top-04 flex-md-nowrap align-items-center p-4 px-3 ${ticketLoading && 'rounded-bottom-04'}`}>
 
                     <div>
                         
@@ -122,7 +123,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                             onClick={handleExportBtn}
                             type="button"
                             className="btn btn-sm btn-outline-secondary ps-md-3 ms-md-3 reset-btn-outline">
-                            <ImportSvg/>&nbsp;Export
+                            <UploadSvg/>&nbsp;Import
                         </button>
                     </div>
 
