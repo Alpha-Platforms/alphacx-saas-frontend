@@ -517,3 +517,12 @@ input[type="radio"]:after {
     filter: blur(5px);
   }
 }
+
+.swal2-container.swal2-backdrop-show,
+.swal2-container.swal2-noanimation {
+  background: rgba(0, 98, 152, 0.2) !important;
+}
+
+.swal2-container.swal2-center > .swal2-popup {
+  padding: 20px 0px 48px 0px !important;
+}
