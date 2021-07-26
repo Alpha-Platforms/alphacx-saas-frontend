@@ -38,6 +38,7 @@ import TicketList from "./components/pages/tickets/TicketList";
 import SettingsHome from './components/pages/settings';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import UsersTable from "./components/pages/users/UsersTable";
 import {SocketDataProvider} from './context/socket'
 import ArticleList from "./components/pages/help_center/help_pages/articleList";
 
@@ -132,6 +133,8 @@ const SiteRouter = connect(mapStateToProps, {
           <Route exact path="/customers/customer" component={Customer} />
           <DefaultLayoutRoute exact path="/tickets" component={TicketList} />
           <DefaultLayoutRoute exact path="/settings" component={SettingsHome} />
+          <Route exact path="/users" component={UsersTable} />
+
           <Route>
             <div
               style={{
