@@ -1,5 +1,10 @@
 .codei-ui-andy-setDefaults * {
-  margin: 0;
+  border: none;
+  outline: none !important;
+}
+
+.codei-ui-andy-setDefaults button {
+  border: 0 !important;
 }
 .conversation-wrap {
   width: 100%;
@@ -377,8 +382,8 @@
   margin-right: 25px;
 }
 .sendMsg button {
-  width: 140px;
-  height: 40px;
+  width: 98px;
+  height: 37px;
   background-color: #006298;
   border-radius: 4px;
   color: white;
@@ -652,17 +657,19 @@ select {
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
-  margin-top: 25px;
+  margin-top: 35px;
   padding-bottom: 20px;
 }
 
 .closeTicketModdalj select {
-  width: 120px;
+  width: 142px;
   border-radius: 4px;
-  height: 40px;
+  height: 37px;
+
   background: #006298;
   color: white;
   cursor: pointer;
+  padding: 10px;
 }
 /* RESPONSIVE CHAT */
 
@@ -763,4 +770,51 @@ select {
   .single-chat-swap-icon {
     padding-left: 10px !important;
   }
+}
+
+.rdw-editor-toolbar img {
+  width: 17px !important;
+  /* height: 15px; */
+}
+
+.rdw-option-wrapper {
+  border: none !important;
+  margin-right: 10px !important;
+}
+
+.wrapperClassName {
+  display: flex !important;
+  flex-direction: column !important;
+  /* top: auto !important;
+  bottom: 10px !important; */
+}
+.rdw-editor-main {
+  order: 1 !important;
+}
+.toolbarClassName {
+  order: 2 !important;
+}
+
+.rdw-editor-wrapper {
+  border: 1px solid rgba(0, 98, 152, 0.15) !important;
+  margin-left: 21px !important;
+  margin-right: 18px !important;
+  margin-top: 25px;
+  height: 180px !important;
+  border-radius: 9px !important;
+}
+
+.rdw-editor-toolbar {
+  border: none !important;
+}
+.rdw-option-wrapper {
+}
+
+.rdw-option-wrapper[title~="Bold"] img {
+  width: 15px !important;
+  height: 15px;
+}
+
+.DraftEditor-editorContainer {
+  padding: 2px 10px 10px 10px;
 }

@@ -15,16 +15,19 @@ import "react-responsive-modal/styles.css";
 import HelpCenter from "./components/pages/help_center/helpCenter";
 import Dashboard from "./components/pages/dashboard/dashboard";
 import Conversation from "./components/pages/conersations/conversation";
-import {Provider, connect} from "react-redux";
-import {PersistGate} from "redux-persist/integration/react";
-import store, {persistor} from "./reduxstore/store";
-import {loginTenant} from "./reduxstore/actions/tenantAuthActions";
-import {loginUser} from "./reduxstore/actions/userAuthActions";
-import {getCustomers} from "./reduxstore/actions/customerActions";
-import {getTickets, getPaginatedTickets} from "./reduxstore/actions/ticketActions";
-import {getPriorities} from './reduxstore/actions/priorityActions';
-import {getCategories} from './reduxstore/actions/categoryActions';
-import {getStatuses} from './reduxstore/actions/statusActions';
+import { Provider, connect } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import store, { persistor } from "./reduxstore/store";
+import { loginTenant } from "./reduxstore/actions/tenantAuthActions";
+import { loginUser } from "./reduxstore/actions/userAuthActions";
+import { getCustomers } from "./reduxstore/actions/customerActions";
+import {
+  getTickets,
+  getPaginatedTickets,
+} from "./reduxstore/actions/ticketActions";
+import { getPriorities } from "./reduxstore/actions/priorityActions";
+import { getCategories } from "./reduxstore/actions/categoryActions";
+import { getStatuses } from "./reduxstore/actions/statusActions";
 import {getGroups} from './reduxstore/actions/groupActions';
 import {getAgents} from './reduxstore/actions/agentActions';
 import CustomerList from "./components/pages/customers/CustomerList";
@@ -35,6 +38,7 @@ import TicketList from "./components/pages/tickets/TicketList";
 import SettingsHome from './components/pages/settings';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import {SocketDataProvider} from './context/socket'
 import ArticleList from "./components/pages/help_center/help_pages/articleList";
 
 const mapStateToProps = (state, ownProps) => ({
@@ -116,6 +120,7 @@ const SiteRouter = connect(mapStateToProps, {
             exact
             path="/conversation"
             component={Conversation}
+            pageName="Conversations"
           />
           <Route exact path="/customers-null" component={CustomersNull} />
           <DefaultLayoutRoute
@@ -127,7 +132,6 @@ const SiteRouter = connect(mapStateToProps, {
           <Route exact path="/customers/customer" component={Customer} />
           <DefaultLayoutRoute exact path="/tickets" component={TicketList} />
           <DefaultLayoutRoute exact path="/settings" component={SettingsHome} />
-
           <Route>
             <div
               style={{
@@ -153,7 +157,9 @@ function App(props) {
       <PersistGate persistor={persistor}>
         <NotificationContainer />
         <LayoutProvider>
+          <SocketDataProvider>
           <SiteRouter />
+          </SocketDataProvider>
         </LayoutProvider>
       </PersistGate>
     </Provider>

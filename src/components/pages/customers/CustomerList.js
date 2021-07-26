@@ -13,6 +13,8 @@ import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/cor
 import tableIcons from '../../../assets/materialicons/tableIcons';
 import MaterialTable from 'material-table';
 import {TablePagination} from '@material-ui/core';
+import {ReactComponent as ProfileSvg} from '../../../assets/svgicons/Profile.svg';
+import CreateCustomerModal from './CreateCustomerModal';
 
 const TicketPagination = props => {
     const {
@@ -96,6 +98,12 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                         </div>
 
                         <div className="btn-toolbar mb-md-0">
+                            <button
+                                type="button"
+                                className="btn btn-sm bg-at-blue-light px-md-3 mx-1"
+                                onClick={() => setCreateModalShow(true)}>
+                                <span style={{ transform: 'scale(0.8)', display: 'inline-block' }}><ProfileSvg/></span>&nbsp;Add New Customer
+                            </button>
 
                             <button
                                 type="button"
@@ -211,71 +219,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                 </div>
             </div> */}
 
-                {/* Create new customer modal */}
-                <Modal
-                    show={createModalShow}
-                    onHide={() => setCreateModalShow(false)}
-                    aria-labelledby="contained-modal-title-vcenter"
-                    centered>
-                    <Modal.Body>
-                        <div className="col-12 p-4">
-                            <h5 className="mb-3">Create Customer</h5>
-                            <form className="needs-validation mb-5" noValidate>
-                                <div className="row g-3 pt-3">
-
-                                    <div className="col-12 mt-2">
-                                        <label htmlFor="title" className="form-label">Full Name</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Title</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Organisation</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Email Address</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Work Phone</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Facebook</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Twitter</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="description" className="form-label">Address</label>
-                                        <textarea name="description" className="form-control"></textarea>
-                                    </div>
-
-                                </div>
-
-                                <button
-                                    className="btn btn-sm bg-at-blue-light mt-1 mt-sm-3 float-end pt-1 pe-3 ps-3"
-                                    type="submit"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#contactCreated"
-                                    data-bs-dismiss="modal">Create</button>
-
-                            </form>
-                        </div>
-                    </Modal.Body>
-                </Modal>
+               <CreateCustomerModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} />
 
                 {/* Upload csv modal */}
                 <Modal

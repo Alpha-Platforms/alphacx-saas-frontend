@@ -122,7 +122,7 @@ const Login = ({ history }) => {
   };
 
   return (
-    <div className="auth-container">
+    <div className="auth-container codei-ui-andy-setDefaults">
       <div className="symbol-wrap2">
         <img src={Symbol2} alt="" />
       </div>
