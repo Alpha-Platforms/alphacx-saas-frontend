@@ -94,7 +94,7 @@ const CreateTicketModal = ({
     useEffect(() => {
         if (isTicketCreated) {
             resetTicketCreated();
-            NotificationManager.success("Successful", 'Ticket created successfully')
+            NotificationManager.success("Successful", 'Ticket created successfully');
             setCreateModalShow(false);
             getPaginatedTickets(5, 1);
         }
