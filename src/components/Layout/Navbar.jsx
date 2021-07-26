@@ -9,7 +9,12 @@ import pic from "../../assets/imgF/codeuiandyimg.png";
 import { useLocation } from "react-router-dom";
 //import GoBack from './../helpers/GoBack';
 
-export default function Navbar({ browserRouter, routeType, fullProps }) {
+export default function Navbar({
+  browserRouter,
+  routeType,
+  fullProps,
+  pageName,
+}) {
   // let [initsidebarState, setinitsidebarState] = useContext(LayoutContext);
   const getLocalItem = "h";
   const router = useLocation();
@@ -42,6 +47,7 @@ export default function Navbar({ browserRouter, routeType, fullProps }) {
   useEffect(() => {
     //IsUserValidated();
     console.log("page", router);
+    console.log(pageName);
   }, []);
 
   return (
@@ -103,9 +109,7 @@ export default function Navbar({ browserRouter, routeType, fullProps }) {
             </div> */}
             <div className="navbar-content">
               <div className="pageTitle">
-                <span style={{ textTransform: "capitalize" }}>
-                  {currentPath}
-                </span>
+                <span style={{ textTransform: "capitalize" }}>{pageName}</span>
               </div>
               <div className="navbar-right-content">
                 <span>

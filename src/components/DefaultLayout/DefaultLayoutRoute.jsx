@@ -3,7 +3,7 @@ import Layout from "../Layout/index.jsx";
 import { Route } from "react-router-dom";
 import { LayoutContext } from "../../context/layoutContext";
 
-const DefaultLayout = ({ children, routeType, ...rest }) => {
+const DefaultLayout = ({ children, routeType, pageName, ...rest }) => {
   let browserRouter = children.props.history.push;
   let fullProps = children.props;
   let currentRoute = children.props.location.pathname;
@@ -16,6 +16,7 @@ const DefaultLayout = ({ children, routeType, ...rest }) => {
       currentRoute={currentRoute}
       browserRouter={browserRouter}
       fullProps={fullProps}
+      pageName={pageName}
     >
       <div
         className={`${
@@ -34,6 +35,7 @@ const DefaultLayoutRoute = ({
   component: Component,
   routeType,
   fullProps,
+  pageName,
   ...rest
 }) => {
   return (
@@ -45,6 +47,7 @@ const DefaultLayoutRoute = ({
             routeType={routeType}
             page={rest.page}
             fullProps={fullProps}
+            pageName={pageName}
           >
             <Component {...matchProps} />
           </DefaultLayout>
