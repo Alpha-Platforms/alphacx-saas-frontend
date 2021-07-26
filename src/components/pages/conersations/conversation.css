@@ -835,6 +835,7 @@ select {
   margin-top: 25px;
   height: 180px !important;
   border-radius: 9px !important;
+  padding-bottom: 10px !important;
 }
 
 .rdw-editor-toolbar {
