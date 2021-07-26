@@ -14,6 +14,7 @@ export default function Index(props) {
             browserRouter={props.browserRouter}
             routeType={props.routeType}
             fullProps={props.fullProps}
+            pageName={props.pageName}
           />
         </div>
 

@@ -11,6 +11,7 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import MyCustomUploadAdapterPlugin from "./UploadAdapter";
 import NoChatFound from "./noChatFound";
 import { dateFormater, timeFormater } from "../../helpers/dateFormater";
+import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 export default function SigleChat({
   ticket,
   SenderInfo,
@@ -62,7 +63,9 @@ export default function SigleChat({
           )}
 
           <div className="single-chat-user-name">
-            <p>{`${SenderInfo?.customer?.firstname} ${SenderInfo?.customer?.lastname}`}</p>
+            <p>{`${capitalizeFirstLetter(
+              SenderInfo?.customer?.firstname
+            )} ${capitalizeFirstLetter(SenderInfo?.customer?.lastname)}`}</p>
             <p>{`Via email (${dateFormater(ticket[0].updated_at)})`}</p>
           </div>
         </div>
@@ -147,7 +150,7 @@ export default function SigleChat({
                           {`${e.user.firstname} ${e?.user?.lastname}`}{" "}
                           <span style={{ color: "#656565" }}>replied</span>
                         </p>
-                        <p>Via email (Sat, 13 Mar 2021 at 10:54 AM)</p>
+                        <p>{`Via email (${dateFormater(data?.updated_at)})`}</p>
                       </div>
                     </div>
                     <div className="single-chat-response">
