@@ -97,6 +97,7 @@
 .input-wrap-with-two-inputes {
   display: flex;
   justify-content: space-between;
+  padding-bottom: 6px;
 }
 
 .inputWrapTwo {
@@ -150,7 +151,7 @@
 
 .haveAnAccou a {
   color: #0067dd;
-  font-size: 18px;
+  font-size: 11px;
 }
 
 .submit-auth-btn {
@@ -167,6 +168,7 @@
   font-size: 18px;
   margin-top: 40px;
   cursor: pointer;
+  border: none;
 }
 
 .symbol-wrap {
