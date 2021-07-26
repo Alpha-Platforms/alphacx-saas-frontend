@@ -47,6 +47,8 @@
 
 .message-toggles select {
   border: none;
+  width: 90px;
+  overflow: hidden;
   background-color: transparent !important;
 }
 
@@ -198,6 +200,11 @@
   height: 80%;
   overflow: hidden;
   overflow-y: scroll;
+  padding-bottom: 30px !important;
+}
+
+.message-list-container .message-listmain:last-child {
+  border-bottom: none;
 }
 
 .message-list-container::-webkit-scrollbar {

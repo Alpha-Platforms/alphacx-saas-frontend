@@ -120,10 +120,18 @@ export default function Conversation() {
     }
   };
 
-  const filterTicket = (value) => {
-    AppSocket.createConnection();
-    let data = { channel: value, per_page: 100 };
-    AppSocket.io.emit(`ws_tickets`, data);
+  const filterTicket = (value, type) => {
+    if (type == "channel") {
+      AppSocket.createConnection();
+      let data = { channel: value, per_page: 100 };
+      AppSocket.io.emit(`ws_tickets`, data);
+    }
+
+    if (type == "status") {
+      AppSocket.createConnection();
+      let data = { status: value, per_page: 100 };
+      AppSocket.io.emit(`ws_tickets`, data);
+    }
   };
 
   const replyTicket = async (reply, attachment) => {
@@ -311,7 +319,7 @@ export default function Conversation() {
                 name=""
                 id=""
                 onChange={(e) => {
-                  filterTicket(e.target.value);
+                  filterTicket(e.target.value, "channel");
                 }}
               >
                 <option value="">All</option>
@@ -322,7 +330,13 @@ export default function Conversation() {
               </select>
             </div>
             <div className="messageOpenClose">
-              <select name="" id="">
+              <select
+                name=""
+                id=""
+                onChange={(e) => {
+                  filterTicket(e.target.value, "status");
+                }}
+              >
                 <option value="">All</option>
                 {Statues?.map((data) => {
                   return <option value={data.id}>{data.status}</option>;
