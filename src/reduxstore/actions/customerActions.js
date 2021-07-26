@@ -8,7 +8,7 @@ import {NotificationManager} from 'react-notifications';
 
 const {getState} = store;
 
-// redux action
+// valid redux action
 export const getCustomers = () => (dispatch, getState) => {
     if (!navigator.onLine) {
         return;
@@ -23,6 +23,20 @@ export const getCustomers = () => (dispatch, getState) => {
                 : {}
         }))
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+}
+
+// valid redux action
+export const getPaginatedCustomers = (itemsPerPage, currentPage) => (dispatch, getState) => {
+    if (!navigator.onLine) {
+        return;
+    }
+    dispatch(setCustomersLoading());
+	axios.get(`${config.stagingBaseUrl}/users?role=Customer&per_page=${itemsPerPage}&page=${currentPage}`, userTokenConfig(getState))
+		.then(res => dispatch({
+			type: types.GET_TICKETS,
+			payload: (res.data && res.data.status === "success") ? res.data.data : {}
+		}))
+		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 }
 
 // invalid redux action

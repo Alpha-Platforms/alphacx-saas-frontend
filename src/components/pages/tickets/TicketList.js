@@ -40,7 +40,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
     });
 
     const handleExportBtn = () => {
-        const exportBtn = document.querySelector('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit');
+        // const exportBtn = document.querySelector('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit');
         // exportBtn && exportBtn.click();
     }
 
@@ -55,7 +55,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
         return (
         <TablePagination
             {...tablePaginationProps}
-            rowsPerPageOptions={[5, 10, 20, 30]}
+            rowsPerPageOptions={[10, 20, 30]}
             rowsPerPage={meta.itemsPerPage}
             count={Number(meta.totalItems)}
             page={meta.currentPage - 1}

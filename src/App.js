@@ -95,7 +95,7 @@ const SiteRouter = connect(mapStateToProps, {
         if (isUserAuthenticated) {
             getCustomers();
             // getTickets();
-            getPaginatedTickets(5, 1);
+            getPaginatedTickets(10, 1);
             getPriorities();
             getCategories();
             getStatuses();
