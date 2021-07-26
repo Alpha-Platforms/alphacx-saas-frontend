@@ -43,7 +43,12 @@ export default function Conversation() {
     },
   ]);
 
-  const { AppSocket, wsTickets } = useContext(SocketDataContext);
+  const {
+    AppSocket,
+    wsTickets,
+    setWsTicketFilter,
+    wsTicketFilter,
+  } = useContext(SocketDataContext);
   const [loadSelectedMsg, setloadSelectedMsg] = useState("");
   const [tickets, setTickets] = useState([]);
   const [filterTicketsState, setFilterTicketsState] = useState([]);
@@ -87,7 +92,7 @@ export default function Conversation() {
   }, []);
   useEffect(() => {
     AppSocket.createConnection();
-  }, []);
+  }, [wsTickets]);
 
   useEffect(() => {
     setLoadingTicks(true);
@@ -116,12 +121,9 @@ export default function Conversation() {
   };
 
   const filterTicket = (value) => {
-    setFilterChat(value);
-    let filterTickets = tickets.filter((data) => {
-      return data.channel == value;
-    });
-    setFilterTicketsState(filterTickets);
-    console.log(filterTickets);
+    AppSocket.createConnection();
+    let data = { channel: value, per_page: 100 };
+    AppSocket.io.emit(`ws_tickets`, data);
   };
 
   const replyTicket = async (reply, attachment) => {
@@ -130,8 +132,10 @@ export default function Conversation() {
       // type: "note",
       response: reply.richText,
       plainResponse: reply.plainText,
+      phoneNumber: singleTicketFullInfo.customer.phone_number,
       // attachment: "",
     };
+    console.log(singleTicketFullInfo.customer.phone_number);
     console.log(data);
     setsendingReply(true);
     const res = await httpPostMain(
@@ -310,7 +314,7 @@ export default function Conversation() {
                   filterTicket(e.target.value);
                 }}
               >
-                <option value="system">All</option>
+                <option value="">All</option>
                 <option value="facebook">Facebook</option>
                 <option value="whatsapp">Whatsapp</option>
                 <option value="email">Email</option>

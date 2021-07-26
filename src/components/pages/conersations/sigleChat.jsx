@@ -143,7 +143,17 @@ export default function SigleChat({
                       className="singleChat-Sender-img"
                       style={{ position: "relative" }}
                     >
-                      <img src={e?.user?.avatar} alt="" />
+                      {e?.user?.avatar == null ? (
+                        <div className="singleChat-Sender-imgNoImg">
+                          <p>{`${capitalizeFirstLetter(
+                            e?.user?.firstname?.slice(0, 1)
+                          )} ${capitalizeFirstLetter(
+                            e?.user?.lastname?.slice(0, 1)
+                          )}`}</p>
+                        </div>
+                      ) : (
+                        <img src={e?.user?.avatar} alt="" />
+                      )}
 
                       <div className="single-chat-user-name">
                         <p style={{ color: "#006298" }}>
