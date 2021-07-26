@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
-
+import Swal from "sweetalert2";
 import { LayoutContext } from "../../context/layoutContext";
 import { AuthContext } from "../../context/authContext";
+import { NotificationManager } from "react-notifications";
 import {
   appLogo,
   toggleIcon,
@@ -38,6 +39,24 @@ export default function Sidebar({ browserRouter, currentRoute }) {
     popular: true,
     recent: false,
   });
+
+  const Logout = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You are about to logout from the Alpha Kustormar service!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#006298",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Log me out!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.clear();
+        NotificationManager.success("Logout Successfully.");
+        window.location.href = "/";
+      }
+    });
+  };
 
   return (
     <div>
@@ -215,7 +234,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
             className={`${
               appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
             }`}
-            onClick={() => browserRouter(`/home`)}
+            onClick={() => Logout()}
           >
             {" "}
             <span style={{ marginRight: "20px", marginTop: "-4px" }}>
