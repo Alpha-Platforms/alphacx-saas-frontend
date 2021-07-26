@@ -1,5 +1,11 @@
 .codei-ui-andy-setDefaults * {
+  border: none;
+  outline: none !important;
   margin: 0;
+}
+
+.codei-ui-andy-setDefaults button {
+  border: 0 !important;
 }
 .conversation-wrap {
   width: 100%;
@@ -41,6 +47,8 @@
 
 .message-toggles select {
   border: none;
+  width: 90px;
+  overflow: hidden;
   background-color: transparent !important;
 }
 
@@ -192,6 +200,11 @@
   height: 80%;
   overflow: hidden;
   overflow-y: scroll;
+  padding-bottom: 30px !important;
+}
+
+.message-list-container .message-listmain:last-child {
+  border-bottom: none;
 }
 
 .message-list-container::-webkit-scrollbar {
@@ -243,7 +256,7 @@
 
 .singleChat-Sender-img {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
 }
 
 .singleChat-Sender-img .singleChatSenderImg {
@@ -258,6 +271,28 @@
   text-transform: uppercase;
   font-weight: 600;
   font-size: 14px;
+}
+
+.singleChatSenderImg p {
+  margin: 0;
+}
+
+.singleChat-Sender-imgNoImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #006298;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.singleChat-Sender-imgNoImg p {
+  margin: 0;
 }
 
 .singleChat-Sender-img img {
@@ -357,12 +392,15 @@
 }
 
 .single-chat-response {
-  margin-top: 10px;
+  margin-top: 5px;
   color: #656565;
   word-spacing: 1px;
   line-height: 25px;
   font-size: 15px;
   color: #656565;
+}
+.single-chat-response p {
+  margin: 0;
 }
 
 .single-msg-container {
@@ -377,8 +415,8 @@
   margin-right: 25px;
 }
 .sendMsg button {
-  width: 140px;
-  height: 40px;
+  width: 98px;
+  height: 37px;
   background-color: #006298;
   border-radius: 4px;
   color: white;
@@ -560,6 +598,13 @@
   background-color: white;
   padding: 35px 30px 20px 30px;
 }
+
+.saveTicketWrapModal input,
+.textarea,
+select {
+  padding-left: 7px;
+  outline: none;
+}
 .modalHeaderSaveT {
   color: #2d3250;
   font-size: 17px;
@@ -652,17 +697,19 @@ select {
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
-  margin-top: 25px;
+  margin-top: 35px;
   padding-bottom: 20px;
 }
 
 .closeTicketModdalj select {
-  width: 120px;
+  width: 142px;
   border-radius: 4px;
-  height: 40px;
+  height: 37px;
+
   background: #006298;
   color: white;
   cursor: pointer;
+  padding: 10px;
 }
 /* RESPONSIVE CHAT */
 
@@ -763,4 +810,52 @@ select {
   .single-chat-swap-icon {
     padding-left: 10px !important;
   }
+}
+
+.rdw-editor-toolbar img {
+  width: 17px !important;
+  /* height: 15px; */
+}
+
+.rdw-option-wrapper {
+  border: none !important;
+  margin-right: 10px !important;
+}
+
+.wrapperClassName {
+  display: flex !important;
+  flex-direction: column !important;
+  /* top: auto !important;
+  bottom: 10px !important; */
+}
+.rdw-editor-main {
+  order: 1 !important;
+}
+.toolbarClassName {
+  order: 2 !important;
+}
+
+.rdw-editor-wrapper {
+  border: 1px solid rgba(0, 98, 152, 0.15) !important;
+  margin-left: 21px !important;
+  margin-right: 18px !important;
+  margin-top: 25px;
+  height: 180px !important;
+  border-radius: 9px !important;
+  padding-bottom: 10px !important;
+}
+
+.rdw-editor-toolbar {
+  border: none !important;
+}
+.rdw-option-wrapper {
+}
+
+.rdw-option-wrapper[title~="Bold"] img {
+  width: 15px !important;
+  height: 15px;
+}
+
+.DraftEditor-editorContainer {
+  padding: 2px 10px 10px 10px;
 }

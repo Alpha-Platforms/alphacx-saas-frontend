@@ -38,6 +38,7 @@ import TicketList from "./components/pages/tickets/TicketList";
 import SettingsHome from "./components/pages/settings";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import {SocketDataProvider} from './context/socket'
 import ArticleList from "./components/pages/help_center/help_pages/articleList";
 
 const mapStateToProps = (state, ownProps) => ({
@@ -119,6 +120,7 @@ const SiteRouter = connect(mapStateToProps, {
             exact
             path="/conversation"
             component={Conversation}
+            pageName="Conversations"
           />
           <Route exact path="/customers-null" component={CustomersNull} />
           <DefaultLayoutRoute
@@ -155,7 +157,9 @@ function App(props) {
       <PersistGate persistor={persistor}>
         <NotificationContainer />
         <LayoutProvider>
+          <SocketDataProvider>
           <SiteRouter />
+          </SocketDataProvider>
         </LayoutProvider>
       </PersistGate>
     </Provider>

@@ -3,6 +3,8 @@ import pic from "../../../assets/imgF/codeuiandyimg.png";
 import truncateWithEllipses from "../../helpers/truncate";
 import ClipLoader from "react-spinners/ClipLoader";
 import { timeFormater } from "../../helpers/dateFormater";
+import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
+
 export default function MessageList({
   tickets,
   LoadingTick,
@@ -61,10 +63,11 @@ export default function MessageList({
               <div className="message-user-img">
                 {data.customer.avatar == null ? (
                   <div className="message-user-noimg">
-                    <span>{`${data?.customer?.firstname?.slice(
-                      0,
-                      1
-                    )} ${data?.customer?.lastname?.slice(0, 1)}`}</span>
+                    <span>{`${capitalizeFirstLetter(
+                      data?.customer?.firstname?.slice(0, 1)
+                    )} ${capitalizeFirstLetter(
+                      data?.customer?.lastname?.slice(0, 1)
+                    )}`}</span>
                   </div>
                 ) : (
                   <img src={data?.customer?.avatar} alt="" />
@@ -72,13 +75,9 @@ export default function MessageList({
                 <div className="user-status-online"></div>
               </div>
               <div className="message-user-body">
-                <p className="senderName">{`${
-                  data?.customer?.firstname?.charAt(0).toUpperCase() +
-                  data?.customer?.firstname?.slice(1)
-                } ${
-                  data?.customer?.lastname?.charAt(0).toUpperCase() +
-                  data?.customer?.lastname?.slice(1)
-                }`}</p>
+                <p className="senderName">{`${capitalizeFirstLetter(
+                  data?.customer?.firstname
+                )} ${capitalizeFirstLetter(data?.customer?.lastname)}`}</p>
                 <p className="senderMSG">
                   {data.customer.description == null
                     ? ""
