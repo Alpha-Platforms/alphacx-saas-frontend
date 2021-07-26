@@ -80,10 +80,10 @@ const OrganisationList = () => {
 
     return (
         <>
-            <div className="m-4">
+            <div>
 
                 <div
-                    className="d-flex justify-content-between flex-wrap bg-light rounded-top-big flex-md-nowrap align-items-center p-4">
+                    className="d-flex justify-content-between flex-wrap bg-light rounded-top-04 flex-md-nowrap align-items-center p-4">
 
                     <div>
                         <div className="input-group input-group-sm has-validation">
@@ -132,7 +132,7 @@ const OrganisationList = () => {
 
                 </div>
 
-                <table className="table bg-white rounded-bottom-big overflow-hidden">
+                <table className="table bg-white rounded-bottom-04 overflow-hidden">
                     <thead className="bg-light border-0">
                         <tr className="border-0">
                             <th className="text-center">
