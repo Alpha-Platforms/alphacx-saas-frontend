@@ -90,6 +90,7 @@ export default function Conversation() {
   }, []);
 
   useEffect(() => {
+    setLoadingTicks(true);
     setTickets(wsTickets);
     setLoadingTicks(false);
   }, [wsTickets]);

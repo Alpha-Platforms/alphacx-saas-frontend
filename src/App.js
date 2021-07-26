@@ -120,6 +120,7 @@ const SiteRouter = connect(mapStateToProps, {
             exact
             path="/conversation"
             component={Conversation}
+            pageName="Conversations"
           />
           <Route exact path="/customers-null" component={CustomersNull} />
           <DefaultLayoutRoute
