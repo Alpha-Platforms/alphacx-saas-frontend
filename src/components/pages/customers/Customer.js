@@ -223,7 +223,7 @@ const Customer = () => {
                             className="mb-3">
                             <Tab eventKey="ticket-history" className="px-2">
                                 <div>
-                                    <table className="table bg-white rounded-bottom-big overflow-hidden">
+                                    <table className="table bg-white rounded-bottom-o4 overflow-hidden">
                                         <thead className="border-0">
                                             <tr className="border-0">
                                                 <th className="text-center">
