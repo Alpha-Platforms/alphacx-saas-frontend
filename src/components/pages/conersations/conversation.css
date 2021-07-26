@@ -1,6 +1,7 @@
 .codei-ui-andy-setDefaults * {
   border: none;
   outline: none !important;
+  margin: 0;
 }
 
 .codei-ui-andy-setDefaults button {
@@ -248,7 +249,7 @@
 
 .singleChat-Sender-img {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
 }
 
 .singleChat-Sender-img .singleChatSenderImg {
@@ -263,6 +264,28 @@
   text-transform: uppercase;
   font-weight: 600;
   font-size: 14px;
+}
+
+.singleChatSenderImg p {
+  margin: 0;
+}
+
+.singleChat-Sender-imgNoImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #006298;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.singleChat-Sender-imgNoImg p {
+  margin: 0;
 }
 
 .singleChat-Sender-img img {
@@ -362,12 +385,15 @@
 }
 
 .single-chat-response {
-  margin-top: 10px;
+  margin-top: 5px;
   color: #656565;
   word-spacing: 1px;
   line-height: 25px;
   font-size: 15px;
   color: #656565;
+}
+.single-chat-response p {
+  margin: 0;
 }
 
 .single-msg-container {
@@ -564,6 +590,13 @@
   height: fit-content;
   background-color: white;
   padding: 35px 30px 20px 30px;
+}
+
+.saveTicketWrapModal input,
+.textarea,
+select {
+  padding-left: 7px;
+  outline: none;
 }
 .modalHeaderSaveT {
   color: #2d3250;
@@ -802,6 +835,7 @@ select {
   margin-top: 25px;
   height: 180px !important;
   border-radius: 9px !important;
+  padding-bottom: 10px !important;
 }
 
 .rdw-editor-toolbar {

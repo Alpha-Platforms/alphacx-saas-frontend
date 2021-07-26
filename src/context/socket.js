@@ -5,6 +5,7 @@ export const SocketDataContext = createContext();
 export const AppSocket = {};
 export const SocketDataProvider = (props) => {
   const [wsTickets, setwsTickets] = useState([]);
+  const [wsTicketFilter, setWsTicketFilter] = useState({ channel: "",per_page:100 });
 let baseUrl = "https://kustormar-staging.herokuapp.com"
   useEffect(() => {}, [wsTickets]);
 
@@ -26,15 +27,13 @@ let baseUrl = "https://kustormar-staging.herokuapp.com"
       console.log("connected to server");
     });
     //console.log(">>>a","gets here");
-    AppSocket.io.on("ws_tickets", (data) => {
+    AppSocket.io.on(`ws_tickets`, (data) => {
         console.log(">>>a","gets here");
       console.log("this is a notification", data?.data?.tickets);
       setwsTickets(data?.data?.tickets)
     });
 
-    AppSocket.io.emit("ws_tickets", (data) => {
-      
-    });
+    AppSocket.io.emit(`ws_tickets`, (wsTicketFilter));
   };
 
   AppSocket.sendRequest = async (path, payload) => {
@@ -50,6 +49,8 @@ let baseUrl = "https://kustormar-staging.herokuapp.com"
       value={{
         AppSocket,
         wsTickets,
+        setWsTicketFilter,
+        wsTicketFilter
       }}
     >
       {props.children}
