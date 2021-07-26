@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../../../styles/Customer.css'
 import {getCustomers} from '../../../reduxstore/actions/customerActions';
-import {NotificationManager} from 'react-notifications';
+// import {NotificationManager} from 'react-notifications';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import tableIcons from '../../../assets/materialicons/tableIcons';
