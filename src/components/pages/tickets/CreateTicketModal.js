@@ -18,7 +18,8 @@ const CreateTicketModal = ({
     userId,
     isTicketCreated,
     getPaginatedTickets,
-    resetTicketCreated
+    resetTicketCreated,
+    customers
 }) => {
     const [selectedTags,
         setSelectedTags] = useState([]);
@@ -80,7 +81,8 @@ const CreateTicketModal = ({
                 description,
                 plainDescription: description,
                 categoryId: category,
-                userId,
+                // userId,
+                userId: customer, 
                 groupId: group,
                 statusId: status,
                 subject,
@@ -94,12 +96,16 @@ const CreateTicketModal = ({
     useEffect(() => {
         if (isTicketCreated) {
             resetTicketCreated();
-            NotificationManager.success("Successful", 'Ticket created successfully')
+            NotificationManager.success("Successful", 'Ticket created successfully');
             setCreateModalShow(false);
             getPaginatedTickets(5, 1);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isTicketCreated])
+
+    const wordCapitalize = word => {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+    }
 
     return (
         <Modal
@@ -115,11 +121,19 @@ const CreateTicketModal = ({
                         <div className="row">
                             <div className="col-6 mt-2 position-relative">
                                 <label htmlFor="customer" className="form-label">Customer</label>
-                                <input
+                                <select
+                                    className="form-select"
+                                    name="customer"
+                                    aria-label="Customer select"
+                                    onChange={handleModalInput}>
+                                    <option value=""></option>
+                                    {customers && customers.map(({id, firstname, lastname}) => <option value={id}>{`${wordCapitalize(firstname)} ${wordCapitalize(lastname)}`}</option>)}
+                                </select>
+                                {/* <input
                                     type="text"
                                     name="customer"
                                     className="form-control"
-                                    onChange={handleModalInput}/>
+                                    onChange={handleModalInput}/> */}
                                 <span className="text-at-blue-light f-12 d-inline-block w-100 text-end">Add Customer</span>
                             </div>
 
@@ -264,7 +278,8 @@ const mapStateToProps = (state, ownProps) => ({
     agents: state.agent.agents,
     groups: state.group.groups,
     userId: state.userAuth.user.id,
-    isTicketCreated: state.ticket.isTicketCreated
+    isTicketCreated: state.ticket.isTicketCreated,
+    customers: state.customer.customers
 })
 
 export default connect(mapStateToProps, {addTicket, getPaginatedTickets, resetTicketCreated})(CreateTicketModal);

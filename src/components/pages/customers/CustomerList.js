@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../../../styles/Customer.css'
 import {getCustomers} from '../../../reduxstore/actions/customerActions';
-import {NotificationManager} from 'react-notifications';
+// import {NotificationManager} from 'react-notifications';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import tableIcons from '../../../assets/materialicons/tableIcons';
@@ -89,10 +89,10 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
             <div>
                 {custLoading && <div className="cust-table-loader"><ScaleLoader loading={custLoading} color={"#006298"}/></div>}
 
-                <div className="m-4">
+                <div>
 
                     <div
-                        className="d-flex justify-content-between flex-wrap bg-light rounded-top-big flex-md-nowrap align-items-center p-4">
+                        className="d-flex justify-content-between flex-wrap bg-light rounded-top-04 flex-md-nowrap align-items-center p-4">
 
                         <div>
                         </div>
@@ -107,7 +107,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
 
                             <button
                                 type="button"
-                                className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3 reset-btn-outline"
+                                className="btn btn-sm btn-outline-secondary px-md-3 ms-md-3 reset-btn-outline"
                                 onClick={() => setUploadModalShow(true)}>
                                 <UploadSvg/>&nbsp;Import
                             </button>
