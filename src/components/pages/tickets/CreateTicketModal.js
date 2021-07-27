@@ -15,7 +15,6 @@ const CreateTicketModal = ({
     agents,
     groups,
     addTicket,
-    userId,
     isTicketCreated,
     getPaginatedTickets,
     resetTicketCreated,
@@ -277,7 +276,6 @@ const mapStateToProps = (state, ownProps) => ({
     statuses: state.status.statuses,
     agents: state.agent.agents,
     groups: state.group.groups,
-    userId: state.userAuth.user.id,
     isTicketCreated: state.ticket.isTicketCreated,
     customers: state.customer.customers
 })

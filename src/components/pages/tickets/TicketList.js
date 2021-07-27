@@ -61,7 +61,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
             rowsPerPageOptions={[10, 20, 30]}
             rowsPerPage={meta?.itemsPerPage || 5}
             count={Number(meta?.totalItems || 20)}
-            page={meta.currentPage - 1}
+            page={(meta?.currentPage || 1) - 1}
             onPageChange={onChangePage}
             // when the number of rows per page changes
             onRowsPerPageChange={event => {
@@ -90,13 +90,13 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
     const getStatusColor = status => {
         switch (status) {
             case "Pending":
-                return 'yellow';
+                return 'orange';
             case "Resolved":
                 return 'green';
             case "In Review":
-                return 'orange';
-            case "Awaiting User Reply":
                 return 'yellow';
+            case "Awaiting User Reply":
+                return 'awaiting';
             case "Closed":
                 return 'red';
             default:

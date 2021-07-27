@@ -744,6 +744,13 @@ a object {
 */
 /* ticket module */
 
+.ticket-state .btn {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  border-radius: 10rem;
+}
+
 .ticket-state.red .btn {
   border: solid 1px rgb(255 77 53 / 30%);
   background-color: rgb(255 77 53 / 6%);
@@ -760,10 +767,16 @@ a object {
   color: #eeb64a !important;
 }
 
+.ticket-state.awaiting .btn {
+  border: solid 1px rgb(108 65 129 / 30%);
+  background-color: rgb(108 65 129 / 6%);
+  color: rgba(108, 65, 129) !important;
+}
+
 .ticket-state.yellow .btn {
-  border: solid 1px rgb(240 233 36 / 30%);
-  background-color: rgb(240 233 36 / 6%);
-  color: #f0e924 !important;
+  border: solid 1px rgb(56 150 136 / 30%);
+  background-color: rgb(56 150 136 / 6%);
+  color: rgb(56, 150, 136) !important;
 }
 
 .ticket-priority button span::before,
