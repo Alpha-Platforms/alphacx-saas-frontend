@@ -4,7 +4,10 @@ const initialState = {
 	customers: [],
     meta: null,
 	isCustomersLoading: false, //will be true when fetching data and back to false when the fetch is done
-	isCustomersLoaded: false
+	isCustomersLoaded: false,
+	currentCustomer: null,
+	isCurrentCustomerLoading: false,
+	isCurrentCustomerLoaded: false
 }
 
 //export the post reducer
@@ -27,6 +30,19 @@ const customerReducer = (state = initialState, action) => {
 		case types.ADD_CUSTOMER:
 			return {
 				...state
+			}
+		case types.CURRENT_CUSTOMER_LOADING:
+			return {
+				...state,
+				isCurrentCustomerLoading: true,
+				isCurrentCustomerLoaded: false
+			}
+		case types.GET_CURRENT_CUSTOMER:
+			return {
+				...state,
+				currentCustomer: action.payload,
+				isCurrentCustomerLoading: false,
+				isCurrentCustomerLoaded: true
 			}
 		default:
 			return state;

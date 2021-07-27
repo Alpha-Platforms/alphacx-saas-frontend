@@ -188,7 +188,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                                 ? contact.theme
                                                 : themes[Math.floor(Math.random() * 4)]}`}>{getUserInitials(`${contact.firstname} ${contact.lastname}`)}</div>
                                             <div className="ms-2 mt-1">
-                                                <Link to="#" style={{ textTransform: 'capitalize' }}>{`${contact.firstname} ${contact.lastname}`}</Link>
+                                                <Link to={`/customers/${contact.id}`} style={{ textTransform: 'capitalize' }}>{`${contact.firstname} ${contact.lastname}`}</Link>
                                             </div>
                                         </div>)
                                     }, {
@@ -213,9 +213,10 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                 company,
                                 email,
                                 phone_number,
-                                theme}) => ({
+                                theme,
+                                id}) => ({
                                 title: title ? title :`Mr.`,
-                                contact: {firstname, lastname, theme},
+                                contact: {firstname, lastname, theme, id},
                                 organisation: company ? company : 'Gillete',
                                 emailAddress: email,
                                 workphone: phone_number,
