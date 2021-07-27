@@ -72,12 +72,14 @@ export const getCurrentCustomer = (id) => (dispatch, getState) => {
         ?.id === id)[0];
 
     console.log("Current Customer", currentCustomer);
+
     if (getState().customer.currentCustomer
         ?.id === id) {
-        return;
-    }
-
-    if (currentCustomer) {
+        dispatch({
+            type: types.GET_CURRENT_CUSTOMER,
+            payload: getState().customer.currentCustomer
+        })
+    } else if (currentCustomer) {
         dispatch({type: types.GET_CURRENT_CUSTOMER, payload: currentCustomer})
     } else {
         axios
@@ -88,7 +90,13 @@ export const getCurrentCustomer = (id) => (dispatch, getState) => {
                     ? res.data.data
                     : null
             }))
-            .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+            .catch(err => {
+                dispatch(returnErrors(err.response.data, err.response.status))
+                dispatch({
+                    type: types.GET_CURRENT_CUSTOMER,
+                    payload: null
+                })
+            });
     }
 }
 

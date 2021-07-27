@@ -41,7 +41,18 @@ import CreateCustomerModal from './CreateCustomerModal';
             />
         );
     } */
-
+export const getUserInitials = (name) => {
+    name = name.toUpperCase();
+    const nameArr = name.split(' ');
+    const firstInitial = nameArr[0] && nameArr[0][0];
+    const secondInitial = nameArr[1] && nameArr[1][0];
+    const result = `${firstInitial
+        ? firstInitial
+        : ''}${secondInitial
+            ? secondInitial
+            : ''}`;
+    return <span>{result}</span>;
+}
     
 const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPaginatedCustomers}) => {
     const [createModalShow,

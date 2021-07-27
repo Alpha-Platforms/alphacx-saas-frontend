@@ -18,6 +18,7 @@ import ScaleLoader from 'react-spinners/ScaleLoader';
 import {connect} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {getCurrentCustomer} from '../../../reduxstore/actions/customerActions';
+import {getUserInitials} from './CustomerList';
 
 const CircleIcon = (props) => <span className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
 
@@ -91,7 +92,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
         <Fragment>
             {!isCurrentCustomerLoaded
                 ? <div className="single-cust-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
-                : <div
+                : !currentCustomer? <div>No Customer Found.</div> : <div
                     style={{
                     gridTemplateColumns: "280px 1fr"
                 }}
@@ -103,10 +104,9 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                     }}
                         className="bg-primary py-5 px-3 bg-white">
                         <div className="user-initials-lg">
-                            <div className="user-initials blue me-auto ms-auto">
-                                AO</div>
+                            <div className="user-initials blue me-auto ms-auto">{getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname}`)}</div>
                             <div className="text-center mt-3">
-                                <h4>Adewale Olagunju</h4>
+                                <h4 style={{ textTransform: 'capitalize' }}>{`${currentCustomer.firstname} ${currentCustomer.lastname}`}</h4>
                                 <p className="text-muted">Gillette Group International</p>
                             </div>
                         </div>
@@ -117,21 +117,21 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                     <div><CircleIcon icon={WorkIcon}/></div>
                                     <div>
                                         <h6>Account ID</h6>
-                                        <p className="text-muted">000112</p>
+                                        <p className="text-muted">{currentCustomer.id.slice(0, 8).toUpperCase()}</p>
                                     </div>
                                 </li>
                                 <li>
                                     <div><CircleIcon icon={MessageIcon}/></div>
                                     <div>
                                         <h6>Email Address</h6>
-                                        <p className="text-muted">jeromebell@gmail.com</p>
+                                        <p className="text-muted">{currentCustomer.email}</p>
                                     </div>
                                 </li>
                                 <li>
                                     <div><CircleIcon icon={CallIcon}/></div>
                                     <div>
                                         <h6>Work Phone</h6>
-                                        <p className="text-muted">(217) 555-0113</p>
+                                        <p className="text-muted">{currentCustomer.phone_number}</p>
                                     </div>
                                 </li>
                                 <li>
