@@ -66,7 +66,6 @@ const SiteRouter = connect(mapStateToProps, {
     isTenantAuthenticated,
     tenantToken,
     isUserAuthenticated,
-    getCustomers,
     getPaginatedTickets,
     getPriorities,
     getCategories,
@@ -96,7 +95,7 @@ const SiteRouter = connect(mapStateToProps, {
     useEffect(() => {
         if (isUserAuthenticated) {
             // getCustomers();
-            getPaginatedCustomers(5, 1);
+            getPaginatedCustomers(10, 1);
             // getTickets();
             getPaginatedTickets(10, 1);
             getPriorities();

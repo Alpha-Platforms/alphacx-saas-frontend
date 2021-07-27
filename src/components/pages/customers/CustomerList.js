@@ -100,8 +100,8 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
             return (
             <TablePagination
                 {...tablePaginationProps}
-                rowsPerPageOptions={[5, 10, 20, 30]}
-                rowsPerPage={meta?.itemsPerPage || 5}
+                rowsPerPageOptions={[10, 20, 30]}
+                rowsPerPage={meta?.itemsPerPage || 10}
                 count={Number(meta?.totalItems || 20)}
                 page={(meta?.currentPage || 1) - 1}
                 onPageChange={onChangePage}
@@ -203,7 +203,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                     }, {
                                         title: 'Tags',
                                         field: 'tags',
-                                        render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1">+2</span></div>)
+                                        render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">+2</span></div>)
                                     }
                                 ]
                             }
@@ -228,7 +228,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                 exportButton: true,
                                 tableLayout: 'auto',
                                 paging: true,
-                                pageSize: meta?.itemsPerPage || 5,
+                                pageSize: meta?.itemsPerPage || 10,
                                 headerStyle: {
                                     backgroundColor: '#f8f9fa'
                                 }
