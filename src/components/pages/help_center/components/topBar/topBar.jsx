@@ -8,8 +8,6 @@ const TopBar = () => {
   const location = useLocation();
   const [links, setLinks] = useState([]);
   useEffect(() => {
-    console.log(location.pathname);
-    console.log(location.pathname.split("/"));
     let pagelinks = location.pathname.split("/");
     pagelinks.shift();
     pagelinks.shift();
@@ -27,7 +25,7 @@ const TopBar = () => {
             key={i}
             className={`link ${i === links.length - 1 ? "active" : ""}`}
           >
-            {link.replace("-", " ")}
+            <Link to={`/help/${link}`}>{link.replaceAll("-", " ")}</Link>
           </p>
         ))}
       </div>
