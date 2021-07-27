@@ -15,7 +15,7 @@ import agentReducer from './agentReducer';
 const persistConfig = {
     key: 'alphacx_platform',
     storage,
-    whitelist: ['error', 'tenantAuth', 'userAuth', 'customer', 'priority', 'category', 'status', 'group']
+    whitelist: ['error', 'tenantAuth', 'userAuth', 'priority', 'category', 'status', 'group']
 }
 
 const rootReducer = combineReducers({

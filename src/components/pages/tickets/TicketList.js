@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
-import {ReactComponent as ImportSvg} from '../../../assets/svgicons/import.svg';
 import {ReactComponent as UploadSvg} from '../../../assets/svgicons/Upload.svg';
 import TicketStarIcon from '../../../assets/svgicons//Ticket-Star.svg';
 import MaterialTable from 'material-table';

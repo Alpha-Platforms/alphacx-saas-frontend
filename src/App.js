@@ -20,7 +20,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./reduxstore/store";
 import { loginTenant } from "./reduxstore/actions/tenantAuthActions";
 import { loginUser } from "./reduxstore/actions/userAuthActions";
-import { getCustomers } from "./reduxstore/actions/customerActions";
+import { getCustomers, getPaginatedCustomers } from "./reduxstore/actions/customerActions";
 import {
   getTickets,
   getPaginatedTickets,
@@ -57,7 +57,8 @@ const SiteRouter = connect(mapStateToProps, {
   getCategories,
   getStatuses,
   getGroups,
-  getAgents
+  getAgents,
+  getPaginatedCustomers
 })(
   ({
     loginTenant,
@@ -71,7 +72,8 @@ const SiteRouter = connect(mapStateToProps, {
     getCategories,
     getStatuses,
     getGroups,
-    getAgents
+    getAgents,
+    getPaginatedCustomers
 }) => {
     useEffect(() => {
       loginTenant({ domain: "techpoint" });
@@ -93,7 +95,8 @@ const SiteRouter = connect(mapStateToProps, {
 
     useEffect(() => {
         if (isUserAuthenticated) {
-            getCustomers();
+            // getCustomers();
+            getPaginatedCustomers(5, 1);
             // getTickets();
             getPaginatedTickets(10, 1);
             getPriorities();
