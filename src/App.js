@@ -28,18 +28,19 @@ import {
 import { getPriorities } from "./reduxstore/actions/priorityActions";
 import { getCategories } from "./reduxstore/actions/categoryActions";
 import { getStatuses } from "./reduxstore/actions/statusActions";
-import {getGroups} from './reduxstore/actions/groupActions';
-import {getAgents} from './reduxstore/actions/agentActions';
+import { getGroups } from "./reduxstore/actions/groupActions";
+import { getAgents } from "./reduxstore/actions/agentActions";
 import CustomerList from "./components/pages/customers/CustomerList";
 import CustomersNull from "./components/pages/customers/CustomersNull";
 import Customer from "./components/pages/customers/Customer";
 import OrganisationList from "./components/pages/customers/OrganisationList";
 import TicketList from "./components/pages/tickets/TicketList";
-import SettingsHome from "./components/pages/settings";
+import SettingsHome from './components/pages/settings';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import {SocketDataProvider} from './context/socket'
+import { SocketDataProvider } from "./context/socket";
 import ArticleList from "./components/pages/help_center/help_pages/articleList";
+import Article from "./components/pages/help_center/help_pages/article";
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -66,6 +67,7 @@ const SiteRouter = connect(mapStateToProps, {
     isTenantAuthenticated,
     tenantToken,
     isUserAuthenticated,
+    getCustomers,
     getPaginatedTickets,
     getPriorities,
     getCategories,
@@ -115,6 +117,7 @@ const SiteRouter = connect(mapStateToProps, {
           {/* help pages */}
           <Route exact path="/help" component={HelpCenter} />
           <Route exact path="/help/:topic" component={ArticleList} />
+          <Route exact path="/help/:topic/:article" component={Article} />
 
           {/* help pages end */}
           <DefaultLayoutRoute exact path="/home" component={Dashboard} />
@@ -161,7 +164,7 @@ function App(props) {
         <NotificationContainer />
         <LayoutProvider>
           <SocketDataProvider>
-          <SiteRouter />
+            <SiteRouter />
           </SocketDataProvider>
         </LayoutProvider>
       </PersistGate>

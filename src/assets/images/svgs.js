@@ -2357,6 +2357,23 @@ export const SendIcon = ({ size }) => {
   );
 };
 
+export const HelpIcons = ({ size, color, name }) => {
+  return name === "star" ? (
+    <svg
+      width={size || 22}
+      height={size || 21}
+      viewBox="0 0 22 21"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M11 0l3.74 6.443L22 8.021l-4.95 5.56.748 7.419L11 17.993 4.202 21l.748-7.418L0 8.021l7.26-1.579L11 0z"
+        fill={color || "#FFCB45"}
+      />
+    </svg>
+  ) : null;
+};
+
 export const HelpNavIcon = ({ size, name }) => {
   return name === "work" ? (
     <svg
