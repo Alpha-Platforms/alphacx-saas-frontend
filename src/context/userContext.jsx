@@ -15,7 +15,7 @@ export const UserDataProvider = (props) => {
     let lUser = getLocalItem("user");
     //alert(lUser);
     if (lUser == undefined || lUser == null) {
-      window.location.href = "/";
+      // window.location.href = "/";
     } else {
       console.log(lUser);
       setUser(lUser);

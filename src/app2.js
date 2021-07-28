@@ -216,13 +216,11 @@ function App(props) {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <NotificationContainer />
-        <UserDataProvider>
-          <LayoutProvider>
-            <SocketDataProvider>
-              <SiteRouter />
-            </SocketDataProvider>
-          </LayoutProvider>
-        </UserDataProvider>
+        <LayoutProvider>
+          <SocketDataProvider>
+            <SiteRouter />
+          </SocketDataProvider>
+        </LayoutProvider>
       </PersistGate>
     </Provider>
   );

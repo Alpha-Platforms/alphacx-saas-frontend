@@ -16,7 +16,7 @@ let baseUrl = "https://kustormar-staging.herokuapp.com"
     let lUser = getLocalItem("user");
     //alert(lUser);
     if (lUser == undefined || lUser == null) {
-      window.location.href = "/";
+      // window.location.href = "/";
     } else {
       setuser(lUser)
       console.log(lUser);
