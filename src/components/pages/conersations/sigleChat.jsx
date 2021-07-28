@@ -21,8 +21,6 @@ export default function SigleChat({
   setshowUserProfile,
   setopenSaveTicketModal,
   openSaveTicketModal,
-  msgHistory,
-  UserInfo,
 }) {
   useEffect(() => {
     // getTicketMsg();
@@ -68,9 +66,7 @@ export default function SigleChat({
             <p>{`${capitalizeFirstLetter(
               SenderInfo?.customer?.firstname
             )} ${capitalizeFirstLetter(SenderInfo?.customer?.lastname)}`}</p>
-            <p>{`Via ${ticket[0].channel} (${dateFormater(
-              ticket[0].updated_at
-            )})`}</p>
+            <p>{`Via email (${dateFormater(ticket[0].updated_at)})`}</p>
           </div>
         </div>
         <div className="alignt-action-right-single">
@@ -136,8 +132,11 @@ export default function SigleChat({
           </p>
         ) : (
           <div className="chat-response" style={{ marginTop: "20px" }}>
-            {ticket.map((data) => {
-              return msgHistory.map((e) => {
+            {ticket?.map((data) => {
+              {
+                setMessageSenderId(data.id);
+              }
+              return data.history.map((e) => {
                 return (
                   <div className="single-msg-container">
                     <div
@@ -158,12 +157,10 @@ export default function SigleChat({
 
                       <div className="single-chat-user-name">
                         <p style={{ color: "#006298" }}>
-                          {`${e?.user?.firstname} ${e?.user?.lastname}`}{" "}
+                          {`${e.user.firstname} ${e?.user?.lastname}`}{" "}
                           <span style={{ color: "#656565" }}>replied</span>
                         </p>
-                        <p>{`Via ${ticket[0].channel} (${dateFormater(
-                          e?.created_at
-                        )})`}</p>
+                        <p>{`Via email (${dateFormater(data?.updated_at)})`}</p>
                       </div>
                     </div>
                     <div className="single-chat-response">
