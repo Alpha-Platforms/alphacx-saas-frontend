@@ -97,7 +97,6 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                     main: 'rgba(0, 98, 152)',
                 },
             },
-            
         });
         
         const TicketPagination = props => {

@@ -69,173 +69,173 @@ const Fields = () => {
                         <Tab eventKey="contact-field" className="px-2">
                             <div>
 
-                                <div class="border border-1 w-75 p-5 mt-3">
-                                    <div class="text-center py-4">
-                                        <div class="fieldsWrapper pb-3" id="customerFieldWrapper">
-                                            <div class="fieldParent d-flex my-2">
+                                <div className="border border-1 w-75 p-5 mt-3">
+                                    <div className="text-center py-4">
+                                        <div className="fieldsWrapper pb-3" id="customerFieldWrapper">
+                                            <div className="fieldParent d-flex my-2">
                                                 <button
                                                     type="button"
-                                                    class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                    className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                     <HamburgerSvg/>
                                                 </button>
-                                                <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                                <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                     <span>First Name</span>
                                                     <span>Required</span>
 
                                                 </div>
                                                 <button
                                                     type="button"
-                                                    class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                    className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                     <FormMinusNeutralSvg/>
 
                                                 </button>
                                             </div>
 
-                                            <div class="fieldParent d-flex my-2">
+                                            <div className="fieldParent d-flex my-2">
                                                 <button
                                                     type="button"
-                                                    class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                    className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                     <HamburgerSvg/>
                                                 </button>
-                                                <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                                <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                     <span>Last Name</span>
                                                     <span>Required</span>
 
                                                 </div>
                                                 <button
                                                     type="button"
-                                                    class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                    className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                     <FormMinusNeutralSvg/>
 
                                                 </button>
                                             </div>
 
-                                            <div class="fieldParent d-flex my-2">
+                                            <div className="fieldParent d-flex my-2">
                                                 <button
                                                     type="button"
-                                                    class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                    className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                     <HamburgerSvg/>
                                                 </button>
-                                                <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                                <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                     <span>Title</span>
                                                     <span>Required</span>
 
                                                 </div>
                                                 <button
                                                     type="button"
-                                                    class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                    className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                     <FormMinusNeutralSvg/>
 
                                                 </button>
                                             </div>
 
-                                            <div class="fieldParent d-flex my-2">
+                                            <div className="fieldParent d-flex my-2">
                                                 <button
                                                     type="button"
-                                                    class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                    className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                     <HamburgerSvg/>
                                                 </button>
-                                                <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                                <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                     <span>Email Address</span>
                                                     <span>Required</span>
 
                                                 </div>
                                                 <button
                                                     type="button"
-                                                    class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                    className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                     <FormMinusNeutralSvg/>
 
                                                 </button>
                                             </div>
 
-                                            <div class="fieldParent d-flex my-2">
+                                            <div className="fieldParent d-flex my-2">
                                                 <button
                                                     type="button"
-                                                    class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                    className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                     <HamburgerSvg/>
                                                 </button>
-                                                <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                                <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                     <span>Company</span>
                                                     <span>Required</span>
 
                                                 </div>
                                                 <button
                                                     type="button"
-                                                    class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                    className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                     <FormMinusSvg/>
                                                 </button>
                                             </div>
 
-                                            <div class="fieldParent d-flex my-2">
+                                            <div className="fieldParent d-flex my-2">
                                                 <button
                                                     type="button"
-                                                    class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                    className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                     <HamburgerSvg/>
                                                 </button>
-                                                <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                                <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                     <span>Work Phone</span>
                                                     <span>Required</span>
 
                                                 </div>
                                                 <button
                                                     type="button"
-                                                    class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                    className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                     <FormMinusSvg/>
                                                 </button>
                                             </div>
 
-                                            <div class="fieldParent d-flex my-2">
+                                            <div className="fieldParent d-flex my-2">
                                                 <button
                                                     type="button"
-                                                    class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                    className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                     <HamburgerSvg/>
                                                 </button>
-                                                <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                                <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                     <span>Facebook</span>
                                                     <span>Required</span>
 
                                                 </div>
                                                 <button
                                                     type="button"
-                                                    class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                    className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                     <FormMinusSvg/>
                                                 </button>
                                             </div>
 
-                                            <div class="fieldParent d-flex my-2">
+                                            <div className="fieldParent d-flex my-2">
                                                 <button
                                                     type="button"
-                                                    class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                    className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                     <HamburgerSvg/>
                                                 </button>
-                                                <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                                <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                     <span>Twitter</span>
                                                     <span>Required</span>
 
                                                 </div>
                                                 <button
                                                     type="button"
-                                                    class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                    className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                     <FormMinusSvg/>
                                                 </button>
                                             </div>
 
                                         </div>
 
-                                        <div class="text-start mt-2">
+                                        <div className="text-start mt-2">
                                             <button
-                                                class="btn btn-link text-decoration-none text-at-blue-light"
+                                                className="btn btn-link text-decoration-none text-at-blue-light"
                                                 onClick={() => setAddModalShow(true)}>+ Add New Field</button>
                                         </div>
 
-                                        <div class="text-end mt-4">
+                                        <div className="text-end mt-4">
                                             <button
                                                 style={{
                                                 border: "1px solid var(--at-blue-light)"
                                             }}
                                                 type="button"
-                                                class="btn btn-outline btn-sm px-3 me-3 text-at-blue-light">Discard Changes</button>
-                                            <button type="button" class="btn btn-sm bg-at-blue-light text-white px-4">Save Changes</button>
+                                                className="btn btn-outline btn-sm px-3 me-3 text-at-blue-light">Discard Changes</button>
+                                            <button type="button" className="btn btn-sm bg-at-blue-light text-white px-4">Save Changes</button>
                                         </div>
 
                                     </div>
@@ -247,116 +247,116 @@ const Fields = () => {
                         {/* Ticket Field Tab */}
                         <Tab eventKey="ticket-field" className="px-2">
                             <div>
-                                <div class="border border-1 w-75 p-5 mt-3">
-                                    <div class="text-center py-4">
-                                        <div class="fieldsWrapper pb-3" id="ticketFieldWrapper">
+                                <div className="border border-1 w-75 p-5 mt-3">
+                                    <div className="text-center py-4">
+                                        <div className="fieldsWrapper pb-3" id="ticketFieldWrapper">
 
-                                            <div class="fieldParent d-flex my-2">
+                                            <div className="fieldParent d-flex my-2">
                                                 <button
                                                     type="button"
-                                                    class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                    className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                     <HamburgerSvg/>
                                                 </button>
-                                                <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                                <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                     <span>Contact</span>
                                                     <span>Required</span>
 
                                                 </div>
                                                 <button
                                                     type="button"
-                                                    class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                    className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                     <FormMinusSvg/>
                                                 </button>
                                             </div>
 
-                                            <div class="fieldParent d-flex my-2">
+                                            <div className="fieldParent d-flex my-2">
                                                 <button
                                                     type="button"
-                                                    class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                    className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                     <HamburgerSvg/>
                                                 </button>
-                                                <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                                <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                     <span>Category</span>
                                                     <span>Required</span>
 
                                                 </div>
                                                 <button
                                                     type="button"
-                                                    class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                    className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                     <FormMinusSvg/>
                                                 </button>
                                             </div>
 
-                                            <div class="fieldParent d-flex my-2">
+                                            <div className="fieldParent d-flex my-2">
                                                 <button
                                                     type="button"
-                                                    class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                    className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                     <HamburgerSvg/>
                                                 </button>
-                                                <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                                <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                     <span>Subject</span>
                                                     <span>Required</span>
 
                                                 </div>
                                                 <button
                                                     type="button"
-                                                    class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                    className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                     <FormMinusSvg/>
                                                 </button>
                                             </div>
 
-                                            <div class="fieldParent d-flex my-2">
+                                            <div className="fieldParent d-flex my-2">
                                                 <button
                                                     type="button"
-                                                    class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                    className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                     <HamburgerSvg/>
                                                 </button>
-                                                <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                                <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                     <span>Priority</span>
                                                     <span>Required</span>
 
                                                 </div>
                                                 <button
                                                     type="button"
-                                                    class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                    className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                     <FormMinusSvg/>
                                                 </button>
                                             </div>
 
-                                            <div class="fieldParent d-flex my-2">
+                                            <div className="fieldParent d-flex my-2">
                                                 <button
                                                     type="button"
-                                                    class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                    className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                     <HamburgerSvg/>
                                                 </button>
-                                                <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                                <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                     <span>Attach File</span>
                                                     <span>Required</span>
 
                                                 </div>
                                                 <button
                                                     type="button"
-                                                    class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                    className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                     <FormMinusSvg/>
                                                 </button>
                                             </div>
 
                                         </div>
 
-                                        <div class="text-start mt-2">
+                                        <div className="text-start mt-2">
                                             <button
-                                                class="btn btn-link text-decoration-none text-at-blue-light"
+                                                className="btn btn-link text-decoration-none text-at-blue-light"
                                                 onClick={() => setAddModalShow(true)}>+ Add New Field</button>
                                         </div>
 
-                                        <div class="text-end mt-4">
+                                        <div className="text-end mt-4">
                                             <button
                                                 style={{
                                                 border: "1px solid var(--at-blue-light)"
                                             }}
                                                 type="button"
-                                                class="btn btn-outline btn-sm px-3 me-3 text-at-blue-light">Discard Changes</button>
-                                            <button type="button" class="btn btn-sm bg-at-blue-light text-white px-4">Save Changes</button>
+                                                className="btn btn-outline btn-sm px-3 me-3 text-at-blue-light">Discard Changes</button>
+                                            <button type="button" className="btn btn-sm bg-at-blue-light text-white px-4">Save Changes</button>
                                         </div>
 
                                     </div>
@@ -366,188 +366,188 @@ const Fields = () => {
 
                         {/* User Field Tab */}
                         <Tab eventKey="user-field" className="px-2">
-                            <div class="border border-1 w-75 p-5 mt-3">
-                                <div class="text-center py-4">
-                                    <div class="fieldsWrapper pb-3" id="userFieldWrapper">
+                            <div className="border border-1 w-75 p-5 mt-3">
+                                <div className="text-center py-4">
+                                    <div className="fieldsWrapper pb-3" id="userFieldWrapper">
 
-                                        <div class="fieldParent d-flex my-2">
+                                        <div className="fieldParent d-flex my-2">
                                             <button
                                                 type="button"
-                                                class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                 <HamburgerSvg/>
                                             </button>
-                                            <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                            <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                 <span>First Name</span>
                                                 <span>Required</span>
 
                                             </div>
                                             <button
                                                 type="button"
-                                                class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                 <FormMinusNeutralSvg/>
                                             </button>
                                         </div>
 
-                                        <div class="fieldParent d-flex my-2">
+                                        <div className="fieldParent d-flex my-2">
                                             <button
                                                 type="button"
-                                                class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                 <HamburgerSvg/>
                                             </button>
-                                            <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                            <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                 <span>Last Name</span>
                                                 <span>Required</span>
 
                                             </div>
                                             <button
                                                 type="button"
-                                                class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                 <FormMinusNeutralSvg/>
                                             </button>
                                         </div>
 
-                                        <div class="fieldParent d-flex my-2">
+                                        <div className="fieldParent d-flex my-2">
                                             <button
                                                 type="button"
-                                                class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                 <HamburgerSvg/>
                                             </button>
-                                            <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                            <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                 <span>Login ID</span>
                                                 <span>Required</span>
 
                                             </div>
                                             <button
                                                 type="button"
-                                                class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                 <FormMinusNeutralSvg/>
                                             </button>
                                         </div>
 
-                                        <div class="fieldParent d-flex my-2">
+                                        <div className="fieldParent d-flex my-2">
                                             <button
                                                 type="button"
-                                                class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                 <HamburgerSvg/>
                                             </button>
-                                            <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                            <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                 <span>Email Address</span>
                                                 <span>Required</span>
 
                                             </div>
                                             <button
                                                 type="button"
-                                                class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                 <FormMinusNeutralSvg/>
                                             </button>
                                         </div>
 
-                                        <div class="fieldParent d-flex my-2">
+                                        <div className="fieldParent d-flex my-2">
                                             <button
                                                 type="button"
-                                                class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                 <HamburgerSvg/>
                                             </button>
-                                            <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                            <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                 <span>Phone</span>
                                                 <span>Required</span>
 
                                             </div>
                                             <button
                                                 type="button"
-                                                class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                 <FormMinusSvg/>
                                             </button>
                                         </div>
 
-                                        <div class="fieldParent d-flex my-2">
+                                        <div className="fieldParent d-flex my-2">
                                             <button
                                                 type="button"
-                                                class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                 <HamburgerSvg/>
                                             </button>
-                                            <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                            <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                 <span>Role</span>
                                                 <span>Required</span>
 
                                             </div>
                                             <button
                                                 type="button"
-                                                class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                 <FormMinusSvg/>
                                             </button>
                                         </div>
 
-                                        <div class="fieldParent d-flex my-2">
+                                        <div className="fieldParent d-flex my-2">
                                             <button
                                                 type="button"
-                                                class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                 <HamburgerSvg/>
                                             </button>
-                                            <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                            <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                 <span>Heirarchy Level</span>
                                                 <span>Required</span>
 
                                             </div>
                                             <button
                                                 type="button"
-                                                class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                 <FormMinusSvg/>
                                             </button>
                                         </div>
 
-                                        <div class="fieldParent d-flex my-2">
+                                        <div className="fieldParent d-flex my-2">
                                             <button
                                                 type="button"
-                                                class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                 <HamburgerSvg/>
                                             </button>
-                                            <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                            <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                 <span>Location</span>
                                                 <span>Required</span>
 
                                             </div>
                                             <button
                                                 type="button"
-                                                class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                 <FormMinusSvg/>
                                             </button>
                                         </div>
 
-                                        <div class="fieldParent d-flex my-2">
+                                        <div className="fieldParent d-flex my-2">
                                             <button
                                                 type="button"
-                                                class="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                                 <HamburgerSvg/>
                                             </button>
-                                            <div class="w-100 d-flex align-items-center justify-content-between ps-4">
+                                            <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                                 <span>Department</span>
                                                 <span>Required</span>
 
                                             </div>
                                             <button
                                                 type="button"
-                                                class="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                 <FormMinusSvg/>
                                             </button>
                                         </div>
 
                                     </div>
 
-                                    <div class="text-start mt-2">
+                                    <div className="text-start mt-2">
                                         <button
-                                            class="btn btn-link text-decoration-none text-at-blue-light"
+                                            className="btn btn-link text-decoration-none text-at-blue-light"
                                             onClick={() => setAddModalShow(true)}>+ Add New Field</button>
                                     </div>
 
-                                    <div class="text-end mt-4">
+                                    <div className="text-end mt-4">
                                         <button
                                             style={{
                                             border: "1px solid var(--at-blue-light)"
                                         }}
                                             type="button"
-                                            class="btn btn-outline btn-sm px-3 me-3 text-at-blue-light">Discard Changes</button>
-                                        <button type="button" class="btn btn-sm bg-at-blue-light text-white px-4">Save Changes</button>
+                                            className="btn btn-outline btn-sm px-3 me-3 text-at-blue-light">Discard Changes</button>
+                                        <button type="button" className="btn btn-sm bg-at-blue-light text-white px-4">Save Changes</button>
                                     </div>
 
                                 </div>
@@ -566,23 +566,23 @@ const Fields = () => {
                 aria-labelledby="contained-modal-title-vcenter"
                 centered>
                 <Modal.Body>
-                    <div class="modal-content border-0">
-                        <div class="modal-body ">
-                            <h3 class="f-16 text-black">Add New field</h3>
+                    <div className="modal-content border-0">
+                        <div className="modal-body ">
+                            <h3 className="f-16 text-black">Add New field</h3>
                             <form action="">
-                                <div class="form-group mt-3">
-                                    <label class="f-12" for="fieldName">Field Name</label>
+                                <div className="form-group mt-3">
+                                    <label className="f-12" for="fieldName">Field Name</label>
                                     <input
                                         type="text"
                                         name="field-name"
-                                        class="form-control form-control-sm"
+                                        className="form-control form-control-sm"
                                         id="fieldName"/>
                                 </div>
-                                <div class="form-group mt-3">
-                                    <label class="f-12 form-select-label" for="fieldType">Field Type</label>
+                                <div className="form-group mt-3">
+                                    <label className="f-12 form-select-label" for="fieldType">Field Type</label>
                                     <select
                                         name="field-type"
-                                        class="form-select form-select-sm f-12 py-2"
+                                        className="form-select form-select-sm f-12 py-2"
                                         id="fieldType">
                                         <option value="single-line-text">Single line text</option>
                                         <option value="dropdown">Dropdown</option>
@@ -598,34 +598,34 @@ const Fields = () => {
                                 </div>
 
                                 <div id="allOptionsContainer">
-                                    <div class="form-group mt-3 d-none" id="fieldOptionsWrapper">
-                                        <label class="f-12 d-block">Options</label>
-                                        <div class="optionsWrapper" id="optionsWrapper"></div>
+                                    <div className="form-group mt-3 d-none" id="fieldOptionsWrapper">
+                                        <label className="f-12 d-block">Options</label>
+                                        <div className="optionsWrapper" id="optionsWrapper"></div>
                                         <button
                                             onclick="addOption(event)"
                                             type="button"
-                                            class="no-focus btn btn-link f-12 text-decoration-none text-at-blue-light">+ Add option</button>
+                                            className="no-focus btn btn-link f-12 text-decoration-none text-at-blue-light">+ Add option</button>
                                     </div>
                                 </div>
 
-                                <div class="form-group mt-3">
-                                    <label class="f-12" for="makeOptional">Make field optional</label>
-                                    <div class="form-check form-switch mt-1">
+                                <div className="form-group mt-3">
+                                    <label className="f-12" for="makeOptional">Make field optional</label>
+                                    <div className="form-check form-switch mt-1">
                                         <input
                                             name="optional"
-                                            class="legendInput legend-input form-check-input form-check-input-lg mt-1"
+                                            className="legendInput legend-input form-check-input form-check-input-lg mt-1"
                                             type="checkbox"
                                             id="makeOptional"/>
                                     </div>
                                 </div>
-                                <div class="text-end">
+                                <div className="text-end">
                                     <button
                                         type="button"
                                         style={{
                                         border: "1px solid var(--at-blue-light)"
                                     }}
-                                        class="btn btn-sm btn-outline-secondary w-25 me-1 text-at-blue-light">Cancel</button>
-                                    <btn type="button" class="btn btn-custom btn-sm w-25 d-inline-block">Add Field</btn>
+                                        className="btn btn-sm btn-outline-secondary w-25 me-1 text-at-blue-light">Cancel</button>
+                                    <btn type="button" className="btn btn-custom btn-sm w-25 d-inline-block">Add Field</btn>
 
                                 </div>
 

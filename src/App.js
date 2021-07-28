@@ -25,6 +25,7 @@ import {
   getTickets,
   getPaginatedTickets,
 } from "./reduxstore/actions/ticketActions";
+import { getPaginatedUsers } from './reduxstore/actions/userActions';
 import { getPriorities } from "./reduxstore/actions/priorityActions";
 import { getCategories } from "./reduxstore/actions/categoryActions";
 import { getStatuses } from "./reduxstore/actions/statusActions";
@@ -62,7 +63,8 @@ const SiteRouter = connect(mapStateToProps, {
   getStatuses,
   getGroups,
   getAgents,
-  getPaginatedCustomers
+  getPaginatedCustomers,
+  getPaginatedUsers
 })(
   ({
     loginTenant,
@@ -70,14 +72,15 @@ const SiteRouter = connect(mapStateToProps, {
     isTenantAuthenticated,
     tenantToken,
     isUserAuthenticated,
-    getCustomers,
+    // getCustomers,
     getPaginatedTickets,
     getPriorities,
     getCategories,
     getStatuses,
     getGroups,
     getAgents,
-    getPaginatedCustomers
+    getPaginatedCustomers,
+    getPaginatedUsers
 }) => {
     useEffect(() => {
       loginTenant({ domain: "techpoint" });
@@ -103,6 +106,7 @@ const SiteRouter = connect(mapStateToProps, {
             getPaginatedCustomers(10, 1);
             // getTickets();
             getPaginatedTickets(10, 1);
+            getPaginatedUsers(10, 1);
             getPriorities();
             getCategories();
             getStatuses();

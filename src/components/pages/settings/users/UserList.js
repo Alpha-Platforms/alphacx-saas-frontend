@@ -1,15 +1,34 @@
 import {useState} from 'react'
-import {ReactComponent as CardDesignSvg} from '../../../../assets/icons/Card-Design.svg';
+// import {ReactComponent as CardDesignSvg} from '../../../../assets/icons/Card-Design.svg';
 import {ReactComponent as FormMinusSvg} from '../../../../assets/icons/form-minus.svg';
 import {ReactComponent as AddButtonSvg} from '../../../../assets/icons/add-button.svg';
+import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
+import MaterialTable from 'material-table';
 import {Dropdown, Modal} from 'react-bootstrap';
+import {connect} from 'react-redux';
+import tableIcons from '../../../../assets/materialicons/tableIcons';
+import moment from 'moment';
+
 import '../../../../styles/Setting.css';
-const UserList = () => {
+const UserList = ({users, meta}) => {
     const [createModalShow,
         setCreateModalShow] = useState(false);
     const [inviteModalShow,
         setInviteModalShow] = useState(false);
     const [importModalShow, setImportModalShow] = useState(false);
+    const [changingRow, setChangingRow] = useState(false);
+
+
+    const tableTheme = createTheme({
+        palette: {
+            primary: {
+            main: 'rgba(0, 98, 152)',
+            },
+            secondary: {
+                main: 'rgba(0, 98, 152)',
+            },
+        },
+    });
 
     return (
         <div>
@@ -60,7 +79,79 @@ const UserList = () => {
                         placeholder="Search agents"/>
                 </div>
 
-                <div className="text-center empty-state" id="agent-empty">
+                <div id="ticketsTable" className="pb-5">
+                    {(users && !changingRow) && <MuiThemeProvider theme={tableTheme}>
+                        <MaterialTable
+                            title = ""
+                            icons = {
+                                tableIcons
+                            }
+                            columns = {
+                                [
+                                    {
+                                        title: 'First Name',
+                                        field: 'firstName',
+                                        width: '10%'
+                                    }, {
+                                        title: 'Last Name',
+                                        field: 'lastName'
+                                    }, {
+                                        title: 'Email Address',
+                                        field: 'emailAddress'
+                                    }, {
+                                        title: 'Role',
+                                        field: 'role'
+                                    }, {
+                                        title: 'Group',
+                                        field: 'group'
+                                    }, {
+                                        title: 'Created',
+                                        field: 'created'
+                                    }, {
+                                        title: 'Action',
+                                        field: 'action',
+                                        // render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">+2</span></div>)
+                                    }
+                                ]
+                            }
+                            data = {users.map(({firstname,
+                                lastname,
+                                role,
+                                company,
+                                email,
+                                group,
+                                theme,
+                                id}) => ({
+                                firstName: firstname && firstname,
+                                lastName: firstname && firstname,
+                                emailAddress: email,
+                                role,
+                                contact: {firstname, lastname, theme, id},
+                                organisation: company ? company : 'Gillete',
+                                workphone: null,
+                                tags: ''
+                            }))
+                            }
+                            options = {{
+                                search: false,
+                                selection: true,
+                                // exportButton: true,
+                                tableLayout: 'auto',
+                                paging: true,
+                                pageSize: meta?.itemsPerPage || 10,
+                                headerStyle: {
+                                    // backgroundColor: '#f8f9fa'
+                                }
+                                // filtering: true
+                            }}
+                            components={{ 
+                                // Pagination: TicketPagination
+                            }}
+                        />
+                    </MuiThemeProvider>}
+                </div>
+
+                {/* <div className="text-center empty-state" id="agent-empty">
                     <CardDesignSvg/>
                     <p className="text-center f-16">
                         You currently have no Agent record at
@@ -72,7 +163,7 @@ const UserList = () => {
                         onClick={() => setCreateModalShow(true)}>
                         New User
                     </button>
-                </div>
+                </div> */}
             </div>
 
             {/* Upload csv modal */}
@@ -316,4 +407,9 @@ const UserList = () => {
     );
 }
 
-export default UserList;
+const mapStateToProps = (state, ownProps) => ({
+    users: state.user.users,
+    meta: state.user.meta
+})
+
+export default connect(mapStateToProps, null)(UserList);
