@@ -28,6 +28,7 @@ import {
   getTickets,
   getPaginatedTickets,
 } from "./reduxstore/actions/ticketActions";
+import { getPaginatedUsers } from "./reduxstore/actions/userActions";
 import { getPriorities } from "./reduxstore/actions/priorityActions";
 import { getCategories } from "./reduxstore/actions/categoryActions";
 import { getStatuses } from "./reduxstore/actions/statusActions";
@@ -46,6 +47,9 @@ import ArticleList from "./components/pages/help_center/help_pages/articleList";
 import Article from "./components/pages/help_center/help_pages/article";
 import EmailSettings from "./components/pages/settings/email/emailSettings";
 import SettingsEmail from "./components/pages/settings/email/emailSettings";
+import UserList from "./components/pages/settings/users/UserList";
+import UserPersonal from "./components/pages/settings/users/UserPersonal";
+import Fields from "./components/pages/settings/fields/Fields";
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -65,6 +69,7 @@ const SiteRouter = connect(mapStateToProps, {
   getGroups,
   getAgents,
   getPaginatedCustomers,
+  getPaginatedUsers,
 })(
   ({
     loginTenant,
@@ -72,7 +77,7 @@ const SiteRouter = connect(mapStateToProps, {
     isTenantAuthenticated,
     tenantToken,
     isUserAuthenticated,
-    getCustomers,
+    // getCustomers,
     getPaginatedTickets,
     getPriorities,
     getCategories,
@@ -80,6 +85,7 @@ const SiteRouter = connect(mapStateToProps, {
     getGroups,
     getAgents,
     getPaginatedCustomers,
+    getPaginatedUsers,
   }) => {
     useEffect(() => {
       loginTenant({ domain: "techpoint" });
@@ -105,6 +111,7 @@ const SiteRouter = connect(mapStateToProps, {
         getPaginatedCustomers(10, 1);
         // getTickets();
         getPaginatedTickets(10, 1);
+        getPaginatedUsers(10, 1);
         getPriorities();
         getCategories();
         getStatuses();
@@ -144,7 +151,6 @@ const SiteRouter = connect(mapStateToProps, {
             component={CustomerList}
             pageName="Customers"
           />
-
           <DefaultLayoutRoute
             exact
             path="/organisations"
@@ -163,16 +169,24 @@ const SiteRouter = connect(mapStateToProps, {
             pageName="Tickets"
             component={TicketList}
           />
-          {/* settings pages
-            ...
-            ..
-            .
-          */}
+          <DefaultLayoutRoute exact path="/settings" component={SettingsHome} />
           <DefaultLayoutRoute
             exact
-            path="/settings"
+            path="/settings/users"
             pageName="Settings"
-            component={SettingsHome}
+            component={UserList}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/users/personal-info-settings"
+            pageName="Settings"
+            component={UserPersonal}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/fields"
+            pageName="Settings"
+            component={Fields}
           />
           <DefaultLayoutRoute
             exact
