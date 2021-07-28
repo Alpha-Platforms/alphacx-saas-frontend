@@ -35,11 +35,6 @@ const EmailSettings = () => {
               <div>
                 <a class="btn btn-outline-gray btn-sm">
                   <span class="d-flex justify-content-center align-items-center">
-                    {/* <object
-                      class="pe-1"
-                      data="../assets/alphatickets/icons/settings-button.svg"
-                      class="img-fluide"
-                    ></object>{" "} */}
                     <span>Advanced Settings</span>
                   </span>
                 </a>
@@ -59,10 +54,6 @@ const EmailSettings = () => {
               />
             </div>
             <div class="text-center empty-state">
-              {/* <object
-                data="../assets/alphatickets/icons/Email-Empty.svg"
-                class="img-fluid"
-              ></object> */}
               <p class="text-center">
                 You currently have no Email record at
                 <br /> the moment

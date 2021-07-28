@@ -217,7 +217,7 @@ const SiteRouter = connect(mapStateToProps, {
             exact
             path="/settings/email"
             pageName="Settings"
-            component={SettingsEmail}
+            component={SettingsHome}
           />
           <DefaultLayoutRoute
             exact
