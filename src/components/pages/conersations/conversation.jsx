@@ -28,6 +28,7 @@ import TextAlignRight from "../../../assets/imgF/TextAlignRight.png";
 import UserProfile from "./userProfile";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 import { SocketDataContext } from "../../../context/socket";
+
 export default function Conversation() {
   const initialState = EditorState.createWithContent(
     ContentState.createFromText("")
@@ -45,9 +46,11 @@ export default function Conversation() {
 
   const {
     AppSocket,
-    wsTickets,
+    //wsTickets,
     setWsTicketFilter,
     wsTicketFilter,
+    // setMsgHistory,
+    // msgHistory,
   } = useContext(SocketDataContext);
   const [loadSelectedMsg, setloadSelectedMsg] = useState("");
   const [tickets, setTickets] = useState([]);
@@ -82,6 +85,10 @@ export default function Conversation() {
     category: "",
   });
   const [sendingReply, setsendingReply] = useState(false);
+  const [msgHistory, setMsgHistory] = useState([]);
+  const [wsTickets, setwsTickets] = useState([]);
+  const [categoryUpdate, setCategoryUpdate] = useState("");
+
   useEffect(() => {
     // getTickets();
   }, []);
@@ -92,13 +99,36 @@ export default function Conversation() {
   }, []);
   useEffect(() => {
     AppSocket.createConnection();
-  }, [wsTickets]);
+    AppSocket.io.on(`ws_tickets`, (data) => {
+      console.log("this are Ticketsss", data?.data?.tickets);
+      setwsTickets(data?.data?.tickets);
+    });
+    AppSocket.io.on(`message`, (data) => {
+      console.log("this are history msbsg", data);
+      console.log(UserInfo);
+      let msg = {
+        created_at: data.created_at,
+        id: data.history.id,
+        plain_response: data.history.plain_response,
+        response: data.history.response,
+        type: "reply",
+        user: data.user,
+      };
+      console.log("msg>>>", msg);
+
+      setMsgHistory((item) => [...item, msg]);
+    });
+    return () => {
+      AppSocket.io.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     setLoadingTicks(true);
     setTickets(wsTickets);
     setLoadingTicks(false);
   }, [wsTickets]);
+
   const onEditorStateChange = (editorState) => {
     // handleDescriptionValidation(editorState);
 
@@ -145,14 +175,24 @@ export default function Conversation() {
     };
     console.log(singleTicketFullInfo.customer.phone_number);
     console.log(data);
-    setsendingReply(true);
+    // setsendingReply(true);
+    const replyData = {
+      attachment: null,
+      created_at: new Date(),
+      plain_response: reply.plainText,
+      response: reply.richText,
+      // user: SenderInfo?.customer,
+      user: ticket[0]?.assignee,
+    };
+    console.log(replyData);
+    setMsgHistory((item) => [...item, replyData]);
     const res = await httpPostMain(
       `tickets/${singleTicketFullInfo.id}/replies`,
       data
     );
     if (res?.status == "success") {
-      setsendingReply(false);
-      ReloadloadSingleMessage();
+      // setsendingReply(false);
+      // ReloadloadSingleMessage();
       setEditorState(initialState);
       setReplyTicket({ plainText: "", richText: "" });
     } else {
@@ -209,18 +249,23 @@ export default function Conversation() {
     }
   };
 
-  const loadSingleMessage = async ({ id, customer, subject }) => {
+  const loadSingleMessage = async ({ id, customer, assignee, subject }) => {
+    getUser(customer.id);
     setChatCol({ col1: "hideColOne", col2: "showColTwo" });
     setSenderInfo({ customer, subject });
-    getUser(customer.id);
     setMessageSenderId(id);
     setLoadSingleTicket(true);
     setTingleTicketFullInfo();
     setTicket([]);
+    let swData = { assigneeId: assignee.id, userId: customer.id };
+    UserInfo.id && AppSocket.io.leave(`${UserInfo.id}${assignee.id}`);
+    AppSocket.io.emit("join_private", swData);
     const res = await httpGetMain(`tickets/${id}`);
     setfirstTimeLoad(false);
     if (res.status == "success") {
       setTicket(res?.data);
+      setMsgHistory(res?.data[0]?.history);
+      setMessageSenderId(res?.data[0]?.id);
       setSaveTicket({
         ...saveTicket,
         customer: "",
@@ -242,6 +287,35 @@ export default function Conversation() {
       setUserInfo(res.data);
     } else {
       setLoadSingleTicket(false);
+      return NotificationManager.error(res.er.message, "Error", 4000);
+    }
+  };
+
+  const updateTicket = async (status) => {
+    // if (categoryUpdate == "") {
+    //   NotificationManager.error("You need to update category to continue!");
+    // }
+    if (status == "") {
+      return;
+    }
+
+    let data = {
+      statusId: status,
+      priorityId: ticket[0].priority.id,
+      assigneeId: ticket[0].assignee.id,
+      categoryId: categoryUpdate,
+    };
+    console.log(data);
+    const res = await httpPatchMain(`tickets/${ticket[0].id}`);
+    // updateTicketBo(true)
+    if (res.status == "success") {
+      console.log(res);
+      closeSaveTicketModal();
+      NotificationManager.success(
+        "Ticket status successfully updated",
+        "Success"
+      );
+    } else {
       return NotificationManager.error(res.er.message, "Error", 4000);
     }
   };
@@ -400,6 +474,7 @@ export default function Conversation() {
               </div>
               <SingleChatOpen
                 ticket={ticket}
+                msgHistory={msgHistory}
                 SenderInfo={SenderInfo}
                 setMessageSenderId={setMessageSenderId}
                 Statues={Statues}
@@ -535,7 +610,14 @@ export default function Conversation() {
 
                 <div className="ticketmodalInputWrapMain">
                   <label htmlFor="">Category</label>
-                  <select name="" id="">
+                  <select
+                    name=""
+                    id=""
+                    onChange={(e) => {
+                      setCategoryUpdate(e.target.value);
+                    }}
+                    style={{ fontSize: "12px" }}
+                  >
                     <option value="">Select Category</option>
                     {Category?.map((data) => {
                       return (
@@ -556,6 +638,7 @@ export default function Conversation() {
                     value={`${saveTicket.subject} `}
                     type="text"
                     disabled
+                    style={{ fontSize: "12px" }}
                   />
                 </div>
               </div>
@@ -569,16 +652,20 @@ export default function Conversation() {
                   value={`${saveTicket?.description?.map((data) => {
                     return data?.plain_response;
                   })} `}
+                  style={{ fontSize: "12px", padding: "7px" }}
                 ></textarea>
               </div>
 
               <div className="closeTicketModdalj">
-                <select name="" id="">
-                  <option value="">Close chat</option>
-                  <option value="Save as in progress">
-                    Save as in progress
-                  </option>
-                  <option value="Save as closed">Save as closed</option>
+                <select
+                  name=""
+                  id=""
+                  onChange={(e) => updateTicket(e.target.value)}
+                >
+                  <option value="">Save as</option>
+                  {Statues?.map((data) => {
+                    return <option value={data.id}>{data.status}</option>;
+                  })}
                 </select>
               </div>
             </div>
