@@ -43,7 +43,10 @@ const EmailSettings = () => {
                     <span>Advanced Settings</span>
                   </span>
                 </a>
-                <a class="btn btn-primary btn-sm ms-2" href="email-form.html">
+                <a
+                  class="btn btn-primary btn-sm ms-2"
+                  href="/settings/email/email-form"
+                >
                   <span>New support email</span>
                 </a>
               </div>

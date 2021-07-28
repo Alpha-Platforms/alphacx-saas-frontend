@@ -7,7 +7,7 @@ import RightArrow from "../../../../../assets/imgF/arrow_right.png";
 const NewSupportEmail = () => {
   const [defaultServer, setDefaultServer] = useState(false);
   const [state, setState] = useState({
-    activeRadio: "default-server",
+    activeRadio: "own-server",
   });
 
   const handleServerChange = (e) => {
@@ -19,7 +19,7 @@ const NewSupportEmail = () => {
     <div className="new-support-email">
       <main class="mb-5">
         <div id="mainContent" class="container">
-          <div class="card card-body bg-white border-0 p-5 mt-4">
+          <div class="card card-body bg-white border-0 p-5">
             <div id="mainContentHeader">
               <h6 class="text-muted f-14">
                 Settings
@@ -96,7 +96,7 @@ const NewSupportEmail = () => {
               <div class="card-header p-3">
                 <p class="f-16 fw-bold mb-3">Mail Server</p>
                 <div class="row">
-                  <div class="col-md-5">
+                  {/* <div class="col-md-5">
                     <div class="form-check">
                       <input
                         class="form-check-input"
@@ -111,7 +111,7 @@ const NewSupportEmail = () => {
                         Default (Alphatickets)
                       </label>
                     </div>
-                  </div>
+                  </div> */}
                   <div class="col-md-7">
                     <div class="form-check">
                       <input

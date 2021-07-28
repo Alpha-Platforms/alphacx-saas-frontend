@@ -125,7 +125,12 @@ const SiteRouter = connect(mapStateToProps, {
           <Route exact path="/help/:topic/:article" component={Article} />
 
           {/* help pages end */}
-          <DefaultLayoutRoute exact path="/home" component={Dashboard} />
+          <DefaultLayoutRoute
+            exact
+            path="/home"
+            pageName="Dashboard"
+            component={Dashboard}
+          />
           <DefaultLayoutRoute
             exact
             path="/conversation"
