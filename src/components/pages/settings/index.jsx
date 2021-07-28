@@ -28,6 +28,7 @@ import UserBWIcon from "../../../assets/icons/Discount-blue.svg"
 import DiscountBlueIcon from "../../../assets/icons/Touch-blue.svg"
 import HeartBWIcon from "../../../assets/icons/Heart-BW.svg"
 import RoleLightIcon from "../../../assets/icons/role_light.svg"
+import {Link} from 'react-router-dom';
 
 
 export default function SettingsHome() {
@@ -42,7 +43,7 @@ export default function SettingsHome() {
           
 
     <div className="setting-link-item f-basis-30 border rounded bg-light">
-        <a href="#" className="d-block cursor text-decoration-none">
+        <Link to="/settings/users" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
                 <div className="">
                     <img src={AgentLightIcon} alt="" />
@@ -53,7 +54,7 @@ export default function SettingsHome() {
                         details</p>
                 </div>
             </div>
-        </a>
+        </Link>
     </div>
 
     <div className="setting-link-item f-basis-30 border rounded bg-light">

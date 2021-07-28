@@ -809,26 +809,433 @@ a object {
   background-color: #eeb64a;
 }
 
-/* width */
-/* ::-webkit-scrollbar {
-  width: 0.5rem;
-  height: 0.5rem;
+/* * Setting CSS */
+
+/*
+* ACCOUNT SETTINGS PAGE STYLES */
+.nav-pills .nav-link {
   opacity: 0.7;
-} */
+}
 
-/* Track */
-/* ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0);
-  border-radius: 1rem;
-} */
+.nav-pills .nav-link.active {
+  color: var(--at-blue-light) !important;
+  background-color: transparent;
+  opacity: 1;
+  border-bottom: 3px solid var(--at-blue-light);
+  border-radius: 0;
+}
 
-/* Handle */
-/* ::-webkit-scrollbar-thumb {
+.time-form-control {
+  padding: .375rem 2.25rem .375rem .75rem;
+}
+
+
+.cpbWrapper div {
+  z-index: 2;
+  position: relative;
+
+}
+
+.cpbWrapper {
+  position: relative;
+  z-index: 1;
+  width: auto;
+  height: auto;
+  display: inline-block;
+}
+
+.cpbWrapper::before {
+  content: "";
+  height: 80px;
+  width: 80px;
+  border-radius: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+
+}
+
+.storageUsedMeter .cpbWrapper::before {
   background: var(--at-blue-light);
-  border-radius: 1rem;
-} */
+}
 
-/* Handle on hover */
-/* ::-webkit-scrollbar-thumb:hover {
-  background: var(--at-blue);
-} */
+.userMeter .cpbWrapper::before {
+  background: #FCD525;
+}
+
+.customerMeter .cpbWrapper::before {
+  background: #FD7289;
+}
+
+.color-theme-box {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  margin-right: 6px;
+  margin-bottom: 6px;
+}
+
+.color-pattern-box {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  font-size: 9px;
+}
+
+.selected::after {
+  content: "";
+  width: 13px;
+  height: 13px;
+  background: var(--at-blue-light);
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  border: 2px solid white;
+  border-radius: 100%;
+}
+
+.uploadInfoWrapper {
+  max-width: 300px;
+}
+
+#colorThemeInput {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border: none;
+  border-radius: 4px;
+  width: 30px;
+  height: 30px;
+  background-color: red;
+  padding: 0;
+  overflow: hidden;
+}
+
+#colorThemeInput::-webkit-color-swatch,
+#colorThemeInput::-webkit-color-swatch-wrapper,
+#colorThemeInput::-moz-color-swatch-wrapper {
+  margin: 0;
+  border: 0;
+}
+
+
+
+/* 
+* FIELDS PAGE 
+*/
+
+.status-input:checked {
+  background-color: var(--at-green) !important;
+  border: none;
+}
+
+
+.bg-sky-blue {
+  background: rgba(232, 241, 246, 0.7);
+}
+
+.border-sky-blue {
+  border: 1px solid rgba(0, 98, 152, 0.1);
+}
+
+.no-focus:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.move-cursor {
+  cursor: move !important;
+}
+
+.fieldsWrapper {
+  border-top: 1px solid rgba(0, 98, 152, 0.1);
+}
+
+.fieldParent {
+  border-bottom: 1px solid rgba(0, 98, 152, 0.1);
+
+}
+
+
+/* * FORM CATEGORY PAGE */
+.no-focus:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.optionInputParent,
+.optionsWrapper,
+#addFieldModal {
+  transition: all 0.5s ease !important;
+}
+
+/* * FORM PREVIEW */
+
+.blue-circle {
+  height: 40px;
+  width: 40px;
+  border-radius: 100%;
+  top: -20px;
+  left: 20px;
+}
+
+.rounded-4 {
+  border-radius: 10px;
+}
+
+.logo {
+  transform: scale(0.9);
+}
+
+@media screen and (max-width: 480px) {
+  .header {
+      height: 190px !important;
+      position: absolute;
+      top: 0;
+  }
+
+  .preview-wrapper {
+      padding-top: 40px;
+  }
+
+  .blue-circle {
+      display: none;
+  }
+
+  .card-one {
+      padding-top: 30px !important;
+  }
+}
+
+
+/* * INTEGRATION SETTINGS */
+.btn-w-100 {
+  width: 100px;
+}
+
+/* 
+* GENERAL SETTINGS */
+#ticket-closes-wrapper {
+  position: relative;
+}
+
+#ticket-closes-wrapper::after {
+  content: attr(data-side-text) "";
+  position: absolute;
+  top: 8px;
+  right: -120px;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.prefixBtnClicked {
+  background-color: #80d2ff !important;
+  font-weight: 600 !important;
+}
+
+
+/* * BRANDING (ACCOUNT SETTINGS) */
+.branding-btn-width {
+  width: 130px;
+}
+
+
+/* *EMAIL TEMPLATE */
+.available-placeholder {
+  width: 80px !important;
+}
+
+.ck-editor__editable {
+  min-height: 6rem !important;    
+}
+
+.w-150 {
+  width: 150px !important;
+}
+
+/** >>> From former styles.css*/
+.bg-outline-custom {
+background-color: transparent;
+color: #006298;
+border: 1px solid #006298;
+}
+
+
+/* Resolution Target */
+
+.resolution-form .form-control,
+.customer-form-first .form-control {
+width: 78px;
+}
+
+.customer-form-second .form-control {
+width: 70;
+}
+
+.customer-choice a {
+font-size: .7rem;
+}
+
+.btn-custom {
+background-color: #006298;
+color: #fff !important;
+}
+
+.bg-custom-gray {
+background-color: #F9F9FB;
+color: #696C81 !important;
+}
+
+.btn-outline-gray {
+color: transparent;
+border: 1px solid #696C81;
+}
+
+.text-custom-gray {
+color: #696C81 !important;
+}
+
+.empty-state {
+padding: 8rem !important;
+}
+
+.empty-state object {
+display: inline-block;
+width: 110px !important;
+height: auto;
+}
+
+.bg-custom-success {
+color: #51B74F;
+background-color: #EDF5F5;
+}
+
+.description-text {
+color: #3C3C3C !important;
+font-size: 0.9rem;
+}
+
+.save-btn {
+display: block;
+float: right;
+width: 100%;
+}
+
+.bg-outline-mail {
+background-color: transparent;
+border: 1px solid #C0C2CB;
+}
+
+.vertical-line {
+width: 2px;
+height: 150px;
+background-color: #C0C2CB;
+}
+
+.bg-role,
+.bg-dashboard {
+background-color: #F6F7F9;
+color: #B5B5B5;
+}
+
+.bg-role p {
+font-size: 0.85rem;
+}
+
+.role-form .form-check-label {
+color: #808080 !important;
+font-size: 0.9rem;
+}
+
+.alert-custom {
+background-color: rgba(0, 98, 152, 0.07);
+display: inline-block;
+color: #006298;
+height: 50px;
+}
+
+#create {
+margin-left: 72%;
+}
+
+.add-btn {
+width: 15px !important;
+margin-bottom: -2px;
+}
+
+.border-top-right {
+border-radius: 8px 0px 0px 0px !important;
+}
+
+.border-top-left {
+border-radius: 0px 8px 0px 0px !important;
+}
+
+.border-top-left-right {
+border-radius: 8px 8px 0px 0px !important;
+}
+
+.resolution-icon {
+width: 15px;
+margin-top: -20px !important;
+}
+
+.edit-shadow {
+box-shadow: 0px 0px 114px rgba(15, 79, 170, 0.2);
+}
+
+.sla-bar {
+padding-right: 20rem !important;
+}
+
+.mail-active {
+background-color: transparent;
+color: #006298;
+border: 1px solid #006298;
+}
+
+.bg-form-tab {
+background: #E8F1F6;
+}
+
+.form-svg {
+margin-bottom: -5px;
+width: 18px !important;
+}
+
+.border-form {
+background: #FFFFFF;
+border: 1px solid rgba(0, 98, 152, 0.1);
+box-shadow: 0px 0px 9px rgba(13, 13, 13, 0.06);
+border-radius: 5px;
+}
+
+.select-wrapper {
+position: relative;
+}
+
+.select-all-ctrl {
+position: absolute;
+z-index: 9999 !important;
+background-color: transparent;
+top: -1px;
+left: 0;
+height: 85%;
+width: 78%;
+border: none;
+}
+
+.select-all-ctrl:checked {
+background-image: none;
+background-color: transparent;
+border-color: transparent;
+}
+
+.select-all-ctrl:checked[type=checkbox] {
+background-image: none;
+}
+/** >>> End | From from styles.css*/
