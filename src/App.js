@@ -20,14 +20,12 @@ import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./reduxstore/store";
 import { loginTenant } from "./reduxstore/actions/tenantAuthActions";
 import { loginUser } from "./reduxstore/actions/userAuthActions";
-import {
-  getCustomers,
-  getPaginatedCustomers,
-} from "./reduxstore/actions/customerActions";
+import { getCustomers, getPaginatedCustomers } from "./reduxstore/actions/customerActions";
 import {
   getTickets,
   getPaginatedTickets,
 } from "./reduxstore/actions/ticketActions";
+import { getPaginatedUsers } from './reduxstore/actions/userActions';
 import { getPriorities } from "./reduxstore/actions/priorityActions";
 import { getCategories } from "./reduxstore/actions/categoryActions";
 import { getStatuses } from "./reduxstore/actions/statusActions";
@@ -46,6 +44,9 @@ import ArticleList from "./components/pages/help_center/help_pages/articleList";
 import Article from "./components/pages/help_center/help_pages/article";
 import EmailSettings from "./components/pages/settings/email/emailSettings";
 import SettingsEmail from "./components/pages/settings/email/emailSettings";
+import UserList from './components/pages/settings/users/UserList';
+import UserPersonal from './components/pages/settings/users/UserPersonal';
+import Fields from './components/pages/settings/fields/Fields';
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -65,6 +66,7 @@ const SiteRouter = connect(mapStateToProps, {
   getGroups,
   getAgents,
   getPaginatedCustomers,
+  getPaginatedUsers
 })(
   ({
     loginTenant,
@@ -72,7 +74,7 @@ const SiteRouter = connect(mapStateToProps, {
     isTenantAuthenticated,
     tenantToken,
     isUserAuthenticated,
-    getCustomers,
+    // getCustomers,
     getPaginatedTickets,
     getPriorities,
     getCategories,
@@ -80,7 +82,8 @@ const SiteRouter = connect(mapStateToProps, {
     getGroups,
     getAgents,
     getPaginatedCustomers,
-  }) => {
+    getPaginatedUsers
+}) => {
     useEffect(() => {
       loginTenant({ domain: "techpoint" });
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -100,18 +103,19 @@ const SiteRouter = connect(mapStateToProps, {
     }, [isTenantAuthenticated]);
 
     useEffect(() => {
-      if (isUserAuthenticated) {
-        // getCustomers();
-        getPaginatedCustomers(10, 1);
-        // getTickets();
-        getPaginatedTickets(10, 1);
-        getPriorities();
-        getCategories();
-        getStatuses();
-        getGroups();
-        getAgents();
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+        if (isUserAuthenticated) {
+            // getCustomers();
+            getPaginatedCustomers(10, 1);
+            // getTickets();
+            getPaginatedTickets(10, 1);
+            getPaginatedUsers(10, 1);
+            getPriorities();
+            getCategories();
+            getStatuses();
+            getGroups();
+            getAgents();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
     return (
       <BrowserRouter>
@@ -144,37 +148,14 @@ const SiteRouter = connect(mapStateToProps, {
             component={CustomerList}
             pageName="Customers"
           />
-
-          <DefaultLayoutRoute
-            exact
-            path="/organisations"
-            pageName="Organisations"
-            component={OrganisationList}
-          />
-          <DefaultLayoutRoute
-            exact
-            path="/customers/:id"
-            pageName="Customer"
-            component={Customer}
-          />
-          <DefaultLayoutRoute
-            exact
-            path="/tickets"
-            pageName="Tickets"
-            component={TicketList}
-          />
-          {/* settings pages
-            ...
-            ..
-            .
-          */}
-          <DefaultLayoutRoute
-            exact
-            path="/settings"
-            pageName="Settings"
-            component={SettingsHome}
-          />
-          <DefaultLayoutRoute
+          <DefaultLayoutRoute exact path="/organisations" pageName="Organisations" component={OrganisationList} />
+          <DefaultLayoutRoute exact path="/customers/:id" pageName="Customer" component={Customer} />
+          <DefaultLayoutRoute exact path="/tickets" pageName="Tickets" component={TicketList} />
+          <DefaultLayoutRoute exact path="/settings" component={SettingsHome} />
+          <DefaultLayoutRoute exact path="/settings/users" pageName="Settings" component={UserList} />
+          <DefaultLayoutRoute exact path="/settings/users/personal-info-settings" pageName="Settings" component={UserPersonal} />
+          <DefaultLayoutRoute exact path="/settings/fields" pageName="Settings" component={Fields} />
+<DefaultLayoutRoute
             exact
             path="/settings/email"
             pageName="Settings"

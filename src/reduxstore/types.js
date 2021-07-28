@@ -74,3 +74,9 @@ export const GROUPS_LOADING = "GROUPS_LOADING";
 export const GET_AGENTS = "GET_AGENTS";
 export const ADD_AGENT = "ADD_AGENT";
 export const AGENTS_LOADING = "AGENTS_LOADING";
+
+
+// USERS
+export const GET_USERS = "GET_USERS";
+export const USERS_LOADING = "USERS_LOADING";
+export const RESET_USER_CREATED = "RESET_USER_CREATED";
