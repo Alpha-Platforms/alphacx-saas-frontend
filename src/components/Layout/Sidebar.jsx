@@ -6,6 +6,7 @@ import { NotificationManager } from "react-notifications";
 import {
   appLogo,
   toggleIcon,
+  dashboardIcon,
   HomeIcon,
   ClockIcon,
   CardIcon,
