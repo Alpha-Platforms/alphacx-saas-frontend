@@ -117,7 +117,7 @@ export default function SettingsHome() {
     </div>
 
     <div className="setting-link-item f-basis-30 border rounded bg-light">
-        <a href="#" className="d-block cursor text-decoration-none">
+        <Link to="/settings/fields" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
                 <div className="">
                     <img src={FieldsLightIcon} alt="" />
@@ -128,7 +128,7 @@ export default function SettingsHome() {
                         tickets and users</p>
                 </div>
             </div>
-        </a>
+        </Link>
     </div>
 
     <div className="setting-link-item f-basis-30 border rounded bg-light">

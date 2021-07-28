@@ -1,3 +1,4 @@
+/* * USER */
 .new-user-dropdown > div {
     transform: translateY(2.5rem) !important;
     box-shadow: 0px 0px 20px 1px rgba(0, 0, 0, 0.1);
@@ -19,4 +20,10 @@
     grid-template-columns: 1fr auto;
     justify-content: center;
     align-items: center;
+}
+
+
+/* * FIELD */
+.field-tab-wrapper .nav-tabs {
+    border-bottom: none;
 }

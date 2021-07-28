@@ -42,6 +42,8 @@ import { SocketDataProvider } from "./context/socket";
 import ArticleList from "./components/pages/help_center/help_pages/articleList";
 import Article from "./components/pages/help_center/help_pages/article";
 import UserList from './components/pages/settings/users/UserList';
+import UserPersonal from './components/pages/settings/users/UserPersonal';
+import Fields from './components/pages/settings/fields/Fields';
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -140,6 +142,8 @@ const SiteRouter = connect(mapStateToProps, {
           <DefaultLayoutRoute exact path="/tickets" pageName="Tickets" component={TicketList} />
           <DefaultLayoutRoute exact path="/settings" component={SettingsHome} />
           <DefaultLayoutRoute exact path="/settings/users" pageName="Settings" component={UserList} />
+          <DefaultLayoutRoute exact path="/settings/users/personal-info-settings" pageName="Settings" component={UserPersonal} />
+          <DefaultLayoutRoute exact path="/settings/fields" pageName="Settings" component={Fields} />
           <Route>
             <div
               style={{

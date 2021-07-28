@@ -15,11 +15,11 @@ const UserList = () => {
         <div>
             <div className="card card-body bg-white border-0 p-5">
                 <div id="mainContentHeader">
-                    <h6 className="text-muted f-14">
+                    <span className="text-muted f-14">
                         Settings
                         <i className="bi bi-chevron-right"></i>
                         <span className="text-custom">Users</span>
-                    </h6>
+                    </span>
                 </div>
 
                 <h5 className="my-3 f-16 fw-500 text-dark">User Management</h5>
