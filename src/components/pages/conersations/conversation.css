@@ -401,19 +401,11 @@
 }
 .single-chat-response p {
   margin: 0;
-  padding-left: 5px;
 }
 
 .single-msg-container {
   margin-top: 20px;
   margin-bottom: -9px !important;
-  padding-bottom: 15px;
-  padding-top: 10px;
-  border-bottom: 1px solid rgba(0, 98, 152, 0.1);
-  padding-left: 5px;
-}
-.single-msg-container:last-child {
-  border-bottom: none;
 }
 .sendMsg {
   display: flex;
@@ -421,18 +413,14 @@
   align-items: flex-end;
   margin-top: 25px;
   margin-right: 25px;
-  position: relative;
 }
 .sendMsg button {
-  width: 95px;
-  height: 35px;
+  width: 98px;
+  height: 37px;
   background-color: #006298;
   border-radius: 4px;
   color: white;
   font-size: 16px;
-  position: absolute;
-  right: 7px;
-  top: -75px;
 }
 
 .user-profile-conversation-page {
@@ -524,13 +512,13 @@
 
 .userProfileAboutCovers .aboutUserColConv p:first-child {
   color: rgba(0, 0, 0, 0.7);
-  font-size: 14px;
+  font-size: 17px;
   margin-bottom: 0;
 }
 
 .userProfileAboutCovers .aboutUserColConv p:last-child {
   color: rgba(0, 0, 0, 0.5);
-  font-size: 12px;
+  font-size: 15px;
   padding-top: 3px;
   margin-bottom: 0;
 }
@@ -544,7 +532,7 @@
   display: flex;
   padding-top: 20px;
   justify-content: space-between;
-  margin-top: 11px;
+  margin-top: 70px;
 }
 
 .userTopActivities .activityConPRcov:first-child {
@@ -561,16 +549,16 @@
 
 .activityConPRcov .activityCountconvers {
   background-color: #006298;
-  background-color: #006298;
   color: white;
-  width: 37px;
-  height: 37px;
+  width: 43px;
+  height: 43px;
   border-radius: 50%;
-  font-size: 16px;
+  font-size: 19px;
   font-weight: 600;
-  line-height: 38px;
+  line-height: 45px;
   text-align: center;
   display: block;
+  /* flex: 1; */
 }
 
 .activityConPRcov .lineactivitivy {
@@ -578,16 +566,16 @@
   display: block;
   background-color: rgba(0, 98, 152, 0.4);
   position: relative;
-  top: -4px;
-  left: 18px;
-  height: 40px;
-  width: 2.3px;
+  top: -5px;
+  left: 21px;
+  height: 100px;
+  width: 2.6px;
 }
 
 .activityCountconversText {
-  font-size: 11px;
+  font-size: 16px;
   width: 75%;
-  font-size: 11.5px;
+  font-size: 13px;
   line-height: 17px;
   padding-top: 5px;
   color: #353535;
@@ -597,7 +585,7 @@
   text-align: center;
   margin-top: 36px;
   color: #006298;
-  font-size: 14px;
+  font-size: 17px;
   cursor: pointer;
   padding-bottom: 30px;
 }
@@ -658,7 +646,6 @@ select {
   height: 40px;
   margin-top: 4px;
   color: rgba(101, 101, 101, 0.7);
-  font-size: 12px;
 }
 
 .ticketmodalInputWrapMainOne input,
@@ -715,10 +702,10 @@ select {
 }
 
 .closeTicketModdalj select {
-  width: 132px;
+  width: 142px;
   border-radius: 4px;
   height: 37px;
-  font-size: 13px;
+
   background: #006298;
   color: white;
   cursor: pointer;
@@ -853,7 +840,7 @@ select {
   margin-left: 21px !important;
   margin-right: 18px !important;
   margin-top: 25px;
-  height: 150px !important;
+  height: 180px !important;
   border-radius: 9px !important;
   padding-bottom: 10px !important;
 }
@@ -871,12 +858,4 @@ select {
 
 .DraftEditor-editorContainer {
   padding: 2px 10px 10px 10px;
-}
-.rdw-image-modal {
-  top: -302px !important;
-  background-color: white;
-}
-
-.psvgIcon {
-  margin-right: 4px;
 }

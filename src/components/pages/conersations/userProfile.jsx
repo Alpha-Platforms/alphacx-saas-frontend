@@ -1,7 +1,6 @@
 import React from "react";
 import { CancelIconC } from "../../../assets/images/svgs";
 import pic from "../../../assets/imgF/codeuiandyimg.png";
-import { MsgIcon, LocationIcon, CallIcon } from "../../../assets/images/svgs";
 export default function UserProfile({ setshowUserProfile, UserInfo }) {
   return (
     <div style={{ position: "" }}>
@@ -29,38 +28,20 @@ export default function UserProfile({ setshowUserProfile, UserInfo }) {
         </div>
         <div className="userProfileAboutCovers">
           <div className="aboutUserColConv">
-            <p>
-              {" "}
-              <span className="psvgIcon">
-                <MsgIcon />
-              </span>{" "}
-              Email Address
-            </p>
+            <p>Email Address</p>
 
             <p>{UserInfo?.email ? UserInfo?.email : "unavailable"}</p>
           </div>
 
           <div className="aboutUserColConv">
-            <p>
-              {" "}
-              <span className="psvgIcon">
-                <CallIcon />
-              </span>{" "}
-              Work Phone
-            </p>
+            <p>Work Phone</p>
             <p>
               {UserInfo?.phoneNumber ? UserInfo?.phoneNumber : "unavailable"}
             </p>
           </div>
 
           <div className="aboutUserColConv">
-            <p>
-              {" "}
-              <span className="psvgIcon">
-                <LocationIcon />
-              </span>{" "}
-              Address
-            </p>
+            <p>Address</p>
             <p>Plot 92, Obafemi Awolowo Way, Jabi</p>
           </div>
         </div>
