@@ -20,7 +20,10 @@ import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./reduxstore/store";
 import { loginTenant } from "./reduxstore/actions/tenantAuthActions";
 import { loginUser } from "./reduxstore/actions/userAuthActions";
-import { getCustomers } from "./reduxstore/actions/customerActions";
+import {
+  getCustomers,
+  getPaginatedCustomers,
+} from "./reduxstore/actions/customerActions";
 import {
   getTickets,
   getPaginatedTickets,
@@ -61,6 +64,7 @@ const SiteRouter = connect(mapStateToProps, {
   getStatuses,
   getGroups,
   getAgents,
+  getPaginatedCustomers,
 })(
   ({
     loginTenant,
@@ -75,6 +79,7 @@ const SiteRouter = connect(mapStateToProps, {
     getStatuses,
     getGroups,
     getAgents,
+    getPaginatedCustomers,
   }) => {
     useEffect(() => {
       loginTenant({ domain: "techpoint" });
@@ -96,9 +101,10 @@ const SiteRouter = connect(mapStateToProps, {
 
     useEffect(() => {
       if (isUserAuthenticated) {
-        getCustomers();
+        // getCustomers();
+        getPaginatedCustomers(10, 1);
         // getTickets();
-        getPaginatedTickets(5, 1);
+        getPaginatedTickets(10, 1);
         getPriorities();
         getCategories();
         getStatuses();
@@ -133,14 +139,30 @@ const SiteRouter = connect(mapStateToProps, {
             component={CustomerList}
             pageName="Customers"
           />
-          <Route exact path="/organisations" component={OrganisationList} />
-          <Route exact path="/customers/customer" component={Customer} />
+
+          <DefaultLayoutRoute
+            exact
+            path="/organisations"
+            pageName="Organisations"
+            component={OrganisationList}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/customers/:id"
+            pageName="Customer"
+            component={Customer}
+          />
           <DefaultLayoutRoute
             exact
             path="/tickets"
             pageName="Tickets"
             component={TicketList}
           />
+          {/* settings pages
+            ...
+            ..
+            .
+          */}
           <DefaultLayoutRoute
             exact
             path="/settings"
@@ -159,6 +181,12 @@ const SiteRouter = connect(mapStateToProps, {
             pageName="Settings"
             component={SettingsEmail}
           />
+          {/* 
+          ...
+          ..
+          .
+          settings pages end */}
+
           <Route>
             <div
               style={{

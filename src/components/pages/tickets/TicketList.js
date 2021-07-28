@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
-import {ReactComponent as ImportSvg} from '../../../assets/svgicons/import.svg';
 import {ReactComponent as UploadSvg} from '../../../assets/svgicons/Upload.svg';
 import TicketStarIcon from '../../../assets/svgicons//Ticket-Star.svg';
 import MaterialTable from 'material-table';
@@ -21,9 +20,13 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
     const [ticketLoading,
         setTicketLoading] = useState(false);
     const [createModalShow, setCreateModalShow] = useState(false);
+    const [changingRow, setChangingRow] = useState(false);
         
         useEffect(() => {
             setTicketLoading(!isTicketsLoaded);
+            if (isTicketsLoaded) {
+                setChangingRow(false);
+            }
     }, [isTicketsLoaded]);
 
     
@@ -40,7 +43,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
     });
 
     const handleExportBtn = () => {
-        const exportBtn = document.querySelector('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit');
+        // const exportBtn = document.querySelector('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit');
         // exportBtn && exportBtn.click();
     }
 
@@ -55,13 +58,14 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
         return (
         <TablePagination
             {...tablePaginationProps}
-            rowsPerPageOptions={[5, 10, 20, 30]}
-            rowsPerPage={meta.itemsPerPage}
-            count={Number(meta.totalItems)}
-            page={meta.currentPage - 1}
+            rowsPerPageOptions={[10, 20, 30]}
+            rowsPerPage={meta?.itemsPerPage || 5}
+            count={Number(meta?.totalItems || 20)}
+            page={(meta?.currentPage || 1) - 1}
             onPageChange={onChangePage}
             // when the number of rows per page changes
             onRowsPerPageChange={event => {
+                        setChangingRow(true);
                         getPaginatedTickets(event.target.value, 1);
                         }}
             ActionsComponent={(subprops) => {
@@ -86,13 +90,13 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
     const getStatusColor = status => {
         switch (status) {
             case "Pending":
-                return 'yellow';
+                return 'orange';
             case "Resolved":
                 return 'green';
             case "In Review":
-                return 'orange';
-            case "Awaiting User Reply":
                 return 'yellow';
+            case "Awaiting User Reply":
+                return 'awaiting';
             case "Closed":
                 return 'red';
             default:
@@ -131,7 +135,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
 
 
                 <div id="ticketsTable" className="pb-5">
-                    {isTicketsLoaded && <MuiThemeProvider theme={tableTheme}>
+                    {(tickets && !changingRow) && <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""
                             icons = {
@@ -205,7 +209,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                                 exportButton: true,
                                 tableLayout: 'auto',
                                 paging: true,
-                                pageSize: meta.itemsPerPage,
+                                pageSize: meta?.itemsPerPage || 10,
                                 headerStyle: {
                                     backgroundColor: '#f8f9fa'
                                 }
