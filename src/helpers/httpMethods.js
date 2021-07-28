@@ -4,7 +4,7 @@ import { NotificationManager } from 'react-notifications';
 
 export let baseUrl ="https://kustormar-auth.herokuapp.com/v1";
 export let baseUrlMain ="https://kustormar-staging.herokuapp.com/v1";
- //export let baseUrlMain ="https://62e363c9b2c1.ngrok.io/v1";
+// export let baseUrlMain ="https://e42b1bf085ff.ngrok.io/v1";
 //export let baseUrl = "https://api-dev.thenewspaperstand.com";
 // export let baseUrl = process.env.REACT_APP_BASE_URL;
 // export let baseUrl = "http://d3898537932a.ngrok.io";

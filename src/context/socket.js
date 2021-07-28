@@ -1,27 +1,13 @@
 import React, { createContext, useState, useEffect } from "react";
 import socketIO from "socket.io-client";
 // import { baseUrlMain as baseUrl } from '../helpers/httpMethods';
-import { getLocalItem } from '../components/helpers/authService';
 export const SocketDataContext = createContext();
 export const AppSocket = {};
 export const SocketDataProvider = (props) => {
   const [wsTickets, setwsTickets] = useState([]);
-  const [user, setuser] = useState([]);
   const [wsTicketFilter, setWsTicketFilter] = useState({ channel: "",per_page:100 });
-  const [msgHistory, setMsgHistory] = useState([]);
 let baseUrl = "https://kustormar-staging.herokuapp.com"
-  useEffect(() => {getUserFromStorage()}, [wsTickets]);
-
-  const getUserFromStorage = () => {
-    let lUser = getLocalItem("user");
-    //alert(lUser);
-    if (lUser == undefined || lUser == null) {
-      window.location.href = "/";
-    } else {
-      setuser(lUser)
-      console.log(lUser);
-    }
-  };
+  useEffect(() => {}, [wsTickets]);
 
   AppSocket.createConnection = async () => {
     if (AppSocket.io?.connected) return; // if there has been a connection before, return
@@ -41,8 +27,12 @@ let baseUrl = "https://kustormar-staging.herokuapp.com"
       console.log("connected to server");
     });
     //console.log(">>>a","gets here");
-    
-    AppSocket.io.emit(`join`, ({userId:user?.id}));
+    AppSocket.io.on(`ws_tickets`, (data) => {
+        console.log(">>>a","gets here");
+      console.log("this is a notification", data?.data?.tickets);
+      setwsTickets(data?.data?.tickets)
+    });
+
     AppSocket.io.emit(`ws_tickets`, (wsTicketFilter));
   };
 
@@ -60,9 +50,7 @@ let baseUrl = "https://kustormar-staging.herokuapp.com"
         AppSocket,
         wsTickets,
         setWsTicketFilter,
-        wsTicketFilter,
-        setMsgHistory,
-        msgHistory
+        wsTicketFilter
       }}
     >
       {props.children}
