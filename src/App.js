@@ -120,6 +120,45 @@ const SiteRouter = connect(mapStateToProps, {
           <Route exact path="/login/:domain" component={Login} />
           <Route exact path="/register" component={Register} />
           {/* help pages */}
+          <UserDataProvider>
+            <LayoutProvider>
+              <SocketDataProvider>
+                <Route exact path="/help" component={HelpCenter} />
+                <Route exact path="/help/:topic" component={ArticleList} />
+
+                {/* help pages end */}
+                <DefaultLayoutRoute exact path="/home" component={Dashboard} />
+                <DefaultLayoutRoute
+                  exact
+                  path="/conversation"
+                  component={Conversation}
+                  pageName="Conversations"
+                />
+                <Route exact path="/customers-null" component={CustomersNull} />
+                <DefaultLayoutRoute
+                  exact
+                  path="/customers"
+                  component={CustomerList}
+                />
+                <Route
+                  exact
+                  path="/organisations"
+                  component={OrganisationList}
+                />
+                <Route exact path="/customers/customer" component={Customer} />
+                <DefaultLayoutRoute
+                  exact
+                  path="/tickets"
+                  component={TicketList}
+                />
+                <DefaultLayoutRoute
+                  exact
+                  path="/settings"
+                  component={SettingsHome}
+                />
+              </SocketDataProvider>
+            </LayoutProvider>
+          </UserDataProvider>
           <Route exact path="/help" component={HelpCenter} />
           <Route exact path="/help/:topic" component={ArticleList} />
           <Route exact path="/help/:topic/:article" component={Article} />
@@ -216,11 +255,7 @@ function App(props) {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <NotificationContainer />
-        <LayoutProvider>
-          <SocketDataProvider>
-            <SiteRouter />
-          </SocketDataProvider>
-        </LayoutProvider>
+        <SiteRouter />
       </PersistGate>
     </Provider>
   );

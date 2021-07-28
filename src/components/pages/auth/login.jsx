@@ -60,8 +60,8 @@ const Login = ({ match, history }) => {
     const res = await httpPostMain("auth/login", data);
     if (res.status == "success") {
       setLoading(false);
-      console.log(res?.status);
-      localStorage.setItem("user", JSON.stringify(res.data));
+      console.log(res?.data.user);
+      localStorage.setItem("user", JSON.stringify(res?.data?.user));
       localStorage.setItem("token", res.data.token);
 
       NotificationManager.success(res.data.message, "Success", 4000);
