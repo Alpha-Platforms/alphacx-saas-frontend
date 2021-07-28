@@ -36,12 +36,14 @@ import CustomersNull from "./components/pages/customers/CustomersNull";
 import Customer from "./components/pages/customers/Customer";
 import OrganisationList from "./components/pages/customers/OrganisationList";
 import TicketList from "./components/pages/tickets/TicketList";
-import SettingsHome from './components/pages/settings';
+import SettingsHome from "./components/pages/settings";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { SocketDataProvider } from "./context/socket";
 import ArticleList from "./components/pages/help_center/help_pages/articleList";
 import Article from "./components/pages/help_center/help_pages/article";
+import EmailSettings from "./components/pages/settings/email/emailSettings";
+import SettingsEmail from "./components/pages/settings/email/emailSettings";
 import UserList from './components/pages/settings/users/UserList';
 import UserPersonal from './components/pages/settings/users/UserPersonal';
 import Fields from './components/pages/settings/fields/Fields';
@@ -127,7 +129,12 @@ const SiteRouter = connect(mapStateToProps, {
           <Route exact path="/help/:topic/:article" component={Article} />
 
           {/* help pages end */}
-          <DefaultLayoutRoute exact path="/home" component={Dashboard} />
+          <DefaultLayoutRoute
+            exact
+            path="/home"
+            pageName="Dashboard"
+            component={Dashboard}
+          />
           <DefaultLayoutRoute
             exact
             path="/conversation"
@@ -148,6 +155,24 @@ const SiteRouter = connect(mapStateToProps, {
           <DefaultLayoutRoute exact path="/settings/users" pageName="Settings" component={UserList} />
           <DefaultLayoutRoute exact path="/settings/users/personal-info-settings" pageName="Settings" component={UserPersonal} />
           <DefaultLayoutRoute exact path="/settings/fields" pageName="Settings" component={Fields} />
+<DefaultLayoutRoute
+            exact
+            path="/settings/email"
+            pageName="Settings"
+            component={SettingsEmail}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/email/:action"
+            pageName="Settings"
+            component={SettingsEmail}
+          />
+          {/* 
+          ...
+          ..
+          .
+          settings pages end */}
+
           <Route>
             <div
               style={{
