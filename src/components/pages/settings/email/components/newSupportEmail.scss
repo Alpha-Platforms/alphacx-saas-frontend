@@ -1,0 +1,16 @@
+.new-support-email {
+  max-height: 80vh;
+  overflow-y: scroll;
+  background-color: white;
+  .card-body {
+    padding-bottom: 0 !important;
+  }
+
+  .bg-outline-mail {
+    border: 1px solid #2d325028;
+    height: 74px;
+  }
+  .mail-active {
+    border-color: #006298;
+  }
+}

@@ -35,12 +35,14 @@ import CustomersNull from "./components/pages/customers/CustomersNull";
 import Customer from "./components/pages/customers/Customer";
 import OrganisationList from "./components/pages/customers/OrganisationList";
 import TicketList from "./components/pages/tickets/TicketList";
-import SettingsHome from './components/pages/settings';
+import SettingsHome from "./components/pages/settings";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { SocketDataProvider } from "./context/socket";
 import ArticleList from "./components/pages/help_center/help_pages/articleList";
 import Article from "./components/pages/help_center/help_pages/article";
+import EmailSettings from "./components/pages/settings/email/emailSettings";
+import SettingsEmail from "./components/pages/settings/email/emailSettings";
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -133,8 +135,30 @@ const SiteRouter = connect(mapStateToProps, {
           />
           <Route exact path="/organisations" component={OrganisationList} />
           <Route exact path="/customers/customer" component={Customer} />
-          <DefaultLayoutRoute exact path="/tickets" pageName="Tickets" component={TicketList} />
-          <DefaultLayoutRoute exact path="/settings" component={SettingsHome} />
+          <DefaultLayoutRoute
+            exact
+            path="/tickets"
+            pageName="Tickets"
+            component={TicketList}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings"
+            pageName="Settings"
+            component={SettingsHome}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/email"
+            pageName="Settings"
+            component={SettingsEmail}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/email/:action"
+            pageName="Settings"
+            component={SettingsEmail}
+          />
           <Route>
             <div
               style={{

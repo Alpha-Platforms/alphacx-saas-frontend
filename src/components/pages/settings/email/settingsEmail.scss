@@ -1,0 +1,24 @@
+.settings-email {
+  min-height: 80vh;
+  background-color: white;
+  main,
+  #mainContent {
+    height: 80vh;
+    margin: 0 !important;
+  }
+  .card-body {
+    height: 100%;
+  }
+  .empty-state {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-primary {
+    background-color: #006298;
+    color: white !important;
+  }
+}
