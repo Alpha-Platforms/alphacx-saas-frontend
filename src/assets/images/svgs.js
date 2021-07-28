@@ -2629,3 +2629,96 @@ export const HelpNavIcon = ({ size, name }) => {
     </svg>
   ) : null;
 };
+
+export const MsgIcon = ({ size }) => {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g id="Iconly/Light/Message">
+        <g id="Message">
+          <path
+            id="Stroke 1"
+            d="M14.9217 7.375L11.219 10.3859C10.5194 10.9409 9.53513 10.9409 8.83555 10.3859L5.10156 7.375"
+            stroke="#130F26"
+            stroke-opacity="0.4"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            id="Stroke 3"
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M14.092 17.5C16.6265 17.507 18.3346 15.4246 18.3346 12.8653V7.14168C18.3346 4.58235 16.6265 2.5 14.092 2.5H5.91058C3.37612 2.5 1.66797 4.58235 1.66797 7.14168V12.8653C1.66797 15.4246 3.37612 17.507 5.91058 17.5H14.092Z"
+            stroke="#130F26"
+            stroke-opacity="0.4"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </g>
+      </g>
+    </svg>
+  );
+};
+
+export const CallIcon = ({ size }) => {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M8.60848 9.39431C11.9327 12.7176 12.6868 8.87292 14.8034 10.988C16.8439 13.0279 18.0167 13.4367 15.4314 16.0213C15.1076 16.2815 13.05 19.4125 5.8192 12.1837C-1.41253 4.95398 1.71669 2.89435 1.97701 2.57061C4.56859 -0.0211441 4.97025 1.15847 7.01077 3.19842C9.12733 5.3144 5.28425 6.071 8.60848 9.39431Z"
+        stroke="#130F26"
+        stroke-opacity="0.4"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const LocationIcon = ({ size }) => {
+  return (
+    <svg
+      width="14"
+      height="18"
+      viewBox="0 0 14 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M9.08464 7.74977C9.08464 6.59871 8.15194 5.66602 7.00173 5.66602C5.85067 5.66602 4.91797 6.59871 4.91797 7.74977C4.91797 8.89999 5.85067 9.83268 7.00173 9.83268C8.15194 9.83268 9.08464 8.89999 9.08464 7.74977Z"
+        stroke="#130F26"
+        stroke-opacity="0.4"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M6.99959 16.5C6.00086 16.5 0.75 12.2486 0.75 7.80274C0.75 4.3222 3.54758 1.5 6.99959 1.5C10.4516 1.5 13.25 4.3222 13.25 7.80274C13.25 12.2486 7.99832 16.5 6.99959 16.5Z"
+        stroke="#130F26"
+        stroke-opacity="0.4"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
