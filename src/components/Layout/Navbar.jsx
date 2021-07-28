@@ -8,6 +8,8 @@ import userIcon from "../../assets/images/user.png";
 import pic from "../../assets/imgF/codeuiandyimg.png";
 import { useLocation } from "react-router-dom";
 //import GoBack from './../helpers/GoBack';
+import searchIcon from "../../assets/imgF/Search.png";
+import AddIcon from "../../assets/icons/close-square-w.svg";
 
 export default function Navbar({
   browserRouter,
@@ -111,10 +113,38 @@ export default function Navbar({
               <div className="pageTitle">
                 <span style={{ textTransform: "capitalize" }}>{pageName}</span>
               </div>
-              <div className="navbar-right-content">
-                <span>
-                  <SearchIconNavbr />
-                </span>
+              <div className="navbar-right-content align-items-center d-flex">
+                
+              <div className="search-chat-con">
+                <form>
+                  <div className="hjdwc">
+                    <input placeholder="Search" type="text" style={{height: 28, borderRadius: 16, paddingLeft: '32px!important'}} />
+
+                    <div className="search-chat-searchIcon" style={{ paddingRight: "20px" }}>
+                      <img src={searchIcon} alt="" style={{
+                          top: "-20px",
+                          height: "10px",
+                          width: "10px",
+                      }} />
+
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+
+
+  <button className="d-flex justify-content align-items-center border rounded bg-transparent py-1 px-2 me-3" onClick={
+    console.log("clicked")
+  }>
+    <div className="ps-0 pe-1">
+      <img src={AddIcon} alt="" style={{height: "12px", width: "12px"}} />
+    </div>
+    <span>New</span>
+  </button>
+  
+
+                
                 <span>
                   <BellIconNavbar />
                 </span>
