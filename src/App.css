@@ -380,6 +380,16 @@ object.icon-lg {
   border-bottom-right-radius: 0.8rem !important;
 }
 
+.rounded-top-04 {
+  border-top-left-radius: 4px !important;
+  border-top-right-radius: 4px !important;
+}
+
+.rounded-bottom-04 {
+  border-bottom-left-radius: 4px !important;
+  border-bottom-right-radius: 4px !important;
+}
+
 .at-radio-red {
   box-shadow: 0 0 0 1px var(--at-red) !important;
 }
@@ -734,6 +744,13 @@ a object {
 */
 /* ticket module */
 
+.ticket-state .btn {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  border-radius: 10rem;
+}
+
 .ticket-state.red .btn {
   border: solid 1px rgb(255 77 53 / 30%);
   background-color: rgb(255 77 53 / 6%);
@@ -744,10 +761,22 @@ a object {
   background-color: rgb(81 183 79 / 6%);
   color: #51b74f !important;
 }
-.ticket-state.yellow .btn {
+.ticket-state.orange .btn {
   border: solid 1px rgb(238 182 74 / 30%);
   background-color: rgb(238 182 74 / 6%);
   color: #eeb64a !important;
+}
+
+.ticket-state.awaiting .btn {
+  border: solid 1px rgb(108 65 129 / 30%);
+  background-color: rgb(108 65 129 / 6%);
+  color: rgba(108, 65, 129) !important;
+}
+
+.ticket-state.yellow .btn {
+  border: solid 1px rgb(56 150 136 / 30%);
+  background-color: rgb(56 150 136 / 6%);
+  color: rgb(56, 150, 136) !important;
 }
 
 .ticket-priority button span::before,

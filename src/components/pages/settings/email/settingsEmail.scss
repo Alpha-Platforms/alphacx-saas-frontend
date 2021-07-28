@@ -1,0 +1,39 @@
+.settings-email {
+  height: 80vh;
+  background-color: white;
+  border-radius: 4px !important;
+
+  main,
+  #mainContent {
+    height: 80vh;
+    margin: 0 !important;
+  }
+  .card-body {
+    height: 100%;
+    margin-top: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .empty-state {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn {
+    border-color: #2b304d3a;
+    padding: 6.5px 16px !important;
+  }
+
+  .btn-primary {
+    background-color: #006298;
+    color: white !important;
+    border-color: #006298 !important;
+
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
+  }
+}

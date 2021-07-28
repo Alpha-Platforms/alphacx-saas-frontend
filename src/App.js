@@ -20,7 +20,10 @@ import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./reduxstore/store";
 import { loginTenant } from "./reduxstore/actions/tenantAuthActions";
 import { loginUser } from "./reduxstore/actions/userAuthActions";
-import { getCustomers } from "./reduxstore/actions/customerActions";
+import {
+  getCustomers,
+  getPaginatedCustomers,
+} from "./reduxstore/actions/customerActions";
 import {
   getTickets,
   getPaginatedTickets,
@@ -40,6 +43,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { SocketDataProvider } from "./context/socket";
 import ArticleList from "./components/pages/help_center/help_pages/articleList";
+import Article from "./components/pages/help_center/help_pages/article";
+import EmailSettings from "./components/pages/settings/email/emailSettings";
+import SettingsEmail from "./components/pages/settings/email/emailSettings";
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -58,6 +64,7 @@ const SiteRouter = connect(mapStateToProps, {
   getStatuses,
   getGroups,
   getAgents,
+  getPaginatedCustomers,
 })(
   ({
     loginTenant,
@@ -72,6 +79,7 @@ const SiteRouter = connect(mapStateToProps, {
     getStatuses,
     getGroups,
     getAgents,
+    getPaginatedCustomers,
   }) => {
     useEffect(() => {
       loginTenant({ domain: "techpoint" });
@@ -93,9 +101,10 @@ const SiteRouter = connect(mapStateToProps, {
 
     useEffect(() => {
       if (isUserAuthenticated) {
-        getCustomers();
+        // getCustomers();
+        getPaginatedCustomers(10, 1);
         // getTickets();
-        getPaginatedTickets(5, 1);
+        getPaginatedTickets(10, 1);
         getPriorities();
         getCategories();
         getStatuses();
@@ -150,6 +159,78 @@ const SiteRouter = connect(mapStateToProps, {
               </SocketDataProvider>
             </LayoutProvider>
           </UserDataProvider>
+          <Route exact path="/help" component={HelpCenter} />
+          <Route exact path="/help/:topic" component={ArticleList} />
+          <Route exact path="/help/:topic/:article" component={Article} />
+
+          {/* help pages end */}
+          <DefaultLayoutRoute
+            exact
+            path="/home"
+            pageName="Dashboard"
+            component={Dashboard}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/conversation"
+            component={Conversation}
+            pageName="Conversations"
+          />
+          <Route exact path="/customers-null" component={CustomersNull} />
+          <DefaultLayoutRoute
+            exact
+            path="/customers"
+            component={CustomerList}
+            pageName="Customers"
+          />
+
+          <DefaultLayoutRoute
+            exact
+            path="/organisations"
+            pageName="Organisations"
+            component={OrganisationList}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/customers/:id"
+            pageName="Customer"
+            component={Customer}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/tickets"
+            pageName="Tickets"
+            component={TicketList}
+          />
+          {/* settings pages
+            ...
+            ..
+            .
+          */}
+          <DefaultLayoutRoute
+            exact
+            path="/settings"
+            pageName="Settings"
+            component={SettingsHome}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/email"
+            pageName="Settings"
+            component={SettingsEmail}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/email/:action"
+            pageName="Settings"
+            component={SettingsEmail}
+          />
+          {/* 
+          ...
+          ..
+          .
+          settings pages end */}
+
           <Route>
             <div
               style={{

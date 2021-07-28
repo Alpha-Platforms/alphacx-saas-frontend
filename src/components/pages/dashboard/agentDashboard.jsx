@@ -17,7 +17,7 @@ const AgentDashboard = () => {
         <div className="charts">
           <div className="top">
             <div className="pie-chart" style={{ backgroundColor: "white" }}>
-              <div className="top-bar">
+              <div className="top-section">
                 <p>Customer Satisfaction (CSAT)</p>
               </div>
               <div
@@ -50,7 +50,7 @@ const AgentDashboard = () => {
 
           {/* sidebar progress bars */}
           <div className="progress-bars">
-            <div className="top-bar">
+            <div className="top-section">
               <h3>Ticket Category</h3>
             </div>
             <ProgressBar title="Complaints" value={10} color={"#000080"} />

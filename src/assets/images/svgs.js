@@ -238,7 +238,18 @@ export const toggleIcon = (
     </g>
   </svg>
 );
-
+export function dashboardIcon ({ activeRoute }) {
+  return (
+    <div>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fillRule="evenodd" clip-rule="evenodd" d="M3 6.5C3 3.87479 3.02811 3 6.5 3C9.97189 3 10 3.87479 10 6.5C10 9.12521 10.0111 10 6.5 10C2.98893 10 3 9.12521 3 6.5Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path fillRule="evenodd" clip-rule="evenodd" d="M14 6.5C14 3.87479 14.0281 3 17.5 3C20.9719 3 21 3.87479 21 6.5C21 9.12521 21.0111 10 17.5 10C13.9889 10 14 9.12521 14 6.5Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path fillRule="evenodd" clip-rule="evenodd" d="M3 16.5C3 13.8748 3.02811 13 6.5 13C9.97189 13 10 13.8748 10 16.5C10 19.1252 10.0111 20 6.5 20C2.98893 20 3 19.1252 3 16.5Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path fillRule="evenodd" clip-rule="evenodd" d="M14 16.5C14 13.8748 14.0281 13 17.5 13C20.9719 13 21 13.8748 21 16.5C21 19.1252 21.0111 20 17.5 20C13.9889 20 14 19.1252 14 16.5Z" stroke="white" strokeWidth="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  );
+}
 export function HomeIcon({ activeRoute }) {
   return (
     <div>
@@ -2355,6 +2366,23 @@ export const SendIcon = ({ size }) => {
       />
     </svg>
   );
+};
+
+export const HelpIcons = ({ size, color, name }) => {
+  return name === "star" ? (
+    <svg
+      width={size || 22}
+      height={size || 21}
+      viewBox="0 0 22 21"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M11 0l3.74 6.443L22 8.021l-4.95 5.56.748 7.419L11 17.993 4.202 21l.748-7.418L0 8.021l7.26-1.579L11 0z"
+        fill={color || "#FFCB45"}
+      />
+    </svg>
+  ) : null;
 };
 
 export const HelpNavIcon = ({ size, name }) => {
