@@ -245,7 +245,7 @@ const UseOwnEmail = () => {
                     class="form-control form-control-sm w-75"
                   />
                 </div>
-                <div class="form-group mt-2">
+                <div class="form-group mt-2 mb-4">
                   <label class="form-label">
                     Password<span class="text-danger">*</span>
                   </label>
