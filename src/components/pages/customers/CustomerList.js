@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../../../styles/Customer.css'
-import {getCustomers} from '../../../reduxstore/actions/customerActions';
+import {getCustomers, getPaginatedCustomers} from '../../../reduxstore/actions/customerActions';
 // import {NotificationManager} from 'react-notifications';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
@@ -16,7 +16,7 @@ import {TablePagination} from '@material-ui/core';
 import {ReactComponent as ProfileSvg} from '../../../assets/svgicons/Profile.svg';
 import CreateCustomerModal from './CreateCustomerModal';
 
-const TicketPagination = props => {
+/* const TicketPagination = props => {
     const {
         ActionsComponent,
         onChangePage,
@@ -40,19 +40,32 @@ const TicketPagination = props => {
                 }}
             />
         );
-    }
-
-const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
+    } */
+export const getUserInitials = (name) => {
+    name = name.toUpperCase();
+    const nameArr = name.split(' ');
+    const firstInitial = nameArr[0] && nameArr[0][0];
+    const secondInitial = nameArr[1] && nameArr[1][0];
+    const result = `${firstInitial
+        ? firstInitial
+        : ''}${secondInitial
+            ? secondInitial
+            : ''}`;
+    return <span>{result}</span>;
+}
+    
+const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPaginatedCustomers}) => {
     const [createModalShow,
         setCreateModalShow] = useState(false);
     const [uploadModalShow,
         setUploadModalShow] = useState(false);
-    const [editModalShow,
+        const [editModalShow,
         setEditModalShow] = useState(false);
     const [custLoading,
         setCustLoading] = useState(false);
+    const [changingRow, setChangingRow] = useState(false);
 
-    const getUserInitials = (name) => {
+        const getUserInitials = (name) => {
             name = name.toUpperCase();
             const nameArr = name.split(' ');
             const firstInitial = nameArr[0] && nameArr[0][0];
@@ -68,21 +81,64 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
 
         useEffect(() => {
             setCustLoading(!isCustomersLoaded);
+            if (isCustomersLoaded) {
+                setChangingRow(false);
+            }
         }, [isCustomersLoaded]);
 
         const themes = ['red', 'blue', 'yellow', 'purple'];
-
+        
         const tableTheme = createTheme({
             palette: {
                 primary: {
                 main: 'rgba(0, 98, 152)',
                 },
                 secondary: {
-                main: 'rgba(0, 98, 152)',
+                    main: 'rgba(0, 98, 152)',
                 },
             },
+            
+        });
         
-            });
+        const TicketPagination = props => {
+            const {
+                ActionsComponent,
+                onChangePage,
+                onChangeRowsPerPage,
+                ...tablePaginationProps
+            } = props;
+            
+            return (
+            <TablePagination
+                {...tablePaginationProps}
+                rowsPerPageOptions={[10, 20, 30]}
+                rowsPerPage={meta?.itemsPerPage || 10}
+                count={Number(meta?.totalItems || 20)}
+                page={(meta?.currentPage || 1) - 1}
+                onPageChange={onChangePage}
+                // when the number of rows per page changes
+                onRowsPerPageChange={event => {
+                            setChangingRow(true);
+                            getPaginatedCustomers(event.target.value, 1);
+                            }}
+                ActionsComponent={(subprops) => {
+                    const { onPageChange, ...actionsComponentProps } = subprops;
+                    return (
+                        <ActionsComponent
+                        {...actionsComponentProps}
+                        onChangePage={(event, newPage) => {
+                            // fetch tickets with new current page
+                            getPaginatedCustomers(meta.itemsPerPage, newPage + 1);
+                            }}
+                        onRowsPerPageChange={event => {
+                            // fetch tickets with new rows per page
+                            getPaginatedCustomers(event.target.value, meta.currentPage);
+                        }}
+                        />
+                    );
+                    }}
+            />
+        )}
 
         return (
             // <SideNavBar navbarTitle="Customer List" parentCap="container-fluid">
@@ -122,7 +178,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                     </div>
 
                     <div id="ticketsTable" className="pb-5">
-                    {customers && <MuiThemeProvider theme={tableTheme}>
+                    {(customers && !changingRow) && <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""
                             icons = {
@@ -143,7 +199,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                                                 ? contact.theme
                                                 : themes[Math.floor(Math.random() * 4)]}`}>{getUserInitials(`${contact.firstname} ${contact.lastname}`)}</div>
                                             <div className="ms-2 mt-1">
-                                                <Link to="#" style={{ textTransform: 'capitalize' }}>{`${contact.firstname} ${contact.lastname}`}</Link>
+                                                <Link to={`/customers/${contact.id}`} style={{ textTransform: 'capitalize' }}>{`${contact.firstname} ${contact.lastname}`}</Link>
                                             </div>
                                         </div>)
                                     }, {
@@ -158,7 +214,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                                     }, {
                                         title: 'Tags',
                                         field: 'tags',
-                                        render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1">+2</span></div>)
+                                        render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">+2</span></div>)
                                     }
                                 ]
                             }
@@ -168,9 +224,10 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                                 company,
                                 email,
                                 phone_number,
-                                theme}) => ({
+                                theme,
+                                id}) => ({
                                 title: title ? title :`Mr.`,
-                                contact: {firstname, lastname, theme},
+                                contact: {firstname, lastname, theme, id},
                                 organisation: company ? company : 'Gillete',
                                 emailAddress: email,
                                 workphone: phone_number,
@@ -182,6 +239,8 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
                                 selection: true,
                                 exportButton: true,
                                 tableLayout: 'auto',
+                                paging: true,
+                                pageSize: meta?.itemsPerPage || 10,
                                 headerStyle: {
                                     backgroundColor: '#f8f9fa'
                                 }
@@ -328,4 +387,4 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta}) => {
 
     const mapStateToProps = (state, ownProps) => ({customers: state.customer.customers, isCustomersLoaded: state.customer.isCustomersLoaded, meta: state.customer.meta})
 
-    export default connect(mapStateToProps, {getCustomers})(CustomerList);
+    export default connect(mapStateToProps, {getCustomers, getPaginatedCustomers})(CustomerList);
