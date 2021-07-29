@@ -50,6 +50,7 @@ import SettingsEmail from "./components/pages/settings/email/emailSettings";
 import UserList from "./components/pages/settings/users/UserList";
 import UserPersonal from "./components/pages/settings/users/UserPersonal";
 import Fields from "./components/pages/settings/fields/Fields";
+import ScrollToTop from './components/helpers/ScrollToTop';
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -122,6 +123,8 @@ const SiteRouter = connect(mapStateToProps, {
     }, [isUserAuthenticated]);
     return (
       <BrowserRouter>
+      {/* Scroll Restoration */}
+        <ScrollToTop/>
         <Switch>
           <Route exact path="/" component={Domain} />
           <Route exact path="/login/:domain" component={Login} />
