@@ -51,6 +51,7 @@ import UserList from "./components/pages/settings/users/UserList";
 import UserPersonal from "./components/pages/settings/users/UserPersonal";
 import Fields from "./components/pages/settings/fields/Fields";
 import ScrollToTop from './components/helpers/ScrollToTop';
+import GroupList from './components/pages/settings/groups/GroupList';
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -178,6 +179,12 @@ const SiteRouter = connect(mapStateToProps, {
             path="/settings/users"
             pageName="Settings"
             component={UserList}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/groups"
+            pageName="Settings"
+            component={GroupList}
           />
           <DefaultLayoutRoute
             exact
