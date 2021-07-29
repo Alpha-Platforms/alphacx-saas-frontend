@@ -1,12 +1,12 @@
-#ticketsTable {
+#alphacxMTable {
     position: relative;
 }
 
-#ticketsTable .MuiPaper-elevation2 {
+#alphacxMTable .MuiPaper-elevation2 {
     box-shadow: none !important;
 }
 
-#ticketsTable .MuiPaper-rounded {
+#alphacxMTable .MuiPaper-rounded {
     border-radius: 0rem !important;
     border-bottom-left-radius: 4px !important;
     border-bottom-right-radius: 4px !important;
@@ -17,9 +17,9 @@
     width: auto;
     padding-left: 0;
 }
-#ticketsTable > div:nth-child(1) > div:nth-child(1),
-#ticketsTable .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-59.MuiToolbar-gutters,
-#ticketsTable .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-41.MuiToolbar-gutters {
+#alphacxMTable > div:nth-child(1) > div:nth-child(1),
+#alphacxMTable .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-59.MuiToolbar-gutters,
+#alphacxMTable .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-41.MuiToolbar-gutters {
     position: absolute;
     z-index: 1;
     top: -4.5rem;
@@ -27,38 +27,38 @@
     flex-direction: flex-start;
 }
 
-#ticketsTable > div:nth-child(1) > div:nth-child(1) > div:nth-child(1),
-#ticketsTable .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-59.MuiToolbar-gutters > div:nth-child(1),
-#ticketsTable .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-41.MuiToolbar-gutters > div:nth-child(1) {
+#alphacxMTable > div:nth-child(1) > div:nth-child(1) > div:nth-child(1),
+#alphacxMTable .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-59.MuiToolbar-gutters > div:nth-child(1),
+#alphacxMTable .MuiToolbar-root.MuiToolbar-regular.MTableToolbar-root-41.MuiToolbar-gutters > div:nth-child(1) {
     flex: none !important;
 }
 
-#ticketsTable .MTableToolbar-spacer-7 {
+#alphacxMTable .MTableToolbar-spacer-7 {
     flex: none;
 }
 
-#ticketsTable .MuiInputBase-root.MuiInput-root.MuiInput-underline.MuiInputBase-formControl.MuiInput-formControl.MuiInputBase-adornedStart.MuiInputBase-adornedEnd {
+#alphacxMTable .MuiInputBase-root.MuiInput-root.MuiInput-underline.MuiInputBase-formControl.MuiInput-formControl.MuiInputBase-adornedStart.MuiInputBase-adornedEnd {
     border: 1px solid rgba(0, 0, 0, 0.5);
     border-bottom: 0px solid rgba(0, 0, 0, 0.3);
     border-radius: 5px;
 }
 
-#ticketsTable .MTableToolbar-searchField-46 {
+#alphacxMTable .MTableToolbar-searchField-46 {
     padding-left: 0 !important;
 }
 
 
-#ticketsTable .MuiSvgIcon-root.MuiSvgIcon-fontSizeSmall {
+#alphacxMTable .MuiSvgIcon-root.MuiSvgIcon-fontSizeSmall {
     margin-left: 0.8rem;
 }
 
-#ticketsTable  tr > td:nth-child(1),
-#ticketsTable  tr > th:nth-child(1) {
+#alphacxMTable  tr > td:nth-child(1),
+#alphacxMTable  tr > th:nth-child(1) {
     padding-left: 0.5rem !important;
 }
 
-#ticketsTable  tr > td:nth-child(1) > span,
-#ticketsTable  tr > th:nth-child(1) > span {
+#alphacxMTable  tr > td:nth-child(1) > span,
+#alphacxMTable  tr > th:nth-child(1) > span {
     transform: scale(0.8);
 }
 
@@ -85,11 +85,11 @@
     box-shadow: none !important;
 }
 
-/* #ticketsTable > div > div > div:nth-child(3) {
+/* #alphacxMTable > div > div > div:nth-child(3) {
     border: 1px solid red;
     display: none;
 } */
 
-#ticketsTable tfoot tr:last-child {
+#alphacxMTable tfoot tr:last-child {
     border-bottom: none !important;
 }

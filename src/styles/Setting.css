@@ -27,3 +27,14 @@
 .field-tab-wrapper .nav-tabs {
     border-bottom: none;
 }
+
+#alphacxMTable.acx-user-table {
+    margin-top: 3rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#alphacxMTable.acx-user-table > div > div:nth-child(1) {
+    display: none !important;
+}

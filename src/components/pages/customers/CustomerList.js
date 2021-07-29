@@ -16,7 +16,7 @@ import {TablePagination} from '@material-ui/core';
 import {ReactComponent as ProfileSvg} from '../../../assets/svgicons/Profile.svg';
 import CreateCustomerModal from './CreateCustomerModal';
 
-/* const TicketPagination = props => {
+/* const AlphacxMTPagination = props => {
     const {
         ActionsComponent,
         onChangePage,
@@ -99,7 +99,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
             },
         });
         
-        const TicketPagination = props => {
+        const AlphacxMTPagination = props => {
             const {
                 ActionsComponent,
                 onChangePage,
@@ -176,7 +176,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
 
                     </div>
 
-                    <div id="ticketsTable" className="pb-5">
+                    <div id="alphacxMTable" className="pb-5">
                     {(customers && !changingRow) && <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""
@@ -246,7 +246,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                 // filtering: true
                             }}
                             components={{ 
-                                Pagination: TicketPagination
+                                Pagination: AlphacxMTPagination
                             }}
                         />
                     </MuiThemeProvider>}

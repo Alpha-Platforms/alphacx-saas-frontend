@@ -79,7 +79,7 @@ const UserList = ({users, meta}) => {
                         placeholder="Search agents"/>
                 </div>
 
-                <div id="ticketsTable" className="pb-5">
+                <div id="alphacxMTable" className="mb-3 acx-user-table">
                     {(users && !changingRow) && <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""
@@ -110,7 +110,9 @@ const UserList = ({users, meta}) => {
                                     }, {
                                         title: 'Action',
                                         field: 'action',
-                                        // render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">+2</span></div>)
+                                        render: rowDate => (<div class="form-check form-switch">
+                                                <input class="form-check-input form-check-input-lg mt-1" type="checkbox"/>
+                                            </div>)
                                     }
                                 ]
                             }
@@ -120,16 +122,16 @@ const UserList = ({users, meta}) => {
                                 company,
                                 email,
                                 group,
-                                theme,
+                                created_at,
                                 id}) => ({
                                 firstName: firstname && firstname,
                                 lastName: firstname && firstname,
                                 emailAddress: email,
                                 role,
-                                contact: {firstname, lastname, theme, id},
-                                organisation: company ? company : 'Gillete',
-                                workphone: null,
-                                tags: ''
+                                group: 'Head Office',
+                                // created: moment(created_at).format('DD MMM, YYYY'),
+                                created: '13 Apr 2021',
+                                contact: {firstname, lastname, id}
                             }))
                             }
                             options = {{
@@ -141,11 +143,14 @@ const UserList = ({users, meta}) => {
                                 pageSize: meta?.itemsPerPage || 10,
                                 headerStyle: {
                                     // backgroundColor: '#f8f9fa'
+                                },
+                                rowStyle: {
+                                    backgroundColor: '#f8f9fa'
                                 }
                                 // filtering: true
                             }}
                             components={{ 
-                                // Pagination: TicketPagination
+                                // Pagination: AlphacxMTPagination
                             }}
                         />
                     </MuiThemeProvider>}
