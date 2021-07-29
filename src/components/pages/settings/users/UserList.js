@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 // import {ReactComponent as CardDesignSvg} from '../../../../assets/icons/Card-Design.svg';
 import {ReactComponent as FormMinusSvg} from '../../../../assets/icons/form-minus.svg';
 import {ReactComponent as AddButtonSvg} from '../../../../assets/icons/add-button.svg';
@@ -7,16 +7,69 @@ import MaterialTable from 'material-table';
 import {Dropdown, Modal} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import tableIcons from '../../../../assets/materialicons/tableIcons';
-import moment from 'moment';
+// import moment from 'moment';,
+import ScaleLoader from 'react-spinners/ScaleLoader';
+import {TablePagination} from '@material-ui/core';
+import {getPaginatedUsers} from '../../../../reduxstore/actions/userActions';
+
 
 import '../../../../styles/Setting.css';
-const UserList = ({users, meta}) => {
+const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded}) => {
     const [createModalShow,
         setCreateModalShow] = useState(false);
     const [inviteModalShow,
         setInviteModalShow] = useState(false);
     const [importModalShow, setImportModalShow] = useState(false);
     const [changingRow, setChangingRow] = useState(false);
+    const [userLoading, setUserLoading] = useState(false);
+
+    useEffect(() => {
+            setUserLoading(!isUsersLoaded);
+            if (isUsersLoaded) {
+                setChangingRow(false);
+            }
+    }, [isUsersLoaded]);
+
+
+    const AlphacxMTPagination = props => {
+        const {
+            ActionsComponent,
+            onChangePage,
+            onChangeRowsPerPage,
+            ...tablePaginationProps
+        } = props;
+        
+        return (
+        <TablePagination
+            {...tablePaginationProps}
+            rowsPerPageOptions={[10, 20, 30]}
+            rowsPerPage={meta?.itemsPerPage || 5}
+            count={Number(meta?.totalItems || 20)}
+            page={(meta?.currentPage || 1) - 1}
+            onPageChange={onChangePage}
+            // when the number of rows per page changes
+            onRowsPerPageChange={event => {
+                        setChangingRow(true);
+                        getPaginatedUsers(event.target.value, 1);
+                        }}
+            ActionsComponent={(subprops) => {
+                const { onPageChange, ...actionsComponentProps } = subprops;
+                return (
+                    <ActionsComponent
+                    {...actionsComponentProps}
+                    onChangePage={(event, newPage) => {
+                        // fetch tickets with new current page
+                        getPaginatedUsers(meta.itemsPerPage, newPage + 1);
+                        }}
+                    onRowsPerPageChange={event => {
+                        // fetch tickets with new rows per page
+                        getPaginatedUsers(event.target.value, meta.currentPage);
+                    }}
+                    />
+                );
+                }}
+        />
+    )}
 
 
     const tableTheme = createTheme({
@@ -32,6 +85,7 @@ const UserList = ({users, meta}) => {
 
     return (
         <div>
+            {userLoading && <div className="cust-table-loader"><ScaleLoader loading={userLoading} color={"#006298"}/></div>}
             <div className="card card-body bg-white border-0 p-5">
                 <div id="mainContentHeader">
                     <span className="text-muted f-14">
@@ -150,7 +204,7 @@ const UserList = ({users, meta}) => {
                                 // filtering: true
                             }}
                             components={{ 
-                                // Pagination: AlphacxMTPagination
+                                Pagination: AlphacxMTPagination
                             }}
                         />
                     </MuiThemeProvider>}
@@ -414,7 +468,8 @@ const UserList = ({users, meta}) => {
 
 const mapStateToProps = (state, ownProps) => ({
     users: state.user.users,
-    meta: state.user.meta
+    meta: state.user.meta,
+    isUsersLoaded: state.user.isUsersLoaded
 })
 
-export default connect(mapStateToProps, null)(UserList);
+export default connect(mapStateToProps, {getPaginatedUsers})(UserList);
