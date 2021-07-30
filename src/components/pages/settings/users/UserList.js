@@ -15,7 +15,7 @@ import InviteUserModal from './components/InviteUserModal';
 
 
 import '../../../../styles/Setting.css';
-const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded}) => {
+const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgentsLoaded}) => {
     const [createModalShow,
         setCreateModalShow] = useState(false);
     const [inviteModalShow,
@@ -24,12 +24,19 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded}) => {
     const [changingRow, setChangingRow] = useState(false);
     const [userLoading, setUserLoading] = useState(false);
 
-    useEffect(() => {
+    /* useEffect(() => {
             setUserLoading(!isUsersLoaded);
             if (isUsersLoaded) {
                 setChangingRow(false);
             }
-    }, [isUsersLoaded]);
+    }, [isUsersLoaded]); */
+
+    useEffect(() => {
+        setUserLoading(!isAgentsLoaded);
+        if (isAgentsLoaded) {
+            setChangingRow(false);
+        }
+}, [isAgentsLoaded]);
 
 
     const AlphacxMTPagination = props => {
@@ -135,7 +142,7 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded}) => {
                 </div>
 
                 <div id="alphacxMTable" className="mb-3 acx-user-table">
-                    {(users && !changingRow) && <MuiThemeProvider theme={tableTheme}>
+                    {(agents && !changingRow) && <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""
                             icons = {
@@ -171,7 +178,7 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded}) => {
                                     }
                                 ]
                             }
-                            data = {users.map(({firstname,
+                            data = {agents.map(({firstname,
                                 lastname,
                                 role,
                                 company,
@@ -205,7 +212,7 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded}) => {
                                 // filtering: true
                             }}
                             components={{ 
-                                Pagination: AlphacxMTPagination
+                                // Pagination: AlphacxMTPagination
                             }}
                         />
                     </MuiThemeProvider>}
@@ -237,7 +244,9 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded}) => {
 const mapStateToProps = (state, ownProps) => ({
     users: state.user.users,
     meta: state.user.meta,
-    isUsersLoaded: state.user.isUsersLoaded
+    isUsersLoaded: state.user.isUsersLoaded,
+    agents: state.agent.agents,
+    isAgentsLoaded: state.agent.isAgentsLoaded
 })
 
 export default connect(mapStateToProps, {getPaginatedUsers})(UserList);
