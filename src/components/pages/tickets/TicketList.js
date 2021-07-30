@@ -222,7 +222,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                 </div>
             </div>
 
-            <CreateTicketModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} />
+            <CreateTicketModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} setChangingRow={setChangingRow} />
 
             
         </div>
