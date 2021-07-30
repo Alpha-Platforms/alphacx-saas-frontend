@@ -203,7 +203,7 @@ const NewSupportEmail = () => {
             </div>
             <div class="d-flex justify-content-end mb-1 mt-4 save-btn">
               <a
-                href="email.html"
+                href="/settings/email"
                 class="btn btn-sm px-4 bg-outline-custom cancel"
               >
                 Cancel
