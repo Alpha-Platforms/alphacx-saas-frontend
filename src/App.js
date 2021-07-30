@@ -54,6 +54,7 @@ import ScrollToTop from './components/helpers/ScrollToTop';
 import GroupList from './components/pages/settings/groups/GroupList';
 import RoleList from './components/pages/settings/roles/RoleList';
 import NewRole from './components/pages/settings/roles/NewRole';
+import Form from './components/pages/settings/forms/Form';
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -199,6 +200,12 @@ const SiteRouter = connect(mapStateToProps, {
             path="/settings/roles/new"
             pageName="Settings"
             component={NewRole}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/forms"
+            pageName="Settings"
+            component={Form}
           />
           <DefaultLayoutRoute
             exact
