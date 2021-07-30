@@ -176,7 +176,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
 
                     </div>
 
-                    <div id="alphacxMTable" className="pb-5">
+                    <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table">
                     {(customers && !changingRow) && <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""

@@ -134,7 +134,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                 </div>
 
 
-                <div id="alphacxMTable" className="pb-5">
+                <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table">
                     {(tickets && !changingRow) && <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""
