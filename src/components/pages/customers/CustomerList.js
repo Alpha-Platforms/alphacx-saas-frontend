@@ -16,7 +16,7 @@ import {TablePagination} from '@material-ui/core';
 import {ReactComponent as ProfileSvg} from '../../../assets/svgicons/Profile.svg';
 import CreateCustomerModal from './CreateCustomerModal';
 
-/* const TicketPagination = props => {
+/* const AlphacxMTPagination = props => {
     const {
         ActionsComponent,
         onChangePage,
@@ -99,7 +99,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
             },
         });
         
-        const TicketPagination = props => {
+        const AlphacxMTPagination = props => {
             const {
                 ActionsComponent,
                 onChangePage,
@@ -176,7 +176,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
 
                     </div>
 
-                    <div id="ticketsTable" className="pb-5">
+                    <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table">
                     {(customers && !changingRow) && <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""
@@ -239,14 +239,14 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                 exportButton: true,
                                 tableLayout: 'auto',
                                 paging: true,
-                                pageSize: meta?.itemsPerPage || 10,
+                                pageSize: (isCustomersLoaded && meta?.itemsPerPage) ? meta?.itemsPerPage : 10,
                                 headerStyle: {
                                     backgroundColor: '#f8f9fa'
                                 }
                                 // filtering: true
                             }}
                             components={{ 
-                                Pagination: TicketPagination
+                                Pagination: AlphacxMTPagination
                             }}
                         />
                     </MuiThemeProvider>}
@@ -277,7 +277,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                 </div>
             </div> */}
 
-               <CreateCustomerModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} />
+               <CreateCustomerModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} setChangingRow={setChangingRow} />
 
                 {/* Upload csv modal */}
                 <Modal

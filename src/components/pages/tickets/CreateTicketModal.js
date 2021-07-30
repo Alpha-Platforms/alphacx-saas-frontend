@@ -18,7 +18,8 @@ const CreateTicketModal = ({
     isTicketCreated,
     getPaginatedTickets,
     resetTicketCreated,
-    customers
+    customers,
+    setChangingRow
 }) => {
     const [selectedTags,
         setSelectedTags] = useState([]);
@@ -97,7 +98,8 @@ const CreateTicketModal = ({
             resetTicketCreated();
             NotificationManager.success("Successful", 'Ticket created successfully');
             setCreateModalShow(false);
-            getPaginatedTickets(5, 1);
+            setChangingRow(true);
+            getPaginatedTickets(10, 1);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isTicketCreated])

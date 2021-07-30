@@ -27,3 +27,39 @@
 .field-tab-wrapper .nav-tabs {
     border-bottom: none;
 }
+
+#alphacxMTable.acx-user-table {
+    margin-top: 3rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#alphacxMTable.acx-user-table > div > div:nth-child(1) {
+    display: none !important;
+}
+
+#alphacxMTable.acx-user-table > div > div:nth-child(1) {
+    display: none !important;
+}
+
+#alphacxMTable.acx-group-table > div > div:nth-child(1) > div:nth-child(2) {
+    padding-left: 0;
+    margin-left: -1rem;
+}
+
+#alphacxMTable.acx-group-table > div > div:nth-child(2) {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#alphacxMTable.acx-group-table .MuiTableRow-root td {
+    border: none !important;
+}
+
+.role-search-icon {
+    top: 0.9rem;
+    left: 0.3rem;
+    pointer-events: none;
+}

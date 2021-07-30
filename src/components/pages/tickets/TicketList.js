@@ -47,7 +47,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
         // exportBtn && exportBtn.click();
     }
 
-    const TicketPagination = props => {
+    const AlphacxMTPagination = props => {
         const {
             ActionsComponent,
             onChangePage,
@@ -134,7 +134,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                 </div>
 
 
-                <div id="ticketsTable" className="pb-5">
+                <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table">
                     {(tickets && !changingRow) && <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""
@@ -215,14 +215,14 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                                 }
                             }}
                             components={{ 
-                                Pagination: TicketPagination
+                                Pagination: AlphacxMTPagination
                             }}
                         />
                     </MuiThemeProvider>}
                 </div>
             </div>
 
-            <CreateTicketModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} />
+            <CreateTicketModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} setChangingRow={setChangingRow} />
 
             
         </div>

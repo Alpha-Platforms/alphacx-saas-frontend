@@ -16,7 +16,7 @@ import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import SearchBox from "../../reusables/SearchBox";
 
 
-const TicketPagination = props => {
+const AlphacxMTPagination = props => {
 const {
     ActionsComponent,
     onChangePage,
@@ -112,7 +112,7 @@ const tableTheme = createTheme({
                 </div>
 
 
-                <div id="ticketsTable" className="pb-5">
+                <div id="alphacxMTable" className="pb-5">
                     {isTicketsLoaded && <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""
@@ -175,7 +175,7 @@ const tableTheme = createTheme({
                                 // filtering: true
                             }}
                             components={{ 
-                                Pagination: TicketPagination
+                                Pagination: AlphacxMTPagination
                             }}
                         />
                     </MuiThemeProvider>}

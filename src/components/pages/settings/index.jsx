@@ -145,7 +145,7 @@ export default function SettingsHome() {
     </div>
 
         <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
+          <Link to="/settings/forms" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={FormsLightIcon} alt="" />
@@ -157,7 +157,7 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
         <div className="setting-link-item f-basis-30 border rounded bg-light">
@@ -193,7 +193,7 @@ export default function SettingsHome() {
         </div>
 
         <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
+          <Link to="/settings/roles" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={FolderBlueIcon} alt="" />
@@ -205,7 +205,7 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
         <div className="setting-link-item f-basis-30 border rounded bg-light">
@@ -225,7 +225,7 @@ export default function SettingsHome() {
         </div>
 
         <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
+          <Link to="/settings/groups" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={User3BlueIcon} alt="" />
@@ -237,7 +237,7 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
         <div className="setting-link-item f-basis-30 border rounded bg-light">
