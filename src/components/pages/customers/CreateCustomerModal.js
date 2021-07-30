@@ -1,10 +1,10 @@
 import {useState} from 'react';
 import {Modal} from 'react-bootstrap';
 import {NotificationManager} from 'react-notifications';
-import {addCustomer, getCustomers} from '../../../reduxstore/actions/customerActions';
+import {addCustomer, getPaginatedCustomers} from '../../../reduxstore/actions/customerActions';
 import {connect} from 'react-redux';
 
-const CreateCustomerModal = ({createModalShow, setCreateModalShow, getCustomers}) => {
+const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers, setChangingRow}) => {
 
     const [selectedTags,
         setSelectedTags] = useState([]);
@@ -45,7 +45,8 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getCustomers}
                 NotificationManager.success(res.message, 'Success');
                 setCreateModalShow(false);
                 setModalInputs({firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: ''});
-                getCustomers();
+                setChangingRow(true);
+                getPaginatedCustomers(10, 1);
                 console.log('customer creation was successful');
             }
         }
@@ -172,4 +173,4 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getCustomers}
 
 const mapStateToProps = (state, ownProps) => ({prop: state.prop});
 
-export default connect(mapStateToProps, {getCustomers})(CreateCustomerModal);
+export default connect(mapStateToProps, {getPaginatedCustomers})(CreateCustomerModal);

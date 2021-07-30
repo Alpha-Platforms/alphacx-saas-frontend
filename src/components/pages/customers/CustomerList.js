@@ -239,7 +239,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                 exportButton: true,
                                 tableLayout: 'auto',
                                 paging: true,
-                                pageSize: meta?.itemsPerPage || 10,
+                                pageSize: (isCustomersLoaded && meta?.itemsPerPage) ? meta?.itemsPerPage : 10,
                                 headerStyle: {
                                     backgroundColor: '#f8f9fa'
                                 }
@@ -277,7 +277,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                 </div>
             </div> */}
 
-               <CreateCustomerModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} />
+               <CreateCustomerModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} setChangingRow={setChangingRow} />
 
                 {/* Upload csv modal */}
                 <Modal
