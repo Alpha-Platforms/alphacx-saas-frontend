@@ -110,7 +110,7 @@ export default function SettingsHome() {
 
         <div className="setting-link-item f-basis-30 border rounded bg-light">
           <a
-            href="settings/email"
+            href="/settings/email"
             className="d-block cursor text-decoration-none"
           >
             <div className="d-flex align-items-center p-md-4">
