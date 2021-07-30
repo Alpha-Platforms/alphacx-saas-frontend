@@ -3,16 +3,58 @@ import { useState } from "react";
 import "./newSupportEmail.scss";
 import UseOwnEmail from "./UseOwnEmail";
 import RightArrow from "../../../../../assets/imgF/arrow_right.png";
+import { httpPostMain } from "../../../../../helpers/httpMethods";
+import { NotificationManager } from "react-notifications";
+import { Modal } from "react-responsive-modal";
 
 const NewSupportEmail = () => {
   const [defaultServer, setDefaultServer] = useState(false);
   const [state, setState] = useState({
     activeRadio: "own-server",
+    mailServer: "incoming",
+    mailServer: "incoming-only",
+    emailSystem: "gmail",
+    emailConfig: {
+      tls: false,
+    },
   });
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => {
+    setShow(false);
+    window.location.href = "/settings/email";
+  };
+  const handleShow = () => setShow(true);
 
   const handleServerChange = (e) => {
     if (e.target.checked) {
       setState({ ...state, activeRadio: e.target.value });
+    }
+  };
+  const handleSubmit = async () => {
+    console.clear();
+    const { email, port, tls, host, password } = state.emailConfig;
+    const data = {
+      email: email,
+      password,
+      host,
+      port,
+      tls,
+    };
+
+    console.log("data", data);
+
+    const res = await httpPostMain("email-config", data);
+    if (res?.status == "success") {
+      console.clear();
+      console.log(res.data);
+      handleShow();
+      // setDashInfo({
+      //   ...dashInfo,
+      //   totalTickets: parseInt(res?.data?.meta?.totalItems),
+      // });
+    } else {
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
   return (
@@ -156,7 +198,7 @@ const NewSupportEmail = () => {
                 // ...
                 // ...
                 // ...
-                <UseOwnEmail />
+                <UseOwnEmail state={state} setState={setState} />
               )}
             </div>
             <div class="d-flex justify-content-end mb-1 mt-4 save-btn">
@@ -171,6 +213,7 @@ const NewSupportEmail = () => {
                 id="save-changes"
                 data-bs-toggle="modal"
                 data-bs-target="#successModal"
+                onClick={handleSubmit}
               >
                 Save
               </a>
@@ -178,33 +221,34 @@ const NewSupportEmail = () => {
           </div>
         </div>
       </main>
-
-      <div
-        class="modal fade"
-        id="successModal"
-        tabindex="-1"
-        aria-labelledby="successModal"
-        aria-hidden="true"
-      >
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content p-4 border-0">
-            <div class="modal-body text-center">
-              <div class="text-center">
-                {/* <object data="../assets/alphatickets/icons/sucess.svg" class="img-fluid"></object> */}
-                <h5 class="mt-4">Successful</h5>
-                <p class="text-center">Email has been edited successfully</p>
-                <a
-                  href="./email-table.html"
-                  class="btn btn-sm bg-at-blue text-white px-5 f-16"
-                  id="continue"
-                >
-                  Continue
-                </a>
+      <Modal open={show} onClose={handleClose} center>
+        <div
+          // class="modal fade"
+          id="successModal"
+          tabindex="-1"
+          aria-labelledby="successModal"
+          aria-hidden="false"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4 border-0">
+              <div class="modal-body text-center">
+                <div class="text-center">
+                  {/* <object data="../assets/alphatickets/icons/sucess.svg" class="img-fluid"></object> */}
+                  <h5 class="mt-4">Successful</h5>
+                  <p class="text-center">Email has been edited successfully</p>
+                  <a
+                    href="/settings/email"
+                    class="btn btn-sm bg-at-blue text-white px-5 f-16"
+                    id="continue"
+                  >
+                    Continue
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </Modal>
     </div>
   );
 };
