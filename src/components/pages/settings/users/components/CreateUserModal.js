@@ -41,10 +41,10 @@ const CreateUserModal = ({createModalShow, setCreateModalShow}) => {
                                 <label className="f-12" for="#email">Email Address</label>
                                 <input type="text" className="form-control form-control-sm" id="email"/>
                             </div>
-                            <div className="form-group mt-3">
+                            {/* <div className="form-group mt-3">
                                 <label className="f-12" for="#role">Role</label>
                                 <input type="text" className="form-control form-control-sm" id="role"/>
-                            </div>
+                            </div> */}
                             <div className="form-group mt-3">
                                 <label className="f-12" for="#level">Group (Optional)</label>
                                 <input type="text" className="form-control form-control-sm" id="level"/>

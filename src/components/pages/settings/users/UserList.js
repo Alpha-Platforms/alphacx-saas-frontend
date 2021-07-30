@@ -87,7 +87,7 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded}) => {
     return (
         <div>
             {userLoading && <div className="cust-table-loader"><ScaleLoader loading={userLoading} color={"#006298"}/></div>}
-            <div className="card card-body bg-white border-0 p-5">
+            <div className="card card-body bg-white border-0 p-5 mb-4">
                 <div id="mainContentHeader">
                     <span className="text-muted f-14">
                         Settings
@@ -180,7 +180,7 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded}) => {
                                 created_at,
                                 id}) => ({
                                 firstName: firstname && firstname,
-                                lastName: firstname && firstname,
+                                lastName: lastname && lastname,
                                 emailAddress: email,
                                 role,
                                 group: 'Head Office',
