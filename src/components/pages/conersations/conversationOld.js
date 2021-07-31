@@ -28,8 +28,7 @@ import TextAlignRight from "../../../assets/imgF/TextAlignRight.png";
 import UserProfile from "./userProfile";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 import { SocketDataContext } from "../../../context/socket";
-import { StarIconTicket, SendMsgIcon } from "../../../assets/images/svgs";
-import pic from "../../../assets/imgF/codeuiandyimg.png";
+
 export default function Conversation() {
   const initialState = EditorState.createWithContent(
     ContentState.createFromText("")
@@ -387,8 +386,7 @@ export default function Conversation() {
   return (
     <div className="conversation-wrap codei-ui-andy-setDefaults">
       <div className="conversation-layout">
-        {/* CHAT COL ONE */}
-        <div className={`conversation-layout-col-one`}>
+        <div className={`conversation-layout-col-one ${ChatCol.col1}`}>
           <div className="message-toggles">
             <div className="messageType">
               <select
@@ -442,304 +440,237 @@ export default function Conversation() {
           />
         </div>
 
-        {/* CHAT COL ONE END*/}
-
-        {/* CHAT COL TWO */}
-
         <div
-          className={`conversation-layout-col-two`}
-          // style={showUserProfile ? { width: "calc(100% - 636px)" } : {}}
+          className={`conversation-layout-col-two ${ChatCol.col2}`}
+          style={showUserProfile ? { width: "calc(100% - 636px)" } : {}}
         >
-          <div className="conversation-layout-col-two-chatCol">
-            {" "}
-            {/* CHAT HEADER BOX SECTION */}
-            <div className="conversationHeaderV2">
-              <div className="conversationHeaderMainV2">
-                <div className="custormChatHeaderInfo">
-                  <div className="custormChatHeaderInfoData">
-                    <h1>How can I get a refund for my order?</h1>
-                    <p>
-                      Marvin McKinney (marvin.mckinney@gmail.com){" "}
-                      <div className="custormChatHeaderDot"></div>{" "}
-                      <span>March 13, 2021</span>
-                    </p>
-                  </div>
-                  <div className="custormChatHeaderInfoAction">
-                    <StarIconTicket /> Update
-                  </div>
-                </div>
+          {loadSingleTicket ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "50px",
+              }}
+            >
+              {" "}
+              <ClipLoader
+                color="#0d4166"
+                loading={loadSingleTicket}
+                size={35}
+              />
+            </div>
+          ) : firstTimeLoad ? (
+            <NoChatFound value="Click on a ticket to get started" />
+          ) : (
+            <div className="single-chat-ckeditor">
+              <div
+                className="showBackArrowOnMobile"
+                onClick={() =>
+                  setChatCol({ col1: "showColOne", col2: "hideColTwo" })
+                }
+              >
+                <img src={BackArrow} alt="" />
+              </div>
+              <SingleChatOpen
+                ticket={ticket}
+                msgHistory={msgHistory}
+                SenderInfo={SenderInfo}
+                setMessageSenderId={setMessageSenderId}
+                Statues={Statues}
+                upTicketStatus={upTicketStatus}
+                setshowUserProfile={setshowUserProfile}
+                setopenSaveTicketModal={setopenSaveTicketModal}
+                openSaveTicketModal={openSaveTicketModal}
+              />
+
+              <Editor
+                editorState={editorState}
+                toolbar={{
+                  options: [
+                    "emoji",
+                    "inline",
+                    // "blockType",
+
+                    // "list",
+                    "textAlign",
+                    // "colorPicker",
+                    // "link",
+                    // "embedded",
+                    "image",
+                  ],
+                  // inline: {
+                  //   inDropdown: false,
+                  //   icon: boldB,
+                  //   options: ["bold", "underline", "italic"],
+                  // },
+
+                  inline: {
+                    inDropdown: false,
+                    className: undefined,
+                    component: undefined,
+                    dropdownClassName: undefined,
+                    options: ["bold", "italic", "underline"],
+                    bold: { icon: boldB, className: undefined },
+                    italic: { icon: TextItalic, className: undefined },
+                    underline: { icon: TextUnderline, className: undefined },
+                  },
+
+                  image: {
+                    icon: editorImg,
+                    className: undefined,
+                    component: undefined,
+                    popupClassName: undefined,
+                    urlEnabled: true,
+                    uploadEnabled: true,
+                    alignmentEnabled: true,
+                    uploadCallback: _uploadImageCallBack,
+                    previewImage: true,
+                    inputAccept:
+                      "image/gif,image/jpeg,image/jpg,image/png,image/svg",
+                    alt: { present: false, mandatory: false },
+                    defaultSize: {
+                      height: "auto",
+                      width: "auto",
+                    },
+                  },
+                  emoji: {
+                    icon: Smiley,
+                  },
+                  blockType: {
+                    inDropdown: true,
+                  },
+
+                  list: {
+                    inDropdown: true,
+                  },
+                  textAlign: {
+                    inDropdown: false,
+                    className: undefined,
+                    component: undefined,
+                    dropdownClassName: undefined,
+                    options: ["left", "center", "right"],
+                    left: { icon: TextAlignLeft, className: undefined },
+                    center: { icon: TextAlignCenter, className: undefined },
+                    right: { icon: TextAlignRight, className: undefined },
+                    // justify: { icon: TextAlignCenter, className: undefined },
+                  },
+
+                  link: {
+                    inDropdown: true,
+                  },
+
+                  history: {
+                    inDropdown: true,
+                  },
+                }}
+                toolbarClassName="toolbarClassName"
+                wrapperClassName="wrapperClassName"
+                editorClassName="editorClassName"
+                onEditorStateChange={(editor) => onEditorStateChange(editor)}
+              />
+
+              <div className="sendMsg">
+                <button
+                  disabled={sendingReply}
+                  onClick={() => replyTicket(ReplyTicket, "attachment")}
+                >
+                  Send
+                </button>
               </div>
             </div>
-            {/* CHAT SECTION */}
-            <div className="conversationsMain">
-              <div className="chatDateHeader">
-                <div className="chatDateHeaderhr1"></div>
-                <div className="chatDateHeaderTitle">
-                  <span>Yesterday</span>{" "}
-                </div>
-                <div className="chatDateHeaderhr2"></div>
-              </div>
-
-              <div className="customerTiketChat">
-                <div className="customerTImageHeader">
-                  <div className="imgContainercth">
-                    <img src={pic} alt="" />
-                    <div className="custorActiveStateimgd"></div>
-                  </div>
-                </div>
-                <div className="custormernameticket">
-                  <p>Marvin McKinney</p>
-                  <p>Via email . 10:54 AM</p>
-                </div>
-              </div>
-              <div className="msgbodyticketHeader">
-                Hi there,
-                <br />
-                <br /> I need a refund for the headphones that I purchased last
-                week. My order ID is #53467. The product was damaged when I
-                received it. Can you please tell me how I can get a refund?
-                <br />
-                <br />
-                Best, <br />
-                Jerome.
-              </div>
-              <div className="msgAssingedToee3">
-                This message is assigned to <span>Hammed Daudu</span>
-              </div>
-
-              <div
-                className="msgAssingedToee3"
-                style={{ paddingTop: "8px", marginBottom: "35px" }}
-              >
-                <span>Hammed Daudu</span> picked up this chat
-              </div>
-
-              <div className="msgRepliesSectionChattsdw">
-                <div className="customerTiketChat">
-                  <div className="customerTImageHeader">
-                    <div className="imgContainercth">
-                      <img src={pic} alt="" />
-                      <div className="custorActiveStateimgd"></div>
-                    </div>
-                  </div>
-                  <div className="custormernameticket">
-                    <p style={{ color: "#006298" }}>
-                      Hammed Daudu{" "}
-                      <span style={{ color: "#656565" }}>replied</span>
-                    </p>
-                    <p>16 days ago (Sat, 13 Mar 2021 at 12:45 PM)</p>
-                  </div>
-                </div>
-
-                <div className="msgbodyticketHeader">
-                  Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                  amet sint. Velit officia consequat duis enim velit mollit.
-                  Exercitation veniam consequat sunt nostrud amet.
-                </div>
-              </div>
-
-              <div className="msgAssingedToee3">
-                Ticket Status has been marked as <span> Pending</span>
-              </div>
-
-              <div className="chatDateHeader">
-                <div className="chatDateHeaderhr1"></div>
-                <div className="chatDateHeaderTitle">
-                  <span>Yesterday</span>{" "}
-                </div>
-                <div className="chatDateHeaderhr2"></div>
-              </div>
-
-              <div className="msgAssingedToee3">
-                Ticket Status has been marked as <span> Pending</span>
-              </div>
-
-              <div className="msgRepliesSectionChattsdw">
-                <div className="customerTiketChat">
-                  <div className="customerTImageHeader">
-                    <div className="imgContainercth">
-                      <img src={pic} alt="" />
-                      <div className="custorActiveStateimgd"></div>
-                    </div>
-                  </div>
-                  <div className="custormernameticket">
-                    <p style={{ color: "#006298" }}>
-                      Hammed Daudu{" "}
-                      <span style={{ color: "#656565" }}>replied</span>
-                    </p>
-                    <p>16 days ago (Sat, 13 Mar 2021 at 12:45 PM)</p>
-                  </div>
-                </div>
-
-                <div className="msgbodyticketHeader">
-                  Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                  amet sint. Velit officia consequat duis enim velit mollit.
-                  Exercitation veniam consequat sunt nostrud amet.
-                </div>
-              </div>
-
-              <div className="chatDateHeader">
-                <div className="chatDateHeaderhr1"></div>
-                <div className="chatDateHeaderTitle">
-                  <span>Today</span>{" "}
-                </div>
-                <div className="chatDateHeaderhr2"></div>
-              </div>
-
-              <div className="msgRepliesSectionChattsdw">
-                <div className="customerTiketChat">
-                  <div className="customerTImageHeader">
-                    <div className="imgContainercth">
-                      <img src={pic} alt="" />
-                      <div className="custorActiveStateimgd"></div>
-                    </div>
-                  </div>
-                  <div className="custormernameticket">
-                    <p style={{ color: "#006298" }}>
-                      Hammed Daudu{" "}
-                      <span style={{ color: "#656565" }}>replied</span>
-                    </p>
-                    <p>16 days ago (Sat, 13 Mar 2021 at 12:45 PM)</p>
-                  </div>
-                </div>
-
-                <div className="msgbodyticketHeader">
-                  Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                  amet sint. Velit officia consequat duis enim velit mollit.
-                  Exercitation veniam consequat sunt nostrud amet.
-                </div>
-              </div>
-
-              <div
-                className="msgRepliesSectionChattsdw"
-                style={{ marginTop: "10px" }}
-              >
-                <div className="customerTiketChat">
-                  <div className="customerTImageHeader">
-                    <div className="imgContainercth">
-                      <img src={pic} alt="" />
-                      <div className="custorActiveStateimgd"></div>
-                    </div>
-                  </div>
-                  <div className="custormernameticket">
-                    <p style={{ color: "#006298" }}>
-                      Hammed Daudu{" "}
-                      <span style={{ color: "#656565" }}>replied</span>
-                    </p>
-                    <p>Just now</p>
-                  </div>
-                </div>
-
-                <div
-                  className="msgbodyticketHeader"
-                  style={{ color: "rgba(101, 101, 101, 0.7)" }}
-                >
-                  is typing...
-                </div>
-              </div>
+          )}
+        </div>
+      </div>
+      <div style={showUserProfile ? { display: "block" } : { display: "none" }}>
+        <UserProfile
+          setshowUserProfile={setshowUserProfile}
+          UserInfo={UserInfo}
+        />
+      </div>
+      <div>
+        <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal} center>
+          <div className="saveTicketWrapModal">
+            <div className="modalHeaderSaveT">
+              Kindly update ticket before closing the chat
             </div>
-            {/* CHAT COMMENT BOX SECTION */}
-            <div className="conversationCommentBox">
-              <div className="single-chat-ckeditor">
-                <div
-                  className="showBackArrowOnMobile"
-                  onClick={() =>
-                    setChatCol({ col1: "showColOne", col2: "hideColTwo" })
-                  }
-                >
-                  <img src={BackArrow} alt="" />
+
+            <div className="saveTicketModalForm">
+              <div className="ticketmodalInput-twoCol">
+                <div className="ticketmodalInputWrapMain">
+                  <label htmlFor="">Customer</label>
+                  <input
+                    value={`${capitalizeFirstLetter(
+                      ticket[0]?.customer?.firstname
+                    )} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
+                    type="text"
+                    disabled
+                  />
                 </div>
 
-                <Editor
-                  editorState={editorState}
-                  toolbar={{
-                    options: ["emoji", "inline", "textAlign", "image"],
-
-                    inline: {
-                      inDropdown: false,
-                      className: undefined,
-                      component: undefined,
-                      dropdownClassName: undefined,
-                      options: ["bold", "italic", "underline"],
-                      bold: { icon: boldB, className: undefined },
-                      italic: { icon: TextItalic, className: undefined },
-                      underline: { icon: TextUnderline, className: undefined },
-                    },
-
-                    image: {
-                      icon: editorImg,
-                      className: undefined,
-                      component: undefined,
-                      popupClassName: undefined,
-                      urlEnabled: true,
-                      uploadEnabled: true,
-                      alignmentEnabled: true,
-                      uploadCallback: _uploadImageCallBack,
-                      previewImage: true,
-                      inputAccept:
-                        "image/gif,image/jpeg,image/jpg,image/png,image/svg",
-                      alt: { present: false, mandatory: false },
-                      defaultSize: {
-                        height: "auto",
-                        width: "auto",
-                      },
-                    },
-                    emoji: {
-                      icon: Smiley,
-                    },
-                    blockType: {
-                      inDropdown: true,
-                    },
-
-                    list: {
-                      inDropdown: true,
-                    },
-                    textAlign: {
-                      inDropdown: false,
-                      className: undefined,
-                      component: undefined,
-                      dropdownClassName: undefined,
-                      options: ["left", "center", "right"],
-                      left: { icon: TextAlignLeft, className: undefined },
-                      center: { icon: TextAlignCenter, className: undefined },
-                      right: { icon: TextAlignRight, className: undefined },
-                      // justify: { icon: TextAlignCenter, className: undefined },
-                    },
-
-                    link: {
-                      inDropdown: true,
-                    },
-
-                    history: {
-                      inDropdown: true,
-                    },
-                  }}
-                  toolbarClassName="toolbarClassName"
-                  wrapperClassName="wrapperClassName"
-                  editorClassName="editorClassName"
-                  onEditorStateChange={(editor) => onEditorStateChange(editor)}
-                />
-
-                <div className="sendMsg">
-                  <button
-                    disabled={sendingReply}
-                    onClick={() => replyTicket(ReplyTicket, "attachment")}
+                <div className="ticketmodalInputWrapMain">
+                  <label htmlFor="">Category</label>
+                  <select
+                    name=""
+                    id=""
+                    onChange={(e) => {
+                      setCategoryUpdate(e.target.value);
+                    }}
+                    style={{ fontSize: "12px" }}
                   >
-                    <SendMsgIcon /> Send
-                  </button>
+                    <option value="">Select Category</option>
+                    {Category?.map((data) => {
+                      return (
+                        <option key={data.id} value={data?.id}>
+                          {data?.name}
+                        </option>
+                      );
+                    })}
+                  </select>
                 </div>
+              </div>
+
+              <div className="ticketmodalInput-OneCol">
+                <div className="ticketmodalInputWrapMainOne">
+                  <label htmlFor="">Subject</label>
+                  <input
+                    type="text"
+                    value={`${saveTicket.subject} `}
+                    type="text"
+                    disabled
+                    style={{ fontSize: "12px" }}
+                  />
+                </div>
+              </div>
+
+              <div className="descriptionWrap">
+                <label htmlFor="">Description</label>
+                <textarea
+                  style={{ padding: "10px" }}
+                  name=""
+                  id=""
+                  value={`${saveTicket?.description?.map((data) => {
+                    return data?.plain_response;
+                  })} `}
+                  style={{ fontSize: "12px", padding: "7px" }}
+                ></textarea>
+              </div>
+
+              <div className="closeTicketModdalj">
+                <select
+                  name=""
+                  id=""
+                  onChange={(e) => updateTicket(e.target.value)}
+                >
+                  <option value="">Save as</option>
+                  {Statues?.map((data) => {
+                    return <option value={data.id}>{data.status}</option>;
+                  })}
+                </select>
               </div>
             </div>
           </div>
-        </div>
-
-        {/* CHAT COL TWO END */}
-
-        {/* CHAT COL THREE */}
-        <div className="conversation-layout-col-three">
-          <UserProfile />
-        </div>
-        {/* CHAT COL THREE END */}
+        </Modal>
       </div>
     </div>
   );
