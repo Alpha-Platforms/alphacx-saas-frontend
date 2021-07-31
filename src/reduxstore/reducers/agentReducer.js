@@ -4,7 +4,8 @@ const initialState = {
 	agents: [],
     meta: null,
 	isAgentsLoading: false, //will be true when fetching data and back to false when the fetch is done
-	isAgentsLoaded: false
+	isAgentsLoaded: false,
+	isAgentCreated: false
 }
 
 //export the post reducer
@@ -26,7 +27,13 @@ const agentReducer = (state = initialState, action) => {
 			}
 		case types.ADD_AGENT:
 			return {
-				...state
+				...state,
+				isAgentCreated: true
+			}
+		case types.RESET_AGENT_CREATED:
+			return {
+				...state,
+				isAgentCreated: false
 			}
 		default:
 			return state;
