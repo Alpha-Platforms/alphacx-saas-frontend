@@ -33,7 +33,6 @@ export const getPaginatedAgents = (itemsPerPage, currentPage) => (dispatch, getS
 
 
 export const addAgent = (newAgent) => (dispatch, getState) => {
-
 	//Request body
 	const body = JSON.stringify(newAgent);
 
@@ -43,9 +42,9 @@ export const addAgent = (newAgent) => (dispatch, getState) => {
 			payload: res.data
 		}))
 		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
-
 }
 
+export const resetAgentCreated = () => ({type: types.RESET_AGENT_CREATED});
 
 export const setAgentsLoading = () => {
 	return {

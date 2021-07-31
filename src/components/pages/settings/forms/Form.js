@@ -28,7 +28,7 @@ const Form = () => {
                                     class="btn bg-at-blue-light btn-sm rounded-2 px-5">Preview</Link></span>
                         </div>
                         <div className="bg-sky-blue border-sky-blue p-4 mt-5 rounded-3">
-                            <label for="welcome-message" className="text-black fs-6 fw-bold d-block">Form Description</label>
+                            <label htmlFor="welcome-message" className="text-black fs-6 fw-bold d-block">Form Description</label>
                             <input
                                 type="text"
                                 id="welcome-message"
@@ -82,12 +82,12 @@ const Form = () => {
                         </div>}
 
                         <div className="bg-sky-blue border-sky-blue p-4 mt-5 rounded-3 mb-5">
-                            <label for="thankyou-msg" className="text-black fs-6 fw-bold d-block">Success Message</label>
+                            <label htmlFor="thankyou-msg" className="text-black fs-6 fw-bold d-block">Success Message</label>
                             <input
                                 type="text"
                                 id="thankyou-msg"
                                 className="d-block p-2 w-100 mt-3 border-sky-blue rounded-3"
-                                placeholder="Thank you for the feedback!"/>
+                                placeholder="Thank you htmlFor the feedback!"/>
                         </div>
                     </div>
                 </div>

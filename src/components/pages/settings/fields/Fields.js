@@ -68,7 +68,6 @@ const Fields = () => {
                         className="mb-3">
                         <Tab eventKey="contact-field" className="px-2">
                             <div>
-
                                 <div className="border border-1 w-75 p-5 mt-3">
                                     <div className="text-center py-4">
                                         <div className="fieldsWrapper pb-3" id="customerFieldWrapper">
@@ -571,7 +570,7 @@ const Fields = () => {
                             <h3 className="f-16 text-black">Add New field</h3>
                             <form action="">
                                 <div className="form-group mt-3">
-                                    <label className="f-12" for="fieldName">Field Name</label>
+                                    <label className="f-12" htmlFor="fieldName">Field Name</label>
                                     <input
                                         type="text"
                                         name="field-name"
@@ -579,7 +578,7 @@ const Fields = () => {
                                         id="fieldName"/>
                                 </div>
                                 <div className="form-group mt-3">
-                                    <label className="f-12 form-select-label" for="fieldType">Field Type</label>
+                                    <label className="f-12 form-select-label" htmlFor="fieldType">Field Type</label>
                                     <select
                                         name="field-type"
                                         className="form-select form-select-sm f-12 py-2"
@@ -609,7 +608,7 @@ const Fields = () => {
                                 </div>
 
                                 <div className="form-group mt-3">
-                                    <label className="f-12" for="makeOptional">Make field optional</label>
+                                    <label className="f-12" htmlFor="makeOptional">Make field optional</label>
                                     <div className="form-check form-switch mt-1">
                                         <input
                                             name="optional"

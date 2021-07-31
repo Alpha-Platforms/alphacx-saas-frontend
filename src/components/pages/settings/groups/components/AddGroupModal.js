@@ -14,10 +14,10 @@ const AddGroupModal = ({addGroupModalShow, setAddGroupModalShow}) => {
                 <h6 class="fw-bold">Create A Group</h6>
                     <form action="">
                         <div class="form-group mt-3">
-                            <label class="form-label" for="groupName">Group Name</label>
+                            <label class="form-label" htmlFor="groupName">Group Name</label>
                             <input type="text" id="groupName" class="form-control mb-2"/>
 
-                            <label class="form-label" for="groupDesc">Group Description</label>
+                            <label class="form-label" htmlFor="groupDesc">Group Description</label>
                             <input type="text" id="groupDesc" class="form-control"/>
 
                             <div class="d-flex justify-content-end">
