@@ -50,11 +50,13 @@ import SettingsEmail from "./components/pages/settings/email/emailSettings";
 import UserList from "./components/pages/settings/users/UserList";
 import UserPersonal from "./components/pages/settings/users/UserPersonal";
 import Fields from "./components/pages/settings/fields/Fields";
-import ScrollToTop from './components/helpers/ScrollToTop';
-import GroupList from './components/pages/settings/groups/GroupList';
-import RoleList from './components/pages/settings/roles/RoleList';
-import NewRole from './components/pages/settings/roles/NewRole';
-import Form from './components/pages/settings/forms/Form';
+import ScrollToTop from "./components/helpers/ScrollToTop";
+import GroupList from "./components/pages/settings/groups/GroupList";
+import RoleList from "./components/pages/settings/roles/RoleList";
+import NewRole from "./components/pages/settings/roles/NewRole";
+import Form from "./components/pages/settings/forms/Form";
+import HelpCenterSettings from "./components/pages/settings/help_center/helpCenterSettings";
+import NewArticle from "./components/pages/settings/help_center/components/newArticle";
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -127,8 +129,8 @@ const SiteRouter = connect(mapStateToProps, {
     }, [isUserAuthenticated]);
     return (
       <BrowserRouter>
-      {/* Scroll Restoration */}
-        <ScrollToTop/>
+        {/* Scroll Restoration */}
+        <ScrollToTop />
         <Switch>
           <Route exact path="/" component={Domain} />
           <Route exact path="/login/:domain" component={Login} />
@@ -218,6 +220,18 @@ const SiteRouter = connect(mapStateToProps, {
             path="/settings/fields"
             pageName="Settings"
             component={Fields}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/help-center"
+            pageName="Settings"
+            component={HelpCenterSettings}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/help-center/article"
+            pageName="Settings"
+            component={NewArticle}
           />
           <DefaultLayoutRoute
             exact
