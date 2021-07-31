@@ -72,9 +72,9 @@ const CreateTicketModal = ({
             group
         } = modalInputs;
         if (!customer || !category || !priority || !status || !subject || !description || !assignee || !group) {
-            console.log("All field is required");
+            // console.log("All field is required");
         } else {
-            console.log("good to go");
+            // console.log("good to go");
             addTicket({
                 priorityId: priority,
                 assigneeId: assignee,
@@ -96,7 +96,7 @@ const CreateTicketModal = ({
     useEffect(() => {
         if (isTicketCreated) {
             resetTicketCreated();
-            NotificationManager.success("Successful", 'Ticket created successfully');
+            NotificationManager.success("Ticket created successfully", 'Successful');
             setCreateModalShow(false);
             setChangingRow(true);
             getPaginatedTickets(10, 1);

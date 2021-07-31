@@ -1,6 +1,92 @@
+import {useState, useEffect} from 'react';
 import {Modal} from 'react-bootstrap';
+import {connect} from 'react-redux';
+import {NotificationManager} from 'react-notifications';
+import {addAgent, getAgents, resetAgentCreated} from '../../../../../reduxstore/actions/agentActions';
 
-const CreateUserModal = ({createModalShow, setCreateModalShow}) => {
+const CreateUserModal = ({createModalShow, setCreateModalShow, isAgentCreated, groups, addAgent, getAgents, resetAgentCreated}) => {
+    const [modalInputs,
+        setModalInputs] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        avater: '',
+        phoneNumber: '',
+        description: '',
+        group: '',
+        role: 'Agent'
+    });
+
+    const handleModalInput = e => {
+        const {name, value} = e.target;
+
+        switch (name) {
+            case 'firstname':
+                setModalInputs(prev => ({
+                    ...prev,
+                    firstName: value
+                }));
+                break;
+            case 'lastname':
+                setModalInputs(prev => ({
+                    ...prev,
+                    lastName: value
+                }));
+                break;
+            case 'email':
+                setModalInputs(prev => ({
+                    ...prev,
+                    email: value
+                }));
+                break;
+            case 'group':
+                setModalInputs(prev => ({
+                    ...prev,
+                    group: value
+                }));
+                break;
+            default:
+        }
+    }
+
+    const handleUserCreation = () => {
+        const {firstName, lastName, email, group, role} = modalInputs;
+
+        if (!firstName || !lastName || !email) {
+            // all field not available
+            NotificationManager.error('All fields are required', 'Error');
+        } else {
+            // all fields are passed
+            addAgent({
+                firstName,
+                lastName,
+                email,
+                groupId: group,
+                role
+            })
+
+        }
+    }
+
+    useEffect(() => {
+        if (isAgentCreated) {
+            resetAgentCreated();
+            NotificationManager.success("User created successfully", 'Successful');
+            getAgents();
+            setModalInputs({
+                firstName: '',
+                lastName: '',
+                email: '',
+                avater: '',
+                phoneNumber: '',
+                description: '',
+                group: '',
+                role: 'Agent'
+            });
+            setCreateModalShow(false);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isAgentCreated]);
 
     //create user modal
     return (
@@ -23,36 +109,58 @@ const CreateUserModal = ({createModalShow, setCreateModalShow}) => {
                         <form action="">
                             <div className="d-flex flex-row w-100 justify-content-between mt-3">
                                 <div className="form-group w-100 me-2">
-                                    <label className="f-12" for="#fullName">First Name</label>
+                                    <label className="f-12" htmlFor="fullName">First Name</label>
                                     <input
                                         type="text"
+                                        name="firstname"
                                         className="form-control form-control-sm w-100"
-                                        id="fullName"/>
+                                        id="fullName"
+                                        value={modalInputs.firstName}
+                                        onChange={handleModalInput}/>
+
                                 </div>
                                 <div className="form-group w-100 ms-2">
-                                    <label className="f-12" for="#fullName">Last Name</label>
+                                    <label className="f-12" htmlFor="fullName">Last Name</label>
                                     <input
                                         type="text"
                                         className="form-control form-control-sm w-100"
-                                        id="fullName"/>
+                                        id="fullName"
+                                        name="lastname"
+                                        value={modalInputs.lastName}
+                                        onChange={handleModalInput}/>
                                 </div>
                             </div>
                             <div className="form-group mt-3">
-                                <label className="f-12" for="#email">Email Address</label>
-                                <input type="text" className="form-control form-control-sm" id="email"/>
+                                <label className="f-12" htmlFor="email">Email Address</label>
+                                <input
+                                    type="email"
+                                    className="form-control form-control-sm"
+                                    id="email"
+                                    name="email"
+                                    value={modalInputs.email}
+                                    onChange={handleModalInput}/>
                             </div>
                             {/* <div className="form-group mt-3">
-                                <label className="f-12" for="#role">Role</label>
+                                <label className="f-12" htmlFor="#role">Role</label>
                                 <input type="text" className="form-control form-control-sm" id="role"/>
                             </div> */}
                             <div className="form-group mt-3">
-                                <label className="f-12" for="#level">Group (Optional)</label>
-                                <input type="text" className="form-control form-control-sm" id="level"/>
+                                <label className="f-12" htmlFor="level">Group (Optional)</label>
+                                {/* <input type="text" className="form-control form-control-sm" id="level"/> */}
+                                <select
+                                    name="group"
+                                    className="form-select"
+                                    onChange={handleModalInput}
+                                    value={modalInputs.group}>
+                                    <option value=""></option>
+                                    {groups.map(({name, id}) => <option value={id}>{name}</option>)}
+                                </select>
                             </div>
                             <div className="text-end">
                                 <button
                                     type="button"
                                     className="btn btn-custom btn-sm float-end w-25 mt-4 mb-2"
+                                    onClick={handleUserCreation}
                                     id="createUser">Create</button>
                             </div>
                         </form>
@@ -62,6 +170,8 @@ const CreateUserModal = ({createModalShow, setCreateModalShow}) => {
             </Modal.Body>
         </Modal>
     )
-}
+};
 
-export default CreateUserModal
+const mapStateToProps = (state, ownProps) => ({isAgentCreated: state.agent.isAgentCreated, groups: state.group.groups});
+
+export default connect(mapStateToProps, {resetAgentCreated, addAgent, getAgents})(CreateUserModal);

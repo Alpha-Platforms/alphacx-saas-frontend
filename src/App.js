@@ -57,6 +57,7 @@ import NewRole from "./components/pages/settings/roles/NewRole";
 import Form from "./components/pages/settings/forms/Form";
 import HelpCenterSettings from "./components/pages/settings/help_center/helpCenterSettings";
 import NewArticle from "./components/pages/settings/help_center/components/newArticle";
+import TicketSettings from './components/pages/settings/ticketsettings/TicketSettings';
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -232,6 +233,12 @@ const SiteRouter = connect(mapStateToProps, {
             path="/settings/help-center/article"
             pageName="Settings"
             component={NewArticle}
+          />
+<DefaultLayoutRoute
+            exact
+            path="/settings/ticket-settings"
+            pageName="Settings"
+            component={TicketSettings}
           />
           <DefaultLayoutRoute
             exact
