@@ -55,6 +55,7 @@ import GroupList from './components/pages/settings/groups/GroupList';
 import RoleList from './components/pages/settings/roles/RoleList';
 import NewRole from './components/pages/settings/roles/NewRole';
 import Form from './components/pages/settings/forms/Form';
+import TicketSettings from './components/pages/settings/ticketsettings/TicketSettings';
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -218,6 +219,12 @@ const SiteRouter = connect(mapStateToProps, {
             path="/settings/fields"
             pageName="Settings"
             component={Fields}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/ticket-settings"
+            pageName="Settings"
+            component={TicketSettings}
           />
           <DefaultLayoutRoute
             exact

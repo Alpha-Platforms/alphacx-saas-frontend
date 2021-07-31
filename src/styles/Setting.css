@@ -63,3 +63,32 @@
     left: 0.3rem;
     pointer-events: none;
 }
+
+/* * >>>>>> TICKET SETTINGS <<<<<<< */
+.ticket-cat-tab {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.ticket-cat-tab > div {
+    min-height: 20rem;
+}
+
+.ticket-cat-tab > div:nth-child(1) {
+    margin-right: 1rem;
+}
+
+.tl-col {
+    display: grid;
+    grid-template-columns: 7rem auto;
+}
+
+#alphacxMTable.acx-category-table {
+    margin-top: 1rem !important;
+}
+
+.tr-delete-btn {
+    position: absolute;
+    top: -3.5rem;
+    right: 0;
+}

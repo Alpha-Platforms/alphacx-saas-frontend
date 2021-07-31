@@ -17,26 +17,26 @@ const InviteUserModal = ({inviteModalShow, setInviteModalShow}) => {
                         <div className="row gx-2">
                             <div className="col-md-4">
                                 <div className="form-group mt-4">
-                                    <label className="f-14 mb-1" for="#fullName">First Name</label>
+                                    <label className="f-14 mb-1" htmlFor="#fullName">First Name</label>
                                     <input type="text" className="form-control form-control-sm" id="fullName"/>
                                 </div>
                             </div>
                             <div className="col-md-4">
                                 <div className="form-group mt-4">
-                                    <label className="f-14 mb-1" for="#role">Last Name</label>
+                                    <label className="f-14 mb-1" htmlFor="#role">Last Name</label>
                                     <input type="text" className="form-control form-control-sm" id="role"/>
                                 </div>
                             </div>
                             <div className="col-md-4">
                                 <div className="form-group mt-4">
-                                    <label className="f-14 mb-1" for="#email">Email Address</label>
+                                    <label className="f-14 mb-1" htmlFor="#email">Email Address</label>
                                     <input type="text" className="form-control form-control-sm" id="email"/>
                                 </div>
                             </div>
                         </div>
                         <div className="col-md-12">
                             <div className="form-group mt-4">
-                                <label className="f-14 mb-1" for="#email"></label>
+                                <label className="f-14 mb-1" htmlFor="#email"></label>
                                 <span className="fs-3 d-inline ms-2 cursor mt-3 d-inline-block">
                                     <FormMinusSvg/>
                                 </span>

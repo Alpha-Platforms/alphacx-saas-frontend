@@ -23,14 +23,14 @@ const CreateUserModal = ({createModalShow, setCreateModalShow}) => {
                         <form action="">
                             <div className="d-flex flex-row w-100 justify-content-between mt-3">
                                 <div className="form-group w-100 me-2">
-                                    <label className="f-12" for="#fullName">First Name</label>
+                                    <label className="f-12" htmlFor="#fullName">First Name</label>
                                     <input
                                         type="text"
                                         className="form-control form-control-sm w-100"
                                         id="fullName"/>
                                 </div>
                                 <div className="form-group w-100 ms-2">
-                                    <label className="f-12" for="#fullName">Last Name</label>
+                                    <label className="f-12" htmlFor="#fullName">Last Name</label>
                                     <input
                                         type="text"
                                         className="form-control form-control-sm w-100"
@@ -38,15 +38,15 @@ const CreateUserModal = ({createModalShow, setCreateModalShow}) => {
                                 </div>
                             </div>
                             <div className="form-group mt-3">
-                                <label className="f-12" for="#email">Email Address</label>
+                                <label className="f-12" htmlFor="#email">Email Address</label>
                                 <input type="text" className="form-control form-control-sm" id="email"/>
                             </div>
                             {/* <div className="form-group mt-3">
-                                <label className="f-12" for="#role">Role</label>
+                                <label className="f-12" htmlFor="#role">Role</label>
                                 <input type="text" className="form-control form-control-sm" id="role"/>
                             </div> */}
                             <div className="form-group mt-3">
-                                <label className="f-12" for="#level">Group (Optional)</label>
+                                <label className="f-12" htmlFor="#level">Group (Optional)</label>
                                 <input type="text" className="form-control form-control-sm" id="level"/>
                             </div>
                             <div className="text-end">

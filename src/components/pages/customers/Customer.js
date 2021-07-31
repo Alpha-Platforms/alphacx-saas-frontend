@@ -321,7 +321,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                     </div>
                                     <form action="#">
                                         {/* <div className="mb-3">
-                                        <label for="noteInput" className="form-label">New Note</label>
+                                        <label htmlFor="noteInput" className="form-label">New Note</label>
                                         <textarea className="form-control" id="noteInput"></textarea>
                                     </div> */}
                                         <div>
@@ -421,7 +421,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
 
                                 {/* Timeline tab */}
                                 <Tab eventKey="timeline" className="px-2">
-                                    <h5>How do I get a refund for my order?</h5>
+                                    <h5>How do I get a refund htmlFor my order?</h5>
                                     <ul className="timeline-tree">
                                         <li>
                                             <div>
@@ -501,7 +501,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                     </div>
                                 </div>
                                 <div>
-                                    <label for="imageInput" className="form-label btn bg-at-blue-light hover-op-8">Upload Photo</label>
+                                    <label htmlFor="imageInput" className="form-label btn bg-at-blue-light hover-op-8">Upload Photo</label>
                                     <p className="op-9">
                                         <small>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small>
                                     </p>
@@ -510,31 +510,31 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                             <input type="file" className="form-control" id="imageInput"/>
                         </div>
                         <div className="mb-3">
-                            <label for="firstNameInput" className="form-label">First Name</label>
+                            <label htmlFor="firstNameInput" className="form-label">First Name</label>
                             <input type="text" className="form-control" id="firstNameInput"/>
                         </div>
                         <div className="mb-3">
-                            <label for="lastNameInput" className="form-label">Last Name</label>
+                            <label htmlFor="lastNameInput" className="form-label">Last Name</label>
                             <input type="text" className="form-control" id="lastNameInput"/>
                         </div>
                         <div className="mb-3">
-                            <label for="emailInput" className="form-label">Email address</label>
+                            <label htmlFor="emailInput" className="form-label">Email address</label>
                             <input type="email" className="form-control" id="emailInput"/>
                         </div>
                         <div className="mb-3">
-                            <label for="phoneNumerInput" className="form-label">Phone Number</label>
+                            <label htmlFor="phoneNumerInput" className="form-label">Phone Number</label>
                             <input type="tel" className="form-control" id="phoneNumberInput"/>
                         </div>
                         <div className="mb-3">
-                            <label for="companyInput" className="form-label">Company</label>
+                            <label htmlFor="companyInput" className="form-label">Company</label>
                             <input type="text" className="form-control" id="companyInput"/>
                         </div>
                         <div className="mb-3">
-                            <label for="addressInput" className="form-label">Address</label>
+                            <label htmlFor="addressInput" className="form-label">Address</label>
                             <textarea className="form-control" id="addressInput"></textarea>
                         </div>
                         <div className="mb-3">
-                            <label for="customerGroupInput" className="form-label">Customer Group</label>
+                            <label htmlFor="customerGroupInput" className="form-label">Customer Group</label>
                             <input type="text" className="form-control" id="customerGroupInput"/>
                         </div>
                         <button
