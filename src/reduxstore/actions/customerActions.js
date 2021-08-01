@@ -26,6 +26,21 @@ export const getCustomers = () => (dispatch, getState) => {
 }
 
 // valid redux action
+export const getInstantSearchedCustomers = async (term) => {
+    if (!navigator.onLine) {
+        return;
+    }
+    const searchStr = term.replace(/\W+/gi, ' ').replace(/\s+/gi, '%20');
+    try {
+        const res = await axios.get(`${config.stagingBaseUrl}/users?role=Customer&per_page=30`, userTokenConfig(getState));
+        return res?.data;
+    } catch (err) {
+        NotificationManager.error(err.response.data.error, 'Error');
+        return err.response.data;
+    }
+}
+
+// valid redux action
 export const getPaginatedCustomers = (itemsPerPage, currentPage) => (dispatch, getState) => {
     if (!navigator.onLine) {
         return;
