@@ -7,7 +7,8 @@ import {
   UserProfileIcon3,
 } from "../../../assets/images/svgs";
 import userImg from "../../../assets/imgF/user.png";
-export default function UserProfile({ setshowUserProfile, UserInfo }) {
+import { capitalize } from "@material-ui/core";
+export default function UserProfile({ ticket, UserInfo }) {
   const [tags, setTags] = useState([
     <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
     <div style={{ color: "#F40D0D", background: "#FFEAEA " }}>Billing</div>,
@@ -23,8 +24,8 @@ export default function UserProfile({ setshowUserProfile, UserInfo }) {
     <div style={{ position: "" }}>
       <div className="user-profile-conversation-page">
         <div className="userProfilePicCon">
-          {UserInfo?.avatar ? (
-            <img src={UserInfo?.avatar} alt="" />
+          {ticket[0]?.customer?.avatar ? (
+            <img src={ticket[0]?.customer?.avatar} alt="" />
           ) : (
             <img src={userImg} alt="" />
             // <div className="userProfilePicConNoImg">
@@ -35,8 +36,10 @@ export default function UserProfile({ setshowUserProfile, UserInfo }) {
             // </div>
           )}
 
-          {/* <p>{`${UserInfo?.firstname} ${UserInfo?.lastname}`}</p> */}
-          <p>{` Marvin McKinney`}</p>
+          <p>{`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(
+            ticket[0]?.customer?.lastname
+          )}`}</p>
+          {/* <p>{` Marvin McKinney`}</p> */}
         </div>
         <div className="userProfileAboutCovers">
           <div className="aboutUserColConv">
@@ -48,7 +51,6 @@ export default function UserProfile({ setshowUserProfile, UserInfo }) {
               Ticket ID
             </p>
 
-            {/* <p>{UserInfo?.email ? UserInfo?.email : "unavailable"}</p> */}
             <p>#53467</p>
           </div>
 
@@ -56,18 +58,42 @@ export default function UserProfile({ setshowUserProfile, UserInfo }) {
             <p>
               {" "}
               <span className="psvgIcon">
-                <img
-                  src={pic}
-                  alt=""
-                  style={{ width: "30px", height: "30px", borderRadius: "50%" }}
-                />
+                {ticket[0]?.assignee?.avatar ? (
+                  <img
+                    src={ticket[0]?.assignee?.avatar}
+                    alt=""
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      borderRadius: "50%",
+                      marginRight: "2px",
+                    }}
+                  />
+                ) : (
+                  <div
+                    className="userProfilePicConNoImg"
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      borderRadius: "50%",
+                      marginRight: "19px",
+                    }}
+                  >
+                    <span>{`${ticket[0]?.assignee?.firstname?.slice(
+                      0,
+                      1
+                    )} ${ticket[0]?.assignee?.lastname?.slice(0, 1)}`}</span>
+                  </div>
+                )}
               </span>{" "}
               Assigned to
             </p>
             {/* <p>
               {UserInfo?.phoneNumber ? UserInfo?.phoneNumber : "unavailable"}
             </p> */}
-            <p>Hammed Daudu</p>
+            <p>{`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(
+              ticket[0]?.assignee?.lastname
+            )}`}</p>
           </div>
 
           <div className="aboutUserColConv">
@@ -79,9 +105,11 @@ export default function UserProfile({ setshowUserProfile, UserInfo }) {
               Work Phone
             </p>
             {/* <p>
-              {UserInfo?.phoneNumber ? UserInfo?.phoneNumber : "unavailable"}
+              
             </p> */}
-            <p>(217) 555-0113</p>
+            <p>
+              {UserInfo?.phoneNumber ? UserInfo?.phoneNumber : "unavailable"}
+            </p>
           </div>
 
           <div className="aboutUserColConv">
@@ -92,7 +120,7 @@ export default function UserProfile({ setshowUserProfile, UserInfo }) {
               </span>{" "}
               Address
             </p>
-            <p>jeromebell@gmail.com</p>
+            <p>{UserInfo?.email ? UserInfo?.email : "unavailable"}</p>
           </div>
           <div className="ticktTagsgfs3">
             {tags.map((data) => {
