@@ -9,7 +9,7 @@ export const SocketDataProvider = (props) => {
   const [user, setuser] = useState([]);
   const [wsTicketFilter, setWsTicketFilter] = useState({ channel: "",per_page:100 });
   const [msgHistory, setMsgHistory] = useState([]);
-let baseUrl = "https://kustormar-staging.herokuapp.com"
+let baseUrl ="https://kustormar-staging.herokuapp.com";
   useEffect(() => {getUserFromStorage()}, [wsTickets]);
 
   const getUserFromStorage = () => {

@@ -10,6 +10,12 @@ import {
   httpPostMain,
   httpPatchMain,
 } from "../../../helpers/httpMethods";
+import { makeStyles } from "@material-ui/core/styles";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 import { NotificationManager } from "react-notifications";
 import ClipLoader from "react-spinners/ClipLoader";
 import { EditorState, convertToRaw, ContentState } from "draft-js";
@@ -28,6 +34,15 @@ import TextAlignRight from "../../../assets/imgF/TextAlignRight.png";
 import UserProfile from "./userProfile";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 import { SocketDataContext } from "../../../context/socket";
+import {
+  StarIconTicket,
+  SendMsgIcon,
+  ExpandChat,
+} from "../../../assets/images/svgs";
+import pic from "../../../assets/imgF/codeuiandyimg.png";
+import { dateFormater } from "../../helpers/dateFormater";
+import { capitalize } from "@material-ui/core";
+import moment from "moment";
 
 export default function Conversation() {
   const initialState = EditorState.createWithContent(
@@ -88,10 +103,15 @@ export default function Conversation() {
   const [msgHistory, setMsgHistory] = useState([]);
   const [wsTickets, setwsTickets] = useState([]);
   const [categoryUpdate, setCategoryUpdate] = useState("");
-
+  const [noResponseFound, setNoResponseFound] = useState(true);
+  const [TodayMsges, setTodayMsges] = useState([]);
+  const [YesterdayMsges, setYesterdayMsges] = useState([]);
+  const [AchiveMsges, setAchiveMsges] = useState([]);
+  const [ShowAchive, setShowAchive] = useState(false);
   useEffect(() => {
     // getTickets();
-  }, []);
+    sortMsges(msgHistory);
+  }, [msgHistory]);
 
   useEffect(() => {
     getStatues();
@@ -117,12 +137,45 @@ export default function Conversation() {
       console.log("msg>>>", msg);
 
       setMsgHistory((item) => [...item, msg]);
+      // sortMsges((item) => [...item, msg]);
     });
     return () => {
       AppSocket.io.disconnect();
     };
   }, []);
 
+  const sortMsges = (msgs) => {
+    console.log("msgHis", msgs);
+    let Today = [];
+
+    let resultToday = msgs.filter((observation) => {
+      return (
+        moment(observation.created_at).format("DD/MM/YYYY") ==
+        moment(new Date()).format("DD/MM/YYYY")
+      );
+    });
+    let resultYesterday = msgs.filter((observation) => {
+      return (
+        moment(observation.created_at).format("DD/MM/YYYY") ==
+        moment().add(-1, "days").format("DD/MM/YYYY")
+      );
+    });
+
+    let resultAchive = msgs.filter((observation) => {
+      return (
+        moment(observation.created_at).format("DD/MM/YYYY") !=
+          moment().add(-1, "days").format("DD/MM/YYYY") &&
+        moment(observation.created_at).format("DD/MM/YYYY") !=
+          moment(new Date()).format("DD/MM/YYYY")
+      );
+    });
+    setTodayMsges(resultToday);
+    setYesterdayMsges(resultYesterday);
+    setAchiveMsges(resultAchive);
+    console.log("Today>>>", resultToday);
+    console.log("Yesterdat msg ", resultYesterday);
+    console.log("resultAchive msg ", resultAchive);
+  };
   useEffect(() => {
     setLoadingTicks(true);
     setTickets(wsTickets);
@@ -250,6 +303,8 @@ export default function Conversation() {
   };
 
   const loadSingleMessage = async ({ id, customer, assignee, subject }) => {
+    setShowAchive(false);
+    setAchiveMsges([]);
     getUser(customer.id);
     setChatCol({ col1: "hideColOne", col2: "showColTwo" });
     setSenderInfo({ customer, subject });
@@ -265,6 +320,7 @@ export default function Conversation() {
     if (res.status == "success") {
       setTicket(res?.data);
       setMsgHistory(res?.data[0]?.history);
+      // sortMsges(res?.data[0]?.history);
       setMessageSenderId(res?.data[0]?.id);
       setSaveTicket({
         ...saveTicket,
@@ -274,6 +330,7 @@ export default function Conversation() {
       });
       console.log(res?.data[0]?.history);
       setLoadSingleTicket(false);
+      checkRes();
     } else {
       setLoadSingleTicket(false);
       return NotificationManager.error(res.er.message, "Error", 4000);
@@ -327,6 +384,19 @@ export default function Conversation() {
       subject: "",
       description: [],
       category: "",
+    });
+  };
+
+  function createMarkup(data) {
+    return { __html: data };
+  }
+  const checkRes = () => {
+    let a = ticket?.map((data) => {
+      if (data.history.length === 0) {
+        setNoResponseFound(true);
+      } else {
+        setNoResponseFound(false);
+      }
     });
   };
 
@@ -384,294 +454,626 @@ export default function Conversation() {
   };
 
   return (
-    <div className="conversation-wrap codei-ui-andy-setDefaults">
-      <div className="conversation-layout">
-        <div className={`conversation-layout-col-one ${ChatCol.col1}`}>
-          <div className="message-toggles">
-            <div className="messageType">
-              <select
-                name=""
-                id=""
-                onChange={(e) => {
-                  filterTicket(e.target.value, "channel");
-                }}
-              >
-                <option value="">All</option>
-                <option value="facebook">Facebook</option>
-                <option value="whatsapp">Whatsapp</option>
-                <option value="email">Email</option>
-                <option value="liveChat">Live Chat</option>
-              </select>
+    <React.Fragment>
+      <div className="conversation-wrap codei-ui-andy-setDefaults">
+        <div className="conversation-layout">
+          {/* CHAT COL ONE */}
+          <div className={`conversation-layout-col-one`}>
+            <div className="message-toggles">
+              <div className="messageType">
+                {/* <select
+                  name=""
+                  id=""
+                  onChange={(e) => {
+                    filterTicket(e.target.value, "channel");
+                  }}
+                >
+                  <option value="">All</option>
+                  <option value="facebook">Facebook</option>
+                  <option value="whatsapp">Whatsapp</option>
+                  <option value="email">Email</option>
+                  <option value="liveChat">Live Chat</option>
+                </select> */}
+
+                <FormControl variant="outlined">
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    All
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    onChange={(e) => {
+                      filterTicket(e.target.value, "channel");
+                    }}
+                    label="Filter"
+                  >
+                    <MenuItem value="">All</MenuItem>
+                    <MenuItem value="facebook">Facebook</MenuItem>
+                    <MenuItem value="whatsapp">Whatsapp</MenuItem>
+                    <MenuItem value="email">Email</MenuItem>
+                    <MenuItem value="liveChat">Live Chat</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="messageOpenClose">
+                <FormControl variant="outlined">
+                  <InputLabel id="demo-simple-select-outlined-label">
+                    All
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    onChange={(e) => {
+                      filterTicket(e.target.value, "status");
+                    }}
+                  >
+                    <MenuItem value="">All</MenuItem>
+                    {Statues?.map((data) => {
+                      return <MenuItem value={data.id}>{data.status}</MenuItem>;
+                    })}
+                  </Select>
+                </FormControl>
+              </div>
             </div>
-            <div className="messageOpenClose">
+
+            <div className="search-chat-con">
+              <form>
+                <div className="hjdwc">
+                  <input placeholder="Search" type="text" />
+                  <div className="search-chat-searchIcon">
+                    <img src={searchIcon} alt="" />
+                  </div>
+                </div>
+              </form>
+            </div>
+            <MessageList
+              tickets={tickets}
+              LoadingTick={LoadingTick}
+              loadSingleMessage={loadSingleMessage}
+              setTingleTicketFullInfo={setTingleTicketFullInfo}
+              setTicketId={setTicketId}
+              filterChat={filterChat}
+              filterTicketsState={filterTicketsState}
+            />
+          </div>
+
+          {/* CHAT COL ONE END*/}
+
+          {/* CHAT COL TWO */}
+
+          <div
+            className={`conversation-layout-col-two`}
+            // style={showUserProfile ? { width: "calc(100% - 636px)" } : {}}
+          >
+            {firstTimeLoad ? (
+              <NoChatFound value="Click on a ticket to get started" />
+            ) : loadSingleTicket ? (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: "50px",
+                  width: "100%",
+                }}
+              >
+                {" "}
+                <ClipLoader
+                  color="#0d4166"
+                  loading={loadSingleTicket}
+                  size={35}
+                />
+              </div>
+            ) : (
+              <div className="conversation-layout-col-two-chatCol">
+                {" "}
+                {/* CHAT HEADER BOX SECTION */}
+                {/* {noResponseFound ? (
+                <p
+                  style={{
+                    textAlign: "center",
+                    paddingTop: "30px",
+                    paddingBottom: "30px",
+                    marginBottom: "auto",
+                    marginTop: "auto",
+                  }}
+                >
+                  {" "}
+                  <NoChatFound value="No response found" />
+                </p>
+              ) : ( */}
+                <React.Fragment>
+                  <div className="conversationHeaderV2">
+                    <div className="conversationHeaderMainV2">
+                      <div className="custormChatHeaderInfo">
+                        <div className="custormChatHeaderInfoData">
+                          <h1>{ticket[0]?.subject}</h1>
+                          <p>
+                            {`${capitalize(
+                              SenderInfo?.customer?.firstname
+                            )} ${capitalize(
+                              SenderInfo?.customer?.lastname
+                            )} ${capitalize(SenderInfo?.customer?.email)}`}
+                            <div className="custormChatHeaderDot"></div>{" "}
+                            <span>{dateFormater(ticket[0]?.updated_at)}</span>
+                          </p>
+                        </div>
+                        <div
+                          className="custormChatHeaderInfoAction"
+                          onClick={closeSaveTicketModal}
+                        >
+                          <StarIconTicket /> Update
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {/* CHAT SECTION */}
+                  <div className="conversationsMain">
+                    <div className="chatDateHeader">
+                      <div className="chatDateHeaderhr1"></div>
+                      <div className="chatDateHeaderTitle">
+                        <span>
+                          {moment(ticket[0].created_at).format("DD/MM/YYYY") ==
+                          moment(new Date()).format("DD/MM/YYYY")
+                            ? "Today"
+                            : moment(ticket[0].created_at).format(
+                                "DD/MM/YYYY"
+                              ) == moment().add(-1, "days").format("DD/MM/YYYY")
+                            ? "Yesterday"
+                            : moment(ticket[0].created_at).fromNow()}
+                        </span>{" "}
+                      </div>
+                      <div className="chatDateHeaderhr2"></div>
+                    </div>
+
+                    <div className="customerTiketChat">
+                      <div className="customerTImageHeader">
+                        <div className="imgContainercth">
+                          {SenderInfo?.customer?.avatar ? (
+                            <img src={SenderInfo?.customer?.avatar} alt="" />
+                          ) : (
+                            <div className="singleChatSenderImg">
+                              <p>{`${SenderInfo?.customer?.firstname?.slice(
+                                0,
+                                1
+                              )} ${SenderInfo?.customer?.lastname?.slice(
+                                0,
+                                1
+                              )}`}</p>
+                            </div>
+                          )}
+                          <div className="custorActiveStateimgd"></div>
+                        </div>
+                      </div>
+                      <div className="custormernameticket">
+                        <p style={{ color: "#006298" }}>
+                          {`${capitalize(
+                            ticket[0]?.customer?.firstname
+                          )} ${capitalize(ticket[0]?.customer?.lastname)}`}
+                        </p>
+                        <p>{`Via ${ticket[0].channel} . ${dateFormater(
+                          ticket[0].created_at
+                        )}`}</p>
+                      </div>
+                    </div>
+                    <div className="msgbodyticketHeader">
+                      {capitalize(ticket[0]?.description)}
+                    </div>
+                    <div className="msgAssingedToee3">
+                      This message is assigned to{" "}
+                      <span>
+                        {" "}
+                        {`${capitalize(
+                          ticket[0]?.assignee?.firstname
+                        )} ${capitalize(ticket[0]?.assignee?.lastname)}`}
+                      </span>
+                    </div>
+
+                    <div
+                      className="msgAssingedToee3"
+                      style={{ paddingTop: "8px", marginBottom: "-6px" }}
+                    >
+                      <span>
+                        {" "}
+                        {`${capitalize(
+                          ticket[0]?.assignee?.firstname
+                        )} ${capitalize(ticket[0]?.assignee?.lastname)}`}
+                      </span>{" "}
+                      picked up this chat
+                    </div>
+
+                    <div className="msgAssingedToee3">
+                      Ticket Status has been marked as{" "}
+                      <span> {ticket[0].status.status}</span>
+                    </div>
+
+                    <div
+                      className="achivemsagesSection"
+                      onClick={() => setShowAchive(!ShowAchive)}
+                    >
+                      <ExpandChat />
+                      {AchiveMsges.length == 0 &&
+                      TodayMsges.length == 0 &&
+                      YesterdayMsges.length == 0 ? (
+                        <span> No response found ({AchiveMsges.length})</span>
+                      ) : (
+                        <span>
+                          {" "}
+                          {ShowAchive ? "Condense" : "Expand"} all conversation
+                          ({AchiveMsges.length})
+                        </span>
+                      )}
+                    </div>
+
+                    <div
+                      className={` ${
+                        ShowAchive && AchiveMsges.length > 0
+                          ? "showAchivesWrap"
+                          : "hideAchivesWrap"
+                      }`}
+                    >
+                      {AchiveMsges.map((data) => {
+                        return (
+                          <div className="msgRepliesSectionChattsdw">
+                            <div className="customerTiketChat">
+                              <div className="customerTImageHeader">
+                                <div className="imgContainercth">
+                                  {data?.user.avatar ? (
+                                    <img src={data?.user.avatar} alt="" />
+                                  ) : (
+                                    <div className="singleChatSenderImg">
+                                      <p>{`${data?.user?.firstname?.slice(
+                                        0,
+                                        1
+                                      )} ${data?.user?.lastname?.slice(
+                                        0,
+                                        1
+                                      )}`}</p>
+                                    </div>
+                                  )}
+                                  <div className="custorActiveStateimgd"></div>
+                                </div>
+                              </div>
+                              <div className="custormernameticket">
+                                <p style={{ color: "#006298" }}>
+                                  {`${capitalize(
+                                    data?.user?.firstname
+                                  )} ${capitalize(data?.user?.lastname)}`}
+                                  <span style={{ color: "#656565" }}>
+                                    {" "}
+                                    replied
+                                  </span>
+                                </p>
+                                <p>{dateFormater(data.created_at)}</p>
+                              </div>
+                            </div>
+
+                            <div
+                              className="msgbodyticketHeader"
+                              dangerouslySetInnerHTML={createMarkup(
+                                data?.response
+                              )}
+                            ></div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {YesterdayMsges.length == 0 ? (
+                      ""
+                    ) : (
+                      <div className="chatDateHeader">
+                        <div className="chatDateHeaderhr1"></div>
+                        <div className="chatDateHeaderTitle">
+                          <span>Yesterday</span>{" "}
+                        </div>
+                        <div className="chatDateHeaderhr2"></div>
+                      </div>
+                    )}
+
+                    {TodayMsges.length == 0 ? (
+                      ""
+                    ) : (
+                      <div className="chatDateHeader">
+                        <div className="chatDateHeaderhr1"></div>
+                        <div className="chatDateHeaderTitle">
+                          <span>Today</span>{" "}
+                        </div>
+                        <div className="chatDateHeaderhr2"></div>
+                      </div>
+                    )}
+
+                    {TodayMsges.map((data) => {
+                      return (
+                        <div className="msgRepliesSectionChattsdw">
+                          <div className="customerTiketChat">
+                            <div className="customerTImageHeader">
+                              <div className="imgContainercth">
+                                {data?.user.avatar ? (
+                                  <img src={data?.user.avatar} alt="" />
+                                ) : (
+                                  <div className="singleChatSenderImg">
+                                    <p>{`${data?.user?.firstname?.slice(
+                                      0,
+                                      1
+                                    )} ${data?.user?.lastname?.slice(
+                                      0,
+                                      1
+                                    )}`}</p>
+                                  </div>
+                                )}
+                                <div className="custorActiveStateimgd"></div>
+                              </div>
+                            </div>
+                            <div className="custormernameticket">
+                              <p style={{ color: "#006298" }}>
+                                {`${capitalize(
+                                  data?.user?.firstname
+                                )} ${capitalize(data?.user?.lastname)}`}
+                                <span style={{ color: "#656565" }}>
+                                  {" "}
+                                  replied
+                                </span>
+                              </p>
+                              <p>{dateFormater(data.created_at)}</p>
+                            </div>
+                          </div>
+
+                          <div
+                            className="msgbodyticketHeader"
+                            dangerouslySetInnerHTML={createMarkup(
+                              data?.response
+                            )}
+                          ></div>
+                        </div>
+                      );
+                    })}
+
+                    {/* <div
+                    className="msgRepliesSectionChattsdw"
+                    style={{ marginTop: "10px" }}
+                  >
+                    <div className="customerTiketChat">
+                      <div className="customerTImageHeader">
+                        <div className="imgContainercth">
+                          <img src={pic} alt="" />
+                          <div className="custorActiveStateimgd"></div>
+                        </div>
+                      </div>
+                      <div className="custormernameticket">
+                        <p style={{ color: "#006298" }}>
+                          Hammed Daudu{" "}
+                          <span style={{ color: "#656565" }}>replied</span>
+                        </p>
+                        <p>Just now</p>
+                      </div>
+                    </div>
+
+                    <div
+                      className="msgbodyticketHeader"
+                      style={{ color: "rgba(101, 101, 101, 0.7)" }}
+                    >
+                      is typing...
+                    </div>
+                  </div> */}
+                  </div>
+                </React.Fragment>
+                {/* CHAT COMMENT BOX SECTION */}
+                <div className="conversationCommentBox">
+                  <div className="single-chat-ckeditor">
+                    <div
+                      className="showBackArrowOnMobile"
+                      onClick={() =>
+                        setChatCol({ col1: "showColOne", col2: "hideColTwo" })
+                      }
+                    >
+                      <img src={BackArrow} alt="" />
+                    </div>
+
+                    <Editor
+                      editorState={editorState}
+                      toolbar={{
+                        options: ["emoji", "inline", "textAlign", "image"],
+
+                        inline: {
+                          inDropdown: false,
+                          className: undefined,
+                          component: undefined,
+                          dropdownClassName: undefined,
+                          options: ["bold", "italic", "underline"],
+                          bold: { icon: boldB, className: undefined },
+                          italic: { icon: TextItalic, className: undefined },
+                          underline: {
+                            icon: TextUnderline,
+                            className: undefined,
+                          },
+                        },
+
+                        image: {
+                          icon: editorImg,
+                          className: undefined,
+                          component: undefined,
+                          popupClassName: undefined,
+                          urlEnabled: true,
+                          uploadEnabled: true,
+                          alignmentEnabled: true,
+                          uploadCallback: _uploadImageCallBack,
+                          previewImage: true,
+                          inputAccept:
+                            "image/gif,image/jpeg,image/jpg,image/png,image/svg",
+                          alt: { present: false, mandatory: false },
+                          defaultSize: {
+                            height: "auto",
+                            width: "auto",
+                          },
+                        },
+                        emoji: {
+                          icon: Smiley,
+                        },
+                        blockType: {
+                          inDropdown: true,
+                        },
+
+                        list: {
+                          inDropdown: true,
+                        },
+                        textAlign: {
+                          inDropdown: false,
+                          className: undefined,
+                          component: undefined,
+                          dropdownClassName: undefined,
+                          options: ["left", "center", "right"],
+                          left: { icon: TextAlignLeft, className: undefined },
+                          center: {
+                            icon: TextAlignCenter,
+                            className: undefined,
+                          },
+                          right: { icon: TextAlignRight, className: undefined },
+                          // justify: { icon: TextAlignCenter, className: undefined },
+                        },
+
+                        link: {
+                          inDropdown: true,
+                        },
+
+                        history: {
+                          inDropdown: true,
+                        },
+                      }}
+                      toolbarClassName="toolbarClassName"
+                      wrapperClassName="wrapperClassName"
+                      editorClassName="editorClassName"
+                      onEditorStateChange={(editor) =>
+                        onEditorStateChange(editor)
+                      }
+                    />
+
+                    <div className="sendMsg">
+                      <button
+                        disabled={sendingReply}
+                        onClick={() => replyTicket(ReplyTicket, "attachment")}
+                      >
+                        <SendMsgIcon /> Send
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* CHAT COL TWO END */}
+
+          {/* CHAT COL THREE */}
+          <div className="conversation-layout-col-three">
+            {firstTimeLoad ? (
+              ""
+            ) : loadSingleTicket ? (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: "50px",
+                  width: "100%",
+                }}
+              >
+                {" "}
+                <ClipLoader
+                  color="#0d4166"
+                  loading={loadSingleTicket}
+                  size={35}
+                />
+              </div>
+            ) : (
+              <UserProfile UserInfo={UserInfo} ticket={ticket} />
+            )}
+          </div>
+          {/* CHAT COL THREE END */}
+        </div>
+      </div>
+      <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal} center>
+        <div className="saveTicketWrapModal">
+          <div className="modalHeaderSaveT">
+            Kindly update ticket before closing the chat
+          </div>
+
+          <div className="saveTicketModalForm">
+            <div className="ticketmodalInput-twoCol">
+              <div className="ticketmodalInputWrapMain">
+                <label htmlFor="">Customer</label>
+                <input
+                  value={`${capitalizeFirstLetter(
+                    ticket[0]?.customer?.firstname
+                  )} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
+                  type="text"
+                  disabled
+                />
+              </div>
+
+              <div className="ticketmodalInputWrapMain">
+                <label htmlFor="">Category</label>
+                <select
+                  name=""
+                  id=""
+                  onChange={(e) => {
+                    setCategoryUpdate(e.target.value);
+                  }}
+                  style={{ fontSize: "12px" }}
+                >
+                  <option value="">Select Category</option>
+                  {Category?.map((data) => {
+                    return (
+                      <option key={data.id} value={data?.id}>
+                        {data?.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+            </div>
+
+            <div className="ticketmodalInput-OneCol">
+              <div className="ticketmodalInputWrapMainOne">
+                <label htmlFor="">Subject</label>
+                <input
+                  type="text"
+                  value={`${saveTicket.subject} `}
+                  type="text"
+                  disabled
+                  style={{ fontSize: "12px" }}
+                />
+              </div>
+            </div>
+
+            <div className="descriptionWrap">
+              <label htmlFor="">Description</label>
+              <textarea
+                style={{ padding: "10px" }}
+                name=""
+                id=""
+                value={`${saveTicket?.description?.map((data) => {
+                  return data?.plain_response;
+                })} `}
+                style={{ fontSize: "12px", padding: "7px" }}
+              ></textarea>
+            </div>
+
+            <div className="closeTicketModdalj">
               <select
                 name=""
                 id=""
-                onChange={(e) => {
-                  filterTicket(e.target.value, "status");
-                }}
+                onChange={(e) => updateTicket(e.target.value)}
               >
-                <option value="">All</option>
+                <option value="">Save as</option>
                 {Statues?.map((data) => {
                   return <option value={data.id}>{data.status}</option>;
                 })}
               </select>
             </div>
           </div>
-
-          <div className="search-chat-con">
-            <form>
-              <div className="hjdwc">
-                <input placeholder="Search" type="text" />
-                <div className="search-chat-searchIcon">
-                  <img src={searchIcon} alt="" />
-                </div>
-              </div>
-            </form>
-          </div>
-          <MessageList
-            tickets={tickets}
-            LoadingTick={LoadingTick}
-            loadSingleMessage={loadSingleMessage}
-            setTingleTicketFullInfo={setTingleTicketFullInfo}
-            setTicketId={setTicketId}
-            filterChat={filterChat}
-            filterTicketsState={filterTicketsState}
-          />
         </div>
-
-        <div
-          className={`conversation-layout-col-two ${ChatCol.col2}`}
-          style={showUserProfile ? { width: "calc(100% - 636px)" } : {}}
-        >
-          {loadSingleTicket ? (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: "50px",
-              }}
-            >
-              {" "}
-              <ClipLoader
-                color="#0d4166"
-                loading={loadSingleTicket}
-                size={35}
-              />
-            </div>
-          ) : firstTimeLoad ? (
-            <NoChatFound value="Click on a ticket to get started" />
-          ) : (
-            <div className="single-chat-ckeditor">
-              <div
-                className="showBackArrowOnMobile"
-                onClick={() =>
-                  setChatCol({ col1: "showColOne", col2: "hideColTwo" })
-                }
-              >
-                <img src={BackArrow} alt="" />
-              </div>
-              <SingleChatOpen
-                ticket={ticket}
-                msgHistory={msgHistory}
-                SenderInfo={SenderInfo}
-                setMessageSenderId={setMessageSenderId}
-                Statues={Statues}
-                upTicketStatus={upTicketStatus}
-                setshowUserProfile={setshowUserProfile}
-                setopenSaveTicketModal={setopenSaveTicketModal}
-                openSaveTicketModal={openSaveTicketModal}
-              />
-
-              <Editor
-                editorState={editorState}
-                toolbar={{
-                  options: [
-                    "emoji",
-                    "inline",
-                    // "blockType",
-
-                    // "list",
-                    "textAlign",
-                    // "colorPicker",
-                    // "link",
-                    // "embedded",
-                    "image",
-                  ],
-                  // inline: {
-                  //   inDropdown: false,
-                  //   icon: boldB,
-                  //   options: ["bold", "underline", "italic"],
-                  // },
-
-                  inline: {
-                    inDropdown: false,
-                    className: undefined,
-                    component: undefined,
-                    dropdownClassName: undefined,
-                    options: ["bold", "italic", "underline"],
-                    bold: { icon: boldB, className: undefined },
-                    italic: { icon: TextItalic, className: undefined },
-                    underline: { icon: TextUnderline, className: undefined },
-                  },
-
-                  image: {
-                    icon: editorImg,
-                    className: undefined,
-                    component: undefined,
-                    popupClassName: undefined,
-                    urlEnabled: true,
-                    uploadEnabled: true,
-                    alignmentEnabled: true,
-                    uploadCallback: _uploadImageCallBack,
-                    previewImage: true,
-                    inputAccept:
-                      "image/gif,image/jpeg,image/jpg,image/png,image/svg",
-                    alt: { present: false, mandatory: false },
-                    defaultSize: {
-                      height: "auto",
-                      width: "auto",
-                    },
-                  },
-                  emoji: {
-                    icon: Smiley,
-                  },
-                  blockType: {
-                    inDropdown: true,
-                  },
-
-                  list: {
-                    inDropdown: true,
-                  },
-                  textAlign: {
-                    inDropdown: false,
-                    className: undefined,
-                    component: undefined,
-                    dropdownClassName: undefined,
-                    options: ["left", "center", "right"],
-                    left: { icon: TextAlignLeft, className: undefined },
-                    center: { icon: TextAlignCenter, className: undefined },
-                    right: { icon: TextAlignRight, className: undefined },
-                    // justify: { icon: TextAlignCenter, className: undefined },
-                  },
-
-                  link: {
-                    inDropdown: true,
-                  },
-
-                  history: {
-                    inDropdown: true,
-                  },
-                }}
-                toolbarClassName="toolbarClassName"
-                wrapperClassName="wrapperClassName"
-                editorClassName="editorClassName"
-                onEditorStateChange={(editor) => onEditorStateChange(editor)}
-              />
-
-              <div className="sendMsg">
-                <button
-                  disabled={sendingReply}
-                  onClick={() => replyTicket(ReplyTicket, "attachment")}
-                >
-                  Send
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-      <div style={showUserProfile ? { display: "block" } : { display: "none" }}>
-        <UserProfile
-          setshowUserProfile={setshowUserProfile}
-          UserInfo={UserInfo}
-        />
-      </div>
-      <div>
-        <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal} center>
-          <div className="saveTicketWrapModal">
-            <div className="modalHeaderSaveT">
-              Kindly update ticket before closing the chat
-            </div>
-
-            <div className="saveTicketModalForm">
-              <div className="ticketmodalInput-twoCol">
-                <div className="ticketmodalInputWrapMain">
-                  <label htmlFor="">Customer</label>
-                  <input
-                    value={`${capitalizeFirstLetter(
-                      ticket[0]?.customer?.firstname
-                    )} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
-                    type="text"
-                    disabled
-                  />
-                </div>
-
-                <div className="ticketmodalInputWrapMain">
-                  <label htmlFor="">Category</label>
-                  <select
-                    name=""
-                    id=""
-                    onChange={(e) => {
-                      setCategoryUpdate(e.target.value);
-                    }}
-                    style={{ fontSize: "12px" }}
-                  >
-                    <option value="">Select Category</option>
-                    {Category?.map((data) => {
-                      return (
-                        <option key={data.id} value={data?.id}>
-                          {data?.name}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
-              </div>
-
-              <div className="ticketmodalInput-OneCol">
-                <div className="ticketmodalInputWrapMainOne">
-                  <label htmlFor="">Subject</label>
-                  <input
-                    type="text"
-                    value={`${saveTicket.subject} `}
-                    type="text"
-                    disabled
-                    style={{ fontSize: "12px" }}
-                  />
-                </div>
-              </div>
-
-              <div className="descriptionWrap">
-                <label htmlFor="">Description</label>
-                <textarea
-                  style={{ padding: "10px" }}
-                  name=""
-                  id=""
-                  value={`${saveTicket?.description?.map((data) => {
-                    return data?.plain_response;
-                  })} `}
-                  style={{ fontSize: "12px", padding: "7px" }}
-                ></textarea>
-              </div>
-
-              <div className="closeTicketModdalj">
-                <select
-                  name=""
-                  id=""
-                  onChange={(e) => updateTicket(e.target.value)}
-                >
-                  <option value="">Save as</option>
-                  {Statues?.map((data) => {
-                    return <option value={data.id}>{data.status}</option>;
-                  })}
-                </select>
-              </div>
-            </div>
-          </div>
-        </Modal>
-      </div>
-    </div>
+      </Modal>
+    </React.Fragment>
   );
 }
