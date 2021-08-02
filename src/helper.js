@@ -1,3 +1,7 @@
+import {CsvBuilder} from 'filefy';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+
 // function to return axios configuration with tenant token
 export const tenantTokenConfig = getState => {
     //get tenant tenantToken from local storage
@@ -18,7 +22,6 @@ export const tenantTokenConfig = getState => {
     return axiosConfig;
 }
 
-
 // function to return axios configuration with user token
 export const userTokenConfig = getState => {
     //get tenant tenantToken from local storage
@@ -37,4 +40,40 @@ export const userTokenConfig = getState => {
     }
 
     return axiosConfig;
+}
+
+export const wordCapitalize = word => {
+    return word
+        .charAt(0)
+        .toUpperCase() + word.slice(1);
+}
+
+export const exportTable = (exportColumns, exportData, exportType, fileName) => {
+
+    const exportColumnsTitle = exportColumns.map(column => column.title);
+    const exportDataFields = exportData.map(rowData => exportColumns.map(column => {
+        switch (column.field) {
+            case 'contact':
+                return `${wordCapitalize(rowData.contact.firstname)} ${wordCapitalize(rowData.contact.lastname)}`
+            default:
+                return rowData[column.field]
+        }
+    }));
+
+    if (exportType.toLowerCase() === "csv") {
+        const builder = new CsvBuilder(fileName + ".csv");
+        builder
+            .setColumns(exportColumnsTitle)
+            .addRows(exportDataFields)
+            .exportFile();
+    } else if (exportType.toLowerCase() === "pdf") {
+        const doc = new jsPDF();
+
+        doc.autoTable({
+            head: [exportColumnsTitle],
+            body: exportDataFields
+        });
+
+        doc.save(fileName + '.pdf');
+    }
 }

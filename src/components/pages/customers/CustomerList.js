@@ -15,32 +15,11 @@ import MaterialTable from 'material-table';
 import {TablePagination} from '@material-ui/core';
 import {ReactComponent as ProfileSvg} from '../../../assets/svgicons/Profile.svg';
 import CreateCustomerModal from './CreateCustomerModal';
+import {exportTable} from '../../../helper';
+import {Dropdown} from 'react-bootstrap';
+// import SaveAlt from '@material-ui/icons/SaveAlt';
 
-/* const AlphacxMTPagination = props => {
-    const {
-        ActionsComponent,
-        onChangePage,
-        onChangeRowsPerPage,
-        ...tablePaginationProps
-    } = props;
-    
-        return (
-            <TablePagination
-                {...tablePaginationProps}
-                onPageChange={onChangePage}
-                onRowsPerPageChange={onChangeRowsPerPage}
-                ActionsComponent={(subprops) => {
-                const { onPageChange, ...actionsComponentProps } = subprops;
-                return (
-                    <ActionsComponent
-                    {...actionsComponentProps}
-                    onChangePage={onPageChange}
-                    />
-                );
-                }}
-            />
-        );
-    } */
+
 export const getUserInitials = (name) => {
     name = name.toUpperCase();
     const nameArr = name.split(' ');
@@ -59,11 +38,11 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
         setCreateModalShow] = useState(false);
     const [uploadModalShow,
         setUploadModalShow] = useState(false);
-        const [editModalShow,
-        setEditModalShow] = useState(false);
     const [custLoading,
         setCustLoading] = useState(false);
     const [changingRow, setChangingRow] = useState(false);
+    // const [selectedRows, setSelectedRows] = useState([]);
+    let selectedRows = [];
 
         const getUserInitials = (name) => {
             name = name.toUpperCase();
@@ -139,6 +118,91 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
             />
         )}
 
+        const tableColumns = [
+            {
+                title: 'Title',
+                field: 'title',
+                width: '10%'
+            }, {
+                title: 'Contact',
+                field: 'contact',
+                render: ({contact}) => (<div className="d-flex user-initials-sm">
+                    <div
+                        className={`user-initials ${contact.theme
+                        ? contact.theme
+                        : themes[Math.floor(Math.random() * 4)]}`}>{getUserInitials(`${contact.firstname} ${contact.lastname}`)}</div>
+                    <div className="ms-2 mt-1">
+                        <Link to={`/customers/${contact.id}`} style={{ textTransform: 'capitalize' }}>{`${contact.firstname} ${contact.lastname}`}</Link>
+                    </div>
+                </div>)
+            }, {
+                title: 'Organisation',
+                field: 'organisation'
+            }, {
+                title: 'Email Address',
+                field: 'emailAddress'
+            }, {
+                title: 'Workphone',
+                field: 'workphone'
+            }, {
+                title: 'Tags',
+                field: 'tags',
+                render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">+2</span></div>)
+            }
+        ];
+
+        
+
+        
+
+        const handleCSVExport = () => {
+            if (customers) {
+                const data = selectedRows.length !== 0 ? selectedRows : customers.map(({firstname,
+                    lastname,
+                    title,
+                    company,
+                    email,
+                    phone_number,
+                    theme,
+                    id}) => ({
+                    title: title ? title :`Mr.`,
+                    contact: {firstname, lastname, theme, id},
+                    organisation: company ? company : 'Gillete',
+                    emailAddress: email,
+                    workphone: phone_number,
+                    tags: ''
+                }));
+                exportTable(tableColumns, data, 'csv', 'CustomerExport');
+            }
+
+        }
+
+        const handlePDFExport = () => {
+            if (customers) {
+                const data = selectedRows.length !== 0 ? selectedRows : customers.map(({firstname,
+                    lastname,
+                    title,
+                    company,
+                    email,
+                    phone_number,
+                    theme,
+                    id}) => ({
+                    title: title ? title :`Mr.`,
+                    contact: {firstname, lastname, theme, id},
+                    organisation: company ? company : 'Gillete',
+                    emailAddress: email,
+                    workphone: phone_number,
+                    tags: ''
+                }));
+                exportTable(tableColumns, data, 'pdf', 'CustomerExport');
+            }
+        }
+
+        const handleSelectionChange = (rows) => {
+            selectedRows = rows;
+        }
+
+
         return (
             // <SideNavBar navbarTitle="Customer List" parentCap="container-fluid">
             <div>
@@ -162,16 +226,33 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
 
                             <button
                                 type="button"
-                                className="btn btn-sm btn-outline-secondary px-md-3 ms-md-3 reset-btn-outline"
+                                className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3 reset-btn-outline"
                                 onClick={() => setUploadModalShow(true)}>
                                 <UploadSvg/>&nbsp;Import
                             </button>
 
+                            {/* <button
+                                type="button"
+                                className="btn btn-sm btn-outline-secondary px-md-3 ms-md-3 reset-btn-outline"
+                                onClick={handlePDFExport}>
+                                <ImportSvg/>&nbsp;Export PDF
+                            </button>
                             <button
                                 type="button"
-                                className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3 reset-btn-outline">
-                                <ImportSvg/>&nbsp;Export
-                            </button>
+                                className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3 reset-btn-outline"
+                                onClick={handleCSVExport}>
+                                <ImportSvg/>&nbsp;Export CSV
+                            </button> */}
+                            <Dropdown>
+                                <Dropdown.Toggle id="export-dropdown" className="btn-outline-secondary reset-btn-outline btn">
+                                    <ImportSvg/>&nbsp;Export
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    <Dropdown.Item as="button" onClick={handlePDFExport}>As PDF</Dropdown.Item>
+                                    <Dropdown.Item as="button" onClick={handleCSVExport}>As CSV</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
                         </div>
 
                     </div>
@@ -183,40 +264,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                             icons = {
                                 tableIcons
                             }
-                            columns = {
-                                [
-                                    {
-                                        title: 'Title',
-                                        field: 'title',
-                                        width: '10%'
-                                    }, {
-                                        title: 'Contact',
-                                        field: 'contact',
-                                        render: ({contact}) => (<div className="d-flex user-initials-sm">
-                                            <div
-                                                className={`user-initials ${contact.theme
-                                                ? contact.theme
-                                                : themes[Math.floor(Math.random() * 4)]}`}>{getUserInitials(`${contact.firstname} ${contact.lastname}`)}</div>
-                                            <div className="ms-2 mt-1">
-                                                <Link to={`/customers/${contact.id}`} style={{ textTransform: 'capitalize' }}>{`${contact.firstname} ${contact.lastname}`}</Link>
-                                            </div>
-                                        </div>)
-                                    }, {
-                                        title: 'Organisation',
-                                        field: 'organisation'
-                                    }, {
-                                        title: 'Email Address',
-                                        field: 'emailAddress'
-                                    }, {
-                                        title: 'Workphone',
-                                        field: 'workphone'
-                                    }, {
-                                        title: 'Tags',
-                                        field: 'tags',
-                                        render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">+2</span></div>)
-                                    }
-                                ]
-                            }
+                            columns = {tableColumns}
                             data = {customers.map(({firstname,
                                 lastname,
                                 title,
@@ -236,18 +284,60 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                             options = {{
                                 search: true,
                                 selection: true,
-                                exportButton: true,
+                                exportButton: false,
                                 tableLayout: 'auto',
                                 paging: true,
                                 pageSize: (isCustomersLoaded && meta?.itemsPerPage) ? meta?.itemsPerPage : 10,
                                 headerStyle: {
                                     backgroundColor: '#f8f9fa'
-                                }
+                                },
+                                exportFileName: 'Customers'
                                 // filtering: true
                             }}
                             components={{ 
                                 Pagination: AlphacxMTPagination
                             }}
+                            localization={{ 
+                                body: {
+                                    emptyDataSourceMessage: 'No customers to display'
+                                }
+                             }}
+                             actions={[
+                            // {
+                            //     position: "toolbarOnSelect",
+                            //     icon: SaveAlt,
+                            //     tooltip: "Export the selected rows!",
+                            //     onClick: (e, rowData) => {
+                            //         const fileName = "TestDate_Table";
+                            //         const builder = new CsvBuilder(
+                            //             fileName + ".csv"
+                            //         );
+                            //         builder
+                            //             .setColumns(
+                            //                 tableColumns.map(
+                            //                     columnDef => columnDef.title
+                            //                 )
+                            //             )
+                            //             .addRows(
+                            //                 rowData.map(rowData =>
+                            //                     tableColumns.map(
+                            //                         columnDef => {
+                            //                             console.log(columnDef, rowData);
+                            //                             switch (columnDef.field) {
+                            //                                 case 'contact':
+                            //                                     return `${wordCapitalize(rowData.contact.firstname)} ${wordCapitalize(rowData.contact.lastname)}`
+                            //                                 default:
+                            //                                     return rowData[columnDef.field]
+                            //                             }
+                            //                             }
+                            //                     )
+                            //                 )
+                            //             )
+                            //             .exportFile();
+                            //     },
+                            // },
+                        ]}
+                        onSelectionChange={handleSelectionChange}
                         />
                     </MuiThemeProvider>}
                 </div>
@@ -311,76 +401,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                         </div>
                     </Modal.Body>
                 </Modal>
-
-                {/* Edit Customer modal */}
-                <Modal
-                    show={editModalShow}
-                    onHide={() => setEditModalShow(false)}
-                    aria-labelledby="contained-modal-title-vcenter"
-                    centered>
-                    <Modal.Body>
-                        <div className="col-12 p-5">
-                            <h5 className="mb-3">Edit Customer</h5>
-                            <form className="needs-validation" noValidate>
-                                <div className="row g-3 pt-3">
-
-                                    <div className="col-12 mt-2">
-                                        <label htmlFor="title" className="form-label">Full Name</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Title</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Organisation</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Email Address</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Work Phone</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Facebook</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Twitter</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="description" className="form-label">Address</label>
-                                        <textarea name="description" className="form-control"></textarea>
-                                    </div>
-
-                                </div>
-
-                                <button
-                                    className="btn btn-sm bg-at-blue mt-1 mt-sm-3 float-end pt-1 pe-3 ps-3"
-                                    type="submit"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#contactCreated"
-                                    data-bs-dismiss="modal">Edit</button>
-
-                            </form>
-                        </div>
-
-                    </Modal.Body>
-                </Modal>
-</div>
-        
-
+            </div>
         )
     }
 
