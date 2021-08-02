@@ -116,3 +116,21 @@
     text-align: center;
     margin-top: 2rem;
 }
+
+#export-dropdown {
+    background: transparent !important;
+    font-size: 0.8rem;
+}
+
+#export-dropdown::after {
+    content: none;
+    display: none;
+}
+
+#export-dropdown + div {
+    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.1);
+}
+
+#export-dropdown + div button:hover {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+}

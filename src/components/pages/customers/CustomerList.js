@@ -15,36 +15,11 @@ import MaterialTable from 'material-table';
 import {TablePagination} from '@material-ui/core';
 import {ReactComponent as ProfileSvg} from '../../../assets/svgicons/Profile.svg';
 import CreateCustomerModal from './CreateCustomerModal';
-import SaveAlt from '@material-ui/icons/SaveAlt';
-import {CsvBuilder} from 'filefy';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import {exportTable} from '../../../helper';
+import {Dropdown} from 'react-bootstrap';
+// import SaveAlt from '@material-ui/icons/SaveAlt';
 
-/* const AlphacxMTPagination = props => {
-    const {
-        ActionsComponent,
-        onChangePage,
-        onChangeRowsPerPage,
-        ...tablePaginationProps
-    } = props;
-    
-        return (
-            <TablePagination
-                {...tablePaginationProps}
-                onPageChange={onChangePage}
-                onRowsPerPageChange={onChangeRowsPerPage}
-                ActionsComponent={(subprops) => {
-                const { onPageChange, ...actionsComponentProps } = subprops;
-                return (
-                    <ActionsComponent
-                    {...actionsComponentProps}
-                    onChangePage={onPageChange}
-                    />
-                );
-                }}
-            />
-        );
-    } */
+
 export const getUserInitials = (name) => {
     name = name.toUpperCase();
     const nameArr = name.split(' ');
@@ -176,61 +151,9 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
             }
         ];
 
-        const wordCapitalize = word => {
-            return word
-                .charAt(0)
-                .toUpperCase() + word.slice(1);
-        }
+        
 
-        const exportTable = (exportColumns, exportData, exportType, fileName) => {
-            if (exportType.toLowerCase() === "csv") {
-
-                const builder = new CsvBuilder(
-                    fileName + ".csv"
-                );
-                builder
-                    .setColumns(
-                        exportColumns.map(
-                            column => column.title
-                        )
-                    )
-                    .addRows(
-                        exportData.map(rowData =>
-                            exportColumns.map(
-                                column => {
-                                    switch (column.field) {
-                                        case 'contact':
-                                            return `${wordCapitalize(rowData.contact.firstname)} ${wordCapitalize(rowData.contact.lastname)}`
-                                        default:
-                                            return rowData[column.field]
-                                    }
-                                    }
-                            )
-                        )
-                    )
-                    .exportFile();
-            } else if (exportType.toLowerCase() === "pdf") {
-                const doc = new jsPDF();
-
-                doc.autoTable({
-                    head: [exportColumns.map(column => column.title)],
-                    body: exportData.map(rowData =>
-                        exportColumns.map(
-                            column => {
-                                switch (column.field) {
-                                    case 'contact':
-                                        return `${wordCapitalize(rowData.contact.firstname)} ${wordCapitalize(rowData.contact.lastname)}`
-                                    default:
-                                        return rowData[column.field]
-                                }
-                                }
-                        )
-                    )
-                });
-
-                doc.save(fileName + '.pdf');
-            }
-        }
+        
 
         const handleCSVExport = () => {
             if (customers) {
@@ -249,12 +172,12 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                     workphone: phone_number,
                     tags: ''
                 }));
-                exportTable(tableColumns, data, 'csv', 'text-export');
+                exportTable(tableColumns, data, 'csv', 'CustomerExport');
             }
 
         }
 
-        const handlePdfExport = () => {
+        const handlePDFExport = () => {
             if (customers) {
                 const data = selectedRows.length !== 0 ? selectedRows : customers.map(({firstname,
                     lastname,
@@ -271,7 +194,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                     workphone: phone_number,
                     tags: ''
                 }));
-                exportTable(tableColumns, data, 'pdf', 'text-export');
+                exportTable(tableColumns, data, 'pdf', 'CustomerExport');
             }
         }
 
@@ -303,15 +226,15 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
 
                             <button
                                 type="button"
-                                className="btn btn-sm btn-outline-secondary px-md-3 ms-md-3 reset-btn-outline"
+                                className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3 reset-btn-outline"
                                 onClick={() => setUploadModalShow(true)}>
                                 <UploadSvg/>&nbsp;Import
                             </button>
 
-                            <button
+                            {/* <button
                                 type="button"
                                 className="btn btn-sm btn-outline-secondary px-md-3 ms-md-3 reset-btn-outline"
-                                onClick={handlePdfExport}>
+                                onClick={handlePDFExport}>
                                 <ImportSvg/>&nbsp;Export PDF
                             </button>
                             <button
@@ -319,7 +242,17 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                 className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3 reset-btn-outline"
                                 onClick={handleCSVExport}>
                                 <ImportSvg/>&nbsp;Export CSV
-                            </button>
+                            </button> */}
+                            <Dropdown>
+                                <Dropdown.Toggle id="export-dropdown" className="btn-outline-secondary reset-btn-outline btn">
+                                    <ImportSvg/>&nbsp;Export
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    <Dropdown.Item as="button" onClick={handlePDFExport}>As PDF</Dropdown.Item>
+                                    <Dropdown.Item as="button" onClick={handleCSVExport}>As CSV</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
                         </div>
 
                     </div>
@@ -468,9 +401,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                         </div>
                     </Modal.Body>
                 </Modal>
-</div>
-        
-
+            </div>
         )
     }
 
