@@ -771,6 +771,52 @@ export default function Conversation() {
                       </div>
                     )}
 
+                    {YesterdayMsges.map((data) => {
+                      return (
+                        <div className="msgRepliesSectionChattsdw">
+                          <div className="customerTiketChat">
+                            <div className="customerTImageHeader">
+                              <div className="imgContainercth">
+                                {data?.user.avatar ? (
+                                  <img src={data?.user.avatar} alt="" />
+                                ) : (
+                                  <div className="singleChatSenderImg">
+                                    <p>{`${data?.user?.firstname?.slice(
+                                      0,
+                                      1
+                                    )} ${data?.user?.lastname?.slice(
+                                      0,
+                                      1
+                                    )}`}</p>
+                                  </div>
+                                )}
+                                <div className="custorActiveStateimgd"></div>
+                              </div>
+                            </div>
+                            <div className="custormernameticket">
+                              <p style={{ color: "#006298" }}>
+                                {`${capitalize(
+                                  data?.user?.firstname
+                                )} ${capitalize(data?.user?.lastname)}`}
+                                <span style={{ color: "#656565" }}>
+                                  {" "}
+                                  replied
+                                </span>
+                              </p>
+                              <p>{dateFormater(data.created_at)}</p>
+                            </div>
+                          </div>
+
+                          <div
+                            className="msgbodyticketHeader"
+                            dangerouslySetInnerHTML={createMarkup(
+                              data?.response
+                            )}
+                          ></div>
+                        </div>
+                      );
+                    })}
+
                     {TodayMsges.length == 0 ? (
                       ""
                     ) : (
