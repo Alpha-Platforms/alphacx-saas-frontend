@@ -1,6 +1,6 @@
 .general-wrapper {
   height: 100vh;
-  background: #e5e5e5;
+  background: #ffff;
 }
 
 .navbar-wrap {
@@ -364,14 +364,25 @@
   position: relative;
   top: 10px;
 }
-.app-container {
-  background-color: #e5e5e5;
+/* .app-container {
+  background-color: #fff;
   position: relative;
   left: 0px;
   width: calc(100vw - 50px);
   top: 74px;
   left: 50px;
   overflow-x: hidden;
+  width: calc(100vw - 100px);
+} */
+
+.app-container {
+  background-color: #fff;
+  position: relative;
+  left: 0px;
+  width: calc(100vw - 50px);
+  top: 74px;
+  left: 30px;
+  /* overflow-x: hidden; */
   width: calc(100vw - 100px);
 }
 
