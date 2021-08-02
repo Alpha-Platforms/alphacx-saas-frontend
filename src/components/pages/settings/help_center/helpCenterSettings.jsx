@@ -1,9 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./helpCenter.scss";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
 import EmptyArticle from "../../../../assets/images/empty_article.png";
+import { httpGetMain } from "../../../../helpers/httpMethods";
+import { NotificationManager } from "react-notifications";
+import { useState } from "react";
 
 const HelpCenterSettings = () => {
+  const [articles, setArticles] = useState([]);
+  const fetchAllArticles = async () => {
+    const res = await httpGetMain("articles/categories");
+    if (res?.status == "success") {
+      console.clear();
+      console.log("articles", res);
+      setArticles(res?.data[0].folders[1]);
+      // setLoadingTicks(true);
+      // setTickets(res?.data?.tickets);
+      // setLoadingTicks(false);
+    } else {
+      // setLoadingTicks(false);
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
+  const handleCheck = (e, index) => {
+    let newArticles = articles;
+    newArticles.articles[index].checked = e.target.checked;
+    setArticles(newArticles);
+  };
+
+  useEffect(() => {
+    if (articles.length === 0) {
+      fetchAllArticles();
+    }
+  }, [articles]);
   return (
     <div id="mainContent" class="container settings-email help-center">
       <main class="mb-5">
@@ -34,20 +63,67 @@ const HelpCenterSettings = () => {
                 placeholder="Search help center"
               />
             </div>
-            <div class="text-center empty-state">
-              <img src={EmptyArticle} alt="no article" class="img-fluid mb-4" />
-              <p class="text-center">
-                You currently have no Help Center Article record at <br />
-                the moment
-              </p>
-              <a
-                class="btn btn-sm btn-primary"
-                href="/settings/help-center/article"
-              >
-                New Article
-              </a>
-            </div>
-            <div id="result"></div>
+            {articles?.articles?.length > 0 && (
+              <div className="articleList">
+                <div className="header">
+                  <input
+                    name="isGoing"
+                    type="checkbox"
+                    checked={false}
+                    //   onChange={this.handleInputChange}
+                  />
+                  <p>Title</p>
+                  <p>Status</p>
+                  <p>Page Views</p>
+                  <p>Author</p>
+                  <p>Created at</p>
+                  <p>Last modified at</p>
+                </div>
+                {articles?.articles?.map((art, i) => (
+                  <div key={art.id} className="listItem">
+                    <input
+                      name="isGoing"
+                      type="checkbox"
+                      checked={art?.checked}
+                      onClick={(e) => {
+                        handleCheck(e, i);
+                      }}
+                    />
+                    <p>{art.title}</p>
+                    <p>Published</p>
+                    <p>100</p>
+                    <p>Dabo Etela</p>
+                    <p>12-05-2021</p>
+                    <p>12-05-2021</p>
+                  </div>
+                ))}
+              </div>
+            )}
+            {!articles?.articles && (
+              <div class="text-center empty-state">
+                <img
+                  src={EmptyArticle}
+                  alt="no article"
+                  class="img-fluid mb-4"
+                />
+                <p class="text-center">
+                  You currently have no Help Center Article record at <br />
+                  the moment
+                </p>
+                <a
+                  class="btn btn-sm btn-primary"
+                  href="/settings/help-center/article"
+                >
+                  New Article
+                </a>
+              </div>
+            )}
+            {articles?.articles?.length > 0 && (
+              <div className="pagination">
+                <p>Showing 1-1 of 1 entries</p>
+              </div>
+            )}
+            {/* <div id="result"></div> */}
           </div>
         </div>
       </main>
