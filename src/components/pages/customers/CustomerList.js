@@ -63,12 +63,11 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
         setCreateModalShow] = useState(false);
     const [uploadModalShow,
         setUploadModalShow] = useState(false);
-        const [editModalShow,
-        setEditModalShow] = useState(false);
     const [custLoading,
         setCustLoading] = useState(false);
     const [changingRow, setChangingRow] = useState(false);
-    const [selectedRows, setSelectedRows] = useState([]);
+    // const [selectedRows, setSelectedRows] = useState([]);
+    let selectedRows = [];
 
         const getUserInitials = (name) => {
             name = name.toUpperCase();
@@ -276,6 +275,11 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
             }
         }
 
+        const handleSelectionChange = (rows) => {
+            selectedRows = rows;
+        }
+
+
         return (
             // <SideNavBar navbarTitle="Customer List" parentCap="container-fluid">
             <div>
@@ -400,7 +404,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                             //     },
                             // },
                         ]}
-                        onSelectionChange={rows => setSelectedRows(rows)}
+                        onSelectionChange={handleSelectionChange}
                         />
                     </MuiThemeProvider>}
                 </div>
@@ -462,73 +466,6 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
 
                             </form>
                         </div>
-                    </Modal.Body>
-                </Modal>
-
-                {/* Edit Customer modal */}
-                <Modal
-                    show={editModalShow}
-                    onHide={() => setEditModalShow(false)}
-                    aria-labelledby="contained-modal-title-vcenter"
-                    centered>
-                    <Modal.Body>
-                        <div className="col-12 p-5">
-                            <h5 className="mb-3">Edit Customer</h5>
-                            <form className="needs-validation" noValidate>
-                                <div className="row g-3 pt-3">
-
-                                    <div className="col-12 mt-2">
-                                        <label htmlFor="title" className="form-label">Full Name</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Title</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Organisation</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Email Address</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Work Phone</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Facebook</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Twitter</label>
-                                        <input type="text" className="form-control"/>
-                                    </div>
-
-                                    <div className="col-12 mt-3">
-                                        <label htmlFor="description" className="form-label">Address</label>
-                                        <textarea name="description" className="form-control"></textarea>
-                                    </div>
-
-                                </div>
-
-                                <button
-                                    className="btn btn-sm bg-at-blue mt-1 mt-sm-3 float-end pt-1 pe-3 ps-3"
-                                    type="submit"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#contactCreated"
-                                    data-bs-dismiss="modal">Edit</button>
-
-                            </form>
-                        </div>
-
                     </Modal.Body>
                 </Modal>
 </div>
