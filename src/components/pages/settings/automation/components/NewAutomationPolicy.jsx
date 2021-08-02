@@ -13,7 +13,9 @@ const NewAutomationPolicy = () => {
               <h6 class="text-muted f-12">
                 Settings{" "}
                 <img src={RightArrow} alt="" class="img-fluid mx-2 me-3" />
-                <span class="text-custom">Automation Settings</span>{" "}
+                <a href="/settings/automation/">
+                  <span class="text-custom">Automation Settings</span>{" "}
+                </a>
                 <img src={RightArrow} alt="" class="img-fluid mx-2 me-3" />
                 <span class="text-custom">New Policy</span>{" "}
               </h6>
@@ -39,7 +41,7 @@ const NewAutomationPolicy = () => {
                 </div>
                 <div class="form-group mt-3">
                   <label for="ticket" class="f-14 mb-1">
-                    Ticket Categories
+                    Ticket Type
                   </label>
                   <select class="form-select form-select-sm f-14" id="ticket">
                     <option>Complaints</option>
@@ -100,7 +102,7 @@ const NewAutomationPolicy = () => {
                 </div> */}
 
                 <div class="Resolution mt-3">
-                  <p class="my-4">SLA Due Date</p>
+                  <p class="my-4">Resolution Target</p>
                   <div
                     class="
                 resolution-form

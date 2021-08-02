@@ -181,15 +181,22 @@ const SiteRouter = connect(mapStateToProps, {
             pageName="Tickets"
             component={TicketList}
           />
-          <DefaultLayoutRoute exact path="/settings" component={SettingsHome} />
+          <DefaultLayoutRoute
+            exact
+            path="/settings"
+            pageName="Settings"
+            component={SettingsHome}
+          />
           <DefaultLayoutRoute
             exact
             path="/settings/automation"
+            pageName="Settings"
             component={AutomationSettings}
           />
           <DefaultLayoutRoute
             exact
             path="/settings/automation/new-policy"
+            pageName="Settings"
             component={NewAutomationPolicy}
           />
 
