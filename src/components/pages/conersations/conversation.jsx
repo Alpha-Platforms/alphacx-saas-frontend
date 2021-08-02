@@ -108,6 +108,8 @@ export default function Conversation() {
   const [YesterdayMsges, setYesterdayMsges] = useState([]);
   const [AchiveMsges, setAchiveMsges] = useState([]);
   const [ShowAchive, setShowAchive] = useState(false);
+  const [channel, setchannel] = useState("All");
+  const [status, setstatus] = useState("All");
   useEffect(() => {
     // getTickets();
     sortMsges(msgHistory);
@@ -205,14 +207,16 @@ export default function Conversation() {
 
   const filterTicket = (value, type) => {
     if (type == "channel") {
+      setchannel(value);
       AppSocket.createConnection();
-      let data = { channel: value, per_page: 100 };
+      let data = { channel: value == "All" ? "" : value, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, data);
     }
 
     if (type == "status") {
+      setstatus(value);
       AppSocket.createConnection();
-      let data = { status: value, per_page: 100 };
+      let data = { status: value == "All" ? "" : value, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, data);
     }
   };
@@ -461,24 +465,7 @@ export default function Conversation() {
           <div className={`conversation-layout-col-one`}>
             <div className="message-toggles">
               <div className="messageType">
-                {/* <select
-                  name=""
-                  id=""
-                  onChange={(e) => {
-                    filterTicket(e.target.value, "channel");
-                  }}
-                >
-                  <option value="">All</option>
-                  <option value="facebook">Facebook</option>
-                  <option value="whatsapp">Whatsapp</option>
-                  <option value="email">Email</option>
-                  <option value="liveChat">Live Chat</option>
-                </select> */}
-
                 <FormControl variant="outlined">
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    All
-                  </InputLabel>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
@@ -486,8 +473,12 @@ export default function Conversation() {
                       filterTicket(e.target.value, "channel");
                     }}
                     label="Filter"
+                    value={channel}
                   >
-                    <MenuItem value="">All</MenuItem>
+                    {/* <MenuItem value=""></MenuItem> */}
+                    <MenuItem value="All" label="All">
+                      All
+                    </MenuItem>
                     <MenuItem value="facebook">Facebook</MenuItem>
                     <MenuItem value="whatsapp">Whatsapp</MenuItem>
                     <MenuItem value="email">Email</MenuItem>
@@ -497,17 +488,15 @@ export default function Conversation() {
               </div>
               <div className="messageOpenClose">
                 <FormControl variant="outlined">
-                  <InputLabel id="demo-simple-select-outlined-label">
-                    All
-                  </InputLabel>
                   <Select
                     labelId="demo-simple-select-outlined-label"
                     id="demo-simple-select-outlined"
                     onChange={(e) => {
                       filterTicket(e.target.value, "status");
                     }}
+                    value={status}
                   >
-                    <MenuItem value="">All</MenuItem>
+                    <MenuItem value="All">All</MenuItem>
                     {Statues?.map((data) => {
                       return <MenuItem value={data.id}>{data.status}</MenuItem>;
                     })}

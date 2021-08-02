@@ -84,7 +84,14 @@ export default function MessageList({
                     : truncateWithEllipses(data.customer.description, 30)}
                 </p>
                 <div className="msg-badges">
-                  <div className={`chMslist${data.channel}`}>
+                  <div
+                    style={{
+                      background: data.status.background_color,
+                      color: data.status.forecolor,
+                      border: `1px solid ${data.status.forecolor}`,
+                    }}
+                    // className={`chMslist${data.channel}`}
+                  >
                     {data.channel}
                   </div>
 
