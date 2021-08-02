@@ -163,5 +163,15 @@
 }
 
 .ticket-table-wrapper {
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    /* border: 1px solid rgba(0, 0, 0, 0.1); */
+    border: 1px solid #f1f1f1;
+}
+
+
+#alphacxMTable.acx-ticket-cust-table thead tr th:nth-child(3) > span > div  {
+    white-space: nowrap;
+}
+
+#alphacxMTable.acx-ticket-cust-table thead tr th:nth-child(7) > span > div {
+    white-space: nowrap;
 }

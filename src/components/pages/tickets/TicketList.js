@@ -118,6 +118,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
         }, {
             title: 'Ticket ID',
             field: 'ticketId',
+            width: '40%',
             render: rowData => <Link to="#" style={{ textTransform: 'uppercase' }}>{rowData.ticketId}</Link>
         }, {
             title: 'Subject',
@@ -130,7 +131,12 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
             title: 'Status',
             field: 'status',
             render: rowData => <div className={`ticket-state ${getStatusColor(rowData.status.status)}`}><Link to="#" className="btn btn-sm">{rowData.status.status}</Link></div>
-        }, 
+        },
+        {
+            title: 'Assigned to',
+            field: 'assignedTo',
+            render: rowData => <Link to="#" style={{ textTransform: 'capitalize' }}>Paul Ifeoma</Link>
+        },  
         // {
         //     title: 'Status',
         //     field: 'status',
