@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {ReactComponent as UploadSvg} from '../../../assets/svgicons/Upload.svg';
+import {ReactComponent as ImportSvg} from '../../../assets/svgicons/import.svg';
 import TicketStarIcon from '../../../assets/svgicons//Ticket-Star.svg';
 import MaterialTable from 'material-table';
 import {TablePagination} from '@material-ui/core';
@@ -13,6 +14,7 @@ import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/cor
 import {getPaginatedTickets} from '../../../reduxstore/actions/ticketActions';
 import CreateTicketModal from './CreateTicketModal';
 import {Dropdown} from 'react-bootstrap';
+import {exportTable} from '../../../helper';
 
 
 
@@ -21,6 +23,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
         setTicketLoading] = useState(false);
     const [createModalShow, setCreateModalShow] = useState(false);
     const [changingRow, setChangingRow] = useState(false);
+    let selectedRows = [];
         
         useEffect(() => {
             setTicketLoading(!isTicketsLoaded);
@@ -104,6 +107,94 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
         }
     }
 
+    const tableColumns = [
+        {
+            title: 'Name',
+            field: 'name',
+            render: rowData => <Link to="#" style={{ textTransform: 'capitalize' }}>{rowData.name}</Link>
+        }, {
+            title: 'Subject',
+            field: 'subject',
+            width: '40%'
+        }, {
+            title: 'Category',
+            field: 'category'
+        }, {
+            title: 'Ticket ID',
+            field: 'ticketId',
+            render: rowData => <Link to="#" style={{ textTransform: 'uppercase' }}>{rowData.ticketId}</Link>
+        }, {
+            title: 'State',
+            field: 'state',
+            render: rowData => <div className={`ticket-state ${getStatusColor(rowData.state.status)}`}><Link to="#" className="btn btn-sm">{rowData.state.status}</Link></div>
+        }, {
+            title: 'Status',
+            field: 'status',
+            render: rowData => (<Dropdown className="ticket-status-dropdown">
+                                    <Dropdown.Toggle variant="transparent" size="sm">
+                                        Open
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                        <Dropdown.Item eventKey="1">Open</Dropdown.Item>
+                                        <Dropdown.Item eventKey="2">Pending</Dropdown.Item>
+                                        <Dropdown.Item eventKey="3">Resolved</Dropdown.Item>
+                                        <Dropdown.Item eventKey="4">Closed</Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>)
+            // render: rowData => (<select name="ticket-status-select" id="ticket-status-select">
+            //                         <option value="open">Open</option>
+            //                         <option value="pending">Pending</option>
+            //                         <option value="resolved">Resolved</option>
+            //                         <option value="closed">Closed</option>
+            //                     </select>)
+        }, {
+            title: 'Tags',
+            field: 'tags',
+            render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1">Customer Data</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">Billing</span><span className="badge rounded-pill text-muted border px-2 py-1">+2</span></div>)
+        }, {
+            title: 'Created',
+            field: 'created'
+        }
+    ];
+
+    const handleCSVExport = () => {
+        if (tickets) {
+            const data = selectedRows.length !== 0 ? selectedRows : tickets.map(({customer, subject, id, category, created_at, status}) => ({
+                name: `${customer.firstname} ${customer.lastname}`,
+                email: customer.email,
+                subject: `${subject.substr(0, 25)}...`,
+                ticketId: id.slice(-8),
+                category: category.name,
+                created: moment(created_at).format('DD MMM, YYYY'),
+                state: status
+
+            }));
+            exportTable(tableColumns, data, 'csv', 'TicketExport');
+        }
+
+    }
+
+    const handlePDFExport = () => {
+        if (tickets) {
+            const data = selectedRows.length !== 0 ? selectedRows : tickets.map(({customer, subject, id, category, created_at, status}) => ({
+                name: `${customer.firstname} ${customer.lastname}`,
+                email: customer.email,
+                subject: `${subject.substr(0, 25)}...`,
+                ticketId: id.slice(-8),
+                category: category.name,
+                created: moment(created_at).format('DD MMM, YYYY'),
+                state: status
+
+            }));
+            exportTable(tableColumns, data, 'pdf', 'TicketExport');
+        }
+    }
+
+    const handleSelectionChange = (rows) => {
+        selectedRows = rows;
+    }
+
+
     return (
         <div>
             { ticketLoading && <div className={`cust-table-loader ${ticketLoading && 'add-loader-opacity'}`}><ScaleLoader loading={ticketLoading} color={"#006298"}/></div>}
@@ -126,9 +217,20 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                         <button
                             onClick={handleExportBtn}
                             type="button"
-                            className="btn btn-sm btn-outline-secondary ps-md-3 ms-md-3 reset-btn-outline">
+                            className="btn btn-sm btn-outline-secondary ps-md-3 mx-md-3 reset-btn-outline">
                             <UploadSvg/>&nbsp;Import
                         </button>
+
+                        <Dropdown>
+                            <Dropdown.Toggle id="export-dropdown" className="btn-outline-secondary reset-btn-outline btn">
+                                <ImportSvg/>&nbsp;Export
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                                <Dropdown.Item as="button" onClick={handlePDFExport}>As PDF</Dropdown.Item>
+                                <Dropdown.Item as="button" onClick={handleCSVExport}>As CSV</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
                     </div>
 
                 </div>
@@ -141,57 +243,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                             icons = {
                                 tableIcons
                             }
-                            columns = {
-                                [
-                                    {
-                                        title: 'Name',
-                                        field: 'name',
-                                        render: rowData => <Link to="#" style={{ textTransform: 'capitalize' }}>{rowData.name}</Link>
-                                    }, {
-                                        title: 'Subject',
-                                        field: 'subject',
-                                        width: '40%'
-                                    }, {
-                                        title: 'Category',
-                                        field: 'category'
-                                    }, {
-                                        title: 'Ticket ID',
-                                        field: 'ticketId',
-                                        render: rowData => <Link to="#" style={{ textTransform: 'uppercase' }}>{rowData.ticketId}</Link>
-                                    }, {
-                                        title: 'State',
-                                        field: 'state',
-                                        render: rowData => <div className={`ticket-state ${getStatusColor(rowData.state.status)}`}><Link to="#" className="btn btn-sm">{rowData.state.status}</Link></div>
-                                    }, {
-                                        title: 'Status',
-                                        field: 'status',
-                                        render: rowData => (<Dropdown className="ticket-status-dropdown">
-                                                                <Dropdown.Toggle variant="transparent" size="sm">
-                                                                    Open
-                                                                </Dropdown.Toggle>
-                                                                <Dropdown.Menu>
-                                                                    <Dropdown.Item eventKey="1">Open</Dropdown.Item>
-                                                                    <Dropdown.Item eventKey="2">Pending</Dropdown.Item>
-                                                                    <Dropdown.Item eventKey="3">Resolved</Dropdown.Item>
-                                                                    <Dropdown.Item eventKey="4">Closed</Dropdown.Item>
-                                                                </Dropdown.Menu>
-                                                            </Dropdown>)
-                                        // render: rowData => (<select name="ticket-status-select" id="ticket-status-select">
-                                        //                         <option value="open">Open</option>
-                                        //                         <option value="pending">Pending</option>
-                                        //                         <option value="resolved">Resolved</option>
-                                        //                         <option value="closed">Closed</option>
-                                        //                     </select>)
-                                    }, {
-                                        title: 'Tags',
-                                        field: 'tags',
-                                        render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1">Customer Data</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">Billing</span><span className="badge rounded-pill text-muted border px-2 py-1">+2</span></div>)
-                                    }, {
-                                        title: 'Created',
-                                        field: 'created'
-                                    }
-                                ]
-                            }
+                            columns = {tableColumns}
                             data = {tickets.map(({customer, subject, id, category, created_at, status}) => ({
                                 name: `${customer.firstname} ${customer.lastname}`,
                                 email: customer.email,
@@ -206,7 +258,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                             options = {{
                                 search: true,
                                 selection: true,
-                                exportButton: true,
+                                // exportButton: true,
                                 tableLayout: 'auto',
                                 paging: true,
                                 pageSize: meta?.itemsPerPage || 10,
@@ -217,6 +269,12 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                             components={{ 
                                 Pagination: AlphacxMTPagination
                             }}
+                            localization={{ 
+                                body: {
+                                    emptyDataSourceMessage: 'No tickets to display'
+                                }
+                             }}
+                             onSelectionChange={handleSelectionChange}
                         />
                     </MuiThemeProvider>}
                 </div>
