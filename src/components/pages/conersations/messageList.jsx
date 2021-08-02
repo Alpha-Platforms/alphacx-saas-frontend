@@ -65,7 +65,7 @@ export default function MessageList({
                   <div className="message-user-noimg">
                     <span>{`${capitalizeFirstLetter(
                       data?.customer?.firstname?.slice(0, 1)
-                    )} ${capitalizeFirstLetter(
+                    )}${capitalizeFirstLetter(
                       data?.customer?.lastname?.slice(0, 1)
                     )}`}</span>
                   </div>
@@ -88,7 +88,7 @@ export default function MessageList({
                     style={{
                       background: data.status.background_color,
                       color: data.status.forecolor,
-                      border: `1px solid ${data.status.forecolor}`,
+                      // border: `1px solid ${data.status.forecolor}`,
                     }}
                     // className={`chMslist${data.channel}`}
                   >
@@ -99,7 +99,7 @@ export default function MessageList({
                     style={{
                       background: data.status.background_color,
                       color: data.status.forecolor,
-                      border: `1px solid ${data.status.forecolor}`,
+                      // border: `1px solid ${data.status.forecolor}`,
                     }}
                   >
                     {data.status.status}
@@ -107,8 +107,8 @@ export default function MessageList({
                 </div>
               </div>
               <div className="message-user-time">
-                <p className="msGtime">{timeFormater(data.updated_at)}</p>
                 <p className="msgCountCon">4</p>
+                <p className="msGtime">{timeFormater(data.updated_at)}</p>
               </div>
             </div>
           );
