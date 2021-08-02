@@ -144,15 +144,15 @@
   display: flex;
 }
 .msg-badges div:first-child {
-  background: rgba(81, 183, 79, 0.08);
-  color: #51b74f;
+  /* background: rgba(81, 183, 79, 0.08);
+  color: #51b74f; */
   font-size: 10px;
   margin-right: 5px;
 
   width: 56px;
   height: 21px;
 
-  border: 1px solid #006298;
+  /* border: 1px solid #006298; */
   box-sizing: border-box;
   border-radius: 5px;
   text-align: center;
@@ -1196,7 +1196,7 @@ select {
   border-radius: 5px !important;
 }
 
-.chMslistfacebook {
+/* .chMslistfacebook {
   background: rgba(0, 98, 152, 0.08) !important;
   border: 1px solid #006298 !important;
   background: rgba(43, 48, 77, 0.08);
@@ -1208,4 +1208,4 @@ select {
   background: rgba(43, 48, 77, 0.08) !important;
   border: 1px solid rgba(43, 48, 77, 0.7) !important;
   color: rgba(43, 48, 77, 0.7) !important;
-}
+} */
