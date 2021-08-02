@@ -2,5 +2,20 @@
   height: 80vh;
   background-color: white;
   border-radius: 4px !important;
+  overflow-y: auto;
+  .card-body {
+    padding-left: 0.75rem !important;
+    padding-right: 1.5rem !important;
+    padding-top: 3rem !important;
+    margin: 0 !important;
+  }
 
+  .empty-state {
+    padding: 0 !important;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 }
