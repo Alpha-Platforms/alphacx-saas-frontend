@@ -140,3 +140,28 @@
 .cust-search-preview ul li:hover {
     background-color: rgba(0, 0, 0, 0.1);
 }
+
+#export-dropdown-main {
+    margin-left: 18.25rem;
+}
+
+.ticket-export-btn {
+    border: none !important;
+    margin-left: 0 !important;
+    padding-left: 0;
+    opacity: 0.7;
+}
+#alphacxMTable thead tr th:nth-child(1) > span > span > svg,
+#alphacxMTable tbody tr td:nth-child(1) > span > span > svg {
+    /* border: 1px solid red; */
+    color: rgba(43, 48, 77, 0.29);
+}  
+
+.table-ratings-span {
+    transform: scale(0.9);
+    display: inline-block;
+}
+
+.ticket-table-wrapper {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
