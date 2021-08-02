@@ -25,14 +25,14 @@ export const getCustomers = () => (dispatch, getState) => {
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 }
 
-// valid redux action
+// invalid redux action
 export const getInstantSearchedCustomers = async (term) => {
     if (!navigator.onLine) {
         return;
     }
     const searchStr = term.replace(/\W+/gi, ' ').replace(/\s+/gi, '%20');
     try {
-        const res = await axios.get(`${config.stagingBaseUrl}/users?role=Customer&per_page=30`, userTokenConfig(getState));
+        const res = await axios.get(`${config.stagingBaseUrl}/users?role=Customer&per_page=50`, userTokenConfig(getState));
         return res?.data;
     } catch (err) {
         NotificationManager.error(err.response.data.error, 'Error');
