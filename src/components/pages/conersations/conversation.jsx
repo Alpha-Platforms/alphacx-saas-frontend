@@ -625,7 +625,7 @@ export default function Conversation() {
                               <p>{`${SenderInfo?.customer?.firstname?.slice(
                                 0,
                                 1
-                              )} ${SenderInfo?.customer?.lastname?.slice(
+                              )}${SenderInfo?.customer?.lastname?.slice(
                                 0,
                                 1
                               )}`}</p>
@@ -714,7 +714,7 @@ export default function Conversation() {
                                       <p>{`${data?.user?.firstname?.slice(
                                         0,
                                         1
-                                      )} ${data?.user?.lastname?.slice(
+                                      )}${data?.user?.lastname?.slice(
                                         0,
                                         1
                                       )}`}</p>
@@ -773,10 +773,7 @@ export default function Conversation() {
                                     <p>{`${data?.user?.firstname?.slice(
                                       0,
                                       1
-                                    )} ${data?.user?.lastname?.slice(
-                                      0,
-                                      1
-                                    )}`}</p>
+                                    )}${data?.user?.lastname?.slice(0, 1)}`}</p>
                                   </div>
                                 )}
                                 <div className="custorActiveStateimgd"></div>
@@ -831,10 +828,7 @@ export default function Conversation() {
                                     <p>{`${data?.user?.firstname?.slice(
                                       0,
                                       1
-                                    )} ${data?.user?.lastname?.slice(
-                                      0,
-                                      1
-                                    )}`}</p>
+                                    )}${data?.user?.lastname?.slice(0, 1)}`}</p>
                                   </div>
                                 )}
                                 <div className="custorActiveStateimgd"></div>
@@ -908,7 +902,7 @@ export default function Conversation() {
                     <Editor
                       editorState={editorState}
                       toolbar={{
-                        options: ["emoji", "inline", "textAlign", "image"],
+                        options: ["emoji", "inline", "image"],
 
                         inline: {
                           inDropdown: false,
@@ -952,20 +946,20 @@ export default function Conversation() {
                         list: {
                           inDropdown: true,
                         },
-                        textAlign: {
-                          inDropdown: false,
-                          className: undefined,
-                          component: undefined,
-                          dropdownClassName: undefined,
-                          options: ["left", "center", "right"],
-                          left: { icon: TextAlignLeft, className: undefined },
-                          center: {
-                            icon: TextAlignCenter,
-                            className: undefined,
-                          },
-                          right: { icon: TextAlignRight, className: undefined },
-                          // justify: { icon: TextAlignCenter, className: undefined },
-                        },
+                        // textAlign: {
+                        //   inDropdown: false,
+                        //   className: undefined,
+                        //   component: undefined,
+                        //   dropdownClassName: undefined,
+                        //   options: ["left", "center", "right"],
+                        //   left: { icon: TextAlignLeft, className: undefined },
+                        //   center: {
+                        //     icon: TextAlignCenter,
+                        //     className: undefined,
+                        //   },
+                        //   right: { icon: TextAlignRight, className: undefined },
+                        //   // justify: { icon: TextAlignCenter, className: undefined },
+                        // },
 
                         link: {
                           inDropdown: true,

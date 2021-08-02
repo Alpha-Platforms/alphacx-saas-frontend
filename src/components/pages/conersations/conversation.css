@@ -13,6 +13,7 @@
   background-color: white;
   border-radius: 4px;
   position: relative;
+  border: 1px solid #f1f1f1;
 }
 
 .conversation-layout {
@@ -56,7 +57,7 @@
   border: none;
   background: rgba(239, 240, 242, 0.6);
   border-radius: 26.5px;
-  height: 45px;
+  height: 40px;
   font-size: 13px;
   color: #03659991;
   padding-left: 40px !important;
@@ -76,8 +77,8 @@
 }
 
 .message-user-img img {
-  width: 45px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
 }
 
@@ -125,7 +126,7 @@
 
 .message-user-body .senderName {
   color: #040930;
-  font-size: 12.5px;
+  font-size: 14px;
   font-weight: 500;
   margin-bottom: 5px;
 }
@@ -142,11 +143,13 @@
 .msg-badges {
   margin-top: 2px;
   display: flex;
+  position: relative;
+  top: 8px;
 }
 .msg-badges div:first-child {
   /* background: rgba(81, 183, 79, 0.08);
   color: #51b74f; */
-  font-size: 10px;
+  font-size: 9px;
   margin-right: 5px;
 
   width: 56px;
@@ -163,13 +166,13 @@
 .msg-badges div:last-child {
   background: rgba(81, 183, 79, 0.08);
   color: #51b74f;
-  font-size: 10px;
+  font-size: 9px;
   margin-right: 5px;
 
   width: 56px;
   height: 21px;
 
-  border: 1px solid #006298;
+  /* border: 1px solid #006298; */
   box-sizing: border-box;
   border-radius: 5px;
   text-align: center;
@@ -183,11 +186,15 @@
   align-items: center;
   justify-content: center;
   margin-left: auto;
+  position: relative;
 }
 
 .message-user-time .msGtime {
   font-size: 12px;
   color: rgba(4, 9, 48, 0.5);
+  position: relative;
+  top: 15px;
+  white-space: nowrap;
 }
 
 .message-user-time .msgCountCon {
@@ -200,7 +207,7 @@
   text-align: center;
   padding-top: 3px;
   position: relative;
-  top: 10px;
+  top: -5px;
 }
 .message-list-container {
   height: 80%;
@@ -460,7 +467,7 @@
   flex-direction: column;
   padding-top: 15px;
   border-bottom: 1px solid rgba(0, 98, 152, 0.1);
-  padding-bottom: 25px;
+  padding-bottom: 15px;
 }
 
 .userProfilePicCon img {
@@ -501,7 +508,7 @@
 }
 
 .userProfileAboutCovers .aboutUserColConv {
-  padding-bottom: 15px;
+  padding-bottom: 5px;
 }
 
 .userProfileAboutCovers .aboutUserColConv p:first-child {
@@ -854,8 +861,8 @@ select {
 }
 
 .rdw-option-wrapper[title~="Bold"] img {
-  width: 15px !important;
-  height: 15px;
+  width: 12px !important;
+  height: 12px;
 }
 
 .DraftEditor-editorContainer {
@@ -869,6 +876,14 @@ select {
 
 .psvgIcon {
   margin-right: 17px;
+}
+.psvgIcon svg {
+  position: relative;
+  top: 9px;
+}
+.psvgIcon img {
+  position: relative;
+  top: 9px;
 }
 
 /* CONVERSATION PAGE DESIGN V2 */
@@ -956,7 +971,7 @@ select {
 }
 
 .custormChatHeaderInfoData h1 {
-  font-size: 14px;
+  font-size: 16px;
   color: #343434;
 }
 
@@ -1091,7 +1106,7 @@ select {
 .user-profile-conversation-page {
   width: 100%;
   height: 100%;
-  padding-top: 25px;
+  padding-top: 0px;
   padding-right: 20px;
   padding-left: 20px;
   padding-bottom: 20px;
@@ -1109,7 +1124,7 @@ select {
   padding: 5px 6px 5px 6px;
   border-radius: 10px;
   white-space: nowrap;
-  font-size: 10px;
+  font-size: 8px;
   text-align: center;
 }
 
@@ -1209,3 +1224,60 @@ select {
   border: 1px solid rgba(43, 48, 77, 0.7) !important;
   color: rgba(43, 48, 77, 0.7) !important;
 } */
+
+.container-timeline {
+  padding: 10px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  padding-left: 0px;
+}
+.box {
+  display: flex;
+}
+.img {
+  width: 3px;
+  background-color: rgba(0, 98, 152, 0.4);
+  margin-left: 7px;
+  content: "";
+  height: calc(100% - 20px);
+}
+
+.textTimeLineSec {
+  width: 75%;
+  margin-left: 19px;
+  padding-bottom: 20px;
+}
+.circle {
+  border: 1px solid #006298;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+}
+.borderContainer {
+  width: 25%;
+  height: 100%;
+  margin: 0px;
+}
+
+.timeLinehashtags {
+  padding-top: 5px;
+  display: flex;
+  align-items: center;
+}
+.textTimeLineSec span {
+  font-size: 12px;
+  color: #353535;
+}
+.timeLinehashtags div:first-child {
+  background: #f8eeff;
+  border-radius: 5px;
+  padding: 4px 8px 4px 8px;
+  margin-right: 5px;
+  font-size: 12px;
+}
+
+.timeLinehashtags div:last-child {
+  font-size: 11px;
+  color: #909090;
+}
