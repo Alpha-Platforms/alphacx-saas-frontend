@@ -12,7 +12,7 @@ const HelpCenterSettings = () => {
     const res = await httpGetMain("articles/categories");
     if (res?.status == "success") {
       console.clear();
-      console.log("articles", res?.data[0].folders[1]);
+      console.log("articles", res);
       setArticles(res?.data[0].folders[1]);
       // setLoadingTicks(true);
       // setTickets(res?.data?.tickets);
