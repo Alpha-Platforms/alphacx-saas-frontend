@@ -64,8 +64,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
     ];
 
     useEffect(() => {
-
-        console.log("id:", id);
+        
         getCurrentCustomer(id);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -92,7 +91,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
         <Fragment>
             {!isCurrentCustomerLoaded
                 ? <div className="single-cust-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
-                : !currentCustomer? <div>No Customer Found.</div> : <div
+                : !currentCustomer ? <div>No Customer Found.</div> : <div
                     style={{
                     gridTemplateColumns: "280px 1fr"
                 }}
@@ -117,7 +116,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                     <div><CircleIcon icon={WorkIcon}/></div>
                                     <div>
                                         <h6>Account ID</h6>
-                                        <p className="text-muted">{currentCustomer.id.slice(0, 8).toUpperCase()}</p>
+                                        <p className="text-muted">{id?.slice(0, 8).toUpperCase()}</p>
                                     </div>
                                 </li>
                                 <li>

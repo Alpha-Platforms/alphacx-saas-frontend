@@ -22,7 +22,7 @@ export const getCustomers = () => (dispatch, getState) => {
                 ? res.data.data
                 : {}
         }))
-        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+        .catch(err => dispatch(returnErrors(err?.response?.data, err?.response?.status)));
 }
 
 // invalid redux action
@@ -35,8 +35,8 @@ export const getInstantSearchedCustomers = async (term) => {
         const res = await axios.get(`${config.stagingBaseUrl}/users?role=Customer&per_page=50`, userTokenConfig(getState));
         return res?.data;
     } catch (err) {
-        NotificationManager.error(err.response.data.error, 'Error');
-        return err.response.data;
+        NotificationManager.error(err?.response?.data.error, 'Error');
+        return err?.response?.data;
     }
 }
 
@@ -54,7 +54,7 @@ export const getPaginatedCustomers = (itemsPerPage, currentPage) => (dispatch, g
                 ? res.data.data
                 : {}
         }))
-        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+        .catch(err => dispatch(returnErrors(err?.response?.data, err.response?.status)));
 }
 
 // invalid redux action
@@ -70,8 +70,8 @@ export const addCustomer = async(newCustomer) => {
         const res = await axios.post(`${config.stagingBaseUrl}/customer`, body, userTokenConfig(getState));
         return res.data;
     } catch (err) {
-        NotificationManager.error(err.response.data.message, 'Error');
-        return err.response.data;
+        NotificationManager.error(err?.response?.data.message, 'Error');
+        return err?.response?.data;
     }
 }
 
@@ -86,7 +86,7 @@ export const getCurrentCustomer = (id) => (dispatch, getState) => {
     let currentCustomer = customers.filter(customer => customer
         ?.id === id)[0];
 
-    console.log("Current Customer", currentCustomer);
+    // console.log("Current Customer", currentCustomer);
 
     if (getState().customer.currentCustomer
         ?.id === id) {
@@ -101,12 +101,12 @@ export const getCurrentCustomer = (id) => (dispatch, getState) => {
             .get(`${config.stagingBaseUrl}/users/${id}`, userTokenConfig(getState))
             .then(res => dispatch({
                 type: types.GET_CURRENT_CUSTOMER,
-                payload: res.data && res.data.status === "success"
+                payload: res.data && res.data?.status === "success"
                     ? res.data.data
                     : null
             }))
             .catch(err => {
-                dispatch(returnErrors(err.response.data, err.response.status))
+                dispatch(returnErrors(err?.response?.data, err?.response?.status))
                 dispatch({
                     type: types.GET_CURRENT_CUSTOMER,
                     payload: null
