@@ -34,7 +34,7 @@ const HelpCenterSettings = () => {
     }
   }, [articles]);
   return (
-    <div id="mainContent" class="container settings-email help-center">
+    <div id="mainContent" class="container settings-email help-center-settings">
       <main class="mb-5">
         <div id="mainContent" class="container">
           <div class="card card-body bg-white border-0 p-5 mt-4">
