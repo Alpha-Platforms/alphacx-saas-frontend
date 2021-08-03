@@ -39,6 +39,7 @@ import CustomersNull from "./components/pages/customers/CustomersNull";
 import Customer from "./components/pages/customers/Customer";
 import OrganisationList from "./components/pages/customers/OrganisationList";
 import TicketList from "./components/pages/tickets/TicketList";
+import Ticket from "./components/pages/tickets/Ticket";
 import SettingsHome from "./components/pages/settings";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -180,6 +181,12 @@ const SiteRouter = connect(mapStateToProps, {
             path="/tickets"
             pageName="Tickets"
             component={TicketList}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/tickets/:id"
+            pageName="Ticket"
+            component={Ticket}
           />
           <DefaultLayoutRoute
             exact

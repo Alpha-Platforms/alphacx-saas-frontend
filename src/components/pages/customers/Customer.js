@@ -18,7 +18,7 @@ import ScaleLoader from 'react-spinners/ScaleLoader';
 import {connect} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {getCurrentCustomer} from '../../../reduxstore/actions/customerActions';
-import {getUserInitials} from './CustomerList';
+import {getUserInitials} from '../../../helper';
 
 const CircleIcon = (props) => <span className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
 
@@ -64,7 +64,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
     ];
 
     useEffect(() => {
-        
+
         getCurrentCustomer(id);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps

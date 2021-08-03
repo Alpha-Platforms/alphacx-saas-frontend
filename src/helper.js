@@ -77,3 +77,17 @@ export const exportTable = (exportColumns, exportData, exportType, fileName) => 
         doc.save(fileName + '.pdf');
     }
 }
+
+
+export const getUserInitials = (name) => {
+    name = name.toUpperCase();
+    const nameArr = name.split(' ');
+    const firstInitial = nameArr[0] && nameArr[0][0];
+    const secondInitial = nameArr[1] && nameArr[1][0];
+    const result = `${firstInitial
+        ? firstInitial
+        : ''}${secondInitial
+            ? secondInitial
+            : ''}`;
+    return <span>{result}</span>;
+}

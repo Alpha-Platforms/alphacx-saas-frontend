@@ -15,25 +15,12 @@ import MaterialTable from 'material-table';
 import {TablePagination} from '@material-ui/core';
 import {ReactComponent as ProfileSvg} from '../../../assets/svgicons/Profile.svg';
 import CreateCustomerModal from './CreateCustomerModal';
-import {exportTable} from '../../../helper';
+import {exportTable, getUserInitials} from '../../../helper';
 import {Dropdown} from 'react-bootstrap';
 import {ReactComponent as DotSvg} from '../../../assets/icons/dots.svg';
 import SaveAlt from '@material-ui/icons/SaveAlt';
-
-
-export const getUserInitials = (name) => {
-    name = name.toUpperCase();
-    const nameArr = name.split(' ');
-    const firstInitial = nameArr[0] && nameArr[0][0];
-    const secondInitial = nameArr[1] && nameArr[1][0];
-    const result = `${firstInitial
-        ? firstInitial
-        : ''}${secondInitial
-            ? secondInitial
-            : ''}`;
-    return <span>{result}</span>;
-}
     
+
 const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPaginatedCustomers}) => {
     const [createModalShow,
         setCreateModalShow] = useState(false);
