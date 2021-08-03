@@ -44,18 +44,18 @@ const AccountSettings = () => {
   };
   return (
     <div className="account-settings">
-      <div id="mainContent" class="container">
-        <div class="card card-body bg-white border-0 p-0 mt-4">
+      <div id="mainContent" className="container">
+        <div className="card card-body bg-white border-0 p-0 mt-4">
           <div id="mainContentHeader">
-            <h6 class="text-muted f-14 my-4">
-              Settings <img src={RightArrow} class="img-fluid mx-2 me-3" />{" "}
-              <span class="text-custom">Forms</span>
+            <h6 className="text-muted f-14 my-4">
+              Settings <img src={RightArrow} className="img-fluid mx-2 me-3" />{" "}
+              <span className="text-custom">Forms</span>
             </h6>
-            <div id="pageTabs" class="mb-5">
-              <ul class="nav nav-pills" id="pills-tab" role="tablist">
-                <li class="nav-item" role="presentation">
+            <div id="pageTabs" className="mb-5">
+              <ul className="nav nav-pills" id="pills-tab" role="tablist">
+                <li className="nav-item" role="presentation">
                   <button
-                    class={` ${
+                    className={` ${
                       activeTab === "personal" && "active"
                     } nav-link text-muted px-0 me-5`}
                     id="pills-personal-tab"
@@ -64,9 +64,9 @@ const AccountSettings = () => {
                     Personal Information
                   </button>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li className="nav-item" role="presentation">
                   <button
-                    class={`${
+                    className={`${
                       activeTab === "account" && "active"
                     } nav-link text-muted px-0 me-5`}
                     id="pills-account-tab"
@@ -75,9 +75,9 @@ const AccountSettings = () => {
                     Account Settings
                   </button>
                 </li>
-                {/* <li class="nav-item" role="presentation">
+                {/* <li className="nav-item" role="presentation">
                   <button
-                    class="nav-link text-muted px-0 me-5"
+                    className="nav-link text-muted px-0 me-5"
                     id="pills-branding-tab"
                     data-bs-toggle="pill"
                     data-bs-target="#branding-view"
@@ -89,9 +89,9 @@ const AccountSettings = () => {
                     Branding
                   </button>
                 </li>
-                <li class="nav-item" role="presentation">
+                <li className="nav-item" role="presentation">
                   <button
-                    class="nav-link text-muted px-0"
+                    className="nav-link text-muted px-0"
                     id="pills-subcription-tab"
                     data-bs-toggle="pill"
                     data-bs-target="#subscription-license-view"
@@ -108,40 +108,46 @@ const AccountSettings = () => {
           </div>
         </div>
         {activeTab === "personal" ? (
-          <div class="tab-content" id="pills-tabContent">
+          <div className="tab-content" id="pills-tabContent">
             {/*
           <!--* Personal Information View -->
           */}
+            <div className="d-flex justify-content-between">
+              <h3 className="fs-6 text-black">Personal Information Settings</h3>
+              <button
+                type="button"
+                className="btn btn-sm bg-at-blue-light text-white px-4"
+              >
+                Save Changes
+              </button>
+            </div>
             <div
-              class="tab-pane active show fade w-75"
+              className="tab-pane active show fade w-75"
               id="personal-information-view"
               role="tabpanel"
               aria-labelledby="pills-personal-tab"
             >
-              <div>
-                <h3 class="fs-6 text-black">Personal Information Settings</h3>
-              </div>
-              <div class="mb-5 mt-4">
-                <div class="d-flex mb-3">
-                  <div class="me-2 w-100">
-                    <label for="first-name" class="form-label">
+              <div className="mb-5 mt-4">
+                <div className="d-flex mb-3">
+                  <div className="me-2 w-100">
+                    <label for="first-name" className="form-label">
                       First Name
                     </label>
                     <input
                       type="text"
                       id="first-name"
                       name="first_name"
-                      class="form-control"
+                      className="form-control"
                       value={personalInformation.first_name || ""}
                       onChange={handleChange}
                     />
                   </div>
-                  <div class="w-100">
-                    <label class="form-label" for="last-name">
+                  <div className="w-100">
+                    <label className="form-label" for="last-name">
                       Last Name
                     </label>
                     <input
-                      class="form-control"
+                      className="form-control"
                       type="text"
                       id="last-name"
                       name="last_name"
@@ -150,12 +156,12 @@ const AccountSettings = () => {
                     />
                   </div>
                 </div>
-                <div class="mb-3">
-                  <label class="form-label" for="first-name">
+                <div className="mb-3">
+                  <label className="form-label" for="first-name">
                     Email
                   </label>
                   <input
-                    class="form-control"
+                    className="form-control"
                     type="text"
                     id="email"
                     name="email"
@@ -167,11 +173,11 @@ const AccountSettings = () => {
               {/*
             <!-- * upload photo section -->
             */}
-              <div class="d-flex mb-5">
+              <div className="d-flex mb-5">
                 <div
                   id="uploadPersonalPhotoInputImgPreview"
                   style={{ width: "6rem", height: "6rem" }}
-                  class="
+                  className="
                   border border-1
                   rounded-3
                   me-5
@@ -186,7 +192,7 @@ const AccountSettings = () => {
                       height: "100%",
                       width: "100%",
                     }}
-                    class="ms-0 d-flex justify-content-between align-items-center"
+                    className="ms-0 d-flex justify-content-between align-items-center"
                   >
                     {personalInformation?.avatar?.blob && (
                       <img
@@ -200,7 +206,7 @@ const AccountSettings = () => {
                 <div>
                   <label
                     for="uploadPersonalPhotoInput"
-                    class="btn btn-sm bg-at-blue-light px-4 py-1 mb-2 mt-1"
+                    className="btn btn-sm bg-at-blue-light px-4 py-1 mb-2 mt-1"
                   >
                     Upload Photo
                   </label>
@@ -210,10 +216,10 @@ const AccountSettings = () => {
                     id="uploadPersonalPhotoInput"
                     onChange={handleAvatar}
                   />
-                  <p class="mb-0 text-at-red">
+                  <p className="mb-0 text-at-red">
                     <small id="uploadPersonalPhotoInputError"></small>
                   </p>
-                  <p class="uploadInfoWrapper">
+                  <p className="uploadInfoWrapper">
                     <small id="uploadPersonalPhotoInputInfo">
                       Upload personal photo, uploaded file must be an image.
                     </small>
@@ -223,35 +229,35 @@ const AccountSettings = () => {
               {/*
             <!-- * change password -->
             */}
-              <div class="mb-5">
-                <label class="form-label" for="change-password">
+              <div className="mb-5">
+                <label className="form-label" for="change-password">
                   Change Password
                 </label>
                 <input
-                  class="form-control"
+                  className="form-control"
                   type="password"
                   name="change_password"
                   id="change-password"
                   value={personalInformation.change_password || ""}
                   onChange={handleChange}
                 />
-                <button class="btn btn-sm bg-at-blue-light px-3 py-1 mt-3">
+                <button className="btn btn-sm bg-at-blue-light px-3 py-1 mt-3">
                   Change Password
                 </button>
               </div>
               {/*
             <!-- * Notifications -->
             */}
-              <div class="mb-3">
-                <label class="d-block">Notifications</label>
+              <div className="mb-3">
+                <label className="d-block">Notifications</label>
                 <label>
                   <small>Disable notifications</small>
                 </label>
-                <div class="mt-2 d-flex">
-                  <div class="border border-1 d-inline-block px-4 py-2 rounded-3">
-                    <div class="form-check form-switch d-flex align-items-center">
+                <div className="mt-2 d-flex">
+                  <div className="border border-1 d-inline-block px-4 py-2 rounded-3">
+                    <div className="form-check form-switch d-flex align-items-center">
                       <input
-                        class="form-check-input"
+                        className="form-check-input"
                         type="checkbox"
                         id="flexSwitchCheckDefault"
                         checked={personalInformation.notifications}
@@ -263,7 +269,7 @@ const AccountSettings = () => {
                         }
                       />
                       <label
-                        class="form-check-label ms-3"
+                        className="form-check-label ms-3"
                         for="flexSwitchCheckDefault"
                         style={{ width: 20 }}
                       >
@@ -271,20 +277,20 @@ const AccountSettings = () => {
                       </label>
                     </div>
                   </div>
-                  <div class="ms-4">
+                  <div className="ms-4">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                   </div>
                 </div>
               </div>
               {/* <!-- * Security and Privacy --> */}
-              <div class="mb-5">
-                <label class="d-block" for="">
+              <div className="mb-5">
+                <label className="d-block" for="">
                   Security and Privacy (MFA)
                 </label>
-                <div class="mt-2 border border-1 d-inline-block px-4 py-2 rounded-3">
-                  <div class="form-check form-switch d-flex align-items-center">
+                <div className="mt-2 border border-1 d-inline-block px-4 py-2 rounded-3">
+                  <div className="form-check form-switch d-flex align-items-center">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       type="checkbox"
                       id="security-switch"
                       checked={personalInformation.security}
@@ -296,7 +302,7 @@ const AccountSettings = () => {
                       }
                     />
                     <label
-                      class="form-check-label ms-3"
+                      className="form-check-label ms-3"
                       for="security-switch"
                       style={{ width: 20 }}
                     >
@@ -312,128 +318,128 @@ const AccountSettings = () => {
           </div>
         ) : (
           <div
-            class="tab-pane"
+            className="tab-pane"
             id="account-settings-view"
             role="tabpanel"
             aria-labelledby="pills-account-tab"
           >
             {/* <!--* Start of Account Settings View --> */}
-            <div class="d-flex justify-content-between">
-              <h3 class="fs-6 text-black">Account Settings</h3>
+            <div className="d-flex justify-content-between">
+              <h3 className="fs-6 text-black">Account Settings</h3>
               <button
                 type="button"
-                class="btn btn-sm bg-at-blue-light text-white px-4"
+                className="btn btn-sm bg-at-blue-light text-white px-4"
               >
                 Save Changes
               </button>
             </div>
 
-            <div class="mt-4 mb-5 w-75">
-              <div class="mb-3">
-                <label for="organisation-name" class="form-label">
+            <div className="mt-4 mb-5 w-75">
+              <div className="mb-3">
+                <label for="organisation-name" className="form-label">
                   Organisation Name
                 </label>
                 <input
                   type="text"
                   name="organisation_name"
-                  class="form-control"
+                  className="form-control"
                   id="organisation-name"
                   value={accountSettings.organisation_name || ""}
                   onChange={handleChange}
                 />
               </div>
-              <div class="mb-3">
-                <label for="domain-field" class="form-label">
+              <div className="mb-3">
+                <label for="domain-field" className="form-label">
                   Domain
                 </label>
                 <input
                   name="domain_field"
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   id="domain-field"
                   value={accountSettings.domain_field || ""}
                   onChange={handleChange}
                 />
               </div>
 
-              <div class="mb-3">
-                <label for="organisation-profile" class="form-label">
+              <div className="mb-3">
+                <label for="organisation-profile" className="form-label">
                   Organisation Profile
                 </label>
                 <textarea
                   name="organisation_profile"
-                  class="form-control"
+                  className="form-control"
                   id="organisation-profile"
                   value={accountSettings.organisation_profile || ""}
                   onChange={handleChange}
                 ></textarea>
               </div>
 
-              <div class="row">
-                <div class="mb-3 col-6">
-                  <label for="account-email" class="form-label">
+              <div className="row">
+                <div className="mb-3 col-6">
+                  <label for="account-email" className="form-label">
                     Email
                   </label>
                   <input
                     name="account_email"
                     type="email"
-                    class="form-control"
+                    className="form-control"
                     id="account-email"
                     value={accountSettings.account_email || ""}
                     onChange={handleChange}
                   />
                 </div>
 
-                <div class="mb-3 col-6">
-                  <label for="account-website" class="form-label">
+                <div className="mb-3 col-6">
+                  <label for="account-website" className="form-label">
                     Website
                   </label>
                   <input
                     name="account_website"
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     id="account-website"
                     value={accountSettings.account_website || ""}
                     onChange={handleChange}
                   />
                 </div>
 
-                <div class="mb-3 col-6">
-                  <label for="account-address" class="form-label">
+                <div className="mb-3 col-6">
+                  <label for="account-address" className="form-label">
                     Address
                   </label>
                   <input
                     name="account_address"
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     id="account-address"
                     value={accountSettings.account_address || ""}
                     onChange={handleChange}
                   />
                 </div>
 
-                <div class="mb-3 col-6">
-                  <label for="account-phone" class="form-label">
+                <div className="mb-3 col-6">
+                  <label for="account-phone" className="form-label">
                     Phone
                   </label>
                   <input
                     name="account_phone"
                     type="tel"
-                    class="form-control"
+                    className="form-control"
                     id="account-phone"
                     value={accountSettings.account_phone || ""}
                     onChange={handleChange}
                   />
                 </div>
 
-                <div class="mb-3 col-6">
-                  <label for="account-timezone" class="form-label">
+                <div className="mb-3 col-6">
+                  <label for="account-timezone" className="form-label">
                     Timezone
                   </label>
                   <select
                     name="account-timezone"
                     id="account-timezone"
-                    class="form-select"
+                    className="form-select"
                     aria-label="Default select example"
                   >
                     <option selected></option>
@@ -441,14 +447,14 @@ const AccountSettings = () => {
                   </select>
                 </div>
 
-                <div class="mb-3 col-6">
-                  <label for="account-language" class="form-label">
+                <div className="mb-3 col-6">
+                  <label for="account-language" className="form-label">
                     Language
                   </label>
                   <select
                     name="account-language"
                     id="account-language"
-                    class="form-select"
+                    className="form-select"
                     aria-label="Default select example"
                   >
                     <option selected></option>
@@ -457,14 +463,14 @@ const AccountSettings = () => {
                 </div>
               </div>
 
-              <div class="mb-3">
-                <label for="account-country" class="form-label">
+              <div className="mb-3">
+                <label for="account-country" className="form-label">
                   Country
                 </label>
                 <select
                   name="account-country"
                   id="account-country"
-                  class="form-select"
+                  className="form-select"
                   aria-label="Default select example"
                 >
                   <option selected></option>
@@ -472,15 +478,15 @@ const AccountSettings = () => {
                 </select>
               </div>
 
-              <div class="row">
-                <div class="mb-3 col-6">
-                  <label for="work-days" class="form-label">
+              <div className="row">
+                <div className="mb-3 col-6">
+                  <label for="work-days" className="form-label">
                     Work Days
                   </label>
                   <select
                     name="work-days"
                     id="work-days"
-                    class="form-select"
+                    className="form-select"
                     aria-label="Default select example"
                   >
                     <option selected></option>
@@ -488,16 +494,16 @@ const AccountSettings = () => {
                   </select>
                 </div>
 
-                <div class="mb-3 col-6">
-                  <label for="working-hours-from" class="form-label">
+                <div className="mb-3 col-6">
+                  <label for="working-hours-from" className="form-label">
                     Working Hours
                   </label>
-                  <div class="d-flex align-items-center">
+                  <div className="d-flex align-items-center">
                     <select
                       name="work-hour-start"
                       id="working-hours-from"
-                      //   class="form-select"
-                      class="border border-1 time-form-control"
+                      //   className="form-select"
+                      className="border border-1 time-form-control"
                       aria-label="Default select example"
                       style={{ width: 100, paddingRight: 20 }}
                     >
@@ -507,8 +513,8 @@ const AccountSettings = () => {
                     <select
                       name="work-hour-start"
                       id="working-hours-from"
-                      //   class="form-select"
-                      class="border border-1 time-form-control"
+                      //   className="form-select"
+                      className="border border-1 time-form-control"
                       aria-label="Default select example"
                       style={{ width: 100, paddingRight: 20 }}
                     >
@@ -518,13 +524,13 @@ const AccountSettings = () => {
                 </div>
               </div>
 
-              <div class="mb-3">
-                <label class="d-block" for="">
+              <div className="mb-3">
+                <label className="d-block" for="">
                   Security and Privacy (2FA Settings)
                 </label>
                 <div>
                   <div
-                    class="
+                    className="
                       mt-2
                       border border-1
                       d-inline-block
@@ -534,11 +540,11 @@ const AccountSettings = () => {
                     "
                   >
                     <div
-                      class="form-check form-switch d-flex align-items-center"
+                      className="form-check form-switch d-flex align-items-center"
                       style={{ width: 70 }}
                     >
                       <input
-                        class="form-check-input"
+                        className="form-check-input"
                         type="checkbox"
                         id="security-switch"
                         checked={accountSettings.two_factor}
@@ -550,30 +556,30 @@ const AccountSettings = () => {
                         }
                       />
                       <label
-                        class="form-check-label ms-3"
+                        className="form-check-label ms-3"
                         for="security-switch"
                       >
                         {accountSettings.two_factor ? "Yes" : "No"}
                       </label>
                     </div>
                   </div>
-                  <div class="d-inline-block">
+                  <div className="d-inline-block">
                     &nbsp;&nbsp; Enable Two Factor Authentication
                   </div>
                 </div>
               </div>
 
               <div>
-                <label class="d-block mb-2">Export Data</label>
+                <label className="d-block mb-2">Export Data</label>
                 <button
-                  class="btn btn-sm bg-at-blue-light px-4 py-1"
+                  className="btn btn-sm bg-at-blue-light px-4 py-1"
                   style={{ width: 120 }}
                 >
                   Export{" "}
                   {/*
                   <object
                     data="../assets/alphatickets/icons/white-upload.svg"
-                    class="sm-align"
+                    className="sm-align"
                     type="image/svg+xml"
                   ></object>
                   */}
