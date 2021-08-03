@@ -65,7 +65,10 @@ export default function SettingsHome() {
         </div>
 
         <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
+          <a
+            href="settings/automation"
+            className="d-block cursor text-decoration-none"
+          >
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={AutomationIcon} alt="" />
@@ -341,7 +344,10 @@ export default function SettingsHome() {
         </div>
 
         <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <Link to="/settings/ticket-settings" className="d-block cursor text-decoration-none">
+          <Link
+            to="/settings/ticket-settings"
+            className="d-block cursor text-decoration-none"
+          >
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={AccountLightIcon} alt="" />
