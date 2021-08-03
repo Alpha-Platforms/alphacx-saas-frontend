@@ -87,7 +87,10 @@ export default function SettingsHome() {
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
+          <a
+            href="/settings/account"
+            className="d-block cursor text-decoration-none"
+          >
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={ShieldIcon} alt="" />
