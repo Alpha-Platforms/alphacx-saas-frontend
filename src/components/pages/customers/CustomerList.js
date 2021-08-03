@@ -17,7 +17,8 @@ import {ReactComponent as ProfileSvg} from '../../../assets/svgicons/Profile.svg
 import CreateCustomerModal from './CreateCustomerModal';
 import {exportTable} from '../../../helper';
 import {Dropdown} from 'react-bootstrap';
-// import SaveAlt from '@material-ui/icons/SaveAlt';
+import {ReactComponent as DotSvg} from '../../../assets/icons/dots.svg';
+import SaveAlt from '@material-ui/icons/SaveAlt';
 
 
 export const getUserInitials = (name) => {
@@ -120,11 +121,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
 
         const tableColumns = [
             {
-                title: 'Title',
-                field: 'title',
-                width: '10%'
-            }, {
-                title: 'Contact',
+                title: 'Customer',
                 field: 'contact',
                 render: ({contact}) => (<div className="d-flex user-initials-sm">
                     <div
@@ -147,7 +144,21 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
             }, {
                 title: 'Tags',
                 field: 'tags',
+                width: '40%',
                 render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">+2</span></div>)
+            }, {
+                title: '',
+                field: 'action',
+                render: rowData => (<Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+                                            <Dropdown.Toggle variant="transparent" size="sm">
+                                                <span className="cust-table-dots"><DotSvg/></span>
+                                            </Dropdown.Toggle>
+                                            <Dropdown.Menu>
+                                                <Dropdown.Item eventKey="1">Edit</Dropdown.Item>
+                                                <Dropdown.Item eventKey="2">Delete</Dropdown.Item>
+                                            </Dropdown.Menu>
+                                        </Dropdown>)
+                // render: rowData => (<div><span className="cust-table-dots"><DotSvg/></span></div>)
             }
         ];
 
@@ -208,16 +219,16 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
             <div>
                 {custLoading && <div className="cust-table-loader"><ScaleLoader loading={custLoading} color={"#006298"}/></div>}
 
-                <div>
+                <div className="ticket-table-wrapper">
 
-                    <div
-                        className="d-flex justify-content-between flex-wrap bg-light rounded-top-04 flex-md-nowrap align-items-center p-4">
-
+                    <div style={{ background: '#fefdfd' }}
+                        className="d-flex justify-content-between flex-wrap rounded-top-04 flex-md-nowrap align-items-center p-4 position-relative">
+{/* 
                         <div>
-                        </div>
+                        </div> */}
 
-                        <div className="btn-toolbar mb-md-0">
-                            <button
+                        <div className="btn-toolbar mb-md-0 cust-table-btns-wrapper">
+                            {/* <button
                                 type="button"
                                 className="btn btn-sm bg-at-blue-light px-md-3 mx-1"
                                 onClick={() => setCreateModalShow(true)}>
@@ -229,7 +240,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                 className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3 reset-btn-outline"
                                 onClick={() => setUploadModalShow(true)}>
                                 <UploadSvg/>&nbsp;Import
-                            </button>
+                            </button> */}
 
                             {/* <button
                                 type="button"
@@ -243,9 +254,21 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                 onClick={handleCSVExport}>
                                 <ImportSvg/>&nbsp;Export CSV
                             </button> */}
-                            <Dropdown>
+                            {/* <Dropdown>
                                 <Dropdown.Toggle id="export-dropdown" className="btn-outline-secondary reset-btn-outline btn">
                                     <ImportSvg/>&nbsp;Export
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                    <Dropdown.Item as="button" onClick={handlePDFExport}>As PDF</Dropdown.Item>
+                                    <Dropdown.Item as="button" onClick={handleCSVExport}>As CSV</Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown> */}
+
+                            <Dropdown id="cust-export-dropdown">
+                                <Dropdown.Toggle id="export-dropdown" className="reset-btn-outline btn ticket-export-btn">
+                                    {/* <ImportSvg/>&nbsp;Export */}
+                                    <SaveAlt />
                                 </Dropdown.Toggle>
 
                                 <Dropdown.Menu>
@@ -289,7 +312,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                 paging: true,
                                 pageSize: (isCustomersLoaded && meta?.itemsPerPage) ? meta?.itemsPerPage : 10,
                                 headerStyle: {
-                                    backgroundColor: '#f8f9fa'
+                                    backgroundColor: '#fefdfd'
                                 },
                                 exportFileName: 'Customers'
                                 // filtering: true
