@@ -158,14 +158,15 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
         //     //                         <option value="closed">Closed</option>
         //     //                     </select>)
         // }, 
+        // {
+        //     title: 'Tags',
+        //     field: 'tags',
+        //     render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1">Customer Data</span><span className="badge rounded-pill text-muted border px-2 py-1">+2</span></div>)
+        // },
         {
-            title: 'Tags',
-            field: 'tags',
-            render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1">Customer Data</span><span className="badge rounded-pill text-muted border px-2 py-1">+2</span></div>)
-        },{
             title: 'Ratings',
             field: 'rating',
-            render: rowData => (<div className={"table-ratings"}><span className="me-1 table-ratings-span"><StarYellowSvg/></span><span className="me-1 table-ratings-span"><StarUnactiveSvg/></span><span className="me-1 table-ratings-span"><StarUnactiveSvg/></span><span className="me-1 table-ratings-span"><StarUnactiveSvg/></span><span className="me-1 table-ratings-span"><StarUnactiveSvg/></span></div>)
+            render: rowData => (<div className={"table-ratings"}><span className="table-ratings-span"><StarYellowSvg/></span><span className="me-1 table-ratings-span"><StarUnactiveSvg/></span><span className="me-1 table-ratings-span"><StarUnactiveSvg/></span><span className="me-1 table-ratings-span"><StarUnactiveSvg/></span><span className="me-1 table-ratings-span"><StarUnactiveSvg/></span></div>)
         }, {
             title: 'Created',
             field: 'created'
@@ -214,8 +215,8 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
         <div>
             { ticketLoading && <div className={`cust-table-loader ${ticketLoading && 'add-loader-opacity'}`}><ScaleLoader loading={ticketLoading} color={"#006298"}/></div>}
             <div className="ticket-table-wrapper">
-                <div
-                    className={`d-flex justify-content-start flex-wrap bg-light rounded-top-04 flex-md-nowrap align-items-center p-4 px-3 ${ticketLoading && 'rounded-bottom-04'}`}>
+                <div style={{ background: '#fefdfd' }}
+                    className={`d-flex justify-content-start flex-wrap rounded-top-04 flex-md-nowrap align-items-center p-4 px-3 ${ticketLoading && 'rounded-bottom-04'}`}>
 
 {/*                     <div>
                         
@@ -252,7 +253,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                 </div>
 
 
-                <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table">
+                <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table acx-ticket-table">
                     {(tickets && !changingRow) && <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""
@@ -279,7 +280,8 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                                 paging: true,
                                 pageSize: meta?.itemsPerPage || 10,
                                 headerStyle: {
-                                    backgroundColor: '#f8f9fa'
+                                    // backgroundColor: '#f8f9fa'
+                                    backgroundColor: '#fefdfd'
                                 }
                             }}
                             components={{ 

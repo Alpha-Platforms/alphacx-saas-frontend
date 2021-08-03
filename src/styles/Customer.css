@@ -134,3 +134,28 @@
 #export-dropdown + div button:hover {
     background-color: rgba(0, 0, 0, 0.1) !important;
 }
+
+
+.cust-table-dots {
+    display: inline-block;
+    transform: rotate(90deg);
+}
+
+#cust-table-dropdown button::after {
+    content: none;
+}
+
+#cust-export-dropdown {
+    /* position: absolute;
+    left: 19.5rem; */
+    /* margin-left: 19rem; */
+    margin-left: 0;
+    padding-left: 0;
+    transform: translateX(-15px);
+}
+
+.cust-table-btns-wrapper {
+    /* border: 1px solid red; */
+    margin-left: 18.5rem;
+    transform: translateY(4px);
+}
