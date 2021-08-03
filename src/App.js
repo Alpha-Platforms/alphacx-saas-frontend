@@ -60,6 +60,7 @@ import NewArticle from "./components/pages/settings/help_center/components/newAr
 import TicketSettings from "./components/pages/settings/ticketsettings/TicketSettings";
 import AutomationSettings from "./components/pages/settings/automation/automationSettings.jsx";
 import NewAutomationPolicy from "./components/pages/settings/automation/components/NewAutomationPolicy";
+import AccountSettings from "./components/pages/settings/account/AccountSettings";
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -181,11 +182,18 @@ const SiteRouter = connect(mapStateToProps, {
             pageName="Tickets"
             component={TicketList}
           />
+          {/* settings route start */}
           <DefaultLayoutRoute
             exact
             path="/settings"
             pageName="Settings"
             component={SettingsHome}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/account"
+            pageName="Account"
+            component={AccountSettings}
           />
           <DefaultLayoutRoute
             exact
