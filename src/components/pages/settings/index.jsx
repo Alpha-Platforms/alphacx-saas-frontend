@@ -304,7 +304,7 @@ export default function SettingsHome() {
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Live Chat</h6>
                 <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Setup and Update Live Chat settings
+                  Setup and update Live Chat settings
                 </p>
               </div>
             </div>
