@@ -5,7 +5,7 @@ import "./newArticle.scss";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import draftToHtml from "draftjs-to-html";
-
+import AddCategory from "../../../../../assets/imgF/addCategory.png";
 import boldB from "../../../../../assets/imgF/boldB.png";
 import Smiley from "../../../../../assets/imgF/Smiley.png";
 import editorImg from "../../../../../assets/imgF/editorImg.png";
@@ -14,25 +14,57 @@ import TextUnderline from "../../../../../assets/imgF/TextUnderline.png";
 import TextAlignLeft from "../../../../../assets/imgF/TextAlignLeft.png";
 import TextAlignCenter from "../../../../../assets/imgF/TextAlignCenter.png";
 import TextAlignRight from "../../../../../assets/imgF/TextAlignRight.png";
+import { useEffect } from "react";
+import { httpGetMain, httpPostMain } from "../../../../../helpers/httpMethods";
+import { NotificationManager } from "react-notifications";
 
+// 67796966-e0c2-44db-b184-cc4a7e19bee0
 const NewArticle = () => {
   const initialState = EditorState.createWithContent(
     ContentState.createFromText("")
   );
 
-  const [newPost, setNewPost] = useState({
-    category: ["Data", "big", "get started"],
-    tag: ["Data", "big", "get started"],
+  const [compState, setCompState] = useState({
+    showCategories: false,
+    showTags: false,
   });
+
+  const [newPost, setNewPost] = useState({
+    title: "",
+    body: "",
+    richText: "",
+    category: [],
+    tag: [],
+    publishGlobal: false,
+    publishEnglish: false,
+  });
+  const [categories, setCategories] = useState([]);
+
   const [editorState, setEditorState] = useState(initialState);
+
+  const addCategory = (value) => {
+    let newCategory = [...newPost.category, value];
+    setNewPost({ ...newPost, category: newCategory });
+    setCompState({ ...compState, showCategories: false });
+    setCategories(categories.filter((item) => item.id !== value.id));
+  };
+  const removeCategory = (value) => {
+    setNewPost({
+      ...newPost,
+      category: newPost.category.filter((item) => item.id !== value.id),
+    });
+    setCategories([...categories, value]);
+  };
+
   const onEditorStateChange = (editorState) => {
     // handleDescriptionValidation(editorState);
 
     const plainText = editorState.getCurrentContent().getPlainText();
     const richText = draftToHtml(convertToRaw(editorState.getCurrentContent()));
     setEditorState(editorState);
+    setNewPost({ ...newPost, richText });
     // setReplyTicket({ plainText, richText });
-    console.log(">>>>", richText, richText);
+    // console.log(">>>>", richText, plainText);
   };
   const _uploadImageCallBack = (file) => {
     // long story short, every time we upload an image, we
@@ -60,6 +92,41 @@ const NewArticle = () => {
       resolve({ data: { link: imageObject.localSrc } });
     });
   };
+
+  //   function that fetches all available categories
+  //    that can be added to an article
+  const fetchCategories = async () => {
+    const res = await httpGetMain("articles/categories");
+    if (res?.status == "success") {
+      console.clear();
+      console.log("categories", res?.data);
+      let categories = res?.data;
+      setCategories(categories);
+    } else {
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
+
+  const handleSubmitNewArticle = async () => {
+    const data = {
+      title: newPost.title,
+      body: newPost.richText,
+      folderId: "67796966-e0c2-44db-b184-cc4a7e19bee0",
+    };
+    console.log("article", data);
+
+    const res = await httpPostMain("articles", data);
+    if (res?.status == "success") {
+      console.clear();
+      console.log("sent", res);
+    } else {
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
   return (
     <div id="mainContent" class="container settings-email help-center">
       <main class="mb-5">
@@ -83,6 +150,10 @@ const NewArticle = () => {
                     type="search"
                     class="form-control form-control-sm f-12 search-bar px-5 d-block"
                     placeholder="Enter article title ..."
+                    value={newPost.title}
+                    onChange={(e) =>
+                      setNewPost({ ...newPost, title: e.target.value })
+                    }
                   />
                 </div>
                 <div className="editorContainer">
@@ -192,7 +263,7 @@ const NewArticle = () => {
                     <div>
                       <a
                         class="btn btn-primary btn-sm ms-2"
-                        href="/settings/help-center/article"
+                        onClick={handleSubmitNewArticle}
                       >
                         <span>Save</span>
                       </a>
@@ -202,33 +273,78 @@ const NewArticle = () => {
                 <div className="category mb-4">
                   <p>Category</p>
                   <div className="category-holder">
-                    {/* {newPost.category ? (
-                      <div className="cat">
-                        jjjj
-                        <p>{"cat"}</p>
-                      </div>
-                    ) : null} */}
-                    {newPost.category.map((cat, i) => (
+                    {newPost?.category.map((cat, i) => (
                       <div key={i} className="cat">
-                        <p>{cat}</p>
+                        <p>{cat.name}</p>
+                        <span onClick={() => removeCategory(cat)}>x</span>
                       </div>
                     ))}
+                    <img
+                      src={AddCategory}
+                      className="add-icon"
+                      alt=""
+                      onClick={() => {
+                        setCompState({
+                          ...compState,
+                          showCategories: !compState?.showCategories,
+                        });
+                      }}
+                    />
+
+                    {/* drop list to show all categories to select from ,, */}
+
+                    {compState.showCategories && (
+                      <div className={"drop-list"}>
+                        {categories?.map((item, i) => (
+                          <p key={i} onClick={() => addCategory(item)}>
+                            {item.name}
+                          </p>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
-                <div className="category">
+                <div className="category mb-4">
                   <p>Tag</p>
                   <div className="category-holder">
-                    {/* {newPost.category ? (
-                      <div className="cat">
-                        jjjj
-                        <p>{"cat"}</p>
-                      </div>
-                    ) : null} */}
-                    {newPost.category.map((cat, i) => (
+                    {/* {newPost.category.map((cat, i) => (
                       <div key={i} className="cat">
                         <p>{cat}</p>
+                        <span>x</span>
                       </div>
-                    ))}
+                    ))} */}
+                    <img src={AddCategory} className="add-icon" alt="" />
+                  </div>
+                </div>
+
+                <div className="toogles">
+                  <div className="toogle mb-4">
+                    <p>Published globally</p>
+                    <button
+                      className={newPost.publishGlobal ? "active" : ""}
+                      onClick={() =>
+                        setNewPost({
+                          ...newPost,
+                          publishGlobal: !newPost.publishGlobal,
+                        })
+                      }
+                    >
+                      <div className="ball"></div>
+                    </button>
+                  </div>
+                  <div className="toogle">
+                    <p>Published in English</p>
+                    <button
+                      className={newPost.publishEnglish ? "active" : ""}
+                      onClick={() =>
+                        setNewPost({
+                          ...newPost,
+                          publishEnglish: !newPost.publishEnglish,
+                        })
+                      }
+                    >
+                      <div className="ball"></div>
+                    </button>
                   </div>
                 </div>
               </div>

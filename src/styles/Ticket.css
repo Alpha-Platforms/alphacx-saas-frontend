@@ -140,3 +140,53 @@
 .cust-search-preview ul li:hover {
     background-color: rgba(0, 0, 0, 0.1);
 }
+
+#export-dropdown-main {
+    margin-left: 18.25rem;
+}
+
+.ticket-export-btn {
+    border: none !important;
+    margin-left: 0 !important;
+    padding-left: 0;
+    opacity: 0.7;
+}
+#alphacxMTable thead tr th:nth-child(1) > span > span > svg,
+#alphacxMTable tbody tr td:nth-child(1) > span > span > svg {
+    /* border: 1px solid red; */
+    color: rgba(43, 48, 77, 0.29);
+}  
+
+.table-ratings span {
+    margin-right: -4px !important;
+    transform: scale(0.7);
+    display: inline-block;
+    padding: 0 !important;
+}
+
+.ticket-table-wrapper {
+    /* border: 1px solid rgba(0, 0, 0, 0.1); */
+    border: 1px solid #f1f1f1;
+}
+
+
+#alphacxMTable.acx-ticket-cust-table thead tr th:nth-child(3) > span > div  {
+    white-space: nowrap;
+}
+
+#alphacxMTable.acx-ticket-cust-table thead tr th:nth-child(7) > span > div {
+    white-space: nowrap;
+}
+
+#alphacxMTable.acx-ticket-table tbody tr td {
+    white-space: nowrap;
+}
+
+#alphacxMTable.acx-ticket-table tbody tr {
+    border-bottom: 1px solid red !important;
+}
+
+#alphacxMTable.acx-ticket-cust-table thead tr th.MuiTableCell-root,
+#alphacxMTable.acx-ticket-cust-table tbody tr td.MuiTableCell-root {
+    border-bottom: 1px solid #f1f1f1 !important;
+}

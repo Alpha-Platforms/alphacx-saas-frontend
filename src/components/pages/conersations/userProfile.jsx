@@ -118,7 +118,7 @@ export default function UserProfile({ ticket, UserInfo }) {
               <span className="psvgIcon">
                 <UserProfileIcon3 />
               </span>{" "}
-              Address
+              Email Address
             </p>
             <p>{UserInfo?.email ? UserInfo?.email : "unavailable"}</p>
           </div>
@@ -148,6 +148,57 @@ export default function UserProfile({ ticket, UserInfo }) {
             );
           })}
         </div> */}
+        <div class="container-timeline">
+          <div class="box">
+            <div class="borderContaner">
+              <div class="circle"></div>
+              <div class="img"></div>
+            </div>
+            <div class="textTimeLineSec">
+              <span>
+                consectetur adipiscing elit. Quis pellentesque vitae nisi nulla.
+                Diam elit, ipsum id rhoncus
+              </span>
+              <div className="timeLinehashtags">
+                <div>#53467</div>
+                <div>13 March - 31 July, 2021</div>
+              </div>
+            </div>
+          </div>
+          <div class="box">
+            <div class="borderContaner">
+              <div class="circle"></div>
+              <div class="img"></div>
+            </div>
+            <div class="textTimeLineSec">
+              <span>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quis
+                pellentesque vitae nisi nulla. Diam elit, ipsum id rhoncus
+              </span>
+              <div className="timeLinehashtags">
+                <div style={{ background: "#DAECF8" }}>#53467</div>
+                <div>13 March - 31 July, 2021</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="box">
+            <div class="borderContaner">
+              <div class="circle"></div>
+              <div style={{ height: "0px" }} class="img"></div>
+            </div>
+            <div class="textTimeLineSec">
+              <span>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quis
+                pellentesque vitae nisi nulla. Diam elit, ipsum id rhoncus
+              </span>
+              <div className="timeLinehashtags">
+                <div>#53467</div>
+                <div>13 March - 31 July, 2021</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
