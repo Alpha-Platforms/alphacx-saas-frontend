@@ -75,34 +75,6 @@ const AccountSettings = () => {
                     Account Settings
                   </button>
                 </li>
-                {/* <li className="nav-item" role="presentation">
-                  <button
-                    className="nav-link text-muted px-0 me-5"
-                    id="pills-branding-tab"
-                    data-bs-toggle="pill"
-                    data-bs-target="#branding-view"
-                    type="button"
-                    role="tab"
-                    aria-controls="branding-view"
-                    aria-selected="false"
-                  >
-                    Branding
-                  </button>
-                </li>
-                <li className="nav-item" role="presentation">
-                  <button
-                    className="nav-link text-muted px-0"
-                    id="pills-subcription-tab"
-                    data-bs-toggle="pill"
-                    data-bs-target="#subscription-license-view"
-                    type="button"
-                    role="tab"
-                    aria-controls="subscription-license-view"
-                    aria-selected="false"
-                  >
-                    Subscription and License
-                  </button>
-                </li> */}
               </ul>
             </div>
           </div>
