@@ -60,7 +60,7 @@ export default function SettingsHome() {
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Users</h6>
                 <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Assign user type, persmissions and other details
+                  Create users, assign permissions
                 </p>
               </div>
             </div>
@@ -132,7 +132,7 @@ export default function SettingsHome() {
                 <img src={UserBWIcon} alt="" />
               </div>
               <div className="ms-3">
-                <h6 className="text-dark mb-0">Profiling Settings</h6>
+                <h6 className="text-dark mb-0">Profile Settings</h6>
                 <p className="acx-fs-8 lh-1 mt-1 text-muted">
                   Update your user profile
                 </p>
