@@ -63,6 +63,8 @@ import NewAutomationPolicy from "./components/pages/settings/automation/componen
 import AccountSettings from "./components/pages/settings/account/AccountSettings";
 import NotificationSettings from "./components/pages/settings/notifications/NotificationSettings";
 import NewEmailTemplate from "./components/pages/settings/notifications/components/NewEmailTemplate";
+import CannedResponsesSettings from "./components/pages/settings/canned_responses/CannedResponsesSettings";
+import NewCannedResponse from "./components/pages/settings/canned_responses/components/NewCannedResponse";
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -293,6 +295,18 @@ const SiteRouter = connect(mapStateToProps, {
             path="/settings/notifications/email-template"
             pageName="Settings"
             component={NewEmailTemplate}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/canned-responses"
+            pageName="Settings"
+            component={CannedResponsesSettings}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/canned-response/new-response"
+            pageName="Settings"
+            component={NewCannedResponse}
           />
           {/* 
           ...
