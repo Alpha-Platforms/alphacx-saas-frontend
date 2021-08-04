@@ -21,111 +21,114 @@ export default function UserProfile({ ticket, UserInfo }) {
     <div style={{ color: "#1E90FF", background: "#E3F1FF" }}>Billing</div>,
   ]);
   return (
-    <div style={{ position: "" }}>
+    <div style={{ width: "100%", height: "100%" }}>
       <div className="user-profile-conversation-page">
-        <div className="userProfilePicCon">
-          {ticket[0]?.customer?.avatar ? (
-            <img src={ticket[0]?.customer?.avatar} alt="" />
-          ) : (
-            <img src={userImg} alt="" />
-            // <div className="userProfilePicConNoImg">
-            //   <p>{`${UserInfo?.firstname?.slice(
-            //     0,
-            //     1
-            //   )} ${UserInfo?.lastname?.slice(0, 1)}`}</p>
-            // </div>
-          )}
+        <div className="userProfileTwoColFormat">
+          <div className="userProfilePicCon">
+            {ticket[0]?.customer?.avatar ? (
+              <img src={ticket[0]?.customer?.avatar} alt="" />
+            ) : (
+              <img src={userImg} alt="" />
+              // <div className="userProfilePicConNoImg">
+              //   <p>{`${UserInfo?.firstname?.slice(
+              //     0,
+              //     1
+              //   )} ${UserInfo?.lastname?.slice(0, 1)}`}</p>
+              // </div>
+            )}
 
-          <p>{`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(
-            ticket[0]?.customer?.lastname
-          )}`}</p>
-          {/* <p>{` Marvin McKinney`}</p> */}
-        </div>
-        <div className="userProfileAboutCovers">
-          <div className="aboutUserColConv">
-            <p>
-              {" "}
-              <span className="psvgIcon">
-                <UserProfileIcon1 />
-              </span>{" "}
-              Ticket ID
-            </p>
-
-            <p>#53467</p>
+            <p>{`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(
+              ticket[0]?.customer?.lastname
+            )}`}</p>
+            {/* <p>{` Marvin McKinney`}</p> */}
           </div>
 
-          <div className="aboutUserColConv">
-            <p>
-              {" "}
-              <span className="psvgIcon">
-                {ticket[0]?.assignee?.avatar ? (
-                  <img
-                    src={ticket[0]?.assignee?.avatar}
-                    alt=""
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      borderRadius: "50%",
-                      marginRight: "2px",
-                    }}
-                  />
-                ) : (
-                  <div
-                    className="userProfilePicConNoImg"
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      borderRadius: "50%",
-                      marginRight: "19px",
-                    }}
-                  >
-                    <span>{`${ticket[0]?.assignee?.firstname?.slice(
-                      0,
-                      1
-                    )} ${ticket[0]?.assignee?.lastname?.slice(0, 1)}`}</span>
-                  </div>
-                )}
-              </span>{" "}
-              Assigned to
-            </p>
-            {/* <p>
+          <div className="userProfileAboutCovers">
+            <div className="aboutUserColConv">
+              <p>
+                {" "}
+                <span className="psvgIcon">
+                  <UserProfileIcon1 />
+                </span>{" "}
+                Ticket ID
+              </p>
+
+              <p>#53467</p>
+            </div>
+
+            <div className="aboutUserColConv">
+              <p>
+                {" "}
+                <span className="psvgIcon">
+                  {ticket[0]?.assignee?.avatar ? (
+                    <img
+                      src={ticket[0]?.assignee?.avatar}
+                      alt=""
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        borderRadius: "50%",
+                        marginRight: "2px",
+                      }}
+                    />
+                  ) : (
+                    <div
+                      className="userProfilePicConNoImg"
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        borderRadius: "50%",
+                        marginRight: "19px",
+                      }}
+                    >
+                      <span>{`${ticket[0]?.assignee?.firstname?.slice(
+                        0,
+                        1
+                      )} ${ticket[0]?.assignee?.lastname?.slice(0, 1)}`}</span>
+                    </div>
+                  )}
+                </span>{" "}
+                Assigned to
+              </p>
+              {/* <p>
               {UserInfo?.phoneNumber ? UserInfo?.phoneNumber : "unavailable"}
             </p> */}
-            <p>{`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(
-              ticket[0]?.assignee?.lastname
-            )}`}</p>
-          </div>
+              <p>{`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(
+                ticket[0]?.assignee?.lastname
+              )}`}</p>
+            </div>
 
-          <div className="aboutUserColConv">
-            <p>
-              {" "}
-              <span className="psvgIcon">
-                <UserProfileIcon2 />
-              </span>{" "}
-              Work Phone
-            </p>
-            {/* <p>
+            <div className="aboutUserColConv">
+              <p>
+                {" "}
+                <span className="psvgIcon">
+                  <UserProfileIcon2 />
+                </span>{" "}
+                Work Phone
+              </p>
+              {/* <p>
               
             </p> */}
-            <p>
-              {UserInfo?.phoneNumber ? UserInfo?.phoneNumber : "unavailable"}
-            </p>
-          </div>
+              <p>
+                {UserInfo?.phoneNumber ? UserInfo?.phoneNumber : "unavailable"}
+              </p>
+            </div>
 
-          <div className="aboutUserColConv">
-            <p>
-              {" "}
-              <span className="psvgIcon">
-                <UserProfileIcon3 />
-              </span>{" "}
-              Email Address
-            </p>
-            <p>{UserInfo?.email ? UserInfo?.email : "unavailable"}</p>
-          </div>
-          <div className="ticktTagsgfs3">
-            {tags.map((data) => {
-              return data;
-            })}
+            <div className="aboutUserColConv">
+              <p>
+                {" "}
+                <span className="psvgIcon">
+                  <UserProfileIcon3 />
+                </span>{" "}
+                Email Address
+              </p>
+              <p>{UserInfo?.email ? UserInfo?.email : "unavailable"}</p>
+            </div>
+            <div className="ticktTagsgfs3">
+              {tags.map((data) => {
+                return data;
+              })}
+            </div>
           </div>
         </div>
 
