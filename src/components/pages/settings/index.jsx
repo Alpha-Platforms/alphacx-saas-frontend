@@ -68,8 +68,8 @@ export default function SettingsHome() {
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <a
-            href="settings/automation"
+          <Link
+            to="settings/automation"
             className="d-block cursor text-decoration-none"
           >
             <div className="d-flex align-items-center p-md-4">
@@ -83,12 +83,12 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <a
-            href="/settings/account"
+          <Link
+            to="/settings/account"
             className="d-block cursor text-decoration-none"
           >
             <div className="d-flex align-items-center p-md-4">
@@ -102,12 +102,12 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <a
-            href="/settings/email"
+          <Link
+            to="/settings/email"
             className="d-block cursor text-decoration-none"
           >
             <div className="d-flex align-items-center p-md-4">
@@ -122,11 +122,11 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
+          <Link to="#" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={UserBWIcon} alt="" />
@@ -138,7 +138,7 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
         <div className="setting-link-item border rounded bg-light">
@@ -199,8 +199,8 @@ export default function SettingsHome() {
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <a
-            href="/settings/help-center"
+          <Link
+            to="/settings/help-center"
             className="d-block cursor text-decoration-none"
           >
             <div className="d-flex align-items-center p-md-4">
@@ -215,11 +215,14 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
+          <Link
+            to="/settings/notifications"
+            className="d-block cursor text-decoration-none"
+          >
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={SendBlueIcon} alt="" />
@@ -231,11 +234,11 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
+          <Link to="#" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={RoleLightIcon} alt="" />
@@ -247,11 +250,11 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
+          <Link to="#" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={StarBWIcon} alt="" />
@@ -263,11 +266,11 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
+          <Link to="#" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={SocialBlurbIcon} alt="" />
@@ -279,11 +282,11 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
+          <Link to="#" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={DocumentIcon} alt="" />
@@ -295,11 +298,11 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
+          <Link to="#" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={LivechatIcon} alt="" />
@@ -311,11 +314,11 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
+          <Link to="#" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={RoleLightIcon} alt="" />
@@ -327,7 +330,7 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
       </div>
     </>
