@@ -3,6 +3,7 @@ import MaterialTable from 'material-table';
 import {TablePagination} from '@material-ui/core';
 import tableIcons from '../../../../assets/materialicons/tableIcons';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
+import ShowIcon from '../../../../assets/icons/Show.svg';
 
 const getStatusColor = status => {
     switch (status) {
@@ -24,9 +25,6 @@ const getStatusColor = status => {
 const TicketHistory = ({ meta }) => {
     const tableColumns = [
         {
-            title: 'Date',
-            field: 'date'
-        }, {
             title: 'Ticket ID',
             field: 'ticketId',
             render: rowData => <Link
@@ -45,16 +43,17 @@ const TicketHistory = ({ meta }) => {
             field: 'category'
         }, {
             title: 'Agent Assigned',
-            field: 'agentAssigned'
+            field: 'agentAssigned',
+            render: rowData => <Link to="#">{rowData.agentAssigned}</Link>
         }, {
-            title: 'Stage',
+            title: 'Status',
             field: 'stage',
             render: rowData => <div className={`ticket-state ${getStatusColor(rowData.stage)}`}>
                     <Link to="#" className="btn btn-sm">{rowData.stage}</Link>
                 </div>
         }, {
-            title: 'Actions',
-            field: 'actions'
+            title: 'Last Updated',
+            field: 'date'
         }
     ];
 

@@ -9,6 +9,7 @@ import {connect} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {getCurrentTicket} from '../../../reduxstore/actions/ticketActions';
 import {getUserInitials} from '../../../helper';
+import UserProfile from '../conersations/userProfile';
 
 const CircleIcon = (props) => <span className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
 
@@ -31,11 +32,13 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                 ? <div className="single-cust-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
                 : !currentTicket ? <div>No Ticket Found.</div> : <div
                     style={{
-                    gridTemplateColumns: "280px 1fr"
+                    gridTemplateColumns: "280px 1fr",
+                    border: '1px solid #f1f1f1'
                 }}
                     className="d-grid mb-4">
+                    <div className="pt-2"><UserProfile ticket={[currentTicket]}  /></div>
 
-                    <div
+                    {/* <div
                         style={{
                         borderRight: '1px solid #f1f1f1'
                     }}
@@ -47,7 +50,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                 <p className="text-muted">Gillette Group International</p>
                             </div>
                         </div>
-                        <hr className="op-1"/> {/* <!-- Ticket date info --> */}
+                        <hr className="op-1"/>
                         <div className="py-3">
                             <ul className="cust-profile-info">
                                 <li>
@@ -87,7 +90,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                         <div className="text-center mt-4">
 
                         </div>
-                    </div>
+                    </div> */}
 
                     <div
                         style={{
@@ -270,6 +273,10 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                         
 
                     </div>
+                    {/* third column */}
+                    {/* <div>
+                      <UserProfile ticket={[currentTicket]}  />
+                    </div> */}
 
                 </div>}
 

@@ -103,12 +103,12 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                         style={{
                         borderRight: '1px solid #f1f1f1'
                     }}
-                        className="bg-primary py-5 px-3 bg-white">
+                        className="bg-primary py-5 pt-4 px-3 bg-white">
                         <div className="user-initials-lg">
                             <div className="user-initials blue me-auto ms-auto">{getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname}`)}</div>
                             <div className="text-center mt-3">
                                 <h4 style={{ textTransform: 'capitalize' }}>{`${currentCustomer.firstname} ${currentCustomer.lastname}`}</h4>
-                                <p className="text-muted">Gillette Group International</p>
+                                <p className="text-muted">jackmay@gmail.com</p>
                             </div>
                         </div>
                         <hr className="op-1"/> {/* <!-- Customer date info --> */}
@@ -122,17 +122,17 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                     </div>
                                 </li>
                                 <li>
-                                    <div><CircleIcon icon={MessageIcon}/></div>
-                                    <div>
-                                        <h6>Email Address</h6>
-                                        <p className="text-muted">{currentCustomer.email}</p>
-                                    </div>
-                                </li>
-                                <li>
                                     <div><CircleIcon icon={CallIcon}/></div>
                                     <div>
                                         <h6>Work Phone</h6>
                                         <p className="text-muted">{currentCustomer.phone_number}</p>
+                                    </div>
+                                </li>
+                                {/* <li>
+                                    <div><CircleIcon icon={MessageIcon}/></div>
+                                    <div>
+                                        <h6>Email Address</h6>
+                                        <p className="text-muted">{currentCustomer.email}</p>
                                     </div>
                                 </li>
                                 <li>
@@ -155,8 +155,9 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                         <h6>Subscription Enquiry</h6>
                                         <p className="text-muted pb-0 mb-0">26-06-2022</p>
                                     </div>
-                                </li>
+                                </li> */}
                             </ul>
+                            <div className={"table-tags text-justify"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1 f-10">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1 f-10">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1 f-10">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1 f-10">Active</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1 f-10">Urgent</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1 f-10">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1 f-10">High Value</span></div>
 
                         </div>
 
@@ -196,14 +197,6 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                             id="pills-notes-tab"
                                             type="button"
                                             onClick={() => setTabKey('notes')}>Notes</button>
-                                    </li>
-
-                                    <li className="nav-item" role="presentation">
-                                        <button
-                                            className={`nav-link ${tabKey === 'integrations' && 'nav-active'} text-muted`}
-                                            id="pills-integrations-tab"
-                                            type="button"
-                                            onClick={() => setTabKey('integrations')}>Integrations</button>
                                     </li>
                                     <li className="nav-item" role="presentation">
                                         <button
@@ -416,11 +409,6 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                         </div>
 
                                     </div>
-                                </Tab>
-
-                                {/* Integrations Tab */}
-                                <Tab eventKey="integrations" className="px-2">
-                                    Integrations
                                 </Tab>
 
                                 {/* Timeline tab */}
