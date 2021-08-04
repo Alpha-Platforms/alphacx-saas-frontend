@@ -3,6 +3,7 @@ import "../help_center/helpCenter.scss";
 import "./automationSettings.scss";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
 import TripleDot from "../../../../assets/imgF/triple_dot.png";
+import { Link } from "react-router-dom";
 
 const TableItem = ({ policy, handleStatusToogle, i }) => {
   const [showActions, setShowActions] = useState(false);
@@ -68,12 +69,12 @@ const AutomationSettings = () => {
           <div className="d-flex justify-content-between align-baseline">
             <h5 className="mt-3 mb-4 f-16 fw-bold">SLA Policies</h5>
             <div>
-              <a
+              <Link
                 className="btn btn-sm f-14 px-5 btn-custom bt"
-                href="automation/new-policy"
+                to="automation/new-policy"
               >
                 Add policy
-              </a>
+              </Link>
             </div>
           </div>
           <p className="w-50 f-12">

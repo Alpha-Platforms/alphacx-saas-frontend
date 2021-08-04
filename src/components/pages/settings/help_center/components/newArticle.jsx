@@ -17,6 +17,7 @@ import TextAlignRight from "../../../../../assets/imgF/TextAlignRight.png";
 import { useEffect } from "react";
 import { httpGetMain, httpPostMain } from "../../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
+import { Link } from "react-router-dom";
 
 // 67796966-e0c2-44db-b184-cc4a7e19bee0
 const NewArticle = () => {
@@ -252,12 +253,12 @@ const NewArticle = () => {
               <div className="side-content">
                 <div className="action_btns">
                   <div>
-                    <a
+                    <Link
                       class="btn btn-primary btn-sm preview ms-2"
-                      href="/settings/help-center/article"
+                      to="/settings/help-center/article"
                     >
                       <span>Preview</span>
-                    </a>
+                    </Link>
                   </div>
                   <div className="action_btns">
                     <div>

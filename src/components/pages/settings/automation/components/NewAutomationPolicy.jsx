@@ -6,6 +6,7 @@ import DeleteIcon from "../../../../../assets/icons/Delete.svg";
 import AddIcon from "../../../../../assets/icons/add.svg";
 import EditorBox from "../../../../reusables/EditorBox";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const NewAutomationPolicy = () => {
   const availablePlaceholders = [
@@ -28,9 +29,9 @@ const NewAutomationPolicy = () => {
               <h6 className="text-muted f-12">
                 Settings{" "}
                 <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
-                <a href="/settings/automation/">
+                <Link to="/settings/automation">
                   <span className="text-custom">Automation Settings</span>{" "}
-                </a>
+                </Link>
                 <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
                 <span className="text-custom">New Policy</span>{" "}
               </h6>

@@ -6,6 +6,7 @@ import RightArrow from "../../../../../assets/imgF/arrow_right.png";
 import { httpPostMain } from "../../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import { Modal } from "react-responsive-modal";
+import { Link } from "react-router-dom";
 
 const NewSupportEmail = () => {
   const [defaultServer, setDefaultServer] = useState(false);
@@ -202,12 +203,12 @@ const NewSupportEmail = () => {
               )}
             </div>
             <div class="d-flex justify-content-end mb-1 mt-4 save-btn">
-              <a
-                href="/settings/email"
+              <Link
+                to="/settings/email"
                 class="btn btn-sm px-4 bg-outline-custom cancel"
               >
                 Cancel
-              </a>
+              </Link>
               <a
                 class="btn btn-sm px-4 bg-custom ms-3"
                 id="save-changes"
@@ -236,13 +237,13 @@ const NewSupportEmail = () => {
                   {/* <object data="../assets/alphatickets/icons/sucess.svg" class="img-fluid"></object> */}
                   <h5 class="mt-4">Successful</h5>
                   <p class="text-center">Email has been edited successfully</p>
-                  <a
-                    href="/settings/email"
+                  <Link
+                    to="/settings/email"
                     class="btn btn-sm bg-at-blue text-white px-5 f-16"
                     id="continue"
                   >
                     Continue
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

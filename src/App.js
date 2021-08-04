@@ -61,6 +61,8 @@ import TicketSettings from "./components/pages/settings/ticketsettings/TicketSet
 import AutomationSettings from "./components/pages/settings/automation/automationSettings.jsx";
 import NewAutomationPolicy from "./components/pages/settings/automation/components/NewAutomationPolicy";
 import AccountSettings from "./components/pages/settings/account/AccountSettings";
+import NotificationSettings from "./components/pages/settings/notifications/NotificationSettings";
+import NewEmailTemplate from "./components/pages/settings/notifications/components/NewEmailTemplate";
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -279,6 +281,18 @@ const SiteRouter = connect(mapStateToProps, {
             path="/settings/email/:action"
             pageName="Settings"
             component={SettingsEmail}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/notifications"
+            pageName="Settings"
+            component={NotificationSettings}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/notifications/email-template"
+            pageName="Settings"
+            component={NewEmailTemplate}
           />
           {/* 
           ...
