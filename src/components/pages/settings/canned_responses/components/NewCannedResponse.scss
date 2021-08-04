@@ -1,0 +1,47 @@
+.new-canned-response {
+  display: flex;
+
+  .card-body {
+    max-width: 55%;
+    border-right: 1px solid #9e9e9eb0;
+  }
+  .add-files {
+    border: 1px dashed #9e9e9eb0;
+
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    cursor: pointer;
+    p {
+      margin: 0;
+    }
+  }
+  .response-list {
+    width: 45%;
+    margin-top: 115px;
+    margin-left: 30px;
+
+    .responses {
+      height: 300px;
+      background-color: #f6f7f9;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  .response {
+    display: flex;
+    background-color: #f6f7f9;
+    padding: 10px 30px;
+    input {
+      height: 20px;
+      width: 20px;
+    }
+    p {
+      width: 100%;
+    }
+  }
+}
