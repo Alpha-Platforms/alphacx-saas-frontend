@@ -19,6 +19,7 @@ import {connect} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {getCurrentCustomer} from '../../../reduxstore/actions/customerActions';
 import {getUserInitials} from '../../../helper';
+import TicketHistory from './components/TicketHistory';
 
 const CircleIcon = (props) => <span className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
 
@@ -93,13 +94,14 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                 ? <div className="single-cust-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
                 : !currentCustomer ? <div>No Customer Found.</div> : <div
                     style={{
-                    gridTemplateColumns: "280px 1fr"
+                    gridTemplateColumns: "280px 1fr",
+                    border: '1px solid #f1f1f1'
                 }}
                     className="d-grid mb-4">
 
                     <div
                         style={{
-                        marginRight: '1px'
+                        borderRight: '1px solid #f1f1f1'
                     }}
                         className="bg-primary py-5 px-3 bg-white">
                         <div className="user-initials-lg">
@@ -178,7 +180,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                             style={{
                             margin: "0 -0.5rem"
                         }}
-                            className="bg-light px-4 py-3 d-flex justify-content-between">
+                            className="px-4 py-3 d-flex justify-content-between">
                             <div>
                                 <ul className="nav nav-pills" id="pills-tab" role="tablist">
                                     <li className="nav-item " role="presentation">
@@ -235,7 +237,10 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                 onSelect={(k) => setTabKey(k)}
                                 className="mb-3">
                                 <Tab eventKey="ticket-history" className="px-2">
-                                    <div>
+                                    <TicketHistory />
+
+
+                                    {/* <div>
                                         <table className="table bg-white rounded-bottom-o4 overflow-hidden">
                                             <thead className="border-0">
                                                 <tr className="border-0">
@@ -306,7 +311,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                                 </nav>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
 
                                 </Tab>
 
