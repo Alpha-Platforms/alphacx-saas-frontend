@@ -1,22 +1,23 @@
-import React, { useState, useEffect, useContext } from "react";
-import "./conversation.css";
-import { Modal } from "react-responsive-modal";
-import MessageList from "./messageList";
-import searchIcon from "../../../assets/imgF/Search.png";
-import NoChatFound from "./noChatFound";
-import SingleChatOpen from "./sigleChat";
+import {useState, Fragment, useEffect, useContext} from 'react';
+import TicketIcon from '../../../assets/svgicons/Ticket.svg';
+import WorkIcon from '../../../assets/svgicons/Work.svg';
+import ProfileLightIcon from '../../../assets/svgicons/Profile-Light.svg';
+import FolderIcon from '../../../assets/icons/Folder.svg';
+import '../../../styles/Ticket.css';
+import ScaleLoader from 'react-spinners/ScaleLoader';
+import {connect} from 'react-redux';
+import {useParams} from 'react-router-dom';
+import {getCurrentTicket} from '../../../reduxstore/actions/ticketActions';
+import {getUserInitials} from '../../../helper';
+import UserProfile from '../conersations/userProfile';
+import { dateFormater } from "../../helpers/dateFormater";
 import {
-  httpGetMain,
-  httpPostMain,
-  httpPatchMain,
-} from "../../../helpers/httpMethods";
-import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-import { NotificationManager } from "react-notifications";
+  StarIconTicket,
+  SendMsgIcon,
+  ExpandChat,
+} from "../../../assets/images/svgs";
+import moment from 'moment';
+import { capitalize } from '@material-ui/core';
 import ClipLoader from "react-spinners/ClipLoader";
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
@@ -28,505 +29,545 @@ import Smiley from "../../../assets/imgF/Smiley.png";
 import boldB from "../../../assets/imgF/boldB.png";
 import TextItalic from "../../../assets/imgF/TextItalic.png";
 import TextUnderline from "../../../assets/imgF/TextUnderline.png";
-import TextAlignLeft from "../../../assets/imgF/TextAlignLeft.png";
-import TextAlignCenter from "../../../assets/imgF/TextAlignCenter.png";
-import TextAlignRight from "../../../assets/imgF/TextAlignRight.png";
-import UserProfile from "./userProfile";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 import { SocketDataContext } from "../../../context/socket";
+import { NotificationManager } from 'react-notifications';
 import {
-  StarIconTicket,
-  SendMsgIcon,
-  ExpandChat,
-} from "../../../assets/images/svgs";
-import pic from "../../../assets/imgF/codeuiandyimg.png";
-import { dateFormater } from "../../helpers/dateFormater";
-import { capitalize } from "@material-ui/core";
-import moment from "moment";
+  httpGetMain,
+  httpPostMain,
+  httpPatchMain,
+} from "../../../helpers/httpMethods";
+import NoChatFound from "../conersations/noChatFound";
 
-export default function Conversation() {
-  const initialState = EditorState.createWithContent(
-    ContentState.createFromText("")
-  );
-  const [userMsg, setUsermsg] = useState([
-    {
-      img: "",
-      fullName: "",
-      msg: "",
-      date: "",
-      msgCount: "",
-      badge1: "",
-    },
-  ]);
 
-  const {
-    AppSocket,
-    //wsTickets,
-    setWsTicketFilter,
-    wsTicketFilter,
-    // setMsgHistory,
-    // msgHistory,
-  } = useContext(SocketDataContext);
-  const [loadSelectedMsg, setloadSelectedMsg] = useState("");
-  const [tickets, setTickets] = useState([]);
-  const [filterTicketsState, setFilterTicketsState] = useState([]);
-  const [ticket, setTicket] = useState([]);
-  const [LoadingTick, setLoadingTicks] = useState(true);
-  const [loadSingleTicket, setLoadSingleTicket] = useState(false);
-  const [SenderInfo, setSenderInfo] = useState(false);
-  const [singleTicketFullInfo, setTingleTicketFullInfo] = useState(false);
-  const [Category, setCategory] = useState([]);
-  const [editorState, setEditorState] = useState(initialState);
-  const [firstTimeLoad, setfirstTimeLoad] = useState(true);
-  const [MessageSenderId, setMessageSenderId] = useState("");
-  const [TicketId, setTicketId] = useState("");
-  const [showUserProfile, setshowUserProfile] = useState(false);
-  const [ReplyTicket, setReplyTicket] = useState({
-    plainText: "",
-    richText: "",
-  });
-  const [Statues, setStatues] = useState([]);
-  const [UserInfo, setUserInfo] = useState({});
-  const [ChatCol, setChatCol] = useState({
-    col1: "",
-    col2: "",
-  });
-  const [openSaveTicketModal, setopenSaveTicketModal] = useState(false);
-  const [filterChat, setFilterChat] = useState("system");
-  const [saveTicket, setSaveTicket] = useState({
-    customer: "",
-    subject: "",
-    description: [],
-    category: "",
-  });
-  const [sendingReply, setsendingReply] = useState(false);
-  const [msgHistory, setMsgHistory] = useState([]);
-  const [wsTickets, setwsTickets] = useState([]);
-  const [categoryUpdate, setCategoryUpdate] = useState("");
-  const [noResponseFound, setNoResponseFound] = useState(true);
-  const [TodayMsges, setTodayMsges] = useState([]);
-  const [YesterdayMsges, setYesterdayMsges] = useState([]);
-  const [AchiveMsges, setAchiveMsges] = useState([]);
-  const [ShowAchive, setShowAchive] = useState(false);
-  const [channel, setchannel] = useState("All");
-  const [status, setstatus] = useState("All");
-  useEffect(() => {
-    // getTickets();
-    sortMsges(msgHistory);
-  }, [msgHistory]);
+const CircleIcon = (props) => <span className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
 
-  useEffect(() => {
-    getStatues();
-    getCategories();
-  }, []);
-  useEffect(() => {
-    AppSocket.createConnection();
-    AppSocket.io.on(`ws_tickets`, (data) => {
-      console.log("this are Ticketsss", data?.data?.tickets);
-      setwsTickets(data?.data?.tickets);
-    });
-    AppSocket.io.on(`message`, (data) => {
-      console.log("this are history msbsg", data);
-      console.log(UserInfo);
-      let msg = {
-        created_at: data.created_at,
-        id: data.history.id,
-        plain_response: data.history.plain_response,
-        response: data.history.response,
-        type: "reply",
-        user: data.user,
-      };
-      console.log("msg>>>", msg);
+const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, currentTicket}) => {
 
-      setMsgHistory((item) => [...item, msg]);
-      // sortMsges((item) => [...item, msg]);
-    });
-    return () => {
-      AppSocket.io.disconnect();
-    };
-  }, []);
+    const {id} = useParams();
 
-  const sortMsges = (msgs) => {
-    console.log("msgHis", msgs);
-    let Today = [];
+    useEffect(() => {
+        // get current ticket when component mounts
+        getCurrentTicket(id);
 
-    let resultToday = msgs.filter((observation) => {
-      return (
-        moment(observation.created_at).format("DD/MM/YYYY") ==
-        moment(new Date()).format("DD/MM/YYYY")
-      );
-    });
-    let resultYesterday = msgs.filter((observation) => {
-      return (
-        moment(observation.created_at).format("DD/MM/YYYY") ==
-        moment().add(-1, "days").format("DD/MM/YYYY")
-      );
-    });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
-    let resultAchive = msgs.filter((observation) => {
-      return (
-        moment(observation.created_at).format("DD/MM/YYYY") !=
-          moment().add(-1, "days").format("DD/MM/YYYY") &&
-        moment(observation.created_at).format("DD/MM/YYYY") !=
-          moment(new Date()).format("DD/MM/YYYY")
-      );
-    });
-    setTodayMsges(resultToday);
-    setYesterdayMsges(resultYesterday);
-    setAchiveMsges(resultAchive);
-    console.log("Today>>>", resultToday);
-    console.log("Yesterdat msg ", resultYesterday);
-    console.log("resultAchive msg ", resultAchive);
-  };
-  useEffect(() => {
-    setLoadingTicks(true);
-    setTickets(wsTickets);
-    setLoadingTicks(false);
-  }, [wsTickets]);
+    useEffect(() => {
+      if (currentTicket) {
+        const {customer, subject} = currentTicket;
+        setSenderInfo(currentTicket);
+      }
 
-  const onEditorStateChange = (editorState) => {
-    // handleDescriptionValidation(editorState);
+    }, [currentTicket]);
 
-    const plainText = editorState.getCurrentContent().getPlainText();
-    const richText = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-    setEditorState(editorState);
-    setReplyTicket({ plainText, richText });
-    console.log(">>>>", richText, richText);
-  };
-  const getTickets = async () => {
-    const res = await httpGetMain("tickets?channel=whatsapp");
-    if (res?.status == "success") {
-      setLoadingTicks(true);
-      setTickets(res?.data?.tickets);
-      setLoadingTicks(false);
-    } else {
-      setLoadingTicks(false);
-      return NotificationManager.error(res?.er?.message, "Error", 4000);
-    }
-  };
+    // console.log("current ticket from tick", currentTicket);
 
-  const filterTicket = (value, type) => {
-    if (type == "channel") {
-      setchannel(value);
-      AppSocket.createConnection();
-      let data = { channel: value == "All" ? "" : value, per_page: 100 };
-      AppSocket.io.emit(`ws_tickets`, data);
-    }
 
-    if (type == "status") {
-      setstatus(value);
-      AppSocket.createConnection();
-      let data = { status: value == "All" ? "" : value, per_page: 100 };
-      AppSocket.io.emit(`ws_tickets`, data);
-    }
-  };
 
-  const replyTicket = async (reply, attachment) => {
-    console.log(reply);
-    const data = {
-      // type: "note",
-      response: reply.richText,
-      plainResponse: reply.plainText,
-      phoneNumber: singleTicketFullInfo.customer.phone_number,
-      // attachment: "",
-    };
-    console.log(singleTicketFullInfo.customer.phone_number);
-    console.log(data);
-    // setsendingReply(true);
-    const replyData = {
-      attachment: null,
-      created_at: new Date(),
-      plain_response: reply.plainText,
-      response: reply.richText,
-      // user: SenderInfo?.customer,
-      user: ticket[0]?.assignee,
-    };
-    console.log(replyData);
-    setMsgHistory((item) => [...item, replyData]);
-    const res = await httpPostMain(
-      `tickets/${singleTicketFullInfo.id}/replies`,
-      data
+    /** >>>>> FROM CODE-UI-ANDY */
+    const initialState = EditorState.createWithContent(
+      ContentState.createFromText("")
     );
-    if (res?.status == "success") {
-      // setsendingReply(false);
-      // ReloadloadSingleMessage();
-      setEditorState(initialState);
-      setReplyTicket({ plainText: "", richText: "" });
-    } else {
-      // setLoadingTicks(false);
-      setsendingReply(false);
-      return NotificationManager.error(res?.er?.message, "Error", 4000);
-    }
-  };
-
-  const ReloadloadSingleMessage = async () => {
-    setLoadSingleTicket(true);
-
-    const res = await httpGetMain(`tickets/${MessageSenderId}`);
-    if (res.status == "success") {
-      setTicket(res?.data);
-      setLoadSingleTicket(false);
-    } else {
-      setLoadSingleTicket(false);
-      return NotificationManager.error(res.er.message, "Error", 4000);
-    }
-  };
-
-  const getStatues = async () => {
-    const res = await httpGetMain(`statuses`);
-    if (res.status == "success") {
-      // getTickets();
-      setStatues(res?.data?.statuses);
-    } else {
-      return NotificationManager.error(res.er.message, "Error", 4000);
-    }
-  };
-
-  const getCategories = async () => {
-    const res = await httpGetMain(`categories`);
-    if (res.status == "success") {
-      setCategory(res?.data?.categories);
-    } else {
-      return NotificationManager.error(res.er.message, "Error", 4000);
-    }
-  };
-
-  const upTicketStatus = async (id) => {
-    const data = { statusId: id };
-    const res = await httpPatchMain(`tickets/${TicketId}`, data);
-    if (res.status == "success") {
-      // setStatues(res?.data?.statuses);
-      return NotificationManager.success(
-        "Ticket status update successfully",
-        "Success",
-        4000
-      );
-    } else {
-      return NotificationManager.error(res.er.message, "Error", 4000);
-    }
-  };
-
-  const loadSingleMessage = async ({ id, customer, assignee, subject }) => {
-    setShowAchive(false);
-    setAchiveMsges([]);
-    getUser(customer.id);
-    setChatCol({ col1: "hideColOne", col2: "showColTwo" });
-    setSenderInfo({ customer, subject });
-    setMessageSenderId(id);
-    setLoadSingleTicket(true);
-    setTingleTicketFullInfo();
-    setTicket([]);
-    let swData = { assigneeId: assignee.id, userId: customer.id };
-    UserInfo.id && AppSocket.io.leave(`${UserInfo.id}${assignee.id}`);
-    AppSocket.io.emit("join_private", swData);
-    const res = await httpGetMain(`tickets/${id}`);
-    setfirstTimeLoad(false);
-    if (res.status == "success") {
-      setTicket(res?.data);
-      setMsgHistory(res?.data[0]?.history);
-      // sortMsges(res?.data[0]?.history);
-      setMessageSenderId(res?.data[0]?.id);
-      setSaveTicket({
-        ...saveTicket,
-        customer: "",
-        subject: res?.data[0].subject,
-        description: res?.data[0].history,
-      });
-      console.log(res?.data[0]?.history);
-      setLoadSingleTicket(false);
-      checkRes();
-    } else {
-      setLoadSingleTicket(false);
-      return NotificationManager.error(res.er.message, "Error", 4000);
-    }
-  };
-
-  const getUser = async (id) => {
-    const res = await httpGetMain(`users/${id}`);
-    setfirstTimeLoad(false);
-    if (res.status == "success") {
-      setUserInfo(res.data);
-    } else {
-      setLoadSingleTicket(false);
-      return NotificationManager.error(res.er.message, "Error", 4000);
-    }
-  };
-
-  const updateTicket = async (status) => {
-    // if (categoryUpdate == "") {
-    //   NotificationManager.error("You need to update category to continue!");
-    // }
-    if (status == "") {
-      return;
-    }
-
-    let data = {
-      statusId: status,
-      priorityId: ticket[0].priority.id,
-      assigneeId: ticket[0].assignee.id,
-      categoryId: categoryUpdate,
-    };
-    console.log(data);
-    const res = await httpPatchMain(`tickets/${ticket[0].id}`);
-    // updateTicketBo(true)
-    if (res.status == "success") {
-      console.log(res);
-      closeSaveTicketModal();
-      NotificationManager.success(
-        "Ticket status successfully updated",
-        "Success"
-      );
-    } else {
-      return NotificationManager.error(res.er.message, "Error", 4000);
-    }
-  };
-
-  const closeSaveTicketModal = () => {
-    setopenSaveTicketModal(!openSaveTicketModal);
-    setSaveTicket({
+    const [userMsg, setUsermsg] = useState([
+      {
+        img: "",
+        fullName: "",
+        msg: "",
+        date: "",
+        msgCount: "",
+        badge1: "",
+      },
+    ]);
+  
+    const {
+      AppSocket,
+      //wsTickets,
+      setWsTicketFilter,
+      wsTicketFilter,
+      // setMsgHistory,
+      // msgHistory,
+    } = useContext(SocketDataContext);
+    const [loadSelectedMsg, setloadSelectedMsg] = useState("");
+    const [tickets, setTickets] = useState([]);
+    const [filterTicketsState, setFilterTicketsState] = useState([]);
+    const [ticket, setTicket] = useState([]);
+    const [LoadingTick, setLoadingTicks] = useState(true);
+    const [loadSingleTicket, setLoadSingleTicket] = useState(false);
+    const [SenderInfo, setSenderInfo] = useState(false);
+    const [singleTicketFullInfo, setTingleTicketFullInfo] = useState(false);
+    const [Category, setCategory] = useState([]);
+    const [editorState, setEditorState] = useState(initialState);
+    const [firstTimeLoad, setfirstTimeLoad] = useState(true);
+    const [MessageSenderId, setMessageSenderId] = useState("");
+    const [TicketId, setTicketId] = useState("");
+    const [showUserProfile, setshowUserProfile] = useState(false);
+    const [ReplyTicket, setReplyTicket] = useState({
+      plainText: "",
+      richText: "",
+    });
+    const [Statues, setStatues] = useState([]);
+    const [UserInfo, setUserInfo] = useState({});
+    const [ChatCol, setChatCol] = useState({
+      col1: "",
+      col2: "",
+    });
+    const [openSaveTicketModal, setopenSaveTicketModal] = useState(false);
+    const [filterChat, setFilterChat] = useState("system");
+    const [saveTicket, setSaveTicket] = useState({
       customer: "",
       subject: "",
       description: [],
       category: "",
     });
-  };
-
-  function createMarkup(data) {
-    return { __html: data };
-  }
-  const checkRes = () => {
-    let a = ticket?.map((data) => {
-      if (data.history.length === 0) {
-        setNoResponseFound(true);
+    const [sendingReply, setsendingReply] = useState(false);
+    const [msgHistory, setMsgHistory] = useState([]);
+    const [wsTickets, setwsTickets] = useState([]);
+    const [categoryUpdate, setCategoryUpdate] = useState("");
+    const [noResponseFound, setNoResponseFound] = useState(true);
+    const [TodayMsges, setTodayMsges] = useState([]);
+    const [YesterdayMsges, setYesterdayMsges] = useState([]);
+    const [AchiveMsges, setAchiveMsges] = useState([]);
+    const [ShowAchive, setShowAchive] = useState(false);
+    const [channel, setchannel] = useState("All");
+    const [status, setstatus] = useState("All");
+    useEffect(() => {
+      // getTickets();
+      sortMsges(msgHistory);
+    }, [msgHistory]);
+  
+    useEffect(() => {
+      getStatues();
+      getCategories();
+    }, []);
+    useEffect(() => {
+      AppSocket.createConnection();
+      AppSocket.io.on(`ws_tickets`, (data) => {
+        console.log("this are Ticketsss", data?.data?.tickets);
+        setwsTickets(data?.data?.tickets);
+      });
+      AppSocket.io.on(`message`, (data) => {
+        console.log("this are history msbsg", data);
+        console.log(UserInfo);
+        let msg = {
+          created_at: data.created_at,
+          id: data.history.id,
+          plain_response: data.history.plain_response,
+          response: data.history.response,
+          type: "reply",
+          user: data.user,
+        };
+        console.log("msg>>>", msg);
+  
+        setMsgHistory((item) => [...item, msg]);
+        // sortMsges((item) => [...item, msg]);
+      });
+      return () => {
+        AppSocket.io.disconnect();
+      };
+    }, []);
+  
+    const sortMsges = (msgs) => {
+      console.log("msgHis", msgs);
+      let Today = [];
+  
+      let resultToday = msgs.filter((observation) => {
+        return (
+          moment(observation.created_at).format("DD/MM/YYYY") ==
+          moment(new Date()).format("DD/MM/YYYY")
+        );
+      });
+      let resultYesterday = msgs.filter((observation) => {
+        return (
+          moment(observation.created_at).format("DD/MM/YYYY") ==
+          moment().add(-1, "days").format("DD/MM/YYYY")
+        );
+      });
+  
+      let resultAchive = msgs.filter((observation) => {
+        return (
+          moment(observation.created_at).format("DD/MM/YYYY") !=
+            moment().add(-1, "days").format("DD/MM/YYYY") &&
+          moment(observation.created_at).format("DD/MM/YYYY") !=
+            moment(new Date()).format("DD/MM/YYYY")
+        );
+      });
+      setTodayMsges(resultToday);
+      setYesterdayMsges(resultYesterday);
+      setAchiveMsges(resultAchive);
+      console.log("Today>>>", resultToday);
+      console.log("Yesterdat msg ", resultYesterday);
+      console.log("resultAchive msg ", resultAchive);
+    };
+    useEffect(() => {
+      setLoadingTicks(true);
+      setTickets(wsTickets);
+      setLoadingTicks(false);
+    }, [wsTickets]);
+  
+    const onEditorStateChange = (editorState) => {
+      // handleDescriptionValidation(editorState);
+  
+      const plainText = editorState.getCurrentContent().getPlainText();
+      const richText = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+      setEditorState(editorState);
+      setReplyTicket({ plainText, richText });
+      console.log(">>>>", richText, richText);
+    };
+    const getTickets = async () => {
+      const res = await httpGetMain("tickets?channel=whatsapp");
+      if (res?.status == "success") {
+        setLoadingTicks(true);
+        setTickets(res?.data?.tickets);
+        setLoadingTicks(false);
       } else {
-        setNoResponseFound(false);
+        setLoadingTicks(false);
+        return NotificationManager.error(res?.er?.message, "Error", 4000);
       }
-    });
-  };
-
-  // const _uploadImageCallBack = (file) => {
-  //   // long story short, every time we upload an image, we
-  //   // need to save it to the state so we can get it's data
-  //   // later when we decide what to do with it.
-
-  //   // Make sure you have a uploadImages: [] as your default state
-  //   let uploadedImages = uploadImgS;
-
-  //   const imageObject = {
-  //     file: file,
-  //     localSrc: URL.createObjectURL(file),
-  //   };
-
-  //   setUploadIMGs(imageObject);
-
-  //   uploadImgS(uploadedImages);
-
-  //   // We need to return a promise with the image src
-  //   // the img src we will use here will be what's needed
-  //   // to preview it in the browser. This will be different than what
-  //   // we will see in the index.md file we generate.
-  //   return new Promise((resolve, reject) => {
-  //     resolve({ data: { link: imageObject.localSrc } });
-  //   });
-  // };
-
-  const _uploadImageCallBack = (file) => {
-    // long story short, every time we upload an image, we
-    // need to save it to the state so we can get it's data
-    // later when we decide what to do with it.
-
-    // Make sure you have a uploadImages: [] as your default state
-    let uploadedImages = [];
-
-    const imageObject = {
-      file: file,
-      localSrc: URL.createObjectURL(file),
+    };
+  
+    const filterTicket = (value, type) => {
+      if (type == "channel") {
+        setchannel(value);
+        AppSocket.createConnection();
+        let data = { channel: value == "All" ? "" : value, per_page: 100 };
+        AppSocket.io.emit(`ws_tickets`, data);
+      }
+  
+      if (type == "status") {
+        setstatus(value);
+        AppSocket.createConnection();
+        let data = { status: value == "All" ? "" : value, per_page: 100 };
+        AppSocket.io.emit(`ws_tickets`, data);
+      }
+    };
+  
+    const replyTicket = async (reply, attachment) => {
+      console.log(reply);
+      const data = {
+        // type: "note",
+        response: reply.richText,
+        plainResponse: reply.plainText,
+        phoneNumber: singleTicketFullInfo.customer.phone_number,
+        // attachment: "",
+      };
+      console.log(singleTicketFullInfo.customer.phone_number);
+      console.log(data);
+      // setsendingReply(true);
+      const replyData = {
+        attachment: null,
+        created_at: new Date(),
+        plain_response: reply.plainText,
+        response: reply.richText,
+        // user: SenderInfo?.customer,
+        user: ticket[0]?.assignee,
+      };
+      console.log(replyData);
+      setMsgHistory((item) => [...item, replyData]);
+      const res = await httpPostMain(
+        `tickets/${singleTicketFullInfo.id}/replies`,
+        data
+      );
+      if (res?.status == "success") {
+        // setsendingReply(false);
+        // ReloadloadSingleMessage();
+        setEditorState(initialState);
+        setReplyTicket({ plainText: "", richText: "" });
+      } else {
+        // setLoadingTicks(false);
+        setsendingReply(false);
+        return NotificationManager.error(res?.er?.message, "Error", 4000);
+      }
+    };
+  
+    const ReloadloadSingleMessage = async () => {
+      setLoadSingleTicket(true);
+  
+      const res = await httpGetMain(`tickets/${MessageSenderId}`);
+      if (res.status == "success") {
+        setTicket(res?.data);
+        setLoadSingleTicket(false);
+      } else {
+        setLoadSingleTicket(false);
+        return NotificationManager.error(res.er.message, "Error", 4000);
+      }
+    };
+  
+    const getStatues = async () => {
+      const res = await httpGetMain(`statuses`);
+      if (res.status == "success") {
+        // getTickets();
+        setStatues(res?.data?.statuses);
+      } else {
+        return NotificationManager.error(res.er.message, "Error", 4000);
+      }
+    };
+  
+    const getCategories = async () => {
+      const res = await httpGetMain(`categories`);
+      if (res.status == "success") {
+        setCategory(res?.data?.categories);
+      } else {
+        return NotificationManager.error(res.er.message, "Error", 4000);
+      }
+    };
+  
+    const upTicketStatus = async (id) => {
+      const data = { statusId: id };
+      const res = await httpPatchMain(`tickets/${TicketId}`, data);
+      if (res.status == "success") {
+        // setStatues(res?.data?.statuses);
+        return NotificationManager.success(
+          "Ticket status update successfully",
+          "Success",
+          4000
+        );
+      } else {
+        return NotificationManager.error(res.er.message, "Error", 4000);
+      }
+    };
+  
+    const loadSingleMessage = async ({ id, customer, assignee, subject }) => {
+      setShowAchive(false);
+      setAchiveMsges([]);
+      getUser(customer.id);
+      setChatCol({ col1: "hideColOne", col2: "showColTwo" });
+      setSenderInfo({ customer, subject });
+      setMessageSenderId(id);
+      setLoadSingleTicket(true);
+      setTingleTicketFullInfo();
+      setTicket([]);
+      let swData = { assigneeId: assignee.id, userId: customer.id };
+      UserInfo.id && AppSocket.io.leave(`${UserInfo.id}${assignee.id}`);
+      AppSocket.io.emit("join_private", swData);
+      const res = await httpGetMain(`tickets/${id}`);
+      setfirstTimeLoad(false);
+      if (res.status == "success") {
+        setTicket(res?.data);
+        setMsgHistory(res?.data[0]?.history);
+        // sortMsges(res?.data[0]?.history);
+        setMessageSenderId(res?.data[0]?.id);
+        setSaveTicket({
+          ...saveTicket,
+          customer: "",
+          subject: res?.data[0].subject,
+          description: res?.data[0].history,
+        });
+        console.log(res?.data[0]?.history);
+        setLoadSingleTicket(false);
+        checkRes();
+      } else {
+        setLoadSingleTicket(false);
+        return NotificationManager.error(res.er.message, "Error", 4000);
+      }
+    };
+  
+    const getUser = async (id) => {
+      const res = await httpGetMain(`users/${id}`);
+      setfirstTimeLoad(false);
+      if (res.status == "success") {
+        setUserInfo(res.data);
+      } else {
+        setLoadSingleTicket(false);
+        return NotificationManager.error(res.er.message, "Error", 4000);
+      }
+    };
+  
+    const updateTicket = async (status) => {
+      // if (categoryUpdate == "") {
+      //   NotificationManager.error("You need to update category to continue!");
+      // }
+      if (status == "") {
+        return;
+      }
+  
+      let data = {
+        statusId: status,
+        priorityId: ticket[0].priority.id,
+        assigneeId: ticket[0].assignee.id,
+        categoryId: categoryUpdate,
+      };
+      console.log(data);
+      const res = await httpPatchMain(`tickets/${ticket[0].id}`);
+      // updateTicketBo(true)
+      if (res.status == "success") {
+        console.log(res);
+        closeSaveTicketModal();
+        NotificationManager.success(
+          "Ticket status successfully updated",
+          "Success"
+        );
+      } else {
+        return NotificationManager.error(res.er.message, "Error", 4000);
+      }
+    };
+  
+    const closeSaveTicketModal = () => {
+      setopenSaveTicketModal(!openSaveTicketModal);
+      setSaveTicket({
+        customer: "",
+        subject: "",
+        description: [],
+        category: "",
+      });
+    };
+  
+    function createMarkup(data) {
+      return { __html: data };
+    }
+    const checkRes = () => {
+      let a = ticket?.map((data) => {
+        if (data.history.length === 0) {
+          setNoResponseFound(true);
+        } else {
+          setNoResponseFound(false);
+        }
+      });
+    };
+  
+    // const _uploadImageCallBack = (file) => {
+    //   // long story short, every time we upload an image, we
+    //   // need to save it to the state so we can get it's data
+    //   // later when we decide what to do with it.
+  
+    //   // Make sure you have a uploadImages: [] as your default state
+    //   let uploadedImages = uploadImgS;
+  
+    //   const imageObject = {
+    //     file: file,
+    //     localSrc: URL.createObjectURL(file),
+    //   };
+  
+    //   setUploadIMGs(imageObject);
+  
+    //   uploadImgS(uploadedImages);
+  
+    //   // We need to return a promise with the image src
+    //   // the img src we will use here will be what's needed
+    //   // to preview it in the browser. This will be different than what
+    //   // we will see in the index.md file we generate.
+    //   return new Promise((resolve, reject) => {
+    //     resolve({ data: { link: imageObject.localSrc } });
+    //   });
+    // };
+  
+    const _uploadImageCallBack = (file) => {
+      // long story short, every time we upload an image, we
+      // need to save it to the state so we can get it's data
+      // later when we decide what to do with it.
+  
+      // Make sure you have a uploadImages: [] as your default state
+      let uploadedImages = [];
+  
+      const imageObject = {
+        file: file,
+        localSrc: URL.createObjectURL(file),
+      };
+  
+      uploadedImages.push(imageObject);
+      console.log(imageObject);
+  
+      //this.setState(uploadedImages: uploadedImages)
+  
+      // We need to return a promise with the image src
+      // the img src we will use here will be what's needed
+      // to preview it in the browser. This will be different than what
+      // we will see in the index.md file we generate.
+      return new Promise((resolve, reject) => {
+        resolve({ data: { link: imageObject.localSrc } });
+      });
     };
 
-    uploadedImages.push(imageObject);
-    console.log(imageObject);
+    /* <<<<<< FROM CODE-UI-ANDY */
 
-    //this.setState(uploadedImages: uploadedImages)
 
-    // We need to return a promise with the image src
-    // the img src we will use here will be what's needed
-    // to preview it in the browser. This will be different than what
-    // we will see in the index.md file we generate.
-    return new Promise((resolve, reject) => {
-      resolve({ data: { link: imageObject.localSrc } });
-    });
-  };
+    useEffect(() => {
 
-  return (
-    <React.Fragment>
-      <div className="conversation-wrap codei-ui-andy-setDefaults">
-        <div className="conversation-layout">
-          {/* CHAT COL ONE */}
-          <div className={`conversation-layout-col-one`}>
-            <div className="message-toggles">
-              <div className="messageType">
-                <FormControl variant="outlined">
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    onChange={(e) => {
-                      filterTicket(e.target.value, "channel");
+      if (isCurrentTicketLoaded && currentTicket) {
+        loadSingleMessage(currentTicket);
+        console.log('loading messages');
+      }
+
+    }, [isCurrentTicketLoaded, currentTicket])
+
+
+    return (
+        <Fragment>
+            {!isCurrentTicketLoaded
+                ? <div className="single-cust-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
+                : !currentTicket ? <div>No Ticket Found.</div> : <div
+                    style={{
+                    gridTemplateColumns: "280px 1fr",
+                    border: '1px solid #f1f1f1'
+                }}
+                    className="d-grid mb-4">
+                    <div className="pt-2"><UserProfile ticket={[currentTicket]}  /></div>
+
+                    {/* <div
+                        style={{
+                        borderRight: '1px solid #f1f1f1'
                     }}
-                    label="Filter"
-                    value={channel}
-                  >
-                    {/* <MenuItem value=""></MenuItem> */}
-                    <MenuItem value="All" label="All">
-                      Channels
-                    </MenuItem>
-                    <MenuItem value="facebook">Facebook</MenuItem>
-                    <MenuItem value="whatsapp">Whatsapp</MenuItem>
-                    <MenuItem value="email">Email</MenuItem>
-                    <MenuItem value="liveChat">Live Chat</MenuItem>
-                  </Select>
-                </FormControl>
-              </div>
-              <div className="messageOpenClose">
-                <FormControl variant="outlined">
-                  <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    onChange={(e) => {
-                      filterTicket(e.target.value, "status");
+                        className="bg-primary py-5 px-3 bg-white">
+                        <div className="user-initials-lg">
+                            <div className="user-initials blue me-auto ms-auto">{getUserInitials(`${currentTicket.customer?.firstname} ${currentTicket.customer?.lastname}`)}</div>
+                            <div className="text-center mt-3">
+                                <h4 className="text-capitalize">{`${currentTicket.customer?.firstname} ${currentTicket.customer?.lastname}`}</h4>
+                                <p className="text-muted">Gillette Group International</p>
+                            </div>
+                        </div>
+                        <hr className="op-1"/>
+                        <div className="py-3">
+                            <ul className="cust-profile-info">
+                                <li>
+                                    <div><CircleIcon icon={ProfileLightIcon}/></div>
+                                    <div>
+                                        <h6>Assignee</h6>
+                                        <p className="text-muted text-capitalize">{`${currentTicket.assignee.firstname} ${currentTicket.assignee.lastname}`}</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div><CircleIcon icon={TicketIcon}/></div>
+                                    <div>
+                                        <h6>ID</h6>
+                                        <p className="text-muted">{id?.slice(-8).toUpperCase()}</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div><CircleIcon icon={WorkIcon}/></div>
+                                    <div>
+                                        <h6>Priority</h6>
+                                        <p className="text-muted">{currentTicket.priority?.name}</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div><CircleIcon icon={FolderIcon}/></div>
+                                    <div>
+                                        <h6>Stage</h6>
+                                        <p className="text-muted">{currentTicket.status?.status}</p>
+                                    </div>
+                                </li>
+                            </ul>
+
+                        </div>
+
+                        <hr className="op-1"/>
+
+                        <div className="text-center mt-4">
+
+                        </div>
+                    </div> */}
+
+                    <div
+                        style={{
+                        overflowX: "hidden"
                     }}
-                    value={status}
-                  >
-                    <MenuItem value="All">Stages</MenuItem>
-                    {Statues?.map((data) => {
-                      return <MenuItem value={data.id}>{data.status}</MenuItem>;
-                    })}
-                  </Select>
-                </FormControl>
-              </div>
-            </div>
+                        className="bg-secondary py-3 pt-0 bg-white">
 
-            <div className="search-chat-con">
-              <form>
-                <div className="hjdwc">
-                  <input placeholder="Search" type="text" />
-                  <div className="search-chat-searchIcon">
-                    <img src={searchIcon} alt="" />
-                  </div>
-                </div>
-              </form>
-            </div>
-            <MessageList
-              tickets={tickets}
-              LoadingTick={LoadingTick}
-              loadSingleMessage={loadSingleMessage}
-              setTingleTicketFullInfo={setTingleTicketFullInfo}
-              setTicketId={setTicketId}
-              filterChat={filterChat}
-              filterTicketsState={filterTicketsState}
-            />
-          </div>
+                        {/* Conversation Part */}
 
-          {/* CHAT COL ONE END*/}
+
+
+
 
           {/* CHAT COL TWO */}
 
@@ -535,7 +576,7 @@ export default function Conversation() {
             // style={showUserProfile ? { width: "calc(100% - 636px)" } : {}}
           >
             {firstTimeLoad ? (
-              <NoChatFound value="Click on a ticket to get started" />
+              <div className="single-cust-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
             ) : loadSingleTicket ? (
               <div
                 style={{
@@ -571,7 +612,7 @@ export default function Conversation() {
                   <NoChatFound value="No response found" />
                 </p>
               ) : ( */}
-                <React.Fragment>
+                <Fragment>
                   <div className="conversationHeaderV2">
                     <div className="conversationHeaderMainV2">
                       <div className="custormChatHeaderInfo">
@@ -886,7 +927,7 @@ export default function Conversation() {
                     </div>
                   </div> */}
                   </div>
-                </React.Fragment>
+                </Fragment>
                 {/* CHAT COMMENT BOX SECTION */}
                 <div className="conversationCommentBox">
                   <div className="single-chat-ckeditor">
@@ -993,116 +1034,24 @@ export default function Conversation() {
 
           {/* CHAT COL TWO END */}
 
-          {/* CHAT COL THREE */}
-          <div className="conversation-layout-col-three">
-            {firstTimeLoad ? (
-              ""
-            ) : loadSingleTicket ? (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "50px",
-                  width: "100%",
-                }}
-              >
-                {" "}
-                <ClipLoader
-                  color="#0d4166"
-                  loading={loadSingleTicket}
-                  size={35}
-                />
-              </div>
-            ) : (
-              <UserProfile UserInfo={UserInfo} ticket={ticket} />
-            )}
-          </div>
-          {/* CHAT COL THREE END */}
-        </div>
-      </div>
-      <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal} center>
-        <div className="saveTicketWrapModal">
-          <div className="modalHeaderSaveT">
-            Kindly update ticket before closing the chat
-          </div>
 
-          <div className="saveTicketModalForm">
-            <div className="ticketmodalInput-twoCol">
-              <div className="ticketmodalInputWrapMain">
-                <label htmlFor="">Customer</label>
-                <input
-                  value={`${capitalizeFirstLetter(
-                    ticket[0]?.customer?.firstname
-                  )} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
-                  type="text"
-                  disabled
-                />
-              </div>
+  
 
-              <div className="ticketmodalInputWrapMain">
-                <label htmlFor="">Category</label>
-                <select
-                  name=""
-                  id=""
-                  onChange={(e) => {
-                    setCategoryUpdate(e.target.value);
-                  }}
-                  style={{ fontSize: "12px" }}
-                >
-                  <option value="">Select Category</option>
-                  {Category?.map((data) => {
-                    return (
-                      <option key={data.id} value={data?.id}>
-                        {data?.name}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
-            </div>
 
-            <div className="ticketmodalInput-OneCol">
-              <div className="ticketmodalInputWrapMainOne">
-                <label htmlFor="">Subject</label>
-                <input
-                  type="text"
-                  value={`${saveTicket.subject} `}
-                  type="text"
-                  disabled
-                  style={{ fontSize: "12px" }}
-                />
-              </div>
-            </div>
 
-            <div className="descriptionWrap">
-              <label htmlFor="">Description</label>
-              <textarea
-                style={{ padding: "10px" }}
-                name=""
-                id=""
-                value={`${saveTicket?.description?.map((data) => {
-                  return data?.plain_response;
-                })} `}
-                style={{ fontSize: "12px", padding: "7px" }}
-              ></textarea>
-            </div>
 
-            <div className="closeTicketModdalj">
-              <select
-                name=""
-                id=""
-                onChange={(e) => updateTicket(e.target.value)}
-              >
-                <option value="">Save as</option>
-                {Statues?.map((data) => {
-                  return <option value={data.id}>{data.status}</option>;
-                })}
-              </select>
-            </div>
-          </div>
-        </div>
-      </Modal>
-    </React.Fragment>
-  );
+
+
+                        
+
+                    </div>
+
+                </div>}
+
+        </Fragment>
+    )
 }
+
+const mapStateToProps = (state, ownProps) => ({tickets: state.ticket.tickets, isTicketLoaded: state.ticket.isTicketLoaded, isCurrentTicketLoaded: state.ticket.isCurrentTicketLoaded, currentTicket: state.ticket.currentTicket});
+
+export default connect(mapStateToProps, {getCurrentTicket})(Ticket);

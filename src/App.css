@@ -670,6 +670,10 @@ label.file-picker object.lg-icon {
   background-color: #f2f7fa !important;
 }
 
+.black-text {
+  color: #000000;
+}
+
 /* ** FROM STYLE.CSS */
 
 /* * placeholder sytling */

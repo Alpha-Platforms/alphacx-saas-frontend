@@ -1,0 +1,107 @@
+.pageHeaderInter p {
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 20px;
+}
+
+.interSocialAccountsTab {
+  display: flex;
+  margin-top: 15px;
+  align-items: center;
+}
+
+.interSocialAccountsTab p {
+  margin-right: 25px;
+  display: block;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.interSocialAccountsTab .activeSocial::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 5px;
+  background-color: #006298;
+}
+
+.interSocialAccountsTab .activeSocial {
+  color: #006298;
+}
+
+.connectViaWhatsappInstr {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.connectViaWhatsappInstr img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.connectViaInstText p {
+  margin: 0;
+}
+
+.connectViaInstText p:nth-child(1) {
+  margin-bottom: 2px;
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 17px;
+}
+
+.connectViaInstText p:nth-child(2) {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.connectViaTwilSoInbt {
+  margin-top: 20px;
+  font-size: 15px;
+}
+
+.inputContainInter {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 15px;
+  width: 470px;
+}
+
+.inputContainInter input {
+  /* opacity: 0.1; */
+  border: 1px solid #0063983d;
+  box-sizing: border-box;
+  border-radius: 2px;
+  width: 100%;
+  height: 45px;
+  border-radius: 4px;
+  padding-top: 5px;
+  color: rgba(0, 0, 0, 0.692);
+  outline: none;
+  font-size: 13px;
+  padding-left: 10px;
+  margin-top: 5px;
+}
+
+.inputContainInter label {
+  /* opacity: 0.1; */
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.buttonSubSocialInt button {
+  width: 130px;
+  background: #006298;
+  border-radius: 4px;
+  height: 45px;
+  border: none;
+  color: white;
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+.rpageDmatsoci {
+  width: 50%;
+  border: 0.5px solid rgba(43, 48, 77, 0.075);
+}
