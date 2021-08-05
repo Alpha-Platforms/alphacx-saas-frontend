@@ -10,6 +10,8 @@ import {getPaginatedUsers} from '../../../../reduxstore/actions/userActions';
 import CreateUserModal from './components/CreateUserModal';
 import ImportUserModal from './components/ImportUserModal';
 import InviteUserModal from './components/InviteUserModal';
+import {ReactComponent as DotSvg} from '../../../../assets/icons/dots.svg';
+import {Link} from 'react-router-dom';
 // import moment from 'moment';,
 // import {ReactComponent as CardDesignSvg} from '../../../../assets/icons/Card-Design.svg';
 
@@ -175,7 +177,20 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgen
                                         render: rowDate => (<div class="form-check form-switch">
                                                 <input class="form-check-input form-check-input-lg mt-1" type="checkbox"/>
                                             </div>)
-                                    }
+                                    }, {
+                                    title: '',
+                                    field: 'dropdownAction',
+                                    render: rowData => (<Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+                                                                <Dropdown.Toggle variant="transparent" size="sm">
+                                                                    <span className="cust-table-dots"><DotSvg/></span>
+                                                                </Dropdown.Toggle>
+                                                                <Dropdown.Menu>
+                                                                    <Dropdown.Item eventKey="1"><Link to="/settings/users/personal-info-settings"><span className="black-text">Edit</span></Link></Dropdown.Item>
+                                                                    <Dropdown.Item eventKey="2"><span className="black-text">Delete</span></Dropdown.Item>
+                                                                </Dropdown.Menu>
+                                                            </Dropdown>)
+                // render: rowData => (<div><span className="cust-table-dots"><DotSvg/></span></div>)
+            }
                                 ]
                             }
                             data = {agents.map(({firstname,
