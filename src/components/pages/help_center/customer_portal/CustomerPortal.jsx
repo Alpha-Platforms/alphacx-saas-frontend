@@ -86,12 +86,12 @@ const CustomerPortal = () => {
                 </label>
                 <button className="add-file">Add file or drag file here</button>
               </div>
-              <button className="btn btn-sm ms-2 f-12 bg-custom px-4 mt-3 mb-3">
+              <button className="btn btn-sm ms-2 f-12 bg-custom px-4 mt-3 mb-2">
                 Submit
               </button>
             </form>
             <StarRating numOfStars={5} />
-            <p>Does our service make you happy?</p>
+            <p className="mt-2">Does our service make you happy?</p>
           </div>
         </div>
       </div>
