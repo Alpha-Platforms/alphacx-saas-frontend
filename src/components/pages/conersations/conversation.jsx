@@ -477,7 +477,7 @@ export default function Conversation() {
                   >
                     {/* <MenuItem value=""></MenuItem> */}
                     <MenuItem value="All" label="All">
-                      All
+                      Channels
                     </MenuItem>
                     <MenuItem value="facebook">Facebook</MenuItem>
                     <MenuItem value="whatsapp">Whatsapp</MenuItem>
@@ -496,7 +496,7 @@ export default function Conversation() {
                     }}
                     value={status}
                   >
-                    <MenuItem value="All">All</MenuItem>
+                    <MenuItem value="All">Stages</MenuItem>
                     {Statues?.map((data) => {
                       return <MenuItem value={data.id}>{data.status}</MenuItem>;
                     })}

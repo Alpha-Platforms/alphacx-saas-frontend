@@ -51,6 +51,8 @@ import SettingsEmail from "./components/pages/settings/email/emailSettings";
 import UserList from "./components/pages/settings/users/UserList";
 import UserPersonal from "./components/pages/settings/users/UserPersonal";
 import Fields from "./components/pages/settings/fields/Fields";
+import SocialIntegrations from "./components/pages/settings/socialIntegrations";
+
 import ScrollToTop from "./components/helpers/ScrollToTop";
 import GroupList from "./components/pages/settings/groups/GroupList";
 import RoleList from "./components/pages/settings/roles/RoleList";
@@ -291,6 +293,12 @@ const SiteRouter = connect(mapStateToProps, {
             pageName="Settings"
             component={SettingsEmail}
           />
+            <DefaultLayoutRoute
+            exact
+            path="/settings/integrations"
+            pageName="Integration Settings"
+            component={SocialIntegrations}/>
+
           <DefaultLayoutRoute
             exact
             path="/settings/notifications"
