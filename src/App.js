@@ -68,6 +68,7 @@ import NotificationSettings from "./components/pages/settings/notifications/Noti
 import NewEmailTemplate from "./components/pages/settings/notifications/components/NewEmailTemplate";
 import CannedResponsesSettings from "./components/pages/settings/canned_responses/CannedResponsesSettings";
 import NewCannedResponse from "./components/pages/settings/canned_responses/components/NewCannedResponse";
+import CustomerPortal from "./components/pages/help_center/customer_portal/CustomerPortal";
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -148,6 +149,7 @@ const SiteRouter = connect(mapStateToProps, {
           <Route exact path="/register" component={Register} />
           {/* help pages */}
           <Route exact path="/help" component={HelpCenter} />
+          <Route exact path="/help/tickets" component={CustomerPortal} />
           <Route exact path="/help/:topic" component={ArticleList} />
           <Route exact path="/help/:topic/:article" component={Article} />
 
