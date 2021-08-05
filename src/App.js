@@ -50,6 +50,8 @@ import SettingsEmail from "./components/pages/settings/email/emailSettings";
 import UserList from "./components/pages/settings/users/UserList";
 import UserPersonal from "./components/pages/settings/users/UserPersonal";
 import Fields from "./components/pages/settings/fields/Fields";
+import SocialIntegrations from "./components/pages/settings/socialIntegrations";
+
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -199,6 +201,12 @@ const SiteRouter = connect(mapStateToProps, {
             path="/settings/email/:action"
             pageName="Settings"
             component={SettingsEmail}
+          />
+            <DefaultLayoutRoute
+            exact
+            path="/settings/integration_settings"
+            pageName="Integration Settings"
+            component={SocialIntegrations}
           />
           {/* 
           ...
