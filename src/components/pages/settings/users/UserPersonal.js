@@ -49,28 +49,20 @@ const UserPersonal = () => {
                                 placeholder="seunorofin@gmail.com"/>
                         </div>
                         <div className="form-group mt-3">
-                            <label htmlFor="userGroup" className="mb-1">Group</label>
+                            <label htmlFor="userRole" className="mb-1">Role</label>
                             <input
                                 type="password"
                                 className="form-control"
-                                id="userGroup"
+                                id="userRole"
                                 placeholder="Orofin"/>
                         </div>
                         <div className="form-group mt-3">
-                            <label htmlFor="userDepartment" className="mb-1">Department</label>
+                            <label htmlFor="userTeam" className="mb-1">Team</label>
                             <input
                                 type="password"
                                 className="form-control"
-                                id="userDepartment"
+                                id="userTeam"
                                 placeholder="department"/>
-                        </div>
-                        <div className="form-group mt-3">
-                            <label htmlFor="userLocation" className="mb-1">Location</label>
-                            <input
-                                type="password"
-                                className="form-control"
-                                id="userLocation"
-                                placeholder="Location"/>
                         </div>
                         <div className="mt-4 pt-1">
                             <button type="submit" className="btn btn-primary btn-sm bg-at-blue-light">Password Reset</button>
