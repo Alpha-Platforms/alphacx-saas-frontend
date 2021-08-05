@@ -5,6 +5,7 @@ import EmptyArticle from "../../../../assets/images/empty_article.png";
 import { httpGetMain } from "../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const HelpCenterSettings = () => {
   const [articles, setArticles] = useState([]);
@@ -48,12 +49,12 @@ const HelpCenterSettings = () => {
             <div class="d-flex justify-content-between flex-row">
               <h5 class="mt-3 mb-4 fs-6 fw-bold">Help Center Settings</h5>
               <div>
-                <a
+                <Link
                   class="btn btn-primary btn-sm ms-2"
-                  href="/settings/help-center/article"
+                  to="/settings/help-center/article"
                 >
                   <span>New Article</span>
-                </a>
+                </Link>
               </div>
             </div>
             <div class="form-group">
@@ -110,12 +111,12 @@ const HelpCenterSettings = () => {
                   You currently have no Help Center Article record at <br />
                   the moment
                 </p>
-                <a
+                <Link
                   class="btn btn-sm btn-primary"
-                  href="/settings/help-center/article"
+                  to="/settings/help-center/article"
                 >
                   New Article
-                </a>
+                </Link>
               </div>
             )}
             {articles?.articles?.length > 0 && (

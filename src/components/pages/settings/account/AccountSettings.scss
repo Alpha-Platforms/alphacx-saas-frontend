@@ -1,0 +1,22 @@
+.account-settings {
+  height: 80vh;
+  border-radius: 8px;
+  overflow-y: auto;
+  #uploadPersonalPhotoInputImgPreview {
+    overflow: hidden;
+  }
+  textarea {
+    resize: none;
+  }
+  .avatarImage {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+  .separator {
+    width: 15px;
+    height: 3px;
+    background-color: #2b304db3;
+    margin: 0 10px;
+  }
+}

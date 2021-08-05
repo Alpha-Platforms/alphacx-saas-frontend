@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../conersations/conversation.css";
+import "../../../styles/Setting.css";
 
 // import searchIcon from "../../../assets/imgF/Search.png";
 import AgentLightIcon from "../../../assets/icons/agent_light.svg";
@@ -28,12 +29,14 @@ import UserBWIcon from "../../../assets/icons/Discount-blue.svg";
 import DiscountBlueIcon from "../../../assets/icons/Touch-blue.svg";
 import HeartBWIcon from "../../../assets/icons/Heart-BW.svg";
 import RoleLightIcon from "../../../assets/icons/role_light.svg";
+import LivechatIcon from "../../../assets/icons/chat-blue.svg";
+import DocumentIcon from "../../../assets/icons/doc-blue.svg";
 import { Link } from "react-router-dom";
 
 export default function SettingsHome() {
   return (
     <>
-      <div className="form-group w-25 mb-4 rounded-pill">
+      <div className="form-group mb-4 rounded-pill">
         <input
           type="search"
           className="form-control magnifying-glass py-2"
@@ -42,10 +45,10 @@ export default function SettingsHome() {
       </div>
 
       <div
-        className="flex-wrap d-flex align-items-start gap-3"
+        className="flex-wrap d-flex align-items-start"
         style={{ flexBasis: "32%" }}
       >
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
+        <div className="setting-link-item border rounded bg-light">
           <Link
             to="/settings/users"
             className="d-block cursor text-decoration-none"
@@ -57,16 +60,16 @@ export default function SettingsHome() {
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Users</h6>
                 <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Assign user type, persmissions and other details
+                  Create users, assign permissions
                 </p>
               </div>
             </div>
           </Link>
         </div>
 
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a
-            href="settings/automation"
+        <div className="setting-link-item border rounded bg-light">
+          <Link
+            to="settings/automation"
             className="d-block cursor text-decoration-none"
           >
             <div className="d-flex align-items-center p-md-4">
@@ -80,11 +83,14 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
+        <div className="setting-link-item border rounded bg-light">
+          <Link
+            to="/settings/account"
+            className="d-block cursor text-decoration-none"
+          >
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={ShieldIcon} alt="" />
@@ -96,28 +102,12 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={DepartmentLightIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Departments</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Description here
-                </p>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a
-            href="/settings/email"
+        <div className="setting-link-item border rounded bg-light">
+          <Link
+            to="/settings/email"
             className="d-block cursor text-decoration-none"
           >
             <div className="d-flex align-items-center p-md-4">
@@ -132,80 +122,45 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <Link
-            to="/settings/fields"
-            className="d-block cursor text-decoration-none"
-          >
+        <div className="setting-link-item border rounded bg-light">
+          <Link to="#" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
-                <img src={FieldsLightIcon} alt="" />
+                <img src={UserBWIcon} alt="" />
               </div>
               <div className="ms-3">
-                <h6 className="text-dark mb-0">Fields</h6>
+                <h6 className="text-dark mb-0">Profile Settings</h6>
                 <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Capture specific information for customers, tickets and users
+                  Update your user profile
                 </p>
               </div>
             </div>
           </Link>
         </div>
 
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
+        <div className="setting-link-item border rounded bg-light">
           <Link
-            to="/settings/forms"
+            to="/settings/groups"
             className="d-block cursor text-decoration-none"
           >
             <div className="d-flex align-items-center p-md-4">
               <div className="">
-                <img src={FormsLightIcon} alt="" />
+                <img src={FolderBlueIcon} alt="" />
               </div>
               <div className="ms-3">
-                <h6 className="text-dark mb-0">Forms</h6>
+                <h6 className="text-dark mb-0">Teams</h6>
                 <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Create custom forms for tickets and customers
+                  Organize users in your organization
                 </p>
               </div>
             </div>
           </Link>
         </div>
 
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={HierarchyLightIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Hierachy</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Define structures and levels within your organization
-                </p>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={LocationLightIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Locations</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Set different locations for your organization
-                </p>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
+        <div className="setting-link-item border rounded bg-light">
           <Link
             to="/settings/roles"
             className="d-block cursor text-decoration-none"
@@ -224,126 +179,7 @@ export default function SettingsHome() {
           </Link>
         </div>
 
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={ReportsLightIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Reports</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Generate analytical reports
-                </p>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <Link
-            to="/settings/groups"
-            className="d-block cursor text-decoration-none"
-          >
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={User3BlueIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Groups</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Organize users in your organization
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={SendBlueIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Notifications</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Assign notifications roles to users
-                </p>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={ActivityBlueIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">AD/LDAP</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Integrate Active Directory/LDAP
-                </p>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a
-            href="/settings/help-center"
-            className="d-block cursor text-decoration-none"
-          >
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={SearchBlueIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Help Centre</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Learn how to use AlphaCX, fix a problem and get answers to
-                  your questions
-                </p>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={DatabaseBlueIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Databases Integration</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Import existing database into your organization
-                </p>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={MessageBWIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">API Import</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Description here
-                </p>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
+        <div className="setting-link-item border rounded bg-light">
           <Link
             to="/settings/ticket-settings"
             className="d-block cursor text-decoration-none"
@@ -362,104 +198,47 @@ export default function SettingsHome() {
           </Link>
         </div>
 
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
+        <div className="setting-link-item border rounded bg-light">
+          <Link
+            to="/settings/help-center"
+            className="d-block cursor text-decoration-none"
+          >
             <div className="d-flex align-items-center p-md-4">
               <div className="">
-                <img src={SocialBlurbIcon} alt="" />
+                <img src={SearchBlueIcon} alt="" />
               </div>
               <div className="ms-3">
-                <h6 className="text-dark mb-0">Social Media</h6>
+                <h6 className="text-dark mb-0">Help Centre</h6>
                 <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Record of events and changes
+                  Learn how to use AlphaCX, fix a problem and get answers to
+                  your questions
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
+        <div className="setting-link-item border rounded bg-light">
+          <Link
+            to="/settings/notifications"
+            className="d-block cursor text-decoration-none"
+          >
             <div className="d-flex align-items-center p-md-4">
               <div className="">
-                <img src={ChartBlueIcon} alt="" />
+                <img src={SendBlueIcon} alt="" />
               </div>
               <div className="ms-3">
-                <h6 className="text-dark mb-0">Audit Log</h6>
+                <h6 className="text-dark mb-0">Notifications</h6>
                 <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Integrate third party apps such as Facebook and Twitter
+                  Assign notifications roles to users
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={StarBWIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Branding</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Change outlook of your organization
-                </p>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={UserBWIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Profiling Settings</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Update your user profile
-                </p>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={DiscountBlueIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Subscription & License</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  View subscription status
-                </p>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={HeartBWIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Self-Service Portal</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Description here
-                </p>
-              </div>
-            </div>
-          </a>
-        </div>
-
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
+        <div className="setting-link-item border rounded bg-light">
+          <Link to="#" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={RoleLightIcon} alt="" />
@@ -471,11 +250,78 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
 
-        <div className="setting-link-item f-basis-30 border rounded bg-light">
-          <a href="#" className="d-block cursor text-decoration-none">
+        <div className="setting-link-item border rounded bg-light">
+          <Link to="#" className="d-block cursor text-decoration-none">
+            <div className="d-flex align-items-center p-md-4">
+              <div className="">
+                <img src={StarBWIcon} alt="" />
+              </div>
+              <div className="ms-3">
+                <h6 className="text-dark mb-0">Branding</h6>
+                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                  Change outlook of your organization
+                </p>
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        <div className="setting-link-item border rounded bg-light">
+          <Link to="#" className="d-block cursor text-decoration-none">
+            <div className="d-flex align-items-center p-md-4">
+              <div className="">
+                <img src={SocialBlurbIcon} alt="" />
+              </div>
+              <div className="ms-3">
+                <h6 className="text-dark mb-0">Social Media</h6>
+                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                  Record of events and changes
+                </p>
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        <div className="setting-link-item border rounded bg-light">
+          <Link
+            to="/settings/canned-responses"
+            className="d-block cursor text-decoration-none"
+          >
+            <div className="d-flex align-items-center p-md-4">
+              <div className="">
+                <img src={DocumentIcon} alt="" />
+              </div>
+              <div className="ms-3">
+                <h6 className="text-dark mb-0">Canned Responses</h6>
+                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                  Create responses templates
+                </p>
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        <div className="setting-link-item border rounded bg-light">
+          <Link to="#" className="d-block cursor text-decoration-none">
+            <div className="d-flex align-items-center p-md-4">
+              <div className="">
+                <img src={LivechatIcon} alt="" />
+              </div>
+              <div className="ms-3">
+                <h6 className="text-dark mb-0">Live Chat</h6>
+                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                  Setup and update Live Chat settings
+                </p>
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        <div className="setting-link-item border rounded bg-light">
+          <Link to="#" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={RoleLightIcon} alt="" />
@@ -487,7 +333,7 @@ export default function SettingsHome() {
                 </p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
       </div>
     </>

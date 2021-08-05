@@ -1,4 +1,4 @@
-.new-automation-policy {
+.new-email-template {
   a {
     color: unset;
   }
@@ -24,6 +24,10 @@
     .selected {
       background-color: #006298;
       color: white;
+      &::after {
+        width: 0;
+        height: 0;
+      }
     }
   }
 }

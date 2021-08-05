@@ -61,6 +61,11 @@ import NewArticle from "./components/pages/settings/help_center/components/newAr
 import TicketSettings from "./components/pages/settings/ticketsettings/TicketSettings";
 import AutomationSettings from "./components/pages/settings/automation/automationSettings.jsx";
 import NewAutomationPolicy from "./components/pages/settings/automation/components/NewAutomationPolicy";
+import AccountSettings from "./components/pages/settings/account/AccountSettings";
+import NotificationSettings from "./components/pages/settings/notifications/NotificationSettings";
+import NewEmailTemplate from "./components/pages/settings/notifications/components/NewEmailTemplate";
+import CannedResponsesSettings from "./components/pages/settings/canned_responses/CannedResponsesSettings";
+import NewCannedResponse from "./components/pages/settings/canned_responses/components/NewCannedResponse";
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -182,6 +187,7 @@ const SiteRouter = connect(mapStateToProps, {
             pageName="Tickets"
             component={TicketList}
           />
+          {/* settings route start */}
           <DefaultLayoutRoute
             exact
             path="/tickets/:id"
@@ -193,6 +199,12 @@ const SiteRouter = connect(mapStateToProps, {
             path="/settings"
             pageName="Settings"
             component={SettingsHome}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/account"
+            pageName="Account"
+            component={AccountSettings}
           />
           <DefaultLayoutRoute
             exact
@@ -278,6 +290,30 @@ const SiteRouter = connect(mapStateToProps, {
             path="/settings/email/:action"
             pageName="Settings"
             component={SettingsEmail}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/notifications"
+            pageName="Settings"
+            component={NotificationSettings}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/notifications/email-template"
+            pageName="Settings"
+            component={NewEmailTemplate}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/canned-responses"
+            pageName="Settings"
+            component={CannedResponsesSettings}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/settings/canned-response/new-response"
+            pageName="Settings"
+            component={NewCannedResponse}
           />
           {/* 
           ...
