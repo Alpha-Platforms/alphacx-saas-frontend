@@ -27,3 +27,82 @@
 .field-tab-wrapper .nav-tabs {
     border-bottom: none;
 }
+
+#alphacxMTable.acx-user-table {
+    margin-top: 3rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#alphacxMTable.acx-user-table > div > div:nth-child(1) {
+    display: none !important;
+}
+
+#alphacxMTable.acx-user-table > div > div:nth-child(1) {
+    display: none !important;
+}
+
+#alphacxMTable.acx-group-table > div > div:nth-child(1) > div:nth-child(2) {
+    padding-left: 0;
+    margin-left: -1rem;
+}
+
+#alphacxMTable.acx-group-table > div > div:nth-child(2) {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#alphacxMTable.acx-group-table .MuiTableRow-root td {
+    border: none !important;
+}
+
+.role-search-icon {
+    top: 0.9rem;
+    left: 0.3rem;
+    pointer-events: none;
+}
+
+/* * >>>>>> TICKET SETTINGS <<<<<<< */
+.ticket-cat-tab {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.ticket-cat-tab > div {
+    min-height: 20rem;
+}
+
+.ticket-cat-tab > div:nth-child(1) {
+    margin-right: 1rem;
+}
+
+.tl-col {
+    display: grid;
+    grid-template-columns: 7rem auto;
+}
+
+#alphacxMTable.acx-category-table {
+    margin-top: 1rem !important;
+}
+
+.tr-delete-btn {
+    position: absolute;
+    top: -3.5rem;
+    right: 0;
+}
+.setting-link-item {
+    flex-basis: 32%;
+}
+.setting-link-item:nth-child(3n+2) {
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-bottom: 2%;
+}
+#imgDefault {
+    width: 6rem;
+    height: 6rem;
+    right: 0;
+    border: 1px solid #f1f1f1
+}

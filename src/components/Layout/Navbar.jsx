@@ -9,7 +9,84 @@ import pic from "../../assets/imgF/codeuiandyimg.png";
 import { useLocation } from "react-router-dom";
 //import GoBack from './../helpers/GoBack';
 import searchIcon from "../../assets/imgF/Search.png";
-import AddIcon from "../../assets/icons/close-square-w.svg";
+
+// --- dropdown component
+function PlusIcon(){
+  return (
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.19486 6.95428L4.79963 7.02689" stroke="currentColor" stroke-width="1.21622" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M7.03707 9.19234L6.96484 4.79297" stroke="currentColor" stroke-width="1.21622" stroke-linecap="round" stroke-linejoin="round"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M9.81124 1H4.18811C2.22854 1 1 2.38746 1 4.35092V9.64908C1 11.6125 2.2227 13 4.18811 13H9.81059C11.7766 13 13 11.6125 13 9.64908V4.35092C13 2.38746 11.7766 1 9.81124 1Z" stroke="currentColor" stroke-width="1.21622" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+  )
+}
+
+function DowncaretIcon(){
+  return (
+      <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8.5 1.25L5 4.75L1.5 1.25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+  )
+}
+
+function Dropdown() {
+  const [isVisible, setInvisible] = useState(false);
+
+
+  return (
+      <div className="" style={{ fontSize: "0.8rem"}} onMouseLeave={() => setInvisible(false)} >
+              <button 
+                onClick={() => setInvisible(isVisible => !isVisible)}
+                style={{ 
+                    color: "white",
+                    padding: "0.5rem 0",
+                    backgroundColor: "#006298",
+                    borderRadius: "3px",
+                    width: "6rem",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}
+              className="" 
+              type="button" 
+              id="dropdownMenuButtonSM">
+              
+              <span style={{padding: 0}}>               
+                  <PlusIcon />
+              </span>
+              <span style={{padding: "0 0.5rem"}}>Create</span>
+              <span>
+                  <DowncaretIcon />
+              </span>
+              
+              </button>
+              {
+                  isVisible &&
+                  <ul className="dd_menu list-unstyled"
+                    style={{ 
+                        border: "solid 1px #ddd",
+                        padding: "0.25rem 0.75rem 0.5rem",
+                        backgroundColor: "white",
+                        borderRadius: "3px",
+                        marginTop: "0px",
+                        width: "6rem",
+                        position: "fixed"
+                    }}
+                  >
+                      <li style={{borderBottom: "solid 1px #CCC"}}>
+                        <button className="dd_item btn rounded-0">Ticket</button>
+                      </li>
+                      <li style={{borderBottom: "solid 1px #CCC"}}>
+                        <button className="dd_item btn rounded-0">Contact</button>
+                      </li>
+                  </ul>
+              }
+          </div>
+      
+  )
+}
+// --- //dropdown component
+
 
 export default function Navbar({
   browserRouter,
@@ -71,86 +148,49 @@ export default function Navbar({
                 : "navbar-wrap section-wrap-navWidth"
             }`}
           >
-            {/* <div className="navbar-pad">
-              <div className="nav-list-data">
-                <span className="navBack-container">
-                  <span
-                    onClick={GobackFun}
-                    style={{ color: "#14274E", cursor: "pointer" }}
-                  >
-                    <img
-                      style={{ marginRight: "10px", marginBottom: "-2px" }}
-                      src={backIcon}
-                      alt=""
-                    />{" "}
-                    Back
-                  </span>
-                </span>
 
-                <span
-                  // style={{ marginBottom: "15px" }}
-                  className="center-element"
-                >
-                  <span className="navbar-bel-icon">
-                    <img
-                      style={{ width: "18px", marginRight: "27px" }}
-                      src={bellIcon}
-                      alt=""
-                    />
-                  </span>
-                  <span className="center-element user-info-nav">
-                    <span className="userNameiii">okeke</span>
-                    <img
-                      style={{ width: "45px", borderRadius: "50%" }}
-                      src={userIcon}
-                      alt=""
-                    />
-                  </span>
-                </span>
-              </div>
-            </div> */}
             <div className="navbar-content">
               <div className="pageTitle">
                 <span style={{ textTransform: "capitalize" }}>{pageName}</span>
               </div>
-              <div className="navbar-right-content align-items-center d-flex">
-                
-              <div className="search-chat-con">
-                <form>
-                  <div className="hjdwc">
-                    <input placeholder="Search" type="text" style={{height: 28, borderRadius: 16, paddingLeft: '32px!important'}} />
+              <div className="navbar-right-content align-items-center d-flex gap-3">
+          
+              <form>
+                <div>
+                  <input placeholder="Search" type="text" style={{
+                    width: "100%",
+                    borderRadius: 3,
+                    backgroundColor: "rgba(239, 240, 242, 0.6)",
+                    border: "solid 0.5px #ddd",
+                    padding: "0.35rem 2rem",
+                    backgroundImage: `url(${searchIcon})`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "14px",
+                    backgroundPosition: "10px 50%",
+                  }} />
 
-                    <div className="search-chat-searchIcon" style={{ paddingRight: "20px" }}>
-                      <img src={searchIcon} alt="" style={{
-                          top: "-20px",
-                          height: "10px",
-                          width: "10px",
-                      }} />
+                  <div>
+                    <img src={searchIcon} alt="" style={{
+                        height: "10px",
+                        width: "10px",
+                        display: "none"
+                    }} />
 
-                    </div>
                   </div>
-                </form>
-              </div>
+                </div>
+              </form>
 
+              <Dropdown />
 
-
-  <button className="d-flex justify-content align-items-center border rounded bg-transparent py-1 px-2 me-3" onClick={
-    console.log("clicked")
-  }>
-    <div className="ps-0 pe-1">
-      <img src={AddIcon} alt="" style={{height: "12px", width: "12px"}} />
-    </div>
-    <span>New</span>
-  </button>
-  
-
-                
-                <span>
+                <div style={{width: "1.5"}}>
                   <BellIconNavbar />
-                </span>
-                <span className="navbar-user-image">
-                  <img src={pic} alt="" />
-                </span>
+                </div>
+                <div>
+                  <img src={pic} alt="" style={{
+                    width: 30,
+                    borderRadius: "50%"
+                  }} />
+                </div>
               </div>
             </div>
           </div>

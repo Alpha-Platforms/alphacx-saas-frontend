@@ -7,16 +7,34 @@ import Reject from "../../../../assets/icons/reject.png";
 import "./article.scss";
 import Accordion from "../components/accordion/Accordion";
 import StarRating from "../components/starRating/starRating";
+import matter from "gray-matter";
+import ReactMarkdown from "react-markdown";
 
 const Article = () => {
   const file_name = "blog-one.md";
-  const [post, setPost] = useState("");
+  const [articleContent, setArticleContent] = useState("");
+
+  async function getMarkdownFile(title) {
+    // const { post } = params;
+    const content = await import(`./article_markdowns/${title}`);
+    const data = matter(content.default);
+
+    console.log(JSON.stringify(data));
+    setArticleContent(JSON.stringify(data));
+
+    // return {
+    //   props: {
+    //     markdown: JSON.stringify(data),
+    //   },
+    // };
+  }
   useEffect(() => {
+    // getMarkdownFile(file_name);
     import(`./article_markdowns/${file_name}`)
       .then((res) => {
         fetch(res.default)
           .then((res) => res.text())
-          .then((res) => setPost(res))
+          .then((res) => setArticleContent(res))
           .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
@@ -27,7 +45,8 @@ const Article = () => {
       <TopBar />
       <div className="help-article">
         <div className="content">
-          <Markdown>{post}</Markdown>
+          {/* <Markdown>{post}</Markdown> */}
+          <ReactMarkdown children={articleContent} className="line-break" />
           <div className="attachments">
             <Accordion question="Article Attachments" />
           </div>

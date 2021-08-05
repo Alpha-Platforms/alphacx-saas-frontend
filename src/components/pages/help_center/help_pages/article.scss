@@ -3,6 +3,10 @@
   background-color: white;
   display: flex;
   flex-direction: row-reverse;
+
+  .line-break {
+    white-space: pre-wrap;
+  }
   button {
     border: none;
     background-color: unset;

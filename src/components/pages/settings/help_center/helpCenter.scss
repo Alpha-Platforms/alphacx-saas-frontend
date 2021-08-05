@@ -1,0 +1,44 @@
+.help-center-settings {
+  height: 80vh;
+  background-color: white;
+  position: relative;
+  overflow-y: hidden;
+  border-radius: 4px !important;
+  .btn {
+    min-width: 150px;
+  }
+  .articleList {
+    width: 100%;
+    margin: 20px 0;
+
+    border: 0.5px solid #c5c7cd;
+    overflow: hidden;
+
+    border-radius: 8px;
+    p {
+      margin: 0;
+    }
+    .header,
+    .listItem {
+      display: grid;
+      grid-template-columns: 5% 30% 12.5% 12.5% 15% 12.5% 12.5%;
+      background: #fefefe;
+      height: 50px;
+      align-items: center;
+      padding: 0 20px;
+      input {
+        height: 15px;
+        width: 15px;
+        cursor: pointer;
+      }
+    }
+    .listItem {
+      background-color: #f6f7f9;
+    }
+  }
+  .pagination {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+  }
+}

@@ -1,10 +1,12 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import {Modal} from 'react-bootstrap';
 import PinIcon from '../../../assets/icons/pin.svg';
 import {connect} from 'react-redux';
 import {addTicket, resetTicketCreated} from '../../../reduxstore/actions/ticketActions';
-import { NotificationManager } from 'react-notifications';
+import {NotificationManager} from 'react-notifications';
 import {getPaginatedTickets} from '../../../reduxstore/actions/ticketActions';
+import {getInstantSearchedCustomers} from '../../../reduxstore/actions/customerActions';
+import BeatLoader from 'react-spinners/BeatLoader';
 
 const CreateTicketModal = ({
     createModalShow,
@@ -18,10 +20,16 @@ const CreateTicketModal = ({
     isTicketCreated,
     getPaginatedTickets,
     resetTicketCreated,
-    customers
+    customers,
+    setChangingRow
 }) => {
     const [selectedTags,
         setSelectedTags] = useState([]);
+    const [custSearch,
+        setCustSearch] = useState({gottenCust: [], term: '', openPreview: false, isLoading: false, isLoaded: false});
+
+    // ref to customer input
+    const custInputRef = useRef(null);
 
     const [modalInputs,
         setModalInputs] = useState({
@@ -72,6 +80,7 @@ const CreateTicketModal = ({
         } = modalInputs;
         if (!customer || !category || !priority || !status || !subject || !description || !assignee || !group) {
             console.log("All field is required");
+            NotificationManager.error('All fields are required', 'Error', 5000);
         } else {
             console.log("good to go");
             addTicket({
@@ -81,7 +90,7 @@ const CreateTicketModal = ({
                 plainDescription: description,
                 categoryId: category,
                 // userId,
-                userId: customer, 
+                userId: customer,
                 groupId: group,
                 statusId: status,
                 subject,
@@ -90,49 +99,122 @@ const CreateTicketModal = ({
         }
     }
 
-    
-
     useEffect(() => {
         if (isTicketCreated) {
             resetTicketCreated();
-            NotificationManager.success("Successful", 'Ticket created successfully');
+            NotificationManager.success("Ticket created successfully", 'Successful');
             setCreateModalShow(false);
-            getPaginatedTickets(5, 1);
+            setChangingRow(true);
+            getPaginatedTickets(10, 1);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isTicketCreated])
 
     const wordCapitalize = word => {
-        return word.charAt(0).toUpperCase() + word.slice(1);
+        return word
+            .charAt(0)
+            .toUpperCase() + word.slice(1);
     }
+
+    const timeBeforeSearch = 2000;
+    let timeoutId;
+
+    const handleCustomerSearch = (e) => {
+        if (!navigator.onLine) 
+            return NotificationManager.error('Check your network', 'Oops');
+        const {value} = e.target;
+
+        if (timeoutId) 
+            clearTimeout(timeoutId);
+        
+        timeoutId = setTimeout(async() => {
+            console.log('Search for: ', value);
+            if (value) {
+                setCustSearch(prev => ({
+                    ...prev,
+                    openPreview: true,
+                    isLoading: true
+                }));
+
+                const res = await getInstantSearchedCustomers(value);
+                if (res
+                    ?.data) {
+                    setCustSearch(prev => ({
+                        ...prev,
+                        isLoading: false,
+                        isLoaded: true,
+                        gottenCust: res.data.users
+                    }));
+                }
+
+            } else {
+                setCustSearch(prev => ({
+                    ...prev,
+                    openPreview: false
+                }));
+            }
+
+        }, timeBeforeSearch);
+
+    }
+
+    const handleCustClick = function () {
+        const {id, firstname, lastname} = this;
+        const custInput = custInputRef.current;
+        setModalInputs(prev => ({
+            ...prev,
+            customer: id
+        }));
+        custInput.value = `${wordCapitalize(firstname)} ${wordCapitalize(lastname)}`;
+        setCustSearch(prev => ({
+            ...prev,
+            openPreview: false
+        }));
+    }
+
+    const handleModalHide = () => {
+        setCreateModalShow(false);
+        setCustSearch(prev => ({
+            ...prev,
+            openPreview: false
+        }));
+    } 
 
     return (
         <Modal
             show={createModalShow}
-            onHide={() => setCreateModalShow(false)}
+            onHide={handleModalHide}
             aria-labelledby="contained-modal-title-vcenter"
             centered
             size="lg">
             <Modal.Body>
                 <div className="col-12 p-4 pb-2">
                     <h5 className="mb-3">Create Ticket</h5>
-                    <form className="needs-validation mb-5" onSubmit={handleTicketCreation}>
+                    <form className="needs-validation mb-5" onSubmit={e => e.preventDefault()}>
                         <div className="row">
                             <div className="col-6 mt-2 position-relative">
                                 <label htmlFor="customer" className="form-label">Customer</label>
-                                <select
+                                {/* <select
                                     className="form-select"
                                     name="customer"
                                     aria-label="Customer select"
                                     onChange={handleModalInput}>
                                     <option value=""></option>
                                     {customers && customers.map(({id, firstname, lastname}) => <option value={id}>{`${wordCapitalize(firstname)} ${wordCapitalize(lastname)}`}</option>)}
-                                </select>
-                                {/* <input
+                                </select> */}
+                                <input
                                     type="text"
                                     name="customer"
                                     className="form-control"
-                                    onChange={handleModalInput}/> */}
+                                    autoComplete="off"
+                                    ref={custInputRef}
+                                    onChange={handleCustomerSearch}/> {custSearch.openPreview && <div className="cust-search-preview">
+                                    {custSearch.isLoading && <div
+                                        style={{
+                                        textAlign: 'center'
+                                    }}><BeatLoader loading={true} color={"#006298"} margin={5} size={7}/></div>}
+                                    <ul>{(custSearch.gottenCust.length !== 0) && custSearch.gottenCust.map(({firstname, lastname, id}) => <li onClick={handleCustClick.bind({id, firstname, lastname})}>{`${firstname} ${lastname}`}</li>)}</ul>
+                                </div>}
                                 <span className="text-at-blue-light f-12 d-inline-block w-100 text-end">Add Customer</span>
                             </div>
 
@@ -262,7 +344,10 @@ const CreateTicketModal = ({
                         </div>
 
                         <div className="mt-3 mt-sm-3 pt-3 text-end">
-                            <button type="submit" className="btn btn-sm bg-at-blue-light  py-1 px-4">Add Ticket</button>
+                            <button
+                                type="button"
+                                onClick={handleTicketCreation}
+                                className="btn btn-sm bg-at-blue-light  py-1 px-4">Add Ticket</button>
                         </div>
                     </form>
                 </div>

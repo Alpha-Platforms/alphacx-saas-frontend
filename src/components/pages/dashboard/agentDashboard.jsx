@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./dashboard.scss";
 import "./dashcards/pieChartCard/pieChartCard.scss";
 import LineChartCard from "./dashcards/lineChartCard";
@@ -8,8 +8,44 @@ import ProgressBar from "./dashcards/progressBar";
 
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { httpGetMain } from "../../../helpers/httpMethods";
+import { NotificationManager } from "react-notifications";
 
 const AgentDashboard = () => {
+  const [dashInfo, setDashInfo] = useState({});
+  const [userInfo, setUserInfo] = useState({});
+  const getTickets = async () => {
+    let user = JSON.parse(localStorage.getItem("user"));
+
+    const res = await httpGetMain("tickets");
+    if (res?.status == "success") {
+      console.clear();
+      console.log(res.data);
+      console.log("user", user);
+      setDashInfo({
+        ...dashInfo,
+        totalTickets: parseInt(res?.data?.meta?.totalItems),
+      });
+    } else {
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+    const statuses = await httpGetMain("statuses");
+
+    if (statuses?.status == "success") {
+      // console.clear();
+      console.log("statues", statuses.data);
+
+      // setDashInfo({
+      //   ...dashInfo,
+      //   totalTickets: parseInt(statuses?.data?.meta?.totalItems),
+      // });
+    } else {
+      return NotificationManager.error(statuses?.er?.message, "Error", 4000);
+    }
+  };
+  useEffect(() => {
+    getTickets();
+  }, []);
   return (
     <>
       <div className="dashboard">
@@ -44,7 +80,11 @@ const AgentDashboard = () => {
           <LineChartCard />
         </div>
         <div className="side-bar">
-          <TotalCard title="Total Tickets" value={57} color={"#662D91"} />
+          <TotalCard
+            title="Total Tickets"
+            value={dashInfo?.totalTickets}
+            color={"#662D91"}
+          />
           <TotalCard title="Assigned Tickets" value={57} color={"#51B74F"} />
           <TotalCard title="Overdue Tickets" value={50} color={"#F40D0D"} />
 

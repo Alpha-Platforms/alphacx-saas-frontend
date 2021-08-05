@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import NewSupportEmail from "./components/NewSupportEmail";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
+import { Link } from "react-router-dom";
 
 import "./settingsEmail.scss";
 
@@ -35,20 +36,15 @@ const EmailSettings = () => {
               <div>
                 <a class="btn btn-outline-gray btn-sm">
                   <span class="d-flex justify-content-center align-items-center">
-                    {/* <object
-                      class="pe-1"
-                      data="../assets/alphatickets/icons/settings-button.svg"
-                      class="img-fluide"
-                    ></object>{" "} */}
                     <span>Advanced Settings</span>
                   </span>
                 </a>
-                <a
+                <Link
                   class="btn btn-primary btn-sm ms-2"
-                  href="/settings/email/email-form"
+                  to="/settings/email/email-form"
                 >
                   <span>New support email</span>
-                </a>
+                </Link>
               </div>
             </div>
             <div class="form-group">
@@ -59,20 +55,16 @@ const EmailSettings = () => {
               />
             </div>
             <div class="text-center empty-state">
-              {/* <object
-                data="../assets/alphatickets/icons/Email-Empty.svg"
-                class="img-fluid"
-              ></object> */}
               <p class="text-center">
                 You currently have no Email record at
                 <br /> the moment
               </p>
-              <a
+              <Link
                 class="btn btn-sm btn-primary"
-                href="/settings/email/email-form"
+                to="/settings/email/email-form"
               >
                 New support email
-              </a>
+              </Link>
             </div>
             <div id="result"></div>
           </div>

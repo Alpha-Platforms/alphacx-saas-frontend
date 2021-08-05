@@ -18,7 +18,8 @@ import ScaleLoader from 'react-spinners/ScaleLoader';
 import {connect} from 'react-redux';
 import {useParams} from 'react-router-dom';
 import {getCurrentCustomer} from '../../../reduxstore/actions/customerActions';
-import {getUserInitials} from './CustomerList';
+import {getUserInitials} from '../../../helper';
+import TicketHistory from './components/TicketHistory';
 
 const CircleIcon = (props) => <span className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
 
@@ -65,7 +66,6 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
 
     useEffect(() => {
 
-        console.log("id:", id);
         getCurrentCustomer(id);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -92,22 +92,23 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
         <Fragment>
             {!isCurrentCustomerLoaded
                 ? <div className="single-cust-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
-                : !currentCustomer? <div>No Customer Found.</div> : <div
+                : !currentCustomer ? <div>No Customer Found.</div> : <div
                     style={{
-                    gridTemplateColumns: "280px 1fr"
+                    gridTemplateColumns: "280px 1fr",
+                    border: '1px solid #f1f1f1'
                 }}
                     className="d-grid mb-4">
 
                     <div
                         style={{
-                        marginRight: '1px'
+                        borderRight: '1px solid #f1f1f1'
                     }}
-                        className="bg-primary py-5 px-3 bg-white">
+                        className="bg-primary py-5 pt-4 px-3 bg-white">
                         <div className="user-initials-lg">
                             <div className="user-initials blue me-auto ms-auto">{getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname}`)}</div>
                             <div className="text-center mt-3">
                                 <h4 style={{ textTransform: 'capitalize' }}>{`${currentCustomer.firstname} ${currentCustomer.lastname}`}</h4>
-                                <p className="text-muted">Gillette Group International</p>
+                                <p className="text-muted">jackmay@gmail.com</p>
                             </div>
                         </div>
                         <hr className="op-1"/> {/* <!-- Customer date info --> */}
@@ -117,14 +118,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                     <div><CircleIcon icon={WorkIcon}/></div>
                                     <div>
                                         <h6>Account ID</h6>
-                                        <p className="text-muted">{currentCustomer.id.slice(0, 8).toUpperCase()}</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div><CircleIcon icon={MessageIcon}/></div>
-                                    <div>
-                                        <h6>Email Address</h6>
-                                        <p className="text-muted">{currentCustomer.email}</p>
+                                        <p className="text-muted">{id?.slice(0, 8).toUpperCase()}</p>
                                     </div>
                                 </li>
                                 <li>
@@ -132,6 +126,13 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                     <div>
                                         <h6>Work Phone</h6>
                                         <p className="text-muted">{currentCustomer.phone_number}</p>
+                                    </div>
+                                </li>
+                                {/* <li>
+                                    <div><CircleIcon icon={MessageIcon}/></div>
+                                    <div>
+                                        <h6>Email Address</h6>
+                                        <p className="text-muted">{currentCustomer.email}</p>
                                     </div>
                                 </li>
                                 <li>
@@ -154,8 +155,9 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                         <h6>Subscription Enquiry</h6>
                                         <p className="text-muted pb-0 mb-0">26-06-2022</p>
                                     </div>
-                                </li>
+                                </li> */}
                             </ul>
+                            <div className={"table-tags text-justify"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1 f-10">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1 f-10">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1 f-10">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1 f-10">Active</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1 f-10">Urgent</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1 f-10">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1 f-10">High Value</span></div>
 
                         </div>
 
@@ -179,7 +181,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                             style={{
                             margin: "0 -0.5rem"
                         }}
-                            className="bg-light px-4 py-3 d-flex justify-content-between">
+                            className="px-4 py-3 d-flex justify-content-between">
                             <div>
                                 <ul className="nav nav-pills" id="pills-tab" role="tablist">
                                     <li className="nav-item " role="presentation">
@@ -195,14 +197,6 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                             id="pills-notes-tab"
                                             type="button"
                                             onClick={() => setTabKey('notes')}>Notes</button>
-                                    </li>
-
-                                    <li className="nav-item" role="presentation">
-                                        <button
-                                            className={`nav-link ${tabKey === 'integrations' && 'nav-active'} text-muted`}
-                                            id="pills-integrations-tab"
-                                            type="button"
-                                            onClick={() => setTabKey('integrations')}>Integrations</button>
                                     </li>
                                     <li className="nav-item" role="presentation">
                                         <button
@@ -236,7 +230,10 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                 onSelect={(k) => setTabKey(k)}
                                 className="mb-3">
                                 <Tab eventKey="ticket-history" className="px-2">
-                                    <div>
+                                    <TicketHistory />
+
+
+                                    {/* <div>
                                         <table className="table bg-white rounded-bottom-o4 overflow-hidden">
                                             <thead className="border-0">
                                                 <tr className="border-0">
@@ -307,7 +304,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                                 </nav>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
 
                                 </Tab>
 
@@ -321,7 +318,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                     </div>
                                     <form action="#">
                                         {/* <div className="mb-3">
-                                        <label for="noteInput" className="form-label">New Note</label>
+                                        <label htmlFor="noteInput" className="form-label">New Note</label>
                                         <textarea className="form-control" id="noteInput"></textarea>
                                     </div> */}
                                         <div>
@@ -414,14 +411,9 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                     </div>
                                 </Tab>
 
-                                {/* Integrations Tab */}
-                                <Tab eventKey="integrations" className="px-2">
-                                    Integrations
-                                </Tab>
-
                                 {/* Timeline tab */}
                                 <Tab eventKey="timeline" className="px-2">
-                                    <h5>How do I get a refund for my order?</h5>
+                                    <h5>How do I get a refund htmlFor my order?</h5>
                                     <ul className="timeline-tree">
                                         <li>
                                             <div>
@@ -501,7 +493,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                     </div>
                                 </div>
                                 <div>
-                                    <label for="imageInput" className="form-label btn bg-at-blue-light hover-op-8">Upload Photo</label>
+                                    <label htmlFor="imageInput" className="form-label btn bg-at-blue-light hover-op-8">Upload Photo</label>
                                     <p className="op-9">
                                         <small>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small>
                                     </p>
@@ -510,31 +502,31 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                             <input type="file" className="form-control" id="imageInput"/>
                         </div>
                         <div className="mb-3">
-                            <label for="firstNameInput" className="form-label">First Name</label>
+                            <label htmlFor="firstNameInput" className="form-label">First Name</label>
                             <input type="text" className="form-control" id="firstNameInput"/>
                         </div>
                         <div className="mb-3">
-                            <label for="lastNameInput" className="form-label">Last Name</label>
+                            <label htmlFor="lastNameInput" className="form-label">Last Name</label>
                             <input type="text" className="form-control" id="lastNameInput"/>
                         </div>
                         <div className="mb-3">
-                            <label for="emailInput" className="form-label">Email address</label>
+                            <label htmlFor="emailInput" className="form-label">Email address</label>
                             <input type="email" className="form-control" id="emailInput"/>
                         </div>
                         <div className="mb-3">
-                            <label for="phoneNumerInput" className="form-label">Phone Number</label>
+                            <label htmlFor="phoneNumerInput" className="form-label">Phone Number</label>
                             <input type="tel" className="form-control" id="phoneNumberInput"/>
                         </div>
                         <div className="mb-3">
-                            <label for="companyInput" className="form-label">Company</label>
+                            <label htmlFor="companyInput" className="form-label">Company</label>
                             <input type="text" className="form-control" id="companyInput"/>
                         </div>
                         <div className="mb-3">
-                            <label for="addressInput" className="form-label">Address</label>
+                            <label htmlFor="addressInput" className="form-label">Address</label>
                             <textarea className="form-control" id="addressInput"></textarea>
                         </div>
                         <div className="mb-3">
-                            <label for="customerGroupInput" className="form-label">Customer Group</label>
+                            <label htmlFor="customerGroupInput" className="form-label">Customer Group</label>
                             <input type="text" className="form-control" id="customerGroupInput"/>
                         </div>
                         <button

@@ -1,0 +1,29 @@
+.new-automation-policy {
+  a {
+    color: unset;
+  }
+  textarea {
+    resize: none;
+  }
+  .available-placeholders {
+    display: flex;
+    p {
+      border: 1px solid #006298;
+      color: #006298;
+      margin: 0;
+      padding: 5px 25px;
+      border-radius: 5px;
+      margin-right: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      &:hover {
+        background-color: #006298;
+        color: white;
+      }
+    }
+    .selected {
+      background-color: #006298;
+      color: white;
+    }
+  }
+}
