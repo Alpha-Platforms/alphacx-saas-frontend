@@ -3,8 +3,8 @@ import { useState } from "react";
 import { HelpIcons } from "../../../../../assets/images/svgs";
 import "./starRating.scss";
 
-const StarRating = ({ numOfStars }) => {
-  const [activeStars, setActiveStars] = useState(0);
+const StarRating = ({ numOfStars, checked }) => {
+  const [activeStars, setActiveStars] = useState(checked || 0);
 
   const handleRating = (value) => {
     setActiveStars(value + 1);
