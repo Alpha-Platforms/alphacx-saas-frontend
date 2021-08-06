@@ -135,7 +135,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
         {
             title: 'Assigned to',
             field: 'assignedTo',
-            render: rowData => <Link to="/settings/users" style={{ textTransform: 'capitalize' }}>Paul Ifeoma</Link>
+            render: rowData => <Link to="/settings/users" style={{ textTransform: 'capitalize' }}>{rowData.assignedTo}</Link>
         },  
         // {
         //     title: 'Status',
@@ -261,14 +261,15 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                                 tableIcons
                             }
                             columns = {tableColumns}
-                            data = {tickets.map(({customer, subject, id, category, created_at, status}) => ({
+                            data = {tickets.map(({customer, subject, id, category, created_at, status, assignee}) => ({
                                 name: {fullName: `${customer.firstname} ${customer.lastname}`, customerId: customer.id},
                                 ticketId: id,
                                 email: customer.email,
                                 subject: `${subject.substr(0, 25)}...`,
                                 category: category.name,
                                 created: moment(created_at).format('DD MMM, YYYY'),
-                                status
+                                status,
+                                assignedTo: `${assignee.firstname} ${assignee.lastname}`
 
                             }))
                             }
