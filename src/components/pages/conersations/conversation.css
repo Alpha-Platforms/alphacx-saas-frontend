@@ -198,14 +198,14 @@
 }
 
 .message-user-time .msgCountCon {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  background-color: #006298;
+  background-color: #fa3e3e;
   font-size: 11px;
   color: white;
   text-align: center;
-  padding-top: 3px;
+  padding-top: 2px;
   position: relative;
   top: -5px;
 }
@@ -213,7 +213,7 @@
   height: 80%;
   overflow: hidden;
   overflow-y: scroll;
-  padding-bottom: 30px !important;
+  padding-bottom: 0px !important;
 }
 
 .message-list-container .message-listmain:last-child {
@@ -736,7 +736,6 @@ select {
   .conversation-layout .conversation-layout-col-one {
     width: 300px;
     height: 100%;
-    background-color: transparent;
     border-right: 1px solid rgba(0, 98, 152, 0.1);
     overflow: hidden;
   }
@@ -891,7 +890,7 @@ select {
 .conversation-layout .conversation-layout-col-one {
   width: 25%;
   height: 100%;
-  background-color: transparent;
+  background-color: #fafafa;
   border-right: 1px solid rgba(0, 98, 152, 0.1);
   overflow: hidden;
 }
@@ -1117,9 +1116,12 @@ select {
 }
 
 .userProfileTwoColFormat {
-  height: 50%;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
   width: 100%;
   overflow: hidden;
+  /* flex: 1; */
 }
 .ticktTagsgfs3 {
   display: flex;
@@ -1238,7 +1240,7 @@ select {
   display: flex;
   flex-direction: column;
   padding-left: 0px;
-  height: 50%;
+  height: 30%;
   overflow-y: scroll !important;
   padding-top: 10px;
   padding-left: 6px;
@@ -1254,7 +1256,7 @@ select {
 .img {
   width: 3px;
   background-color: rgba(0, 98, 152, 0.4);
-  margin-left: 7px;
+  margin-left: 8px;
   content: "";
   height: calc(100% - 20px);
 }
@@ -1301,4 +1303,8 @@ select {
 .MuiFormControl-root * {
   border: none !important;
   background-color: transparent !important;
+}
+
+.codei-ui-andy-setDefaults *::-webkit-scrollbar {
+  display: none !important;
 }
