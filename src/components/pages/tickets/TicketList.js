@@ -114,7 +114,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
         {
             title: 'Name',
             field: 'name',
-            render: rowData => <Link to={`/customers/${rowData.name.customerId}`} style={{ textTransform: 'capitalize' }}>{rowData.name.fullName}</Link>
+            render: rowData => <Link to={`/customers/${rowData.customerId}`} style={{ textTransform: 'capitalize' }}>{rowData.name}</Link>
         }, {
             title: 'Ticket ID',
             field: 'ticketId',
@@ -130,7 +130,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
         }, {
             title: 'Status',
             field: 'status',
-            render: rowData => <div className={`ticket-state ${getStatusColor(rowData.status.status)}`}><Link to="#" className="btn btn-sm">{rowData.status.status}</Link></div>
+            render: rowData => <div className={`ticket-state ${getStatusColor(rowData.status)}`}><Link to="#" className="btn btn-sm">{rowData.status}</Link></div>
         },
         {
             title: 'Assigned to',
@@ -262,13 +262,14 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                             }
                             columns = {tableColumns}
                             data = {tickets.map(({customer, subject, id, category, created_at, status, assignee}) => ({
-                                name: {fullName: `${customer.firstname} ${customer.lastname}`, customerId: customer.id},
+                                name: `${customer.firstname} ${customer.lastname}`,
+                                customerId: customer.id,
                                 ticketId: id,
                                 email: customer.email,
                                 subject: `${subject.substr(0, 25)}...`,
                                 category: category.name,
                                 created: moment(created_at).format('DD MMM, YYYY'),
-                                status,
+                                status: status?.status,
                                 assignedTo: `${assignee.firstname} ${assignee.lastname}`
 
                             }))
