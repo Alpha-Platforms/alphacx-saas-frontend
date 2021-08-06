@@ -8,6 +8,9 @@
   textarea {
     resize: none;
   }
+  .active {
+    border-bottom: 2px solid #006298 !important;
+  }
   .avatarImage {
     height: 100%;
     width: 100%;
