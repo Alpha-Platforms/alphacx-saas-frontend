@@ -135,7 +135,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
         {
             title: 'Assigned to',
             field: 'assignedTo',
-            render: rowData => <Link to="#" style={{ textTransform: 'capitalize' }}>Paul Ifeoma</Link>
+            render: rowData => <Link to="/settings/users" style={{ textTransform: 'capitalize' }}>Paul Ifeoma</Link>
         },  
         // {
         //     title: 'Status',
