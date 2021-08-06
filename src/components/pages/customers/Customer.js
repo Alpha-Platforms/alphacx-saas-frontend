@@ -105,7 +105,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                     }}
                         className="bg-primary py-5 pt-4 px-3 bg-white">
                         <div className="user-initials-lg">
-                            <div className="user-initials blue me-auto ms-auto">{getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname}`)}</div>
+                            {currentCustomer?.avatar ? <div className="customer-avatar"><img src={currentCustomer.avatar} alt='' /></div> : <div className="user-initials blue me-auto ms-auto">{getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname}`)}</div>}
                             <div className="text-center mt-3">
                                 <h4 style={{ textTransform: 'capitalize' }}>{`${currentCustomer.firstname} ${currentCustomer.lastname}`}</h4>
                                 <p className="text-muted">jackmay@gmail.com</p>
