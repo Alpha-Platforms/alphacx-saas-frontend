@@ -2,6 +2,7 @@ import React from "react";
 import "./AccountSettings.scss";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
 import { useState } from "react";
+import Branding from "./components/Branding";
 
 const AccountSettings = () => {
   const [activeTab, setActiveTab] = useState("personal");
@@ -73,6 +74,17 @@ const AccountSettings = () => {
                     onClick={() => setActiveTab("account")}
                   >
                     Account Settings
+                  </button>
+                </li>
+                <li className="nav-item" role="presentation">
+                  <button
+                    className={`${
+                      activeTab === "branding" && "active"
+                    } nav-link text-muted px-0 me-5`}
+                    id="pills-account-tab"
+                    onClick={() => setActiveTab("branding")}
+                  >
+                    Branding
                   </button>
                 </li>
               </ul>
@@ -288,7 +300,7 @@ const AccountSettings = () => {
           <!--* End of Personal Information View -->
           */}
           </div>
-        ) : (
+        ) : activeTab === "account" ? (
           <div
             className="tab-pane"
             id="account-settings-view"
@@ -561,7 +573,11 @@ const AccountSettings = () => {
               </div>
             </div>
           </div>
-        )}
+        ) : activeTab === "branding" ? (
+          <div>
+            <Branding />
+          </div>
+        ) : null}
       </div>
     </div>
   );
