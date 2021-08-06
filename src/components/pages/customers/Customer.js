@@ -277,7 +277,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                 onSelect={(k) => setTabKey(k)}
                                 className="mb-3">
                                 <Tab eventKey="ticket-history" className="px-2">
-                                    <TicketHistory />
+                                    <TicketHistory currentCustomerId={id} />
                                 </Tab>
 
                                 {/* Notes Tab */}
