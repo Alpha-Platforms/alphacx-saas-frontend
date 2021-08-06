@@ -22,7 +22,7 @@ import TicketHistory from './components/TicketHistory';
 import Notes from './components/Notes';
 import Timeline from './components/Timeline';
 
-const CircleIcon = (props) => <span className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
+const CircleIcon = (props) => <span style={{ backgroundColor: props.color }} className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
 
 const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded, currentCustomer}) => {
 
@@ -123,7 +123,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                     </div>
                                 </li>
                                 <li>
-                                    <div><CircleIcon icon={CallIcon}/></div>
+                                    <div><CircleIcon color="rgba(186, 104, 200, 0.25)" icon={CallIcon}/></div>
                                     <div>
                                         <h6>Work Phone</h6>
                                         <p className="text-muted">{currentCustomer.phone_number}</p>
@@ -163,6 +163,52 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                         </div>
 
                         <hr className="op-1"/>
+
+                        <div class="container-timeline">
+                            <div class="box">
+                            <div class="borderContaner">
+                                <div class="circle"></div>
+                                <div class="img"></div>
+                            </div>
+                            <div class="textTimeLineSec">
+                            <p className="pb-0 mb-0 f-13">
+                            <Link to="#">Olamide Adeleke</Link>&nbsp;changed ticket status from In progress to Closed</p>
+                                <div className="timeLinehashtags">
+                                <div className="d-none"></div>
+                                <div>01-05-2021, 12.00 AM</div>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="box">
+                            <div class="borderContaner">
+                                <div class="circle"></div>
+                                <div class="img"></div>
+                            </div>
+                            <div class="textTimeLineSec">
+                            <p className="pb-0 mb-0 f-13">
+                            <Link to="#">Olamide Adeleke</Link>&nbsp;changed ticket status from In progress to Closed</p>
+                                <div className="timeLinehashtags">
+                                <div className="d-none"></div>
+                                <div>01-05-2021, 12.00 AM</div>
+                                </div>
+                            </div>
+                            </div>
+
+                            <div class="box">
+                            <div class="borderContaner">
+                                <div class="circle"></div>
+                                <div style={{ height: "0px" }} class="img"></div>
+                            </div>
+                            <div class="textTimeLineSec">
+                            <p className="pb-0 mb-0 f-13">
+                            <Link to="#">Olamide Adeleke</Link>&nbsp;changed priorrity from medium to high</p>
+                                <div className="timeLinehashtags">
+                                <div className="d-none"></div>
+                                <div>01-05-2021, 12.00 AM</div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
 
                         <div className="text-center mt-4">
                             <Button
