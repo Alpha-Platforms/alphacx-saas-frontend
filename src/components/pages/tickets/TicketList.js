@@ -114,7 +114,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
         {
             title: 'Name',
             field: 'name',
-            render: rowData => <Link to="#" style={{ textTransform: 'capitalize' }}>{rowData.name}</Link>
+            render: rowData => <Link to={`/customers/${rowData.name.customerId}`} style={{ textTransform: 'capitalize' }}>{rowData.name.fullName}</Link>
         }, {
             title: 'Ticket ID',
             field: 'ticketId',
@@ -262,7 +262,7 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                             }
                             columns = {tableColumns}
                             data = {tickets.map(({customer, subject, id, category, created_at, status}) => ({
-                                name: `${customer.firstname} ${customer.lastname}`,
+                                name: {fullName: `${customer.firstname} ${customer.lastname}`, customerId: customer.id},
                                 ticketId: id,
                                 email: customer.email,
                                 subject: `${subject.substr(0, 25)}...`,
