@@ -194,6 +194,11 @@
 
 #ticketConvoEditorBox {
     position: fixed;
-    bottom: 1rem;
+    bottom: -0.2rem;
     width: calc(100vw - 430px);
+}
+
+#ticketDetailsWrapper {
+    position: fixed;
+    width: calc(100vw - 140px);
 }

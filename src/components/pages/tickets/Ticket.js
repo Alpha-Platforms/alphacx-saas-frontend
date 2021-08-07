@@ -488,6 +488,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         console.log('loading messages');
       }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isCurrentTicketLoaded, currentTicket])
 
 
@@ -496,6 +497,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
             {!isCurrentTicketLoaded
                 ? <div className="single-cust-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
                 : !currentTicket ? <div>No Ticket Found.</div> : <div
+                    id="ticketDetailsWrapper"
                     style={{
                     gridTemplateColumns: "280px 1fr",
                     border: '1px solid #f1f1f1'
