@@ -6,8 +6,12 @@ const initialState = {
 	isCustomersLoading: false, //will be true when fetching data and back to false when the fetch is done
 	isCustomersLoaded: false,
 	currentCustomer: null,
+	currentCustomerTickets: null,
+	currentCustomerTicketsMeta: null,
 	isCurrentCustomerLoading: false,
-	isCurrentCustomerLoaded: false
+	isCurrentCustomerLoaded: false,
+	isCurrentCustomersTicketLoading: false,
+	isCurrentCustomersTicketLoaded: false
 }
 
 //export the post reducer
@@ -44,6 +48,21 @@ const customerReducer = (state = initialState, action) => {
 				isCurrentCustomerLoading: false,
 				isCurrentCustomerLoaded: true
 			}
+		case types.GET_CURRENT_CUSTOMER_TICKETS:
+				return {
+					...state,
+					currentCustomerTickets: action.payload.tickets,
+					currentCustomerTicketsMeta: action.payload.meta,
+					isCurrentCustomerTicketsLoading: false,
+					isCurrentCustomerTicketsLoaded: true,
+					isCurrentCustomerTicketsFullyLoaded: true
+				}
+			case types.CURRENT_CUSTOMER_TICKETS_LOADING:
+				return {
+					...state,
+					isCurrentCustomerTicketsLoading: true,
+					isCurrentCustomerTicketsLoaded: false
+				}
 		default:
 			return state;
 	}

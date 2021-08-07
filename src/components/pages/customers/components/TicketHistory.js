@@ -1,9 +1,12 @@
+import {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import MaterialTable from 'material-table';
 import {TablePagination} from '@material-ui/core';
 import tableIcons from '../../../../assets/materialicons/tableIcons';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import ShowIcon from '../../../../assets/icons/Show.svg';
+import {getPaginatedCurrentCustomerTickets} from '../../../../reduxstore/actions/customerActions';
+import {connect} from 'react-redux';
 
 const getStatusColor = status => {
     switch (status) {
@@ -22,7 +25,18 @@ const getStatusColor = status => {
     }
 }
 
-const TicketHistory = ({ meta }) => {
+const TicketHistory = ({ meta, currentCustomerId, getPaginatedCurrentCustomerTickets, isCurrentCustomerLoaded }) => {
+    const [changingRow, setChangingRow] = useState(false);
+
+    console.log("currentCustomerId", currentCustomerId);
+
+    useEffect(() => {
+        if (isCurrentCustomerLoaded) {
+            getPaginatedCurrentCustomerTickets(10, 1, currentCustomerId);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isCurrentCustomerLoaded]);
+
     const tableColumns = [
         {
             title: 'Ticket ID',
@@ -68,6 +82,46 @@ const TicketHistory = ({ meta }) => {
         },
         
     });
+
+    const AlphacxMTPagination = props => {
+        const {
+            ActionsComponent,
+            onChangePage,
+            onChangeRowsPerPage,
+            ...tablePaginationProps
+        } = props;
+        
+        return (
+        <TablePagination
+            {...tablePaginationProps}
+            rowsPerPageOptions={[10, 20, 30]}
+            rowsPerPage={meta?.itemsPerPage || 5}
+            count={Number(meta?.totalItems || 20)}
+            page={(meta?.currentPage || 1) - 1}
+            onPageChange={onChangePage}
+            // when the number of rows per page changes
+            onRowsPerPageChange={event => {
+                        setChangingRow(true);
+                        getPaginatedCurrentCustomerTickets(event.target.value, 1);
+                        }}
+            ActionsComponent={(subprops) => {
+                const { onPageChange, ...actionsComponentProps } = subprops;
+                return (
+                    <ActionsComponent
+                    {...actionsComponentProps}
+                    onChangePage={(event, newPage) => {
+                        // fetch tickets with new current page
+                        getPaginatedCurrentCustomerTickets(meta.itemsPerPage, newPage + 1);
+                        }}
+                    onRowsPerPageChange={event => {
+                        // fetch tickets with new rows per page
+                        getPaginatedCurrentCustomerTickets(event.target.value, meta.currentPage);
+                    }}
+                    />
+                );
+                }}
+        />
+    )}
 
     return (
         <div>
@@ -116,4 +170,8 @@ const TicketHistory = ({ meta }) => {
     )
 }
 
-export default TicketHistory
+const mapStateToProps = (state, ownProps) => ({
+    isCurrentCustomerLoaded: state.customer.isCurrentCustomerLoaded,
+});
+
+export default connect(mapStateToProps, {getPaginatedCurrentCustomerTickets})(TicketHistory);
