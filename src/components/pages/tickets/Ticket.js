@@ -501,7 +501,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                     border: '1px solid #f1f1f1'
                 }}
                     className="d-grid mb-4">
-                    <div className="pt-2"><UserProfile ticket={[currentTicket]}  /></div>
+                    <div className="pt-2" style={{ backgroundColor: "#fafafa" }}><UserProfile ticket={[currentTicket]}  /></div>
 
                     {/* <div
                         style={{
