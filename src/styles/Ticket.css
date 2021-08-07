@@ -200,31 +200,21 @@
 }
 
 #alphacxMTable.acx-ticket-table tbody tr {
-<<<<<<< HEAD
   /* border-bottom: 1px solid red !important; */
-=======
-    /* border-bottom: 1px solid red !important; */
->>>>>>> 08d811cd2604e5a5d56bb7b3f3a13a1d093b0735
 }
 
 #alphacxMTable.acx-ticket-cust-table thead tr th.MuiTableCell-root,
 #alphacxMTable.acx-ticket-cust-table tbody tr td.MuiTableCell-root {
-<<<<<<< HEAD
   border-bottom: 1px solid #f1f1f1 !important;
 }
-=======
-    border-bottom: 1px solid #f1f1f1 !important;
-}
-
 
 #ticketConvoEditorBox {
-    position: fixed;
-    bottom: -0.2rem;
-    width: calc(100vw - 430px);
+  position: fixed;
+  bottom: -0.2rem;
+  width: calc(100vw - 430px);
 }
 
 #ticketDetailsWrapper {
-    position: fixed;
-    width: calc(100vw - 140px);
+  position: fixed;
+  width: calc(100vw - 140px);
 }
->>>>>>> 08d811cd2604e5a5d56bb7b3f3a13a1d093b0735
