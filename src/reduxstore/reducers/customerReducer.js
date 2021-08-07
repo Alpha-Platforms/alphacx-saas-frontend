@@ -51,11 +51,10 @@ const customerReducer = (state = initialState, action) => {
 		case types.GET_CURRENT_CUSTOMER_TICKETS:
 				return {
 					...state,
-					currentCustomerTickets: action.payload.tickets,
-					currentCustomerTicketsMeta: action.payload.meta,
+					currentCustomerTickets: action.payload?.tickets,
+					currentCustomerTicketsMeta: action.payload?.meta,
 					isCurrentCustomerTicketsLoading: false,
-					isCurrentCustomerTicketsLoaded: true,
-					isCurrentCustomerTicketsFullyLoaded: true
+					isCurrentCustomerTicketsLoaded: true
 				}
 			case types.CURRENT_CUSTOMER_TICKETS_LOADING:
 				return {

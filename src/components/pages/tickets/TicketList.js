@@ -271,7 +271,6 @@ const TicketList = ({isTicketsLoaded, tickets, meta, getPaginatedTickets}) => {
                                 created: moment(created_at).format('DD MMM, YYYY'),
                                 status: status?.status,
                                 assignedTo: `${assignee.firstname} ${assignee.lastname}`
-
                             }))
                             }
                             options = {{

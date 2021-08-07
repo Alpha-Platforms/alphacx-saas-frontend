@@ -1,7 +1,7 @@
 .general-wrapper {
   height: 100vh;
   background: #ffff;
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
 }
 
 .navbar-wrap {
