@@ -245,13 +245,13 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                             type="button"
                                             onClick={() => setTabKey('notes')}>Notes</button>
                                     </li>
-                                    <li className="nav-item" role="presentation">
+                                    {/* <li className="nav-item" role="presentation">
                                         <button
                                             className={`nav-link ${tabKey === 'timeline' && 'nav-active'} text-muted`}
                                             id="pills-timeline-tab"
                                             type="button"
                                             onClick={() => setTabKey('timeline')}>Timeline</button>
-                                    </li>
+                                    </li> */}
                                 </ul>
                             </div>
                             <div className="d-flex align-items-md-center">
