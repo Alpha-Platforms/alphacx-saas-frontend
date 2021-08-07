@@ -245,25 +245,25 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                             type="button"
                                             onClick={() => setTabKey('notes')}>Notes</button>
                                     </li>
-                                    <li className="nav-item" role="presentation">
+                                    {/* <li className="nav-item" role="presentation">
                                         <button
                                             className={`nav-link ${tabKey === 'timeline' && 'nav-active'} text-muted`}
                                             id="pills-timeline-tab"
                                             type="button"
                                             onClick={() => setTabKey('timeline')}>Timeline</button>
-                                    </li>
+                                    </li> */}
                                 </ul>
                             </div>
                             <div className="d-flex align-items-md-center">
                                 <div>
-                                    <button
+                                    {/* <button
                                         type="button"
                                         className="btn btn-sm btn-outline-secondary px-md-3 mx-md-2 me-1">
                                         <img src={TicketIcon} className="pe-none" alt=""/>&nbsp; New Ticket
-                                    </button>
+                                    </button> */}
                                     <button
                                         type="button"
-                                        className="btn btn-sm btn-outline-secondary px-md-2 mx-md-2"><img src={MessageIcon} className="pe-none" alt=""/>&nbsp; Activation Email
+                                        className="reset-btn-outline btn btn-sm border btn-outline-secondary px-md-2 mx-md-2"><img src={MessageIcon} className="pe-none" alt=""/>&nbsp; Activation Email
                                     </button>
                                 </div>
                             </div>

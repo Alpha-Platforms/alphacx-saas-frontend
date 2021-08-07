@@ -183,10 +183,17 @@
 }
 
 #alphacxMTable.acx-ticket-table tbody tr {
-    border-bottom: 1px solid red !important;
+    /* border-bottom: 1px solid red !important; */
 }
 
 #alphacxMTable.acx-ticket-cust-table thead tr th.MuiTableCell-root,
 #alphacxMTable.acx-ticket-cust-table tbody tr td.MuiTableCell-root {
     border-bottom: 1px solid #f1f1f1 !important;
+}
+
+
+#ticketConvoEditorBox {
+    position: fixed;
+    bottom: 1rem;
+    width: calc(100vw - 430px);
 }

@@ -214,7 +214,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                         <div>
                         </div> */}
 
-                        <div className="btn-toolbar mb-md-0 cust-table-btns-wrapper">
+                        <div className="btn-toolbar mb-md-0 cust-table-btns-wrapper" style={{ zIndex: 40 }}>
                             {/* <button
                                 type="button"
                                 className="btn btn-sm bg-at-blue-light px-md-3 mx-1"
