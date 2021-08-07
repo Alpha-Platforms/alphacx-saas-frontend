@@ -190,3 +190,10 @@
 #alphacxMTable.acx-ticket-cust-table tbody tr td.MuiTableCell-root {
     border-bottom: 1px solid #f1f1f1 !important;
 }
+
+
+#ticketConvoEditorBox {
+    position: fixed;
+    bottom: 1rem;
+    width: calc(100vw - 430px);
+}
