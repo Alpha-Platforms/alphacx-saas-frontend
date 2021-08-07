@@ -183,7 +183,7 @@
 }
 
 #alphacxMTable.acx-ticket-table tbody tr {
-    border-bottom: 1px solid red !important;
+    /* border-bottom: 1px solid red !important; */
 }
 
 #alphacxMTable.acx-ticket-cust-table thead tr th.MuiTableCell-root,
