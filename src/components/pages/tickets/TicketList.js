@@ -114,6 +114,7 @@ const TicketList = ({
     }
   };
 
+<<<<<<< HEAD
   const tableColumns = [
     {
       title: "Name",
@@ -222,6 +223,70 @@ const TicketList = ({
       field: "created",
     },
   ];
+=======
+    const tableColumns = [
+        {
+            title: 'Name',
+            field: 'name',
+            render: rowData => <Link to={`/customers/${rowData.customerId}`} style={{ textTransform: 'capitalize' }}>{rowData.name}</Link>
+        }, {
+            title: 'Ticket ID',
+            field: 'ticketId',
+            width: '40%',
+            render: rowData => <Link to={`/tickets/${rowData.ticketId}`} style={{ textTransform: 'uppercase' }}>{rowData.ticketId.slice(-8)}</Link>
+        }, {
+            title: 'Subject',
+            field: 'subject',
+            width: '40%'
+        }, {
+            title: 'Category',
+            field: 'category'
+        }, {
+            title: 'Status',
+            field: 'status',
+            render: rowData => <div className={`ticket-state ${getStatusColor(rowData.status)}`}><Link to="#" className="btn btn-sm">{rowData.status}</Link></div>
+        },
+        {
+            title: 'Assigned to',
+            field: 'assignedTo',
+            render: rowData => <Link to="/settings/users" style={{ textTransform: 'capitalize' }}>{rowData.assignedTo}</Link>
+        },  
+        // {
+        //     title: 'Status',
+        //     field: 'status',
+        //     render: rowData => (<Dropdown className="ticket-status-dropdown">
+        //                             <Dropdown.Toggle variant="transparent" size="sm">
+        //                                 Open
+        //                             </Dropdown.Toggle>
+        //                             <Dropdown.Menu>
+        //                                 <Dropdown.Item eventKey="1">Open</Dropdown.Item>
+        //                                 <Dropdown.Item eventKey="2">Pending</Dropdown.Item>
+        //                                 <Dropdown.Item eventKey="3">Resolved</Dropdown.Item>
+        //                                 <Dropdown.Item eventKey="4">Closed</Dropdown.Item>
+        //                             </Dropdown.Menu>
+        //                         </Dropdown>)
+        //     // render: rowData => (<select name="ticket-status-select" id="ticket-status-select">
+        //     //                         <option value="open">Open</option>
+        //     //                         <option value="pending">Pending</option>
+        //     //                         <option value="resolved">Resolved</option>
+        //     //                         <option value="closed">Closed</option>
+        //     //                     </select>)
+        // }, 
+        // {
+        //     title: 'Tags',
+        //     field: 'tags',
+        //     render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1">Customer Data</span><span className="badge rounded-pill text-muted border px-2 py-1">+2</span></div>)
+        // },
+        {
+            title: 'Ratings',
+            field: 'rating',
+            render: rowData => (<div className={"table-ratings"}><span className="table-ratings-span"><StarYellowSvg/></span><span className="me-1 table-ratings-span"><StarUnactiveSvg/></span><span className="me-1 table-ratings-span"><StarUnactiveSvg/></span><span className="me-1 table-ratings-span"><StarUnactiveSvg/></span><span className="me-1 table-ratings-span"><StarUnactiveSvg/></span></div>)
+        }, {
+            title: 'Created',
+            field: 'created'
+        }
+    ];
+>>>>>>> 08d811cd2604e5a5d56bb7b3f3a13a1d093b0735
 
   const handleCSVExport = () => {
     if (tickets) {
@@ -304,6 +369,7 @@ const TicketList = ({
                             <UploadSvg/>&nbsp;Import
                         </button> */}
 
+<<<<<<< HEAD
             <Dropdown id="export-dropdown-main">
               <Dropdown.Toggle
                 id="export-dropdown"
@@ -312,6 +378,69 @@ const TicketList = ({
                 {/* <ImportSvg/>&nbsp;Export */}
                 <SaveAlt />
               </Dropdown.Toggle>
+=======
+                        <Dropdown id="export-dropdown-main">
+                            <Dropdown.Toggle id="export-dropdown" className="reset-btn-outline btn ticket-export-btn">
+                                {/* <ImportSvg/>&nbsp;Export */}
+                                <SaveAlt />
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                                <Dropdown.Item as="button" onClick={handlePDFExport}>As PDF</Dropdown.Item>
+                                <Dropdown.Item as="button" onClick={handleCSVExport}>As CSV</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </div>
+
+                </div>
+
+
+                <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table acx-ticket-table">
+                    {(tickets && !changingRow) && <MuiThemeProvider theme={tableTheme}>
+                        <MaterialTable
+                            title = ""
+                            icons = {
+                                tableIcons
+                            }
+                            columns = {tableColumns}
+                            data = {tickets.map(({customer, subject, id, category, created_at, status, assignee}) => ({
+                                name: `${customer.firstname} ${customer.lastname}`,
+                                customerId: customer.id,
+                                ticketId: id,
+                                email: customer.email,
+                                subject: `${subject.substr(0, 25)}...`,
+                                category: category.name,
+                                created: moment(created_at).format('DD MMM, YYYY'),
+                                status: status?.status,
+                                assignedTo: `${assignee.firstname} ${assignee.lastname}`
+                            }))
+                            }
+                            options = {{
+                                search: true,
+                                selection: true,
+                                // exportButton: true,
+                                tableLayout: 'auto',
+                                paging: true,
+                                pageSize: meta?.itemsPerPage || 10,
+                                headerStyle: {
+                                    // backgroundColor: '#f8f9fa'
+                                    backgroundColor: '#fefdfd'
+                                }
+                            }}
+                            components={{ 
+                                Pagination: AlphacxMTPagination
+                            }}
+                            localization={{ 
+                                body: {
+                                    emptyDataSourceMessage: 'No tickets to display'
+                                }
+                             }}
+                             onSelectionChange={handleSelectionChange}
+                        />
+                    </MuiThemeProvider>}
+                </div>
+            </div>
+>>>>>>> 08d811cd2604e5a5d56bb7b3f3a13a1d093b0735
 
               <Dropdown.Menu>
                 <Dropdown.Item as="button" onClick={handlePDFExport}>

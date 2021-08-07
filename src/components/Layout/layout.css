@@ -1,7 +1,11 @@
 .general-wrapper {
   height: 100vh;
   background: #ffff;
+<<<<<<< HEAD
   /* overflow-y: hidden; */
+=======
+  overflow-y: auto;
+>>>>>>> 08d811cd2604e5a5d56bb7b3f3a13a1d093b0735
 }
 
 .navbar-wrap {

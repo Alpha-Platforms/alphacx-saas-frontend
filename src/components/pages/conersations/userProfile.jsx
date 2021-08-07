@@ -151,13 +151,13 @@ export default function UserProfile({ ticket, UserInfo }) {
             );
           })}
         </div> */}
-        <div class="container-timeline">
-          <div class="box">
-            <div class="borderContaner">
-              <div class="circle"></div>
-              <div class="img"></div>
+        <div className="container-timeline">
+          <div className="box">
+            <div className="borderContaner">
+              <div className="circle"></div>
+              <div className="img"></div>
             </div>
-            <div class="textTimeLineSec">
+            <div className="textTimeLineSec">
               <span>
                 consectetur adipiscing elit. Quis pellentesque vitae nisi nulla.
                 Diam elit, ipsum id rhoncus
@@ -168,12 +168,12 @@ export default function UserProfile({ ticket, UserInfo }) {
               </div>
             </div>
           </div>
-          <div class="box">
-            <div class="borderContaner">
-              <div class="circle"></div>
-              <div class="img"></div>
+          <div className="box">
+            <div className="borderContaner">
+              <div className="circle"></div>
+              <div className="img"></div>
             </div>
-            <div class="textTimeLineSec">
+            <div className="textTimeLineSec">
               <span>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quis
                 pellentesque vitae nisi nulla. Diam elit, ipsum id rhoncus
@@ -185,12 +185,12 @@ export default function UserProfile({ ticket, UserInfo }) {
             </div>
           </div>
 
-          <div class="box">
-            <div class="borderContaner">
-              <div class="circle"></div>
-              <div style={{ height: "0px" }} class="img"></div>
+          <div className="box">
+            <div className="borderContaner">
+              <div className="circle"></div>
+              <div style={{ height: "0px" }} className="img"></div>
             </div>
-            <div class="textTimeLineSec">
+            <div className="textTimeLineSec">
               <span>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quis
                 pellentesque vitae nisi nulla. Diam elit, ipsum id rhoncus

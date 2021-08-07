@@ -536,6 +536,21 @@ label.file-picker object.lg-icon {
   z-index: 1 !important;
 }
 
+/* * ------- CUSTOMER AVATAR ---------- */
+.customer-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: auto;
+}
+
+.customer-avatar img {
+  width: 100%;
+  border: solid 1px #fff;
+  border-radius: 50%;
+}
+
 /*  -------- USER NAME INITIALS -----------   */
 
 .user-initials {
@@ -577,6 +592,7 @@ label.file-picker object.lg-icon {
   background-color: var(--at-purple);
 }
 
+
 /* * Size Utility classes */
 .max-w-700 {
   max-width: 700px !important;
@@ -600,7 +616,7 @@ label.file-picker object.lg-icon {
 }
 
 .f-13 {
-  font-size: 12px !important;
+  font-size: 13px !important;
 }
 
 .f-18 {

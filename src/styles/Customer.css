@@ -152,6 +152,8 @@
     margin-left: 0;
     padding-left: 0;
     transform: translateX(-15px);
+    z-index: 40 !important;
+    position: relative;
 }
 
 .cust-table-btns-wrapper {
