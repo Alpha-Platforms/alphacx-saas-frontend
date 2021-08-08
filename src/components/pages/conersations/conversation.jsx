@@ -43,8 +43,11 @@ import pic from "../../../assets/imgF/codeuiandyimg.png";
 import { dateFormater } from "../../helpers/dateFormater";
 import { capitalize } from "@material-ui/core";
 import moment from "moment";
+import RSelect from 'react-select/creatable';
+
 
 export default function Conversation() {
+
   const initialState = EditorState.createWithContent(
     ContentState.createFromText("")
   );
@@ -456,6 +459,16 @@ export default function Conversation() {
       resolve({ data: { link: imageObject.localSrc } });
     });
   };
+
+  /* UPDATE MODAL FORM VALUES */
+  const [RSCustomerName, setRSCustomerName] = useState("")
+  const [RSTicketCate, setRSTicketCate] = useState("")
+  const [RSTickeSubject, setRSTickeSubject] = useState("")
+  const [RSTicketStage, setRSTicketStage] = useState("")
+  const [RSTicketPriority, setRSTicketPriority] = useState("")
+  const [RSTicketRemarks, setRSTicketRemarks] = useState("")
+  const [RSTicketAssignedAgent, setRSTicketAssignedAgent] = useState("")
+  const [RSTicketDueDate, setRSTicketDueDate] = useState("")
 
   return (
     <React.Fragment>
@@ -1028,6 +1041,7 @@ export default function Conversation() {
           </div>
 
           <div className="saveTicketModalForm">
+            
             <div className="ticketmodalInput-twoCol">
 
               <div className="ticketmodalInputWrapMain">
@@ -1041,23 +1055,28 @@ export default function Conversation() {
                 />
               </div>
 
+              {/* 
+              Andy's setters
+              setCategoryUpdate,
+              updateTicket              
+              */}
+
               <div className="ticketmodalInputWrapMain">
                 <label htmlFor="">Category</label>
-                <select
-                  onChange={(e) => {
-                    setCategoryUpdate(e.target.value);
-                  }}
+                <RSelect className="rselectfield"
                   style={{ fontSize: "12px" }}
-                >
-                  <option value="">Select Category</option>
-                  {Category?.map((data) => {
-                    return (
-                      <option key={data.id} value={data?.id}>
-                        {data?.name}
-                      </option>
-                    );
-                  })}
-                </select>
+                  onChange={ (value, actionMeta) => {
+                    setRSTicketCate(value);
+                  }}
+                  isClearable={false}
+
+                  options={
+                    // populate 'options' prop from $Category, with names remapped
+                    Category.map(data => {
+                      return {value: data.name,label: data.name}
+                    })
+                  }
+                />
               </div>
             </div>
 
@@ -1079,32 +1098,39 @@ export default function Conversation() {
 
               <div className="ticketmodalInputWrapMain">
                 <label htmlFor="">Stage</label>
-                <input
-                  value={`${capitalizeFirstLetter(
-                    ticket[0]?.customer?.firstname
-                  )} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
-                  type="text"
-                  disabled
+                <RSelect className="rselectfield"
+                  style={{ fontSize: "12px" }}
+                  onChange={ (value, actionMeta) => {
+                    setRSTicketStage(value);
+                  }}
+                  isClearable={false}
+
+                  options={
+                    // populate 'options' prop from $Category, with names remapped
+                    // Andy, replace Category below with whichever const holds list of priorities
+                    Statues.map(data => {
+                      return {value: data.name,label: data.status}
+                    })
+                  }
                 />
               </div>
 
               <div className="ticketmodalInputWrapMain">
                 <label htmlFor="">Priority</label>
-                <select
-                  onChange={(e) => {
-                    setCategoryUpdate(e.target.value);
-                  }}
+                <RSelect className="rselectfield"
                   style={{ fontSize: "12px" }}
-                >
-                  <option value="">Select Category</option>
-                  {Category?.map((data) => {
-                    return (
-                      <option key={data.id} value={data?.id}>
-                        {data?.name}
-                      </option>
-                    );
-                  })}
-                </select>
+                  onChange={ (value, actionMeta) => {
+                    setRSTicketStage(value);
+                  }}
+                  isClearable={false}
+
+                  options={
+                    // populate 'options' prop from $Statues, with names remapped
+                    Category.map(data => {
+                      return {value: data.name,label: data.name}
+                    })
+                  }
+                />
               </div>
             </div>
             
@@ -1139,70 +1165,64 @@ export default function Conversation() {
               <div className="ticketmodalInputWrapMain" style={{width: "100%" }}>
                 <label htmlFor="">Ticket Due Date</label>
                 <div style={{ display: "flex", gap: "1rem"}}>
-                  <div style={{
-                    display: "flex",
-                      width: "calc(100% * 1/3)",
-                      gap: "8px",
-                      alignItems: "center"}}>
-                    <select
-                      onChange={(e) => {
-                        setCategoryUpdate(e.target.value);
-                      }}
-                      style={{ fontSize: "12px" }}
-                    >
-                      <option value="">7</option>
-                      {Category?.map((data) => {
-                        return (
-                          <option key={data.id} value={data?.id}>
-                            {data?.name}
-                          </option>
-                        );
-                      })}
-                    </select>
+                  <div className="thirdselects">
+                  <RSelect className="rselectfield"
+                    style={{ fontSize: "12px" }}
+                    onChange={ (value, actionMeta) => {
+                      setRSTicketStage(value);
+                    }}
+                    isClearable={false}
+
+                    options={[
+                      {value: 1, label: 1},
+                      {value: 2, label: 2},
+                      {value: 3, label: 3},
+                      {value: 4, label: 4},
+                      {value: 5, label: 5},
+                      {value: 6, label: 6},
+                      {value: 7, label: 7},
+                    ]}
+                  />
                     <label htmlFor="">Days</label>
                   </div>
-                  <div style={{
-                    display: "flex",
-                        width: "calc(100% * 1/3)",
-                        gap: "8px",
-                        alignItems: "center"}}>
-                    <select
-                      onChange={(e) => {
-                        setCategoryUpdate(e.target.value);
-                      }}
+                  <div className="thirdselects">
+                    <RSelect className="rselectfield"
                       style={{ fontSize: "12px" }}
-                    >
-                      <option value="">7</option>
-                      {Category?.map((data) => {
-                        return (
-                          <option key={data.id} value={data?.id}>
-                            {data?.name}
-                          </option>
-                        );
-                      })}
-                    </select>
+                      onChange={ (value, actionMeta) => {
+                        setRSTicketStage(value);
+                      }}
+                      isClearable={false}
+
+                      options={[
+                        {value: 1, label: 1},
+                        {value: 2, label: 2},
+                        {value: 3, label: 3},
+                        {value: 4, label: 4},
+                        {value: 5, label: 5},
+                        {value: 6, label: 6},
+                        {value: 7, label: 7},
+                      ]}
+                    />
                     <label htmlFor="">Hours</label>
                   </div>
-                  <div style={{
-                    display: "flex",
-                        width: "calc(100% * 1/3)",
-                        gap: "8px",
-                        alignItems: "center"}}>
-                    <select
-                      onChange={(e) => {
-                        setCategoryUpdate(e.target.value);
+                  <div className="thirdselects">
+                    <RSelect className="rselectfield"
+                      style={{ fontSize: "12px" }}
+                      onChange={ (value, actionMeta) => {
+                        setRSTicketStage(value);
                       }}
-                      style={{ fontSize: "12px", width: "calc" }}
-                    >
-                      <option value="">7</option>
-                      {Category?.map((data) => {
-                        return (
-                          <option key={data.id} value={data?.id}>
-                            {data?.name}
-                          </option>
-                        );
-                      })}
-                    </select>
+                      isClearable={false}
+
+                      options={[
+                        {value: 1, label: 1},
+                        {value: 2, label: 2},
+                        {value: 3, label: 3},
+                        {value: 4, label: 4},
+                        {value: 5, label: 5},
+                        {value: 6, label: 6},
+                        {value: 7, label: 7},
+                      ]}
+                    />
                     <label htmlFor="">Minutes</label>
                   </div>
                   
@@ -1210,19 +1230,15 @@ export default function Conversation() {
               </div>
             </div>
 
-            
+            <div>
+              <RSelect className="rselectfield mt-4"
+                onChange={ (value, actionMeta) => setRSCustomerName(value)}
+                isMulti
+              />
+            </div>
 
             <div className="closeTicketModdalj">
-              <select
-                name=""
-                id=""
-                onChange={(e) => updateTicket(e.target.value)}
-              >
-                <option value="">Save</option>
-                {Statues?.map((data) => {
-                  return <option value={data.id}>{data.status}</option>;
-                })}
-              </select>
+              <button type="submit">Update</button>
             </div>
           </div>
         </div>
