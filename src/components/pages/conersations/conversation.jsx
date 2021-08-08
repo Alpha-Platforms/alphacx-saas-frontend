@@ -1029,6 +1029,7 @@ export default function Conversation() {
 
           <div className="saveTicketModalForm">
             <div className="ticketmodalInput-twoCol">
+
               <div className="ticketmodalInputWrapMain">
                 <label htmlFor="">Customer</label>
                 <input
@@ -1043,8 +1044,6 @@ export default function Conversation() {
               <div className="ticketmodalInputWrapMain">
                 <label htmlFor="">Category</label>
                 <select
-                  name=""
-                  id=""
                   onChange={(e) => {
                     setCategoryUpdate(e.target.value);
                   }}
@@ -1075,12 +1074,45 @@ export default function Conversation() {
               </div>
             </div>
 
+
+            <div className="ticketmodalInput-twoCol">
+
+              <div className="ticketmodalInputWrapMain">
+                <label htmlFor="">Stage</label>
+                <input
+                  value={`${capitalizeFirstLetter(
+                    ticket[0]?.customer?.firstname
+                  )} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
+                  type="text"
+                  disabled
+                />
+              </div>
+
+              <div className="ticketmodalInputWrapMain">
+                <label htmlFor="">Priority</label>
+                <select
+                  onChange={(e) => {
+                    setCategoryUpdate(e.target.value);
+                  }}
+                  style={{ fontSize: "12px" }}
+                >
+                  <option value="">Select Category</option>
+                  {Category?.map((data) => {
+                    return (
+                      <option key={data.id} value={data?.id}>
+                        {data?.name}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+            </div>
+            
+
             <div className="descriptionWrap">
-              <label htmlFor="">Description</label>
+              <label htmlFor="">Remarks</label>
               <textarea
                 style={{ padding: "10px" }}
-                name=""
-                id=""
                 value={`${saveTicket?.description?.map((data) => {
                   return data?.plain_response;
                 })} `}
@@ -1088,13 +1120,105 @@ export default function Conversation() {
               ></textarea>
             </div>
 
+
+            <div className="ticketmodalInput-OneCol">
+              <div className="ticketmodalInputWrapMainOne">
+                <label htmlFor="">Assigned To</label>
+                <input
+                  type="text"
+                  value={`${saveTicket.subject} `}
+                  type="text"
+                  disabled
+                  style={{ fontSize: "12px" }}
+                />
+              </div>
+            </div>
+
+            <div className="ticketmodalInput-twoCol">
+
+              <div className="ticketmodalInputWrapMain" style={{width: "100%" }}>
+                <label htmlFor="">Ticket Due Date</label>
+                <div style={{ display: "flex", gap: "1rem"}}>
+                  <div style={{
+                    display: "flex",
+                      width: "calc(100% * 1/3)",
+                      gap: "8px",
+                      alignItems: "center"}}>
+                    <select
+                      onChange={(e) => {
+                        setCategoryUpdate(e.target.value);
+                      }}
+                      style={{ fontSize: "12px" }}
+                    >
+                      <option value="">7</option>
+                      {Category?.map((data) => {
+                        return (
+                          <option key={data.id} value={data?.id}>
+                            {data?.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    <label htmlFor="">Days</label>
+                  </div>
+                  <div style={{
+                    display: "flex",
+                        width: "calc(100% * 1/3)",
+                        gap: "8px",
+                        alignItems: "center"}}>
+                    <select
+                      onChange={(e) => {
+                        setCategoryUpdate(e.target.value);
+                      }}
+                      style={{ fontSize: "12px" }}
+                    >
+                      <option value="">7</option>
+                      {Category?.map((data) => {
+                        return (
+                          <option key={data.id} value={data?.id}>
+                            {data?.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    <label htmlFor="">Hours</label>
+                  </div>
+                  <div style={{
+                    display: "flex",
+                        width: "calc(100% * 1/3)",
+                        gap: "8px",
+                        alignItems: "center"}}>
+                    <select
+                      onChange={(e) => {
+                        setCategoryUpdate(e.target.value);
+                      }}
+                      style={{ fontSize: "12px", width: "calc" }}
+                    >
+                      <option value="">7</option>
+                      {Category?.map((data) => {
+                        return (
+                          <option key={data.id} value={data?.id}>
+                            {data?.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                    <label htmlFor="">Minutes</label>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+
+            
+
             <div className="closeTicketModdalj">
               <select
                 name=""
                 id=""
                 onChange={(e) => updateTicket(e.target.value)}
               >
-                <option value="">Save as</option>
+                <option value="">Save</option>
                 {Statues?.map((data) => {
                   return <option value={data.id}>{data.status}</option>;
                 })}

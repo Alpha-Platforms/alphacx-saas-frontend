@@ -650,7 +650,6 @@ select {
   box-sizing: border-box;
   border-radius: 2px;
   height: 40px;
-  margin-top: 4px;
   color: rgba(101, 101, 101, 0.7);
   font-size: 12px;
 }
