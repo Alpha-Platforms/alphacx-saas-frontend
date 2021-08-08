@@ -8,6 +8,8 @@ import {
 } from "../../../assets/images/svgs";
 import userImg from "../../../assets/imgF/user.png";
 import { capitalize } from "@material-ui/core";
+import {Link} from 'react-router-dom';
+
 export default function UserProfile({ ticket, UserInfo }) {
   const [tags, setTags] = useState([
     <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
@@ -37,9 +39,9 @@ export default function UserProfile({ ticket, UserInfo }) {
               // </div>
             )}
 
-            <p>{`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(
+            <p className="font-weight-bold"><b>{`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(
               ticket[0]?.customer?.lastname
-            )}`}</p>
+            )}`}</b></p>
             {/* <p>{` Marvin McKinney`}</p> */}
           </div>
 
@@ -93,9 +95,9 @@ export default function UserProfile({ ticket, UserInfo }) {
               {/* <p>
               {UserInfo?.phoneNumber ? UserInfo?.phoneNumber : "unavailable"}
             </p> */}
-              <p>{`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(
+              <p><Link to="/settings/users">{`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(
                 ticket[0]?.assignee?.lastname
-              )}`}</p>
+              )}`}</Link></p>
             </div>
 
             <div className="aboutUserColConv">

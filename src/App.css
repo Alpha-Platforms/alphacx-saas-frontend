@@ -623,6 +623,10 @@ label.file-picker object.lg-icon {
   font-size: 18px !important;
 }
 
+.f-8 {
+  font-size: 8px !important;
+}
+
 .fw-500 {
   font-weight: 500;
 }
@@ -1252,3 +1256,7 @@ a object {
   background-image: none;
 }
 /** >>> End | From from styles.css*/
+
+.whitespace-nowrap {
+  white-space: nowrap;
+}
