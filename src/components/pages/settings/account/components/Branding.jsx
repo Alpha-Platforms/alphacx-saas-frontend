@@ -30,7 +30,7 @@ const Branding = () => {
     setBrandingImages({ ...brandingImages, themeColor: color.hex });
   };
   return (
-    <div>
+    <div className="w-75">
       {/*
             <!-- * upload photo section -->
             */}
@@ -321,7 +321,7 @@ const Branding = () => {
           </div>
         )}
       </div>
-      <div className=" mb-5">
+      <div className="float-end mb-5">
         <a
           href="automation.html"
           className="btn btn-sm f-12 bg-outline-custom cancel px-4"
