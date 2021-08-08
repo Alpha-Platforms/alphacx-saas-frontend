@@ -129,7 +129,7 @@ const NewArticle = () => {
     fetchCategories();
   }, []);
   return (
-    <div id="mainContent" class="container settings-email help-center">
+    <div id="mainContent" class="container settings-email help-center-settings">
       <main class="mb-5">
         <div id="mainContent" class="container">
           <div class="card card-body bg-white border-0 p-5 mt-4">
@@ -137,7 +137,11 @@ const NewArticle = () => {
               <h6 class="text-muted f-14">
                 Settings{" "}
                 <img src={RightArrow} alt="" class="img-fluid mx-2 me-3" />
-                <span class="text-custom">Help Center</span>
+                <Link to="/settings/help-center">
+                  <span class="text-custom">Help Center</span>
+                </Link>
+                <img src={RightArrow} alt="" class="img-fluid mx-2 me-3" />
+                <span class="text-custom">Article</span>
               </h6>
             </div>
             <div class="d-flex justify-content-between flex-row">
@@ -251,26 +255,21 @@ const NewArticle = () => {
                 </div>
               </div>
               <div className="side-content">
-                <div className="action_btns">
-                  <div>
-                    <Link
-                      class="btn btn-primary btn-sm preview ms-2"
-                      to="/settings/help-center/article"
-                    >
-                      <span>Preview</span>
-                    </Link>
-                  </div>
-                  <div className="action_btns">
-                    <div>
-                      <a
-                        class="btn btn-primary btn-sm ms-2"
-                        onClick={handleSubmitNewArticle}
-                      >
-                        <span>Save</span>
-                      </a>
-                    </div>
-                  </div>
+                <div className=" mb-5">
+                  <Link
+                    to="/settings/help-center/article"
+                    className="btn btn-sm f-12 bg-outline-custom cancel px-4 w-50"
+                  >
+                    <p>Preview</p>
+                  </Link>
+                  <a
+                    className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
+                    onClick={handleSubmitNewArticle}
+                  >
+                    Save Changes
+                  </a>
                 </div>
+
                 <div className="category mb-4">
                   <p>Category</p>
                   <div className="category-holder">

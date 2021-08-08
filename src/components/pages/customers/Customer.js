@@ -74,24 +74,25 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
         <Fragment>
             {!isCurrentCustomerLoaded
                 ? <div className="single-cust-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
-                : !currentCustomer ? <div>No Customer Found.</div> : <div
+                : !currentCustomer ? <div>No Customer Found.</div> : <div className="pb-4"> <div
                     style={{
                     gridTemplateColumns: "280px 1fr",
                     border: '1px solid #f1f1f1'
                 }}
-                    className="d-grid mb-4">
+                    className="d-grid">
 
                     <div
                         style={{
                         borderRight: '1px solid #f1f1f1',
                         background: '#fafafa'
                     }}
-                        className="py-5 pt-4 px-3">
+                        className="pt-4 px-3">
                         <div className="user-initials-lg">
                             {currentCustomer?.avatar ? <div className="customer-avatar"><img src={currentCustomer.avatar} alt='' /></div> : <div className="user-initials blue me-auto ms-auto">{getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname}`)}</div>}
                             <div className="text-center mt-3">
-                                <h4 style={{ textTransform: 'capitalize' }}>{`${currentCustomer.firstname} ${currentCustomer.lastname}`}</h4>
-                                <p className="text-muted">jackmay@gmail.com</p>
+                                {/* <h4 style={{ textTransform: 'capitalize' }}>{`${currentCustomer.firstname} ${currentCustomer.lastname}`}</h4> */}
+                                <h6 className="mb-0 text-capitalize"><b>{`${currentCustomer.firstname} ${currentCustomer.lastname}`}</b></h6>
+                                <p className="text-muted f-13">jackmay@gmail.com</p>
                             </div>
                         </div>
                         <hr className="op-1"/> {/* <!-- Customer date info --> */}
@@ -100,14 +101,14 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                 <li>
                                     <div><CircleIcon icon={WorkIcon}/></div>
                                     <div>
-                                        <p className="pb-0 mb-0 f-12">Account ID</p>
+                                        <p className="pb-0 mb-0 f-12 text-muted op-9">Account ID</p>
                                         <p className="text-muted f-13">{id?.slice(0, 8).toUpperCase()}</p>
                                     </div>
                                 </li>
                                 <li>
                                     <div><CircleIcon color="rgba(186, 104, 200, 0.25)" icon={CallIcon}/></div>
                                     <div>
-                                        <p className="pb-0 mb-0 f-12">Work Phone</p>
+                                        <p className="pb-0 mb-0 f-12 text-muted op-9">Work Phone</p>
                                         <p className="text-muted f-13">{currentCustomer.phoneNumber ? currentCustomer.phoneNumber : currentCustomer.phone_number ? currentCustomer.phone_number : ''}</p>
                                     </div>
                                 </li>
@@ -210,7 +211,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                         style={{
                         overflowX: "hidden"
                     }}
-                        className="bg-secondary py-3 pt-0 bg-white">
+                        className="bg-secondary pt-0 bg-white">
 
                         <div
                             style={{
@@ -282,7 +283,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
 
                     </div>
 
-                </div>}
+                </div></div>}
 
             {/* Profile Update OffCanvas */}
             <div

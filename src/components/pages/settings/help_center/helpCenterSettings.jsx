@@ -6,6 +6,14 @@ import { httpGetMain } from "../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import MaterialTable from "material-table";
+import { TablePagination } from "@material-ui/core";
+import tableIcons from "../../../../assets/materialicons/tableIcons";
+import {
+  ThemeProvider as MuiThemeProvider,
+  createTheme,
+} from "@material-ui/core/styles";
+import "../../../../styles/Ticket.css";
 
 const HelpCenterSettings = () => {
   const [articles, setArticles] = useState([]);
@@ -27,6 +35,86 @@ const HelpCenterSettings = () => {
     let newArticles = articles;
     newArticles.articles[index].checked = e.target.checked;
     setArticles(newArticles);
+  };
+
+  const tableTheme = createTheme({
+    palette: {
+      primary: {
+        main: "rgba(0, 98, 152)",
+      },
+      secondary: {
+        main: "rgba(0, 98, 152)",
+      },
+    },
+  });
+  const [changingRow, setChangingRow] = useState(false);
+  const tableColumns = [
+    {
+      title: "Title",
+      field: "title",
+      width: "40%",
+    },
+    {
+      title: "Status",
+      field: "status",
+    },
+    {
+      title: "Page Views",
+      field: "views",
+    },
+    {
+      title: "Author",
+      field: "author",
+    },
+    {
+      title: "Created at",
+      field: "created_at",
+    },
+    {
+      title: "Last modified at",
+      field: "modified_at",
+    },
+  ];
+
+  const AlphacxMTPagination = (props) => {
+    const {
+      ActionsComponent,
+      onChangePage,
+      onChangeRowsPerPage,
+      ...tablePaginationProps
+    } = props;
+
+    return (
+      <TablePagination
+        {...tablePaginationProps}
+        rowsPerPageOptions={[10, 20, 30]}
+        rowsPerPage={5}
+        count={20}
+        page={1 - 1}
+        onPageChange={onChangePage}
+        // when the number of rows per page changes
+        onRowsPerPageChange={(event) => {
+          setChangingRow(true);
+          // getPaginatedTickets(event.target.value, 1);
+        }}
+        ActionsComponent={(subprops) => {
+          const { onPageChange, ...actionsComponentProps } = subprops;
+          return (
+            <ActionsComponent
+              {...actionsComponentProps}
+              onChangePage={(event, newPage) => {
+                // fetch tickets with new current page
+                // getPaginatedTickets(meta.itemsPerPage, newPage + 1);
+              }}
+              onRowsPerPageChange={(event) => {
+                // fetch tickets with new rows per page
+                // getPaginatedTickets(event.target.value, meta.currentPage);
+              }}
+            />
+          );
+        }}
+      />
+    );
   };
 
   useEffect(() => {
@@ -57,47 +145,44 @@ const HelpCenterSettings = () => {
                 </Link>
               </div>
             </div>
-            <div class="form-group">
-              <input
-                type="search"
-                class="form-control form-control-sm f-12 search-bar mt-2 px-5 d-block w-50"
-                placeholder="Search help center"
-              />
-            </div>
+
             {articles?.articles?.length > 0 && (
-              <div className="articleList">
-                <div className="header">
-                  <input
-                    name="isGoing"
-                    type="checkbox"
-                    checked={false}
-                    //   onChange={this.handleInputChange}
-                  />
-                  <p>Title</p>
-                  <p>Status</p>
-                  <p>Page Views</p>
-                  <p>Author</p>
-                  <p>Created at</p>
-                  <p>Last modified at</p>
-                </div>
-                {articles?.articles?.map((art, i) => (
-                  <div key={art.id} className="listItem">
-                    <input
-                      name="isGoing"
-                      type="checkbox"
-                      checked={art?.checked}
-                      onClick={(e) => {
-                        handleCheck(e, i);
+              <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
+                <div
+                  id="alphacxMTable"
+                  className="pb-5 acx-ticket-cust-table acx-ticket-table p-4"
+                >
+                  <MuiThemeProvider theme={tableTheme}>
+                    <MaterialTable
+                      columns={tableColumns}
+                      title=""
+                      icons={tableIcons}
+                      data={articles?.articles?.map(({ title }) => ({
+                        title,
+                        status: "Published",
+                        views: "100",
+                        author: "Dabo Etela",
+                        created_at: "12-05-2021",
+                        modified_at: "12-05-2021",
+                      }))}
+                      options={{
+                        search: true,
+                        selection: true,
+                        // exportButton: true,
+                        tableLayout: "auto",
+                        paging: true,
+                        pageSize: 10,
+                        headerStyle: {
+                          // backgroundColor: '#f8f9fa'
+                          backgroundColor: "#fefdfd",
+                        },
+                      }}
+                      components={{
+                        Pagination: AlphacxMTPagination,
                       }}
                     />
-                    <p>{art.title}</p>
-                    <p>Published</p>
-                    <p>100</p>
-                    <p>Dabo Etela</p>
-                    <p>12-05-2021</p>
-                    <p>12-05-2021</p>
-                  </div>
-                ))}
+                  </MuiThemeProvider>
+                </div>
               </div>
             )}
             {!articles?.articles && (
@@ -119,11 +204,11 @@ const HelpCenterSettings = () => {
                 </Link>
               </div>
             )}
-            {articles?.articles?.length > 0 && (
+            {/* {articles?.articles?.length > 0 && (
               <div className="pagination">
                 <p>Showing 1-1 of 1 entries</p>
               </div>
-            )}
+            )} */}
             {/* <div id="result"></div> */}
           </div>
         </div>
