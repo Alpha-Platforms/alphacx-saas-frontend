@@ -33,37 +33,6 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
     const [showUpdate,
         setShowUpdate] = useState(false);
 
-    const customers = [
-        {
-            date: '02 Jul, 2021',
-            ticket_id: '0721115',
-            subject: 'How do I get a refund?',
-            category: 'Enquiry',
-            agent_assigned: 'Munachi',
-            status: 'Pending'
-        }, {
-            date: '02 Jul, 2021',
-            ticket_id: '0721115',
-            subject: 'How do I get a refund?',
-            category: 'Enquiry',
-            agent_assigned: 'Munachi',
-            status: 'Closed'
-        }, {
-            date: '02 Jul, 2021',
-            ticket_id: '0721115',
-            subject: 'How do I get a refund?',
-            category: 'Enquiry',
-            agent_assigned: 'Munachi',
-            status: 'Overdue'
-        }, {
-            date: '02 Jul, 2021',
-            ticket_id: '0721115',
-            subject: 'How do I get a refund?',
-            category: 'Enquiry',
-            agent_assigned: 'Munachi',
-            status: 'Pending'
-        }
-    ];
 
     useEffect(() => {
 
@@ -87,7 +56,19 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
             default:
         }
         return output;
-    }
+    };
+
+    const [tags, setTags] = useState([
+        <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
+        <div style={{ color: "#F40D0D", background: "#FFEAEA " }}>Billing</div>,
+        <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
+        <div style={{ color: "#1E90FF", background: "#E3F1FF" }}>Billing</div>,
+        <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
+        <div style={{ color: "#1E90FF", background: "#E3F1FF" }}>Billing</div>,
+        <div style={{ color: "#F40D0D", background: "#FFEAEA " }}>Billing</div>,
+        <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
+        <div style={{ color: "#1E90FF", background: "#E3F1FF" }}>Billing</div>,
+      ]);
 
     return (
         <Fragment>
@@ -102,9 +83,10 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
 
                     <div
                         style={{
-                        borderRight: '1px solid #f1f1f1'
+                        borderRight: '1px solid #f1f1f1',
+                        background: '#fafafa'
                     }}
-                        className="bg-primary py-5 pt-4 px-3 bg-white">
+                        className="py-5 pt-4 px-3">
                         <div className="user-initials-lg">
                             {currentCustomer?.avatar ? <div className="customer-avatar"><img src={currentCustomer.avatar} alt='' /></div> : <div className="user-initials blue me-auto ms-auto">{getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname}`)}</div>}
                             <div className="text-center mt-3">
@@ -118,15 +100,15 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                 <li>
                                     <div><CircleIcon icon={WorkIcon}/></div>
                                     <div>
-                                        <h6>Account ID</h6>
-                                        <p className="text-muted">{id?.slice(0, 8).toUpperCase()}</p>
+                                        <p className="pb-0 mb-0 f-12">Account ID</p>
+                                        <p className="text-muted f-13">{id?.slice(0, 8).toUpperCase()}</p>
                                     </div>
                                 </li>
                                 <li>
                                     <div><CircleIcon color="rgba(186, 104, 200, 0.25)" icon={CallIcon}/></div>
                                     <div>
-                                        <h6>Work Phone</h6>
-                                        <p className="text-muted">{currentCustomer.phone_number}</p>
+                                        <p className="pb-0 mb-0 f-12">Work Phone</p>
+                                        <p className="text-muted f-13">{currentCustomer.phoneNumber ? currentCustomer.phoneNumber : currentCustomer.phone_number ? currentCustomer.phone_number : ''}</p>
                                     </div>
                                 </li>
                                 {/* <li>
@@ -158,11 +140,17 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                     </div>
                                 </li> */}
                             </ul>
-                            <div className={"table-tags text-justify"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1 f-10">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1 f-10">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1 f-10">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1 f-10">Active</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1 f-10">Urgent</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1 f-10">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1 f-10">High Value</span></div>
+                            {/* <div className={"table-tags text-justify"}><span className="badge rounded-pill acx-bg-purple-30 px-2 py-2 me-1 my-1 f-8">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-2 py-2 me-1 my-1 f-8">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-2 py-2 me-1 my-1 f-8">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-2 py-2 me-1 my-1 f-8">Active</span><span className="badge rounded-pill acx-bg-blue-light-30 px-2 py-2 me-1 my-1 f-8">Urgent</span><span className="badge rounded-pill acx-bg-red-30 px-2 py-2 me-1 my-1 f-8">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-purple-30 px-2 py-2 me-1 my-1 f-8">High Value</span></div> */}
+
+                            <div className="ticktTagsgfs3">
+                                {tags.map((data) => {
+                                    return data;
+                                })}
+                            </div>
 
                         </div>
 
-                        <hr className="op-1"/>
+                        <hr className="op-1 mt-0"/>
 
                         <div class="container-timeline">
                             <div class="box">
