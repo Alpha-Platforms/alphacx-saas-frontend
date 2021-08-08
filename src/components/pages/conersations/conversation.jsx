@@ -470,6 +470,8 @@ export default function Conversation() {
   const [RSTicketAssignedAgent, setRSTicketAssignedAgent] = useState("")
   const [RSTicketDueDate, setRSTicketDueDate] = useState("")
 
+  const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(false)
+
   return (
     <React.Fragment>
       <div className="conversation-wrap codei-ui-andy-setDefaults">
@@ -1145,98 +1147,108 @@ export default function Conversation() {
                 style={{ fontSize: "12px", padding: "7px" }}
               ></textarea>
             </div>
+              
+            <p className="btn mt-3 p-0 text-start" 
+            role="button"
+              style={{ fontSize: "0.8rem", fontWeight: "bold", marginBottom: 0 }}
+              onClick={() => setIsAdditionalOptionVisible(v => !v)}>Additional Options</p>
 
+            { isAdditionalOptionVisible && (
 
-            <div className="ticketmodalInput-OneCol">
-              <div className="ticketmodalInputWrapMainOne">
-                <label htmlFor="">Assigned To</label>
-                <input
-                  type="text"
-                  value={`${saveTicket.subject} `}
-                  type="text"
-                  disabled
-                  style={{ fontSize: "12px" }}
-                />
-              </div>
-            </div>
-
-            <div className="ticketmodalInput-twoCol">
-
-              <div className="ticketmodalInputWrapMain" style={{width: "100%" }}>
-                <label htmlFor="">Ticket Due Date</label>
-                <div style={{ display: "flex", gap: "1rem"}}>
-                  <div className="thirdselects">
-                  <RSelect className="rselectfield"
+            <div className="additional-options">
+              <div className="ticketmodalInput-OneCol">
+                <div className="ticketmodalInputWrapMainOne">
+                  <label htmlFor="">Assigned To</label>
+                  <input
+                    type="text"
+                    value={`${saveTicket.subject} `}
+                    type="text"
+                    disabled
                     style={{ fontSize: "12px" }}
-                    onChange={ (value, actionMeta) => {
-                      setRSTicketStage(value);
-                    }}
-                    isClearable={false}
-
-                    options={[
-                      {value: 1, label: 1},
-                      {value: 2, label: 2},
-                      {value: 3, label: 3},
-                      {value: 4, label: 4},
-                      {value: 5, label: 5},
-                      {value: 6, label: 6},
-                      {value: 7, label: 7},
-                    ]}
                   />
-                    <label htmlFor="">Days</label>
-                  </div>
-                  <div className="thirdselects">
-                    <RSelect className="rselectfield"
-                      style={{ fontSize: "12px" }}
-                      onChange={ (value, actionMeta) => {
-                        setRSTicketStage(value);
-                      }}
-                      isClearable={false}
-
-                      options={[
-                        {value: 1, label: 1},
-                        {value: 2, label: 2},
-                        {value: 3, label: 3},
-                        {value: 4, label: 4},
-                        {value: 5, label: 5},
-                        {value: 6, label: 6},
-                        {value: 7, label: 7},
-                      ]}
-                    />
-                    <label htmlFor="">Hours</label>
-                  </div>
-                  <div className="thirdselects">
-                    <RSelect className="rselectfield"
-                      style={{ fontSize: "12px" }}
-                      onChange={ (value, actionMeta) => {
-                        setRSTicketStage(value);
-                      }}
-                      isClearable={false}
-
-                      options={[
-                        {value: 1, label: 1},
-                        {value: 2, label: 2},
-                        {value: 3, label: 3},
-                        {value: 4, label: 4},
-                        {value: 5, label: 5},
-                        {value: 6, label: 6},
-                        {value: 7, label: 7},
-                      ]}
-                    />
-                    <label htmlFor="">Minutes</label>
-                  </div>
-                  
                 </div>
               </div>
-            </div>
 
-            <div>
-              <RSelect className="rselectfield mt-4"
-                onChange={ (value, actionMeta) => setRSCustomerName(value)}
-                isMulti
-              />
-            </div>
+              <div className="ticketmodalInput-twoCol">
 
+                <div className="ticketmodalInputWrapMain" style={{width: "100%" }}>
+                  <label htmlFor="">Ticket Due Date</label>
+                  <div style={{ display: "flex", gap: "1rem"}}>
+                    <div className="thirdselects">
+                    <RSelect className="rselectfield"
+                      style={{ fontSize: "12px" }}
+                      onChange={ (value, actionMeta) => {
+                        setRSTicketStage(value);
+                      }}
+                      isClearable={false}
+
+                      options={[
+                        {value: 1, label: 1},
+                        {value: 2, label: 2},
+                        {value: 3, label: 3},
+                        {value: 4, label: 4},
+                        {value: 5, label: 5},
+                        {value: 6, label: 6},
+                        {value: 7, label: 7},
+                      ]}
+                    />
+                      <label htmlFor="">Days</label>
+                    </div>
+                    <div className="thirdselects">
+                      <RSelect className="rselectfield"
+                        style={{ fontSize: "12px" }}
+                        onChange={ (value, actionMeta) => {
+                          setRSTicketStage(value);
+                        }}
+                        isClearable={false}
+
+                        options={[
+                          {value: 1, label: 1},
+                          {value: 2, label: 2},
+                          {value: 3, label: 3},
+                          {value: 4, label: 4},
+                          {value: 5, label: 5},
+                          {value: 6, label: 6},
+                          {value: 7, label: 7},
+                        ]}
+                      />
+                      <label htmlFor="">Hours</label>
+                    </div>
+                    <div className="thirdselects">
+                      <RSelect className="rselectfield"
+                        style={{ fontSize: "12px" }}
+                        onChange={ (value, actionMeta) => {
+                          setRSTicketStage(value);
+                        }}
+                        isClearable={false}
+
+                        options={[
+                          {value: 1, label: 1},
+                          {value: 2, label: 2},
+                          {value: 3, label: 3},
+                          {value: 4, label: 4},
+                          {value: 5, label: 5},
+                          {value: 6, label: 6},
+                          {value: 7, label: 7},
+                        ]}
+                      />
+                      <label htmlFor="">Minutes</label>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <RSelect className="rselectfield mt-4"
+                  onChange={ (value, actionMeta) => setRSCustomerName(value)}
+                  isMulti
+                />
+              </div>
+
+            </div> 
+
+            )}
             <div className="closeTicketModdalj">
               <button type="submit">Update</button>
             </div>
