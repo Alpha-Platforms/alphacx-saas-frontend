@@ -38,6 +38,7 @@ import {
   httpPatchMain,
 } from "../../../helpers/httpMethods";
 import NoChatFound from "../conersations/noChatFound";
+import { CURRENT_CUSTOMER_TICKETS_LOADING } from "../../../reduxstore/types";
 
 const CircleIcon = (props) => (
   <span className="cust-grey-circle">
@@ -216,7 +217,7 @@ const Ticket = ({
     const richText = draftToHtml(convertToRaw(editorState.getCurrentContent()));
     setEditorState(editorState);
     setReplyTicket({ plainText, richText });
-    console.log(">>>>", richText, richText);
+    console.log(">>>>", richText, plainText);
   };
   const getTickets = async () => {
     const res = await httpGetMain("tickets?channel=whatsapp");
@@ -252,10 +253,10 @@ const Ticket = ({
       // type: "note",
       response: reply.richText,
       plainResponse: reply.plainText,
-      phoneNumber: singleTicketFullInfo.customer.phone_number,
+      phoneNumber: currentTicket.customer.phone_number,
       // attachment: "",
     };
-    console.log(singleTicketFullInfo.customer.phone_number);
+    console.log(currentTicket.customer.phone_number);
     console.log(data);
     // setsendingReply(true);
     const replyData = {
@@ -268,10 +269,7 @@ const Ticket = ({
     };
     console.log(replyData);
     setMsgHistory((item) => [...item, replyData]);
-    const res = await httpPostMain(
-      `tickets/${singleTicketFullInfo.id}/replies`,
-      data
-    );
+    const res = await httpPostMain(`tickets/${currentTicket.id}/replies`, data);
     if (res?.status == "success") {
       // setsendingReply(false);
       // ReloadloadSingleMessage();
@@ -510,7 +508,13 @@ const Ticket = ({
           }}
           className="d-grid mb-4"
         >
-          <div className="pt-2" style={{ backgroundColor: "#fafafa" }}>
+          <div
+            className="pt-2"
+            style={{
+              backgroundColor: "#fafafa",
+              borderRight: "1px solid #f1f1f1",
+            }}
+          >
             <UserProfile UserInfo={UserInfo} ticket={[currentTicket]} />
           </div>
 
@@ -569,6 +573,7 @@ const Ticket = ({
                     </div> */}
 
           <div
+            id="ticketDetailsRightPane"
             style={{
               overflowX: "hidden",
             }}
@@ -666,7 +671,7 @@ const Ticket = ({
                       </div>
                     </div>
                     {/* CHAT SECTION */}
-                    <div className="conversationsMain">
+                    <div id="ticketConvoBox" className="conversationsMain">
                       <div className="chatDateHeader">
                         <div className="chatDateHeaderhr1"></div>
                         <div className="chatDateHeaderTitle">
