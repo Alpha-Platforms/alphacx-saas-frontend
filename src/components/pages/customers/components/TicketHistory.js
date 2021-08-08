@@ -134,7 +134,7 @@ const TicketHistory = ({ currentCustomerTicketsMeta, currentCustomerId, getPagin
 
     return (
         <div>
-            <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table acx-ticket-table">
+            <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table acx-ticket-table acx-single-cust-table">
                     {!isCurrentCustomerTicketsLoaded ? <div className="text-center"><ScaleLoader loading={ticketLoading} color={"#006298"}/></div> : <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""
