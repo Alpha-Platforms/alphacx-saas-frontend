@@ -38,10 +38,13 @@ export default function UserProfile({ ticket, UserInfo }) {
               //   )} ${UserInfo?.lastname?.slice(0, 1)}`}</p>
               // </div>
             )}
-
+{/* 
             <p className="font-weight-bold"><b>{`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(
               ticket[0]?.customer?.lastname
-            )}`}</b></p>
+            )}`}</b></p> */}
+            <h6 className="mb-0 text-capitalize mt-2"><b>{`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(
+              ticket[0]?.customer?.lastname
+            )}`}</b></h6>
             {/* <p>{` Marvin McKinney`}</p> */}
           </div>
 
