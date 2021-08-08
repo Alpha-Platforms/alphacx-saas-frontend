@@ -560,6 +560,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                     </div> */}
 
                     <div
+                        id="ticketDetailsRightPane"
                         style={{
                         overflowX: "hidden"
                     }}
@@ -659,7 +660,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                       </div>
                   </div>
                   {/* CHAT SECTION */}
-                  <div className="conversationsMain">
+                  <div id="ticketConvoBox" className="conversationsMain">
                     <div className="chatDateHeader">
                       <div className="chatDateHeaderhr1"></div>
                       <div className="chatDateHeaderTitle">
