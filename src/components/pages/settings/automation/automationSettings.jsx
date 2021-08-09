@@ -43,6 +43,7 @@ const AutomationSettings = () => {
     {
       title: "Status",
       field: "status",
+      width: "10%",
     },
     {
       title: "Action",
@@ -109,13 +110,13 @@ const AutomationSettings = () => {
         </div>
         <div id="settings">
           <div className="d-flex justify-content-between align-baseline">
-            <h5 className="mt-3 mb-4 f-16 fw-bold">SLA Policies</h5>
+            <h5 className="mt-3 mb-4 f-16 fw-bold">Automation</h5>
             <div>
               <Link
                 className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
                 to="automation/new-policy"
               >
-                Add policy
+                Add Automation
               </Link>
               {/* <a
                 className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"

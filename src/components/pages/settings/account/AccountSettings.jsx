@@ -4,6 +4,9 @@ import RightArrow from "../../../../assets/imgF/arrow_right.png";
 import { useState } from "react";
 import Branding from "./components/Branding";
 import { Link } from "react-router-dom";
+import { timezone } from "../../../shared/timezone";
+import { languages } from "../../../shared/languages";
+import { countries } from "../../../shared/countries";
 
 const AccountSettings = () => {
   const [activeTab, setActiveTab] = useState("personal");
@@ -81,7 +84,7 @@ const AccountSettings = () => {
                   Account Settings
                 </button>
               </li>
-              <li className="nav-item" role="presentation">
+              {/* <li className="nav-item" role="presentation">
                 <button
                   className={`${
                     activeTab === "branding" && "active"
@@ -91,7 +94,7 @@ const AccountSettings = () => {
                 >
                   Branding
                 </button>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>
@@ -238,7 +241,7 @@ const AccountSettings = () => {
             <!-- * Notifications -->
             */}
               <div className="d-flex">
-                <div className="mb-3">
+                {/* <div className="mb-3">
                   <label className="d-block">Notifications</label>
                   <label>
                     <small>Disable notifications</small>
@@ -268,9 +271,9 @@ const AccountSettings = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 {/* <!-- * Security and Privacy --> */}
-                <div className="mb-5" style={{ marginLeft: 50 }}>
+                {/* <div className="mb-5" style={{ marginLeft: 50 }}>
                   <label className="d-block" for="">
                     Security and Privacy (MFA)
                   </label>
@@ -302,7 +305,7 @@ const AccountSettings = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
             {/*
@@ -435,8 +438,12 @@ const AccountSettings = () => {
                     className="form-select"
                     aria-label="Default select example"
                   >
-                    <option selected></option>
-                    <option value="--">--</option>
+                    <option value="">Select time zone</option>
+                    {timezone.map((zone, i) => (
+                      <option key={i} value={zone.value}>
+                        {zone.value}({zone.abbr})
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -450,8 +457,12 @@ const AccountSettings = () => {
                     className="form-select"
                     aria-label="Default select example"
                   >
-                    <option selected></option>
-                    <option value="--">--</option>
+                    <option value="">Select language</option>
+                    {languages.map((lang, i) => (
+                      <option key={i} value={lang?.name}>
+                        {lang?.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -466,8 +477,12 @@ const AccountSettings = () => {
                   className="form-select"
                   aria-label="Default select example"
                 >
-                  <option selected></option>
-                  <option value="--">--</option>
+                  <option value="">Select country</option>
+                  {countries.map((country, i) => (
+                    <option key={i} value={country.name}>
+                      {country.name}
+                    </option>
+                  ))}
                 </select>
               </div>
 

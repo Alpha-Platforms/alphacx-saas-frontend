@@ -103,7 +103,7 @@ const NewSupportEmail = () => {
               This serves as your Return-to address e.g bayo@yourcompany.com
             </p>
           </div>
-          <div class="form-group mt-2">
+          {/* <div class="form-group mt-2">
             <label for="group" class="form-label f-14">
               Assign to Group
             </label>
@@ -115,8 +115,8 @@ const NewSupportEmail = () => {
             <p class="description-text f-12 text-muted mt-1">
               New tickets in this email will be automaically assigned to a group
             </p>
-          </div>
-          <div class="form-group mt-2">
+          </div> */}
+          {/* <div class="form-group mt-2">
             <label for="support" class="form-labedl f-14">
               Link support email with a product
             </label>
@@ -133,7 +133,7 @@ const NewSupportEmail = () => {
                 </a>
               </span>
             </p>
-          </div>
+          </div> */}
           <div class="card mt-4">
             <div class="card-header p-3">
               <p class="f-16 fw-bold mb-3">Mail Server</p>

@@ -36,11 +36,11 @@ const EmailSettings = () => {
         <div class="d-flex justify-content-between flex-row align-items-center">
           <h5 class="mt-3 mb-4 fs-6 fw-bold">Email Settings</h5>
           <div>
-            <a class="btn btn-outline-gray btn-sm">
+            {/* <a class="btn btn-outline-gray btn-sm">
               <span class="d-flex justify-content-center align-items-center">
                 <span>Advanced Settings</span>
               </span>
-            </a>
+            </a> */}
             <Link
               class="btn btn-primary btn-sm ms-2"
               to="/settings/email/email-form"
