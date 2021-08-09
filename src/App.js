@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Route, Switch, BrowserRouter } from "react-router-dom";
 import DefaultLayoutRoute from "./components/DefaultLayout/DefaultLayoutRoute";
+import SettingsLayoutRoute from "./components/DefaultLayout/SettingsLayoutRoute";
 import { NotificationContainer } from "react-notifications";
 import { LayoutProvider } from "./context/layoutContext";
 import { UserDataProvider } from "./context/userContext";
@@ -198,7 +199,7 @@ const SiteRouter = connect(mapStateToProps, {
             pageName="Ticket"
             component={Ticket}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings"
             pageName="Settings"

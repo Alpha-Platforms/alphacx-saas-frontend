@@ -3,6 +3,7 @@ import "./AccountSettings.scss";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
 import { useState } from "react";
 import Branding from "./components/Branding";
+import { Link } from "react-router-dom";
 
 const AccountSettings = () => {
   const [activeTab, setActiveTab] = useState("personal");
@@ -45,58 +46,62 @@ const AccountSettings = () => {
   };
   return (
     <div className="account-settings">
-      <div id="mainContent" className="container">
-        <div className="card card-body bg-white border-0 p-0 mt-4">
-          <div id="mainContentHeader">
-            <h6 className="text-muted f-14 my-4">
-              Settings <img src={RightArrow} className="img-fluid mx-2 me-3" />{" "}
-              <span className="text-custom">Forms</span>
-            </h6>
-            <div id="pageTabs" className="mb-5">
-              <ul className="nav nav-pills" id="pills-tab" role="tablist">
-                <li className="nav-item" role="presentation">
-                  <button
-                    className={` ${
-                      activeTab === "personal" && "active"
-                    } nav-link text-muted px-0 me-5`}
-                    id="pills-personal-tab"
-                    onClick={() => setActiveTab("personal")}
-                  >
-                    Personal Information
-                  </button>
-                </li>
-                <li className="nav-item" role="presentation">
-                  <button
-                    className={`${
-                      activeTab === "account" && "active"
-                    } nav-link text-muted px-0 me-5`}
-                    id="pills-account-tab"
-                    onClick={() => setActiveTab("account")}
-                  >
-                    Account Settings
-                  </button>
-                </li>
-                <li className="nav-item" role="presentation">
-                  <button
-                    className={`${
-                      activeTab === "branding" && "active"
-                    } nav-link text-muted px-0 me-5`}
-                    id="pills-account-tab"
-                    onClick={() => setActiveTab("branding")}
-                  >
-                    Branding
-                  </button>
-                </li>
-              </ul>
-            </div>
+      <div className="card card-body bg-white border-0 p-5">
+        <div id="mainContentHeader">
+          <h6 className="text-muted f-14">
+            <Link to="/settings">
+              <span className="text-custom">Settings</span>
+            </Link>{" "}
+            <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
+            {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
+                            className="img-fluid mx-2 me-3"></object> */}
+            <span>Account Settings</span>
+          </h6>
+          <div id="pageTabs" className="mb-5 mt-3">
+            <ul className="nav nav-pills" id="pills-tab" role="tablist">
+              <li className="nav-item" role="presentation">
+                <button
+                  className={` ${
+                    activeTab === "personal" && "active"
+                  } nav-link text-muted px-0 me-5`}
+                  id="pills-personal-tab"
+                  onClick={() => setActiveTab("personal")}
+                >
+                  Personal Information
+                </button>
+              </li>
+              <li className="nav-item" role="presentation">
+                <button
+                  className={`${
+                    activeTab === "account" && "active"
+                  } nav-link text-muted px-0 me-5`}
+                  id="pills-account-tab"
+                  onClick={() => setActiveTab("account")}
+                >
+                  Account Settings
+                </button>
+              </li>
+              <li className="nav-item" role="presentation">
+                <button
+                  className={`${
+                    activeTab === "branding" && "active"
+                  } nav-link text-muted px-0 me-5`}
+                  id="pills-account-tab"
+                  onClick={() => setActiveTab("branding")}
+                >
+                  Branding
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
+
         {activeTab === "personal" ? (
           <div className="tab-content" id="pills-tabContent">
             {/*
           <!--* Personal Information View -->
           */}
-            <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-between col-md-8">
               <h3 className="fs-6 text-black">Personal Information Settings</h3>
               <button
                 type="button"
@@ -106,7 +111,7 @@ const AccountSettings = () => {
               </button>
             </div>
             <div
-              className="tab-pane active show fade w-75"
+              className="show fade col-md-8"
               id="personal-information-view"
               role="tabpanel"
               aria-labelledby="pills-personal-tab"
@@ -232,66 +237,70 @@ const AccountSettings = () => {
               {/*
             <!-- * Notifications -->
             */}
-              <div className="mb-3">
-                <label className="d-block">Notifications</label>
-                <label>
-                  <small>Disable notifications</small>
-                </label>
-                <div className="mt-2 d-flex">
-                  <div className="border border-1 d-inline-block px-4 py-2 rounded-3">
-                    <div className="form-check form-switch d-flex align-items-center">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id="flexSwitchCheckDefault"
-                        checked={personalInformation.notifications}
-                        onChange={(e) =>
-                          setPersonalInformation({
-                            ...personalInformation,
-                            notifications: e.target.checked,
-                          })
-                        }
-                      />
-                      <label
-                        className="form-check-label ms-3"
-                        for="flexSwitchCheckDefault"
-                        style={{ width: 20 }}
-                      >
-                        {personalInformation.notifications ? "Yes" : "No"}
-                      </label>
+              <div className="d-flex">
+                <div className="mb-3">
+                  <label className="d-block">Notifications</label>
+                  <label>
+                    <small>Disable notifications</small>
+                  </label>
+                  <div className="mt-2 d-flex">
+                    <div className="border border-1 d-inline-block px-4 py-2 rounded-3">
+                      <div className="form-check form-switch d-flex align-items-center">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="flexSwitchCheckDefault"
+                          checked={personalInformation.notifications}
+                          onChange={(e) =>
+                            setPersonalInformation({
+                              ...personalInformation,
+                              notifications: e.target.checked,
+                            })
+                          }
+                        />
+                        <label
+                          className="form-check-label ms-3"
+                          for="flexSwitchCheckDefault"
+                          style={{ width: 20 }}
+                        >
+                          {personalInformation.notifications ? "Yes" : "No"}
+                        </label>
+                      </div>
                     </div>
                   </div>
-                  <div className="ms-4">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </div>
                 </div>
-              </div>
-              {/* <!-- * Security and Privacy --> */}
-              <div className="mb-5">
-                <label className="d-block" for="">
-                  Security and Privacy (MFA)
-                </label>
-                <div className="mt-2 border border-1 d-inline-block px-4 py-2 rounded-3">
-                  <div className="form-check form-switch d-flex align-items-center">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      id="security-switch"
-                      checked={personalInformation.security}
-                      onChange={(e) =>
-                        setPersonalInformation({
-                          ...personalInformation,
-                          security: e.target.checked,
-                        })
-                      }
-                    />
-                    <label
-                      className="form-check-label ms-3"
-                      for="security-switch"
-                      style={{ width: 20 }}
-                    >
-                      {personalInformation.security ? "Yes" : "No"}
-                    </label>
+                {/* <!-- * Security and Privacy --> */}
+                <div className="mb-5" style={{ marginLeft: 50 }}>
+                  <label className="d-block" for="">
+                    Security and Privacy (MFA)
+                  </label>
+                  <label>
+                    <small>Enable Security</small>
+                  </label>
+                  <div className="mt-2 d-flex">
+                    <div className="border border-1 d-inline-block px-4 py-2 rounded-3">
+                      <div className="form-check form-switch d-flex align-items-center">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="security-switch"
+                          checked={personalInformation.security}
+                          onChange={(e) =>
+                            setPersonalInformation({
+                              ...personalInformation,
+                              security: e.target.checked,
+                            })
+                          }
+                        />
+                        <label
+                          className="form-check-label ms-3"
+                          for="security-switch"
+                          style={{ width: 20 }}
+                        >
+                          {personalInformation.security ? "Yes" : "No"}
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -308,7 +317,7 @@ const AccountSettings = () => {
             aria-labelledby="pills-account-tab"
           >
             {/* <!--* Start of Account Settings View --> */}
-            <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-between col-md-8">
               <h3 className="fs-6 text-black">Account Settings</h3>
               <button
                 type="button"
@@ -318,7 +327,7 @@ const AccountSettings = () => {
               </button>
             </div>
 
-            <div className="mt-4 mb-5 w-75">
+            <div className="mt-4 mb-5 col-md-8">
               <div className="mb-3">
                 <label for="organisation-name" className="form-label">
                   Organisation Name

@@ -1,9 +1,12 @@
 .new-article {
   display: flex;
 
-  .main-content {
-    width: 70%;
+  // .card-body {
+  //   padding-left: 65px !important;
+  //   padding-right: 65px !important;
+  // }
 
+  .main-content {
     .articleTitle {
       border: 1px solid #2d325038;
       border-radius: 5px;
@@ -15,8 +18,6 @@
     }
 
     .editorContainer {
-      padding: 25px;
-      background-color: #f6fafd;
       border-radius: 5px;
       //   height: 100%;
     }
@@ -43,12 +44,20 @@
   }
 
   .side-content {
-    margin-left: 5%;
-    width: 30%;
+    padding-left: 5%;
+    box-sizing: border-box;
+
     p {
       margin: 0;
     }
-
+    .top {
+      display: flex;
+      justify-content: space-between;
+      .btn {
+        width: 45% !important;
+        margin: 0 !important;
+      }
+    }
     .action_btns {
       display: flex;
       justify-content: space-between;
