@@ -49,7 +49,7 @@ const AccountSettings = () => {
   };
   return (
     <div className="account-settings">
-      <div className="card card-body bg-white border-0 p-5">
+      <div className="card card-body bg-white border-0">
         <div id="mainContentHeader">
           <h6 className="text-muted f-14">
             <Link to="/settings">

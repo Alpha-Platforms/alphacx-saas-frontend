@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
 import { TablePagination } from "@material-ui/core";
 import tableIcons from "../../../../assets/materialicons/tableIcons";
+import { ReactComponent as DotSvg } from "../../../../assets/icons/dots.svg";
+import { Dropdown } from "react-bootstrap";
 import {
   ThemeProvider as MuiThemeProvider,
   createTheme,
@@ -37,8 +39,9 @@ const AutomationSettings = () => {
   const [changingRow, setChangingRow] = useState(false);
   const tableColumns = [
     {
-      title: "SLA Policy",
-      field: "slaPolicy",
+      title: "Automation Policy",
+      field: "automationPolicy",
+      width: "90%",
     },
     {
       title: "Status",
@@ -46,9 +49,27 @@ const AutomationSettings = () => {
       width: "10%",
     },
     {
-      title: "Action",
-      field: "action",
-      width: "10%",
+      title: "",
+      field: "dropdownAction",
+      render: (rowData) => (
+        <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+          <Dropdown.Toggle variant="transparent" size="sm">
+            <span className="cust-table-dots">
+              <DotSvg />
+            </span>
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item eventKey="1">
+              <Link to="/settings/users/personal-info-settings">
+                <span className="black-text">Edit</span>
+              </Link>
+            </Dropdown.Item>
+            <Dropdown.Item eventKey="2">
+              <span className="black-text">Delete</span>
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      ),
     },
   ];
   const AlphacxMTPagination = (props) => {
@@ -96,7 +117,7 @@ const AutomationSettings = () => {
   }, [SLApolicies]);
   return (
     <div className="help-center-settings automation-settings">
-      <div className="card card-body bg-white border-0 p-5 mt-4">
+      <div className="card card-body bg-white border-0 mt-4">
         <div id="mainContentHeader">
           <h6 className="text-muted f-14">
             <Link to="/settings">
@@ -148,7 +169,7 @@ const AutomationSettings = () => {
                   title=""
                   icons={tableIcons}
                   data={SLApolicies.map(({ name, active }, i) => ({
-                    slaPolicy: name,
+                    automationPolicy: name,
                     status: (
                       <div className="form-check form-switch d-flex align-items-center">
                         <input

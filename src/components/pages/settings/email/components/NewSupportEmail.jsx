@@ -60,7 +60,7 @@ const NewSupportEmail = () => {
   };
   return (
     <div className="new-support-email">
-      <div class="card card-body bg-white border-0 p-5">
+      <div class="card card-body bg-white border-0 ">
         <div id="mainContentHeader">
           <h6 className="text-muted f-14">
             <Link to="/settings">

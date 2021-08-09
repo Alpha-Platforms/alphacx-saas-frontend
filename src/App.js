@@ -205,19 +205,19 @@ const SiteRouter = connect(mapStateToProps, {
             pageName="Settings"
             component={SettingsHome}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/account"
             pageName="Account"
             component={AccountSettings}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/automation"
             pageName="Settings"
             component={AutomationSettings}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/automation/new-policy"
             pageName="Settings"
@@ -266,13 +266,13 @@ const SiteRouter = connect(mapStateToProps, {
             pageName="Settings"
             component={Fields}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/help-center"
             pageName="Settings"
             component={HelpCenterSettings}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/help-center/article"
             pageName="Settings"
@@ -284,43 +284,44 @@ const SiteRouter = connect(mapStateToProps, {
             pageName="Settings"
             component={TicketSettings}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/email"
             pageName="Settings"
             component={SettingsEmail}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/email/:action"
             pageName="Settings"
             component={SettingsEmail}
           />
-            <DefaultLayoutRoute
+          <DefaultLayoutRoute
             exact
             path="/settings/integrations"
             pageName="Integration Settings"
-            component={SocialIntegrations}/>
+            component={SocialIntegrations}
+          />
 
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/notifications"
             pageName="Settings"
             component={NotificationSettings}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/notifications/email-template"
             pageName="Settings"
             component={NewEmailTemplate}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/canned-responses"
             pageName="Settings"
             component={CannedResponsesSettings}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/canned-response/new-response"
             pageName="Settings"
