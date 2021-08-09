@@ -205,122 +205,122 @@ const SiteRouter = connect(mapStateToProps, {
             pageName="Settings"
             component={SettingsHome}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/account"
             pageName="Account"
             component={AccountSettings}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/automation"
             pageName="Settings"
             component={AutomationSettings}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/automation/new-policy"
             pageName="Settings"
             component={NewAutomationPolicy}
           />
 
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/users"
             pageName="Settings"
             component={UserList}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/teams"
             pageName="Settings"
             component={GroupList}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/roles"
             pageName="Settings"
             component={RoleList}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/roles/new"
             pageName="Settings"
             component={NewRole}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/forms"
             pageName="Settings"
             component={Form}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/users/personal-info-settings"
             pageName="Settings"
             component={UserPersonal}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/fields"
             pageName="Settings"
             component={Fields}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/help-center"
             pageName="Settings"
             component={HelpCenterSettings}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/help-center/article"
             pageName="Settings"
             component={NewArticle}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/ticket-settings"
             pageName="Settings"
             component={TicketSettings}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/email"
             pageName="Settings"
             component={SettingsEmail}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/email/:action"
             pageName="Settings"
             component={SettingsEmail}
           />
-            <DefaultLayoutRoute
+            <SettingsLayoutRoute
             exact
             path="/settings/integrations"
             pageName="Integration Settings"
             component={SocialIntegrations}/>
 
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/notifications"
             pageName="Settings"
             component={NotificationSettings}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/notifications/email-template"
             pageName="Settings"
             component={NewEmailTemplate}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/canned-responses"
             pageName="Settings"
             component={CannedResponsesSettings}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/canned-response/new-response"
             pageName="Settings"
