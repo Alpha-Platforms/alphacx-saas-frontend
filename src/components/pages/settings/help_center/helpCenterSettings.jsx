@@ -123,96 +123,92 @@ const HelpCenterSettings = () => {
     }
   }, [articles]);
   return (
-    <div id="mainContent" class="container settings-email help-center-settings">
-      <main class="mb-5">
-        <div id="mainContent" class="container">
-          <div class="card card-body bg-white border-0 p-5 mt-4">
-            <div id="mainContentHeader">
-              <h6 class="text-muted f-14">
-                Settings{" "}
-                <img src={RightArrow} alt="" class="img-fluid mx-2 me-3" />
-                <span class="text-custom">Help Center</span>
-              </h6>
-            </div>
-            <div class="d-flex justify-content-between flex-row">
-              <h5 class="mt-3 mb-4 fs-6 fw-bold">Help Center Settings</h5>
-              <div>
-                <Link
-                  class="btn btn-primary btn-sm ms-2"
-                  to="/settings/help-center/article"
-                >
-                  <span>New Article</span>
-                </Link>
-              </div>
-            </div>
+    <div class="settings-email help-center-settings">
+      <div class="card card-body bg-white border-0 p-5 mt-4">
+        <div id="mainContentHeader">
+          <h6 className="text-muted f-14">
+            <Link to="/settings">
+              <span className="text-custom">Settings</span>
+            </Link>{" "}
+            <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
+            {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
+                            className="img-fluid mx-2 me-3"></object> */}
+            <span>Help Center</span>
+          </h6>
+        </div>
+        <div class="d-flex justify-content-between flex-row">
+          <h5 class="mt-3 mb-4 fs-6 fw-bold">Help Center Settings</h5>
+          <div>
+            <Link
+              class="btn btn-primary btn-sm ms-2"
+              to="/settings/help-center/article"
+            >
+              <span>New Article</span>
+            </Link>
+          </div>
+        </div>
 
-            {articles?.articles?.length > 0 && (
-              <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
-                <div
-                  id="alphacxMTable"
-                  className="pb-5 acx-ticket-cust-table acx-ticket-table p-4"
-                >
-                  <MuiThemeProvider theme={tableTheme}>
-                    <MaterialTable
-                      columns={tableColumns}
-                      title=""
-                      icons={tableIcons}
-                      data={articles?.articles?.map(({ title }) => ({
-                        title,
-                        status: "Published",
-                        views: "100",
-                        author: "Dabo Etela",
-                        created_at: "12-05-2021",
-                        modified_at: "12-05-2021",
-                      }))}
-                      options={{
-                        search: true,
-                        selection: true,
-                        // exportButton: true,
-                        tableLayout: "auto",
-                        paging: true,
-                        pageSize: 10,
-                        headerStyle: {
-                          // backgroundColor: '#f8f9fa'
-                          backgroundColor: "#fefdfd",
-                        },
-                      }}
-                      components={{
-                        Pagination: AlphacxMTPagination,
-                      }}
-                    />
-                  </MuiThemeProvider>
-                </div>
-              </div>
-            )}
-            {!articles?.articles && (
-              <div class="text-center empty-state">
-                <img
-                  src={EmptyArticle}
-                  alt="no article"
-                  class="img-fluid mb-4"
+        {articles?.articles?.length > 0 && (
+          <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
+            <div
+              id="alphacxMTable"
+              className="pb-5 acx-ticket-cust-table acx-ticket-table p-4"
+            >
+              <MuiThemeProvider theme={tableTheme}>
+                <MaterialTable
+                  columns={tableColumns}
+                  title=""
+                  icons={tableIcons}
+                  data={articles?.articles?.map(({ title }) => ({
+                    title,
+                    status: "Published",
+                    views: "100",
+                    author: "Dabo Etela",
+                    created_at: "12-05-2021",
+                    modified_at: "12-05-2021",
+                  }))}
+                  options={{
+                    search: true,
+                    selection: true,
+                    // exportButton: true,
+                    tableLayout: "auto",
+                    paging: true,
+                    pageSize: 10,
+                    headerStyle: {
+                      // backgroundColor: '#f8f9fa'
+                      backgroundColor: "#fefdfd",
+                    },
+                  }}
+                  components={{
+                    Pagination: AlphacxMTPagination,
+                  }}
                 />
-                <p class="text-center">
-                  You currently have no Help Center Article record at <br />
-                  the moment
-                </p>
-                <Link
-                  class="btn btn-sm btn-primary"
-                  to="/settings/help-center/article"
-                >
-                  New Article
-                </Link>
-              </div>
-            )}
-            {/* {articles?.articles?.length > 0 && (
+              </MuiThemeProvider>
+            </div>
+          </div>
+        )}
+        {!articles?.articles && (
+          <div class="text-center empty-state">
+            <img src={EmptyArticle} alt="no article" class="img-fluid mb-4" />
+            <p class="text-center">
+              You currently have no Help Center Article record at <br />
+              the moment
+            </p>
+            <Link
+              class="btn btn-sm btn-primary"
+              to="/settings/help-center/article"
+            >
+              New Article
+            </Link>
+          </div>
+        )}
+        {/* {articles?.articles?.length > 0 && (
               <div className="pagination">
                 <p>Showing 1-1 of 1 entries</p>
               </div>
             )} */}
-            {/* <div id="result"></div> */}
-          </div>
-        </div>
-      </main>
+        {/* <div id="result"></div> */}
+      </div>
     </div>
   );
 };

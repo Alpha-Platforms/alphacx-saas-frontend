@@ -30,7 +30,7 @@ const Branding = () => {
     setBrandingImages({ ...brandingImages, themeColor: color.hex });
   };
   return (
-    <div className="w-75">
+    <div className="col-md-8">
       {/*
             <!-- * upload photo section -->
             */}

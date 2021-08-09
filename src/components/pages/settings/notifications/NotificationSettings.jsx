@@ -121,21 +121,23 @@ const NotificationSettings = () => {
   };
   return (
     <div className="notification-settings">
-      <div className="card card-body bg-white border-0 p-5 mt-4">
+      <div className="card card-body bg-white border-0 p-5">
         <div id="mainContentHeader">
           <h6 className="text-muted f-14">
-            Settings{" "}
+            <Link to="/settings">
+              <span className="text-custom">Settings</span>
+            </Link>{" "}
             <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
             {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
                             className="img-fluid mx-2 me-3"></object> */}
-            <span className="text-custom">Notification Settings</span>
+            <span>Notification Settings</span>
           </h6>
         </div>
         <div className="d-flex justify-content-between align-baseline">
           <h5 className="mt-3 mb-4 f-16 fw-bold">Email Management</h5>
           <div>
             <Link
-              className="btn btn-sm f-14 px-5 btn-custom bt"
+              className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
               to="/settings/notifications/email-template"
             >
               Add Notification

@@ -129,229 +129,227 @@ const NewArticle = () => {
     fetchCategories();
   }, []);
   return (
-    <div id="mainContent" class="container settings-email help-center-settings">
-      <main class="mb-5">
-        <div id="mainContent" class="container">
-          <div class="card card-body bg-white border-0 p-5 mt-4">
-            <div id="mainContentHeader">
-              <h6 class="text-muted f-14">
-                Settings{" "}
-                <img src={RightArrow} alt="" class="img-fluid mx-2 me-3" />
-                <Link to="/settings/help-center">
-                  <span class="text-custom">Help Center</span>
-                </Link>
-                <img src={RightArrow} alt="" class="img-fluid mx-2 me-3" />
-                <span class="text-custom">Article</span>
-              </h6>
+    <div className=" settings-email help-center-settings">
+      <div className="card card-body bg-white border-0 p-5 mt-4">
+        <div id="mainContentHeader">
+          <h6 className="text-muted f-14">
+            <Link to="/settings">
+              <span className="text-custom">Settings</span>
+            </Link>{" "}
+            <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
+            {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
+                            className="img-fluid mx-2 me-3"></object> */}
+            <Link to="/settings/help-center">
+              <span className="text-custom">Help Center</span>
+            </Link>
+            <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
+            <span>Article</span>
+          </h6>
+        </div>
+        <div className="d-flex justify-content-between flex-row">
+          <h5 className="mt-3 mb-4 fs-6 fw-bold">Help Center Settings</h5>
+        </div>
+
+        <div className="new-article">
+          <div className="main-content col-md-8">
+            <div className="articleTitle form-group mb-4">
+              <input
+                type="search"
+                className="form-control form-control-sm f-12 search-bar px-5 d-block"
+                placeholder="Enter article title ..."
+                value={newPost.title}
+                onChange={(e) =>
+                  setNewPost({ ...newPost, title: e.target.value })
+                }
+              />
             </div>
-            <div class="d-flex justify-content-between flex-row">
-              <h5 class="mt-3 mb-4 fs-6 fw-bold">Help Center Settings</h5>
+            <div className="editorContainer">
+              <Editor
+                editorState={editorState}
+                toolbar={{
+                  options: [
+                    "emoji",
+                    "inline",
+                    // "blockType",
+
+                    // "list",
+                    "textAlign",
+                    // "colorPicker",
+                    // "link",
+                    // "embedded",
+                    "image",
+                  ],
+                  // inline: {
+                  //   inDropdown: false,
+                  //   icon: boldB,
+                  //   options: ["bold", "underline", "italic"],
+                  // },
+
+                  inline: {
+                    inDropdown: false,
+                    className: undefined,
+                    component: undefined,
+                    dropdownClassName: undefined,
+                    options: ["bold", "italic", "underline"],
+                    bold: { icon: boldB, className: undefined },
+                    italic: { icon: TextItalic, className: undefined },
+                    underline: {
+                      icon: TextUnderline,
+                      className: undefined,
+                    },
+                  },
+
+                  image: {
+                    icon: editorImg,
+                    className: undefined,
+                    component: undefined,
+                    popupClassName: undefined,
+                    urlEnabled: true,
+                    uploadEnabled: true,
+                    alignmentEnabled: true,
+                    uploadCallback: _uploadImageCallBack,
+                    previewImage: true,
+                    inputAccept:
+                      "image/gif,image/jpeg,image/jpg,image/png,image/svg",
+                    alt: { present: false, mandatory: false },
+                    defaultSize: {
+                      height: "auto",
+                      width: "auto",
+                    },
+                  },
+                  emoji: {
+                    icon: Smiley,
+                  },
+                  blockType: {
+                    inDropdown: true,
+                  },
+
+                  list: {
+                    inDropdown: true,
+                  },
+                  textAlign: {
+                    inDropdown: false,
+                    className: undefined,
+                    component: undefined,
+                    dropdownClassName: undefined,
+                    options: ["left", "center", "right"],
+                    left: { icon: TextAlignLeft, className: undefined },
+                    center: { icon: TextAlignCenter, className: undefined },
+                    right: { icon: TextAlignRight, className: undefined },
+                    // justify: { icon: TextAlignCenter, className: undefined },
+                  },
+
+                  link: {
+                    inDropdown: true,
+                  },
+
+                  history: {
+                    inDropdown: true,
+                  },
+                }}
+                toolbarClassName="toolbarClassName"
+                wrapperClassName="wrapperClassName"
+                editorClassName="editorClassName"
+                onEditorStateChange={(editor) => onEditorStateChange(editor)}
+              />
+            </div>
+          </div>
+          <div className="side-content col-md-4">
+            <div className="mb-5 top">
+              <Link
+                to="/settings/help-center/article"
+                className="btn btn-sm f-12 bg-outline-custom cancel px-4 w-50"
+              >
+                <p>Preview</p>
+              </Link>
+              <a
+                className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
+                onClick={handleSubmitNewArticle}
+              >
+                Save Changes
+              </a>
             </div>
 
-            <div className="new-article">
-              <div className="main-content">
-                <div className="articleTitle form-group mb-4">
-                  <input
-                    type="search"
-                    class="form-control form-control-sm f-12 search-bar px-5 d-block"
-                    placeholder="Enter article title ..."
-                    value={newPost.title}
-                    onChange={(e) =>
-                      setNewPost({ ...newPost, title: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="editorContainer">
-                  <Editor
-                    editorState={editorState}
-                    toolbar={{
-                      options: [
-                        "emoji",
-                        "inline",
-                        // "blockType",
-
-                        // "list",
-                        "textAlign",
-                        // "colorPicker",
-                        // "link",
-                        // "embedded",
-                        "image",
-                      ],
-                      // inline: {
-                      //   inDropdown: false,
-                      //   icon: boldB,
-                      //   options: ["bold", "underline", "italic"],
-                      // },
-
-                      inline: {
-                        inDropdown: false,
-                        className: undefined,
-                        component: undefined,
-                        dropdownClassName: undefined,
-                        options: ["bold", "italic", "underline"],
-                        bold: { icon: boldB, className: undefined },
-                        italic: { icon: TextItalic, className: undefined },
-                        underline: {
-                          icon: TextUnderline,
-                          className: undefined,
-                        },
-                      },
-
-                      image: {
-                        icon: editorImg,
-                        className: undefined,
-                        component: undefined,
-                        popupClassName: undefined,
-                        urlEnabled: true,
-                        uploadEnabled: true,
-                        alignmentEnabled: true,
-                        uploadCallback: _uploadImageCallBack,
-                        previewImage: true,
-                        inputAccept:
-                          "image/gif,image/jpeg,image/jpg,image/png,image/svg",
-                        alt: { present: false, mandatory: false },
-                        defaultSize: {
-                          height: "auto",
-                          width: "auto",
-                        },
-                      },
-                      emoji: {
-                        icon: Smiley,
-                      },
-                      blockType: {
-                        inDropdown: true,
-                      },
-
-                      list: {
-                        inDropdown: true,
-                      },
-                      textAlign: {
-                        inDropdown: false,
-                        className: undefined,
-                        component: undefined,
-                        dropdownClassName: undefined,
-                        options: ["left", "center", "right"],
-                        left: { icon: TextAlignLeft, className: undefined },
-                        center: { icon: TextAlignCenter, className: undefined },
-                        right: { icon: TextAlignRight, className: undefined },
-                        // justify: { icon: TextAlignCenter, className: undefined },
-                      },
-
-                      link: {
-                        inDropdown: true,
-                      },
-
-                      history: {
-                        inDropdown: true,
-                      },
-                    }}
-                    toolbarClassName="toolbarClassName"
-                    wrapperClassName="wrapperClassName"
-                    editorClassName="editorClassName"
-                    onEditorStateChange={(editor) =>
-                      onEditorStateChange(editor)
-                    }
-                  />
-                </div>
-              </div>
-              <div className="side-content">
-                <div className=" mb-5">
-                  <Link
-                    to="/settings/help-center/article"
-                    className="btn btn-sm f-12 bg-outline-custom cancel px-4 w-50"
-                  >
-                    <p>Preview</p>
-                  </Link>
-                  <a
-                    className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
-                    onClick={handleSubmitNewArticle}
-                  >
-                    Save Changes
-                  </a>
-                </div>
-
-                <div className="category mb-4">
-                  <p>Category</p>
-                  <div className="category-holder">
-                    {newPost?.category.map((cat, i) => (
-                      <div key={i} className="cat">
-                        <p>{cat.name}</p>
-                        <span onClick={() => removeCategory(cat)}>x</span>
-                      </div>
-                    ))}
-                    <img
-                      src={AddCategory}
-                      className="add-icon"
-                      alt=""
-                      onClick={() => {
-                        setCompState({
-                          ...compState,
-                          showCategories: !compState?.showCategories,
-                        });
-                      }}
-                    />
-
-                    {/* drop list to show all categories to select from ,, */}
-
-                    {compState.showCategories && (
-                      <div className={"drop-list"}>
-                        {categories?.map((item, i) => (
-                          <p key={i} onClick={() => addCategory(item)}>
-                            {item.name}
-                          </p>
-                        ))}
-                      </div>
-                    )}
+            <div className="category mb-4">
+              <p>Category</p>
+              <div className="category-holder">
+                {newPost?.category.map((cat, i) => (
+                  <div key={i} className="cat">
+                    <p>{cat.name}</p>
+                    <span onClick={() => removeCategory(cat)}>x</span>
                   </div>
-                </div>
-                <div className="category mb-4">
-                  <p>Tag</p>
-                  <div className="category-holder">
-                    {/* {newPost.category.map((cat, i) => (
+                ))}
+                <img
+                  src={AddCategory}
+                  className="add-icon"
+                  alt=""
+                  onClick={() => {
+                    setCompState({
+                      ...compState,
+                      showCategories: !compState?.showCategories,
+                    });
+                  }}
+                />
+
+                {/* drop list to show all categories to select from ,, */}
+
+                {compState.showCategories && (
+                  <div className={"drop-list"}>
+                    {categories?.map((item, i) => (
+                      <p key={i} onClick={() => addCategory(item)}>
+                        {item.name}
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="category mb-4">
+              <p>Tag</p>
+              <div className="category-holder">
+                {/* {newPost.category.map((cat, i) => (
                       <div key={i} className="cat">
                         <p>{cat}</p>
                         <span>x</span>
                       </div>
                     ))} */}
-                    <img src={AddCategory} className="add-icon" alt="" />
-                  </div>
-                </div>
+                <img src={AddCategory} className="add-icon" alt="" />
+              </div>
+            </div>
 
-                <div className="toogles">
-                  <div className="toogle mb-4">
-                    <p>Published globally</p>
-                    <button
-                      className={newPost.publishGlobal ? "active" : ""}
-                      onClick={() =>
-                        setNewPost({
-                          ...newPost,
-                          publishGlobal: !newPost.publishGlobal,
-                        })
-                      }
-                    >
-                      <div className="ball"></div>
-                    </button>
-                  </div>
-                  <div className="toogle">
-                    <p>Published in English</p>
-                    <button
-                      className={newPost.publishEnglish ? "active" : ""}
-                      onClick={() =>
-                        setNewPost({
-                          ...newPost,
-                          publishEnglish: !newPost.publishEnglish,
-                        })
-                      }
-                    >
-                      <div className="ball"></div>
-                    </button>
-                  </div>
-                </div>
+            <div className="toogles">
+              <div className="toogle mb-4">
+                <p>Published globally</p>
+                <button
+                  className={newPost.publishGlobal ? "active" : ""}
+                  onClick={() =>
+                    setNewPost({
+                      ...newPost,
+                      publishGlobal: !newPost.publishGlobal,
+                    })
+                  }
+                >
+                  <div className="ball"></div>
+                </button>
+              </div>
+              <div className="toogle">
+                <p>Published in English</p>
+                <button
+                  className={newPost.publishEnglish ? "active" : ""}
+                  onClick={() =>
+                    setNewPost({
+                      ...newPost,
+                      publishEnglish: !newPost.publishEnglish,
+                    })
+                  }
+                >
+                  <div className="ball"></div>
+                </button>
               </div>
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 };
