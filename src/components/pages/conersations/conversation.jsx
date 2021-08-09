@@ -1150,7 +1150,7 @@ export default function Conversation() {
               
             <p className="btn mt-3 p-0 text-start" 
             role="button"
-              style={{ fontSize: "0.8rem", fontWeight: "bold", marginBottom: 0 }}
+              style={{ fontSize: "0.8rem", fontWeight: "bold", marginBottom: 0, color: "#006298!important" }}
               onClick={() => setIsAdditionalOptionVisible(v => !v)}>Additional Options</p>
 
             { isAdditionalOptionVisible && (
@@ -1240,6 +1240,7 @@ export default function Conversation() {
               </div>
 
               <div>
+              <label htmlFor="">Tags</label>
                 <RSelect className="rselectfield mt-4"
                   onChange={ (value, actionMeta) => setRSCustomerName(value)}
                   isMulti
