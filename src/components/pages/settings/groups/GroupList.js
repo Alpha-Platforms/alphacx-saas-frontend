@@ -86,7 +86,7 @@ const GroupList = ({groups, meta, getPaginatedUsers, isUsersLoaded}) => {
 
     return (
         <div>
-            <div className="card card-body bg-white p-5 border-0">
+            <div className="card card-body bg-white p-0 border-0">
                 <div id="mainContentHeader" className="breadcrumb">
                     <span className="text-muted f-14">
                         <Link to="/settings">Settings</Link>&nbsp;&nbsp;&nbsp;
@@ -155,7 +155,7 @@ const GroupList = ({groups, meta, getPaginatedUsers, isUsersLoaded}) => {
                                                                     <span className="cust-table-dots"><DotSvg/></span>
                                                                 </Dropdown.Toggle>
                                                                 <Dropdown.Menu>
-                                                                    <Dropdown.Item eventKey="1"><Link to="/settings/users/personal-info-settings"><span className="black-text">Edit</span></Link></Dropdown.Item>
+                                                                    <Dropdown.Item eventKey="1"><Link to="#"><span className="black-text">Edit</span></Link></Dropdown.Item>
                                                                     <Dropdown.Item eventKey="2"><span className="black-text">Delete</span></Dropdown.Item>
                                                                 </Dropdown.Menu>
                                                             </Dropdown>)

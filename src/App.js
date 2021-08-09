@@ -224,43 +224,43 @@ const SiteRouter = connect(mapStateToProps, {
             component={NewAutomationPolicy}
           />
 
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/users"
             pageName="Settings"
             component={UserList}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/teams"
             pageName="Settings"
             component={GroupList}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/roles"
             pageName="Settings"
             component={RoleList}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/roles/new"
             pageName="Settings"
             component={NewRole}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/forms"
             pageName="Settings"
             component={Form}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/users/personal-info-settings"
             pageName="Settings"
             component={UserPersonal}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/fields"
             pageName="Settings"
@@ -278,7 +278,7 @@ const SiteRouter = connect(mapStateToProps, {
             pageName="Settings"
             component={NewArticle}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/ticket-settings"
             pageName="Settings"
@@ -296,7 +296,7 @@ const SiteRouter = connect(mapStateToProps, {
             pageName="Settings"
             component={SettingsEmail}
           />
-          <DefaultLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/integrations"
             pageName="Integration Settings"
