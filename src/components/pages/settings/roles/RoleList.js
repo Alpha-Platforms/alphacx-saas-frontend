@@ -7,7 +7,7 @@ const RoleList = () => {
 
     return (
         <div>
-            <div className="card card-body bg-white border-0 p-5 mb-4">
+            <div className="card card-body bg-white border-0 p-0 mb-4">
                 <div id="mainContentHeader">
                     <span className="text-muted f-14">
                         <Link to="/settings">Settings</Link>&nbsp;&nbsp;&nbsp;

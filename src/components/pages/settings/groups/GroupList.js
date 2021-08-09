@@ -86,7 +86,7 @@ const GroupList = ({groups, meta, getPaginatedUsers, isUsersLoaded}) => {
 
     return (
         <div>
-            <div className="card card-body bg-white p-5 border-0">
+            <div className="card card-body bg-white p-0 border-0">
                 <div id="mainContentHeader" className="breadcrumb">
                     <span className="text-muted f-14">
                         <Link to="/settings">Settings</Link>&nbsp;&nbsp;&nbsp;
