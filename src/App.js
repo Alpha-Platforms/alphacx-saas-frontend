@@ -232,7 +232,7 @@ const SiteRouter = connect(mapStateToProps, {
           />
           <DefaultLayoutRoute
             exact
-            path="/settings/groups"
+            path="/settings/teams"
             pageName="Settings"
             component={GroupList}
           />

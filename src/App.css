@@ -1037,7 +1037,7 @@ a object {
 
 /* 
 * GENERAL SETTINGS */
-#ticket-closes-wrapper {
+/* #ticket-closes-wrapper {
   position: relative;
 }
 
@@ -1046,7 +1046,7 @@ a object {
   position: absolute;
   top: 8px;
   right: -120px;
-}
+} */
 
 .cursor-pointer {
   cursor: pointer;

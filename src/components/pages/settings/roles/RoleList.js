@@ -9,10 +9,11 @@ const RoleList = () => {
         <div>
             <div className="card card-body bg-white border-0 p-5 mb-4">
                 <div id="mainContentHeader">
-                    <h6 className="text-muted f-14">Settings
-                        <i className="bi bi-chevron-right"></i>
-                        <span className="text-custom">Roles</span>
-                    </h6>
+                    <span className="text-muted f-14">
+                        <Link to="/settings">Settings</Link>&nbsp;&nbsp;&nbsp;
+                        <i className="bi bi-chevron-right"></i>&nbsp;&nbsp;&nbsp;
+                        <span>Roles</span>
+                    </span>
                 </div>
                 <div className="d-flex justify-content-between flex-row">
                     <h5 className="mt-3 mb-4 f-16 fw-500">Roles</h5>
