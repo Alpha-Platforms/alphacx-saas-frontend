@@ -6,6 +6,8 @@ import {ReactComponent as DeleteGreySvg} from '../../../../../assets/icons/Delet
 import {ReactComponent as EditGreySvg} from '../../../../../assets/icons/Edit-grey.svg';
 import {ReactComponent as DeleteWhiteSvg} from '../../../../../assets/icons/Delete-white.svg';
 import {connect} from 'react-redux';
+import {ReactComponent as DotSvg} from '../../../../../assets/icons/dots.svg';
+import { Dropdown } from 'react-bootstrap';
 
 const TicketCategoriesTab = ({categories, meta}) => {
     const [changingRow, setChangingRow] = useState(false);
@@ -54,7 +56,7 @@ const TicketCategoriesTab = ({categories, meta}) => {
                 </form>
             </div>
             <div className="tct-right position-relative">
-            <btn className="tr-delete-btn btn btn-sm bg-at-blue-light px-2"><span style={{ transform: 'scale(0.9)' }} className="d-inline-block"><DeleteWhiteSvg/></span> Delete</btn>
+            {/* <btn className="tr-delete-btn btn btn-sm bg-at-blue-light px-2"><span style={{ transform: 'scale(0.9)' }} className="d-inline-block"><DeleteWhiteSvg/></span> Delete</btn> */}
             <div id="alphacxMTable" className="mb-3 acx-user-table acx-category-table">
                     {(categories && !changingRow) && <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
@@ -66,8 +68,7 @@ const TicketCategoriesTab = ({categories, meta}) => {
                                 [
                                     {
                                         title: 'Category',
-                                        field: 'category',
-                                        width: '10%'
+                                        field: 'category'
                                     }, {
                                         title: 'Parent Category',
                                         field: 'parentCategory'
@@ -77,10 +78,15 @@ const TicketCategoriesTab = ({categories, meta}) => {
                                     }, {
                                         title: '',
                                         field: 'action',
-                                        render: rowDate => (<div className="" style={{ width: '3rem' }}>
-                                                <span className="me-2"><EditGreySvg/></span>
-                                                <span><DeleteGreySvg/></span>
-                                            </div>)
+                                        render: rowData => (<Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+                                                                    <Dropdown.Toggle variant="transparent" size="sm">
+                                                                        <span className="cust-table-dots"><DotSvg/></span>
+                                                                    </Dropdown.Toggle>
+                                                                    <Dropdown.Menu>
+                                                                        <Dropdown.Item eventKey="1"><span className="black-text">Edit</span></Dropdown.Item>
+                                                                        <Dropdown.Item eventKey="2"><span className="black-text">Delete</span></Dropdown.Item>
+                                                                    </Dropdown.Menu>
+                                                                </Dropdown>)
                                     }
                                 ]
                             }
@@ -98,10 +104,10 @@ const TicketCategoriesTab = ({categories, meta}) => {
                                 paging: true,
                                 pageSize: 10,
                                 headerStyle: {
-                                    // backgroundColor: '#f8f9fa'
+                                    backgroundColor: '#f8f9fa'
                                 },
                                 rowStyle: {
-                                    backgroundColor: '#f8f9fa'
+                                    // backgroundColor: '#f8f9fa'
                                 }
                                 // filtering: true
                             }}

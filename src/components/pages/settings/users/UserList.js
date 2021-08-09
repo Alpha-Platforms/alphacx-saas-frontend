@@ -11,6 +11,7 @@ import CreateUserModal from './components/CreateUserModal';
 import ImportUserModal from './components/ImportUserModal';
 import InviteUserModal from './components/InviteUserModal';
 import {ReactComponent as DotSvg} from '../../../../assets/icons/dots.svg';
+import {ReactComponent as ArrowDownSvg} from '../../../../assets/icons/arrow-down.svg';
 import {Link} from 'react-router-dom';
 // import moment from 'moment';,
 // import {ReactComponent as CardDesignSvg} from '../../../../assets/icons/Card-Design.svg';
@@ -99,9 +100,9 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgen
             <div className="card card-body bg-white border-0 p-5 mb-4">
                 <div id="mainContentHeader">
                     <span className="text-muted f-14">
-                        Settings
-                        <i className="bi bi-chevron-right"></i>
-                        <span className="text-custom">Users</span>
+                        <Link to="/settings">Settings</Link>&nbsp;&nbsp;&nbsp;
+                        <i className="bi bi-chevron-right"></i>&nbsp;&nbsp;&nbsp;
+                        <span>Users</span>
                     </span>
                 </div>
 
@@ -116,31 +117,28 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgen
                             applied to tickets with matching conditions</p>
                     </div>
                     <div>
-                        <Dropdown className="new-user-dropdown">
+                        <Dropdown className="new-user-dropdown" id="new-user-dropdown">
                             <Dropdown.Toggle
                                 id="dropdown-basic"
-                                className="btn btn-custom btn-sm dropdown-toggle px-4 bg-at-blue-light">
-                                New User
+                                className="btn btn-custom btn-sm dropdown-toggle px-3 bg-at-blue-light">
+                                <span>New User</span> <ArrowDownSvg />
                             </Dropdown.Toggle>
 
-                            <Dropdown.Menu className="f-12 p-2">
+                            <Dropdown.Menu className="f-12">
                                 <Dropdown.Item as="button" onClick={() => setCreateModalShow(true)}>New User</Dropdown.Item>
-                                <Dropdown.Divider/>
                                 <Dropdown.Item
                                     className="text-muted"
                                     as="button"
                                     onClick={() => setInviteModalShow(true)}>Invite User</Dropdown.Item>
-                                <Dropdown.Divider/>
-                                <Dropdown.Item className="text-muted" as="button" onClick={() => setImportModalShow(true)}>Import User</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
                     </div>
                 </div>
                 <div className="form-group">
-                    <input
+                    {/* <input
                         type="search"
                         className="form-control search-bar form-control-sm w-50 ps-5 f-12"
-                        placeholder="Search agents"/>
+                        placeholder="Search agents"/> */}
                 </div>
 
                 <div id="alphacxMTable" className="mb-3 acx-user-table">
@@ -153,12 +151,10 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgen
                             columns = {
                                 [
                                     {
-                                        title: 'First Name',
-                                        field: 'firstName',
+                                        title: 'Name',
+                                        field: 'name',
+                                        render: rowData => <Link to={`#`} style={{ textTransform: 'capitalize' }}>{`${rowData.name}`}</Link>,
                                         width: '10%'
-                                    }, {
-                                        title: 'Last Name',
-                                        field: 'lastName'
                                     }, {
                                         title: 'Email Address',
                                         field: 'emailAddress'
@@ -166,13 +162,13 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgen
                                         title: 'Role',
                                         field: 'role'
                                     }, {
-                                        title: 'Group',
+                                        title: 'Team',
                                         field: 'group'
                                     }, {
                                         title: 'Created',
                                         field: 'created'
                                     }, {
-                                        title: 'Action',
+                                        title: 'Active',
                                         field: 'action',
                                         render: rowDate => (<div class="form-check form-switch">
                                                 <input class="form-check-input form-check-input-lg mt-1" type="checkbox"/>
@@ -201,8 +197,7 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgen
                                 group,
                                 created_at,
                                 id}) => ({
-                                firstName: firstname && firstname,
-                                lastName: lastname && lastname,
+                                name: `${firstname} ${lastname}`,
                                 emailAddress: email,
                                 role,
                                 group: 'Head Office',
@@ -219,10 +214,10 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgen
                                 paging: true,
                                 pageSize: meta?.itemsPerPage || 10,
                                 headerStyle: {
-                                    // backgroundColor: '#f8f9fa'
+                                    backgroundColor: '#f8f9fa'
                                 },
                                 rowStyle: {
-                                    backgroundColor: '#f8f9fa'
+                                    // backgroundColor: '#f8f9fa'
                                 }
                                 // filtering: true
                             }}
