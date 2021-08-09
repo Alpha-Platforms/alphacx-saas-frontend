@@ -1,16 +1,17 @@
 import '../../../../styles/Setting.css';
 import ImageDefault from '../../../../assets/svgicons/image-default.svg';
+import {Link} from 'react-router-dom';
 
 const UserPersonal = () => {
 
     return (
         <div className="pb-3">
-            <div className="card card-body bg-white border p-5">
+            <div className="card card-body bg-white border-0 p-5">
                 <div id="mainContentHeader">
                     <span className="text-muted f-14">
-                        Settings
-                        <i className="bi bi-chevron-right"></i>
-                        <span className="text-custom">Users</span>
+                        <Link to="/settings">Settings</Link>&nbsp;&nbsp;&nbsp;
+                        <i className="bi bi-chevron-right"></i>&nbsp;&nbsp;&nbsp;
+                        <span>Users</span>
                     </span>
                 </div>
 
