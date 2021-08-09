@@ -13,37 +13,6 @@ import {
 } from "@material-ui/core/styles";
 import "../../../../styles/Ticket.css";
 
-// const TableItem = ({ policy, handleStatusToogle, i }) => {
-//   const [showActions, setShowActions] = useState(false);
-
-//   return (
-//     <tr className="table-item">
-//       <th className="ps-5">{policy.name}</th>
-//       <th>
-//         <button
-//           className={`status-toogle ${policy.active ? "active" : ""}`}
-//           onClick={() => handleStatusToogle(i)}
-//         >
-//           <div className="circle" />
-//         </button>
-
-//         <button
-//           className="actions-btn"
-//           onClick={() => setShowActions(!showActions)}
-//         >
-//           <img src={TripleDot} alt="" />
-//         </button>
-//         {showActions && (
-//           <div className="actions-drop">
-//             <p>Edit</p>
-//             <p>Delete</p>
-//           </div>
-//         )}
-//       </th>
-//     </tr>
-//   );
-// };
-
 const AutomationSettings = () => {
   const [SLApolicies, setSLApolicies] = useState([
     { name: "Default Policy", active: true },
@@ -70,24 +39,10 @@ const AutomationSettings = () => {
     {
       title: "SLA Policy",
       field: "slaPolicy",
-      // render: (rowData) => (
-      //   <Link to="#" style={{ textTransform: "capitalize" }}>
-      //     {rowData.name}
-      //   </Link>
-      // ),
     },
     {
       title: "Status",
       field: "status",
-      // width: "40%",
-      // render: (rowData) => (
-      //   <Link
-      //     to={`/tickets/${rowData.ticketId}`}
-      //     style={{ textTransform: "uppercase" }}
-      //   >
-      //     {rowData.ticketId.slice(-8)}
-      //   </Link>
-      // ),
     },
     {
       title: "Action",
@@ -139,18 +94,17 @@ const AutomationSettings = () => {
     console.log("changed");
   }, [SLApolicies]);
   return (
-    <div
-      id="mainContent"
-      className="container help-center-settings automation-settings"
-    >
+    <div className="help-center-settings automation-settings">
       <div className="card card-body bg-white border-0 p-5 mt-4">
         <div id="mainContentHeader">
           <h6 className="text-muted f-14">
-            Settings{" "}
+            <Link to="/settings">
+              <span className="text-custom">Settings</span>
+            </Link>{" "}
             <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
             {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
                             className="img-fluid mx-2 me-3"></object> */}
-            <span className="text-custom">Automation Settings</span>
+            <span>Automation Settings</span>
           </h6>
         </div>
         <div id="settings">
@@ -158,11 +112,17 @@ const AutomationSettings = () => {
             <h5 className="mt-3 mb-4 f-16 fw-bold">SLA Policies</h5>
             <div>
               <Link
-                className="btn btn-sm f-14 px-5 btn-custom bt"
+                className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
                 to="automation/new-policy"
               >
                 Add policy
               </Link>
+              {/* <a
+                className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
+                // onClick={handleSubmitNewArticle}
+              >
+                Add policy
+              </a> */}
             </div>
           </div>
           <p className="w-50 f-12">
