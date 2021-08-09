@@ -161,23 +161,22 @@ const UseOwnEmail = ({ state, setState }) => {
                   />
                 </div>
               </div>
-              <div class="col-md-2 mt-5">
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="ssl"
-                    name="tls"
-                    checked={state.emailConfig.tls || false}
-                    onChange={handleConfigChange}
-                  />
-                  <label class="form-check-label" for="ssl">
-                    Use SSL
-                  </label>
-                </div>
-              </div>
             </div>
+
             <div class="row ms-1">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="ssl"
+                  name="tls"
+                  checked={state.emailConfig.tls || false}
+                  onChange={handleConfigChange}
+                />
+                <label class="form-check-label" for="ssl">
+                  Use SSL
+                </label>
+              </div>
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" />
                 <label class="form-check-label">

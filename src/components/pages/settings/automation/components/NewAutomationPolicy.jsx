@@ -38,15 +38,15 @@ const NewAutomationPolicy = () => {
               <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
               {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
                             className="img-fluid mx-2 me-3"></object> */}
-              <span>New Policy</span>
+              <span>New Automation</span>
             </h6>
           </div>
           <div id="setting-form">
-            <h5 className="mt-3 mb-4 f-16 fw-bold">New SLA policy</h5>
+            <h5 className="mt-3 mb-4 f-16 fw-bold">New Automation</h5>
             <form action="">
               <div className="form-group mt-3">
                 <label for="slaName" className="f-14 mb-1">
-                  SLA Name
+                  Automation Name
                 </label>
                 <input
                   type="text"
@@ -80,7 +80,7 @@ const NewAutomationPolicy = () => {
               <div className="form-group mt-3">
                 <div className="d-flex">
                   <label for="slaName" className="f-14 mb-1 ">
-                    Assignee:
+                    Assigned To:
                   </label>
                   <div className="form-check" style={{ marginLeft: 20 }}>
                     <input
@@ -127,7 +127,7 @@ const NewAutomationPolicy = () => {
                 </div> */}
 
               <div className="Resolution mt-3">
-                <p className="my-4">SLA Due Date</p>
+                <p className="my-4">Automation Due Date</p>
                 <div
                   className="
                 resolution-form

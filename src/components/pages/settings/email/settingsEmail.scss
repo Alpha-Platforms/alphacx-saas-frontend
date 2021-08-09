@@ -1,5 +1,4 @@
 .settings-email {
-  height: 80vh;
   background-color: white;
   border-radius: 4px !important;
 
@@ -9,10 +8,7 @@
     margin: 0 !important;
   }
   .card-body {
-    height: 100%;
-    margin-top: 0 !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+    padding: 0 !important;
   }
   .empty-state {
     height: 100%;

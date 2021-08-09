@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const CannedResponsesSettings = () => {
   return (
     <div className="canned-reponses">
-      <div className="card card-body bg-white border-0 p-5">
+      <div className="card card-body bg-white border-0">
         <div id="mainContentHeader mb-3">
           <h6 className="text-muted f-14">
             <Link to="/settings">

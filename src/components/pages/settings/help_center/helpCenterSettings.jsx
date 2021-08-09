@@ -9,6 +9,8 @@ import { Link } from "react-router-dom";
 import MaterialTable from "material-table";
 import { TablePagination } from "@material-ui/core";
 import tableIcons from "../../../../assets/materialicons/tableIcons";
+import { ReactComponent as DotSvg } from "../../../../assets/icons/dots.svg";
+import { Dropdown } from "react-bootstrap";
 import {
   ThemeProvider as MuiThemeProvider,
   createTheme,
@@ -74,6 +76,29 @@ const HelpCenterSettings = () => {
       title: "Last modified at",
       field: "modified_at",
     },
+    {
+      title: "",
+      field: "dropdownAction",
+      render: (rowData) => (
+        <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+          <Dropdown.Toggle variant="transparent" size="sm">
+            <span className="cust-table-dots">
+              <DotSvg />
+            </span>
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item eventKey="1">
+              <Link to="/settings/users/personal-info-settings">
+                <span className="black-text">Edit</span>
+              </Link>
+            </Dropdown.Item>
+            <Dropdown.Item eventKey="2">
+              <span className="black-text">Delete</span>
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      ),
+    },
   ];
 
   const AlphacxMTPagination = (props) => {
@@ -124,7 +149,7 @@ const HelpCenterSettings = () => {
   }, [articles]);
   return (
     <div class="settings-email help-center-settings">
-      <div class="card card-body bg-white border-0 p-5 mt-4">
+      <div class="card card-body bg-white border-0 mt-4">
         <div id="mainContentHeader">
           <h6 className="text-muted f-14">
             <Link to="/settings">

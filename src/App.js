@@ -296,11 +296,12 @@ const SiteRouter = connect(mapStateToProps, {
             pageName="Settings"
             component={SettingsEmail}
           />
-            <SettingsLayoutRoute
+          <SettingsLayoutRoute
             exact
             path="/settings/integrations"
             pageName="Integration Settings"
-            component={SocialIntegrations}/>
+            component={SocialIntegrations}
+          />
 
           <SettingsLayoutRoute
             exact

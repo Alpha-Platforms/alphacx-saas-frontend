@@ -25,9 +25,10 @@ const NewCannedResponse = () => {
               <span className="text-custom">Canned Responses</span>{" "}
             </Link>
             <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
-            <span>New Canned Responses</span>
+            <span>New Canned Response</span>
           </h6>
         </div>
+        <h5 className="mt-3 mb-2 f-16 fw-bold">New Canned Response</h5>
         <div className="d-flex">
           <div className="col-md-8">
             <div class="form-group mb-4" style={{ paddingTop: 30 }}>
