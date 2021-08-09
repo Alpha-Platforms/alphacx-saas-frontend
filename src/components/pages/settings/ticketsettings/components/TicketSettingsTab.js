@@ -27,7 +27,7 @@ const TicketSettingsTab = () => {
                         </select>
                     </div>
                 </div>
-
+{/* 
                 <div>
                     <div style={gtcCol} className="mb-2 d-grid align-items-center">
                         <div>
@@ -56,7 +56,8 @@ const TicketSettingsTab = () => {
                                 className="ticketIDPrefixBtn bg-at-blue-lighter cursor-pointer rounded-pill px-2 py-1 f-13 text-at-blue-light me-2">Current Day</span>
                         </div>
                     </div>
-                </div>
+                </div> 
+                
 
                 <div style={gtcCol} className="mb-4 mt-4 d-grid align-items-center">
                     <div>
@@ -85,6 +86,7 @@ const TicketSettingsTab = () => {
                             placeholder="0000581"/>
                     </div>
                 </div>
+                */}
 
                 <div style={gtcCol} className="mb-4 d-grid align-items-center">
                     <div>
@@ -97,9 +99,9 @@ const TicketSettingsTab = () => {
                         <input
                             name="ticket-closes"
                             type="text"
-                            className="form-control d-inline-block"
+                            className="form-control d-inline-block w-25"
                             id="ticket-closes"
-                            placeholder="30"/>
+                            placeholder="30"/>&nbsp;&nbsp;<span>days of reply.</span>
                     </div>
                 </div>
 

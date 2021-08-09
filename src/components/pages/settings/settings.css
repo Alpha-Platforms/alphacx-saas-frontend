@@ -105,3 +105,50 @@
   width: 50%;
   border: 0.5px solid rgba(43, 48, 77, 0.075);
 }
+
+
+.new-user-dropdown > div {
+}
+
+#new-user-dropdown > div {
+  transform: translateY(1.75rem) !important;
+}
+
+#new-user-dropdown > button::after {
+  display: none;
+}
+
+#new-user-dropdown > div > button {
+  padding: 0.2rem 0rem 0.2rem 1rem;
+}
+
+#new-user-dropdown > div > button:hover {
+  background-color: rgba(16, 62, 101, 6%) !important;
+}
+
+#new-user-dropdown > button svg {
+  color: currentColor;
+}
+
+#new-user-dropdown > button span:nth-child(1) {
+  padding-right: 0.2rem;
+}
+
+.ticket-settings-tabs {
+  border-bottom: none !important;
+}
+
+/* #fieldTabsSelector > li {
+  border: 1px solid red;
+} */
+
+#fieldTabsSelector > li > button {
+  border-bottom: 2px solid transparent !important;
+  border-radius: 0 !important;
+}
+
+#fieldTabsSelector > li > button.active {
+  border-bottom: 2px solid var(--at-blue-light) !important;
+  border-radius: 0 !important;
+}
+
