@@ -1,6 +1,9 @@
 .notification-settings {
   border-radius: 8px;
   overflow-y: auto;
+  .card-body {
+    padding: 0 !important;
+  }
 
   .articleList {
     width: 100%;

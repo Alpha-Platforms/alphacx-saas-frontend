@@ -1,11 +1,9 @@
 .new-support-email {
   background-color: white;
   border-radius: 4px !important;
-  // .card-body {
-  //   margin-top: 0 !important;
-  //   padding-left: 7% !important;
-  //   padding-right: 7% !important;
-  // }
+  .card-body {
+    padding: 0 !important;
+  }
 
   .bg-outline-mail {
     border: 1px solid #2d325028;

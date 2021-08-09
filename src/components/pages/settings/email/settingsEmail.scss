@@ -7,11 +7,9 @@
     height: 80vh;
     margin: 0 !important;
   }
-  // .card-body {
-  //   margin-top: 0 !important;
-  //   padding-left: 7% !important;
-  //   padding-right: 7% !important;
-  // }
+  .card-body {
+    padding: 0 !important;
+  }
   .empty-state {
     height: 100%;
     display: flex;

@@ -1,10 +1,9 @@
 .new-article {
   display: flex;
 
-  // .card-body {
-  //   padding-left: 65px !important;
-  //   padding-right: 65px !important;
-  // }
+  .card-body {
+    padding: 0 !important;
+  }
 
   .main-content {
     .articleTitle {
