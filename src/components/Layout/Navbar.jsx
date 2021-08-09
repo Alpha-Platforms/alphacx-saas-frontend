@@ -160,7 +160,6 @@ export default function Navbar({
                   <input placeholder="Search" type="text" style={{
                     width: "100%",
                     borderRadius: 3,
-                    backgroundColor: "rgba(239, 240, 242, 0.6)",
                     border: "solid 0.5px #ddd",
                     padding: "0.35rem 2rem",
                     backgroundImage: `url(${searchIcon})`,
