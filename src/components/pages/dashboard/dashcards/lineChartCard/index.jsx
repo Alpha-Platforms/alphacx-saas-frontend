@@ -18,7 +18,7 @@ const LineChartCard = () => {
       pointBorderColor: "rgba(0, 0, 0, 0)",
       pointBackgroundColor: "rgba(0, 0, 0, 0)",
       pointHoverBorderColor: "#016298",
-      pointHoverBackgroundColor: "#016298",
+      pointHoverBackgroundColor: "#016298"
     },
     {
       id: "livechatLegend",
@@ -34,7 +34,7 @@ const LineChartCard = () => {
       pointBorderColor: "rgba(0, 0, 0, 0)",
       pointBackgroundColor: "rgba(0, 0, 0, 0)",
       pointHoverBorderColor: "#6C4181",
-      pointHoverBackgroundColor: "#6C4181",
+      pointHoverBackgroundColor: "#6C4181"
     },
     {
       id: "callLegend",
@@ -50,7 +50,7 @@ const LineChartCard = () => {
       pointBorderColor: "rgba(0, 0, 0, 0)",
       pointBackgroundColor: "rgba(0, 0, 0, 0)",
       pointHoverBorderColor: "#FD7289",
-      pointHoverBackgroundColor: "#FD7289",
+      pointHoverBackgroundColor: "#FD7289"
     },
   ];
 
@@ -267,7 +267,7 @@ const LineChartCard = () => {
   // }, []);
   return (
     <div className="line-chart">
-      <Line data={data} options={options} height={130} />
+      <Line data={data} options={options}  height={130} />
     </div>
   );
 };
