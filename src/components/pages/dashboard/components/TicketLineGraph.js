@@ -221,6 +221,7 @@ const TicketLineGraph = () => {
     };
     return (
         <div>
+            <div className="dashboard-box-top px-2 py-3"><div>Ticket Sources</div> <div></div></div>
             <div className="tclinegraph-wrapper">
                 <Line data={data} options={options} height={130}/>
             </div>

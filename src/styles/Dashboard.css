@@ -93,13 +93,20 @@
     font-size: 14px;
 }
 
+.tcountcard-wrapper {
+    padding-top: 2rem !important;
+}
+
 .tcount-wrapper {
     height: 60px;
     width: 100%;
     display: flex;
     align-items: center;
     padding: 0 50px;
-    margin-bottom: 15px;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(0, 98, 152, 0.2);;
+    padding-bottom: 2rem;
+    box-shadow: 0 0 15px 0 rgba(0, 98, 152, 0.02);
 }
 
 .tcount-wrapper p {
