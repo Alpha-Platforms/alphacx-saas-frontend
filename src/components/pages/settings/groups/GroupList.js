@@ -116,7 +116,7 @@ const GroupList = ({groups, meta, getPaginatedUsers, isUsersLoaded}) => {
                             onClick={() => setAddGroupModalShow(true)}
                             type="button"
                             className="btn btn-sm bg-at-blue-light px-md-3 mx-1">
-                            &nbsp;Add Group
+                            &nbsp;Add Team
                         </button>
                     </div>
 
@@ -176,8 +176,10 @@ const GroupList = ({groups, meta, getPaginatedUsers, isUsersLoaded}) => {
                                 // exportButton: true,
                                 tableLayout: 'auto',
                                 paging: true,
-                                pageSize: 10,
                                 rowStyle: {
+                                    backgroundColor: '#fff'
+                                },
+                                headerStyle: {
                                     backgroundColor: '#f8f9fa'
                                 }
                             }}

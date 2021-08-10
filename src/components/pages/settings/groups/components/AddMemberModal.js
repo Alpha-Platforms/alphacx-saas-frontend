@@ -14,7 +14,7 @@ const AddMemberModal = ({addMemberModalShow, setAddMemberModalShow, groups}) => 
                     <h6 className="fw-bold">Add New Member</h6>
                     <form action="">
                         <div className="form-group mt-3">
-                            <label className="form-label" htmlFor="groupName">Group Name</label>
+                            <label className="form-label" htmlFor="groupName">Team Name</label>
                             <select name="" id="groupName" className="form-control form-select mb-2">
                                 {groups.map(group => <option value={group.name}>{group.name}</option>)}
                             </select>
@@ -100,7 +100,7 @@ const AddMemberModal = ({addMemberModalShow, setAddMemberModalShow, groups}) => 
 
                                         <button className="btn btn-sm mb-1" id="customerGroups-list" data-bs-toggle="list"
                                             href="#customerGroups" role="tab"
-                                            aria-controls="customerGroups">Group</button>
+                                            aria-controls="customerGroups">Teams</button>
 
                                     </div>
                                 </div>
