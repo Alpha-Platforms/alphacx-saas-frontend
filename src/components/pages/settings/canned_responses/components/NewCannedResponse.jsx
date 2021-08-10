@@ -12,7 +12,7 @@ const NewCannedResponse = () => {
   });
   return (
     <div className="new-canned-response">
-      <div className="card card-body bg-white border-0 p-5 form">
+      <div className="card card-body bg-white border-0 form">
         <div id="mainContentHeader mb-5">
           <h6 className="text-muted f-14">
             <Link to="/settings">
