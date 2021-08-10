@@ -13,9 +13,9 @@ import TextAlignCenter from "../../assets/imgF/TextAlignCenter.png";
 import TextAlignRight from "../../assets/imgF/TextAlignRight.png";
 import "./EditorBox.scss";
 
-const EditorBox = ({ text, textParent, updateText }) => {
+const EditorBox = ({ initialText, text, textParent, updateText }) => {
   const initialState = EditorState.createWithContent(
-    ContentState.createFromText("")
+    ContentState.createFromText(text)
   );
   const [editorState, setEditorState] = useState(initialState);
 
@@ -60,6 +60,14 @@ const EditorBox = ({ text, textParent, updateText }) => {
       resolve({ data: { link: imageObject.localSrc } });
     });
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      // console.clear();
+      console.log("text", text);
+      console.log("ttt", initialText);
+    }, 3000);
+  }, []);
   return (
     <div className="editor-Container">
       <Editor

@@ -47,6 +47,9 @@ body {
 a {
   text-decoration: none !important;
 }
+input:disabled {
+  cursor: not-allowed !important;
+}
 
 .btn,
 body,
@@ -591,7 +594,6 @@ label.file-picker object.lg-icon {
 .user-initials.purple {
   background-color: var(--at-purple);
 }
-
 
 /* * Size Utility classes */
 .max-w-700 {
