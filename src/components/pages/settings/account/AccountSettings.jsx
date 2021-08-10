@@ -7,9 +7,13 @@ import { Link } from "react-router-dom";
 import { timezone } from "../../../shared/timezone";
 import { languages } from "../../../shared/languages";
 import { countries } from "../../../shared/countries";
-
+import { useEffect } from "react";
+import { httpGetMain, httpPatchMain } from "../../../../helpers/httpMethods";
+import { NotificationManager } from "react-notifications";
+import ScaleLoader from "react-spinners/ScaleLoader";
 const AccountSettings = () => {
   const [activeTab, setActiveTab] = useState("personal");
+  const [accountLoading, setAccountLoading] = useState(false);
   const [personalInformation, setPersonalInformation] = useState({
     avatar: {},
     notifications: false,
@@ -47,8 +51,56 @@ const AccountSettings = () => {
       [name]: value,
     });
   };
+
+  const getUserInfo = async () => {
+    let user = JSON.parse(localStorage.getItem("user"));
+    user = user.user;
+    console.clear();
+    console.log("user", user);
+    const res = await httpGetMain(`users/${user?.id}`);
+    if (res?.status == "success") {
+      console.clear();
+      console.log(res?.data);
+      setPersonalInformation({ ...res?.data });
+    } else {
+      // setLoadingTicks(false);
+
+      console.log("error", res);
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
+
+  const updateUserInfo = async () => {
+    setAccountLoading(true);
+    let user = JSON.parse(localStorage.getItem("user"));
+    user = user.user;
+    const res = await httpPatchMain(`users/${user?.id}`, personalInformation);
+    setAccountLoading(false);
+    if (res?.status == "success") {
+      console.clear();
+      console.log(res);
+    } else {
+      // setLoadingTicks(false);
+
+      console.log("error", res);
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
   return (
     <div className="account-settings">
+      {accountLoading && (
+        <div
+          className={`cust-table-loader ${
+            accountLoading && "add-loader-opacity"
+          }`}
+        >
+          <ScaleLoader loading={accountLoading} color={"#006298"} />
+        </div>
+      )}
       <div className="card card-body bg-white border-0">
         <div id="mainContentHeader">
           <h6 className="text-muted f-14">
@@ -109,6 +161,7 @@ const AccountSettings = () => {
               <button
                 type="button"
                 className="btn btn-sm bg-at-blue-light text-white px-4"
+                onClick={updateUserInfo}
               >
                 Save Changes
               </button>
@@ -128,9 +181,9 @@ const AccountSettings = () => {
                     <input
                       type="text"
                       id="first-name"
-                      name="first_name"
+                      name="firstname"
                       className="form-control"
-                      value={personalInformation.first_name || ""}
+                      value={personalInformation.firstname || ""}
                       onChange={handleChange}
                     />
                   </div>
@@ -142,8 +195,8 @@ const AccountSettings = () => {
                       className="form-control"
                       type="text"
                       id="last-name"
-                      name="last_name"
-                      value={personalInformation.last_name || ""}
+                      name="lastname"
+                      value={personalInformation.lastname || ""}
                       onChange={handleChange}
                     />
                   </div>
@@ -158,7 +211,7 @@ const AccountSettings = () => {
                     id="email"
                     name="email"
                     value={personalInformation.email || ""}
-                    onChange={handleChange}
+                    disabled
                   />
                 </div>
               </div>
@@ -186,13 +239,17 @@ const AccountSettings = () => {
                     }}
                     className="ms-0 d-flex justify-content-between align-items-center"
                   >
-                    {personalInformation?.avatar?.blob && (
-                      <img
-                        className="avatarImage"
-                        src={personalInformation?.avatar?.blob}
-                        alt=""
-                      />
-                    )}
+                    {personalInformation?.avatar?.blob ||
+                      (personalInformation.avatar !== {} && (
+                        <img
+                          className="avatarImage"
+                          src={
+                            personalInformation?.avatar?.blob ||
+                            personalInformation?.avatar
+                          }
+                          alt=""
+                        />
+                      ))}
                   </div>
                 </div>
                 <div>

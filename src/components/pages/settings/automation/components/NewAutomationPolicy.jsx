@@ -6,9 +6,15 @@ import DeleteIcon from "../../../../../assets/icons/Delete.svg";
 import AddIcon from "../../../../../assets/icons/add.svg";
 import EditorBox from "../../../../reusables/EditorBox";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { httpGetMain } from "../../../../../helpers/httpMethods";
+import { NotificationManager } from "react-notifications";
+import ScaleLoader from "react-spinners/ScaleLoader";
+import AutomationAction from "./AutomationAction";
 
 const NewAutomationPolicy = () => {
+  let { policyID } = useParams();
   const availablePlaceholders = [
     "name",
     "ticket",
@@ -16,13 +22,50 @@ const NewAutomationPolicy = () => {
     "open",
     "closed",
   ];
+  const [policyLoading, setPolicyLoading] = useState(false);
   const [newPolicy, setNewPolicy] = useState({
     message: "",
     placeholder: "name",
+    reminder: {
+      agreements: [],
+    },
   });
+  const getAutomationInfo = async () => {
+    const res = await httpGetMain(`sla/${policyID}`);
+    setPolicyLoading(false);
+    if (res?.status === "success") {
+      console.clear();
+      console.log(res?.data);
+      setNewPolicy({ ...res?.data });
+    } else {
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
+
+  const updateAutomationPolicy = async () => {};
+  const submitAutomationPolicy = async () => {
+    const automation = {};
+  };
+  useEffect(() => {
+    console.clear();
+    console.log("policy", policyID);
+    if (policyID) {
+      setPolicyLoading(true);
+      getAutomationInfo();
+    }
+  }, []);
   return (
-    <div className="new-automation-policy automation-settings">
-      <div className="card card-body bg-white border-0 p-5 mt-4">
+    <div className="new-automation-policy">
+      {policyLoading && (
+        <div
+          className={`cust-table-loader ${
+            policyLoading && "add-loader-opacity"
+          }`}
+        >
+          <ScaleLoader loading={policyLoading} color={"#006298"} />
+        </div>
+      )}
+      <div className="card card-body bg-white border-0 p-0 ">
         <div className="col-md-8">
           <div id="mainContentHeader">
             <h6 className="text-muted f-14">
@@ -33,16 +76,18 @@ const NewAutomationPolicy = () => {
               {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
                             className="img-fluid mx-2 me-3"></object> */}
               <Link to="/settings/automation">
-                <span className="text-custom">Automation Settings</span>
+                <span className="text-custom">Automations</span>
               </Link>
               <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
               {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
                             className="img-fluid mx-2 me-3"></object> */}
-              <span>New Automation</span>
+              <span>{policyID ? "Edit" : "New"} Automation</span>
             </h6>
           </div>
           <div id="setting-form">
-            <h5 className="mt-3 mb-4 f-16 fw-bold">New Automation</h5>
+            <h5 className="mt-3 mb-4 f-16 fw-bold">
+              {policyID ? "Edit" : "New"} Automation
+            </h5>
             <form action="">
               <div className="form-group mt-3">
                 <label for="slaName" className="f-14 mb-1">
@@ -52,6 +97,8 @@ const NewAutomationPolicy = () => {
                   type="text"
                   className="form-control form-control-sm"
                   id="slaName"
+                  name="name"
+                  value={newPolicy?.name || ""}
                 />
               </div>
               <div className="form-group mt-3">
@@ -176,124 +223,16 @@ const NewAutomationPolicy = () => {
                   Actions
                 </label>
                 <div className="card my-4 f-12">
-                  <div className="card-body border-0">
-                    <div className="d-flex  flex-column assign">
-                      <label for="assign" className="mb-n1 me-4">
-                        Send
-                      </label>
-                      <br />
-                      <select
-                        className="form-select form-select-sm"
-                        id="assign"
-                      >
-                        <option>Email</option>
-                        <option>Customer Care Group</option>
-                        <option>Customer Care Group3</option>
-                        <option>Customer Care Group4</option>
-                      </select>
-                    </div>
-                    <div
-                      className="
-                    customer-form-first
-                    mt-3
-                    py-4
-                    pr-5
-                    d-flex
-                    align-items-center
-                  "
-                    >
-                      <select
-                        className="form-select form-select-sm me-3"
-                        id="day2"
-                      >
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                      </select>
-                      <label for="day" className="mb-n1 me-4">
-                        Days
-                      </label>
+                  {newPolicy?.reminder?.agreements.map((agreement, i) => (
+                    <AutomationAction
+                      key={i}
+                      newPolicy={newPolicy}
+                      setNewPolicy={setNewPolicy}
+                      availablePlaceholders={availablePlaceholders}
+                      agreement={agreement}
+                    />
+                  ))}
 
-                      <select
-                        className="form-select form-select-sm me-3"
-                        id="hour"
-                      >
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                      </select>
-                      <label for="hour" className="mb-n1 me-4">
-                        Hours
-                      </label>
-
-                      <select
-                        className="form-select form-select-sm me-3"
-                        id="mins"
-                      >
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                      </select>
-                      <label for="minute" className="mb-n1 me-4">
-                        Minutes
-                      </label>
-                      <label
-                        className="mb-n1"
-                        style={{
-                          minWidth: 120,
-
-                          fontSize: 16,
-                        }}
-                      >
-                        before due date
-                      </label>
-                    </div>
-                    <div className="form-group mt-3 mb-5">
-                      <label for="slaName" className="f-14 mb-1">
-                        Subject
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control form-control-sm"
-                        id="slaName"
-                      />
-                    </div>
-                    <div className="form-group mt-3 mb-5">
-                      <label className="f-14 mb-1">
-                        Available Placeholders
-                      </label>
-                      <div className="available-placeholders">
-                        {availablePlaceholders.map((item, i) => (
-                          <p
-                            key={i}
-                            className={
-                              newPolicy?.placeholder === item ? "selected" : ""
-                            }
-                            onClick={() =>
-                              setNewPolicy({
-                                ...newPolicy,
-                                placeholder: item,
-                              })
-                            }
-                          >
-                            {item}
-                          </p>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="form-group mt-3">
-                      <label className="f-14 mb-1">Message</label>
-
-                      <EditorBox
-                        text={newPolicy.message}
-                        textParent={newPolicy}
-                        updateText={setNewPolicy}
-                      />
-                    </div>
-                  </div>
                   <div className="card-footer bg-light" id="customer-choice">
                     <a className="addNewResolution">
                       <img

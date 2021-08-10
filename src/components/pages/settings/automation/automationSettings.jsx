@@ -14,18 +14,19 @@ import {
   createTheme,
 } from "@material-ui/core/styles";
 import "../../../../styles/Ticket.css";
+import { httpGetMain } from "../../../../helpers/httpMethods";
+import { NotificationManager } from "react-notifications";
 
 const AutomationSettings = () => {
-  const [SLApolicies, setSLApolicies] = useState([
-    { name: "Default Policy", active: true },
-  ]);
+  const [automationPolicies, setAutomationPolicies] = useState([]);
+  const [tableMeta, setTableMeta] = useState({});
 
-  const handleStatusToogle = (index) => {
-    let policies = SLApolicies;
-    policies[index].active = !policies[index].active;
+  // const handleStatusToogle = (index) => {
+  //   let policies = SLApolicies;
+  //   policies[index].active = !policies[index].active;
 
-    setSLApolicies(policies);
-  };
+  //   setSLApolicies(policies);
+  // };
   const tableTheme = createTheme({
     palette: {
       primary: {
@@ -40,27 +41,48 @@ const AutomationSettings = () => {
   const tableColumns = [
     {
       title: "Automation Policy",
-      field: "automationPolicy",
-      width: "90%",
+      field: "name",
+      width: "5%",
+    },
+    {
+      title: "",
+      field: "id",
+      width: "50px",
+    },
+    {
+      title: "",
+      field: "staus",
+      width: "100px",
     },
     {
       title: "Status",
       field: "status",
-      width: "10%",
+      width: "50px",
     },
     {
       title: "",
       field: "dropdownAction",
+      width: "50px",
       render: (rowData) => (
         <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
           <Dropdown.Toggle variant="transparent" size="sm">
-            <span className="cust-table-dots">
+            <span
+              className="cust-table-dots"
+              onClick={() => {
+                console.clear();
+                console.log("row dats", rowData);
+              }}
+            >
               <DotSvg />
             </span>
           </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item eventKey="1">
-              <Link to="/settings/users/personal-info-settings">
+              <Link
+                to={`/settings/automation/edit/${
+                  automationPolicies[rowData.tableData.id].id
+                }`}
+              >
                 <span className="black-text">Edit</span>
               </Link>
             </Dropdown.Item>
@@ -84,9 +106,9 @@ const AutomationSettings = () => {
       <TablePagination
         {...tablePaginationProps}
         rowsPerPageOptions={[10, 20, 30]}
-        rowsPerPage={5}
-        count={20}
-        page={1 - 1}
+        rowsPerPage={tableMeta?.itemsPerPage || 5}
+        count={Number(tableMeta?.totalItems || 20)}
+        page={(tableMeta?.currentPage || 1) - 1}
         onPageChange={onChangePage}
         // when the number of rows per page changes
         onRowsPerPageChange={(event) => {
@@ -112,9 +134,23 @@ const AutomationSettings = () => {
       />
     );
   };
+
+  const getAllAutomation = async () => {
+    const res = await httpGetMain("sla");
+    if (res?.status === "success") {
+      console.clear();
+      console.log(res?.data?.agreement);
+      setTableMeta(res?.data?.meta);
+      setAutomationPolicies(res?.data?.agreement);
+    } else {
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
+
   useEffect(() => {
-    console.log("changed");
-  }, [SLApolicies]);
+    getAllAutomation();
+  }, []);
+
   return (
     <div className="help-center-settings automation-settings">
       <div className="card card-body bg-white border-0 mt-4">
@@ -126,7 +162,7 @@ const AutomationSettings = () => {
             <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
             {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
                             className="img-fluid mx-2 me-3"></object> */}
-            <span>Automation Settings</span>
+            <span>Automations</span>
           </h6>
         </div>
         <div id="settings">
@@ -168,42 +204,27 @@ const AutomationSettings = () => {
                   columns={tableColumns}
                   title=""
                   icons={tableIcons}
-                  data={SLApolicies.map(({ name, active }, i) => ({
-                    automationPolicy: name,
+                  data={automationPolicies.map(({ name, id }, i) => ({
+                    name,
                     status: (
                       <div className="form-check form-switch d-flex align-items-center">
                         <input
                           className="form-check-input"
                           type="checkbox"
                           id="security-switch"
-                          checked={active}
-                          onChange={(e) => {
-                            console.log(e.target.checked);
-                            let policies = SLApolicies;
-                            policies[i].active = e.target.checked;
-                            policies[i].name = "checked";
-                            console.log(policies);
-                            setSLApolicies(policies);
-                          }}
+                          checked
+                          // onChange={(e) => {
+                          //   console.log(e.target.checked);
+                          //   let policies = SLApolicies;
+                          //   policies[i].active = e.target.checked;
+                          //   policies[i].name = "checked";
+                          //   console.log(policies);
+                          //   setSLApolicies(policies);
+                          // }}
                         />
                       </div>
                     ),
-                    action: (
-                      <button
-                        className="actions-btn"
-                        // onClick={() => setShowActions(!showActions)}
-                      >
-                        <img src={TripleDot} alt="" style={{ height: 20 }} />
-                      </button>
-                    ),
                   }))}
-                  // data={[
-                  //   {
-                  //     slaPolicy: "Default",
-                  //     status: "active",
-                  //     actions: "delete",
-                  //   },
-                  // ]}
                   options={{
                     search: true,
                     selection: true,

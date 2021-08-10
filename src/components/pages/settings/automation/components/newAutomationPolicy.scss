@@ -24,6 +24,10 @@
     .selected {
       background-color: #006298;
       color: white;
+      &::after {
+        height: 0;
+        width: 0;
+      }
     }
   }
 }

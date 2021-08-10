@@ -1,18 +1,17 @@
-import axios from 'axios';
+import axios from "axios";
 // import { hideLoader } from '../helpers/loader';
-import { NotificationManager } from 'react-notifications';
+import { NotificationManager } from "react-notifications";
 
-export let baseUrl ="https://kustormar-auth.herokuapp.com/v1";
-export let baseUrlMain ="https://kustormar-staging.herokuapp.com/v1";
-let token = localStorage.getItem("token")
+export let baseUrl = "https://kustormar-auth.herokuapp.com/v1";
+export let baseUrlMain = "https://kustormar-staging.herokuapp.com/v1";
+let token = localStorage.getItem("token");
 // const token = localStorage.getItem("DomainToken")
-
 
 export const httpPostMain = async (url, postBody) => {
   if (!navigator.onLine) {
     return NotificationManager.error(
-      'Please check your internet',
-      'Opps!',
+      "Please check your internet",
+      "Opps!",
       3000
     );
   }
@@ -26,17 +25,17 @@ export const httpPostMain = async (url, postBody) => {
 
     if (
       error.response.data.message ===
-      'Unauthorized, Your token is invalid or expired'
+      "Unauthorized, Your token is invalid or expired"
     ) {
       NotificationManager.error(
-        'Your token is invalid or expired, please login',
-        'Opps!',
+        "Your token is invalid or expired, please login",
+        "Opps!",
         5000
       );
     }
-    if (error.response.data.message === 'Validation Error!') {
+    if (error.response.data.message === "Validation Error!") {
       NotificationManager.error(
-        Object.values(error.response.data.data).join('  ')
+        Object.values(error.response.data.data).join("  ")
       );
       return;
     }
@@ -45,46 +44,46 @@ export const httpPostMain = async (url, postBody) => {
 };
 
 export const httpPost = async (url, postBody) => {
-    if (!navigator.onLine) {
-      return NotificationManager.error(
-        'Please check your internet',
-        'Opps!',
-        3000
+  if (!navigator.onLine) {
+    return NotificationManager.error(
+      "Please check your internet",
+      "Opps!",
+      3000
+    );
+  }
+  try {
+    const res = await axios.post(`${baseUrl}/${url}`, postBody, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (error) {
+    // hideLoader();
+
+    if (
+      error.response.data.message ===
+      "Unauthorized, Your token is invalid or expired"
+    ) {
+      NotificationManager.error(
+        "Your token is invalid or expired, please login",
+        "Opps!",
+        5000
       );
     }
-    try {
-      const res = await axios.post(`${baseUrl}/${url}`, postBody, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      return res.data;
-    } catch (error) {
-      // hideLoader();
-  
-      if (
-        error.response.data.message ===
-        'Unauthorized, Your token is invalid or expired'
-      ) {
-        NotificationManager.error(
-          'Your token is invalid or expired, please login',
-          'Opps!',
-          5000
-        );
-      }
-      if (error.response.data.message === 'Validation Error!') {
-        NotificationManager.error(
-          Object.values(error.response.data.data).join('  ')
-        );
-        return;
-      }
-      return { er: error.response.data };
+    if (error.response.data.message === "Validation Error!") {
+      NotificationManager.error(
+        Object.values(error.response.data.data).join("  ")
+      );
+      return;
     }
-  };
+    return { er: error.response.data };
+  }
+};
 
 export const httpPostData = async (url, postBody) => {
   if (!navigator.onLine) {
     return NotificationManager.error(
-      'Please check your internet',
-      'Opps!',
+      "Please check your internet",
+      "Opps!",
       3000
     );
   }
@@ -93,7 +92,7 @@ export const httpPostData = async (url, postBody) => {
     const res = await axios.post(`${baseUrl}/api${url}`, postBody, {
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
     return res.data;
@@ -101,11 +100,11 @@ export const httpPostData = async (url, postBody) => {
     // hideLoader();
     if (
       error.response.data.message ===
-      'Unauthorized, Your token is invalid or expired'
+      "Unauthorized, Your token is invalid or expired"
     ) {
       NotificationManager.error(
-        'Your token is invalid or expired, please login',
-        'Opps!',
+        "Your token is invalid or expired, please login",
+        "Opps!",
         5000
       );
     }
@@ -114,44 +113,43 @@ export const httpPostData = async (url, postBody) => {
 };
 
 export const httpGetMain = async (url) => {
-    if (!navigator.onLine) {
-      return NotificationManager.error(
-        'Please check your internet',
-        'Opps!',
-        3000
+  if (!navigator.onLine) {
+    return NotificationManager.error(
+      "Please check your internet",
+      "Opps!",
+      3000
+    );
+  }
+  try {
+    const res = await axios.get(`${baseUrlMain}/${url}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    return res.data;
+  } catch (error) {
+    // hideLoader();
+    console.log("eeeeeeee", error.response.data.message);
+    if (
+      error.response.data.message ===
+      "Unauthorized, Your token is invalid or expired"
+    ) {
+      return { er: error.response.data.message };
+    }
+    if (error.response.data.message === "Validation Error!") {
+      NotificationManager.error(
+        Object.values(error.response.data.data).join("  ")
       );
+      return;
     }
-    try {
-      const res = await axios.get(`${baseUrlMain}/${url}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      return res.data;
-    } catch (error) {
-      // hideLoader();
-      console.log('eeeeeeee', error.response.data.message);
-      if (
-        error.response.data.message ===
-        'Unauthorized, Your token is invalid or expired'
-      ) {
-       
-        return { er: error.response.data.message };
-      }
-      if (error.response.data.message === 'Validation Error!') {
-        NotificationManager.error(
-          Object.values(error.response.data.data).join('  ')
-        );
-        return;
-      }
-      return { er: error.response.data };
-    }
-  };
-  
+    return { er: error.response.data };
+  }
+};
 
 export const httpGet = async (url) => {
   if (!navigator.onLine) {
     return NotificationManager.error(
-      'Please check your internet',
-      'Opps!',
+      "Please check your internet",
+      "Opps!",
       3000
     );
   }
@@ -162,17 +160,16 @@ export const httpGet = async (url) => {
     return res.data;
   } catch (error) {
     // hideLoader();
-    console.log('eeeeeeee', error.response.data.message);
+    console.log("eeeeeeee", error.response.data.message);
     if (
       error.response.data.message ===
-      'Unauthorized, Your token is invalid or expired'
+      "Unauthorized, Your token is invalid or expired"
     ) {
-     
       return { er: error.response.data.message };
     }
-    if (error.response.data.message === 'Validation Error!') {
+    if (error.response.data.message === "Validation Error!") {
       NotificationManager.error(
-        Object.values(error.response.data.data).join('  ')
+        Object.values(error.response.data.data).join("  ")
       );
       return;
     }
@@ -183,8 +180,8 @@ export const httpGet = async (url) => {
 export const httpPut = async (url, postBody) => {
   if (!navigator.onLine) {
     return NotificationManager.error(
-      'Please check your internet',
-      'Opps!',
+      "Please check your internet",
+      "Opps!",
       3000
     );
   }
@@ -196,13 +193,13 @@ export const httpPut = async (url, postBody) => {
   } catch (error) {
     // hideLoader();
     NotificationManager.error(
-      'Your token is invalid or expired, please login',
-      'Opps!',
+      "Your token is invalid or expired, please login",
+      "Opps!",
       5000
     );
     if (
       error.response.data.message ===
-      'Unauthorized, Your token is invalid or expired'
+      "Unauthorized, Your token is invalid or expired"
     ) {
     }
     return { er: error.response.data };
@@ -212,8 +209,8 @@ export const httpPut = async (url, postBody) => {
 export const httpPatchMain = async (url, postBody) => {
   if (!navigator.onLine) {
     return NotificationManager.error(
-      'Please check your internet',
-      'Opps!',
+      "Please check your internet",
+      "Opps!",
       3000
     );
   }
@@ -225,13 +222,13 @@ export const httpPatchMain = async (url, postBody) => {
   } catch (error) {
     // hideLoader();
     NotificationManager.error(
-      'Your token is invalid or expired, please login',
-      'Opps!',
+      "Your token is invalid or expired, please login",
+      "Opps!",
       5000
     );
     if (
       error.response.data.message ===
-      'Unauthorized, Your token is invalid or expired'
+      "Unauthorized, Your token is invalid or expired"
     ) {
     }
     return { er: error.response.data };
@@ -241,8 +238,8 @@ export const httpPatchMain = async (url, postBody) => {
 export const httpDelete = async (url, postBody) => {
   if (!navigator.onLine) {
     return NotificationManager.error(
-      'Please check your internet',
-      'Opps!',
+      "Please check your internet",
+      "Opps!",
       3000
     );
   }
