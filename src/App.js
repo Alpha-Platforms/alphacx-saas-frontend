@@ -70,6 +70,7 @@ import NewEmailTemplate from "./components/pages/settings/notifications/componen
 import CannedResponsesSettings from "./components/pages/settings/canned_responses/CannedResponsesSettings";
 import NewCannedResponse from "./components/pages/settings/canned_responses/components/NewCannedResponse";
 import CustomerPortal from "./components/pages/help_center/customer_portal/CustomerPortal";
+import DashboardTwo from "./components/pages/dashboard/DashboardTwo";
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -160,6 +161,12 @@ const SiteRouter = connect(mapStateToProps, {
             path="/home"
             pageName="Dashboard"
             component={Dashboard}
+          />
+          <DefaultLayoutRoute
+            exact
+            path="/dashboard"
+            pageName="Dashboard"
+            component={DashboardTwo}
           />
           <DefaultLayoutRoute
             exact
