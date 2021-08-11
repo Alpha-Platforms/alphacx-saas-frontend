@@ -9,7 +9,7 @@ import {Dropdown} from 'react-bootstrap';
 const DashboardTwo = () => {
 
     return (
-        <div className="container dashboard-main">
+        <div className="dashboard-main">
             <div>
                 <h3 className="wlc-text">Hi, Dabo</h3>
             </div>
