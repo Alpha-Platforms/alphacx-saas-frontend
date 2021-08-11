@@ -115,6 +115,7 @@ export const getCurrentCustomer = (id) => (dispatch, getState) => {
     }
 }
 
+// valid redux action
 export const getPaginatedCurrentCustomerTickets = (itemsPerPage, currentPage, customerId) => (dispatch, getState) => {
     if (!navigator.onLine) {
         return console.error("Network error!");

@@ -66,6 +66,7 @@ import AutomationSettings from "./components/pages/settings/automation/automatio
 import NewAutomationPolicy from "./components/pages/settings/automation/components/NewAutomationPolicy";
 import AccountSettings from "./components/pages/settings/account/AccountSettings";
 import UserProfile from "./components/pages/settings/account/UserProfile";
+import UserProfileTwo from './components/pages/settings/account/UserProfileTwo';
 import NotificationSettings from "./components/pages/settings/notifications/NotificationSettings";
 import NewEmailTemplate from "./components/pages/settings/notifications/components/NewEmailTemplate";
 import CannedResponsesSettings from "./components/pages/settings/canned_responses/CannedResponsesSettings";
@@ -218,6 +219,12 @@ const SiteRouter = connect(mapStateToProps, {
             path="/settings/profile"
             pageName="User"
             component={UserProfile}
+          />
+          <SettingsLayoutRoute
+            exact
+            path="/settings/profile/:id"
+            pageName="User"
+            component={UserProfileTwo}
           />
           <SettingsLayoutRoute
             exact
