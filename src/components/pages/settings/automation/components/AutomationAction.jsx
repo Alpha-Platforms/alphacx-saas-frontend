@@ -18,7 +18,7 @@ const AutomationAction = ({
       ...newPolicy,
       reminder: {
         ...newPolicy.reminder,
-        agreements: [...newPolicy.reminder.agreements, {}],
+        agreements: [...newPolicy.reminder.agreements, { days: 0 }],
       },
     });
   };
@@ -86,9 +86,8 @@ const AutomationAction = ({
           >
             <option value="">Select action</option>
             <option value="email">Email</option>
-            <option>Customer Care Group</option>
-            <option>Customer Care Group3</option>
-            <option>Customer Care Group4</option>
+            <option value="whatsapp">WhatsApp</option>
+            <option value="sms">SMS</option>
           </select>
         </div>
         <div className="customer-form-first mt-3 py-4 pr-5 d-flex align-items-center">
