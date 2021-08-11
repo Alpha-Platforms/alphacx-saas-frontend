@@ -598,8 +598,31 @@ export default function Conversation() {
                   </div>
                   {/* CHAT SECTION */}
                   <div className="conversationsMain">
+                    {AchiveMsges.length == 0 ? (
+                      ""
+                    ) : (
+                      <div
+                        className="achivemsagesSection"
+                        onClick={() => setShowAchive(!ShowAchive)}
+                      >
+                        <ExpandChat />
+                        {AchiveMsges.length == 0 &&
+                        TodayMsges.length == 0 &&
+                        YesterdayMsges.length == 0 ? (
+                          <span> No response found ({AchiveMsges.length})</span>
+                        ) : (
+                          <span>
+                            {" "}
+                            {ShowAchive ? "Condense" : "Expand"} all
+                            conversation ({AchiveMsges.length})
+                          </span>
+                        )}
+                      </div>
+                    )}
+
                     <div className="chatDateHeader">
                       <div className="chatDateHeaderhr1"></div>
+
                       <div className="chatDateHeaderTitle">
                         <span>
                           {moment(ticket[0].created_at).format("DD/MM/YYYY") ==
@@ -674,24 +697,6 @@ export default function Conversation() {
                     <div className="msgAssingedToee3">
                       Ticket Status has been marked as{" "}
                       <span> {ticket[0].status.status}</span>
-                    </div>
-
-                    <div
-                      className="achivemsagesSection"
-                      onClick={() => setShowAchive(!ShowAchive)}
-                    >
-                      <ExpandChat />
-                      {AchiveMsges.length == 0 &&
-                      TodayMsges.length == 0 &&
-                      YesterdayMsges.length == 0 ? (
-                        <span> No response found ({AchiveMsges.length})</span>
-                      ) : (
-                        <span>
-                          {" "}
-                          {ShowAchive ? "Condense" : "Expand"} all conversation
-                          ({AchiveMsges.length})
-                        </span>
-                      )}
                     </div>
 
                     <div
