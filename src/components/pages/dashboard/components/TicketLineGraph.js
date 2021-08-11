@@ -233,17 +233,10 @@ const TicketLineGraph = () => {
         serviceportal: true
     });
 
-    console.log('toggleInputs', toggleInputs);
-
     const handleChartToggle = e => {
-        console.log("toggle was changed");
 
-        const {id, checked, value, name} = e.target;
+        const {id, checked, name} = e.target;
         const elemId = id;
-
-        console.log("checked", checked);
-        console.log("value", value);
-        console.log('id', elemId);
 
 
         if (checked) {
