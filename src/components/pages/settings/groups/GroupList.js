@@ -123,6 +123,7 @@ const GroupList = ({groups, meta, getPaginatedUsers, isUsersLoaded}) => {
                 </div>
 
                 <div id="alphacxMTable" className="pb-2 acx-group-table">
+                    <h1>hello</h1>
                     {groups && <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""
