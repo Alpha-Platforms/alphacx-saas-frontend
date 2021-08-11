@@ -14,7 +14,7 @@ import Home from "./home";
 import "react-responsive-modal/styles.css";
 
 import HelpCenter from "./components/pages/help_center/helpCenter";
-import Dashboard from "./components/pages/dashboard/dashboard";
+import DashboardOld from "./components/pages/dashboard/dashboardOld";
 import Conversation from "./components/pages/conersations/conversation";
 import { Provider, connect } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
@@ -70,7 +70,7 @@ import NewEmailTemplate from "./components/pages/settings/notifications/componen
 import CannedResponsesSettings from "./components/pages/settings/canned_responses/CannedResponsesSettings";
 import NewCannedResponse from "./components/pages/settings/canned_responses/components/NewCannedResponse";
 import CustomerPortal from "./components/pages/help_center/customer_portal/CustomerPortal";
-import DashboardTwo from "./components/pages/dashboard/DashboardTwo";
+import Dashboard from "./components/pages/dashboard/Dashboard";
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -166,7 +166,7 @@ const SiteRouter = connect(mapStateToProps, {
             exact
             path="/dashboard"
             pageName="Dashboard"
-            component={DashboardTwo}
+            component={DashboardOld}
           />
           <DefaultLayoutRoute
             exact
