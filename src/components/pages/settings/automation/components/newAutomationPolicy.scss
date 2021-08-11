@@ -30,4 +30,10 @@
       }
     }
   }
+  .automation-action {
+    border-top: 1px solid #ced4da !important;
+    &:first-child {
+      border: none !important;
+    }
+  }
 }

@@ -8,7 +8,11 @@ import EditorBox from "../../../../reusables/EditorBox";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
-import { httpGetMain } from "../../../../../helpers/httpMethods";
+import {
+  httpGetMain,
+  httpPatchMain,
+  httpPostMain,
+} from "../../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import AutomationAction from "./AutomationAction";
@@ -24,12 +28,17 @@ const NewAutomationPolicy = () => {
   ];
   const [policyLoading, setPolicyLoading] = useState(false);
   const [newPolicy, setNewPolicy] = useState({
-    message: "",
-    placeholder: "name",
     reminder: {
-      agreements: [],
+      agreements: policyID ? [] : [{}],
     },
   });
+
+  const handlechange = (e) => {
+    const { name, value } = e.target;
+
+    setNewPolicy({ ...newPolicy, [name]: value });
+  };
+
   const getAutomationInfo = async () => {
     const res = await httpGetMain(`sla/${policyID}`);
     setPolicyLoading(false);
@@ -42,9 +51,31 @@ const NewAutomationPolicy = () => {
     }
   };
 
-  const updateAutomationPolicy = async () => {};
+  const updateAutomationPolicy = async () => {
+    setPolicyLoading(true);
+    console.clear();
+    console.log(newPolicy);
+    const res = await httpPatchMain(`sla/${policyID}`, newPolicy);
+    setPolicyLoading(false);
+    if (res?.status === "success") {
+      console.log(res);
+    } else {
+      console.error(res.er);
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
   const submitAutomationPolicy = async () => {
-    const automation = {};
+    setPolicyLoading(true);
+    console.clear();
+    console.log(newPolicy);
+    const res = await httpPostMain(`sla`, newPolicy);
+    setPolicyLoading(false);
+    if (res?.status === "success") {
+      console.log(res);
+    } else {
+      console.error(res.er);
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
   };
   useEffect(() => {
     console.clear();
@@ -99,6 +130,7 @@ const NewAutomationPolicy = () => {
                   id="slaName"
                   name="name"
                   value={newPolicy?.name || ""}
+                  onChange={handlechange}
                 />
               </div>
               <div className="form-group mt-3">
@@ -222,19 +254,20 @@ const NewAutomationPolicy = () => {
                 <label for="ticket" className="f-14">
                   Actions
                 </label>
-                <div className="card my-4 f-12">
-                  {newPolicy?.reminder?.agreements.map((agreement, i) => (
-                    <AutomationAction
-                      key={i}
-                      newPolicy={newPolicy}
-                      setNewPolicy={setNewPolicy}
-                      availablePlaceholders={availablePlaceholders}
-                      agreement={agreement}
-                    />
-                  ))}
+                {/* <div className="card my-4 f-12"> */}
+                {newPolicy?.reminder?.agreements.map((agreement, i) => (
+                  <AutomationAction
+                    key={i}
+                    newPolicy={newPolicy}
+                    setNewPolicy={setNewPolicy}
+                    availablePlaceholders={availablePlaceholders}
+                    agreement={agreement}
+                    index={i}
+                  />
+                ))}
 
-                  <div className="card-footer bg-light" id="customer-choice">
-                    <a className="addNewResolution">
+                {/* <div className="card-footer bg-light" id="customer-choice">
+                    <a className="addNewResolution" onClick={addAction}>
                       <img
                         src={AddIcon}
                         alt=""
@@ -251,22 +284,22 @@ const NewAutomationPolicy = () => {
                       Delete Action
                     </a>
                   </div>
-                </div>
+                </div> */}
               </div>
             </form>
 
             <div className="float-end mb-5">
-              <a
-                href="automation.html"
+              <Link
+                to="/settings/automation"
                 className="btn btn-sm f-12 bg-outline-custom cancel px-4"
               >
                 Cancel
-              </a>
+              </Link>
               <a
-                href="automation-table.html"
                 className="btn btn-sm ms-2 f-12 bg-custom px-4"
-                data-bs-toggle="modal"
-                data-bs-target="#successModal"
+                onClick={
+                  policyID ? updateAutomationPolicy : submitAutomationPolicy
+                }
               >
                 Save Changes
               </a>
