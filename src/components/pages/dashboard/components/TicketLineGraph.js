@@ -76,7 +76,8 @@ const TicketLineGraph = () => {
             pointBackgroundColor: 'rgba(0, 0, 0, 0)',
             pointHoverBorderColor: '#016298',
             pointHoverBackgroundColor: '#016298',
-            lineTension: 0.4
+            lineTension: 0.4,
+            yAxisID: 'yAxes'
         }, {
             id: 'livechatLegend',
             type: 'line',
@@ -178,7 +179,7 @@ const TicketLineGraph = () => {
             yAxes: [
                 {
                     gridLines: {
-                        color: "rgba(0, 0, 0, 0.2)",
+                        color: "transparent",
                         borderDash: [
                             10, 10
                         ],
@@ -193,11 +194,12 @@ const TicketLineGraph = () => {
             xAxes: [
                 {
                     gridLines: {
-                        color: "rgba(0, 0, 0, 0.2)",
+                        color: "transparent",
                         borderDash: [
                             10, 10
                         ],
-                        drawBorder: false
+                        drawBorder: false,
+                        drawOnChartArea: false
                     },
                     ticks: {
                         padding: 15
@@ -207,7 +209,7 @@ const TicketLineGraph = () => {
         },
         plugins: {
             legend: {
-                display: true,
+                display: false,
                 position: 'bottom'
             },
             tooltips: {
@@ -221,9 +223,99 @@ const TicketLineGraph = () => {
     };
     return (
         <div>
-            <div className="dashboard-box-top px-2 py-3"><div>Ticket Sources</div> <div></div></div>
+            <div className="dashboard-box-top px-2 py-3">
+                <div>Ticket Sources</div>
+                <div></div>
+            </div>
             <div className="tclinegraph-wrapper">
                 <Line data={data} options={options} height={130}/>
+            </div>
+            {/*  Line graph check and legend */}
+            <div
+                className="d-flex justify-content-center align-items-center flex-wrap mt-0">
+                {/* Email legend */}
+                <div className="mx-3 my-2">
+                    <div className="form-check form-switch d-flex justify-content-center">
+                        <input
+                            className="legendInput legend-input form-check-input form-check-input-lg mt-1"
+                            type="checkbox"
+                            id="emailLegend"
+                            checked="true"/>
+                    </div>
+                    <div className="text-center">
+                        <span className="legend-circle legend-bg-blue"></span>&nbsp;Email
+                    </div>
+                </div>
+
+                {/*  Livechat legend */}
+                <div className="mx-3 my-2">
+                    <div className="form-check form-switch d-flex justify-content-center">
+                        <input
+                            className="legendInput legend-input form-check-input form-check-input-lg mt-1"
+                            type="checkbox"
+                            id="livechatLegend"
+                            checked="true"/>
+                    </div>
+                    <div className="text-center">
+                        <span className="legend-circle legend-bg-purple"></span>&nbsp;LiveChat
+                    </div>
+                </div>
+
+                {/* calls legend */}
+                <div className="mx-3 my-2">
+                    <div className="form-check form-switch d-flex justify-content-center">
+                        <input
+                            className="legendInput legend-input form-check-input form-check-input-lg mt-1"
+                            type="checkbox"
+                            id="callLegend"
+                            checked="true"/>
+                    </div>
+                    <div className="text-center">
+                        <span className="legend-circle legend-bg-yellow"></span>&nbsp;Call
+                    </div>
+                </div>
+
+                {/* Whatsapp legend */}
+                <div className="mx-3 my-2">
+                    <div className="form-check form-switch d-flex justify-content-center">
+                        <input
+                            className="legendInput legend-input form-check-input form-check-input-lg mt-1"
+                            type="checkbox"
+                            id="whatsappLegend"
+                            checked="true"/>
+                    </div>
+                    <div className="text-center">
+                        <span className="legend-circle legend-bg-green"></span>&nbsp;WhatsApp
+                    </div>
+                </div>
+
+                {/*  Facebook legend  */}
+                <div className="mx-3 my-2">
+                    <div className="form-check form-switch d-flex justify-content-center">
+                        <input
+                            className="legendInput legend-input form-check-input form-check-input-lg mt-1"
+                            type="checkbox"
+                            id="facebookLegend"
+                            checked="true"/>
+                    </div>
+                    <div className="text-center">
+                        <span className="legend-circle legend-bg-blue-light"></span>&nbsp;Facebook
+                    </div>
+                </div>
+
+                {/* <!-- Service Portal legend --> */}
+                <div className="mx-3 my-2">
+                    <div className="form-check form-switch d-flex justify-content-center">
+                        <input
+                            className="legendInput legend-input form-check-input form-check-input-lg mt-1"
+                            type="checkbox"
+                            id="servicePortalLegend"
+                            checked="true"/>
+                    </div>
+                    <div className="text-center">
+                        <span className="legend-circle legend-bg-red"></span>&nbsp;Service Portal
+                    </div>
+                </div>
             </div>
         </div>
     )
