@@ -1,4 +1,5 @@
 import {Line} from 'react-chartjs-2';
+import { Dropdown } from 'react-bootstrap';
 
 const TicketLineGraph = () => {
 
@@ -225,7 +226,21 @@ const TicketLineGraph = () => {
         <div>
             <div className="dashboard-box-top px-2 py-3">
                 <div>Ticket Sources</div>
-                <div></div>
+                <div>
+                    <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+                        <Dropdown.Toggle variant="transparent" size="sm">
+                            <span className="">Days</span> <i className="bi bi-chevron-expand"></i>
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            <Dropdown.Item eventKey="1">
+                                <span className="black-text">--</span>
+                            </Dropdown.Item>
+                            <Dropdown.Item eventKey="2">
+                                <span className="black-text">--</span>
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
             </div>
             <div className="tclinegraph-wrapper">
                 <Line data={data} options={options} height={130}/>

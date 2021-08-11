@@ -36,7 +36,7 @@ const TicketCategoryBar = () => {
                 <div>
                     <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
                         <Dropdown.Toggle variant="transparent" size="sm">
-                            <span className="">Days</span>
+                            <span className="">Days</span> <i className="bi bi-chevron-expand"></i>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                             <Dropdown.Item eventKey="1">
