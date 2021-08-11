@@ -11,10 +11,10 @@ const AddGroupModal = ({addGroupModalShow, setAddGroupModalShow}) => {
             centered>
             <Modal.Body>
                 <div className="col-12 p-3">
-                <h6 class="fw-bold">Create A Group</h6>
+                <h6 class="fw-bold">Create A Team</h6>
                     <form action="">
                         <div class="form-group mt-3">
-                            <label class="form-label" htmlFor="groupName">Group Name</label>
+                            <label class="form-label" htmlFor="groupName">Team Name</label>
                             <input type="text" id="groupName" class="form-control mb-2"/>
 
                             <label class="form-label" htmlFor="groupDesc">Group Description</label>

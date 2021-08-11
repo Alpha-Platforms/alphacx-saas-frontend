@@ -2,9 +2,17 @@ import React from "react";
 import "./AccountSettings.scss";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
 import { useState } from "react";
-
+import Branding from "./components/Branding";
+import { Link } from "react-router-dom";
+import { timezone } from "../../../shared/timezone";
+import { languages } from "../../../shared/languages";
+import { countries } from "../../../shared/countries";
+import { useEffect } from "react";
+import { httpGetMain, httpPatchMain } from "../../../../helpers/httpMethods";
+import { NotificationManager } from "react-notifications";
+import ScaleLoader from "react-spinners/ScaleLoader";
 const AccountSettings = () => {
-  const [activeTab, setActiveTab] = useState("personal");
+  const [accountLoading, setAccountLoading] = useState(false);
   const [personalInformation, setPersonalInformation] = useState({
     avatar: {},
     notifications: false,
@@ -42,253 +50,71 @@ const AccountSettings = () => {
       [name]: value,
     });
   };
+
+  const getUserInfo = async () => {
+    let user = JSON.parse(localStorage.getItem("user"));
+    user = user.user;
+    console.clear();
+    console.log("user", user);
+    const res = await httpGetMain(`users/${user?.id}`);
+    if (res?.status == "success") {
+      console.clear();
+      console.log(res?.data);
+      setPersonalInformation({ ...res?.data });
+    } else {
+      // setLoadingTicks(false);
+
+      console.log("error", res);
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
+
+  const updateUserInfo = async () => {
+    setAccountLoading(true);
+    let user = JSON.parse(localStorage.getItem("user"));
+    user = user.user;
+    const res = await httpPatchMain(`users/${user?.id}`, personalInformation);
+    setAccountLoading(false);
+    if (res?.status == "success") {
+      console.clear();
+      console.log(res);
+    } else {
+      // setLoadingTicks(false);
+
+      console.log("error", res);
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
   return (
     <div className="account-settings">
-      <div id="mainContent" className="container">
-        <div className="card card-body bg-white border-0 p-0 mt-4">
-          <div id="mainContentHeader">
-            <h6 className="text-muted f-14 my-4">
-              Settings <img src={RightArrow} className="img-fluid mx-2 me-3" />{" "}
-              <span className="text-custom">Forms</span>
-            </h6>
-            <div id="pageTabs" className="mb-5">
-              <ul className="nav nav-pills" id="pills-tab" role="tablist">
-                <li className="nav-item" role="presentation">
-                  <button
-                    className={` ${
-                      activeTab === "personal" && "active"
-                    } nav-link text-muted px-0 me-5`}
-                    id="pills-personal-tab"
-                    onClick={() => setActiveTab("personal")}
-                  >
-                    Personal Information
-                  </button>
-                </li>
-                <li className="nav-item" role="presentation">
-                  <button
-                    className={`${
-                      activeTab === "account" && "active"
-                    } nav-link text-muted px-0 me-5`}
-                    id="pills-account-tab"
-                    onClick={() => setActiveTab("account")}
-                  >
-                    Account Settings
-                  </button>
-                </li>
-              </ul>
-            </div>
-          </div>
+      {accountLoading && (
+        <div
+          className={`cust-table-loader ${
+            accountLoading && "add-loader-opacity"
+          }`}
+        >
+          <ScaleLoader loading={accountLoading} color={"#006298"} />
         </div>
-        {activeTab === "personal" ? (
-          <div className="tab-content" id="pills-tabContent">
-            {/*
-          <!--* Personal Information View -->
-          */}
-            <div className="d-flex justify-content-between">
-              <h3 className="fs-6 text-black">Personal Information Settings</h3>
-              <button
-                type="button"
-                className="btn btn-sm bg-at-blue-light text-white px-4"
-              >
-                Save Changes
-              </button>
-            </div>
-            <div
-              className="tab-pane active show fade w-75"
-              id="personal-information-view"
-              role="tabpanel"
-              aria-labelledby="pills-personal-tab"
-            >
-              <div className="mb-5 mt-4">
-                <div className="d-flex mb-3">
-                  <div className="me-2 w-100">
-                    <label for="first-name" className="form-label">
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      id="first-name"
-                      name="first_name"
-                      className="form-control"
-                      value={personalInformation.first_name || ""}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="w-100">
-                    <label className="form-label" for="last-name">
-                      Last Name
-                    </label>
-                    <input
-                      className="form-control"
-                      type="text"
-                      id="last-name"
-                      name="last_name"
-                      value={personalInformation.last_name || ""}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-                <div className="mb-3">
-                  <label className="form-label" for="first-name">
-                    Email
-                  </label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="email"
-                    name="email"
-                    value={personalInformation.email || ""}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              {/*
-            <!-- * upload photo section -->
-            */}
-              <div className="d-flex mb-5">
-                <div
-                  id="uploadPersonalPhotoInputImgPreview"
-                  style={{ width: "6rem", height: "6rem" }}
-                  className="
-                  border border-1
-                  rounded-3
-                  me-5
-                  d-flex
-                  justify-content-center
-                  align-items-center
-                "
-                >
-                  <div
-                    style={{
-                      justifyContent: "center",
-                      height: "100%",
-                      width: "100%",
-                    }}
-                    className="ms-0 d-flex justify-content-between align-items-center"
-                  >
-                    {personalInformation?.avatar?.blob && (
-                      <img
-                        className="avatarImage"
-                        src={personalInformation?.avatar?.blob}
-                        alt=""
-                      />
-                    )}
-                  </div>
-                </div>
-                <div>
-                  <label
-                    for="uploadPersonalPhotoInput"
-                    className="btn btn-sm bg-at-blue-light px-4 py-1 mb-2 mt-1"
-                  >
-                    Upload Photo
-                  </label>
-                  <input
-                    type="file"
-                    name="uploadPersonalPhotoInput"
-                    id="uploadPersonalPhotoInput"
-                    onChange={handleAvatar}
-                  />
-                  <p className="mb-0 text-at-red">
-                    <small id="uploadPersonalPhotoInputError"></small>
-                  </p>
-                  <p className="uploadInfoWrapper">
-                    <small id="uploadPersonalPhotoInputInfo">
-                      Upload personal photo, uploaded file must be an image.
-                    </small>
-                  </p>
-                </div>
-              </div>
-              {/*
-            <!-- * change password -->
-            */}
-              <div className="mb-5">
-                <label className="form-label" for="change-password">
-                  Change Password
-                </label>
-                <input
-                  className="form-control"
-                  type="password"
-                  name="change_password"
-                  id="change-password"
-                  value={personalInformation.change_password || ""}
-                  onChange={handleChange}
-                />
-                <button className="btn btn-sm bg-at-blue-light px-3 py-1 mt-3">
-                  Change Password
-                </button>
-              </div>
-              {/*
-            <!-- * Notifications -->
-            */}
-              <div className="mb-3">
-                <label className="d-block">Notifications</label>
-                <label>
-                  <small>Disable notifications</small>
-                </label>
-                <div className="mt-2 d-flex">
-                  <div className="border border-1 d-inline-block px-4 py-2 rounded-3">
-                    <div className="form-check form-switch d-flex align-items-center">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id="flexSwitchCheckDefault"
-                        checked={personalInformation.notifications}
-                        onChange={(e) =>
-                          setPersonalInformation({
-                            ...personalInformation,
-                            notifications: e.target.checked,
-                          })
-                        }
-                      />
-                      <label
-                        className="form-check-label ms-3"
-                        for="flexSwitchCheckDefault"
-                        style={{ width: 20 }}
-                      >
-                        {personalInformation.notifications ? "Yes" : "No"}
-                      </label>
-                    </div>
-                  </div>
-                  <div className="ms-4">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </div>
-                </div>
-              </div>
-              {/* <!-- * Security and Privacy --> */}
-              <div className="mb-5">
-                <label className="d-block" for="">
-                  Security and Privacy (MFA)
-                </label>
-                <div className="mt-2 border border-1 d-inline-block px-4 py-2 rounded-3">
-                  <div className="form-check form-switch d-flex align-items-center">
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      id="security-switch"
-                      checked={personalInformation.security}
-                      onChange={(e) =>
-                        setPersonalInformation({
-                          ...personalInformation,
-                          security: e.target.checked,
-                        })
-                      }
-                    />
-                    <label
-                      className="form-check-label ms-3"
-                      for="security-switch"
-                      style={{ width: 20 }}
-                    >
-                      {personalInformation.security ? "Yes" : "No"}
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/*
-          <!--* End of Personal Information View -->
-          */}
-          </div>
-        ) : (
+      )}
+      <div className="card card-body bg-white border-0">
+        <div id="mainContentHeader" className="breadcrumb">
+          <h6 className="text-muted f-14">
+            <Link to="/settings">
+              <span className="text-custom">Settings</span>
+            </Link>{" "}
+            <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
+            {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
+                            className="img-fluid mx-2 me-3"></object> */}
+            <span>Account Settings</span>
+          </h6>
+          
+        </div>
+
+          
           <div
             className="tab-pane"
             id="account-settings-view"
@@ -296,7 +122,7 @@ const AccountSettings = () => {
             aria-labelledby="pills-account-tab"
           >
             {/* <!--* Start of Account Settings View --> */}
-            <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-between col-md-8">
               <h3 className="fs-6 text-black">Account Settings</h3>
               <button
                 type="button"
@@ -306,7 +132,7 @@ const AccountSettings = () => {
               </button>
             </div>
 
-            <div className="mt-4 mb-5 w-75">
+            <div className="mt-4 mb-5 col-md-8">
               <div className="mb-3">
                 <label for="organisation-name" className="form-label">
                   Organisation Name
@@ -414,8 +240,12 @@ const AccountSettings = () => {
                     className="form-select"
                     aria-label="Default select example"
                   >
-                    <option selected></option>
-                    <option value="--">--</option>
+                    <option value="">Select time zone</option>
+                    {timezone.map((zone, i) => (
+                      <option key={i} value={zone.value}>
+                        {zone.value}({zone.abbr})
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -429,8 +259,12 @@ const AccountSettings = () => {
                     className="form-select"
                     aria-label="Default select example"
                   >
-                    <option selected></option>
-                    <option value="--">--</option>
+                    <option value="">Select language</option>
+                    {languages.map((lang, i) => (
+                      <option key={i} value={lang?.name}>
+                        {lang?.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -445,8 +279,12 @@ const AccountSettings = () => {
                   className="form-select"
                   aria-label="Default select example"
                 >
-                  <option selected></option>
-                  <option value="--">--</option>
+                  <option value="">Select country</option>
+                  {countries.map((country, i) => (
+                    <option key={i} value={country.name}>
+                      {country.name}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -561,7 +399,7 @@ const AccountSettings = () => {
               </div>
             </div>
           </div>
-        )}
+        
       </div>
     </div>
   );

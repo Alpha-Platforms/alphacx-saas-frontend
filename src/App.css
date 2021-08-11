@@ -47,6 +47,9 @@ body {
 a {
   text-decoration: none !important;
 }
+input:disabled {
+  cursor: not-allowed !important;
+}
 
 .btn,
 body,
@@ -536,6 +539,21 @@ label.file-picker object.lg-icon {
   z-index: 1 !important;
 }
 
+/* * ------- CUSTOMER AVATAR ---------- */
+.customer-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: auto;
+}
+
+.customer-avatar img {
+  width: 100%;
+  border: solid 1px #fff;
+  border-radius: 50%;
+}
+
 /*  -------- USER NAME INITIALS -----------   */
 
 .user-initials {
@@ -600,11 +618,15 @@ label.file-picker object.lg-icon {
 }
 
 .f-13 {
-  font-size: 12px !important;
+  font-size: 13px !important;
 }
 
 .f-18 {
   font-size: 18px !important;
+}
+
+.f-8 {
+  font-size: 8px !important;
 }
 
 .fw-500 {
@@ -1017,7 +1039,7 @@ a object {
 
 /* 
 * GENERAL SETTINGS */
-#ticket-closes-wrapper {
+/* #ticket-closes-wrapper {
   position: relative;
 }
 
@@ -1026,7 +1048,7 @@ a object {
   position: absolute;
   top: 8px;
   right: -120px;
-}
+} */
 
 .cursor-pointer {
   cursor: pointer;
@@ -1236,3 +1258,7 @@ a object {
   background-image: none;
 }
 /** >>> End | From from styles.css*/
+
+.whitespace-nowrap {
+  white-space: nowrap;
+}

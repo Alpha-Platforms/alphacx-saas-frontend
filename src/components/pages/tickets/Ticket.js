@@ -38,9 +38,10 @@ import {
   httpPatchMain,
 } from "../../../helpers/httpMethods";
 import NoChatFound from "../conersations/noChatFound";
-
+import { CURRENT_CUSTOMER_TICKETS_LOADING } from '../../../reduxstore/types';
 
 const CircleIcon = (props) => <span className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
+
 
 const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, currentTicket}) => {
 
@@ -212,7 +213,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       const richText = draftToHtml(convertToRaw(editorState.getCurrentContent()));
       setEditorState(editorState);
       setReplyTicket({ plainText, richText });
-      console.log(">>>>", richText, richText);
+      console.log(">>>>", richText, plainText);
     };
     const getTickets = async () => {
       const res = await httpGetMain("tickets?channel=whatsapp");
@@ -248,10 +249,10 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         // type: "note",
         response: reply.richText,
         plainResponse: reply.plainText,
-        phoneNumber: singleTicketFullInfo.customer.phone_number,
+        phoneNumber: currentTicket.customer.phone_number,
         // attachment: "",
       };
-      console.log(singleTicketFullInfo.customer.phone_number);
+      console.log(currentTicket.customer.phone_number);
       console.log(data);
       // setsendingReply(true);
       const replyData = {
@@ -265,7 +266,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       console.log(replyData);
       setMsgHistory((item) => [...item, replyData]);
       const res = await httpPostMain(
-        `tickets/${singleTicketFullInfo.id}/replies`,
+        `tickets/${currentTicket.id}/replies`,
         data
       );
       if (res?.status == "success") {
@@ -488,6 +489,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         console.log('loading messages');
       }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isCurrentTicketLoaded, currentTicket])
 
 
@@ -496,12 +498,13 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
             {!isCurrentTicketLoaded
                 ? <div className="single-cust-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
                 : !currentTicket ? <div>No Ticket Found.</div> : <div
+                    id="ticketDetailsWrapper"
                     style={{
                     gridTemplateColumns: "280px 1fr",
                     border: '1px solid #f1f1f1'
                 }}
                     className="d-grid mb-4">
-                    <div className="pt-2"><UserProfile ticket={[currentTicket]}  /></div>
+                    <div className="pt-2" style={{ backgroundColor: "#fafafa", borderRight: '1px solid #f1f1f1' }}><UserProfile UserInfo={UserInfo} ticket={[currentTicket]} isTicketDetails={true}  /></div>
 
                     {/* <div
                         style={{
@@ -558,6 +561,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                     </div> */}
 
                     <div
+                        id="ticketDetailsRightPane"
                         style={{
                         overflowX: "hidden"
                     }}
@@ -588,10 +592,10 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                 }}
               >
                 {" "}
-                <ClipLoader
+                <ScaleLoader
                   color="#0d4166"
                   loading={loadSingleTicket}
-                  size={35}
+                  // size={35}
                 />
               </div>
             ) : (
@@ -616,7 +620,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                   <div className="conversationHeaderV2">
                     <div className="conversationHeaderMainV2">
                       <div className="custormChatHeaderInfo">
-                        <div className="custormChatHeaderInfoData">
+                        <div className="custormChatHeaderInfoData pt-3">
                           <h1>{ticket[0]?.subject}</h1>
                           <p>
                             {`${capitalize(
@@ -637,8 +641,27 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                       </div>
                     </div>
                   </div>
+                  <div>
+                    <div
+                        className="achivemsagesSection pt-3"
+                        onClick={() => setShowAchive(!ShowAchive)}
+                      >
+                        <ExpandChat />
+                        {AchiveMsges.length == 0 &&
+                        TodayMsges.length == 0 &&
+                        YesterdayMsges.length == 0 ? (
+                          <span> No response found ({AchiveMsges.length})</span>
+                        ) : (
+                          <span>
+                            {" "}
+                            {ShowAchive ? "Condense" : "Expand"} all conversation
+                            ({AchiveMsges.length})
+                          </span>
+                        )}
+                      </div>
+                  </div>
                   {/* CHAT SECTION */}
-                  <div className="conversationsMain">
+                  <div id="ticketConvoBox" className="conversationsMain">
                     <div className="chatDateHeader">
                       <div className="chatDateHeaderhr1"></div>
                       <div className="chatDateHeaderTitle">
@@ -717,7 +740,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                       <span> {ticket[0].status.status}</span>
                     </div>
 
-                    <div
+                    {/* <div
                       className="achivemsagesSection"
                       onClick={() => setShowAchive(!ShowAchive)}
                     >
@@ -733,7 +756,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                           ({AchiveMsges.length})
                         </span>
                       )}
-                    </div>
+                    </div> */}
 
                     <div
                       className={` ${
@@ -929,7 +952,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                   </div>
                 </Fragment>
                 {/* CHAT COMMENT BOX SECTION */}
-                <div className="conversationCommentBox">
+                <div id="ticketConvoEditorBox" className="conversationCommentBox">
                   <div className="single-chat-ckeditor">
                     <div
                       className="showBackArrowOnMobile"
@@ -940,83 +963,85 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                       <img src={BackArrow} alt="" />
                     </div>
 
-                    <Editor
-                      editorState={editorState}
-                      toolbar={{
-                        options: ["emoji", "inline", "image"],
+                    <div className="ticket-convo-editor">
+                      <Editor
+                        editorState={editorState}
+                        toolbar={{
+                          options: ["emoji", "inline", "image"],
 
-                        inline: {
-                          inDropdown: false,
-                          className: undefined,
-                          component: undefined,
-                          dropdownClassName: undefined,
-                          options: ["bold", "italic", "underline"],
-                          bold: { icon: boldB, className: undefined },
-                          italic: { icon: TextItalic, className: undefined },
-                          underline: {
-                            icon: TextUnderline,
+                          inline: {
+                            inDropdown: false,
                             className: undefined,
+                            component: undefined,
+                            dropdownClassName: undefined,
+                            options: ["bold", "italic", "underline"],
+                            bold: { icon: boldB, className: undefined },
+                            italic: { icon: TextItalic, className: undefined },
+                            underline: {
+                              icon: TextUnderline,
+                              className: undefined,
+                            },
                           },
-                        },
 
-                        image: {
-                          icon: editorImg,
-                          className: undefined,
-                          component: undefined,
-                          popupClassName: undefined,
-                          urlEnabled: true,
-                          uploadEnabled: true,
-                          alignmentEnabled: true,
-                          uploadCallback: _uploadImageCallBack,
-                          previewImage: true,
-                          inputAccept:
-                            "image/gif,image/jpeg,image/jpg,image/png,image/svg",
-                          alt: { present: false, mandatory: false },
-                          defaultSize: {
-                            height: "auto",
-                            width: "auto",
+                          image: {
+                            icon: editorImg,
+                            className: undefined,
+                            component: undefined,
+                            popupClassName: undefined,
+                            urlEnabled: true,
+                            uploadEnabled: true,
+                            alignmentEnabled: true,
+                            uploadCallback: _uploadImageCallBack,
+                            previewImage: true,
+                            inputAccept:
+                              "image/gif,image/jpeg,image/jpg,image/png,image/svg",
+                            alt: { present: false, mandatory: false },
+                            defaultSize: {
+                              height: "auto",
+                              width: "auto",
+                            },
                           },
-                        },
-                        emoji: {
-                          icon: Smiley,
-                        },
-                        blockType: {
-                          inDropdown: true,
-                        },
+                          emoji: {
+                            icon: Smiley,
+                          },
+                          blockType: {
+                            inDropdown: true,
+                          },
 
-                        list: {
-                          inDropdown: true,
-                        },
-                        // textAlign: {
-                        //   inDropdown: false,
-                        //   className: undefined,
-                        //   component: undefined,
-                        //   dropdownClassName: undefined,
-                        //   options: ["left", "center", "right"],
-                        //   left: { icon: TextAlignLeft, className: undefined },
-                        //   center: {
-                        //     icon: TextAlignCenter,
-                        //     className: undefined,
-                        //   },
-                        //   right: { icon: TextAlignRight, className: undefined },
-                        //   // justify: { icon: TextAlignCenter, className: undefined },
-                        // },
+                          list: {
+                            inDropdown: true,
+                          },
+                          // textAlign: {
+                          //   inDropdown: false,
+                          //   className: undefined,
+                          //   component: undefined,
+                          //   dropdownClassName: undefined,
+                          //   options: ["left", "center", "right"],
+                          //   left: { icon: TextAlignLeft, className: undefined },
+                          //   center: {
+                          //     icon: TextAlignCenter,
+                          //     className: undefined,
+                          //   },
+                          //   right: { icon: TextAlignRight, className: undefined },
+                          //   // justify: { icon: TextAlignCenter, className: undefined },
+                          // },
 
-                        link: {
-                          inDropdown: true,
-                        },
+                          link: {
+                            inDropdown: true,
+                          },
 
-                        history: {
-                          inDropdown: true,
-                        },
-                      }}
-                      toolbarClassName="toolbarClassName"
-                      wrapperClassName="wrapperClassName"
-                      editorClassName="editorClassName"
-                      onEditorStateChange={(editor) =>
-                        onEditorStateChange(editor)
-                      }
-                    />
+                          history: {
+                            inDropdown: true,
+                          },
+                        }}
+                        toolbarClassName="toolbarClassName"
+                        wrapperClassName="wrapperClassName"
+                        editorClassName="editorClassName"
+                        onEditorStateChange={(editor) =>
+                          onEditorStateChange(editor)
+                        }
+                      />
+                    </div>
 
                     <div className="sendMsg">
                       <button

@@ -1,6 +1,7 @@
 .general-wrapper {
   height: 100vh;
   background: #ffff;
+  overflow-y: auto;
 }
 
 .navbar-wrap {
@@ -61,6 +62,12 @@
   top: -7px;
   padding-bottom: 30px;
   padding: 0;
+}
+
+.settings-container {
+  margin-left: calc(10% + 50px);
+  margin-right: 10%;
+  margin-top: calc(3rem + 75px);
 }
 
 .sidebar-list {

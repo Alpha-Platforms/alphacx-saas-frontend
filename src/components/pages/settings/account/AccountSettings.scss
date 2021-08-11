@@ -1,12 +1,17 @@
 .account-settings {
-  height: 80vh;
   border-radius: 8px;
-  overflow-y: auto;
+
+  .card-body {
+    padding: 0 !important;
+  }
   #uploadPersonalPhotoInputImgPreview {
     overflow: hidden;
   }
   textarea {
     resize: none;
+  }
+  .active {
+    border-bottom: 2px solid #006298 !important;
   }
   .avatarImage {
     height: 100%;

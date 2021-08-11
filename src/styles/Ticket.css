@@ -169,9 +169,8 @@
     border: 1px solid #f1f1f1;
 }
 
-
-#alphacxMTable.acx-ticket-cust-table thead tr th:nth-child(3) > span > div  {
-    white-space: nowrap;
+#alphacxMTable.acx-ticket-cust-table thead tr th:nth-child(3) > span > div {
+  white-space: nowrap;
 }
 
 #alphacxMTable.acx-ticket-cust-table thead tr th:nth-child(7) > span > div {
@@ -183,10 +182,86 @@
 }
 
 #alphacxMTable.acx-ticket-table tbody tr {
-    border-bottom: 1px solid red !important;
+    /* border-bottom: 1px solid red !important; */
 }
 
 #alphacxMTable.acx-ticket-cust-table thead tr th.MuiTableCell-root,
 #alphacxMTable.acx-ticket-cust-table tbody tr td.MuiTableCell-root {
     border-bottom: 1px solid #f1f1f1 !important;
+}
+
+#ticketConvoEditorBox {
+    height: 9rem;
+    position: fixed;
+    bottom: 1.2rem;
+    width: calc(100vw - 421px);
+    background-color: #fafafa;
+}
+
+
+#ticketConvoEditorBox > div {
+    position: fixed;
+    bottom: 0;
+    width: calc(100vw - 480px);
+    /* width: 100%; */
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-radius: 0.3rem;
+}
+
+#ticketConvoEditorBox > div > div:nth-child(2) {
+    background-color: white;
+}
+
+#ticketDetailsWrapper {
+    position: fixed;
+    width: calc(100vw - 140px);
+    height: calc(100vh - 7.5rem) !important;
+    overflow: hidden;
+}
+
+#ticketConvoBox {
+    position: relative;
+    height: calc(100vh - 21.5rem) !important;
+    max-height: 100%;
+    margin-bottom: 3rem;
+    overflow: scroll;
+    padding-bottom: 0 !important;
+}
+
+#ticketDetailsRightPane {
+    height: calc(100vh - 7.5rem) !important;
+    position: relative;
+}
+
+#ticketConvoEditorBox > div > div:nth-child(2) > div > div:nth-child(2) { 
+    /* border: 1px solid red !important; */
+}
+
+/* width */
+#ticketConvoEditorBox > div > div:nth-child(2) > div > div:nth-child(2)::-webkit-scrollbar {
+    width: 0rem;
+    height: 0rem;
+    opacity: 0;
+}
+
+/* Track */
+#ticketConvoEditorBox > div > div:nth-child(2) > div > div:nth-child(2)::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+    /* border-radius: 1rem; */
+}
+
+/* Handle */
+#ticketConvoEditorBox > div > div:nth-child(2) > div > div:nth-child(2)::-webkit-scrollbar-thumb {
+background: transparent;
+    /* border-radius: 1rem; */
+}
+
+/* Handle on hover */
+#ticketConvoEditorBox > div > div:nth-child(2) > div > div:nth-child(2)::-webkit-scrollbar-thumb:hover {
+background: transparent;
+}
+
+.scale-9 {
+    transform: scale(0.9) !important;
 }

@@ -4,77 +4,183 @@ import "./automationSettings.scss";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
 import TripleDot from "../../../../assets/imgF/triple_dot.png";
 import { Link } from "react-router-dom";
-
-const TableItem = ({ policy, handleStatusToogle, i }) => {
-  const [showActions, setShowActions] = useState(false);
-  return (
-    <tr className="table-item">
-      <th className="ps-5">{policy.name}</th>
-      <th>
-        <button
-          className={`status-toogle ${policy.active ? "active" : ""}`}
-          onClick={() => handleStatusToogle(i)}
-        >
-          <div className="circle" />
-        </button>
-
-        <button
-          className="actions-btn"
-          onClick={() => setShowActions(!showActions)}
-        >
-          <img src={TripleDot} alt="" />
-        </button>
-        {showActions && (
-          <div className="actions-drop">
-            <p>Edit</p>
-            <p>Delete</p>
-          </div>
-        )}
-      </th>
-    </tr>
-  );
-};
+import MaterialTable from "material-table";
+import { TablePagination } from "@material-ui/core";
+import tableIcons from "../../../../assets/materialicons/tableIcons";
+import { ReactComponent as DotSvg } from "../../../../assets/icons/dots.svg";
+import { Dropdown } from "react-bootstrap";
+import {
+  ThemeProvider as MuiThemeProvider,
+  createTheme,
+} from "@material-ui/core/styles";
+import "../../../../styles/Ticket.css";
+import { httpGetMain } from "../../../../helpers/httpMethods";
+import { NotificationManager } from "react-notifications";
 
 const AutomationSettings = () => {
-  const [SLApolicies, SetSLApolicies] = useState([
-    { name: "Default Policy", active: true },
-  ]);
+  const [automationPolicies, setAutomationPolicies] = useState([]);
+  const [tableMeta, setTableMeta] = useState({});
 
-  const handleStatusToogle = (index) => {
-    let policies = SLApolicies;
-    policies[index].active = !policies[index].active;
+  // const handleStatusToogle = (index) => {
+  //   let policies = SLApolicies;
+  //   policies[index].active = !policies[index].active;
 
-    SetSLApolicies(policies);
+  //   setSLApolicies(policies);
+  // };
+  const tableTheme = createTheme({
+    palette: {
+      primary: {
+        main: "rgba(0, 98, 152)",
+      },
+      secondary: {
+        main: "rgba(0, 98, 152)",
+      },
+    },
+  });
+  const [changingRow, setChangingRow] = useState(false);
+  const tableColumns = [
+    {
+      title: "Automation Policy",
+      field: "name",
+      width: "5%",
+    },
+    {
+      title: "",
+      field: "id",
+      width: "50px",
+    },
+    {
+      title: "",
+      field: "staus",
+      width: "100px",
+    },
+    {
+      title: "Status",
+      field: "status",
+      width: "50px",
+    },
+    {
+      title: "",
+      field: "dropdownAction",
+      width: "50px",
+      render: (rowData) => (
+        <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+          <Dropdown.Toggle variant="transparent" size="sm">
+            <span
+              className="cust-table-dots"
+              onClick={() => {
+                console.clear();
+                console.log("row dats", rowData);
+              }}
+            >
+              <DotSvg />
+            </span>
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item eventKey="1">
+              <Link
+                to={`/settings/automation/edit/${
+                  automationPolicies[rowData.tableData.id].id
+                }`}
+              >
+                <span className="black-text">Edit</span>
+              </Link>
+            </Dropdown.Item>
+            <Dropdown.Item eventKey="2">
+              <span className="black-text">Delete</span>
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      ),
+    },
+  ];
+  const AlphacxMTPagination = (props) => {
+    const {
+      ActionsComponent,
+      onChangePage,
+      onChangeRowsPerPage,
+      ...tablePaginationProps
+    } = props;
+
+    return (
+      <TablePagination
+        {...tablePaginationProps}
+        rowsPerPageOptions={[10, 20, 30]}
+        rowsPerPage={tableMeta?.itemsPerPage || 5}
+        count={Number(tableMeta?.totalItems || 20)}
+        page={(tableMeta?.currentPage || 1) - 1}
+        onPageChange={onChangePage}
+        // when the number of rows per page changes
+        onRowsPerPageChange={(event) => {
+          setChangingRow(true);
+          // getPaginatedTickets(event.target.value, 1);
+        }}
+        ActionsComponent={(subprops) => {
+          const { onPageChange, ...actionsComponentProps } = subprops;
+          return (
+            <ActionsComponent
+              {...actionsComponentProps}
+              onChangePage={(event, newPage) => {
+                // fetch tickets with new current page
+                // getPaginatedTickets(meta.itemsPerPage, newPage + 1);
+              }}
+              onRowsPerPageChange={(event) => {
+                // fetch tickets with new rows per page
+                // getPaginatedTickets(event.target.value, meta.currentPage);
+              }}
+            />
+          );
+        }}
+      />
+    );
+  };
+
+  const getAllAutomation = async () => {
+    const res = await httpGetMain("sla");
+    if (res?.status === "success") {
+      console.clear();
+      console.log(res?.data?.agreement);
+      setTableMeta(res?.data?.meta);
+      setAutomationPolicies(res?.data?.agreement);
+    } else {
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
   };
 
   useEffect(() => {
-    console.log("changed");
-  }, [SLApolicies]);
+    getAllAutomation();
+  }, []);
+
   return (
-    <div
-      id="mainContent"
-      className="container help-center-settings automation-settings"
-    >
-      <div className="card card-body bg-white border-0 p-5 mt-4">
+    <div className="help-center-settings automation-settings">
+      <div className="card card-body bg-white border-0 mt-4">
         <div id="mainContentHeader">
           <h6 className="text-muted f-14">
-            Settings{" "}
+            <Link to="/settings">
+              <span className="text-custom">Settings</span>
+            </Link>{" "}
             <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
             {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
                             className="img-fluid mx-2 me-3"></object> */}
-            <span className="text-custom">Automation Settings</span>
+            <span>Automations</span>
           </h6>
         </div>
         <div id="settings">
           <div className="d-flex justify-content-between align-baseline">
-            <h5 className="mt-3 mb-4 f-16 fw-bold">SLA Policies</h5>
+            <h5 className="mt-3 mb-4 f-16 fw-bold">Automation</h5>
             <div>
               <Link
-                className="btn btn-sm f-14 px-5 btn-custom bt"
+                className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
                 to="automation/new-policy"
               >
-                Add policy
+                Add Automation
               </Link>
+              {/* <a
+                className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
+                // onClick={handleSubmitNewArticle}
+              >
+                Add policy
+              </a> */}
             </div>
           </div>
           <p className="w-50 f-12">
@@ -88,8 +194,57 @@ const AutomationSettings = () => {
             first matching SLA policy will be applied to tickets wuth matching
             conditions
           </p>
-
-          <table className="table mt-4">
+          <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
+            <div
+              id="alphacxMTable"
+              className="pb-5 acx-ticket-cust-table acx-ticket-table p-4"
+            >
+              <MuiThemeProvider theme={tableTheme}>
+                <MaterialTable
+                  columns={tableColumns}
+                  title=""
+                  icons={tableIcons}
+                  data={automationPolicies.map(({ name, id }, i) => ({
+                    name,
+                    status: (
+                      <div className="form-check form-switch d-flex align-items-center">
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id="security-switch"
+                          checked
+                          // onChange={(e) => {
+                          //   console.log(e.target.checked);
+                          //   let policies = SLApolicies;
+                          //   policies[i].active = e.target.checked;
+                          //   policies[i].name = "checked";
+                          //   console.log(policies);
+                          //   setSLApolicies(policies);
+                          // }}
+                        />
+                      </div>
+                    ),
+                  }))}
+                  options={{
+                    search: true,
+                    selection: true,
+                    // exportButton: true,
+                    tableLayout: "auto",
+                    paging: true,
+                    pageSize: 10,
+                    headerStyle: {
+                      // backgroundColor: '#f8f9fa'
+                      backgroundColor: "#fefdfd",
+                    },
+                  }}
+                  components={{
+                    Pagination: AlphacxMTPagination,
+                  }}
+                />
+              </MuiThemeProvider>
+            </div>
+          </div>
+          {/* <table className="table mt-4">
             <thead className="bg-custom f-14">
               <tr>
                 <th className="ps-5 border-top-right">SLA Policy</th>
@@ -106,7 +261,7 @@ const AutomationSettings = () => {
                 />
               ))}
             </tbody>
-          </table>
+          </table> */}
           {/* <div className="text-center m-5 p-5 empty-state">
             <object data="../assets/alphatickets//icons/carousel.svg" className="img-fluid"></object>
             <p className="text-center">

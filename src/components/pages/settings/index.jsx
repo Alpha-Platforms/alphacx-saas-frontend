@@ -126,7 +126,7 @@ export default function SettingsHome() {
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <Link to="#" className="d-block cursor text-decoration-none">
+          <Link to="/settings/profile" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={UserBWIcon} alt="" />
@@ -143,7 +143,7 @@ export default function SettingsHome() {
 
         <div className="setting-link-item border rounded bg-light">
           <Link
-            to="/settings/groups"
+            to="/settings/teams"
             className="d-block cursor text-decoration-none"
           >
             <div className="d-flex align-items-center p-md-4">
@@ -247,22 +247,6 @@ export default function SettingsHome() {
                 <h6 className="text-dark mb-0">Customer Satisfaction</h6>
                 <p className="acx-fs-8 lh-1 mt-1 text-muted">
                   Setup ratings for customer feedback
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="setting-link-item border rounded bg-light">
-          <Link to="#" className="d-block cursor text-decoration-none">
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={StarBWIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Branding</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Change outlook of your organization
                 </p>
               </div>
             </div>

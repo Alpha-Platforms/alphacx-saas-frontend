@@ -9,7 +9,6 @@ import ProfileLightIcon from '../../../assets/svgicons/Profile-Light.svg';
 import DiscountIcon from '../../../assets/svgicons/Discount.svg';
 import ImageDefault from '../../../assets/svgicons/image-default.svg';
 import {Tabs, Tab, Button} from 'react-bootstrap';
-import {ReactComponent as TicketEmptySvg} from '../../../assets/svgicons/tickets-empty.svg';
 import '../../../styles/Customer.css';
 import {Link} from 'react-router-dom';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
@@ -20,8 +19,10 @@ import {useParams} from 'react-router-dom';
 import {getCurrentCustomer} from '../../../reduxstore/actions/customerActions';
 import {getUserInitials} from '../../../helper';
 import TicketHistory from './components/TicketHistory';
+import Notes from './components/Notes';
+import Timeline from './components/Timeline';
 
-const CircleIcon = (props) => <span className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
+const CircleIcon = (props) => <span style={{ backgroundColor: props.color }} className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
 
 const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded, currentCustomer}) => {
 
@@ -32,37 +33,6 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
     const [showUpdate,
         setShowUpdate] = useState(false);
 
-    const customers = [
-        {
-            date: '02 Jul, 2021',
-            ticket_id: '0721115',
-            subject: 'How do I get a refund?',
-            category: 'Enquiry',
-            agent_assigned: 'Munachi',
-            status: 'Pending'
-        }, {
-            date: '02 Jul, 2021',
-            ticket_id: '0721115',
-            subject: 'How do I get a refund?',
-            category: 'Enquiry',
-            agent_assigned: 'Munachi',
-            status: 'Closed'
-        }, {
-            date: '02 Jul, 2021',
-            ticket_id: '0721115',
-            subject: 'How do I get a refund?',
-            category: 'Enquiry',
-            agent_assigned: 'Munachi',
-            status: 'Overdue'
-        }, {
-            date: '02 Jul, 2021',
-            ticket_id: '0721115',
-            subject: 'How do I get a refund?',
-            category: 'Enquiry',
-            agent_assigned: 'Munachi',
-            status: 'Pending'
-        }
-    ];
 
     useEffect(() => {
 
@@ -86,29 +56,43 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
             default:
         }
         return output;
-    }
+    };
+
+    const [tags, setTags] = useState([
+        <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
+        <div style={{ color: "#F40D0D", background: "#FFEAEA " }}>Billing</div>,
+        <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
+        <div style={{ color: "#1E90FF", background: "#E3F1FF" }}>Billing</div>,
+        <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
+        <div style={{ color: "#1E90FF", background: "#E3F1FF" }}>Billing</div>,
+        <div style={{ color: "#F40D0D", background: "#FFEAEA " }}>Billing</div>,
+        <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
+        <div style={{ color: "#1E90FF", background: "#E3F1FF" }}>Billing</div>,
+      ]);
 
     return (
         <Fragment>
             {!isCurrentCustomerLoaded
                 ? <div className="single-cust-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
-                : !currentCustomer ? <div>No Customer Found.</div> : <div
+                : !currentCustomer ? <div>No Customer Found.</div> : <div className="pb-4"> <div
                     style={{
                     gridTemplateColumns: "280px 1fr",
                     border: '1px solid #f1f1f1'
                 }}
-                    className="d-grid mb-4">
+                    className="d-grid">
 
                     <div
                         style={{
-                        borderRight: '1px solid #f1f1f1'
+                        borderRight: '1px solid #f1f1f1',
+                        background: '#fafafa'
                     }}
-                        className="bg-primary py-5 pt-4 px-3 bg-white">
+                        className="pt-4 px-3">
                         <div className="user-initials-lg">
-                            <div className="user-initials blue me-auto ms-auto">{getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname}`)}</div>
+                            {currentCustomer?.avatar ? <div className="customer-avatar"><img src={currentCustomer.avatar} alt='' /></div> : <div className="user-initials blue me-auto ms-auto">{getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname}`)}</div>}
                             <div className="text-center mt-3">
-                                <h4 style={{ textTransform: 'capitalize' }}>{`${currentCustomer.firstname} ${currentCustomer.lastname}`}</h4>
-                                <p className="text-muted">jackmay@gmail.com</p>
+                                {/* <h4 style={{ textTransform: 'capitalize' }}>{`${currentCustomer.firstname} ${currentCustomer.lastname}`}</h4> */}
+                                <h6 className="mb-0 text-capitalize"><b>{`${currentCustomer.firstname} ${currentCustomer.lastname}`}</b></h6>
+                                <p className="text-muted f-13">jackmay@gmail.com</p>
                             </div>
                         </div>
                         <hr className="op-1"/> {/* <!-- Customer date info --> */}
@@ -117,15 +101,15 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                 <li>
                                     <div><CircleIcon icon={WorkIcon}/></div>
                                     <div>
-                                        <h6>Account ID</h6>
-                                        <p className="text-muted">{id?.slice(0, 8).toUpperCase()}</p>
+                                        <p className="pb-0 mb-0 f-12 text-muted op-9">Account ID</p>
+                                        <p className="text-muted f-13">{id?.slice(0, 8).toUpperCase()}</p>
                                     </div>
                                 </li>
                                 <li>
-                                    <div><CircleIcon icon={CallIcon}/></div>
+                                    <div><CircleIcon color="rgba(186, 104, 200, 0.25)" icon={CallIcon}/></div>
                                     <div>
-                                        <h6>Work Phone</h6>
-                                        <p className="text-muted">{currentCustomer.phone_number}</p>
+                                        <p className="pb-0 mb-0 f-12 text-muted op-9">Work Phone</p>
+                                        <p className="text-muted f-13">{currentCustomer.phoneNumber ? currentCustomer.phoneNumber : currentCustomer.phone_number ? currentCustomer.phone_number : ''}</p>
                                     </div>
                                 </li>
                                 {/* <li>
@@ -157,11 +141,63 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                     </div>
                                 </li> */}
                             </ul>
-                            <div className={"table-tags text-justify"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1 f-10">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1 f-10">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1 f-10">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1 f-10">Active</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1 f-10">Urgent</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1 f-10">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1 f-10">High Value</span></div>
+                            {/* <div className={"table-tags text-justify"}><span className="badge rounded-pill acx-bg-purple-30 px-2 py-2 me-1 my-1 f-8">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-2 py-2 me-1 my-1 f-8">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-2 py-2 me-1 my-1 f-8">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-2 py-2 me-1 my-1 f-8">Active</span><span className="badge rounded-pill acx-bg-blue-light-30 px-2 py-2 me-1 my-1 f-8">Urgent</span><span className="badge rounded-pill acx-bg-red-30 px-2 py-2 me-1 my-1 f-8">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-purple-30 px-2 py-2 me-1 my-1 f-8">High Value</span></div> */}
+
+                            <div className="ticktTagsgfs3">
+                                {tags.map((data) => {
+                                    return data;
+                                })}
+                            </div>
 
                         </div>
 
-                        <hr className="op-1"/>
+                        <hr className="op-1 mt-0"/>
+
+                        <div class="container-timeline">
+                            <div class="box">
+                            <div class="borderContaner">
+                                <div class="circle"></div>
+                                <div class="img"></div>
+                            </div>
+                            <div class="textTimeLineSec">
+                            <p className="pb-0 mb-0 f-13">
+                            <Link to="#">Olamide Adeleke</Link>&nbsp;changed ticket status from In progress to Closed</p>
+                                <div className="timeLinehashtags">
+                                <div className="d-none"></div>
+                                <div>01-05-2021, 12.00 AM</div>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="box">
+                            <div class="borderContaner">
+                                <div class="circle"></div>
+                                <div class="img"></div>
+                            </div>
+                            <div class="textTimeLineSec">
+                            <p className="pb-0 mb-0 f-13">
+                            <Link to="#">Olamide Adeleke</Link>&nbsp;changed ticket status from In progress to Closed</p>
+                                <div className="timeLinehashtags">
+                                <div className="d-none"></div>
+                                <div>01-05-2021, 12.00 AM</div>
+                                </div>
+                            </div>
+                            </div>
+
+                            <div class="box">
+                            <div class="borderContaner">
+                                <div class="circle"></div>
+                                <div style={{ height: "0px" }} class="img"></div>
+                            </div>
+                            <div class="textTimeLineSec">
+                            <p className="pb-0 mb-0 f-13">
+                            <Link to="#">Olamide Adeleke</Link>&nbsp;changed priorrity from medium to high</p>
+                                <div className="timeLinehashtags">
+                                <div className="d-none"></div>
+                                <div>01-05-2021, 12.00 AM</div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
 
                         <div className="text-center mt-4">
                             <Button
@@ -175,7 +211,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                         style={{
                         overflowX: "hidden"
                     }}
-                        className="bg-secondary py-3 pt-0 bg-white">
+                        className="bg-secondary pt-0 bg-white">
 
                         <div
                             style={{
@@ -198,25 +234,25 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                             type="button"
                                             onClick={() => setTabKey('notes')}>Notes</button>
                                     </li>
-                                    <li className="nav-item" role="presentation">
+                                    {/* <li className="nav-item" role="presentation">
                                         <button
                                             className={`nav-link ${tabKey === 'timeline' && 'nav-active'} text-muted`}
                                             id="pills-timeline-tab"
                                             type="button"
                                             onClick={() => setTabKey('timeline')}>Timeline</button>
-                                    </li>
+                                    </li> */}
                                 </ul>
                             </div>
                             <div className="d-flex align-items-md-center">
                                 <div>
-                                    <button
+                                    {/* <button
                                         type="button"
                                         className="btn btn-sm btn-outline-secondary px-md-3 mx-md-2 me-1">
                                         <img src={TicketIcon} className="pe-none" alt=""/>&nbsp; New Ticket
-                                    </button>
+                                    </button> */}
                                     <button
                                         type="button"
-                                        className="btn btn-sm btn-outline-secondary px-md-2 mx-md-2"><img src={MessageIcon} className="pe-none" alt=""/>&nbsp; Activation Email
+                                        className="reset-btn-outline btn btn-sm border btn-outline-secondary px-md-2 mx-md-2"><img src={MessageIcon} className="pe-none" alt=""/>&nbsp; Activation Email
                                     </button>
                                 </div>
                             </div>
@@ -230,229 +266,24 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                 onSelect={(k) => setTabKey(k)}
                                 className="mb-3">
                                 <Tab eventKey="ticket-history" className="px-2">
-                                    <TicketHistory />
-
-
-                                    {/* <div>
-                                        <table className="table bg-white rounded-bottom-o4 overflow-hidden">
-                                            <thead className="border-0">
-                                                <tr className="border-0">
-                                                    <th className="text-center">
-                                                        <input type="checkbox" className="form-check-input customer-select-all"/>
-                                                    </th>
-                                                    <th>Date</th>
-                                                    <th>Ticket ID</th>
-                                                    <th>Subject</th>
-                                                    <th>Category</th>
-                                                    <th>Agent Assigned</th>
-                                                    <th>Status</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-
-                                                {customers && customers.map(({
-                                                    date,
-                                                    ticket_id,
-                                                    subject,
-                                                    category,
-                                                    agent_assigned,
-                                                    status
-                                                }, idx) => (
-                                                    <tr key={idx}>
-                                                        <td>
-                                                            <input type="checkbox" className="form-check-input customer-select"/>
-                                                        </td>
-                                                        <td>{date}</td>
-                                                        <td>
-                                                            <Link to="#">{ticket_id}</Link>
-                                                        </td>
-                                                        <td>{subject}</td>
-                                                        <td>{category}</td>
-                                                        <td>{agent_assigned}</td>
-                                                        <td className={`ticket-state ${getStatusColor(status)}`}>
-                                                            <span className="btn btn-sm">{status}</span>
-                                                        </td>
-                                                        <td
-                                                            style={{
-                                                            textAlign: 'center'
-                                                        }}>
-                                                            <span><img src={ShowIcon} alt="" className="pe-none"/></span>
-                                                        </td>
-                                                    </tr>
-                                                ))}
-
-                                            </tbody>
-                                        </table>
-
-                                        <div className="d-flex justify-content-between align-items-center my-4">
-                                            <p className="mb-0">Showing 1-11 of 11 entries</p>
-
-                                            <div>
-                                                <nav aria-label="..." className="d-flex justify-content-end align-items-center">
-                                                    <ul className="pagination mb-0">
-                                                        <li className="page-item disabled">
-                                                            <Link className="page-link" to="#" tabindex="-1" aria-disabled="true">Previous</Link>
-                                                        </li>
-                                                        <li className="page-item active" aria-current="page">
-                                                            <Link className="page-link" to="#">1</Link>
-                                                        </li>
-                                                        <li className="page-item">
-                                                            <Link className="page-link" to="#">Next</Link>
-                                                        </li>
-                                                    </ul>
-                                                </nav>
-                                            </div>
-                                        </div>
-                                    </div> */}
-
+                                    <TicketHistory currentCustomerId={id} />
                                 </Tab>
 
                                 {/* Notes Tab */}
                                 <Tab eventKey="notes" className="px-2">
-                                    <div className="text-center mb-5">
-                                        <div>
-                                            <TicketEmptySvg/>
-                                        </div>
-                                        <p className="my-3">You have no note at the moment</p>
-                                    </div>
-                                    <form action="#">
-                                        {/* <div className="mb-3">
-                                        <label htmlFor="noteInput" className="form-label">New Note</label>
-                                        <textarea className="form-control" id="noteInput"></textarea>
-                                    </div> */}
-                                        <div>
-                                            <label>New Note</label>
-                                            {/* CK Editor */}
-                                            <CKEditor
-                                                editor={ClassicEditor}
-                                                data=""
-                                                onReady={editor => {}}
-                                                onChange={(event, editor) => console.log({event, editor})}
-                                                onBlur={(event, editor) => {
-                                                console.log('Blur.', editor);
-                                            }}
-                                                onFocus={(event, editor) => {
-                                                console.log('Focus.', editor);
-                                            }}/>
-                                        </div>
-
-                                        <div className="text-end mt-3">
-                                            <button
-                                                type="submit"
-                                                className="btn btn-sm bg-at-blue-light px-4 rounded-3 hover-op-8">Save Note</button>
-                                        </div>
-                                    </form>
-
-                                    {/* <!-- notes wrapper --> */}
-                                    <div
-                                        className="overflow-auto mt-5"
-                                        style={{
-                                        height: '300px'
-                                    }}>
-
-                                        {/* <!-- notes 1 --> */}
-                                        <div className="mb-2 mt-4 border p-4">
-                                            <div className="d-flex user-initials-sm">
-                                                <div className="col-auto user-initials blue me-2">
-                                                    JB</div>
-                                                <div>
-                                                    <div className="mb-1">
-                                                        <h6 className="mb-0">Jerome Bell</h6>
-                                                        <em className="op-7">05-05-2021</em>
-                                                    </div>
-                                                    <div>
-                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus curabitur
-                                                        aenean sodales sed eros lacus amet. Purus molestie dui dolor quis nullam sem et
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                        {/* <!--  note 2 --> */}
-                                        <div className="mb-2 mt-4 border p-4">
-                                            <div className="d-flex user-initials-sm">
-                                                <div className="col-auto user-initials blue me-2">
-                                                    JB</div>
-                                                <div>
-                                                    <div className="mb-1">
-                                                        <h6 className="mb-0">Jerome Bell</h6>
-                                                        <em className="op-7">05-05-2021</em>
-                                                    </div>
-                                                    <div>
-                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus curabitur
-                                                        aenean sodales sed eros lacus amet. Purus molestie dui dolor quis nullam sem et
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                        {/* <!--  note 3 --> */}
-                                        <div className="mb-2 mt-4 border p-4">
-                                            <div className="d-flex user-initials-sm">
-                                                <div className="col-auto user-initials blue me-2">
-                                                    JB</div>
-                                                <div>
-                                                    <div className="mb-1">
-                                                        <h6 className="mb-0">Jerome Bell</h6>
-                                                        <em className="op-7">05-05-2021</em>
-                                                    </div>
-                                                    <div>
-                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. In faucibus curabitur
-                                                        aenean sodales sed eros lacus amet. Purus molestie dui dolor quis nullam sem et
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                    </div>
+                                    <Notes />
                                 </Tab>
 
                                 {/* Timeline tab */}
                                 <Tab eventKey="timeline" className="px-2">
-                                    <h5>How do I get a refund htmlFor my order?</h5>
-                                    <ul className="timeline-tree">
-                                        <li>
-                                            <div>
-                                                <span>01-05-2021, 12.00 AM</span>
-                                            </div>
-                                            <div>
-                                                <p>
-                                                    <Link to="#">Olamide Adeleke</Link>
-                                                    changed ticket status from In progress to Closed</p>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                <span>01-05-2021, 12.00 AM</span>
-                                            </div>
-                                            <div>
-                                                <p>
-                                                    <Link to="#">Olamide Adeleke</Link>
-                                                    changed priorrity from medium to high</p>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                <span>01-05-2021, 12.00 AM</span>
-                                            </div>
-                                            <div>
-                                                <p>
-                                                    <Link to="#">Adekule Olagunju</Link>
-                                                    dropped a note</p>
-                                            </div>
-                                        </li>
-                                    </ul>
+                                    <Timeline />
                                 </Tab>
                             </Tabs>
                         </div>
 
                     </div>
 
-                </div>}
+                </div></div>}
 
             {/* Profile Update OffCanvas */}
             <div

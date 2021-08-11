@@ -15,6 +15,8 @@ import ShowIcon from '../../../../assets/icons/Show.svg';
 import ProfileIcon from '../../../../assets/svgicons/Profile-Light.svg';
 import AddGroupModal from './components/AddGroupModal';
 import AddMemberModal from './components/AddMemberModal';
+import {Link} from 'react-router-dom';
+import {ReactComponent as DotSvg} from '../../../../assets/icons/dots.svg';
 
 const GroupList = ({groups, meta, getPaginatedUsers, isUsersLoaded}) => {
     const [addGroupModalShow,
@@ -84,12 +86,16 @@ const GroupList = ({groups, meta, getPaginatedUsers, isUsersLoaded}) => {
 
     return (
         <div>
-            <div className="card card-body bg-white p-5">
+            <div className="card card-body bg-white p-0 border-0">
                 <div id="mainContentHeader" className="breadcrumb">
-                    <h6 className="text-muted f-14">Settings <i className="bi bi-chevron-right"></i><span>Groups</span></h6>
+                    <span className="text-muted f-14">
+                        <Link to="/settings">Settings</Link>&nbsp;&nbsp;&nbsp;
+                        <i className="bi bi-chevron-right"></i>&nbsp;&nbsp;&nbsp;
+                        <span>Teams</span>
+                    </span>
                 </div>
 
-                <h5 className="fw-bold">Groups</h5>
+                <h5 className="fw-bold">Teams</h5>
 
                 <div
                     className={`d-flex justify-content-between flex-wrap rounded-top-04 flex-md-nowrap align-items-center p-4 px-3`}>
@@ -102,7 +108,7 @@ const GroupList = ({groups, meta, getPaginatedUsers, isUsersLoaded}) => {
                         <button
                             onClick={() => setAddMemberModalShow(true)}
                             type="button"
-                            className="btn btn-sm btn-outline-secondary ps-md-3 ms-md-3 reset-btn-outline me-3">
+                            className="btn border-1 border btn-sm btn-outline-secondary ps-md-3 ms-md-3 reset-btn-outline me-3">
                             <img src={ProfileIcon} alt="" />&nbsp;Add Member
                         </button>
 
@@ -110,13 +116,14 @@ const GroupList = ({groups, meta, getPaginatedUsers, isUsersLoaded}) => {
                             onClick={() => setAddGroupModalShow(true)}
                             type="button"
                             className="btn btn-sm bg-at-blue-light px-md-3 mx-1">
-                            &nbsp;Add Group
+                            &nbsp;Add Team
                         </button>
                     </div>
 
                 </div>
 
                 <div id="alphacxMTable" className="pb-2 acx-group-table">
+                    
                     {groups && <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""
@@ -144,7 +151,15 @@ const GroupList = ({groups, meta, getPaginatedUsers, isUsersLoaded}) => {
                                     }, {
                                         title: 'Action',
                                         field: 'action',
-                                        render: rowData => (<img src={ShowIcon} alt='' />)
+                                        render: rowData => (<Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+                                                                <Dropdown.Toggle variant="transparent" size="sm">
+                                                                    <span className="cust-table-dots"><DotSvg/></span>
+                                                                </Dropdown.Toggle>
+                                                                <Dropdown.Menu>
+                                                                    <Dropdown.Item eventKey="1"><Link to="#"><span className="black-text">Edit</span></Link></Dropdown.Item>
+                                                                    <Dropdown.Item eventKey="2"><span className="black-text">Delete</span></Dropdown.Item>
+                                                                </Dropdown.Menu>
+                                                            </Dropdown>)
                                     },
                                 ]
                             }
@@ -162,8 +177,10 @@ const GroupList = ({groups, meta, getPaginatedUsers, isUsersLoaded}) => {
                                 // exportButton: true,
                                 tableLayout: 'auto',
                                 paging: true,
-                                pageSize: 10,
                                 rowStyle: {
+                                    backgroundColor: '#fff'
+                                },
+                                headerStyle: {
                                     backgroundColor: '#f8f9fa'
                                 }
                             }}

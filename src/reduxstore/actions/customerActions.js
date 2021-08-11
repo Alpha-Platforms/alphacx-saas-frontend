@@ -115,10 +115,30 @@ export const getCurrentCustomer = (id) => (dispatch, getState) => {
     }
 }
 
+export const getPaginatedCurrentCustomerTickets = (itemsPerPage, currentPage, customerId) => (dispatch, getState) => {
+    if (!navigator.onLine) {
+        return console.error("Network error!");
+    }
+    dispatch(setCurrentCustomerTicketsLoading());
+    axios
+        .get(`${config.stagingBaseUrl}/customer/${customerId}/tickets?per_page=${itemsPerPage}&page=${currentPage}`, userTokenConfig(getState))
+        .then(res => dispatch({
+            type: types.GET_CURRENT_CUSTOMER_TICKETS,
+            payload: (res.data && res.data.status === "success")
+                ? res.data.data
+                : {}
+        }))
+        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+}
+
 export const setCustomersLoading = () => {
     return {type: types.CUSTOMERS_LOADING}
 }
 
 export const setCurrentCustomerLoading = () => {
     return {type: types.CURRENT_CUSTOMER_LOADING}
+}
+
+export const setCurrentCustomerTicketsLoading = () => {
+    return {type: types.CURRENT_CUSTOMER_TICKETS_LOADING}
 }

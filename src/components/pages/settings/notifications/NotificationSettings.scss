@@ -1,7 +1,10 @@
 .notification-settings {
-  height: 80vh;
   border-radius: 8px;
   overflow-y: auto;
+  .card-body {
+    padding: 0 !important;
+  }
+
   .articleList {
     width: 100%;
     margin: 20px 0;

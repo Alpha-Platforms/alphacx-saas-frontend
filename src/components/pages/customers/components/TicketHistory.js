@@ -1,9 +1,14 @@
+import {useState, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import MaterialTable from 'material-table';
 import {TablePagination} from '@material-ui/core';
 import tableIcons from '../../../../assets/materialicons/tableIcons';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import ShowIcon from '../../../../assets/icons/Show.svg';
+import {getPaginatedCurrentCustomerTickets} from '../../../../reduxstore/actions/customerActions';
+import {connect} from 'react-redux';
+import moment from 'moment';
+import ScaleLoader from 'react-spinners/ScaleLoader';
 
 const getStatusColor = status => {
     switch (status) {
@@ -22,7 +27,25 @@ const getStatusColor = status => {
     }
 }
 
-const TicketHistory = ({ meta }) => {
+const TicketHistory = ({ currentCustomerTicketsMeta, currentCustomerId, getPaginatedCurrentCustomerTickets, isCurrentCustomerLoaded, currentCustomerTickets, isCurrentCustomerTicketsLoaded, currentCustomer }) => {
+    const [changingRow, setChangingRow] = useState(false);
+    const [ticketLoading,
+        setTicketLoading] = useState(false);
+
+    useEffect(() => {
+        if (isCurrentCustomerLoaded) {
+            getPaginatedCurrentCustomerTickets(10, 1, currentCustomerId);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isCurrentCustomerLoaded]);
+
+    useEffect(() => {
+        setTicketLoading(!isCurrentCustomerTicketsLoaded);
+        if (isCurrentCustomerTicketsLoaded) {
+            setChangingRow(false);
+        }
+}, [isCurrentCustomerTicketsLoaded]);
+
     const tableColumns = [
         {
             title: 'Ticket ID',
@@ -44,7 +67,7 @@ const TicketHistory = ({ meta }) => {
         }, {
             title: 'Agent Assigned',
             field: 'agentAssigned',
-            render: rowData => <Link to="#">{rowData.agentAssigned}</Link>
+            render: rowData => <Link to="/settings/users">{rowData.agentAssigned}</Link>
         }, {
             title: 'Status',
             field: 'stage',
@@ -69,23 +92,65 @@ const TicketHistory = ({ meta }) => {
         
     });
 
+    const AlphacxMTPagination = props => {
+        const {
+            ActionsComponent,
+            onChangePage,
+            onChangeRowsPerPage,
+            ...tablePaginationProps
+        } = props;
+        
+        return (
+        <TablePagination
+            {...tablePaginationProps}
+            rowsPerPageOptions={[10, 20, 30]}
+            rowsPerPage={currentCustomerTicketsMeta?.itemsPerPage || 5}
+            count={Number(currentCustomerTicketsMeta?.totalItems || 20)}
+            page={(currentCustomerTicketsMeta?.currentPage || 1) - 1}
+            onPageChange={onChangePage}
+            // when the number of rows per page changes
+            onRowsPerPageChange={event => {
+                        setChangingRow(true);
+                        getPaginatedCurrentCustomerTickets(event.target.value, 1, currentCustomerId);
+                        }}
+            ActionsComponent={(subprops) => {
+                const { onPageChange, ...actionsComponentProps } = subprops;
+                return (
+                    <ActionsComponent
+                    {...actionsComponentProps}
+                    onChangePage={(event, newPage) => {
+                        // fetch tickets with new current page
+                        getPaginatedCurrentCustomerTickets(currentCustomerTicketsMeta.itemsPerPage, newPage + 1, currentCustomerId);
+                        }}
+                    onRowsPerPageChange={event => {
+                        // fetch tickets with new rows per page
+                        getPaginatedCurrentCustomerTickets(event.target.value, currentCustomerTicketsMeta.currentPage, currentCustomerId);
+                    }}
+                    />
+                );
+                }}
+        />
+    )}
+
     return (
         <div>
-            <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table acx-ticket-table">
-                    {<MuiThemeProvider theme={tableTheme}>
+            <div id="alphacxMTable" className="pb-3 acx-ticket-cust-table acx-ticket-table acx-single-cust-table">
+                    {!isCurrentCustomerTicketsLoaded ? <div className="text-center"><ScaleLoader loading={ticketLoading} color={"#006298"}/></div> : <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""
                             icons = {
                                 tableIcons
                             }
                             columns = {tableColumns}
-                            data = {[0, 1, 2, 3, 4].map(() => ({
-                                date: `5:28 PM`,
-                                ticketId: '0721115',
-                                subject: 'How do I get a refund',
+                            data = {currentCustomerTickets.map(({subject, id, category, created_at, status, assignee}) => ({
+                                date: moment(created_at).format('DD MMM, YYYY'),
+                                ticketId: id,
+                                subject: `${subject.substr(0, 25)}...`,
                                 category: `Enquiry`,
-                                agentAssigned: 'Munachi',
-                                stage: 'Pending'
+                                // category: category.name,
+                                // agentAssigned: `${assignee.firstname} ${assignee.lastname}`,
+                                agentAssigned: `Munachi`,
+                                stage: status?.status
                             }))
                             }
                             options = {{
@@ -94,18 +159,18 @@ const TicketHistory = ({ meta }) => {
                                 // exportButton: true,
                                 tableLayout: 'auto',
                                 paging: true,
-                                pageSize: meta?.itemsPerPage || 10,
+                                pageSize: currentCustomerTicketsMeta?.itemsPerPage || 10,
                                 headerStyle: {
                                     // backgroundColor: '#f8f9fa'
                                     backgroundColor: '#fefdfd'
                                 }
                             }}
                             components={{ 
-                                // Pagination: AlphacxMTPagination
+                                Pagination: AlphacxMTPagination
                             }}
                             localization={{ 
                                 body: {
-                                    emptyDataSourceMessage: 'No tickets to display'
+                                    emptyDataSourceMessage: `No tickets to display for ${currentCustomer.firstname} ${currentCustomer.lastname}`
                                 }
                              }}
                             //  onSelectionChange={handleSelectionChange}
@@ -116,4 +181,12 @@ const TicketHistory = ({ meta }) => {
     )
 }
 
-export default TicketHistory
+const mapStateToProps = (state, ownProps) => ({
+    isCurrentCustomerLoaded: state.customer.isCurrentCustomerLoaded,
+    currentCustomerTickets: state.customer.currentCustomerTickets,
+    currentCustomerTicketsMeta: state.customer.currentCustomerTicketsMeta,
+    isCurrentCustomerTicketsLoaded: state.customer.isCurrentCustomerTicketsLoaded,
+    currentCustomer: state.customer.currentCustomer
+});
+
+export default connect(mapStateToProps, {getPaginatedCurrentCustomerTickets})(TicketHistory);
