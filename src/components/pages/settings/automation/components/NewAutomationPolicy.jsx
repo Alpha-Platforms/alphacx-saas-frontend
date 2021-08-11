@@ -44,7 +44,7 @@ const NewAutomationPolicy = () => {
     setPolicyLoading(false);
     if (res?.status === "success") {
       console.clear();
-      console.log(res?.data);
+      console.log("auo", res);
       setNewPolicy({ ...res?.data });
     } else {
       return NotificationManager.error(res?.er?.message, "Error", 4000);

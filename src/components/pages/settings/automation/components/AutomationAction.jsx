@@ -50,16 +50,22 @@ const AutomationAction = ({
     const { name, value } = e.target;
     let agreements = newPolicy.reminder.agreements;
     agreements[index] = { ...agreements[index], [name]: value };
-    setNewPolicy({ ...newPolicy, agreements });
-    console.clear();
+    setNewPolicy({
+      ...newPolicy,
+      reminder: { ...newPolicy.reminder, agreements },
+    });
+
     console.log(agreements);
     // console.log(message);,
   };
   useEffect(() => {
     let agreements = newPolicy.reminder.agreements;
     agreements[index] = { ...agreements[index], body: message };
-    setNewPolicy({ ...newPolicy, agreements });
-    console.clear();
+    setNewPolicy({
+      ...newPolicy,
+      reminder: { ...newPolicy.reminder, agreements },
+    });
+
     console.log(message);
     console.log(agreements);
   }, [message]);
