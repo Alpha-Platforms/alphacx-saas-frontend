@@ -214,9 +214,10 @@ export const httpPatchMain = async (url, postBody) => {
       3000
     );
   }
+
   try {
     const res = await axios.patch(`${baseUrlMain}/${url}`, postBody, {
-      headers: { Authorization: `Bearer ${localStorage.token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   } catch (error) {
@@ -231,6 +232,7 @@ export const httpPatchMain = async (url, postBody) => {
       "Unauthorized, Your token is invalid or expired"
     ) {
     }
+    console.log("token", token);
     return { er: error.response.data };
   }
 };

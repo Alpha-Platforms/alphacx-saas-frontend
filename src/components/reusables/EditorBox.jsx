@@ -13,7 +13,14 @@ import TextAlignCenter from "../../assets/imgF/TextAlignCenter.png";
 import TextAlignRight from "../../assets/imgF/TextAlignRight.png";
 import "./EditorBox.scss";
 
-const EditorBox = ({ initialText, text, textParent, updateText }) => {
+const EditorBox = ({
+  placeholder,
+  text,
+  textParent,
+  updateText,
+  textFormat,
+  setPlaceholder,
+}) => {
   const initialState = EditorState.createWithContent(
     ContentState.createFromText(text)
   );
@@ -26,9 +33,12 @@ const EditorBox = ({ initialText, text, textParent, updateText }) => {
     const richText = draftToHtml(convertToRaw(editorState.getCurrentContent()));
     setEditorState(editorState);
     if (textParent) {
-      updateText({ ...textParent, text: richText });
+      updateText({
+        ...textParent,
+        text: textFormat === "plain" ? plainText : richText,
+      });
     } else {
-      updateText(richText);
+      updateText(textFormat === "plain" ? plainText : richText);
     }
     // setNewPost({ ...newPost, richText });
     // setReplyTicket({ plainText, richText });
@@ -62,12 +72,12 @@ const EditorBox = ({ initialText, text, textParent, updateText }) => {
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      // console.clear();
-      console.log("text", text);
-      console.log("ttt", initialText);
-    }, 3000);
-  }, []);
+    const initialState = EditorState.createWithContent(
+      ContentState.createFromText(text)
+    );
+    setEditorState(initialState);
+    setPlaceholder("");
+  }, [placeholder]);
   return (
     <div className="editor-Container">
       <Editor
