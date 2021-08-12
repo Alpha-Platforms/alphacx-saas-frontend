@@ -46,8 +46,8 @@ export default function SocialIntegrations() {
 
   useEffect(() => {
     FB.init({
-      // appId: "244578957291734",
-      appId: "265267201741571",
+      appId: "244578957291734",
+      // appId: "265267201741571",
       autoLogAppEvents: true,
       xfbml: true,
       version: "v11.0",
