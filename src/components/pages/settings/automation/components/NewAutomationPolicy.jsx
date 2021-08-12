@@ -42,7 +42,7 @@ const NewAutomationPolicy = () => {
         : [
             {
               name: "",
-              dueDate: 100,
+              due_date: 0,
               reminder: {
                 categories: [],
                 assigned_to: {
@@ -63,8 +63,10 @@ const NewAutomationPolicy = () => {
   });
 
   const handlechange = (e) => {
-    const { name, value } = e.target;
-
+    let { name, value } = e.target;
+    if (name === "due_date" && value > 30) {
+      value = 30;
+    }
     setNewPolicy({ ...newPolicy, [name]: value });
   };
 
@@ -89,43 +91,45 @@ const NewAutomationPolicy = () => {
     });
   };
 
-  const addAgent = (item) => {
-    let agents = newPolicy?.reminder?.assigned_to?.agent
-      ? newPolicy?.reminder?.assigned_to?.agent
-      : [];
+  // const addAgent = (item) => {
+  //   let agents = newPolicy?.reminder?.assigned_to?.agent
+  //     ? newPolicy?.reminder?.assigned_to?.agent
+  //     : [];
 
-    agents.push(item.id);
-    setNewPolicy({
-      ...newPolicy,
-      reminder: { ...newPolicy.reminder, assigned_to: { agent: agents } },
-    });
-  };
-  const removeAgent = (id) => {
-    let agents = newPolicy?.reminder?.assigned_to?.agent;
-    agents = agents.filter((itm) => itm !== id);
+  //   agents.push(item.id);
+  //   setNewPolicy({
+  //     ...newPolicy,
+  //     reminder: { ...newPolicy.reminder, assigned_to: { agent: agents } },
+  //   });
+  // };
+  // const removeAgent = (id) => {
+  //   let agents = newPolicy?.reminder?.assigned_to?.agent;
+  //   agents = agents.filter((itm) => itm !== id);
 
-    setNewPolicy({
-      ...newPolicy,
-      reminder: { ...newPolicy.reminder, assigned_to: { agent: agents } },
-    });
-  };
+  //   setNewPolicy({
+  //     ...newPolicy,
+  //     reminder: { ...newPolicy.reminder, assigned_to: { agent: agents } },
+  //   });
+  // };
 
-  const getAgents = async () => {
-    const res = await httpGetMain("agents");
-    if (res?.status === "success") {
-      console.log(res.data);
-      setAutomationAgents(res?.data);
-    } else {
-      return NotificationManager.error(res?.er?.message, "Error", 4000);
-    }
-  };
+  // const getAgents = async () => {
+  //   const res = await httpGetMain("agents");
+  //   if (res?.status === "success") {
+  //     console.log(res.data);
+  //     setAutomationAgents(res?.data);
+  //   } else {
+  //     return NotificationManager.error(res?.er?.message, "Error", 4000);
+  //   }
+  // };
 
   //function to Get automation information if in edit mode
   const getAutomationInfo = async () => {
     const res = await httpGetMain(`sla/${policyID}`);
     setPolicyLoading(false);
     if (res?.status === "success") {
-      setNewPolicy({ ...res?.data });
+      setNewPolicy(res?.data);
+      console.clear();
+      console.log(res?.data);
     } else {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
@@ -135,10 +139,8 @@ const NewAutomationPolicy = () => {
   const getTicketCategories = async () => {
     const res = await httpGetMain("categories");
     if (res?.status === "success") {
-      console.clear();
-      console.log("categories", res);
       setTicketCategories(res?.data?.categories);
-      getAgents();
+      // getAgents();
     } else {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
@@ -151,7 +153,8 @@ const NewAutomationPolicy = () => {
     console.log(newPolicy);
     const body = {
       name: newPolicy.name,
-      dueDate: 100,
+
+      dueDate: newPolicy.due_date,
       description: newPolicy.description || "",
       reminder: {
         categories: newPolicy.reminder.categories,
@@ -174,10 +177,21 @@ const NewAutomationPolicy = () => {
     setPolicyLoading(true);
     console.clear();
     console.log(newPolicy);
-    const res = await httpPostMain("sla", newPolicy);
+    const body = {
+      name: newPolicy.name,
+
+      dueDate: newPolicy.due_date,
+      description: newPolicy.description || "",
+      reminder: {
+        categories: newPolicy.reminder.categories,
+        agreements: newPolicy.reminder.agreements,
+      },
+    };
+    const res = await httpPostMain("sla", body);
     setPolicyLoading(false);
     if (res?.status === "success") {
       console.log(res);
+      router.push("/settings/automation");
     } else {
       console.error(res.er);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
@@ -293,7 +307,7 @@ const NewAutomationPolicy = () => {
                   )}
                 </div>
               </div>
-              <div className="form-group mt-3">
+              {/* <div className="form-group mt-3">
                 <div className="d-flex">
                   <label for="slaName" className="f-14 mb-1 ">
                     Assign To:
@@ -327,7 +341,7 @@ const NewAutomationPolicy = () => {
                     </label>
                   </div>
                 </div>
-                {/* right here */}
+
                 <div
                   className="form-select form-control-sm f-14 ticket-category"
                   onClick={() => setShowAssign(!showAssign)}
@@ -393,51 +407,20 @@ const NewAutomationPolicy = () => {
                     </div>
                   )}
                 </div>
-              </div>
+              </div> */}
 
               <div className="Resolution mt-3">
-                <p className="my-4">Automation Due Date</p>
-                <div
-                  className="
-                resolution-form
-                mt-3
-                px-4
-                py-3
-                mb-4
-                d-flex
-                align-items-center
-                f-12
-              "
-                >
-                  <label for="day" className="mb-n1 me-2">
-                    Days
-                  </label>
-                  <select className="form-select form-select-sm" id="day">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                  </select>
-
-                  <label for="hour" className="mb-n1 ms-5 me-2">
-                    Hours
-                  </label>
-                  <select className="form-select form-select-sm" id="hr">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                  </select>
-
-                  <label for="minute" className="mb-n1 ms-5 me-2">
-                    Minutes
-                  </label>
-                  <select className="form-select form-select-sm" id="minute">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                  </select>
+                <p className="my-4">Automation Due Days</p>
+                <div className="resolution-form mt-3 mb-4 d-flex align-items-center f-12 ">
+                  <input
+                    type="number"
+                    max={30}
+                    className="form-control form-control-sm w-100"
+                    id="slaName"
+                    name="due_date"
+                    value={newPolicy?.due_date || 0}
+                    onChange={handlechange}
+                  />
                 </div>
               </div>
               <div id="resolution-wrapper mt-4">
