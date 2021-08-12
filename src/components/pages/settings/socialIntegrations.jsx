@@ -84,7 +84,7 @@ export default function SocialIntegrations() {
         connected: true,
       },
     };
-    let sstringFyData = JSON.stringify(data);
+    // let sstringFyData = JSON.stringify(data);
     const res = await httpPatchMain("settings/facebook-config", data);
     if (res) {
       hideLoader();
