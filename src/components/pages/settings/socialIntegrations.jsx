@@ -24,9 +24,15 @@ export default function SocialIntegrations() {
   const authFb = () => {
     FB.login(
       function (response) {
-        if (response) {
+        if (
+          response.authResponse &&
+          response.authResponse !== "undefined." &&
+          response.authResponse !== undefined
+        ) {
           console.log("Welcome!  Fetching your information.... ", response);
+
           setFBData(response?.authResponse);
+
           handleConnectFBPage(response?.authResponse);
 
           setpageConnected(true);
@@ -39,7 +45,7 @@ export default function SocialIntegrations() {
       },
       {
         scope:
-          "pages_messaging, pages_manage_metadata, pages_read_engagement, pages_show_list",
+          "pages_messaging,pages_manage_metadata,pages_read_engagement,pages_show_list",
       }
     );
   };
@@ -68,14 +74,17 @@ export default function SocialIntegrations() {
     setwhatsappConfig({ ...whatsappConfig, [e.target.name]: e.target.value });
   };
   const handleConnectFBPage = async (response) => {
+    console.log(response, typeof response);
+    if (response && response !== "undefined." && response !== undefined) return;
     showLoader();
     const data = {
       facebook_config: {
         page_token: `${response?.accessToken}`,
         access_token: `${response?.accessToken}`,
+        connected: true,
       },
     };
-    let sstringFyData = JSON.stringify(data);
+    // let sstringFyData = JSON.stringify(data);
     const res = await httpPatchMain("settings/facebook-config", data);
     if (res) {
       hideLoader();
