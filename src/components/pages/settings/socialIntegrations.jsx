@@ -81,6 +81,7 @@ export default function SocialIntegrations() {
       facebook_config: {
         page_token: `${response?.accessToken}`,
         access_token: `${response?.accessToken}`,
+        connected: true,
       },
     };
     let sstringFyData = JSON.stringify(data);
