@@ -24,9 +24,15 @@ export default function SocialIntegrations() {
   const authFb = () => {
     FB.login(
       function (response) {
-        if (response) {
+        if (
+          response.authResponse &&
+          response.authResponse !== "undefined." &&
+          response.authResponse !== undefined
+        ) {
           console.log("Welcome!  Fetching your information.... ", response);
+
           setFBData(response?.authResponse);
+
           handleConnectFBPage(response?.authResponse);
 
           setpageConnected(true);
@@ -68,6 +74,8 @@ export default function SocialIntegrations() {
     setwhatsappConfig({ ...whatsappConfig, [e.target.name]: e.target.value });
   };
   const handleConnectFBPage = async (response) => {
+    console.log(response, typeof response);
+    if (response && response !== "undefined." && response !== undefined) return;
     showLoader();
     const data = {
       facebook_config: {
