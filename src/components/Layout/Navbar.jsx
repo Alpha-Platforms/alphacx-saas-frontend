@@ -5,7 +5,6 @@ import { LayoutContext } from "../../context/layoutContext";
 import { SearchIconNavbr, BellIconNavbar } from "../../assets/images/svgs";
 import { useHistory } from "react-router-dom";
 import userIcon from "../../assets/images/user.png";
-import pic from "../../assets/imgF/codeuiandyimg.png";
 import { useLocation } from "react-router-dom";
 //import GoBack from './../helpers/GoBack';
 import searchIcon from "../../assets/imgF/Search.png";
@@ -185,7 +184,7 @@ export default function Navbar({
                   <BellIconNavbar />
                 </div>
                 <div>
-                  <img src={pic} alt="" style={{
+                  <img src={JSON.parse(localStorage.getItem("user")).user.avatar} alt="" style={{
                     width: 30,
                     borderRadius: "50%"
                   }} />
