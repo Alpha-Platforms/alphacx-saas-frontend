@@ -21,7 +21,7 @@ const CreateTicketModal = ({
     getPaginatedTickets,
     resetTicketCreated,
     customers,
-    setChangingRow
+    // setChangingRow
 }) => {
     const [selectedTags,
         setSelectedTags] = useState([]);
@@ -83,7 +83,7 @@ const CreateTicketModal = ({
             NotificationManager.error('All fields are required', 'Error', 5000);
         } else {
             console.log("good to go");
-            addTicket({
+            const newTicket = {
                 priorityId: priority,
                 assigneeId: assignee,
                 description,
@@ -95,7 +95,10 @@ const CreateTicketModal = ({
                 statusId: status,
                 subject,
                 tags: selectedTags
-            })
+            };
+
+            console.log("New Ticket: ", newTicket);
+            // addTicket(newTicket);
         }
     }
 
@@ -104,7 +107,7 @@ const CreateTicketModal = ({
             resetTicketCreated();
             NotificationManager.success("Ticket created successfully", 'Successful');
             setCreateModalShow(false);
-            setChangingRow(true);
+            // setChangingRow(true);
             getPaginatedTickets(10, 1);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -121,7 +124,8 @@ const CreateTicketModal = ({
 
     const handleCustomerSearch = (e) => {
         if (!navigator.onLine) 
-            return NotificationManager.error('Check your network', 'Oops');
+            return;
+            // return NotificationManager.error('Check your network', 'Oops');
         const {value} = e.target;
 
         if (timeoutId) 
