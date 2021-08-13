@@ -460,13 +460,23 @@ const NewAutomationPolicy = () => {
                   <input
                     type="number"
                     max={30}
-                    className="form-control form-control-sm"
+                    className="number-input form-control form-control-sm"
                     id="slaName"
                     name="due_date"
                     value={newPolicy?.due_date || 0}
                     onChange={handlechange}
                   />
-                  <span className="ps-2">Days</span>
+                  <span className="ps-2 me-2">Days</span>
+                  <input
+                    type="number"
+                    max={30}
+                    className="number-input form-control form-control-sm"
+                    id="slaName"
+                    name="due_date"
+                    value={newPolicy?.due_date || 0}
+                    onChange={handlechange}
+                  />
+                  <span className="ps-2 me-2">Minutes</span>
                 </div>
               </div>
               <div id="resolution-wrapper mt-4">
