@@ -476,7 +476,7 @@ const NewAutomationPolicy = () => {
                     value={newPolicy?.due_date || 0}
                     onChange={handlechange}
                   />
-                  <span className="ps-2 me-2">Minutes</span>
+                  <span className="ps-2 me-2">Days</span>
                 </div>
               </div>
               <div id="resolution-wrapper mt-4">
