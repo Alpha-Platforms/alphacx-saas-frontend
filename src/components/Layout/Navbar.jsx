@@ -42,7 +42,7 @@ function Dropdown() {
                     padding: "0.5rem 0",
                     backgroundColor: "#006298",
                     borderRadius: "3px",
-                    width: "6rem",
+                    width: "6.5rem",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center"
