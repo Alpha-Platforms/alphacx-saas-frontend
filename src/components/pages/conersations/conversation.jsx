@@ -1076,7 +1076,7 @@ export default function Conversation() {
                     setRSTicketCate(value);
                   }}
                   isClearable={false}
-
+                  isMulti
                   options={
                     // populate 'options' prop from $Category, with names remapped
                     Category.map(data => {

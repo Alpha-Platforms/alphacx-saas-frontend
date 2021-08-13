@@ -254,15 +254,15 @@ export default function SettingsHome() {
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <Link to="#" className="d-block cursor text-decoration-none">
+          <Link to="/settings/integrations" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={SocialBlurbIcon} alt="" />
               </div>
               <div className="ms-3">
-                <h6 className="text-dark mb-0">Social Media</h6>
+                <h6 className="text-dark mb-0">Integrations</h6>
                 <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Record of events and changes
+                  Connect social channels to your app.
                 </p>
               </div>
             </div>
