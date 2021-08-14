@@ -7,6 +7,7 @@ import {NotificationManager} from 'react-notifications';
 import {getPaginatedTickets} from '../../../reduxstore/actions/ticketActions';
 import {getInstantSearchedCustomers} from '../../../reduxstore/actions/customerActions';
 import BeatLoader from 'react-spinners/BeatLoader';
+import { getSubCategory } from './../../../reduxstore/actions/categoryActions';
 
 const CreateTicketModal = ({
     createModalShow,
@@ -27,6 +28,9 @@ const CreateTicketModal = ({
         setSelectedTags] = useState([]);
     const [custSearch,
         setCustSearch] = useState({gottenCust: [], term: '', openPreview: false, isLoading: false, isLoaded: false});
+    const [subCatLoading, setSubCatLoading] = useState(false);
+    const [subCat, setSubCat] = useState(null);
+    const [creatingTicket, setCreatingTicket] = useState(false);
 
     // ref to customer input
     const custInputRef = useRef(null);
@@ -40,11 +44,12 @@ const CreateTicketModal = ({
         subject: '',
         description: '',
         assignee: '',
-        group: ''
+        group: '',
+        subcategory: ''
     });
     // const [cancelExec, setCancelExec] = useState(false);
 
-    const handleModalInput = e => {
+    const handleModalInput = async e => {
         // get name and curent value of component
         const {name, value} = e.target;
         // set state of inputs in the modal
@@ -52,6 +57,16 @@ const CreateTicketModal = ({
             ...prevState,
             [name]: value
         }));
+
+        if (name === 'category' && modalInputs.category) {
+            setSubCatLoading(true);
+            const res = await getSubCategory(modalInputs.category);
+            console.log("res of sub cat: ", res);
+            if (res?.status === 'success') {
+                setSubCatLoading(false);
+                setSubCat(res?.data);
+            }
+        }
     }
 
     function handleTagSelection() {
@@ -76,9 +91,10 @@ const CreateTicketModal = ({
             subject,
             description,
             assignee,
-            group
+            group,
+            subcategory
         } = modalInputs;
-        if (!customer || !category || !priority || !status || !subject || !description || !assignee || !group) {
+        if (!customer || !category || !priority || !status || !subject || !description || !assignee || !group || !subcategory) {
             console.log("All field is required");
             NotificationManager.error('All fields are required', 'Error', 5000);
         } else {
@@ -94,11 +110,15 @@ const CreateTicketModal = ({
                 groupId: group,
                 statusId: status,
                 subject,
-                tags: selectedTags
+                tags: selectedTags,
+                subCategoryId: subcategory,
+                channel: 'system'
             };
 
             console.log("New Ticket: ", newTicket);
-            // addTicket(newTicket);
+
+            setCreatingTicket(true);
+            addTicket(newTicket);
         }
     }
 
@@ -107,6 +127,8 @@ const CreateTicketModal = ({
             resetTicketCreated();
             NotificationManager.success("Ticket created successfully", 'Successful');
             setCreateModalShow(false);
+            setCreatingTicket(false);
+            setSubCatLoading(false);
             // setChangingRow(true);
             getPaginatedTickets(10, 1);
         }
@@ -119,14 +141,22 @@ const CreateTicketModal = ({
             .toUpperCase() + word.slice(1);
     }
 
-    const timeBeforeSearch = 2000;
+    const timeBeforeSearch = 1500;
     let timeoutId;
 
     const handleCustomerSearch = (e) => {
         if (!navigator.onLine) 
             return;
-            // return NotificationManager.error('Check your network', 'Oops');
+        
+        // return NotificationManager.error('Check your network', 'Oops');
         const {value} = e.target;
+
+        if (!value) {
+            setCustSearch(prev => ({
+                ...prev,
+                openPreview: false
+            }))
+        }
 
         if (timeoutId) 
             clearTimeout(timeoutId);
@@ -178,11 +208,12 @@ const CreateTicketModal = ({
 
     const handleModalHide = () => {
         setCreateModalShow(false);
+        setCreatingTicket(false);
         setCustSearch(prev => ({
             ...prev,
             openPreview: false
         }));
-    } 
+    }
 
     return (
         <Modal
@@ -223,31 +254,6 @@ const CreateTicketModal = ({
                             </div>
 
                             <div className="col-6 mt-2">
-                                <label htmlFor="category" className="form-label">Category</label>
-                                <select
-                                    className="form-select"
-                                    name="category"
-                                    aria-label="Category select"
-                                    onChange={handleModalInput}>
-                                    <option value=""></option>
-                                    {categories && categories.map(({id, name}) => <option value={id}>{name}</option>)}
-                                </select>
-                            </div>
-                        </div>
-                        <div className="row mb-3">
-                            <div className="col-6 mt-2 position-relative">
-                                <label htmlFor="priority" className="form-label">Priority</label>
-                                <select
-                                    className="form-select"
-                                    name="priority"
-                                    aria-label="Priority select"
-                                    onChange={handleModalInput}>
-                                    <option value=""></option>
-                                    {priorities && priorities.map(({id, name}) => <option value={id}>{name}</option>)}
-                                </select>
-                            </div>
-
-                            <div className="col-6 mt-2">
                                 <label htmlFor="status" className="form-label">Status</label>
                                 <select
                                     className="form-select"
@@ -258,6 +264,35 @@ const CreateTicketModal = ({
                                     {statuses && statuses.map(({id, status}) => <option value={id}>{status}</option>)}
                                 </select>
                             </div>
+
+                            
+                        </div>
+                        <div className="row mb-3">
+                            <div className="col-6 mt-2">
+                                <label htmlFor="category" className="form-label">Category</label>
+                                <select
+                                    className="form-select"
+                                    name="category"
+                                    aria-label="Category select"
+                                    onChange={handleModalInput}>
+                                    <option value=""></option>
+                                    {categories && categories.map(({id, name}) => <option value={id}>{name}</option>)}
+                                </select>
+                            </div>
+
+                            <div className="col-6 mt-2">
+                                <label htmlFor="category" className="form-label">Sub Category</label>
+                                <select
+                                    className="form-select"
+                                    name="subcategory"
+                                    aria-label="Sub Category select"
+                                    disabled={subCatLoading ? true : subCat ? false : true}
+                                    onChange={handleModalInput}>
+                                    <option value=""></option>
+                                    {subCat && subCat.map(({id, category_id, name}) => <option value={id}>{name}</option>)}
+                                </select>
+                            </div>
+
                         </div>
                         <div className="row g-3 ">
                             <div className="col-12 mt-3">
@@ -280,17 +315,19 @@ const CreateTicketModal = ({
                         </div>
 
                         <div className="row">
-                            <div className="col-6 mt-3">
-                                <label htmlFor="assignee" className="form-label">Assignee</label>
+
+                            <div className="col-6 mt-2 position-relative">
+                                <label htmlFor="priority" className="form-label">Priority</label>
                                 <select
                                     className="form-select"
-                                    name="assignee"
-                                    aria-label="Category select"
+                                    name="priority"
+                                    aria-label="Priority select"
                                     onChange={handleModalInput}>
                                     <option value=""></option>
-                                    {agents && agents.map(({id, firstname, lastname}) => <option value={id}>{`${firstname} ${lastname}`}</option>)}
+                                    {priorities && priorities.map(({id, name}) => <option value={id}>{name}</option>)}
                                 </select>
                             </div>
+
                             <div className="col-6 mt-3">
                                 <label htmlFor="priority" className="form-label">Group</label>
                                 <select
@@ -300,6 +337,20 @@ const CreateTicketModal = ({
                                     onChange={handleModalInput}>
                                     <option value=""></option>
                                     {groups && groups.map(({id, name}) => <option value={id}>{name}</option>)}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div className="mt-3">
+                                <label htmlFor="assignee" className="form-label">Assignee</label>
+                                <select
+                                    className="form-select"
+                                    name="assignee"
+                                    aria-label="Category select"
+                                    onChange={handleModalInput}>
+                                    <option value=""></option>
+                                    {agents && agents.map(({id, firstname, lastname}) => <option value={id}>{`${firstname} ${lastname}`}</option>)}
                                 </select>
                             </div>
                         </div>
@@ -351,7 +402,8 @@ const CreateTicketModal = ({
                             <button
                                 type="button"
                                 onClick={handleTicketCreation}
-                                className="btn btn-sm bg-at-blue-light  py-1 px-4">Add Ticket</button>
+                                disabled={creatingTicket}
+                                className="btn btn-sm bg-at-blue-light  py-1 px-4">{creatingTicket ? 'Adding.. Ticket' : 'Add Ticket'}</button>
                         </div>
                     </form>
                 </div>

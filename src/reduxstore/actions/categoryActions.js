@@ -3,6 +3,11 @@ import * as types from '../types';
 import { config } from '../../config/keys';
 import { returnErrors } from './errorActions';
 import {userTokenConfig} from '../../helper';
+import store from '../store';
+import {NotificationManager} from 'react-notifications';
+
+const {getState} = store;
+
 
 export const getCategories = () => (dispatch, getState) => {
 	if (!navigator.onLine) {
@@ -29,6 +34,18 @@ export const addCategory = (newCategory) => (dispatch, getState) => {
 		}))
 		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 
+}
+
+// invalid redux action
+export const getSubCategory = async (categoryId) => {
+
+	try {
+        const res = await axios.get(`${config.stagingBaseUrl}/sub-categories/${categoryId}`, userTokenConfig(getState));
+        return res.data;
+    } catch (err) {
+        NotificationManager.error(err?.response?.data.message, 'Error');
+        return err?.response?.data;
+    }
 }
 
 
