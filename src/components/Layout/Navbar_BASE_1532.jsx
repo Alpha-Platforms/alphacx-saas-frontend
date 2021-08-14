@@ -8,8 +8,6 @@ import userIcon from "../../assets/images/user.png";
 import { useLocation } from "react-router-dom";
 //import GoBack from './../helpers/GoBack';
 import searchIcon from "../../assets/imgF/Search.png";
-import {HelpIcon} from '../../assets/SvgIconsSet.jsx';
-import CreateTicketModal from '../pages/tickets/CreateTicketModal';
 
 // --- dropdown component
 function PlusIcon(){
@@ -32,7 +30,6 @@ function DowncaretIcon(){
 
 function Dropdown() {
   const [isVisible, setInvisible] = useState(false);
-  const [createModalShow, setCreateModalShow] = useState(false);
 
 
   return (
@@ -76,18 +73,13 @@ function Dropdown() {
                     }}
                   >
                       <li style={{borderBottom: "solid 1px #CCC"}}>
-                        <button className="dd_item btn rounded-0" onClick={() => setCreateModalShow(true)}>Ticket</button>
+                        <button className="dd_item btn rounded-0">Ticket</button>
                       </li>
                       <li style={{borderBottom: "solid 1px #CCC"}}>
                         <button className="dd_item btn rounded-0">Contact</button>
                       </li>
                   </ul>
               }
-              <CreateTicketModal
-                createModalShow={createModalShow}
-                setCreateModalShow={setCreateModalShow}
-                // setChangingRow={setChangingRow}
-              />
           </div>
       
   )
@@ -191,9 +183,6 @@ export default function Navbar({
                 <div style={{width: "1.5"}}>
                   <BellIconNavbar />
                 </div>
-
-                <a href="/help"><HelpIcon /></a>                
-
                 <div>
                   <img src={JSON.parse(localStorage.getItem("user")).user.avatar} alt="" style={{
                     width: 30,

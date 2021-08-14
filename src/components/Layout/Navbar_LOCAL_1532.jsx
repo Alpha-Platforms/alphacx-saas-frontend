@@ -8,7 +8,6 @@ import userIcon from "../../assets/images/user.png";
 import { useLocation } from "react-router-dom";
 //import GoBack from './../helpers/GoBack';
 import searchIcon from "../../assets/imgF/Search.png";
-import {HelpIcon} from '../../assets/SvgIconsSet.jsx';
 import CreateTicketModal from '../pages/tickets/CreateTicketModal';
 
 // --- dropdown component
@@ -191,9 +190,6 @@ export default function Navbar({
                 <div style={{width: "1.5"}}>
                   <BellIconNavbar />
                 </div>
-
-                <a href="/help"><HelpIcon /></a>                
-
                 <div>
                   <img src={JSON.parse(localStorage.getItem("user")).user.avatar} alt="" style={{
                     width: 30,
