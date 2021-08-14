@@ -266,7 +266,7 @@ const CreateTicketModal = ({
                             </div>
 
                             <div className="col-6 mt-2">
-                                <label htmlFor="status" className="form-label">Status</label>
+                                <label htmlFor="status" className="form-label">Stage</label>
                                 <select
                                     className="form-select"
                                     name="status"

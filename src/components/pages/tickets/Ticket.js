@@ -39,13 +39,18 @@ import {
 } from "../../../helpers/httpMethods";
 import NoChatFound from "../conersations/noChatFound";
 import { CURRENT_CUSTOMER_TICKETS_LOADING } from '../../../reduxstore/types';
+import RSelect from 'react-select/creatable';
+import { Modal } from "react-responsive-modal";
 
 const CircleIcon = (props) => <span className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
 
 
 const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, currentTicket}) => {
-
-    const {id} = useParams();
+  
+  const {id} = useParams();
+  
+  const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(false)
+  const [RSTicketCate, setRSTicketCate] = useState("")
 
     useEffect(() => {
         // get current ticket when component mounts
@@ -132,6 +137,8 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     const [ShowAchive, setShowAchive] = useState(false);
     const [channel, setchannel] = useState("All");
     const [status, setstatus] = useState("All");
+    const [RSTicketStage, setRSTicketStage] = useState("");
+    const [RSCustomerName, setRSCustomerName] = useState("")
     useEffect(() => {
       // getTickets();
       sortMsges(msgHistory);
@@ -1072,6 +1079,229 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                     </div>
 
                 </div>}
+
+
+                <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal} center>
+        <div className="saveTicketWrapModal">
+          <div className="modalHeaderSaveT">
+            Kindly update ticket before closing the chat
+          </div>
+
+          <div className="saveTicketModalForm">
+            
+            <div className="ticketmodalInput-twoCol">
+
+              <div className="ticketmodalInputWrapMain">
+                <label htmlFor="">Customer</label>
+                <input
+                  value={`${capitalizeFirstLetter(
+                    ticket[0]?.customer?.firstname
+                  )} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
+                  type="text"
+                  disabled
+                />
+              </div>
+
+              {/* 
+              Andy's setters
+              setCategoryUpdate,
+              updateTicket              
+              */}
+
+              <div className="ticketmodalInputWrapMain">
+                <label htmlFor="">Category</label>
+                <RSelect className="rselectfield"
+                  style={{ fontSize: "12px" }}
+                  onChange={ (value, actionMeta) => {
+                    setRSTicketCate(value);
+                  }}
+                  isClearable={false}
+                  isMulti
+                  options={
+                    // populate 'options' prop from $Category, with names remapped
+                    Category.map(data => {
+                      return {value: data.name,label: data.name}
+                    })
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="ticketmodalInput-OneCol">
+              <div className="ticketmodalInputWrapMainOne">
+                <label htmlFor="">Subject</label>
+                <input
+                  type="text"
+                  value={`${saveTicket.subject} `}
+                  type="text"
+                  disabled
+                  style={{ fontSize: "12px" }}
+                />
+              </div>
+            </div>
+
+
+            <div className="ticketmodalInput-twoCol">
+
+              <div className="ticketmodalInputWrapMain">
+                <label htmlFor="">Stage</label>
+                <RSelect className="rselectfield"
+                  style={{ fontSize: "12px" }}
+                  onChange={ (value, actionMeta) => {
+                    setRSTicketStage(value);
+                  }}
+                  isClearable={false}
+
+                  options={
+                    // populate 'options' prop from $Category, with names remapped
+                    // Andy, replace Category below with whichever const holds list of priorities
+                    Statues.map(data => {
+                      return {value: data.name,label: data.status}
+                    })
+                  }
+                />
+              </div>
+
+              <div className="ticketmodalInputWrapMain">
+                <label htmlFor="">Priority</label>
+                <RSelect className="rselectfield"
+                  style={{ fontSize: "12px" }}
+                  onChange={ (value, actionMeta) => {
+                    setRSTicketStage(value);
+                  }}
+                  isClearable={false}
+
+                  options={
+                    // populate 'options' prop from $Statues, with names remapped
+                    Category.map(data => {
+                      return {value: data.name,label: data.name}
+                    })
+                  }
+                />
+              </div>
+            </div>
+            
+
+            <div className="descriptionWrap">
+              <label htmlFor="">Remarks</label>
+              <textarea
+                style={{ padding: "10px" }}
+                value={`${saveTicket?.description?.map((data) => {
+                  return data?.plain_response;
+                })} `}
+                style={{ fontSize: "12px", padding: "7px" }}
+              ></textarea>
+            </div>
+              
+            <p className="btn mt-3 p-0 text-start" 
+            role="button"
+              style={{ fontSize: "0.8rem", fontWeight: "bold", marginBottom: 0, color: "#006298!important" }}
+              onClick={() => setIsAdditionalOptionVisible(v => !v)}>Additional Options</p>import { RSelect } from 'react-select/creatable';
+
+
+            { isAdditionalOptionVisible && (
+
+            <div className="additional-options">
+              <div className="ticketmodalInput-OneCol">
+                <div className="ticketmodalInputWrapMainOne">
+                  <label htmlFor="">Assigned To</label>
+                  <input
+                    type="text"
+                    value={`${saveTicket.subject} `}
+                    type="text"
+                    disabled
+                    style={{ fontSize: "12px" }}
+                  />
+                </div>
+              </div>
+
+              <div className="ticketmodalInput-twoCol">
+
+                <div className="ticketmodalInputWrapMain" style={{width: "100%" }}>
+                  <label htmlFor="">Ticket Due Date</label>
+                  <div style={{ display: "flex", gap: "1rem"}}>
+                    <div className="thirdselects">
+                    <RSelect className="rselectfield"
+                      style={{ fontSize: "12px" }}
+                      onChange={ (value, actionMeta) => {
+                        setRSTicketStage(value);
+                      }}
+                      isClearable={false}
+
+                      options={[
+                        {value: 1, label: 1},
+                        {value: 2, label: 2},
+                        {value: 3, label: 3},
+                        {value: 4, label: 4},
+                        {value: 5, label: 5},
+                        {value: 6, label: 6},
+                        {value: 7, label: 7},
+                      ]}
+                    />
+                      <label htmlFor="">Days</label>
+                    </div>
+                    <div className="thirdselects">
+                      <RSelect className="rselectfield"
+                        style={{ fontSize: "12px" }}
+                        onChange={ (value, actionMeta) => {
+                          setRSTicketStage(value);
+                        }}
+                        isClearable={false}
+
+                        options={[
+                          {value: 1, label: 1},
+                          {value: 2, label: 2},
+                          {value: 3, label: 3},
+                          {value: 4, label: 4},
+                          {value: 5, label: 5},
+                          {value: 6, label: 6},
+                          {value: 7, label: 7},
+                        ]}
+                      />
+                      <label htmlFor="">Hours</label>
+                    </div>
+                    <div className="thirdselects">
+                      <RSelect className="rselectfield"
+                        style={{ fontSize: "12px" }}
+                        onChange={ (value, actionMeta) => {
+                          setRSTicketStage(value);
+                        }}
+                        isClearable={false}
+
+                        options={[
+                          {value: 1, label: 1},
+                          {value: 2, label: 2},
+                          {value: 3, label: 3},
+                          {value: 4, label: 4},
+                          {value: 5, label: 5},
+                          {value: 6, label: 6},
+                          {value: 7, label: 7},
+                        ]}
+                      />
+                      <label htmlFor="">Minutes</label>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+
+              <div>
+              <label htmlFor="">Tags</label>
+                <RSelect className="rselectfield mt-4"
+                  onChange={ (value, actionMeta) => setRSCustomerName(value)}
+                  isMulti
+                />
+              </div>
+
+            </div> 
+
+            )}
+            <div className="closeTicketModdalj">
+              <button type="submit">Update</button>
+            </div>
+          </div>
+        </div>
+      </Modal>
 
         </Fragment>
     )
