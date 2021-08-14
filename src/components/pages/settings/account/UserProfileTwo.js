@@ -7,12 +7,11 @@ import {NotificationManager} from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import {connect} from 'react-redux';
 import {getCurrentAgent} from '../../../../reduxstore/actions/agentActions';
+import { updateUser } from './../../../../reduxstore/actions/userActions';
 
 const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, currentAgent}) => {
 
     const {id} = useParams();
-
-    console.log("profile id: ", id);
 
     const [accountLoading,
         setAccountLoading] = useState(false);
@@ -30,12 +29,37 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
         }
     });
 
-    const updateUserInfo = () => {
-        console.log("update user info");
+    const updateUserInfo = async () => {
+        const {firstname, lastname, email, role, team} = personalInfoInputs;
+        const updatedInfo = {
+            id,
+            firstname,
+            lastname,
+            email,
+            role,
+            team
+        };
+        console.clear();
+
+        setAccountLoading(true);
+
+        const res = await updateUser(updatedInfo);
+
+        if (res?.status === 'success') {
+            NotificationManager.success('Info has been updated', 'Success');
+            setAccountLoading(false);
+        } else {
+            NotificationManager.error('Something went wrong');
+            setAccountLoading(false);
+        }
     }
 
-    const handleInputChange = () => {
-        console.log('input change');
+    const handleInputChange = e => {
+        const {name, value} = e.target;
+        setPersonalInfoInputs(prev => ({
+            ...prev,
+            [name]: value
+        }))
     }
 
     const handleAvatarChange = () => {
@@ -48,20 +72,6 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAgentLoaded])
-
-    /*
-    const handleAvatar = (e) => {
-    e.preventDefault();
-    const files = e.target.files;
-    let avatarImage = URL.createObjectURL(files[0]);
-    console.clear();
-    setPersonalInformation({
-      ...personalInformation,
-      avatar: { file: files[0], blob: avatarImage },
-    });
-    console.log(avatarImage);
-  };
-    */
 
     useEffect(() => {
         if (currentAgent) {
@@ -81,8 +91,6 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
         }
 
     }, [currentAgent]);
-
-    console.log("personal info inputs: ", personalInfoInputs);
 
     return (
         <div className="account-settings">
