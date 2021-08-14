@@ -1,5 +1,6 @@
 import {useState, useEffect, useRef} from 'react';
-import {Modal} from 'react-bootstrap';
+// import {Modal} from 'react-bootstrap';
+import {Modal} from 'react-responsive-modal';
 import PinIcon from '../../../assets/icons/pin.svg';
 import {connect} from 'react-redux';
 import {addTicket, resetTicketCreated} from '../../../reduxstore/actions/ticketActions';
@@ -7,6 +8,8 @@ import {NotificationManager} from 'react-notifications';
 import {getPaginatedTickets} from '../../../reduxstore/actions/ticketActions';
 import {getInstantSearchedCustomers} from '../../../reduxstore/actions/customerActions';
 import BeatLoader from 'react-spinners/BeatLoader';
+import { getSubCategory } from './../../../reduxstore/actions/categoryActions';
+import RSelect from 'react-select/creatable';
 
 const CreateTicketModal = ({
     createModalShow,
@@ -21,12 +24,15 @@ const CreateTicketModal = ({
     getPaginatedTickets,
     resetTicketCreated,
     customers,
-    setChangingRow
+    // setChangingRow
 }) => {
     const [selectedTags,
         setSelectedTags] = useState([]);
     const [custSearch,
         setCustSearch] = useState({gottenCust: [], term: '', openPreview: false, isLoading: false, isLoaded: false});
+    const [subCatLoading, setSubCatLoading] = useState(false);
+    const [subCat, setSubCat] = useState(null);
+    const [creatingTicket, setCreatingTicket] = useState(false);
 
     // ref to customer input
     const custInputRef = useRef(null);
@@ -40,11 +46,12 @@ const CreateTicketModal = ({
         subject: '',
         description: '',
         assignee: '',
-        group: ''
+        group: '',
+        subcategory: ''
     });
     // const [cancelExec, setCancelExec] = useState(false);
 
-    const handleModalInput = e => {
+    const handleModalInput = async e => {
         // get name and curent value of component
         const {name, value} = e.target;
         // set state of inputs in the modal
@@ -52,20 +59,39 @@ const CreateTicketModal = ({
             ...prevState,
             [name]: value
         }));
-    }
 
-    function handleTagSelection() {
-        const {tag} = this;
-        if (selectedTags.includes(tag)) {
-            setSelectedTags(prevState => prevState.filter(x => x !== tag));
-        } else {
-            setSelectedTags(prevState => [
-                ...prevState,
-                tag
-            ]);
+        if (name === 'category' && modalInputs.category) {
+            setSubCatLoading(true);
+            const res = await getSubCategory(modalInputs.category);
+            console.log("res of sub cat: ", res);
+            if (res?.status === 'success') {
+                setSubCatLoading(false);
+                setSubCat(res?.data);
+            }
         }
     }
 
+    // function handleTagSelection() {
+    //     const {tag} = this;
+    //     if (selectedTags.includes(tag)) {
+    //         setSelectedTags(prevState => prevState.filter(x => x !== tag));
+    //     } else {
+    //         setSelectedTags(prevState => [
+    //             ...prevState,
+    //             tag
+    //         ]);
+    //     }
+    // }
+
+    const handleTagSelection = tags => {
+        // setSelectedTags(tag)
+        console.log("tags: ", tags);
+        const realTags = tags.map(tag => tag.value);
+
+        console.log('real tags: ', realTags);
+    }
+
+    
     const handleTicketCreation = e => {
         e.preventDefault();
         const {
@@ -76,14 +102,15 @@ const CreateTicketModal = ({
             subject,
             description,
             assignee,
-            group
+            group,
+            subcategory
         } = modalInputs;
-        if (!customer || !category || !priority || !status || !subject || !description || !assignee || !group) {
+        if (!customer || !category || !priority || !status || !subject || !description || !assignee || !group || !subcategory) {
             console.log("All field is required");
             NotificationManager.error('All fields are required', 'Error', 5000);
         } else {
             console.log("good to go");
-            addTicket({
+            const newTicket = {
                 priorityId: priority,
                 assigneeId: assignee,
                 description,
@@ -94,8 +121,15 @@ const CreateTicketModal = ({
                 groupId: group,
                 statusId: status,
                 subject,
-                tags: selectedTags
-            })
+                tags: selectedTags,
+                subCategoryId: subcategory,
+                channel: 'system'
+            };
+
+            console.log("New Ticket: ", newTicket);
+
+            setCreatingTicket(true);
+            addTicket(newTicket);
         }
     }
 
@@ -104,7 +138,9 @@ const CreateTicketModal = ({
             resetTicketCreated();
             NotificationManager.success("Ticket created successfully", 'Successful');
             setCreateModalShow(false);
-            setChangingRow(true);
+            setCreatingTicket(false);
+            setSubCatLoading(false);
+            // setChangingRow(true);
             getPaginatedTickets(10, 1);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -116,13 +152,22 @@ const CreateTicketModal = ({
             .toUpperCase() + word.slice(1);
     }
 
-    const timeBeforeSearch = 2000;
+    const timeBeforeSearch = 1500;
     let timeoutId;
 
     const handleCustomerSearch = (e) => {
         if (!navigator.onLine) 
-            return NotificationManager.error('Check your network', 'Oops');
+            return;
+        
+        // return NotificationManager.error('Check your network', 'Oops');
         const {value} = e.target;
+
+        if (!value) {
+            setCustSearch(prev => ({
+                ...prev,
+                openPreview: false
+            }))
+        }
 
         if (timeoutId) 
             clearTimeout(timeoutId);
@@ -174,21 +219,23 @@ const CreateTicketModal = ({
 
     const handleModalHide = () => {
         setCreateModalShow(false);
+        setCreatingTicket(false);
         setCustSearch(prev => ({
             ...prev,
             openPreview: false
         }));
-    } 
+    }
 
     return (
         <Modal
-            show={createModalShow}
-            onHide={handleModalHide}
+            // show={createModalShow}
+            // onHide={handleModalHide}
+            open={createModalShow} onClose={handleModalHide}
             aria-labelledby="contained-modal-title-vcenter"
             centered
-            size="lg">
-            <Modal.Body>
-                <div className="col-12 p-4 pb-2">
+            >
+            {/* <Modal.Body> */}
+                <div className="saveTicketWrapModal p-4 pb-2">
                     <h5 className="mb-3">Create Ticket</h5>
                     <form className="needs-validation mb-5" onSubmit={e => e.preventDefault()}>
                         <div className="row">
@@ -219,6 +266,21 @@ const CreateTicketModal = ({
                             </div>
 
                             <div className="col-6 mt-2">
+                                <label htmlFor="status" className="form-label">Stage</label>
+                                <select
+                                    className="form-select"
+                                    name="status"
+                                    aria-label="Status select"
+                                    onChange={handleModalInput}>
+                                    <option value=""></option>
+                                    {statuses && statuses.map(({id, status}) => <option value={id}>{status}</option>)}
+                                </select>
+                            </div>
+
+                            
+                        </div>
+                        <div className="row mb-3">
+                            <div className="col-6 mt-2">
                                 <label htmlFor="category" className="form-label">Category</label>
                                 <select
                                     className="form-select"
@@ -229,31 +291,20 @@ const CreateTicketModal = ({
                                     {categories && categories.map(({id, name}) => <option value={id}>{name}</option>)}
                                 </select>
                             </div>
-                        </div>
-                        <div className="row mb-3">
-                            <div className="col-6 mt-2 position-relative">
-                                <label htmlFor="priority" className="form-label">Priority</label>
+
+                            <div className="col-6 mt-2">
+                                <label htmlFor="category" className="form-label">Sub Category</label>
                                 <select
                                     className="form-select"
-                                    name="priority"
-                                    aria-label="Priority select"
+                                    name="subcategory"
+                                    aria-label="Sub Category select"
+                                    disabled={subCatLoading ? true : subCat ? false : true}
                                     onChange={handleModalInput}>
                                     <option value=""></option>
-                                    {priorities && priorities.map(({id, name}) => <option value={id}>{name}</option>)}
+                                    {subCat && subCat.map(({id, category_id, name}) => <option value={id}>{name}</option>)}
                                 </select>
                             </div>
 
-                            <div className="col-6 mt-2">
-                                <label htmlFor="status" className="form-label">Status</label>
-                                <select
-                                    className="form-select"
-                                    name="status"
-                                    aria-label="Status select"
-                                    onChange={handleModalInput}>
-                                    <option value=""></option>
-                                    {statuses && statuses.map(({id, status}) => <option value={id}>{status}</option>)}
-                                </select>
-                            </div>
                         </div>
                         <div className="row g-3 ">
                             <div className="col-12 mt-3">
@@ -276,19 +327,21 @@ const CreateTicketModal = ({
                         </div>
 
                         <div className="row">
-                            <div className="col-6 mt-3">
-                                <label htmlFor="assignee" className="form-label">Assignee</label>
+
+                            <div className="col-6 mt-3 position-relative">
+                                <label htmlFor="priority" className="form-label">Priority</label>
                                 <select
                                     className="form-select"
-                                    name="assignee"
-                                    aria-label="Category select"
+                                    name="priority"
+                                    aria-label="Priority select"
                                     onChange={handleModalInput}>
-                                    <option value=""></option>
-                                    {agents && agents.map(({id, firstname, lastname}) => <option value={id}>{`${firstname} ${lastname}`}</option>)}
+                                    <option value="Medium">Medium</option>
+                                    {priorities && priorities.map(({id, name}) => name !== "Medium" && <option value={id}>{name}</option>)}
                                 </select>
                             </div>
+
                             <div className="col-6 mt-3">
-                                <label htmlFor="priority" className="form-label">Group</label>
+                                <label htmlFor="priority" className="form-label">Team</label>
                                 <select
                                     className="form-select"
                                     name="group"
@@ -301,12 +354,25 @@ const CreateTicketModal = ({
                         </div>
 
                         <div>
-                            <div className="col-12 mt-3">
+                            <div className="mt-3">
+                                <label htmlFor="assignee" className="form-label">Assigned To</label>
+                                <select
+                                    className="form-select"
+                                    name="assignee"
+                                    aria-label="Category select"
+                                    onChange={handleModalInput}>
+                                    <option value=""></option>
+                                    {agents && agents.map(({id, firstname, lastname}) => <option value={id}>{`${firstname} ${lastname}`}</option>)}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            {/* <div className="col-12 mt-3">
                                 <label htmlFor="title" className="form-label">Tags</label>
                                 <div className="border rounded-2 p-3 py-2">
                                     <label className="text-muted d-block f-12 op-6">Select Tag</label>
                                     <div className="mt-1">
-                                        {/* create tag button */}
                                         {[
                                             'Customer Data',
                                             'Active',
@@ -329,6 +395,35 @@ const CreateTicketModal = ({
                                         }}>{x}&nbsp; ×</span>)}
                                     </div>
                                 </div>
+                            </div> */}
+
+                            <div className="col-12 mt-3">
+                                <label htmlFor="title" className="form-label">Tags</label>
+                                <RSelect className="rselectfield"
+                                    style={{ fontSize: "12px" }}
+                                    onChange={ (value, actionMeta) => {
+                                        handleTagSelection(value);
+                                    }}
+                                    isClearable={false}
+                                    isMulti
+                                    options={
+                                        // populate 'options' prop from $agents, with names remapped
+                                        [
+                                            'Customer Data',
+                                            'Active',
+                                            'Billing',
+                                            'Important',
+                                            'Gillete Group',
+                                            'Oil & Gas',
+                                            'Enquiry',
+                                            'Pharmaceuticals',
+                                            'Telecommunications',
+                                            'Technology'
+                                        ].map(item => {
+                                        return {value: item,label: item}
+                                        })
+                                    }
+                                />
                             </div>
 
                             <div className="col-12 mt-3">
@@ -347,11 +442,12 @@ const CreateTicketModal = ({
                             <button
                                 type="button"
                                 onClick={handleTicketCreation}
-                                className="btn btn-sm bg-at-blue-light  py-1 px-4">Add Ticket</button>
+                                disabled={creatingTicket}
+                                className="btn btn-sm bg-at-blue-light  py-1 px-4">{creatingTicket ? 'Adding.. Ticket' : 'Add Ticket'}</button>
                         </div>
                     </form>
                 </div>
-            </Modal.Body>
+            {/* </Modal.Body> */}
         </Modal>
     )
 }

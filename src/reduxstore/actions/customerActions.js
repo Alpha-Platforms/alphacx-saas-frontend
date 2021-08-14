@@ -32,10 +32,11 @@ export const getInstantSearchedCustomers = async (term) => {
     }
     const searchStr = term.replace(/\W+/gi, ' ').replace(/\s+/gi, '%20');
     try {
-        const res = await axios.get(`${config.stagingBaseUrl}/users?role=Customer&per_page=50`, userTokenConfig(getState));
+        const res = await axios.get(`${config.stagingBaseUrl}/users?role=Customer&per_page=50&search=${searchStr}`, userTokenConfig(getState));
         return res?.data;
     } catch (err) {
-        NotificationManager.error(err?.response?.data.error, 'Error');
+        // NotificationManager.error(err?.response?.data.error, 'Error');
+        console.log('Error', err?.response?.data.error);
         return err?.response?.data;
     }
 }
@@ -115,6 +116,7 @@ export const getCurrentCustomer = (id) => (dispatch, getState) => {
     }
 }
 
+// valid redux action
 export const getPaginatedCurrentCustomerTickets = (itemsPerPage, currentPage, customerId) => (dispatch, getState) => {
     if (!navigator.onLine) {
         return console.error("Network error!");

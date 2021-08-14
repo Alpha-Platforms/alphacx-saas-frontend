@@ -164,6 +164,38 @@ const AccountSettings = () => {
                     onChange={handleChange}
                   />
                 </div>
+
+                <div className="d-flex mb-3">
+                  <div className="me-2 w-100">
+                    <label for="first-name" className="form-label">
+                      Role
+                    </label>
+                    <input
+                      type="text"
+                      id="userrole"
+                      name="userrole"
+                      className="form-control"
+                      value=""
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="w-100">
+                    <label className="form-label" for="last-name">
+                      Team
+                    </label>
+                    <input
+                      className="form-control"
+                      type="text"
+                      id="userteam"
+                      name="userteam"
+                      value=""
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+                
+                
+                
               </div>
               <div className="mb-3">
                 <label className="form-label" for="first-name">

@@ -207,35 +207,35 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                     <div><CircleIcon color="rgba(108, 65, 129, 0.25)" icon={TicketIdIcon}/></div>
                     <div>
                         <p className="pb-0 mb-0 f-12 text-muted op-9">ID</p>
-                        <p className="text-muted f-13">#53467</p>
+                        <p className="text-muted f-13 text-uppercase">#{ticket[0]?.id.slice(0, 8)}</p>
                     </div>
                 </li>
                 <li className="ms-0">
                     <div><CircleIcon color="rgba(244, 13, 13, 0.25)" icon={TicketPriorityIcon}/></div>
                     <div>
                         <p className="pb-0 mb-0 f-12 text-muted op-9">Priority</p>
-                        <p className="text-muted f-13">Medium</p>
+                        <p className="text-muted f-13 text-capitalize">{ticket[0]?.priority?.name}</p>
                     </div>
                 </li>
                 <li className="ms-0">
                     <div><CircleIcon color="rgba(7, 150, 247, 0.25)" icon={TicketStageIcon}/></div>
                     <div>
                         <p className="pb-0 mb-0 f-12 text-muted op-9">Stage</p>
-                        <p className="text-muted f-13">Pending</p>
+                        <p className="text-muted f-13">{ticket[0]?.status?.status}</p>
                     </div>
                 </li>
                 <li className="ms-0">
                     <div><CircleIcon color="rgba(255, 159, 67, 0.25)" icon={TicketCategoriesIcon}/></div>
                     <div>
                         <p className="pb-0 mb-0 f-12 text-muted op-9">Categories</p>
-                        <p className="text-muted f-13">Enquiries</p>
+                        <p className="text-muted f-13">{ticket[0]?.category.name}</p>
                     </div>
                 </li>
                 <li className="ms-0">
                     <div><CircleIcon color="rgba(247, 37, 133, 0.25)" icon={TicketDueDateIcon}/></div>
                     <div>
                         <p className="pb-0 mb-0 f-12 text-muted op-9">Due Date</p>
-                        <p className="text-muted f-13">31 August, 2021</p>
+                        <p className="text-muted f-13">N/A</p>
                     </div>
                 </li>
                 <li className="ms-0">

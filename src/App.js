@@ -34,6 +34,7 @@ import { getPriorities } from "./reduxstore/actions/priorityActions";
 import { getCategories } from "./reduxstore/actions/categoryActions";
 import { getStatuses } from "./reduxstore/actions/statusActions";
 import { getGroups } from "./reduxstore/actions/groupActions";
+import { getTags } from './reduxstore/actions/tagActions';
 import { getAgents } from "./reduxstore/actions/agentActions";
 import CustomerList from "./components/pages/customers/CustomerList";
 import CustomersNull from "./components/pages/customers/CustomersNull";
@@ -66,6 +67,7 @@ import AutomationSettings from "./components/pages/settings/automation/automatio
 import NewAutomationPolicy from "./components/pages/settings/automation/components/NewAutomationPolicy";
 import AccountSettings from "./components/pages/settings/account/AccountSettings";
 import UserProfile from "./components/pages/settings/account/UserProfile";
+import UserProfileTwo from './components/pages/settings/account/UserProfileTwo';
 import NotificationSettings from "./components/pages/settings/notifications/NotificationSettings";
 import NewEmailTemplate from "./components/pages/settings/notifications/components/NewEmailTemplate";
 import CannedResponsesSettings from "./components/pages/settings/canned_responses/CannedResponsesSettings";
@@ -92,6 +94,7 @@ const SiteRouter = connect(mapStateToProps, {
   getAgents,
   getPaginatedCustomers,
   getPaginatedUsers,
+  getTags
 })(
   ({
     loginTenant,
@@ -108,6 +111,7 @@ const SiteRouter = connect(mapStateToProps, {
     getAgents,
     getPaginatedCustomers,
     getPaginatedUsers,
+    getTags
   }) => {
     useEffect(() => {
       loginTenant({ domain: "techpoint" });
@@ -139,6 +143,7 @@ const SiteRouter = connect(mapStateToProps, {
         getStatuses();
         getGroups();
         getAgents();
+        getTags();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
@@ -218,6 +223,12 @@ const SiteRouter = connect(mapStateToProps, {
             path="/settings/profile"
             pageName="User"
             component={UserProfile}
+          />
+          <SettingsLayoutRoute
+            exact
+            path="/settings/profile/:id"
+            pageName="User"
+            component={UserProfileTwo}
           />
           <SettingsLayoutRoute
             exact

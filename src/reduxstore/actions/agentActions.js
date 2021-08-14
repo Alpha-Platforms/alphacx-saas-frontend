@@ -3,6 +3,7 @@ import * as types from '../types';
 import { config } from '../../config/keys';
 import { returnErrors } from './errorActions';
 import {userTokenConfig} from '../../helper';
+import { NotificationManager } from 'react-notifications';
 
 export const getAgents = () => (dispatch, getState) => {
 	if (!navigator.onLine) {
@@ -42,6 +43,50 @@ export const addAgent = (newAgent) => (dispatch, getState) => {
 			payload: res.data
 		}))
 		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+}
+
+// valid redux action
+export const getCurrentAgent = (id) => (dispatch, getState) => {
+    if (!navigator.onLine) {
+        return NotificationManager.error('Please check your internet', 'Opps!', 3000);
+    }
+    setCurrentAgentLoading();
+    const {agents} = getState().agent;
+
+    let currentAgent = agents.filter(agent => agent
+        ?.id === id)[0];
+
+    // console.log("Current Agent", currentAgent);
+
+    if (getState().agent.currentAgent
+        ?.id === id) {
+        dispatch({
+            type: types.GET_CURRENT_AGENT,
+            payload: getState().agent.currentAgent
+        })
+    } else if (currentAgent) {
+        dispatch({type: types.GET_CURRENT_AGENT, payload: currentAgent})
+    } else {
+        axios
+            .get(`${config.stagingBaseUrl}/users/${id}`, userTokenConfig(getState))
+            .then(res => dispatch({
+                type: types.GET_CURRENT_AGENT,
+                payload: res.data && res.data?.status === "success"
+                    ? res.data.data
+                    : null
+            }))
+            .catch(err => {
+                dispatch(returnErrors(err?.response?.data, err?.response?.status))
+                dispatch({
+                    type: types.GET_CURRENT_AGENT,
+                    payload: null
+                })
+            });
+    }
+}
+
+export const setCurrentAgentLoading = () => {
+    return {type: types.CURRENT_AGENT_LOADING}
 }
 
 export const resetAgentCreated = () => ({type: types.RESET_AGENT_CREATED});
