@@ -5,7 +5,6 @@ import { LayoutContext } from "../../context/layoutContext";
 import { SearchIconNavbr, BellIconNavbar } from "../../assets/images/svgs";
 import { useHistory } from "react-router-dom";
 import userIcon from "../../assets/images/user.png";
-import pic from "../../assets/imgF/codeuiandyimg.png";
 import { useLocation } from "react-router-dom";
 //import GoBack from './../helpers/GoBack';
 import searchIcon from "../../assets/imgF/Search.png";
@@ -44,7 +43,7 @@ function Dropdown() {
                     padding: "0.5rem 0",
                     backgroundColor: "#006298",
                     borderRadius: "3px",
-                    width: "6rem",
+                    width: "6.5rem",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center"
@@ -192,7 +191,7 @@ export default function Navbar({
                   <BellIconNavbar />
                 </div>
                 <div>
-                  <img src={pic} alt="" style={{
+                  <img src={JSON.parse(localStorage.getItem("user")).user.avatar} alt="" style={{
                     width: 30,
                     borderRadius: "50%"
                   }} />

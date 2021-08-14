@@ -2,7 +2,7 @@ import HoldOn from 'react-hold-on'
 
 var options = {
   theme:"sk-dot",
-  message:'Ibank',
+  message:'Please Wait...',
   backgroundColor:"#ABB2BF",
   textColor:"white"
 };

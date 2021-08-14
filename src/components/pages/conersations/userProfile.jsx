@@ -78,7 +78,9 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                 Ticket ID
               </p>
 
-              <p>#53467</p>
+              <p style={{ textTransform: "uppercase" }}>
+                #{ticket[0]?.id.slice(0, 8)}
+              </p>
             </div>
 
             <div className="aboutUserColConv">

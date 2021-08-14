@@ -60,7 +60,7 @@ const AccountSettings = () => {
     if (res?.status == "success") {
       console.clear();
       console.log(res?.data);
-      setPersonalInformation({ ...res?.data });
+      setPersonalInformation(res?.data);
     } else {
       // setLoadingTicks(false);
 
@@ -111,74 +111,57 @@ const AccountSettings = () => {
                             className="img-fluid mx-2 me-3"></object> */}
             <span>User Profile</span>
           </h6>
-          
         </div>
 
-          <div className="tab-content" id="pills-tabContent">
-            {/*
+        <div className="tab-content" id="pills-tabContent">
+          {/*
           <!--* Personal Information View -->
           */}
-            <div className="d-flex justify-content-between col-md-8">
+          <div className="d-flex justify-content-between col-md-8">
+            {/* <h5 className="fw-bold">Personal Information Settings</h5> */}
 
-              {/* <h5 className="fw-bold">Personal Information Settings</h5> */}
+            <h3 className="fs-6 text-black">Personal Information Settings</h3>
 
-              <h3 className="fs-6 text-black">Personal Information Settings</h3>
-
-
-              <button
-                type="button"
-                className="btn btn-sm bg-at-blue-light text-white px-4"
-                onClick={updateUserInfo}
-              >
-                Save Changes
-              </button>
-            </div>
-            <div
-              className="show fade col-md-8"
-              id="personal-information-view"
-              role="tabpanel"
-              aria-labelledby="pills-personal-tab"
+            <button
+              type="button"
+              className="btn btn-sm bg-at-blue-light text-white px-4"
+              onClick={updateUserInfo}
             >
-              <div className="mb-5 mt-4">
-                <div className="d-flex mb-3">
-                  <div className="me-2 w-100">
-                    <label for="first-name" className="form-label">
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      id="first-name"
-                      name="firstname"
-                      className="form-control"
-                      value={personalInformation.firstname || ""}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="w-100">
-                    <label className="form-label" for="last-name">
-                      Last Name
-                    </label>
-                    <input
-                      className="form-control"
-                      type="text"
-                      id="last-name"
-                      name="lastname"
-                      value={personalInformation.lastname || ""}
-                      onChange={handleChange}
-                    />
-                  </div>
+              Save Changes
+            </button>
+          </div>
+          <div
+            className="show fade col-md-8"
+            id="personal-information-view"
+            role="tabpanel"
+            aria-labelledby="pills-personal-tab"
+          >
+            <div className="mb-5 mt-4">
+              <div className="d-flex mb-3">
+                <div className="me-2 w-100">
+                  <label for="first-name" className="form-label">
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    id="first-name"
+                    name="firstname"
+                    className="form-control"
+                    value={personalInformation.firstname || ""}
+                    onChange={handleChange}
+                  />
                 </div>
-                <div className="mb-3">
-                  <label className="form-label" for="first-name">
-                    Email
+                <div className="w-100">
+                  <label className="form-label" for="last-name">
+                    Last Name
                   </label>
                   <input
                     className="form-control"
                     type="text"
-                    id="email"
-                    name="email"
-                    value={personalInformation.email || ""}
-                    disabled
+                    id="last-name"
+                    name="lastname"
+                    value={personalInformation.lastname || ""}
+                    onChange={handleChange}
                   />
                 </div>
 
@@ -214,14 +197,28 @@ const AccountSettings = () => {
                 
                 
               </div>
-              {/*
+              <div className="mb-3">
+                <label className="form-label" for="first-name">
+                  Email
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="email"
+                  name="email"
+                  value={personalInformation.email || ""}
+                  disabled
+                />
+              </div>
+            </div>
+            {/*
             <!-- * upload photo section -->
             */}
-              <div className="d-flex mb-5">
-                <div
-                  id="uploadPersonalPhotoInputImgPreview"
-                  style={{ width: "6rem", height: "6rem" }}
-                  className="
+            <div className="d-flex mb-5">
+              <div
+                id="uploadPersonalPhotoInputImgPreview"
+                style={{ width: "6rem", height: "6rem" }}
+                className="
                   border border-1
                   rounded-3
                   me-5
@@ -229,75 +226,75 @@ const AccountSettings = () => {
                   justify-content-center
                   align-items-center
                 "
+              >
+                <div
+                  style={{
+                    justifyContent: "center",
+                    height: "100%",
+                    width: "100%",
+                  }}
+                  className="ms-0 d-flex justify-content-between align-items-center"
                 >
-                  <div
-                    style={{
-                      justifyContent: "center",
-                      height: "100%",
-                      width: "100%",
-                    }}
-                    className="ms-0 d-flex justify-content-between align-items-center"
-                  >
-                    {personalInformation?.avatar?.blob ||
-                      (personalInformation.avatar !== {} && (
-                        <img
-                          className="avatarImage"
-                          src={
-                            personalInformation?.avatar?.blob ||
-                            personalInformation?.avatar
-                          }
-                          alt=""
-                        />
-                      ))}
-                  </div>
-                </div>
-                <div>
-                  <label
-                    for="uploadPersonalPhotoInput"
-                    className="btn btn-sm bg-at-blue-light px-4 py-1 mb-2 mt-1"
-                  >
-                    Upload Photo
-                  </label>
-                  <input
-                    type="file"
-                    name="uploadPersonalPhotoInput"
-                    id="uploadPersonalPhotoInput"
-                    onChange={handleAvatar}
-                  />
-                  <p className="mb-0 text-at-red">
-                    <small id="uploadPersonalPhotoInputError"></small>
-                  </p>
-                  <p className="uploadInfoWrapper">
-                    <small id="uploadPersonalPhotoInputInfo">
-                      Upload personal photo, uploaded file must be an image.
-                    </small>
-                  </p>
+                  {personalInformation?.avatar?.blob ||
+                    (personalInformation.avatar !== {} && (
+                      <img
+                        className="avatarImage"
+                        src={
+                          personalInformation?.avatar?.blob ||
+                          personalInformation?.avatar
+                        }
+                        alt=""
+                      />
+                    ))}
                 </div>
               </div>
-              {/*
-            <!-- * change password -->
-            */}
-              <div className="mb-5">
-                <label className="form-label" for="change-password">
-                  Change Password
+              <div>
+                <label
+                  for="uploadPersonalPhotoInput"
+                  className="btn btn-sm bg-at-blue-light px-4 py-1 mb-2 mt-1"
+                >
+                  Upload Photo
                 </label>
                 <input
-                  className="form-control"
-                  type="password"
-                  name="change_password"
-                  id="change-password"
-                  value={personalInformation.change_password || ""}
-                  onChange={handleChange}
+                  type="file"
+                  name="uploadPersonalPhotoInput"
+                  id="uploadPersonalPhotoInput"
+                  onChange={handleAvatar}
                 />
-                <button className="btn btn-sm bg-at-blue-light px-3 py-1 mt-3">
-                  Change Password
-                </button>
+                <p className="mb-0 text-at-red">
+                  <small id="uploadPersonalPhotoInputError"></small>
+                </p>
+                <p className="uploadInfoWrapper">
+                  <small id="uploadPersonalPhotoInputInfo">
+                    Upload personal photo, uploaded file must be an image.
+                  </small>
+                </p>
               </div>
-              {/*
+            </div>
+            {/*
+            <!-- * change password -->
+            */}
+            <div className="mb-5">
+              <label className="form-label" for="change-password">
+                Change Password
+              </label>
+              <input
+                className="form-control"
+                type="password"
+                name="change_password"
+                id="change-password"
+                value={personalInformation.change_password || ""}
+                onChange={handleChange}
+              />
+              <button className="btn btn-sm bg-at-blue-light px-3 py-1 mt-3">
+                Change Password
+              </button>
+            </div>
+            {/*
             <!-- * Notifications -->
             */}
-              <div className="d-flex">
-                {/* <div className="mb-3">
+            <div className="d-flex">
+              {/* <div className="mb-3">
                   <label className="d-block">Notifications</label>
                   <label>
                     <small>Disable notifications</small>
@@ -328,8 +325,8 @@ const AccountSettings = () => {
                     </div>
                   </div>
                 </div> */}
-                {/* <!-- * Security and Privacy --> */}
-                {/* <div className="mb-5" style={{ marginLeft: 50 }}>
+              {/* <!-- * Security and Privacy --> */}
+              {/* <div className="mb-5" style={{ marginLeft: 50 }}>
                   <label className="d-block" for="">
                     Security and Privacy (MFA)
                   </label>
@@ -362,13 +359,12 @@ const AccountSettings = () => {
                     </div>
                   </div>
                 </div> */}
-              </div>
             </div>
-            {/*
+          </div>
+          {/*
           <!--* End of Personal Information View -->
           */}
-          </div>
-        
+        </div>
       </div>
     </div>
   );

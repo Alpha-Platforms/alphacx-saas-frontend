@@ -1,11 +1,139 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import "./settings.css";
 import whatsappImg from "../../../assets/imgF/WhatsApp.png";
 import facebookImg from "../../../assets/imgF/Facebook.png";
+import { httpGet } from "../../helpers/httpMethods";
+import { httpPatchMain, httpPostMain } from "../../../helpers/httpMethods";
+import { NotificationManager } from "react-notifications";
+import { hideLoader, showLoader } from "../../helpers/loader";
+
+// console.log(window);
+const FB = window.FB;
+
 export default function SocialIntegrations() {
   const [activeSocail, setActiveSocial] = useState("Whatsapp");
+  const [FBData, setFBData] = useState({});
+  const [pageConnected, setpageConnected] = useState(false);
+  const [whatsappConfig, setwhatsappConfig] = useState({
+    twillo_account_sid: "",
+    twillo_auth_token: "",
+    twillo_no: "",
+  });
+  const authFb = () => {
+    FB.login(
+      function (response) {
+        if (
+          response.authResponse &&
+          response.authResponse !== "undefined." &&
+          response.authResponse !== undefined
+        ) {
+          console.log("Welcome!  Fetching your information.... ", response);
+
+          setFBData(response?.authResponse);
+
+          handleConnectFBPage(response?.authResponse);
+
+          setpageConnected(true);
+          FB.api("/me", function (response) {
+            console.log("Good to see you, " + response.name + ".");
+          });
+        } else {
+          console.log("User cancelled login or did not fully authorize.");
+        }
+      },
+      {
+        scope:
+          "pages_messaging,pages_manage_metadata,pages_read_engagement,pages_show_list",
+      }
+    );
+  };
+
+  useEffect(() => {
+    FB.init({
+      appId: "244578957291734",
+      // appId: "265267201741571",
+      autoLogAppEvents: true,
+      xfbml: true,
+      version: "v11.0",
+    });
+
+    let CheckpageConnected = localStorage.getItem("pageConnected");
+    if (
+      CheckpageConnected == undefined ||
+      CheckpageConnected == null ||
+      CheckpageConnected == ""
+    ) {
+      return setpageConnected(false);
+    } else {
+      setpageConnected(true);
+    }
+  }, []);
+  const handleWhatsappChange = (e) => {
+    setwhatsappConfig({ ...whatsappConfig, [e.target.name]: e.target.value });
+  };
+  const handleConnectFBPage = async (response) => {
+    console.log(response, typeof response);
+    if (response && response !== "undefined." && response !== undefined) return;
+    showLoader();
+    const data = {
+      facebook_config: {
+        page_token: `${response?.accessToken}`,
+        access_token: `${response?.accessToken}`,
+        connected: true,
+      },
+    };
+    // let sstringFyData = JSON.stringify(data);
+    const res = await httpPatchMain("settings/facebook-config", data);
+    if (res) {
+      hideLoader();
+      if (res.er) {
+        hideLoader();
+        return NotificationManager.error(res.er);
+      }
+      console.log(res);
+      localStorage.setItem("pageConnected", "true");
+      NotificationManager.success("Page successfully connected");
+    }
+    // hideLoader();
+  };
+
+  const handleConnectWhatsApp = async () => {
+    if (whatsappConfig.twillo_account_sid == "") {
+      return NotificationManager.error("Account SID Is required!");
+    }
+
+    if (whatsappConfig.twillo_auth_token == "") {
+      return NotificationManager.error("Auth Token Is required!");
+    }
+
+    if (whatsappConfig.twillo_no == "") {
+      return NotificationManager.error("Account number Is required!");
+    }
+    showLoader();
+    const data = {
+      whatsapp_config: {
+        ...whatsappConfig,
+      },
+    };
+    const res = await httpPatchMain("settings/whatsapp-config", data);
+    if (res) {
+      hideLoader();
+      if (res.er) {
+        hideLoader();
+        return NotificationManager.error(res.er);
+      }
+      // NotificationManager.success("Page successfully connected");
+      NotificationManager.success("WhatsApp account successfully connected");
+      setwhatsappConfig({
+        twillo_account_sid: "",
+        twillo_auth_token: "",
+        twillo_no: "",
+      });
+    }
+    // hideLoader();
+  };
   return (
     <div className="socialIntergratingPage">
       {" "}
@@ -59,31 +187,44 @@ export default function SocialIntegrations() {
           </p>
 
           <div className="sIntergrationForm">
-            <div className="inputContainInter">
+            {/* <div className="inputContainInter">
               <label htmlFor="">
                 Specify this address in the Webhook field in console:
               </label>
-              <input type="text" />
-            </div>
+              <input type="text" name="" />
+            </div> */}
 
             <div className="inputContainInter">
               <label htmlFor="">Account SID:</label>
-              <input type="text" />
+              <input
+                type="text"
+                name="twillo_account_sid"
+                onChange={handleWhatsappChange}
+                value={whatsappConfig.twillo_account_sid}
+              />
             </div>
 
             <div className="inputContainInter">
               <label htmlFor="">Auth Token:</label>
-              <input type="text" />
+              <input
+                type="text"
+                name="twillo_auth_token"
+                onChange={handleWhatsappChange}
+                value={whatsappConfig.twillo_auth_token}
+              />
             </div>
 
             <div className="inputContainInter">
-              <label htmlFor="">
-                Account phone number (use international format: +99999999999):
-              </label>
-              <input type="text" />
+              <label htmlFor="">Account phone number:</label>
+              <input
+                type="text"
+                name="twillo_no"
+                onChange={handleWhatsappChange}
+                value={whatsappConfig.twillo_no}
+              />
             </div>
             <div className="buttonSubSocialInt">
-              <button>Connect</button>
+              <button onClick={handleConnectWhatsApp}>Connect</button>
             </div>
           </div>
         </div>
@@ -115,15 +256,21 @@ export default function SocialIntegrations() {
             className="buttonSubSocialInt"
             style={{ marginBottom: "20px", marginTop: "-11px" }}
           >
-            <button style={{ width: "120px" }}>Connect Page</button>
+            <button
+              style={{ width: "120px" }}
+              onClick={authFb}
+              disabled={pageConnected}
+            >
+              {pageConnected ? "Page Connected" : "Connect Page"}
+            </button>
           </div>
 
-          <div
+          {/* <div
             className="rpageDmatsoci"
             style={{ marginBottom: "20px", marginTop: "30px" }}
-          ></div>
+          ></div> */}
 
-          <div className="sIntergrationForm">
+          {/* <div className="sIntergrationForm">
             <div className="inputContainInter">
               <label htmlFor="">Auth ID:</label>
               <input type="text" />
@@ -142,7 +289,7 @@ export default function SocialIntegrations() {
             <div className="buttonSubSocialInt">
               <button>Connect</button>
             </div>
-          </div>
+          </div> */}
         </div>
       ) : (
         ""
