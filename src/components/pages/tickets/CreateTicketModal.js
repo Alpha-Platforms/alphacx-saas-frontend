@@ -1,5 +1,6 @@
 import {useState, useEffect, useRef} from 'react';
-import {Modal} from 'react-bootstrap';
+// import {Modal} from 'react-bootstrap';
+import {Modal} from 'react-responsive-modal';
 import PinIcon from '../../../assets/icons/pin.svg';
 import {connect} from 'react-redux';
 import {addTicket, resetTicketCreated} from '../../../reduxstore/actions/ticketActions';
@@ -8,6 +9,7 @@ import {getPaginatedTickets} from '../../../reduxstore/actions/ticketActions';
 import {getInstantSearchedCustomers} from '../../../reduxstore/actions/customerActions';
 import BeatLoader from 'react-spinners/BeatLoader';
 import { getSubCategory } from './../../../reduxstore/actions/categoryActions';
+import RSelect from 'react-select/creatable';
 
 const CreateTicketModal = ({
     createModalShow,
@@ -217,13 +219,14 @@ const CreateTicketModal = ({
 
     return (
         <Modal
-            show={createModalShow}
-            onHide={handleModalHide}
+            // show={createModalShow}
+            // onHide={handleModalHide}
+            open={createModalShow} onClose={handleModalHide}
             aria-labelledby="contained-modal-title-vcenter"
             centered
-            size="lg">
-            <Modal.Body>
-                <div className="col-12 p-4 pb-2">
+            >
+            {/* <Modal.Body> */}
+                <div className="saveTicketWrapModal p-4 pb-2">
                     <h5 className="mb-3">Create Ticket</h5>
                     <form className="needs-validation mb-5" onSubmit={e => e.preventDefault()}>
                         <div className="row">
@@ -387,6 +390,24 @@ const CreateTicketModal = ({
                             </div>
 
                             <div className="col-12 mt-3">
+                                <RSelect className="rselectfield"
+                                    style={{ fontSize: "12px" }}
+                                    onChange={ (value, actionMeta) => {
+                                        console.log(value);
+                                        // if $recipients is buggy use $value
+                                    }}
+                                    isClearable={false}
+                                    isMulti
+                                    options={
+                                        // populate 'options' prop from $agents, with names remapped
+                                        ['one', 'two', 'three', 'four'].map(item => {
+                                        return {value: item,label: item}
+                                        })
+                                    }
+                                />
+                            </div>
+
+                            <div className="col-12 mt-3">
                                 <label htmlFor="title" className="form-label">Attachment (If Any)</label>
                                 <div
                                     id="ticket-ath-box"
@@ -407,7 +428,7 @@ const CreateTicketModal = ({
                         </div>
                     </form>
                 </div>
-            </Modal.Body>
+            {/* </Modal.Body> */}
         </Modal>
     )
 }
