@@ -9,6 +9,7 @@ import pic from "../../assets/imgF/codeuiandyimg.png";
 import { useLocation } from "react-router-dom";
 //import GoBack from './../helpers/GoBack';
 import searchIcon from "../../assets/imgF/Search.png";
+import {HelpIcon} from '../../assets/SvgIconsSet.jsx';
 
 // --- dropdown component
 function PlusIcon(){
@@ -184,6 +185,9 @@ export default function Navbar({
                 <div style={{width: "1.5"}}>
                   <BellIconNavbar />
                 </div>
+
+                <a href="/help"><HelpIcon /></a>                
+
                 <div>
                   <img src={pic} alt="" style={{
                     width: 30,
