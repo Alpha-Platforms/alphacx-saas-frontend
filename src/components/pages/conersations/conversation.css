@@ -447,7 +447,7 @@
   font-size: 15px;
   position: absolute;
   right: 7px;
-  top: -65px;
+  top: -66px;
 }
 
 .cancelIconCovP {
@@ -952,7 +952,7 @@ select {
 }
 .conversationCommentBox {
   width: 100%;
-  height: 20%;
+  height: 22%;
   overflow: hidden;
   padding-left: 30px;
   padding-right: 30px;

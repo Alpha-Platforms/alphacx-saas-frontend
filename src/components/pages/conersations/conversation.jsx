@@ -227,26 +227,15 @@ export default function Conversation() {
     let filterSentTick = tickets.filter((tic) => {
       return tic.id == singleTicketFullInfo.id;
     });
-
-    // let increaseCount = filterSentTick[0].__meta__.history_count;
-    // let increaseCountAdd = Number(++increaseCount);
-
-    // let getIncreasOBJ = filterSentTick[0];
-    // console.log("before", getIncreasOBJ);
-    // let ol = delete getIncreasOBJ.__meta__;
-    // console.log("Deleted", ol);
     let filterSentTickAll = tickets.filter((tic) => {
       return tic.id != singleTicketFullInfo.id;
     });
-
     setActiveChat(1);
-
-    // console.log("FILL>>>>", filterSentTick);
-    // console.log("FILL ALL>>>>", filterSentTickAll);
+    filterSentTick[0]["__meta__"].history_count = ++filterSentTick[0][
+      "__meta__"
+    ].history_count;
     const newTicket = [...filterSentTick, ...filterSentTickAll];
-
     setTickets(newTicket);
-
     const data = {
       // type: "note",
       response: reply.richText,
