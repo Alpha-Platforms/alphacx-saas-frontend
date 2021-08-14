@@ -71,18 +71,27 @@ const CreateTicketModal = ({
         }
     }
 
-    function handleTagSelection() {
-        const {tag} = this;
-        if (selectedTags.includes(tag)) {
-            setSelectedTags(prevState => prevState.filter(x => x !== tag));
-        } else {
-            setSelectedTags(prevState => [
-                ...prevState,
-                tag
-            ]);
-        }
+    // function handleTagSelection() {
+    //     const {tag} = this;
+    //     if (selectedTags.includes(tag)) {
+    //         setSelectedTags(prevState => prevState.filter(x => x !== tag));
+    //     } else {
+    //         setSelectedTags(prevState => [
+    //             ...prevState,
+    //             tag
+    //         ]);
+    //     }
+    // }
+
+    const handleTagSelection = tags => {
+        // setSelectedTags(tag)
+        console.log("tags: ", tags);
+        const realTags = tags.map(tag => tag.value);
+
+        console.log('real tags: ', realTags);
     }
 
+    
     const handleTicketCreation = e => {
         e.preventDefault();
         const {
@@ -319,20 +328,20 @@ const CreateTicketModal = ({
 
                         <div className="row">
 
-                            <div className="col-6 mt-2 position-relative">
+                            <div className="col-6 mt-3 position-relative">
                                 <label htmlFor="priority" className="form-label">Priority</label>
                                 <select
                                     className="form-select"
                                     name="priority"
                                     aria-label="Priority select"
                                     onChange={handleModalInput}>
-                                    <option value=""></option>
-                                    {priorities && priorities.map(({id, name}) => <option value={id}>{name}</option>)}
+                                    <option value="Medium">Medium</option>
+                                    {priorities && priorities.map(({id, name}) => name !== "Medium" && <option value={id}>{name}</option>)}
                                 </select>
                             </div>
 
                             <div className="col-6 mt-3">
-                                <label htmlFor="priority" className="form-label">Group</label>
+                                <label htmlFor="priority" className="form-label">Team</label>
                                 <select
                                     className="form-select"
                                     name="group"
@@ -346,7 +355,7 @@ const CreateTicketModal = ({
 
                         <div>
                             <div className="mt-3">
-                                <label htmlFor="assignee" className="form-label">Assignee</label>
+                                <label htmlFor="assignee" className="form-label">Assigned To</label>
                                 <select
                                     className="form-select"
                                     name="assignee"
@@ -359,12 +368,11 @@ const CreateTicketModal = ({
                         </div>
 
                         <div>
-                            <div className="col-12 mt-3">
+                            {/* <div className="col-12 mt-3">
                                 <label htmlFor="title" className="form-label">Tags</label>
                                 <div className="border rounded-2 p-3 py-2">
                                     <label className="text-muted d-block f-12 op-6">Select Tag</label>
                                     <div className="mt-1">
-                                        {/* create tag button */}
                                         {[
                                             'Customer Data',
                                             'Active',
@@ -387,20 +395,31 @@ const CreateTicketModal = ({
                                         }}>{x}&nbsp; ×</span>)}
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
                             <div className="col-12 mt-3">
+                                <label htmlFor="title" className="form-label">Tags</label>
                                 <RSelect className="rselectfield"
                                     style={{ fontSize: "12px" }}
                                     onChange={ (value, actionMeta) => {
-                                        console.log(value);
-                                        // if $recipients is buggy use $value
+                                        handleTagSelection(value);
                                     }}
                                     isClearable={false}
                                     isMulti
                                     options={
                                         // populate 'options' prop from $agents, with names remapped
-                                        ['one', 'two', 'three', 'four'].map(item => {
+                                        [
+                                            'Customer Data',
+                                            'Active',
+                                            'Billing',
+                                            'Important',
+                                            'Gillete Group',
+                                            'Oil & Gas',
+                                            'Enquiry',
+                                            'Pharmaceuticals',
+                                            'Telecommunications',
+                                            'Technology'
+                                        ].map(item => {
                                         return {value: item,label: item}
                                         })
                                     }

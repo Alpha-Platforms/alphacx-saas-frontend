@@ -235,7 +235,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                     <div><CircleIcon color="rgba(247, 37, 133, 0.25)" icon={TicketDueDateIcon}/></div>
                     <div>
                         <p className="pb-0 mb-0 f-12 text-muted op-9">Due Date</p>
-                        <p className="text-muted f-13">31 August, 2021</p>
+                        <p className="text-muted f-13">N/A</p>
                     </div>
                 </li>
                 <li className="ms-0">

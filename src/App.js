@@ -34,6 +34,7 @@ import { getPriorities } from "./reduxstore/actions/priorityActions";
 import { getCategories } from "./reduxstore/actions/categoryActions";
 import { getStatuses } from "./reduxstore/actions/statusActions";
 import { getGroups } from "./reduxstore/actions/groupActions";
+import { getTags } from './reduxstore/actions/tagActions';
 import { getAgents } from "./reduxstore/actions/agentActions";
 import CustomerList from "./components/pages/customers/CustomerList";
 import CustomersNull from "./components/pages/customers/CustomersNull";
@@ -93,6 +94,7 @@ const SiteRouter = connect(mapStateToProps, {
   getAgents,
   getPaginatedCustomers,
   getPaginatedUsers,
+  getTags
 })(
   ({
     loginTenant,
@@ -109,6 +111,7 @@ const SiteRouter = connect(mapStateToProps, {
     getAgents,
     getPaginatedCustomers,
     getPaginatedUsers,
+    getTags
   }) => {
     useEffect(() => {
       loginTenant({ domain: "techpoint" });
@@ -140,6 +143,7 @@ const SiteRouter = connect(mapStateToProps, {
         getStatuses();
         getGroups();
         getAgents();
+        getTags();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);

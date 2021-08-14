@@ -92,3 +92,9 @@ export const CURRENT_AGENT_LOADING ="CURRENT_AGENT_LOADING";
 export const GET_USERS = "GET_USERS";
 export const USERS_LOADING = "USERS_LOADING";
 export const RESET_USER_CREATED = "RESET_USER_CREATED";
+
+
+// TAGS
+export const GET_TAGS = "GET_TAGS";
+export const ADD_TAG = "ADD_TAG";
+export const TAGS_LOADING = "TAGS_LOADING";
