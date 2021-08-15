@@ -172,8 +172,8 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgen
                                     }, {
                                         title: 'Active',
                                         field: 'action',
-                                        render: rowDate => (<div class="form-check form-switch">
-                                                <input class="form-check-input form-check-input-lg mt-1" type="checkbox"/>
+                                        render: rowData => (<div class="form-check form-switch">
+                                                <input className="form-check-input form-check-input-lg mt-1" checked={rowData.isActivated} readOnly={true} type="checkbox"/>
                                             </div>)
                                     }, {
                                     title: '',
@@ -199,6 +199,7 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgen
                                 email,
                                 group,
                                 created_at,
+                                isActivated,
                                 id}) => ({
                                 name: `${firstname} ${lastname}`,
                                 emailAddress: email,
@@ -206,7 +207,8 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgen
                                 group: 'Head Office',
                                 // created: moment(created_at).format('DD MMM, YYYY'),
                                 created: '13 Apr 2021',
-                                contact: {firstname, lastname, id}
+                                contact: {firstname, lastname, id},
+                                isActivated
                             }))
                             }
                             options = {{
