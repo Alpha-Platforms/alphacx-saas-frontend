@@ -10,6 +10,7 @@ export const UserDataProvider = (props) => {
   const [user, setUser] = useState();
   const [count, setCount] = useState(0);
   const [firstTimeLoad, setFirstTimeLoad] = useState(true);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (firstTimeLoad == true) {
       ValidateToken();
@@ -33,18 +34,22 @@ export const UserDataProvider = (props) => {
   };
 
   const ValidateToken = () => {
+    setLoading(true);
     let token = localStorage.getItem("token");
     if (token == undefined || token == null || token == "") {
       setFirstTimeLoad(false);
       localStorage.clear();
+      // setLoading(false);
       return (window.location.href = "/");
     }
     if (jwtDecode(token).exp < Date.now() / 1000) {
       setFirstTimeLoad(false);
       localStorage.clear();
       setFirstTimeLoad(false);
+      // setLoading(false);
       return (window.location.href = "/");
     }
+    setLoading(false);
     setFirstTimeLoad(false);
     // console.log("still valid");
   };
@@ -58,7 +63,7 @@ export const UserDataProvider = (props) => {
     }
   };
   return (
-    <UserDataContext.Provider value={{}}>
+    <UserDataContext.Provider value={{ loading }}>
       {props.children}
     </UserDataContext.Provider>
   );

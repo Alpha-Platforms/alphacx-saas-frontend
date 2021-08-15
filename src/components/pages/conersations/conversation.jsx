@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { UserDataContext } from "../../../context/userContext";
 import "./conversation.css";
 import { Modal } from "react-responsive-modal";
 import MessageList from "./messageList";
@@ -60,14 +61,8 @@ export default function Conversation() {
     },
   ]);
 
-  const {
-    AppSocket,
-    //wsTickets,
-    setWsTicketFilter,
-    wsTicketFilter,
-    // setMsgHistory,
-    // msgHistory,
-  } = useContext(SocketDataContext);
+  const { AppSocket } = useContext(SocketDataContext);
+  const { loading } = useContext(UserDataContext);
   const [loadSelectedMsg, setloadSelectedMsg] = useState("");
   const [tickets, setTickets] = useState([]);
   const [filterTicketsState, setFilterTicketsState] = useState([]);
@@ -234,8 +229,10 @@ export default function Conversation() {
     filterSentTick[0]["__meta__"].history_count = ++filterSentTick[0][
       "__meta__"
     ].history_count;
+    filterSentTick[0]["updated_at"] = new Date();
     const newTicket = [...filterSentTick, ...filterSentTickAll];
     setTickets(newTicket);
+    console.log(filterSentTick);
     const data = {
       // type: "note",
       response: reply.richText,
@@ -508,6 +505,7 @@ export default function Conversation() {
                     </MenuItem>
                     <MenuItem value="facebook">Facebook</MenuItem>
                     <MenuItem value="whatsapp">Whatsapp</MenuItem>
+                    <MenuItem value="system">System</MenuItem>
                     <MenuItem value="email">Email</MenuItem>
                     <MenuItem value="liveChat">Live Chat</MenuItem>
                   </Select>

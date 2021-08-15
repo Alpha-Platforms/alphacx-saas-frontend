@@ -105,7 +105,12 @@ export default function MessageList({
                 </div>
               </div>
               <div className="message-user-time">
-                <p className="msgCountCon">{data?.__meta__?.history_count}</p>
+                {data?.__meta__?.history_count == 0 ? (
+                  ""
+                ) : (
+                  <p className="msgCountCon">{data?.__meta__?.history_count}</p>
+                )}
+
                 <p className="msGtime">{timeFormater(data.updated_at)}</p>
               </div>
             </div>

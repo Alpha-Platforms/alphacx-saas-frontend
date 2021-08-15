@@ -64,7 +64,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
               style={{ color: "#6c757d" }}
               className="mb-0 text-capitalize mt-2 pb-0"
             >
-              <Link style={{ color: "#6c757d" }} to="/settings/users">
+              <Link to="/settings/users">
                 <b>{`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(
                   ticket[0]?.customer?.lastname
                 )}`}</b>
@@ -98,7 +98,9 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                   </p>
 
                   <p style={{ textTransform: "uppercase" }}>
-                    #{ticket[0]?.id.slice(ticket[0]?.id?.length - 8)}
+                    <Link to={`tickets/${ticket[0]?.id}`}>
+                      #{ticket[0]?.id.slice(ticket[0]?.id?.length - 8)}
+                    </Link>
                   </p>
                 </div>
 
@@ -424,7 +426,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
             );
           })}
         </div> */}
-        {/* <div className="container-timeline">
+        <div className="container-timeline">
           <div className="box">
             <div className="borderContaner">
               <div className="circle"></div>
@@ -474,7 +476,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
               </div>
             </div>
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   );
