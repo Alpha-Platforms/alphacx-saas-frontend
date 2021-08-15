@@ -16,10 +16,29 @@ const NewEmailTemplate = () => {
     "open",
     "closed",
   ];
-  const [newPolicy, setNewPolicy] = useState({
+  const [placeholder, setPlaceholder] = useState("");
+  const [newTemplate, setNewTemplate] = useState({
     message: "",
-    placeholder: "name",
   });
+  const insertPlaceholder = (i) => {
+    const shortCode = `{{${availablePlaceholders[i]}}}`;
+
+    setNewTemplate({
+      ...newTemplate,
+      message: newTemplate.message + " " + shortCode + " ",
+    });
+    setPlaceholder(" " + shortCode + " ");
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewTemplate({ ...newTemplate, [name]: value });
+  };
+
+  const submitNotificationTemplate = async () => {
+    console.clear();
+    console.log("template", newTemplate);
+  };
   return (
     <div className="new-email-template notification-settings">
       <div className="card card-body bg-white border-0 p-5">
@@ -58,10 +77,10 @@ const NewEmailTemplate = () => {
                   Notification Category
                 </label>
                 <select className="form-select form-select-sm f-14" id="ticket">
-                  <option>SMS</option>
-                  <option>WhatsApp</option>
-                  <option>Email</option>
-                  <option>In App</option>
+                  <option value="">Select category</option>
+                  <option value="email">Email</option>
+                  <option value="whatsapp">WhatsApp</option>
+                  <option value="sms">SMS</option>
                 </select>
               </div>
               <div className="form-group mt-3">
@@ -78,18 +97,7 @@ const NewEmailTemplate = () => {
                 <label className="f-14 mb-1">Available Placeholders</label>
                 <div className="available-placeholders">
                   {availablePlaceholders.map((item, i) => (
-                    <p
-                      key={i}
-                      className={
-                        newPolicy?.placeholder === item ? "selected" : ""
-                      }
-                      onClick={() =>
-                        setNewPolicy({
-                          ...newPolicy,
-                          placeholder: item,
-                        })
-                      }
-                    >
+                    <p key={i} onClick={() => insertPlaceholder(i)}>
                       {item}
                     </p>
                   ))}
@@ -99,9 +107,12 @@ const NewEmailTemplate = () => {
                 <label className="f-14 mb-1">Description</label>
 
                 <EditorBox
-                  text={newPolicy.message}
-                  textParent={newPolicy}
-                  updateText={setNewPolicy}
+                  text={newTemplate.message}
+                  textParent={newTemplate}
+                  updateText={setNewTemplate}
+                  textFormat={"plain"}
+                  placeholder={placeholder}
+                  setPlaceholder={setPlaceholder}
                 />
               </div>
             </form>

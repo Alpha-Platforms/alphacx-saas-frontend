@@ -188,7 +188,6 @@ const AutomationAction = ({
             <label className="f-14 mb-1">Message</label>
 
             <EditorBox
-              initialText={agreement}
               text={message || ""}
               // textParent={newPolicy}
               textFormat={"plain"}
