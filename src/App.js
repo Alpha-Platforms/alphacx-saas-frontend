@@ -34,6 +34,7 @@ import { getPriorities } from "./reduxstore/actions/priorityActions";
 import { getCategories } from "./reduxstore/actions/categoryActions";
 import { getStatuses } from "./reduxstore/actions/statusActions";
 import { getGroups } from "./reduxstore/actions/groupActions";
+import { getTags } from "./reduxstore/actions/tagActions";
 import { getAgents } from "./reduxstore/actions/agentActions";
 import CustomerList from "./components/pages/customers/CustomerList";
 import CustomersNull from "./components/pages/customers/CustomersNull";
@@ -66,6 +67,7 @@ import AutomationSettings from "./components/pages/settings/automation/automatio
 import NewAutomationPolicy from "./components/pages/settings/automation/components/NewAutomationPolicy";
 import AccountSettings from "./components/pages/settings/account/AccountSettings";
 import UserProfile from "./components/pages/settings/account/UserProfile";
+import UserProfileTwo from "./components/pages/settings/account/UserProfileTwo";
 import NotificationSettings from "./components/pages/settings/notifications/NotificationSettings";
 import NewEmailTemplate from "./components/pages/settings/notifications/components/NewEmailTemplate";
 import CannedResponsesSettings from "./components/pages/settings/canned_responses/CannedResponsesSettings";
@@ -92,6 +94,7 @@ const SiteRouter = connect(mapStateToProps, {
   getAgents,
   getPaginatedCustomers,
   getPaginatedUsers,
+  getTags,
 })(
   ({
     loginTenant,
@@ -108,6 +111,7 @@ const SiteRouter = connect(mapStateToProps, {
     getAgents,
     getPaginatedCustomers,
     getPaginatedUsers,
+    getTags,
   }) => {
     useEffect(() => {
       loginTenant({ domain: "techpoint" });
@@ -139,6 +143,7 @@ const SiteRouter = connect(mapStateToProps, {
         getStatuses();
         getGroups();
         getAgents();
+        getTags();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
@@ -157,196 +162,203 @@ const SiteRouter = connect(mapStateToProps, {
           <Route exact path="/help/:topic/:article" component={Article} />
 
           {/* help pages end */}
-          <DefaultLayoutRoute
-            exact
-            path="/home"
-            pageName="Dashboard"
-            component={Dashboard}
-          />
-          <DefaultLayoutRoute
-            exact
-            path="/dashboard"
-            pageName="Dashboard"
-            component={DashboardOld}
-          />
-          <DefaultLayoutRoute
-            exact
-            path="/conversation"
-            component={Conversation}
-            pageName="Conversations"
-          />
-          <Route exact path="/customers-null" component={CustomersNull} />
-          <DefaultLayoutRoute
-            exact
-            path="/customers"
-            component={CustomerList}
-            pageName="Customers"
-          />
-          <DefaultLayoutRoute
-            exact
-            path="/organisations"
-            pageName="Organisations"
-            component={OrganisationList}
-          />
-          <DefaultLayoutRoute
-            exact
-            path="/customers/:id"
-            pageName="Customer"
-            component={Customer}
-          />
-          <DefaultLayoutRoute
-            exact
-            path="/tickets"
-            pageName="Tickets"
-            component={TicketList}
-          />
-          {/* settings route start */}
-          <DefaultLayoutRoute
-            exact
-            path="/tickets/:id"
-            pageName="Ticket"
-            component={Ticket}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings"
-            pageName="Settings"
-            component={SettingsHome}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/profile"
-            pageName="User"
-            component={UserProfile}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/account"
-            pageName="Account"
-            component={AccountSettings}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/automation"
-            pageName="Settings"
-            component={AutomationSettings}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/automation/new-policy"
-            pageName="Settings"
-            component={NewAutomationPolicy}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/automation/edit/:policyID"
-            pageName="Settings"
-            component={NewAutomationPolicy}
-          />
+          <UserDataProvider>
+            <LayoutProvider>
+              <SocketDataProvider>
+                <DefaultLayoutRoute
+                  exact
+                  path="/home"
+                  pageName="Dashboard"
+                  component={Dashboard}
+                />
+                <DefaultLayoutRoute
+                  exact
+                  path="/dashboard"
+                  pageName="Dashboard"
+                  component={DashboardOld}
+                />
+                <DefaultLayoutRoute
+                  exact
+                  path="/conversation"
+                  component={Conversation}
+                  pageName="Conversations"
+                />
+                <Route exact path="/customers-null" component={CustomersNull} />
+                <DefaultLayoutRoute
+                  exact
+                  path="/customers"
+                  component={CustomerList}
+                  pageName="Customers"
+                />
+                <DefaultLayoutRoute
+                  exact
+                  path="/organisations"
+                  pageName="Organisations"
+                  component={OrganisationList}
+                />
+                <DefaultLayoutRoute
+                  exact
+                  path="/customers/:id"
+                  pageName="Customer"
+                  component={Customer}
+                />
+                <DefaultLayoutRoute
+                  exact
+                  path="/tickets"
+                  pageName="Tickets"
+                  component={TicketList}
+                />
+                {/* settings route start */}
+                <DefaultLayoutRoute
+                  exact
+                  path="/tickets/:id"
+                  pageName="Ticket"
+                  component={Ticket}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings"
+                  pageName="Settings"
+                  component={SettingsHome}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/profile"
+                  pageName="User"
+                  component={UserProfile}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/account"
+                  pageName="Account"
+                  component={AccountSettings}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/automation"
+                  pageName="Settings"
+                  component={AutomationSettings}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/automation/new-policy"
+                  pageName="Settings"
+                  component={NewAutomationPolicy}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/automation/edit/:policyID"
+                  pageName="Settings"
+                  component={NewAutomationPolicy}
+                />
 
-          <SettingsLayoutRoute
-            exact
-            path="/settings/users"
-            pageName="Settings"
-            component={UserList}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/teams"
-            pageName="Settings"
-            component={GroupList}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/roles"
-            pageName="Settings"
-            component={RoleList}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/roles/new"
-            pageName="Settings"
-            component={NewRole}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/forms"
-            pageName="Settings"
-            component={Form}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/users/personal-info-settings"
-            pageName="Settings"
-            component={UserPersonal}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/fields"
-            pageName="Settings"
-            component={Fields}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/help-center"
-            pageName="Settings"
-            component={HelpCenterSettings}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/help-center/article"
-            pageName="Settings"
-            component={NewArticle}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/ticket-settings"
-            pageName="Settings"
-            component={TicketSettings}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/email"
-            pageName="Settings"
-            component={SettingsEmail}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/email/:action"
-            pageName="Settings"
-            component={SettingsEmail}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/integrations"
-            pageName="Integration Settings"
-            component={SocialIntegrations}
-          />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/users"
+                  pageName="Settings"
+                  component={UserList}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/teams"
+                  pageName="Settings"
+                  component={GroupList}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/roles"
+                  pageName="Settings"
+                  component={RoleList}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/roles/new"
+                  pageName="Settings"
+                  component={NewRole}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/forms"
+                  pageName="Settings"
+                  component={Form}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/users/personal-info-settings"
+                  pageName="Settings"
+                  component={UserPersonal}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/fields"
+                  pageName="Settings"
+                  component={Fields}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/help-center"
+                  pageName="Settings"
+                  component={HelpCenterSettings}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/help-center/article"
+                  pageName="Settings"
+                  component={NewArticle}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/ticket-settings"
+                  pageName="Settings"
+                  component={TicketSettings}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/email"
+                  pageName="Settings"
+                  component={SettingsEmail}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/email/:action"
+                  pageName="Settings"
+                  component={SettingsEmail}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/integrations"
+                  pageName="Integration Settings"
+                  component={SocialIntegrations}
+                />
 
-          <SettingsLayoutRoute
-            exact
-            path="/settings/notifications"
-            pageName="Settings"
-            component={NotificationSettings}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/notifications/email-template"
-            pageName="Settings"
-            component={NewEmailTemplate}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/canned-responses"
-            pageName="Settings"
-            component={CannedResponsesSettings}
-          />
-          <SettingsLayoutRoute
-            exact
-            path="/settings/canned-response/new-response"
-            pageName="Settings"
-            component={NewCannedResponse}
-          />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/notifications"
+                  pageName="Settings"
+                  component={NotificationSettings}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/notifications/email-template"
+                  pageName="Settings"
+                  component={NewEmailTemplate}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/canned-responses"
+                  pageName="Settings"
+                  component={CannedResponsesSettings}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/canned-response/new-response"
+                  pageName="Settings"
+                  component={NewCannedResponse}
+                />
+              </SocketDataProvider>
+            </LayoutProvider>
+          </UserDataProvider>
+
           {/* 
           ...
           ..
@@ -377,13 +389,8 @@ function App(props) {
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <NotificationContainer />
-        <UserDataProvider>
-          <LayoutProvider>
-            <SocketDataProvider>
-              <SiteRouter />
-            </SocketDataProvider>
-          </LayoutProvider>
-        </UserDataProvider>
+
+        <SiteRouter />
       </PersistGate>
     </Provider>
   );

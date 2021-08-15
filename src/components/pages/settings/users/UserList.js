@@ -11,6 +11,8 @@ import CreateUserModal from './components/CreateUserModal';
 import ImportUserModal from './components/ImportUserModal';
 import InviteUserModal from './components/InviteUserModal';
 import {ReactComponent as DotSvg} from '../../../../assets/icons/dots.svg';
+import {ReactComponent as DeleteSvg} from '../../../../assets/icons/Delete.svg';
+import {ReactComponent as DeleteGreySvg} from '../../../../assets/icons/Delete-grey.svg';
 import {ReactComponent as ArrowDownSvg} from '../../../../assets/icons/arrow-down.svg';
 import {Link} from 'react-router-dom';
 // import moment from 'moment';,
@@ -153,7 +155,7 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgen
                                     {
                                         title: 'Name',
                                         field: 'name',
-                                        render: rowData => <Link to={`#`} style={{ textTransform: 'capitalize' }}>{`${rowData.name}`}</Link>,
+                                        render: rowData => <Link to={`/settings/profile/${rowData.contact.id}`} style={{ textTransform: 'capitalize' }}>{`${rowData.name}`}</Link>,
                                         width: '10%'
                                     }, {
                                         title: 'Email Address',
@@ -176,15 +178,16 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgen
                                     }, {
                                     title: '',
                                     field: 'dropdownAction',
-                                    render: rowData => (<Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
-                                                                <Dropdown.Toggle variant="transparent" size="sm">
-                                                                    <span className="cust-table-dots"><DotSvg/></span>
-                                                                </Dropdown.Toggle>
-                                                                <Dropdown.Menu>
-                                                                    <Dropdown.Item eventKey="1"><Link to="/settings/users/personal-info-settings"><span className="black-text">Edit</span></Link></Dropdown.Item>
-                                                                    <Dropdown.Item eventKey="2"><span className="black-text">Delete</span></Dropdown.Item>
-                                                                </Dropdown.Menu>
-                                                            </Dropdown>)
+                                    render: rowData => (<div><DeleteGreySvg /></div>)
+                                    // render: rowData => (<Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+                                    //                             <Dropdown.Toggle variant="transparent" size="sm">
+                                    //                                 <span className="cust-table-dots"><DotSvg/></span>
+                                    //                             </Dropdown.Toggle>
+                                    //                             <Dropdown.Menu>
+                                    //                                 <Dropdown.Item eventKey="1"><Link to="/settings/users/personal-info-settings"><span className="black-text">Edit</span></Link></Dropdown.Item>
+                                    //                                 <Dropdown.Item eventKey="2"><span className="black-text">Delete</span></Dropdown.Item>
+                                    //                             </Dropdown.Menu>
+                                    //                         </Dropdown>)
                 // render: rowData => (<div><span className="cust-table-dots"><DotSvg/></span></div>)
             }
                                 ]

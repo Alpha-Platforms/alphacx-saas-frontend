@@ -17,6 +17,8 @@ import { NotificationManager } from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import AutomationAction from "./AutomationAction";
 
+import RSelect from "react-select/creatable";
+
 const NewAutomationPolicy = () => {
   let router = useHistory();
   let { policyID } = useParams();
@@ -33,8 +35,10 @@ const NewAutomationPolicy = () => {
   const [showAssign, setShowAssign] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
   const [ticketCategories, setTicketCategories] = useState([]);
+  const [agents, setAgents] = useState([]);
   const [automationAgents, setAutomationAgents] = useState([]);
   const [automationTeams, setAutomationTeams] = useState([]);
+  const [recipients, setRecipients] = useState([]);
   const [newPolicy, setNewPolicy] = useState({
     reminder: {
       agreements: policyID
@@ -128,8 +132,6 @@ const NewAutomationPolicy = () => {
     setPolicyLoading(false);
     if (res?.status === "success") {
       setNewPolicy(res?.data);
-      console.clear();
-      console.log(res?.data);
     } else {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
@@ -146,11 +148,20 @@ const NewAutomationPolicy = () => {
     }
   };
 
+  // function to get the list of all users/agents
+  const getAgents = async () => {
+    const res = await httpGetMain("users");
+    if (res?.status === "success") {
+      setAgents(res?.data?.users);
+    } else {
+      // return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
+
   // function to update an Automation if in edit mode
   const updateAutomationPolicy = async () => {
     setPolicyLoading(true);
-    console.clear();
-    console.log(newPolicy);
+
     const body = {
       name: newPolicy.name,
 
@@ -164,7 +175,6 @@ const NewAutomationPolicy = () => {
     const res = await httpPatchMain(`sla/${policyID}`, body);
     setPolicyLoading(false);
     if (res?.status === "success") {
-      console.log(res);
       router.push("/settings/automation");
     } else {
       console.error(res.er);
@@ -175,8 +185,7 @@ const NewAutomationPolicy = () => {
   // function to create an Automation
   const submitAutomationPolicy = async () => {
     setPolicyLoading(true);
-    console.clear();
-    console.log(newPolicy);
+
     const body = {
       name: newPolicy.name,
 
@@ -190,7 +199,6 @@ const NewAutomationPolicy = () => {
     const res = await httpPostMain("sla", body);
     setPolicyLoading(false);
     if (res?.status === "success") {
-      console.log(res);
       router.push("/settings/automation");
     } else {
       console.error(res.er);
@@ -198,6 +206,7 @@ const NewAutomationPolicy = () => {
     }
   };
   useEffect(() => {
+    getAgents();
     getTicketCategories();
     if (policyID) {
       setPolicyLoading(true);
@@ -241,7 +250,7 @@ const NewAutomationPolicy = () => {
             <form action="">
               <div className="form-group mt-3">
                 <label for="slaName" className="f-14 mb-1">
-                  Automation Name
+                  Title
                 </label>
                 <input
                   type="text"
@@ -307,6 +316,34 @@ const NewAutomationPolicy = () => {
                   )}
                 </div>
               </div>
+
+              {/* RECIPIENTS */}
+              <div className="form-group mt-3">
+                <label for="ticket" className="f-14 mb-1">
+                  Recipients
+                </label>
+
+                <RSelect
+                  className="rselectfield"
+                  style={{ fontSize: "12px" }}
+                  onChange={(value, actionMeta) => {
+                    setRecipients(value);
+                    // if $recipients is buggy use $value
+                  }}
+                  isClearable={false}
+                  isMulti
+                  options={
+                    // populate 'options' prop from $agents, with names remapped
+                    agents.map((item) => {
+                      return {
+                        value: item.firstname + " " + item.lastname,
+                        label: item.firstname + " " + item.lastname,
+                      };
+                    })
+                  }
+                />
+              </div>
+
               {/* <div className="form-group mt-3">
                 <div className="d-flex">
                   <label for="slaName" className="f-14 mb-1 ">
@@ -410,21 +447,36 @@ const NewAutomationPolicy = () => {
               </div> */}
 
               <div className="Resolution mt-3">
-                <p className="my-4">Automation Due Days</p>
-                <div className="resolution-form mt-3 mb-4 d-flex align-items-center f-12 ">
+                <label for="ticket" className="f-14 mb-1">
+                  Duration
+                </label>
+
+                {/* resolution-form mt-3 mb-4 d-flex align-items-center f-12  */}
+                <div className="mb-3 d-flex align-items-center">
                   <input
                     type="number"
                     max={30}
-                    className="form-control form-control-sm w-100"
+                    className="number-input form-control form-control-sm"
                     id="slaName"
                     name="due_date"
                     value={newPolicy?.due_date || 0}
                     onChange={handlechange}
                   />
+                  <span className="ps-2 me-2">Days</span>
+                  {/* <input
+                    type="number"
+                    max={30}
+                    className="number-input form-control form-control-sm"
+                    id="slaName"
+                    name="due_date"
+                    value={newPolicy?.due_date || 0}
+                    onChange={handlechange}
+                  />
+                  <span className="ps-2 me-2">Days</span> */}
                 </div>
               </div>
               <div id="resolution-wrapper mt-4">
-                <label for="ticket" className="f-14">
+                <label for="ticket" className="d-flex p-2 acx-bg-blue-light-30">
                   Actions
                 </label>
                 {/* <div className="card my-4 f-12"> */}

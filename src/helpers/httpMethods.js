@@ -3,6 +3,7 @@ import axios from "axios";
 import { NotificationManager } from "react-notifications";
 
 export let baseUrl = "https://kustormar-auth.herokuapp.com/v1";
+// export let baseUrlMain = "https://d3437b953f42.ngrok.io/v1";
 export let baseUrlMain = "https://kustormar-staging.herokuapp.com/v1";
 let token = localStorage.getItem("token");
 // const token = localStorage.getItem("DomainToken")
@@ -247,7 +248,7 @@ export const httpDelete = async (url, postBody) => {
   }
   try {
     const res = await axios.delete(`${baseUrl}/api/${url}`, postBody, {
-      headers: { Authorization: `Bearer ${localStorage.token}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res;
   } catch (error) {

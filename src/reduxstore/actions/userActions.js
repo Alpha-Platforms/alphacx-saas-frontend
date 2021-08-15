@@ -3,6 +3,10 @@ import * as types from '../types';
 import { config } from '../../config/keys';
 import { returnErrors } from './errorActions';
 import {userTokenConfig} from '../../helper';
+import { NotificationManager } from 'react-notifications';
+import store from '../store';
+
+const {getState} = store;
 
 export const getUsers = () => (dispatch, getState) => {
 	if (!navigator.onLine) {
@@ -51,4 +55,22 @@ export const setUsersLoading = () => {
 	return {
 		type: types.USERS_LOADING
 	}
+}
+
+// invalid redux action
+export const updateUser = async (updatedUser) => {
+    if (!navigator.onLine) {
+        return NotificationManager.error('Please check your internet', 'Opps!', 3000);
+    }
+
+    //Request body
+    const body = JSON.stringify(updatedUser);
+
+    try {
+        const res = await axios.patch(`${config.stagingBaseUrl}/users/${updatedUser.id}`, body, userTokenConfig(getState));
+        return res.data;
+    } catch (err) {
+        NotificationManager.error(err?.response?.data.message, 'Error');
+        return err?.response?.data;
+    }
 }

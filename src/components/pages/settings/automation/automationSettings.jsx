@@ -60,7 +60,7 @@ const AutomationSettings = () => {
       width: "100px",
     },
     {
-      title: "Status",
+      title: "",
       field: "status",
       width: "50px",
     },
@@ -77,13 +77,16 @@ const AutomationSettings = () => {
           </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item eventKey="1">
-              <Link
-                to={`/settings/automation/edit/${
-                  automationPolicies[rowData.tableData.id].id
-                }`}
+              <span
+                className="black-text"
+                onClick={() => {
+                  window.location.href = `/settings/automation/edit/${
+                    automationPolicies[rowData.tableData.id].id
+                  }`;
+                }}
               >
-                <span className="black-text">Edit</span>
-              </Link>
+                Edit
+              </span>
             </Dropdown.Item>
             <Dropdown.Item eventKey="2">
               <span
@@ -147,7 +150,7 @@ const AutomationSettings = () => {
   const deleteAutomation = async () => {
     SetOpenDeleteActionModal(false);
     setPolicyLoading(true);
-    const res = await httpDelete("sla");
+    const res = await httpDelete("sla", { agreementId: deleteUrl });
     setPolicyLoading(false);
     if (res?.status === "success") {
       NotificationManager.success(res.data.message, "Success", 4000);
@@ -259,24 +262,17 @@ const AutomationSettings = () => {
                   icons={tableIcons}
                   data={automationPolicies.map(({ name, id }, i) => ({
                     name,
-                    status: (
-                      <div className="form-check form-switch d-flex align-items-center">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id="security-switch"
-                          checked
-                          // onChange={(e) => {
-                          //   console.log(e.target.checked);
-                          //   let policies = SLApolicies;
-                          //   policies[i].active = e.target.checked;
-                          //   policies[i].name = "checked";
-                          //   console.log(policies);
-                          //   setSLApolicies(policies);
-                          // }}
-                        />
-                      </div>
-                    ),
+                    // status: (
+                    //   <div className="form-check form-switch d-flex align-items-center">
+                    //     {/* <input
+                    //       className="form-check-input"
+                    //       type="checkbox"
+                    //       id="security-switch"
+                    //       checked
+
+                    //     /> */}
+                    //   </div>
+                    // ),
                   }))}
                   options={{
                     search: true,

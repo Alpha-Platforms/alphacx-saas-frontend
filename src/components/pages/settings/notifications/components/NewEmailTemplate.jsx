@@ -69,6 +69,9 @@ const NewEmailTemplate = () => {
                   type="text"
                   className="form-control form-control-sm"
                   id="slaName"
+                  name="name"
+                  value={newTemplate.name || ""}
+                  onChange={handleChange}
                 />
               </div>
 
@@ -76,7 +79,13 @@ const NewEmailTemplate = () => {
                 <label for="ticket" className="f-14 mb-1">
                   Notification Category
                 </label>
-                <select className="form-select form-select-sm f-14" id="ticket">
+                <select
+                  className="form-select form-select-sm f-14"
+                  id="ticket"
+                  name="category"
+                  value={newTemplate.category || ""}
+                  onChange={handleChange}
+                >
                   <option value="">Select category</option>
                   <option value="email">Email</option>
                   <option value="whatsapp">WhatsApp</option>
@@ -91,6 +100,9 @@ const NewEmailTemplate = () => {
                   type="text"
                   className="form-control form-control-sm"
                   id="slaName"
+                  name="subject"
+                  value={newTemplate.subject || ""}
+                  onChange={handleChange}
                 />
               </div>
               <div className="form-group mt-3 mb-4">

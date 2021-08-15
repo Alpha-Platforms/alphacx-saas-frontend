@@ -26,13 +26,14 @@ const AutomationAction = ({
   };
 
   const deleteAction = () => {
+    SetOpenDeleteActionModal(false);
     let agreements = newPolicy.reminder.agreements;
-    console.log(agreements);
+
     if (agreements.length === 1) {
       return;
     }
     let newAgreements = agreements.splice(index - 1, 1);
-    console.log("splice", newAgreements);
+
     setNewPolicy({
       ...newPolicy,
       reminder: {
@@ -56,9 +57,6 @@ const AutomationAction = ({
       ...newPolicy,
       reminder: { ...newPolicy.reminder, agreements },
     });
-
-    console.log(agreements);
-    // console.log(message);,
   };
 
   useEffect(() => {
@@ -68,9 +66,6 @@ const AutomationAction = ({
       ...newPolicy,
       reminder: { ...newPolicy.reminder, agreements },
     });
-
-    console.log(message);
-    console.log(agreements);
   }, [message]);
   return (
     <>
@@ -97,7 +92,7 @@ const AutomationAction = ({
           </div>
         </div>
       </Modal>
-      <div className="card my-4 f-12">
+      <div className="card mt-2 mb-4">
         <div className="card-body border-0 p-3 automation-action">
           <div className="d-flex  flex-column assign">
             <label for="assign" className="mb-n1 me-4">
@@ -139,6 +134,7 @@ const AutomationAction = ({
               id="hour"
               name="hours"
               value={agreement?.hours || 0}
+              onChange={handleChange}
             >
               <option>0</option>
               <option>1</option>
@@ -161,8 +157,8 @@ const AutomationAction = ({
               before due date
             </label>
           </div>
-          <div className="form-group mt-3 mb-5">
-            <label for="slaName" className="f-14 mb-1">
+          <div className="form-group mt-3">
+            <label for="slaName" className="mb-1">
               Subject
             </label>
             <input
@@ -174,8 +170,8 @@ const AutomationAction = ({
               onChange={handleChange}
             />
           </div>
-          <div className="form-group mt-3 mb-5">
-            <label className="f-14 mb-1">Available Placeholders</label>
+          <div className="form-group mt-3">
+            <label className="mb-1">Available Placeholders</label>
             <div className="available-placeholders">
               {availablePlaceholders.map((item, i) => (
                 <p key={i} onClick={() => insertPlaceholder(i)}>
@@ -185,7 +181,7 @@ const AutomationAction = ({
             </div>
           </div>
           <div className="form-group mt-3">
-            <label className="f-14 mb-1">Message</label>
+            <label className="mb-1">Message</label>
 
             <EditorBox
               text={message || ""}
