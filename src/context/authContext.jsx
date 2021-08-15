@@ -32,11 +32,13 @@ export const AuthProvider = (props) => {
     let token = localStorage.getItem("token");
     if (token) {
       if (jwtDecode(token).exp < Date.now() / 1000) {
+        localStorage.clear();
         window.location.href = "/login";
       } else {
         setExpiredSession(false);
       }
     } else {
+      localStorage.clear();
       window.location.href = "/login";
     }
   };

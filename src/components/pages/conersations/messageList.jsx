@@ -13,8 +13,9 @@ export default function MessageList({
   setTicketId,
   filterChat,
   filterTicketsState,
+  activeChat,
+  setActiveChat,
 }) {
-  const [activeChat, setActiveChat] = useState(1);
   const [renderTicket, setRenderTicket] = useState([]);
   useEffect(() => {
     checkRender();
@@ -88,9 +89,7 @@ export default function MessageList({
                     style={{
                       background: data.status.background_color,
                       color: data.status.forecolor,
-                      // border: `1px solid ${data.status.forecolor}`,
                     }}
-                    // className={`chMslist${data.channel}`}
                   >
                     {data.channel}
                   </div>
@@ -99,7 +98,6 @@ export default function MessageList({
                     style={{
                       background: data.status.background_color,
                       color: data.status.forecolor,
-                      // border: `1px solid ${data.status.forecolor}`,
                     }}
                   >
                     {data.status.status}
@@ -107,7 +105,12 @@ export default function MessageList({
                 </div>
               </div>
               <div className="message-user-time">
-                <p className="msgCountCon">{data?.__meta__?.history_count}</p>
+                {data?.__meta__?.history_count == 0 ? (
+                  ""
+                ) : (
+                  <p className="msgCountCon">{data?.__meta__?.history_count}</p>
+                )}
+
                 <p className="msGtime">{timeFormater(data.updated_at)}</p>
               </div>
             </div>

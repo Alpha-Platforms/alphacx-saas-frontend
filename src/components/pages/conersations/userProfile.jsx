@@ -8,19 +8,16 @@ import {
 } from "../../../assets/images/svgs";
 import userImg from "../../../assets/imgF/user.png";
 import { capitalize } from "@material-ui/core";
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { Fragment } from "react";
-import {ReactComponent as TicketAssignedSvg} from '../../../assets/icons/ticketassigned.svg';
-import {ReactComponent as TicketIdSvg} from '../../../assets/icons/ticketid.svg';
-import TicketIdIcon from '../../../assets/icons/ticketid.svg'; 
-import TicketPriorityIcon from '../../../assets/icons/ticketpriority.svg'; 
-import TicketStageIcon from '../../../assets/icons/ticketstage.svg'; 
-import TicketCategoriesIcon from '../../../assets/icons/Ticketcategory.svg'; 
-import TicketDueDateIcon from '../../../assets/icons/ticketduedate.svg'; 
-import TicketSourceIcon from '../../../assets/icons/ticketsource.svg'; 
-
-
-
+import { ReactComponent as TicketAssignedSvg } from "../../../assets/icons/ticketassigned.svg";
+import { ReactComponent as TicketIdSvg } from "../../../assets/icons/ticketid.svg";
+import TicketIdIcon from "../../../assets/icons/ticketid.svg";
+import TicketPriorityIcon from "../../../assets/icons/ticketpriority.svg";
+import TicketStageIcon from "../../../assets/icons/ticketstage.svg";
+import TicketCategoriesIcon from "../../../assets/icons/Ticketcategory.svg";
+import TicketDueDateIcon from "../../../assets/icons/ticketduedate.svg";
+import TicketSourceIcon from "../../../assets/icons/ticketsource.svg";
 
 export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
   const [tags, setTags] = useState([
@@ -35,7 +32,13 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
     <div style={{ color: "#1E90FF", background: "#E3F1FF" }}>Billing</div>,
   ]);
 
-  const CircleIcon = (props) => <span style={{ backgroundColor: props.color }} className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
+  const CircleIcon = (props) => (
+    <span style={{ backgroundColor: props.color }} className="cust-grey-circle">
+      <img src={props.icon} alt="" className="pe-none" />
+    </span>
+  );
+
+  const sortTags = () => {};
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
@@ -53,201 +56,275 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
               //   )} ${UserInfo?.lastname?.slice(0, 1)}`}</p>
               // </div>
             )}
-{/* 
+            {/* 
             <p className="font-weight-bold"><b>{`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(
               ticket[0]?.customer?.lastname
             )}`}</b></p> */}
-            <h6 className="mb-0 text-capitalize mt-2 pb-0"><b>{`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(
-              ticket[0]?.customer?.lastname
-            )}`}</b></h6>
-            {isTicketDetails && <Fragment>
-              <p className="mb-0 pb-0 pt-1 f-12">{UserInfo?.email ? UserInfo?.email : "unavailable"}</p>
-              <p className="pt-1 f-12">{UserInfo?.phoneNumber ? UserInfo?.phoneNumber : "unavailable"}</p>
-            </Fragment>}
+            <h6
+              style={{ color: "#6c757d" }}
+              className="mb-0 text-capitalize mt-2 pb-0"
+            >
+              <Link to="/settings/users">
+                <b>{`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(
+                  ticket[0]?.customer?.lastname
+                )}`}</b>
+              </Link>
+            </h6>
+            {isTicketDetails && (
+              <Fragment>
+                <p className="mb-0 pb-0 pt-1 f-12">
+                  {UserInfo?.email ? UserInfo?.email : "unavailable"}
+                </p>
+                <p className="pt-1 f-12">
+                  {UserInfo?.phoneNumber
+                    ? UserInfo?.phoneNumber
+                    : "unavailable"}
+                </p>
+              </Fragment>
+            )}
             {/* <p>{` Marvin McKinney`}</p> */}
           </div>
 
           <div className="userProfileAboutCovers">
-            {!isTicketDetails ? <Fragment>
-            <div className="aboutUserColConv">
-              <p>
-                {" "}
-                <span className="psvgIcon">
-                  <UserProfileIcon1 />
-                </span>{" "}
-                Ticket ID
-              </p>
+            {!isTicketDetails ? (
+              <Fragment>
+                <div className="aboutUserColConv">
+                  <p>
+                    {" "}
+                    <span className="psvgIcon">
+                      <UserProfileIcon1 />
+                    </span>{" "}
+                    Ticket ID
+                  </p>
 
-              <p style={{ textTransform: "uppercase" }}>
-                #{ticket[0]?.id.slice(0, 8)}
-              </p>
-            </div>
+                  <p style={{ textTransform: "uppercase" }}>
+                    <Link to={`tickets/${ticket[0]?.id}`}>
+                      #{ticket[0]?.id.slice(ticket[0]?.id?.length - 8)}
+                    </Link>
+                  </p>
+                </div>
 
-            <div className="aboutUserColConv">
-              <p>
-                {" "}
-                <span className="psvgIcon">
-                  {ticket[0]?.assignee?.avatar ? (
-                    <img
-                      src={ticket[0]?.assignee?.avatar}
-                      alt=""
-                      style={{
-                        width: "30px",
-                        height: "30px",
-                        borderRadius: "50%",
-                        marginRight: "2px",
-                      }}
-                    />
-                  ) : (
-                    <div
-                      className="userProfilePicConNoImg"
-                      style={{
-                        width: "30px",
-                        height: "30px",
-                        borderRadius: "50%",
-                        marginRight: "19px",
-                      }}
-                    >
-                      <span>{`${ticket[0]?.assignee?.firstname?.slice(
-                        0,
-                        1
-                      )} ${ticket[0]?.assignee?.lastname?.slice(0, 1)}`}</span>
-                    </div>
-                  )}
-                </span>{" "}
-                Assigned to
-              </p>
-              {/* <p>
+                <div className="aboutUserColConv">
+                  <p>
+                    {" "}
+                    <span className="psvgIcon">
+                      {ticket[0]?.assignee?.avatar ? (
+                        <img
+                          src={ticket[0]?.assignee?.avatar}
+                          alt=""
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            borderRadius: "50%",
+                            marginRight: "2px",
+                          }}
+                        />
+                      ) : (
+                        <div
+                          className="userProfilePicConNoImg"
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            borderRadius: "50%",
+                            marginRight: "19px",
+                          }}
+                        >
+                          <span>{`${ticket[0]?.assignee?.firstname?.slice(
+                            0,
+                            1
+                          )} ${ticket[0]?.assignee?.lastname?.slice(
+                            0,
+                            1
+                          )}`}</span>
+                        </div>
+                      )}
+                    </span>{" "}
+                    Assigned to
+                  </p>
+                  {/* <p>
               {UserInfo?.phoneNumber ? UserInfo?.phoneNumber : "unavailable"}
             </p> */}
-              <p><Link to="/settings/users">{`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(
-                ticket[0]?.assignee?.lastname
-              )}`}</Link></p>
-            </div>
+                  <p>
+                    <Link to="/settings/users">{`${capitalize(
+                      ticket[0]?.assignee?.firstname
+                    )} ${capitalize(ticket[0]?.assignee?.lastname)}`}</Link>
+                  </p>
+                </div>
 
-            <div className="aboutUserColConv">
-              <p>
-                {" "}
-                <span className="psvgIcon">
-                  <UserProfileIcon2 />
-                </span>{" "}
-                Work Phone
-              </p>
-              {/* <p>
+                <div className="aboutUserColConv">
+                  <p>
+                    {" "}
+                    <span className="psvgIcon">
+                      <UserProfileIcon2 />
+                    </span>{" "}
+                    Work Phone
+                  </p>
+                  {/* <p>
               
             </p> */}
-              <p>{UserInfo?.phoneNumber ? UserInfo?.phoneNumber : "unavailable"}</p>
-            </div>
+                  <p>
+                    {UserInfo?.phoneNumber
+                      ? UserInfo?.phoneNumber
+                      : "unavailable"}
+                  </p>
+                </div>
 
-            <div className="aboutUserColConv">
-              <p>
-                {" "}
-                <span className="psvgIcon">
-                  <UserProfileIcon3 />
-                </span>{" "}
-                Email Address
-              </p>
-              <p>{UserInfo?.email ? UserInfo?.email : "unavailable"}</p>
-            </div>
-
-
-
-
-
-
-            </Fragment> : <Fragment>
-
-
-
-
-            <div className="aboutUserColConv">
-              <p>
-                {" "}
-                <span className="psvgIcon">
-                  {ticket[0]?.assignee?.avatar ? (
-                    <img
-                      src={ticket[0]?.assignee?.avatar}
-                      alt=""
-                      style={{
-                        width: "30px",
-                        height: "30px",
-                        borderRadius: "50%",
-                        marginRight: "2px",
-                      }}
-                    />
-                  ) : (
-                    <div
-                      className="userProfilePicConNoImg"
-                      style={{
-                        width: "30px",
-                        height: "30px",
-                        borderRadius: "50%",
-                        marginRight: "19px",
-                      }}
-                    >
-                      <span>{`${ticket[0]?.assignee?.firstname?.slice(
-                        0,
-                        1
-                      )} ${ticket[0]?.assignee?.lastname?.slice(0, 1)}`}</span>
-                    </div>
-                  )}
-                </span>{" "}
-                Assigned to
-              </p>
-              {/* <p>
+                <div className="aboutUserColConv">
+                  <p>
+                    {" "}
+                    <span className="psvgIcon">
+                      <UserProfileIcon3 />
+                    </span>{" "}
+                    Email Address
+                  </p>
+                  <p>{UserInfo?.email ? UserInfo?.email : "unavailable"}</p>
+                </div>
+              </Fragment>
+            ) : (
+              <Fragment>
+                <div className="aboutUserColConv">
+                  <p>
+                    {" "}
+                    <span className="psvgIcon">
+                      {ticket[0]?.assignee?.avatar ? (
+                        <img
+                          src={ticket[0]?.assignee?.avatar}
+                          alt=""
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            borderRadius: "50%",
+                            marginRight: "2px",
+                          }}
+                        />
+                      ) : (
+                        <div
+                          className="userProfilePicConNoImg"
+                          style={{
+                            width: "30px",
+                            height: "30px",
+                            borderRadius: "50%",
+                            marginRight: "19px",
+                          }}
+                        >
+                          <span>{`${ticket[0]?.assignee?.firstname?.slice(
+                            0,
+                            1
+                          )} ${ticket[0]?.assignee?.lastname?.slice(
+                            0,
+                            1
+                          )}`}</span>
+                        </div>
+                      )}
+                    </span>{" "}
+                    Assigned to
+                  </p>
+                  {/* <p>
               {UserInfo?.phoneNumber ? UserInfo?.phoneNumber : "unavailable"}
             </p> */}
-              <p><Link to="/settings/users">{`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(
-                ticket[0]?.assignee?.lastname
-              )}`}</Link></p>
-            </div>
+                  <p>
+                    <Link to="/settings/users">{`${capitalize(
+                      ticket[0]?.assignee?.firstname
+                    )} ${capitalize(ticket[0]?.assignee?.lastname)}`}</Link>
+                  </p>
+                </div>
 
-            <ul className="cust-profile-info ps-0">
-                <li className="ms-0">
-                    <div><CircleIcon color="rgba(108, 65, 129, 0.25)" icon={TicketIdIcon}/></div>
+                <ul className="cust-profile-info ps-0">
+                  <li className="ms-0">
                     <div>
-                        <p className="pb-0 mb-0 f-12 text-muted op-9">ID</p>
-                        <p className="text-muted f-13 text-uppercase">#{ticket[0]?.id.slice(0, 8)}</p>
+                      <p className="pb-0 mb-0 f-12 text-muted op-9">ID</p>
+                      <p className="text-muted f-13 text-uppercase">
+                        #{ticket[0]?.id.slice(0, 8)}
+                      </p>
+                      <CircleIcon
+                        color="rgba(108, 65, 129, 0.25)"
+                        icon={TicketIdIcon}
+                      />
                     </div>
-                </li>
-                <li className="ms-0">
-                    <div><CircleIcon color="rgba(244, 13, 13, 0.25)" icon={TicketPriorityIcon}/></div>
                     <div>
-                        <p className="pb-0 mb-0 f-12 text-muted op-9">Priority</p>
-                        <p className="text-muted f-13 text-capitalize">{ticket[0]?.priority?.name}</p>
+                      <p className="pb-0 mb-0 f-12 text-muted op-9">Priority</p>
+                      <p className="text-muted f-13 text-capitalize">
+                        {ticket[0]?.priority?.name}
+                      </p>
                     </div>
-                </li>
-                <li className="ms-0">
-                    <div><CircleIcon color="rgba(7, 150, 247, 0.25)" icon={TicketStageIcon}/></div>
+                  </li>
+                  <li className="ms-0">
                     <div>
-                        <p className="pb-0 mb-0 f-12 text-muted op-9">Stage</p>
-                        <p className="text-muted f-13">{ticket[0]?.status?.status}</p>
+                      <p className="pb-0 mb-0 f-12 text-muted op-9">Stage</p>
+                      <p className="text-muted f-13">
+                        {ticket[0]?.status?.status}
+                      </p>
+                      <CircleIcon
+                        color="rgba(244, 13, 13, 0.25)"
+                        icon={TicketPriorityIcon}
+                      />
                     </div>
-                </li>
-                <li className="ms-0">
-                    <div><CircleIcon color="rgba(255, 159, 67, 0.25)" icon={TicketCategoriesIcon}/></div>
                     <div>
-                        <p className="pb-0 mb-0 f-12 text-muted op-9">Categories</p>
-                        <p className="text-muted f-13">{ticket[0]?.category.name}</p>
+                      <p className="pb-0 mb-0 f-12 text-muted op-9">
+                        Categories
+                      </p>
+                      <p className="text-muted f-13">
+                        {ticket[0]?.category.name}
+                      </p>
                     </div>
-                </li>
-                <li className="ms-0">
-                    <div><CircleIcon color="rgba(247, 37, 133, 0.25)" icon={TicketDueDateIcon}/></div>
+                  </li>
+                  <li className="ms-0">
                     <div>
-                        <p className="pb-0 mb-0 f-12 text-muted op-9">Due Date</p>
-                        <p className="text-muted f-13">N/A</p>
+                      <p className="pb-0 mb-0 f-12 text-muted op-9">Due Date</p>
+                      <p className="text-muted f-13">N/A</p>
+                      <CircleIcon
+                        color="rgba(7, 150, 247, 0.25)"
+                        icon={TicketStageIcon}
+                      />
                     </div>
-                </li>
-                <li className="ms-0">
-                    <div><CircleIcon color="rgba(17, 63, 100, 0.25)" icon={TicketSourceIcon}/></div>
                     <div>
-                        <p className="pb-0 mb-0 f-12 text-muted op-9">Ticket Source</p>
-                        <p className="text-muted f-13">Email</p>
+                      <p className="pb-0 mb-0 f-12 text-muted op-9">Stage</p>
+                      <p className="text-muted f-13">Pending</p>
                     </div>
-                </li>
-            </ul>
+                  </li>
+                  <li className="ms-0">
+                    <div>
+                      <CircleIcon
+                        color="rgba(255, 159, 67, 0.25)"
+                        icon={TicketCategoriesIcon}
+                      />
+                    </div>
+                    <div>
+                      <p className="pb-0 mb-0 f-12 text-muted op-9">
+                        Categories
+                      </p>
+                      <p className="text-muted f-13">Enquiries</p>
+                    </div>
+                  </li>
+                  <li className="ms-0">
+                    <div>
+                      <CircleIcon
+                        color="rgba(247, 37, 133, 0.25)"
+                        icon={TicketDueDateIcon}
+                      />
+                    </div>
+                    <div>
+                      <p className="pb-0 mb-0 f-12 text-muted op-9">Due Date</p>
+                      <p className="text-muted f-13">31 August, 2021</p>
+                    </div>
+                  </li>
+                  <li className="ms-0">
+                    <div>
+                      <CircleIcon
+                        color="rgba(17, 63, 100, 0.25)"
+                        icon={TicketSourceIcon}
+                      />
+                    </div>
+                    <div>
+                      <p className="pb-0 mb-0 f-12 text-muted op-9">
+                        Ticket Source
+                      </p>
+                      <p className="text-muted f-13">Email</p>
+                    </div>
+                  </li>
+                </ul>
 
-{/*             <div className="aboutUserColConv">
+                {/*             <div className="aboutUserColConv">
               <p>
                 {" "}
                 <span className="psvgIcon">
@@ -316,12 +393,16 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
               <p>Email</p>
             </div>
  */}
-
-            </Fragment>}
+              </Fragment>
+            )}
             <div className="ticktTagsgfs3">
-              {tags.map((data) => {
-                return data;
-              })}
+              {ticket[0]?.tags == null ? (
+                <p style={{ fontSize: "11px" }}>No tag found</p>
+              ) : (
+                ticket[0]?.tags?.map((data) => {
+                  return <div>{data}</div>;
+                })
+              )}
             </div>
           </div>
         </div>
@@ -345,7 +426,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
             );
           })}
         </div> */}
-        {/* <div className="container-timeline">
+        <div className="container-timeline">
           <div className="box">
             <div className="borderContaner">
               <div className="circle"></div>
@@ -395,7 +476,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
               </div>
             </div>
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   );
