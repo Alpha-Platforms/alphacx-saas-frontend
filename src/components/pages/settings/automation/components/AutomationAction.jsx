@@ -26,13 +26,14 @@ const AutomationAction = ({
   };
 
   const deleteAction = () => {
+    SetOpenDeleteActionModal(false);
     let agreements = newPolicy.reminder.agreements;
-    console.log(agreements);
+
     if (agreements.length === 1) {
       return;
     }
     let newAgreements = agreements.splice(index - 1, 1);
-    console.log("splice", newAgreements);
+
     setNewPolicy({
       ...newPolicy,
       reminder: {
@@ -56,9 +57,6 @@ const AutomationAction = ({
       ...newPolicy,
       reminder: { ...newPolicy.reminder, agreements },
     });
-
-    console.log(agreements);
-    // console.log(message);,
   };
 
   useEffect(() => {
@@ -68,9 +66,6 @@ const AutomationAction = ({
       ...newPolicy,
       reminder: { ...newPolicy.reminder, agreements },
     });
-
-    console.log(message);
-    console.log(agreements);
   }, [message]);
   return (
     <>
@@ -139,6 +134,7 @@ const AutomationAction = ({
               id="hour"
               name="hours"
               value={agreement?.hours || 0}
+              onChange={handleChange}
             >
               <option>0</option>
               <option>1</option>
@@ -188,7 +184,6 @@ const AutomationAction = ({
             <label className="mb-1">Message</label>
 
             <EditorBox
-              initialText={agreement}
               text={message || ""}
               // textParent={newPolicy}
               textFormat={"plain"}

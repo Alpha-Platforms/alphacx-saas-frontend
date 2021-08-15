@@ -247,8 +247,8 @@ export const httpDelete = async (url, postBody) => {
     );
   }
   try {
-    const res = await axios.delete(`${baseUrl}/api/${url}`, {
-      headers: { Authorization: `Bearer ${localStorage.token}` },
+    const res = await axios.delete(`${baseUrl}/api/${url}`, postBody, {
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res;
   } catch (error) {

@@ -14,12 +14,17 @@ import {
   createTheme,
 } from "@material-ui/core/styles";
 import "../../../../styles/Ticket.css";
-import { httpGetMain } from "../../../../helpers/httpMethods";
+import { httpDelete, httpGetMain } from "../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
+import { Modal } from "react-responsive-modal";
+import ScaleLoader from "react-spinners/ScaleLoader";
 
 const AutomationSettings = () => {
   const [automationPolicies, setAutomationPolicies] = useState([]);
   const [tableMeta, setTableMeta] = useState({});
+  const [deleteUrl, setDeleteUrl] = useState("");
+  const [openDeleteActionModal, SetOpenDeleteActionModal] = useState(false);
+  const [policyLoading, setPolicyLoading] = useState(false);
 
   // const handleStatusToogle = (index) => {
   //   let policies = SLApolicies;
@@ -55,7 +60,7 @@ const AutomationSettings = () => {
       width: "100px",
     },
     {
-      title: "Status",
+      title: "",
       field: "status",
       width: "50px",
     },
@@ -66,28 +71,33 @@ const AutomationSettings = () => {
       render: (rowData) => (
         <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
           <Dropdown.Toggle variant="transparent" size="sm">
-            <span
-              className="cust-table-dots"
-              onClick={() => {
-                console.clear();
-                console.log("row dats", rowData);
-              }}
-            >
+            <span className="cust-table-dots">
               <DotSvg />
             </span>
           </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item eventKey="1">
-              <Link
-                to={`/settings/automation/edit/${
-                  automationPolicies[rowData.tableData.id].id
-                }`}
+              <span
+                className="black-text"
+                onClick={() => {
+                  window.location.href = `/settings/automation/edit/${
+                    automationPolicies[rowData.tableData.id].id
+                  }`;
+                }}
               >
-                <span className="black-text">Edit</span>
-              </Link>
+                Edit
+              </span>
             </Dropdown.Item>
             <Dropdown.Item eventKey="2">
-              <span className="black-text">Delete</span>
+              <span
+                className="black-text"
+                onClick={() => {
+                  SetOpenDeleteActionModal(true);
+                  setDeleteUrl(automationPolicies[rowData.tableData.id].id);
+                }}
+              >
+                Delete
+              </span>
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
@@ -134,6 +144,20 @@ const AutomationSettings = () => {
       />
     );
   };
+  // --------------------------
+  // FUnction to delete an automation Policy by ID
+  // --------------------------
+  const deleteAutomation = async () => {
+    SetOpenDeleteActionModal(false);
+    setPolicyLoading(true);
+    const res = await httpDelete("sla", { agreementId: deleteUrl });
+    setPolicyLoading(false);
+    if (res?.status === "success") {
+      NotificationManager.success(res.data.message, "Success", 4000);
+    } else {
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
 
   const getAllAutomation = async () => {
     const res = await httpGetMain("sla");
@@ -153,6 +177,38 @@ const AutomationSettings = () => {
 
   return (
     <div className="help-center-settings automation-settings">
+      {policyLoading && (
+        <div
+          className={`cust-table-loader ${
+            policyLoading && "add-loader-opacity"
+          }`}
+        >
+          <ScaleLoader loading={policyLoading} color={"#006298"} />
+        </div>
+      )}
+      <Modal
+        open={openDeleteActionModal}
+        onClose={() => SetOpenDeleteActionModal(false)}
+        center
+      >
+        <div className="p-5 w-100">
+          <h6 className="mb-5">Are you sure you want to delete this Policy?</h6>
+          <div className="float-end mb-5">
+            <a
+              className="btn btn-sm f-12 bg-outline-custom cancel px-4"
+              onClick={() => SetOpenDeleteActionModal(false)}
+            >
+              Cancel
+            </a>
+            <a
+              className="btn btn-sm ms-2 f-12 bg-custom px-4"
+              onClick={deleteAutomation}
+            >
+              Confirm
+            </a>
+          </div>
+        </div>
+      </Modal>
       <div className="card card-body bg-white border-0 mt-4">
         <div id="mainContentHeader">
           <h6 className="text-muted f-14">
@@ -206,24 +262,17 @@ const AutomationSettings = () => {
                   icons={tableIcons}
                   data={automationPolicies.map(({ name, id }, i) => ({
                     name,
-                    status: (
-                      <div className="form-check form-switch d-flex align-items-center">
-                        <input
-                          className="form-check-input"
-                          type="checkbox"
-                          id="security-switch"
-                          checked
-                          // onChange={(e) => {
-                          //   console.log(e.target.checked);
-                          //   let policies = SLApolicies;
-                          //   policies[i].active = e.target.checked;
-                          //   policies[i].name = "checked";
-                          //   console.log(policies);
-                          //   setSLApolicies(policies);
-                          // }}
-                        />
-                      </div>
-                    ),
+                    // status: (
+                    //   <div className="form-check form-switch d-flex align-items-center">
+                    //     {/* <input
+                    //       className="form-check-input"
+                    //       type="checkbox"
+                    //       id="security-switch"
+                    //       checked
+
+                    //     /> */}
+                    //   </div>
+                    // ),
                   }))}
                   options={{
                     search: true,

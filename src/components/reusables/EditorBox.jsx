@@ -76,7 +76,9 @@ const EditorBox = ({
       ContentState.createFromText(text)
     );
     setEditorState(initialState);
-    setPlaceholder("");
+    if (placeholder) {
+      setPlaceholder("");
+    }
   }, [placeholder]);
   return (
     <div className="editor-Container">
