@@ -9,6 +9,12 @@ export const UserDataContext = createContext();
 export const UserDataProvider = (props) => {
   const [user, setUser] = useState();
   const [count, setCount] = useState(0);
+  const [firstTimeLoad, setFirstTimeLoad] = useState(true);
+  useEffect(() => {
+    if (firstTimeLoad == true) {
+      ValidateToken();
+    }
+  }, [firstTimeLoad]);
 
   useEffect(() => {
     RecallJwt();
@@ -21,25 +27,25 @@ export const UserDataProvider = (props) => {
   // THIS CALLS JWT TOKEN EXP
   // To custantly check if the user token is expired
   const RecallJwt = () => {
-    try {
-      setInterval(async () => {
-        ValidateToken();
-      }, 5000);
-    } catch (e) {
-      console.log(e);
-    }
+    setInterval(async () => {
+      ValidateToken();
+    }, 5000);
   };
 
   const ValidateToken = () => {
     let token = localStorage.getItem("token");
     if (token == undefined || token == null || token == "") {
+      setFirstTimeLoad(false);
       localStorage.clear();
       return (window.location.href = "/");
     }
     if (jwtDecode(token).exp < Date.now() / 1000) {
+      setFirstTimeLoad(false);
       localStorage.clear();
+      setFirstTimeLoad(false);
       return (window.location.href = "/");
     }
+    setFirstTimeLoad(false);
     // console.log("still valid");
   };
 
