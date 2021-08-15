@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { UserDataContext } from "../../../context/userContext";
 import "./conversation.css";
 import { Modal } from "react-responsive-modal";
 import MessageList from "./messageList";
@@ -43,11 +44,9 @@ import pic from "../../../assets/imgF/codeuiandyimg.png";
 import { dateFormater } from "../../helpers/dateFormater";
 import { capitalize } from "@material-ui/core";
 import moment from "moment";
-import RSelect from 'react-select/creatable';
-
+import RSelect from "react-select/creatable";
 
 export default function Conversation() {
-
   const initialState = EditorState.createWithContent(
     ContentState.createFromText("")
   );
@@ -62,14 +61,8 @@ export default function Conversation() {
     },
   ]);
 
-  const {
-    AppSocket,
-    //wsTickets,
-    setWsTicketFilter,
-    wsTicketFilter,
-    // setMsgHistory,
-    // msgHistory,
-  } = useContext(SocketDataContext);
+  const { AppSocket } = useContext(SocketDataContext);
+  const { loading } = useContext(UserDataContext);
   const [loadSelectedMsg, setloadSelectedMsg] = useState("");
   const [tickets, setTickets] = useState([]);
   const [filterTicketsState, setFilterTicketsState] = useState([]);
@@ -113,6 +106,7 @@ export default function Conversation() {
   const [ShowAchive, setShowAchive] = useState(false);
   const [channel, setchannel] = useState("All");
   const [status, setstatus] = useState("All");
+  const [activeChat, setActiveChat] = useState(1);
   useEffect(() => {
     // getTickets();
     sortMsges(msgHistory);
@@ -225,7 +219,20 @@ export default function Conversation() {
   };
 
   const replyTicket = async (reply, attachment) => {
-    console.log(reply);
+    let filterSentTick = tickets.filter((tic) => {
+      return tic.id == singleTicketFullInfo.id;
+    });
+    let filterSentTickAll = tickets.filter((tic) => {
+      return tic.id != singleTicketFullInfo.id;
+    });
+    setActiveChat(1);
+    filterSentTick[0]["__meta__"].history_count = ++filterSentTick[0][
+      "__meta__"
+    ].history_count;
+    filterSentTick[0]["updated_at"] = new Date();
+    const newTicket = [...filterSentTick, ...filterSentTickAll];
+    setTickets(newTicket);
+    console.log(filterSentTick);
     const data = {
       // type: "note",
       response: reply.richText,
@@ -461,16 +468,18 @@ export default function Conversation() {
   };
 
   /* UPDATE MODAL FORM VALUES */
-  const [RSCustomerName, setRSCustomerName] = useState("")
-  const [RSTicketCate, setRSTicketCate] = useState("")
-  const [RSTickeSubject, setRSTickeSubject] = useState("")
-  const [RSTicketStage, setRSTicketStage] = useState("")
-  const [RSTicketPriority, setRSTicketPriority] = useState("")
-  const [RSTicketRemarks, setRSTicketRemarks] = useState("")
-  const [RSTicketAssignedAgent, setRSTicketAssignedAgent] = useState("")
-  const [RSTicketDueDate, setRSTicketDueDate] = useState("")
+  const [RSCustomerName, setRSCustomerName] = useState("");
+  const [RSTicketCate, setRSTicketCate] = useState("");
+  const [RSTickeSubject, setRSTickeSubject] = useState("");
+  const [RSTicketStage, setRSTicketStage] = useState("");
+  const [RSTicketPriority, setRSTicketPriority] = useState("");
+  const [RSTicketRemarks, setRSTicketRemarks] = useState("");
+  const [RSTicketAssignedAgent, setRSTicketAssignedAgent] = useState("");
+  const [RSTicketDueDate, setRSTicketDueDate] = useState("");
 
-  const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(false)
+  const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(
+    false
+  );
 
   return (
     <React.Fragment>
@@ -496,6 +505,7 @@ export default function Conversation() {
                     </MenuItem>
                     <MenuItem value="facebook">Facebook</MenuItem>
                     <MenuItem value="whatsapp">Whatsapp</MenuItem>
+                    <MenuItem value="system">System</MenuItem>
                     <MenuItem value="email">Email</MenuItem>
                     <MenuItem value="liveChat">Live Chat</MenuItem>
                   </Select>
@@ -538,6 +548,8 @@ export default function Conversation() {
               setTicketId={setTicketId}
               filterChat={filterChat}
               filterTicketsState={filterTicketsState}
+              activeChat={activeChat}
+              setActiveChat={setActiveChat}
             />
           </div>
 
@@ -1048,9 +1060,7 @@ export default function Conversation() {
           </div>
 
           <div className="saveTicketModalForm">
-            
             <div className="ticketmodalInput-twoCol">
-
               <div className="ticketmodalInputWrapMain">
                 <label htmlFor="">Customer</label>
                 <input
@@ -1070,17 +1080,17 @@ export default function Conversation() {
 
               <div className="ticketmodalInputWrapMain">
                 <label htmlFor="">Category</label>
-                <RSelect className="rselectfield"
+                <RSelect
+                  className="rselectfield"
                   style={{ fontSize: "12px" }}
-                  onChange={ (value, actionMeta) => {
+                  onChange={(value, actionMeta) => {
                     setRSTicketCate(value);
                   }}
                   isClearable={false}
-                  isMulti
                   options={
                     // populate 'options' prop from $Category, with names remapped
-                    Category.map(data => {
-                      return {value: data.name,label: data.name}
+                    Category.map((data) => {
+                      return { value: data.name, label: data.name };
                     })
                   }
                 />
@@ -1100,23 +1110,21 @@ export default function Conversation() {
               </div>
             </div>
 
-
             <div className="ticketmodalInput-twoCol">
-
               <div className="ticketmodalInputWrapMain">
                 <label htmlFor="">Stage</label>
-                <RSelect className="rselectfield"
+                <RSelect
+                  className="rselectfield"
                   style={{ fontSize: "12px" }}
-                  onChange={ (value, actionMeta) => {
+                  onChange={(value, actionMeta) => {
                     setRSTicketStage(value);
                   }}
                   isClearable={false}
-
                   options={
                     // populate 'options' prop from $Category, with names remapped
                     // Andy, replace Category below with whichever const holds list of priorities
-                    Statues.map(data => {
-                      return {value: data.name,label: data.status}
+                    Statues.map((data) => {
+                      return { value: data.name, label: data.status };
                     })
                   }
                 />
@@ -1124,23 +1132,22 @@ export default function Conversation() {
 
               <div className="ticketmodalInputWrapMain">
                 <label htmlFor="">Priority</label>
-                <RSelect className="rselectfield"
+                <RSelect
+                  className="rselectfield"
                   style={{ fontSize: "12px" }}
-                  onChange={ (value, actionMeta) => {
+                  onChange={(value, actionMeta) => {
                     setRSTicketStage(value);
                   }}
                   isClearable={false}
-
                   options={
                     // populate 'options' prop from $Statues, with names remapped
-                    Category.map(data => {
-                      return {value: data.name,label: data.name}
+                    Category.map((data) => {
+                      return { value: data.name, label: data.name };
                     })
                   }
                 />
               </div>
             </div>
-            
 
             <div className="descriptionWrap">
               <label htmlFor="">Remarks</label>
@@ -1152,108 +1159,116 @@ export default function Conversation() {
                 style={{ fontSize: "12px", padding: "7px" }}
               ></textarea>
             </div>
-              
-            <p className="btn mt-3 p-0 text-start" 
-            role="button"
-              style={{ fontSize: "0.8rem", fontWeight: "bold", marginBottom: 0, color: "#006298!important" }}
-              onClick={() => setIsAdditionalOptionVisible(v => !v)}>Additional Options</p>
 
-            { isAdditionalOptionVisible && (
+            <p
+              className="btn mt-3 p-0 text-start"
+              role="button"
+              style={{
+                fontSize: "0.8rem",
+                fontWeight: "bold",
+                marginBottom: 0,
+                color: "#006298!important",
+              }}
+              onClick={() => setIsAdditionalOptionVisible((v) => !v)}
+            >
+              Additional Options
+            </p>
 
-            <div className="additional-options">
-              <div className="ticketmodalInput-OneCol">
-                <div className="ticketmodalInputWrapMainOne">
-                  <label htmlFor="">Assigned To</label>
-                  <input
-                    type="text"
-                    value={`${saveTicket.subject} `}
-                    type="text"
-                    disabled
-                    style={{ fontSize: "12px" }}
+            {isAdditionalOptionVisible && (
+              <div className="additional-options">
+                <div className="ticketmodalInput-OneCol">
+                  <div className="ticketmodalInputWrapMainOne">
+                    <label htmlFor="">Assigned To</label>
+                    <input
+                      type="text"
+                      value={`${saveTicket.subject} `}
+                      type="text"
+                      disabled
+                      style={{ fontSize: "12px" }}
+                    />
+                  </div>
+                </div>
+
+                <div className="ticketmodalInput-twoCol">
+                  <div
+                    className="ticketmodalInputWrapMain"
+                    style={{ width: "100%" }}
+                  >
+                    <label htmlFor="">Ticket Due Date</label>
+                    <div style={{ display: "flex", gap: "1rem" }}>
+                      <div className="thirdselects">
+                        <RSelect
+                          className="rselectfield"
+                          style={{ fontSize: "12px" }}
+                          onChange={(value, actionMeta) => {
+                            setRSTicketStage(value);
+                          }}
+                          isClearable={false}
+                          options={[
+                            { value: 1, label: 1 },
+                            { value: 2, label: 2 },
+                            { value: 3, label: 3 },
+                            { value: 4, label: 4 },
+                            { value: 5, label: 5 },
+                            { value: 6, label: 6 },
+                            { value: 7, label: 7 },
+                          ]}
+                        />
+                        <label htmlFor="">Days</label>
+                      </div>
+                      <div className="thirdselects">
+                        <RSelect
+                          className="rselectfield"
+                          style={{ fontSize: "12px" }}
+                          onChange={(value, actionMeta) => {
+                            setRSTicketStage(value);
+                          }}
+                          isClearable={false}
+                          options={[
+                            { value: 1, label: 1 },
+                            { value: 2, label: 2 },
+                            { value: 3, label: 3 },
+                            { value: 4, label: 4 },
+                            { value: 5, label: 5 },
+                            { value: 6, label: 6 },
+                            { value: 7, label: 7 },
+                          ]}
+                        />
+                        <label htmlFor="">Hours</label>
+                      </div>
+                      <div className="thirdselects">
+                        <RSelect
+                          className="rselectfield"
+                          style={{ fontSize: "12px" }}
+                          onChange={(value, actionMeta) => {
+                            setRSTicketStage(value);
+                          }}
+                          isClearable={false}
+                          options={[
+                            { value: 1, label: 1 },
+                            { value: 2, label: 2 },
+                            { value: 3, label: 3 },
+                            { value: 4, label: 4 },
+                            { value: 5, label: 5 },
+                            { value: 6, label: 6 },
+                            { value: 7, label: 7 },
+                          ]}
+                        />
+                        <label htmlFor="">Minutes</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="">Tags</label>
+                  <RSelect
+                    className="rselectfield mt-4"
+                    onChange={(value, actionMeta) => setRSCustomerName(value)}
+                    isMulti
                   />
                 </div>
               </div>
-
-              <div className="ticketmodalInput-twoCol">
-
-                <div className="ticketmodalInputWrapMain" style={{width: "100%" }}>
-                  <label htmlFor="">Ticket Due Date</label>
-                  <div style={{ display: "flex", gap: "1rem"}}>
-                    <div className="thirdselects">
-                    <RSelect className="rselectfield"
-                      style={{ fontSize: "12px" }}
-                      onChange={ (value, actionMeta) => {
-                        setRSTicketStage(value);
-                      }}
-                      isClearable={false}
-
-                      options={[
-                        {value: 1, label: 1},
-                        {value: 2, label: 2},
-                        {value: 3, label: 3},
-                        {value: 4, label: 4},
-                        {value: 5, label: 5},
-                        {value: 6, label: 6},
-                        {value: 7, label: 7},
-                      ]}
-                    />
-                      <label htmlFor="">Days</label>
-                    </div>
-                    <div className="thirdselects">
-                      <RSelect className="rselectfield"
-                        style={{ fontSize: "12px" }}
-                        onChange={ (value, actionMeta) => {
-                          setRSTicketStage(value);
-                        }}
-                        isClearable={false}
-
-                        options={[
-                          {value: 1, label: 1},
-                          {value: 2, label: 2},
-                          {value: 3, label: 3},
-                          {value: 4, label: 4},
-                          {value: 5, label: 5},
-                          {value: 6, label: 6},
-                          {value: 7, label: 7},
-                        ]}
-                      />
-                      <label htmlFor="">Hours</label>
-                    </div>
-                    <div className="thirdselects">
-                      <RSelect className="rselectfield"
-                        style={{ fontSize: "12px" }}
-                        onChange={ (value, actionMeta) => {
-                          setRSTicketStage(value);
-                        }}
-                        isClearable={false}
-
-                        options={[
-                          {value: 1, label: 1},
-                          {value: 2, label: 2},
-                          {value: 3, label: 3},
-                          {value: 4, label: 4},
-                          {value: 5, label: 5},
-                          {value: 6, label: 6},
-                          {value: 7, label: 7},
-                        ]}
-                      />
-                      <label htmlFor="">Minutes</label>
-                    </div>
-                    
-                  </div>
-                </div>
-              </div>
-
-              <div>
-              <label htmlFor="">Tags</label>
-                <RSelect className="rselectfield mt-4"
-                  onChange={ (value, actionMeta) => setRSCustomerName(value)}
-                  isMulti
-                />
-              </div>
-
-            </div> 
-
             )}
             <div className="closeTicketModdalj">
               <button type="submit">Update</button>

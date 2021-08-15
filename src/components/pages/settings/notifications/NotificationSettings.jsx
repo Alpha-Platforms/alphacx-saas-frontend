@@ -40,7 +40,7 @@ const NotificationSettings = () => {
     {
       title: "Notification Category",
       field: "category",
-      width: "40%",
+      width: "20px",
       // render: (rowData) => (
       //   <Link
       //     to={`/tickets/${rowData.ticketId}`}
@@ -58,6 +58,7 @@ const NotificationSettings = () => {
     {
       title: "Description",
       field: "description",
+      width: "20%",
     },
     {
       title: "",
@@ -184,7 +185,7 @@ const NotificationSettings = () => {
                     name: name,
                     category,
                     subject,
-                    description,
+                    description: description.substring(0, 15) + "...",
                   })
                 )}
                 options={{

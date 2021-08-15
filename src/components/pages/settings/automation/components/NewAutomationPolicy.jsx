@@ -17,7 +17,7 @@ import { NotificationManager } from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import AutomationAction from "./AutomationAction";
 
-import RSelect from 'react-select/creatable';
+import RSelect from "react-select/creatable";
 
 const NewAutomationPolicy = () => {
   let router = useHistory();
@@ -132,8 +132,6 @@ const NewAutomationPolicy = () => {
     setPolicyLoading(false);
     if (res?.status === "success") {
       setNewPolicy(res?.data);
-      console.clear();
-      console.log(res?.data);
     } else {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
@@ -163,8 +161,7 @@ const NewAutomationPolicy = () => {
   // function to update an Automation if in edit mode
   const updateAutomationPolicy = async () => {
     setPolicyLoading(true);
-    console.clear();
-    console.log(newPolicy);
+
     const body = {
       name: newPolicy.name,
 
@@ -178,7 +175,6 @@ const NewAutomationPolicy = () => {
     const res = await httpPatchMain(`sla/${policyID}`, body);
     setPolicyLoading(false);
     if (res?.status === "success") {
-      console.log(res);
       router.push("/settings/automation");
     } else {
       console.error(res.er);
@@ -189,8 +185,7 @@ const NewAutomationPolicy = () => {
   // function to create an Automation
   const submitAutomationPolicy = async () => {
     setPolicyLoading(true);
-    console.clear();
-    console.log(newPolicy);
+
     const body = {
       name: newPolicy.name,
 
@@ -204,7 +199,6 @@ const NewAutomationPolicy = () => {
     const res = await httpPostMain("sla", body);
     setPolicyLoading(false);
     if (res?.status === "success") {
-      console.log(res);
       router.push("/settings/automation");
     } else {
       console.error(res.er);
@@ -328,24 +322,26 @@ const NewAutomationPolicy = () => {
                 <label for="ticket" className="f-14 mb-1">
                   Recipients
                 </label>
-                
-                <RSelect className="rselectfield"
-                  style={{ fontSize: "12px" }}
-                  onChange={ (value, actionMeta) => {
-                    setRecipients(value)
-                    // if $recipients is buggy use $value
 
+                <RSelect
+                  className="rselectfield"
+                  style={{ fontSize: "12px" }}
+                  onChange={(value, actionMeta) => {
+                    setRecipients(value);
+                    // if $recipients is buggy use $value
                   }}
                   isClearable={false}
                   isMulti
                   options={
                     // populate 'options' prop from $agents, with names remapped
-                    agents.map(item => {
-                      return {value: item.firstname +' '+ item.lastname,label: item.firstname +' '+ item.lastname}
+                    agents.map((item) => {
+                      return {
+                        value: item.firstname + " " + item.lastname,
+                        label: item.firstname + " " + item.lastname,
+                      };
                     })
                   }
                 />
-
               </div>
 
               {/* <div className="form-group mt-3">
@@ -454,7 +450,7 @@ const NewAutomationPolicy = () => {
                 <label for="ticket" className="f-14 mb-1">
                   Duration
                 </label>
-                
+
                 {/* resolution-form mt-3 mb-4 d-flex align-items-center f-12  */}
                 <div className="mb-3 d-flex align-items-center">
                   <input
@@ -467,7 +463,7 @@ const NewAutomationPolicy = () => {
                     onChange={handlechange}
                   />
                   <span className="ps-2 me-2">Days</span>
-                  <input
+                  {/* <input
                     type="number"
                     max={30}
                     className="number-input form-control form-control-sm"
@@ -476,7 +472,7 @@ const NewAutomationPolicy = () => {
                     value={newPolicy?.due_date || 0}
                     onChange={handlechange}
                   />
-                  <span className="ps-2 me-2">Days</span>
+                  <span className="ps-2 me-2">Days</span> */}
                 </div>
               </div>
               <div id="resolution-wrapper mt-4">
