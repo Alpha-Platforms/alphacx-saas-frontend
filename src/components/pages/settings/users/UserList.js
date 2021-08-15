@@ -127,7 +127,7 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgen
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu className="f-12">
-                                <Dropdown.Item as="button" onClick={() => setCreateModalShow(true)}>New User</Dropdown.Item>
+                                <Dropdown.Item as="button" onClick={() => setCreateModalShow(true)}><span className="black-text">New User</span></Dropdown.Item>
                                 <Dropdown.Item
                                     className="text-muted"
                                     as="button"

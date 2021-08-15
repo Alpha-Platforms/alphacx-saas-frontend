@@ -145,7 +145,7 @@ const CreateUserModal = ({createModalShow, setCreateModalShow, isAgentCreated, g
                                 <input type="text" className="form-control form-control-sm" id="role"/>
                             </div> */}
                             <div className="form-group mt-3">
-                                <label className="f-12" htmlFor="level">Group (Optional)</label>
+                                <label className="f-12" htmlFor="level">Team (Optional)</label>
                                 {/* <input type="text" className="form-control form-control-sm" id="level"/> */}
                                 <select
                                     name="group"
