@@ -10,6 +10,7 @@ import { useLocation } from "react-router-dom";
 import searchIcon from "../../assets/imgF/Search.png";
 import {HelpIcon} from '../../assets/SvgIconsSet.jsx';
 import CreateTicketModal from '../pages/tickets/CreateTicketModal';
+import CreateCustomerModal from '../pages/customers/CreateCustomerModal';
 
 // --- dropdown component
 function PlusIcon(){
@@ -32,7 +33,8 @@ function DowncaretIcon(){
 
 function Dropdown() {
   const [isVisible, setInvisible] = useState(false);
-  const [createModalShow, setCreateModalShow] = useState(false);
+  const [createTicketModalShow, setCreateTicketModalShow] = useState(false);
+  const [createCustModalShow, setCreateCustModalShow] = useState(false);
 
 
   return (
@@ -76,17 +78,22 @@ function Dropdown() {
                     }}
                   >
                       <li style={{borderBottom: "solid 1px #CCC"}}>
-                        <button className="dd_item btn rounded-0" onClick={() => setCreateModalShow(true)}>Ticket</button>
+                        <button className="dd_item btn rounded-0" onClick={() => setCreateTicketModalShow(true)}>Ticket</button>
                       </li>
                       <li style={{borderBottom: "solid 1px #CCC"}}>
-                        <button className="dd_item btn rounded-0">Contact</button>
+                        <button className="dd_item btn rounded-0" onClick={() => setCreateCustModalShow(true)}>Contact</button>
                       </li>
                   </ul>
               }
               <CreateTicketModal
-                createModalShow={createModalShow}
-                setCreateModalShow={setCreateModalShow}
+                createModalShow={createTicketModalShow}
+                setCreateModalShow={setCreateTicketModalShow}
                 // setChangingRow={setChangingRow}
+              />
+              <CreateCustomerModal 
+                createModalShow={createCustModalShow} 
+                setCreateModalShow={setCreateCustModalShow} 
+                // setChangingRow={setChangingRow} 
               />
           </div>
       
