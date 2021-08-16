@@ -14,13 +14,17 @@ const AutomationAction = ({
   const [openDeleteActionModal, SetOpenDeleteActionModal] = useState(false);
   const [message, setMessage] = useState(agreement.body || "");
   const [placeholder, setPlaceholder] = useState("");
+  const [availableDays, setAvailableDays] = useState();
 
   const addAction = () => {
     setNewPolicy({
       ...newPolicy,
       reminder: {
         ...newPolicy.reminder,
-        agreements: [...newPolicy.reminder.agreements, { days: 0 }],
+        agreements: [
+          ...newPolicy.reminder.agreements,
+          { days: 0, action: "email" },
+        ],
       },
     });
   };
@@ -46,8 +50,8 @@ const AutomationAction = ({
   const insertPlaceholder = (i) => {
     const shortCode = `{{${availablePlaceholders[i]}}}`;
 
-    setMessage(message + " " + shortCode + " ");
-    setPlaceholder(" " + shortCode + " ");
+    setMessage(message + " " + shortCode.toUpperCase() + " ");
+    setPlaceholder(" " + shortCode.toUpperCase() + " ");
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -106,43 +110,36 @@ const AutomationAction = ({
               value={agreement?.action || ""}
               onChange={handleChange}
             >
-              <option value="">Select action</option>
               <option value="email">Email</option>
               <option value="whatsapp">WhatsApp</option>
               <option value="sms">SMS</option>
             </select>
           </div>
           <div className="customer-form-first mt-3 py-4 pr-5 d-flex align-items-center">
-            <select
-              className="form-select form-select-sm me-3"
-              id="day2"
-              name="days"
-              value={agreement?.days || 0}
+            <input
+              type="number"
+              max={30}
+              className="number-input form-control form-control-sm"
+              id="slaName"
+              name="day"
+              value={agreement?.day || 0}
               onChange={handleChange}
-            >
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-            </select>
-            <label for="day" className="mb-n1 me-4">
+            />
+
+            <label for="day" className="ps-2 me-2">
               Days
             </label>
 
-            <select
-              className="form-select form-select-sm me-3"
-              id="hour"
+            <input
+              type="number"
+              max={23}
+              className="number-input form-control form-control-sm"
+              id="slaName"
               name="hours"
               value={agreement?.hours || 0}
               onChange={handleChange}
-            >
-              <option>0</option>
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-            </select>
-            <label for="hour" className="mb-n1 me-4">
+            />
+            <label for="hour" className="ps-2 me-2">
               Hours
             </label>
 
