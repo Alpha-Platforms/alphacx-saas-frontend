@@ -24,7 +24,8 @@ const CreateTicketModal = ({
     getPaginatedTickets,
     resetTicketCreated,
     customers,
-    // setChangingRow
+    // setChangingRow,
+    subCategories
 }) => {
     const [selectedTags,
         setSelectedTags] = useState([]);
@@ -41,7 +42,7 @@ const CreateTicketModal = ({
         setModalInputs] = useState({
         customer: '',
         category: '',
-        priority: '',
+        priority: 'Medium',
         status: '',
         subject: '',
         description: '',
@@ -60,14 +61,14 @@ const CreateTicketModal = ({
             [name]: value
         }));
 
-        if (name === 'category' && modalInputs.category) {
+        /* if (name === 'category' && modalInputs.category) {
             setSubCatLoading(true);
             const res = await getSubCategory(modalInputs.category);
             if (res?.status === 'success') {
                 setSubCatLoading(false);
                 setSubCat(res?.data);
             }
-        }
+        } */
     }
 
     // function handleTagSelection() {
@@ -226,9 +227,9 @@ const CreateTicketModal = ({
             centered
             >
             {/* <Modal.Body> */}
-                <div className="saveTicketWrapModal p-4 pb-2">
-                    <h5 className="mb-3">Create Ticket</h5>
-                    <form className="needs-validation mb-5" onSubmit={e => e.preventDefault()}>
+                <div className="saveTicketWrapModal p-4 pb-1">
+                    <h5 className="mb-3">Create New Ticket</h5>
+                    <form className="needs-validation mb-4" onSubmit={e => e.preventDefault()}>
                         <div className="row">
                             <div className="col-6 mt-2 position-relative">
                                 <label htmlFor="customer" className="form-label">Customer</label>
@@ -284,15 +285,15 @@ const CreateTicketModal = ({
                             </div>
 
                             <div className="col-6 mt-2">
-                                <label htmlFor="category" className="form-label">Sub Category</label>
+                                <label htmlFor="category" className="form-label">Sub Category (optional)</label>
                                 <select
                                     className="form-select"
                                     name="subcategory"
                                     aria-label="Sub Category select"
-                                    disabled={subCatLoading ? true : subCat ? false : true}
+                                    // disabled={subCatLoading ? true : subCat ? false : true}
                                     onChange={handleModalInput}>
                                     <option value=""></option>
-                                    {subCat && subCat.map(({id, category_id, name}) => <option value={id}>{name}</option>)}
+                                    {subCategories && subCategories.map(({id, category_id, name}) => <option value={id}>{name}</option>)}
                                 </select>
                             </div>
 
@@ -434,7 +435,7 @@ const CreateTicketModal = ({
                                 type="button"
                                 onClick={handleTicketCreation}
                                 disabled={creatingTicket}
-                                className="btn btn-sm bg-at-blue-light  py-1 px-4">{creatingTicket ? 'Adding.. Ticket' : 'Add Ticket'}</button>
+                                className="btn btn-sm bg-at-blue-light  py-1 px-4">{creatingTicket ? 'Creating...' : 'Create'}</button>
                         </div>
                     </form>
                 </div>
@@ -445,6 +446,7 @@ const CreateTicketModal = ({
 const mapStateToProps = (state, ownProps) => ({
     priorities: state.priority.priorities,
     categories: state.category.categories,
+    subCategories: state.subCategory.subCategories,
     statuses: state.status.statuses,
     agents: state.agent.agents,
     groups: state.group.groups,
