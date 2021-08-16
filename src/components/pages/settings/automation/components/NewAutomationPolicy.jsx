@@ -36,6 +36,7 @@ const NewAutomationPolicy = () => {
   const [showCategories, setShowCategories] = useState(false);
   const [ticketCategories, setTicketCategories] = useState([]);
   const [agents, setAgents] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [automationAgents, setAutomationAgents] = useState([]);
   const [automationTeams, setAutomationTeams] = useState([]);
   const [recipients, setRecipients] = useState([]);
@@ -49,13 +50,11 @@ const NewAutomationPolicy = () => {
               due_date: 0,
               reminder: {
                 categories: [],
-                assigned_to: {
-                  agent: [],
-                },
+
                 agreement: [
                   {
                     days: 0,
-                    action: "",
+                    action: "email",
                     subject: "",
                     body: "",
                   },
@@ -68,10 +67,31 @@ const NewAutomationPolicy = () => {
 
   const handlechange = (e) => {
     let { name, value } = e.target;
-    if (name === "due_date" && value > 30) {
+    if (name === "days" && value > 30) {
       value = 30;
     }
+    if (name === "days" && value < 0) {
+      value = 0;
+    }
+    if (name === "hours" && value > 23) {
+      value = 23;
+    }
+    if (name === "hours" && value < 0) {
+      value = 0;
+    }
     setNewPolicy({ ...newPolicy, [name]: value });
+  };
+
+  const handleRecipient = (e) => {
+    const { value } = e.target;
+
+    setNewPolicy({
+      ...newPolicy,
+      reminder: {
+        ...newPolicy.reminder,
+        recipient: { type: assignType, id: value },
+      },
+    });
   };
 
   // function to add category id to automation categories array
@@ -93,6 +113,20 @@ const NewAutomationPolicy = () => {
       ...newPolicy,
       reminder: { ...newPolicy.reminder, categories },
     });
+  };
+
+  const convertToMinutes = (days, hours) => {
+    let daysToMins = days * 24;
+    daysToMins *= 60;
+    let hoursToMins = hours * 60;
+
+    let totalMins = daysToMins + hoursToMins;
+    return totalMins;
+  };
+  const convertToDays = (minutes) => {
+    let minuteToDays = minutes / 60;
+    let days = Math.floor(minuteToDays / 24);
+    let hours = minuteToDays % 24;
   };
 
   // const addAgent = (item) => {
@@ -131,7 +165,9 @@ const NewAutomationPolicy = () => {
     const res = await httpGetMain(`sla/${policyID}`);
     setPolicyLoading(false);
     if (res?.status === "success") {
+      convertToDays(res?.data.due_date);
       setNewPolicy(res?.data);
+      setAssignType(res?.data?.reminder?.recipient?.type || "agent");
     } else {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
@@ -150,28 +186,45 @@ const NewAutomationPolicy = () => {
 
   // function to get the list of all users/agents
   const getAgents = async () => {
-    const res = await httpGetMain("users");
+    const res = await httpGetMain("agents");
     if (res?.status === "success") {
-      setAgents(res?.data?.users);
-    } else {
-      // return NotificationManager.error(res?.er?.message, "Error", 4000);
+      setAgents(res?.data);
+    }
+  };
+  // function to get the list of all sgroups
+  const getGroups = async () => {
+    const res = await httpGetMain("groups");
+    if (res?.status === "success" || res?.status === "Success") {
+      setGroups(res?.data);
     }
   };
 
   // function to update an Automation if in edit mode
   const updateAutomationPolicy = async () => {
     setPolicyLoading(true);
+    let convertedAgreements = newPolicy.reminder.agreements;
+    for (let index = 0; index < convertedAgreements.length; index++) {
+      convertedAgreements[index] = {
+        ...convertedAgreements[index],
+        days: convertToMinutes(
+          convertedAgreements[index].day,
+          convertedAgreements[index].hours
+        ),
+      };
+    }
 
     const body = {
       name: newPolicy.name,
-
-      dueDate: newPolicy.due_date,
+      dueDate: convertToMinutes(newPolicy.days, newPolicy.hours),
+      due_date: convertToMinutes(newPolicy.days, newPolicy.hours),
       description: newPolicy.description || "",
       reminder: {
         categories: newPolicy.reminder.categories,
-        agreements: newPolicy.reminder.agreements,
+        agreements: convertedAgreements,
+        recipient: newPolicy.reminder.recipient,
       },
     };
+
     const res = await httpPatchMain(`sla/${policyID}`, body);
     setPolicyLoading(false);
     if (res?.status === "success") {
@@ -186,16 +239,30 @@ const NewAutomationPolicy = () => {
   const submitAutomationPolicy = async () => {
     setPolicyLoading(true);
 
+    let convertedAgreements = newPolicy.reminder.agreements;
+    for (let index = 0; index < convertedAgreements.length; index++) {
+      convertedAgreements[index] = {
+        ...convertedAgreements[index],
+        days: convertToMinutes(
+          convertedAgreements[index].day,
+          convertedAgreements[index].hours
+        ),
+      };
+    }
+
     const body = {
       name: newPolicy.name,
 
-      dueDate: newPolicy.due_date,
+      dueDate: convertToMinutes(newPolicy.days, newPolicy.hours),
+      due_date: convertToMinutes(newPolicy.days, newPolicy.hours),
       description: newPolicy.description || "",
       reminder: {
         categories: newPolicy.reminder.categories,
-        agreements: newPolicy.reminder.agreements,
+        agreements: convertedAgreements,
+        recipient: newPolicy.reminder.recipient,
       },
     };
+
     const res = await httpPostMain("sla", body);
     setPolicyLoading(false);
     if (res?.status === "success") {
@@ -207,6 +274,7 @@ const NewAutomationPolicy = () => {
   };
   useEffect(() => {
     getAgents();
+    getGroups();
     getTicketCategories();
     if (policyID) {
       setPolicyLoading(true);
@@ -322,8 +390,59 @@ const NewAutomationPolicy = () => {
                 <label for="ticket" className="f-14 mb-1">
                   Recipients
                 </label>
+                <div className="d-flex">
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      name="mail-radio"
+                      type="radio"
+                      id="radio-2"
+                      value="agent"
+                      checked={assignType === "agent"}
+                      onChange={(e) => setAssignType(e.target.value)}
+                    />
+                    <label className="form-check-label f-14" for="radio-2">
+                      Agent
+                    </label>
+                  </div>
+                  <div className="form-check" style={{ marginLeft: 10 }}>
+                    <input
+                      className="form-check-input"
+                      name="mail-radio"
+                      type="radio"
+                      id="radio-2"
+                      value="group"
+                      checked={assignType === "group"}
+                      onChange={(e) => setAssignType(e.target.value)}
+                    />
+                    <label className="form-check-label f-14" for="radio-2">
+                      Group
+                    </label>
+                  </div>
+                </div>
+                <select
+                  className="form-select form-select-sm f-14"
+                  name="agent_id"
+                  value={newPolicy?.reminder?.recipient?.id || ""}
+                  onChange={handleRecipient}
+                >
+                  <option value="">Select recipient</option>
 
-                <RSelect
+                  {assignType === "agent" &&
+                    agents.map((agent) => (
+                      <option key={agent.id} value={agent.id}>
+                        {agent.firstname + " " + agent.lastname}
+                      </option>
+                    ))}
+                  {assignType === "group" &&
+                    groups.map((group) => (
+                      <option key={group.id} value={group.id}>
+                        {group.name.toUpperCase()}
+                      </option>
+                    ))}
+                </select>
+
+                {/* <RSelect
                   className="rselectfield"
                   style={{ fontSize: "12px" }}
                   onChange={(value, actionMeta) => {
@@ -341,7 +460,7 @@ const NewAutomationPolicy = () => {
                       };
                     })
                   }
-                />
+                /> */}
               </div>
 
               {/* <div className="form-group mt-3">
@@ -456,23 +575,26 @@ const NewAutomationPolicy = () => {
                   <input
                     type="number"
                     max={30}
+                    max={0}
                     className="number-input form-control form-control-sm"
                     id="slaName"
-                    name="due_date"
-                    value={newPolicy?.due_date || 0}
+                    name="days"
+                    value={newPolicy?.days || 0}
                     onChange={handlechange}
                   />
                   <span className="ps-2 me-2">Days</span>
-                  {/* <input
+                  <input
                     type="number"
-                    max={30}
+                    max={23}
+                    min={0}
                     className="number-input form-control form-control-sm"
                     id="slaName"
-                    name="due_date"
-                    value={newPolicy?.due_date || 0}
+                    name="hours"
+                    onkeydown="return false"
+                    value={newPolicy?.hours || 0}
                     onChange={handlechange}
                   />
-                  <span className="ps-2 me-2">Days</span> */}
+                  <span className="ps-2 me-2">Hours</span>
                 </div>
               </div>
               <div id="resolution-wrapper mt-4">
