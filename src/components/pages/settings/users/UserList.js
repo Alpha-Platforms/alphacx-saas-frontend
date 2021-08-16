@@ -18,6 +18,7 @@ import {Link} from 'react-router-dom';
 // import moment from 'moment';,
 // import {ReactComponent as CardDesignSvg} from '../../../../assets/icons/Card-Design.svg';
 import Swal from 'sweetalert2';
+import {wordCapitalize} from '../../../../helper';
 
 
 import '../../../../styles/Setting.css';
@@ -98,21 +99,19 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgen
     });
 
     function handleActiveChange () {
-
-        console.log('active change', this);
         const {name, isActivated} = this;
 
         Swal.fire({
             title: isActivated ? 'Deactivate?' : 'Activate?',
-            text: `Do you want to ${isActivated ? 'deactivate' : 'activate'} ${name}`,
+            text: `Do you want to ${isActivated ? 'deactivate' : 'activate'} ${wordCapitalize(name)}`,
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#006298',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes',
             cancelButtonText: 'No'
           }).then((result) => {
             if (result.isConfirmed) {
-              console.log('Deactivate or  user');
+                console.log('Deactivate or  user');
             } else {
                 console.log('Do nothing');
             }
