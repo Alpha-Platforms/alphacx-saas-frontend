@@ -4,7 +4,15 @@ import {connect} from 'react-redux';
 import {NotificationManager} from 'react-notifications';
 import {addAgent, getAgents, resetAgentCreated} from '../../../../../reduxstore/actions/agentActions';
 
-const CreateUserModal = ({createModalShow, setCreateModalShow, isAgentCreated, groups, addAgent, getAgents, resetAgentCreated}) => {
+const CreateUserModal = ({
+    createModalShow,
+    setCreateModalShow,
+    isAgentCreated,
+    groups,
+    addAgent,
+    getAgents,
+    resetAgentCreated
+}) => {
     const [modalInputs,
         setModalInputs] = useState({
         firstName: '',
@@ -16,55 +24,26 @@ const CreateUserModal = ({createModalShow, setCreateModalShow, isAgentCreated, g
         group: '',
         role: 'Agent'
     });
+    const [creatingUser, setCreatingUser] = useState(false);
 
     const handleModalInput = e => {
         const {name, value} = e.target;
-
-        switch (name) {
-            case 'firstname':
-                setModalInputs(prev => ({
-                    ...prev,
-                    firstName: value
-                }));
-                break;
-            case 'lastname':
-                setModalInputs(prev => ({
-                    ...prev,
-                    lastName: value
-                }));
-                break;
-            case 'email':
-                setModalInputs(prev => ({
-                    ...prev,
-                    email: value
-                }));
-                break;
-            case 'group':
-                setModalInputs(prev => ({
-                    ...prev,
-                    group: value
-                }));
-                break;
-            default:
-        }
+        setModalInputs(prev => ({
+            ...prev,
+            [name]: value
+        }));
     }
 
     const handleUserCreation = () => {
-        const {firstName, lastName, email, group, role} = modalInputs;
+        const {firstName, lastName, email, group, role, description, phoneNumber} = modalInputs;
 
-        if (!firstName || !lastName || !email) {
+        if (!firstName || !lastName || !email || !group || !description || !phoneNumber) {
             // all field not available
             NotificationManager.error('All fields are required', 'Error');
         } else {
+            setCreatingUser(true);
             // all fields are passed
-            addAgent({
-                firstName,
-                lastName,
-                email,
-                groupId: group,
-                role
-            })
-
+            addAgent({firstName, lastName, email, groupId: group, role, phoneNumber, description});
         }
     }
 
@@ -84,8 +63,11 @@ const CreateUserModal = ({createModalShow, setCreateModalShow, isAgentCreated, g
                 role: 'Agent'
             });
             setCreateModalShow(false);
+            setCreatingUser(false);
+        } else {
+            setCreatingUser(false);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAgentCreated]);
 
     //create user modal
@@ -112,7 +94,7 @@ const CreateUserModal = ({createModalShow, setCreateModalShow, isAgentCreated, g
                                     <label className="f-12" htmlFor="fullName">First Name</label>
                                     <input
                                         type="text"
-                                        name="firstname"
+                                        name="firstName"
                                         className="form-control form-control-sm w-100"
                                         id="fullName"
                                         value={modalInputs.firstName}
@@ -125,7 +107,7 @@ const CreateUserModal = ({createModalShow, setCreateModalShow, isAgentCreated, g
                                         type="text"
                                         className="form-control form-control-sm w-100"
                                         id="fullName"
-                                        name="lastname"
+                                        name="lastName"
                                         value={modalInputs.lastName}
                                         onChange={handleModalInput}/>
                                 </div>
@@ -140,12 +122,31 @@ const CreateUserModal = ({createModalShow, setCreateModalShow, isAgentCreated, g
                                     value={modalInputs.email}
                                     onChange={handleModalInput}/>
                             </div>
+                            <div className="form-group mt-3">
+                                <label className="f-12" htmlFor="email">Phone Number</label>
+                                <input
+                                    type="tel"
+                                    className="form-control form-control-sm"
+                                    id="phoneNumber"
+                                    name="phoneNumber"
+                                    value={modalInputs.phonenumber}
+                                    onChange={handleModalInput}/>
+                            </div>
+                            <div className="form-group mt-3">
+                                <label className="f-12" htmlFor="email">Description</label>
+                                <textarea
+                                    className="form-control form-control-sm"
+                                    id="description"
+                                    name="description"
+                                    onChange={handleModalInput}
+                                    value={modalInputs.description}></textarea>
+                            </div>
                             {/* <div className="form-group mt-3">
                                 <label className="f-12" htmlFor="#role">Role</label>
                                 <input type="text" className="form-control form-control-sm" id="role"/>
                             </div> */}
                             <div className="form-group mt-3">
-                                <label className="f-12" htmlFor="level">Group (Optional)</label>
+                                <label className="f-12" htmlFor="level">Team</label>
                                 {/* <input type="text" className="form-control form-control-sm" id="level"/> */}
                                 <select
                                     name="group"
@@ -161,7 +162,8 @@ const CreateUserModal = ({createModalShow, setCreateModalShow, isAgentCreated, g
                                     type="button"
                                     className="btn btn-custom btn-sm float-end w-25 mt-4 mb-2"
                                     onClick={handleUserCreation}
-                                    id="createUser">Create</button>
+                                    disabled={creatingUser}
+                                    id="createUser">{creatingUser ? 'Creating...' : 'Create'}</button>
                             </div>
                         </form>
                     </div>

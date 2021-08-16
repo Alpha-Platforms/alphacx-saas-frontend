@@ -63,7 +63,6 @@ const CreateTicketModal = ({
         if (name === 'category' && modalInputs.category) {
             setSubCatLoading(true);
             const res = await getSubCategory(modalInputs.category);
-            console.log("res of sub cat: ", res);
             if (res?.status === 'success') {
                 setSubCatLoading(false);
                 setSubCat(res?.data);
@@ -84,11 +83,8 @@ const CreateTicketModal = ({
     // }
 
     const handleTagSelection = tags => {
-        // setSelectedTags(tag)
-        console.log("tags: ", tags);
         const realTags = tags.map(tag => tag.value);
-
-        console.log('real tags: ', realTags);
+        setSelectedTags(realTags);
     }
 
     
@@ -106,10 +102,8 @@ const CreateTicketModal = ({
             subcategory
         } = modalInputs;
         if (!customer || !category || !priority || !status || !subject || !description || !assignee || !group || !subcategory) {
-            console.log("All field is required");
             NotificationManager.error('All fields are required', 'Error', 5000);
         } else {
-            console.log("good to go");
             const newTicket = {
                 priorityId: priority,
                 assigneeId: assignee,
@@ -125,8 +119,6 @@ const CreateTicketModal = ({
                 subCategoryId: subcategory,
                 channel: 'system'
             };
-
-            console.log("New Ticket: ", newTicket);
 
             setCreatingTicket(true);
             addTicket(newTicket);
@@ -173,7 +165,6 @@ const CreateTicketModal = ({
             clearTimeout(timeoutId);
         
         timeoutId = setTimeout(async() => {
-            console.log('Search for: ', value);
             if (value) {
                 setCustSearch(prev => ({
                     ...prev,

@@ -8,7 +8,9 @@ import userIcon from "../../assets/images/user.png";
 import { useLocation } from "react-router-dom";
 //import GoBack from './../helpers/GoBack';
 import searchIcon from "../../assets/imgF/Search.png";
-import { HelpIcon } from "../../assets/SvgIconsSet.jsx";
+import {HelpIcon} from '../../assets/SvgIconsSet.jsx';
+import CreateTicketModal from '../pages/tickets/CreateTicketModal';
+import CreateCustomerModal from '../pages/customers/CreateCustomerModal';
 
 // --- dropdown component
 function PlusIcon() {
@@ -69,63 +71,74 @@ function DowncaretIcon() {
 
 function Dropdown() {
   const [isVisible, setInvisible] = useState(false);
-  const [createModalShow, setCreateModalShow] = useState(false);
+  const [createTicketModalShow, setCreateTicketModalShow] = useState(false);
+  const [createCustModalShow, setCreateCustModalShow] = useState(false);
+
 
   return (
-    <div
-      className=""
-      style={{ fontSize: "0.8rem" }}
-      onMouseLeave={() => setInvisible(false)}
-    >
-      <button
-        onClick={() => setInvisible((isVisible) => !isVisible)}
-        style={{
-          color: "white",
-          padding: "0.5rem 0",
-          backgroundColor: "#006298",
-          borderRadius: "3px",
-          width: "6.5rem",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        className=""
-        type="button"
-        id="dropdownMenuButtonSM"
-      >
-        <span style={{ padding: 0 }}>
-          <PlusIcon />
-        </span>
-        <span style={{ padding: "0 0.5rem" }}>Create</span>
-        <span>
-          <DowncaretIcon />
-        </span>
-      </button>
-      {isVisible && (
-        <ul
-          className="dd_menu list-unstyled"
-          style={{
-            border: "solid 1px #ddd",
-            padding: "0.25rem 0.75rem 0.5rem",
-            backgroundColor: "white",
-            borderRadius: "3px",
-            marginTop: "0px",
-            width: "6rem",
-            position: "fixed",
-          }}
-        >
-          <li style={{ borderBottom: "solid 1px #CCC" }}>
-            <button className="dd_item btn rounded-0">Ticket</button>
-          </li>
-          <li style={{ borderBottom: "solid 1px #CCC" }}>
-            <button className="dd_item btn rounded-0">Contact</button>
-          </li>
-        </ul>
-      )}
-    </div>
-  );
+      <div className="" style={{ fontSize: "0.8rem"}} onMouseLeave={() => setInvisible(false)} >
+              <button 
+                onClick={() => setInvisible(isVisible => !isVisible)}
+                style={{ 
+                    color: "white",
+                    padding: "0.5rem 0",
+                    backgroundColor: "#006298",
+                    borderRadius: "3px",
+                    width: "6.5rem",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}
+              className="" 
+              type="button" 
+              id="dropdownMenuButtonSM">
+              
+              <span style={{padding: 0}}>               
+                  <PlusIcon />
+              </span>
+              <span style={{padding: "0 0.5rem"}}>Create</span>
+              <span>
+                  <DowncaretIcon />
+              </span>
+              
+              </button>
+              {
+                  isVisible &&
+                  <ul className="dd_menu list-unstyled"
+                    style={{ 
+                        border: "solid 1px #ddd",
+                        padding: "0.25rem 0.75rem 0.5rem",
+                        backgroundColor: "white",
+                        borderRadius: "3px",
+                        marginTop: "0px",
+                        width: "6rem",
+                        position: "fixed"
+                    }}
+                  >
+                      <li style={{borderBottom: "solid 1px #CCC"}}>
+                        <button className="dd_item btn rounded-0" onClick={() => setCreateTicketModalShow(true)}>Ticket</button>
+                      </li>
+                      <li style={{borderBottom: "solid 1px #CCC"}}>
+                        <button className="dd_item btn rounded-0" onClick={() => setCreateCustModalShow(true)}>Contact</button>
+                      </li>
+                  </ul>
+              }
+              <CreateTicketModal
+                createModalShow={createTicketModalShow}
+                setCreateModalShow={setCreateTicketModalShow}
+                // setChangingRow={setChangingRow}
+              />
+              <CreateCustomerModal 
+                createModalShow={createCustModalShow} 
+                setCreateModalShow={setCreateCustModalShow} 
+                // setChangingRow={setChangingRow} 
+              />
+          </div>
+      
+  )
 }
 // --- //dropdown component
+
 
 export default function Navbar({
   browserRouter,
@@ -196,6 +209,7 @@ export default function Navbar({
                 : "navbar-wrap section-wrap-navWidth"
             }`}
           >
+
             <div className="navbar-content">
               <div className="pageTitle">
                 <span style={{ textTransform: "capitalize" }}>{pageName}</span>

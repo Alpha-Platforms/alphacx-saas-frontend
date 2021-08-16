@@ -1,26 +1,33 @@
 import {useState} from 'react';
-import {Modal} from 'react-bootstrap';
+import {Modal} from 'react-responsive-modal';
 import {NotificationManager} from 'react-notifications';
 import {addCustomer, getPaginatedCustomers} from '../../../reduxstore/actions/customerActions';
 import {connect} from 'react-redux';
+import RSelect from 'react-select/creatable';
 
-const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers, setChangingRow}) => {
+const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers}) => {
 
     const [selectedTags,
         setSelectedTags] = useState([]);
     const [modalInputs,
         setModalInputs] = useState({firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: ''});
+    const [creatingCust, setCreatingCust] = useState(false);
 
-    function handleTagSelection() {
-        const {tag} = this;
-        if (selectedTags.includes(tag)) {
-            setSelectedTags(prevState => prevState.filter(x => x !== tag));
-        } else {
-            setSelectedTags(prevState => [
-                ...prevState,
-                tag
-            ]);
-        }
+    // function handleTagSelection() {
+    //     const {tag} = this;
+    //     if (selectedTags.includes(tag)) {
+    //         setSelectedTags(prevState => prevState.filter(x => x !== tag));
+    //     } else {
+    //         setSelectedTags(prevState => [
+    //             ...prevState,
+    //             tag
+    //         ]);
+    //     }
+    // }
+
+    const handleTagSelection = tags => {
+        const realTags = tags.map(tag => tag.value);
+        setSelectedTags(realTags);
     }
 
     // update state with inputs from user
@@ -36,31 +43,38 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
 
     const handleCustomerCreation = async () => {
         const {firstname, lastname, workphone, emailaddress, organisation} = modalInputs;
-        if (!firstname || !lastname || !workphone || !emailaddress || !organisation) {
-            NotificationManager.error("Error", 'All fields are required');
+        if (!firstname || !lastname || !workphone || !emailaddress) {
+            NotificationManager.error("Fill up the required fields", 'Error');
         } else {
-            const res = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, organisation, tags: selectedTags});
-            console.log("returned data", res);
+            setCreatingCust(true);
+            const res = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, phone_number: workphone, organisation, tags: selectedTags});
             if (res.status === "success") {
-                NotificationManager.success(res.message, 'Success');
+                NotificationManager.success(res?.message, 'Success');
                 setCreateModalShow(false);
                 setModalInputs({firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: ''});
-                setChangingRow(true);
                 getPaginatedCustomers(10, 1);
-                console.log('customer creation was successful');
+                setCreatingCust(false);
+            } else {
+                setCreatingCust(false);
             }
         }
     }
 
+    const handleModalHide = () => {
+        setCreateModalShow(false);
+        setCreatingCust(false);
+    }
+
     return (
         <Modal
-            show={createModalShow}
-            onHide={() => setCreateModalShow(false)}
+            // show={createModalShow}
+            // onHide={() => setCreateModalShow(false)}
+            open={createModalShow} onClose={handleModalHide}
             aria-labelledby="contained-modal-title-vcenter"
             size="lg"
             centered>
-            <Modal.Body>
-                <div className="col-12 p-4">
+            {/* <Modal.Body> */}
+                <div className="saveTicketWrapModal p-4">
                     <h5 className="mb-3">Create Customer</h5>
                     <form
                         className="needs-validation mb-5"
@@ -115,7 +129,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                         <div className="row g-3 pt-3">
 
                             <div className="col-12 mt-3">
-                                <label htmlFor="organisation" className="form-label">Organisation</label>
+                                <label htmlFor="organisation" className="form-label">Organisation (optional)</label>
                                 <input
                                     type="text"
                                     name="organisation"
@@ -125,12 +139,11 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                     onChange={handleModalInput}/>
                             </div>
 
-                            <div className="col-12 mt-3">
+                            {/* <div className="col-12 mt-3">
                                 <label htmlFor="title" className="form-label">Tags</label>
                                 <div className="border rounded-2 p-3 py-2">
                                     <label className="text-muted d-block f-12 op-6">Select Tag</label>
                                     <div className="mt-1">
-                                        {/* create tag button */}
                                         {[
                                             'Customer Data',
                                             'Active',
@@ -153,6 +166,35 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                         }}>{x}&nbsp; ×</span>)}
                                     </div>
                                 </div>
+                            </div> */}
+
+                            <div className="col-12 mt-3">
+                                <label htmlFor="title" className="form-label">Tags</label>
+                                <RSelect className="rselectfield"
+                                    style={{ fontSize: "12px" }}
+                                    onChange={ (value, actionMeta) => {
+                                        handleTagSelection(value);
+                                    }}
+                                    isClearable={false}
+                                    isMulti
+                                    options={
+                                        // populate 'options' prop from $agents, with names remapped
+                                        [
+                                            'Customer Data',
+                                            'Active',
+                                            'Billing',
+                                            'Important',
+                                            'Gillete Group',
+                                            'Oil & Gas',
+                                            'Enquiry',
+                                            'Pharmaceuticals',
+                                            'Telecommunications',
+                                            'Technology'
+                                        ].map(item => {
+                                        return {value: item,label: item}
+                                        })
+                                    }
+                                />
                             </div>
 
                         </div>
@@ -161,12 +203,13 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                             <button
                                 type="button"
                                 className="btn btn-sm bg-at-blue-light  py-1 px-4"
-                                onClick={handleCustomerCreation}>Save Changes</button>
+                                disabled={creatingCust}
+                                onClick={handleCustomerCreation}>{creatingCust ? 'Saving... Changes' : 'Save Changes'}</button>
                         </div>
 
                     </form>
                 </div>
-            </Modal.Body>
+            {/* </Modal.Body> */}
         </Modal>
     )
 }
