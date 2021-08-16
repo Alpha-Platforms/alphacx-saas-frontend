@@ -43,8 +43,8 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
 
     const handleCustomerCreation = async () => {
         const {firstname, lastname, workphone, emailaddress, organisation} = modalInputs;
-        if (!firstname || !lastname || !workphone || !emailaddress || !organisation) {
-            NotificationManager.error("All fields are required", 'Error');
+        if (!firstname || !lastname || !workphone || !emailaddress) {
+            NotificationManager.error("Fill up the required fields", 'Error');
         } else {
             setCreatingCust(true);
             const res = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, phone_number: workphone, organisation, tags: selectedTags});
@@ -129,7 +129,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                         <div className="row g-3 pt-3">
 
                             <div className="col-12 mt-3">
-                                <label htmlFor="organisation" className="form-label">Organisation</label>
+                                <label htmlFor="organisation" className="form-label">Organisation (optional)</label>
                                 <input
                                     type="text"
                                     name="organisation"

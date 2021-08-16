@@ -229,6 +229,12 @@ const SiteRouter = connect(mapStateToProps, {
                 />
                 <SettingsLayoutRoute
                   exact
+                  path="/settings/profile/:id"
+                  pageName="User"
+                  component={UserProfileTwo}
+                />
+                <SettingsLayoutRoute
+                  exact
                   path="/settings/account"
                   pageName="Account"
                   component={AccountSettings}
