@@ -74,10 +74,10 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
             size="lg"
             centered>
             {/* <Modal.Body> */}
-                <div className="saveTicketWrapModal p-4">
-                    <h5 className="mb-3">Create Customer</h5>
+                <div className="saveTicketWrapModal p-4 pb-1 mb-0">
+                    <h5 className="mb-3">Create New Customer</h5>
                     <form
-                        className="needs-validation mb-5"
+                        className="needs-validation mb-4"
                         noValidate
                         onSubmit={e => e.preventDefault()}>
                         <div className="row">
@@ -204,7 +204,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                 type="button"
                                 className="btn btn-sm bg-at-blue-light  py-1 px-4"
                                 disabled={creatingCust}
-                                onClick={handleCustomerCreation}>{creatingCust ? 'Saving... Changes' : 'Save Changes'}</button>
+                                onClick={handleCustomerCreation}>{creatingCust ? 'Creating...' : 'Create'}</button>
                         </div>
 
                     </form>

@@ -17,10 +17,12 @@ import {ReactComponent as ArrowDownSvg} from '../../../../assets/icons/arrow-dow
 import {Link} from 'react-router-dom';
 // import moment from 'moment';,
 // import {ReactComponent as CardDesignSvg} from '../../../../assets/icons/Card-Design.svg';
+import Swal from 'sweetalert2';
+import {wordCapitalize} from '../../../../helper';
 
 
 import '../../../../styles/Setting.css';
-const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgentsLoaded}) => {
+const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgentsLoaded, groups}) => {
     const [createModalShow,
         setCreateModalShow] = useState(false);
     const [inviteModalShow,
@@ -95,6 +97,26 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgen
             },
         },
     });
+
+    function handleActiveChange () {
+        const {name, isActivated} = this;
+
+        Swal.fire({
+            title: isActivated ? 'Deactivate?' : 'Activate?',
+            text: `Do you want to ${isActivated ? 'deactivate' : 'activate'} ${wordCapitalize(name)}`,
+            showCancelButton: true,
+            confirmButtonColor: '#006298',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+          }).then((result) => {
+            if (result.isConfirmed) {
+                console.log('Deactivate or  user');
+            } else {
+                console.log('Do nothing');
+            }
+          })
+    }
 
     return (
         <div>
@@ -173,7 +195,7 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgen
                                         title: 'Active',
                                         field: 'action',
                                         render: rowData => (<div class="form-check form-switch">
-                                                <input className="form-check-input form-check-input-lg mt-1" checked={rowData.isActivated} readOnly={true} type="checkbox"/>
+                                                <input className="form-check-input form-check-input-lg mt-1" checked={rowData.isActivated} onChange={handleActiveChange.bind({name: rowData.name, isActivated: rowData.isActivated})} readOnly={true} type="checkbox"/>
                                             </div>)
                                     }, {
                                     title: '',
@@ -200,11 +222,14 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgen
                                 group,
                                 created_at,
                                 isActivated,
-                                id}) => ({
+                                id,
+                                group_id
+                                }) => ({
                                 name: `${firstname} ${lastname}`,
                                 emailAddress: email,
                                 role,
-                                group: 'Head Office',
+                                // group: 'Head Office',
+                                group: groups.filter(x => x.id === group_id)[0]?.name ? groups.filter(x => x.id === group_id)[0]?.name : 'Head Office',
                                 // created: moment(created_at).format('DD MMM, YYYY'),
                                 created: '13 Apr 2021',
                                 contact: {firstname, lastname, id},
@@ -261,7 +286,8 @@ const mapStateToProps = (state, ownProps) => ({
     meta: state.user.meta,
     isUsersLoaded: state.user.isUsersLoaded,
     agents: state.agent.agents,
-    isAgentsLoaded: state.agent.isAgentsLoaded
+    isAgentsLoaded: state.agent.isAgentsLoaded,
+    groups: state.group.groups
 })
 
 export default connect(mapStateToProps, {getPaginatedUsers})(UserList);
