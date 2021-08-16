@@ -13,11 +13,12 @@ import groupReducer from './groupReducer';
 import agentReducer from './agentReducer';
 import userReducer from './userReducer';
 import tagReducer from './tagReducer';
+import subCategoryReducer from './subCategoryReducer';
 
 const persistConfig = {
     key: 'alphacx_platform',
     storage,
-    whitelist: ['error', 'tenantAuth', 'userAuth', 'priority', 'category', 'status', 'group', 'tag']
+    whitelist: ['error', 'tenantAuth', 'userAuth', 'priority', 'category', 'status', 'group', 'tag', 'subCategory']
 }
 
 const rootReducer = combineReducers({
@@ -32,7 +33,8 @@ const rootReducer = combineReducers({
     group: groupReducer,
     agent: agentReducer,
     user: userReducer,
-    tag: tagReducer
+    tag: tagReducer,
+    subCategory: subCategoryReducer
 });
 
 export default persistReducer(persistConfig, rootReducer);

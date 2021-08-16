@@ -112,7 +112,11 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                                 <Link to="/settings">
                                     <span className="text-custom">Settings</span>
                                 </Link>{" "}
-                                <img src={RightArrow} alt="" className="img-fluid mx-2 me-3"/>
+                                <img src={RightArrow} alt="" className="img-fluid mx-2 me-2"/>
+                                <Link to="/settings/users">
+                                    <span className="text-custom">Users</span>
+                                </Link>{" "}
+                                <img src={RightArrow} alt="" className="img-fluid mx-2 me-2"/>
                                 <span>User Profile</span>
                             </h6>
 
@@ -121,22 +125,14 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                         <div className="tab-content" id="pills-tabContent">
 
                             <div className="d-flex justify-content-between col-md-8">
-
                                 <h3 className="fs-6 text-black">Personal Information Settings</h3>
-
-                                <button
-                                    type="button"
-                                    className="btn btn-sm bg-at-blue-light text-white px-4"
-                                    onClick={updateUserInfo}>
-                                    Save Changes
-                                </button>
                             </div>
                             <div
                                 className="show fade col-md-8"
                                 id="personal-information-view"
                                 role="tabpanel"
                                 aria-labelledby="pills-personal-tab">
-                                <div className="mb-5 mt-4">
+                                <div className="mb-3 mt-4">
                                     <div className="d-flex mb-3">
                                         <div className="me-2 w-100">
                                             <label for="first-name" className="form-label">
@@ -205,7 +201,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
 
                                 </div>
 
-                                <div className="d-flex mb-5">
+                                <div className="d-flex mb-3">
                                     <div
                                         id="uploadPersonalPhotoInputImgPreview"
                                         style={{
@@ -251,7 +247,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                                     </div>
                                 </div>
 
-                                <div className="mb-5">
+                                <div className="mb-4">
                                     <label className="form-label" for="change-password">
                                         Change Password
                                     </label>
@@ -262,8 +258,16 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                                         id="change-password"
                                         value={personalInfoInputs.change_password || ""}
                                         onChange={handleInputChange}/>
-                                    <button className="btn btn-sm bg-at-blue-light px-3 py-1 mt-3">
+                                    {/* <button className="btn btn-sm bg-at-blue-light px-3 py-1 mt-3">
                                         Change Password
+                                    </button> */}
+                                </div>
+                                <div className="mb-5">
+                                    <button
+                                        type="button"
+                                        className="btn btn-sm bg-at-blue-light text-white px-4"
+                                        onClick={updateUserInfo}>
+                                        Save Changes
                                     </button>
                                 </div>
 

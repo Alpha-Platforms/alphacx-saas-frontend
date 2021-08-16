@@ -32,8 +32,9 @@ import RoleLightIcon from "../../../assets/icons/role_light.svg";
 import LivechatIcon from "../../../assets/icons/chat-blue.svg";
 import DocumentIcon from "../../../assets/icons/doc-blue.svg";
 import { Link } from "react-router-dom";
+import {connect} from 'react-redux';
 
-export default function SettingsHome() {
+function SettingsHome() {
   return (
     <>
       <div className="form-group mb-4 rounded-pill">
@@ -323,3 +324,5 @@ export default function SettingsHome() {
     </>
   );
 }
+
+export default SettingsHome;
