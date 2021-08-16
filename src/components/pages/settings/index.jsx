@@ -34,7 +34,7 @@ import DocumentIcon from "../../../assets/icons/doc-blue.svg";
 import { Link } from "react-router-dom";
 import {connect} from 'react-redux';
 
-function SettingsHome() {
+function SettingsHome({signedUser}) {
   return (
     <>
       <div className="form-group mb-4 rounded-pill">
@@ -127,7 +127,7 @@ function SettingsHome() {
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <Link to="/settings/profile" className="d-block cursor text-decoration-none">
+          <Link to={`/settings/profile/${signedUser.id}`} className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
                 <img src={UserBWIcon} alt="" />
@@ -325,4 +325,8 @@ function SettingsHome() {
   );
 }
 
-export default SettingsHome;
+const mapStateToProps = (state, ownProps) => ({
+  signedUser: state.userAuth.user
+})
+
+export default connect(mapStateToProps, null)(SettingsHome);
