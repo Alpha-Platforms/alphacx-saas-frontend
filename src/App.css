@@ -56,6 +56,9 @@ body,
 table {
   color: var(--text-color) !important;
 }
+button:disabled {
+  opacity: 0.5;
+}
 
 .reset-btn-outline:hover {
   background-color: transparent !important;
