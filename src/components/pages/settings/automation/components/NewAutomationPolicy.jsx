@@ -70,8 +70,14 @@ const NewAutomationPolicy = () => {
     if (name === "days" && value > 30) {
       value = 30;
     }
+    if (name === "days" && value < 0) {
+      value = 0;
+    }
     if (name === "hours" && value > 23) {
       value = 23;
+    }
+    if (name === "hours" && value < 0) {
+      value = 0;
     }
     setNewPolicy({ ...newPolicy, [name]: value });
   };
@@ -569,6 +575,7 @@ const NewAutomationPolicy = () => {
                   <input
                     type="number"
                     max={30}
+                    max={0}
                     className="number-input form-control form-control-sm"
                     id="slaName"
                     name="days"
@@ -579,6 +586,7 @@ const NewAutomationPolicy = () => {
                   <input
                     type="number"
                     max={23}
+                    min={0}
                     className="number-input form-control form-control-sm"
                     id="slaName"
                     name="hours"

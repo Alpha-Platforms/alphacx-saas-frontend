@@ -23,7 +23,7 @@ const AutomationAction = ({
         ...newPolicy.reminder,
         agreements: [
           ...newPolicy.reminder.agreements,
-          { days: 0, action: "email" },
+          { day: 0, hours: 0, action: "email" },
         ],
       },
     });
@@ -54,7 +54,19 @@ const AutomationAction = ({
     setPlaceholder(" " + shortCode.toUpperCase() + " ");
   };
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+    if (name === "day" && value > 30) {
+      value = 30;
+    }
+    if (name === "day" && value < 0) {
+      value = 0;
+    }
+    if (name === "hours" && value > 23) {
+      value = 23;
+    }
+    if (name === "hours" && value < 0) {
+      value = 0;
+    }
     let agreements = newPolicy.reminder.agreements;
     agreements[index] = { ...agreements[index], [name]: value };
     setNewPolicy({
@@ -119,6 +131,7 @@ const AutomationAction = ({
             <input
               type="number"
               max={30}
+              min={0}
               className="number-input form-control form-control-sm"
               id="slaName"
               name="day"
@@ -133,6 +146,7 @@ const AutomationAction = ({
             <input
               type="number"
               max={23}
+              min={0}
               className="number-input form-control form-control-sm"
               id="slaName"
               name="hours"
