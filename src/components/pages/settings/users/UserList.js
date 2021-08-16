@@ -20,7 +20,7 @@ import {Link} from 'react-router-dom';
 
 
 import '../../../../styles/Setting.css';
-const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgentsLoaded}) => {
+const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgentsLoaded, groups}) => {
     const [createModalShow,
         setCreateModalShow] = useState(false);
     const [inviteModalShow,
@@ -200,11 +200,14 @@ const UserList = ({users, meta, getPaginatedUsers, isUsersLoaded, agents, isAgen
                                 group,
                                 created_at,
                                 isActivated,
-                                id}) => ({
+                                id,
+                                group_id
+                                }) => ({
                                 name: `${firstname} ${lastname}`,
                                 emailAddress: email,
                                 role,
-                                group: 'Head Office',
+                                // group: 'Head Office',
+                                group: groups.filter(x => x.id === group_id)[0]?.name ? groups.filter(x => x.id === group_id)[0]?.name : 'Head Office',
                                 // created: moment(created_at).format('DD MMM, YYYY'),
                                 created: '13 Apr 2021',
                                 contact: {firstname, lastname, id},
@@ -261,7 +264,8 @@ const mapStateToProps = (state, ownProps) => ({
     meta: state.user.meta,
     isUsersLoaded: state.user.isUsersLoaded,
     agents: state.agent.agents,
-    isAgentsLoaded: state.agent.isAgentsLoaded
+    isAgentsLoaded: state.agent.isAgentsLoaded,
+    groups: state.group.groups
 })
 
 export default connect(mapStateToProps, {getPaginatedUsers})(UserList);
