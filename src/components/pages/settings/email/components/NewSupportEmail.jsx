@@ -45,8 +45,8 @@ const NewSupportEmail = () => {
 
     console.log("data", data);
 
-    const res = await httpPostMain("email-config", data);
-    if (res?.status == "success") {
+    const res = await httpPostMain("setting/email-config", data);
+    if (res?.status === "success") {
       console.clear();
       console.log(res.data);
       handleShow();
