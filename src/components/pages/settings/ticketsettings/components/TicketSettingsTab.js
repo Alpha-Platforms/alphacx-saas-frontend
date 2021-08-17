@@ -1,5 +1,7 @@
 import {ReactComponent as HamburgerSvg} from '../../../../../assets/icons/hamburger.svg';
 import {ReactComponent as FormMinusSvg} from '../../../../../assets/icons/form-minus.svg';
+import {ReactComponent as DeleteGreySvg} from '../../../../../assets/icons/Delete-grey.svg';
+import {ReactComponent as EditGreySvg} from '../../../../../assets/icons/Edit-grey.svg';
 
 const TicketSettingsTab = () => {
 
@@ -27,66 +29,6 @@ const TicketSettingsTab = () => {
                         </select>
                     </div>
                 </div>
-{/* 
-                <div>
-                    <div style={gtcCol} className="mb-2 d-grid align-items-center">
-                        <div>
-                            <label htmlFor="ticket-id-prefix" className="form-label d-inline-block">Ticket ID Prefix:</label>
-                        </div>
-                        <div>
-                            <input
-                                name="ticket-id-prefix"
-                                type="text"
-                                className="form-control d-inline-block"
-                                id="ticket-id-prefix"
-                                placeholder="ACX/"/>
-                        </div>
-                    </div>
-                    <div style={gtcCol} className="mb-3 d-grid align-items-center">
-                        <div></div>
-                        <div>
-                            <span
-                                id="currentYearPrefixBtn"
-                                className="ticketIDPrefixBtn bg-at-blue-lighter cursor-pointer rounded-pill px-2 py-1 f-13 text-at-blue-light me-2">Current Year</span>
-                            <span
-                                id="currentMonthPrefixBtn"
-                                className="ticketIDPrefixBtn bg-at-blue-lighter cursor-pointer rounded-pill px-2 py-1 f-13 text-at-blue-light me-2">Current Month</span>
-                            <span
-                                id="currentDayPrefixBtn"
-                                className="ticketIDPrefixBtn bg-at-blue-lighter cursor-pointer rounded-pill px-2 py-1 f-13 text-at-blue-light me-2">Current Day</span>
-                        </div>
-                    </div>
-                </div> 
-                
-
-                <div style={gtcCol} className="mb-4 mt-4 d-grid align-items-center">
-                    <div>
-                        <label htmlFor="ticket-number-series" className="form-label d-inline-block">Ticket Number Series:</label>
-                    </div>
-                    <div>
-                        <input
-                            name="ticket-number-series"
-                            type="text"
-                            className="form-control d-inline-block"
-                            id="ticket-number-series"
-                            placeholder="00001"/>
-                    </div>
-                </div>
-
-                <div style={gtcCol} className="mb-4 d-grid align-items-center">
-                    <div>
-                        <label htmlFor="next-ticket-number" className="form-label d-inline-block">Next ticket number starts from:</label>
-                    </div>
-                    <div>
-                        <input
-                            name="next-ticket-number"
-                            type="text"
-                            className="form-control d-inline-block"
-                            id="next-ticket-number"
-                            placeholder="0000581"/>
-                    </div>
-                </div>
-                */}
 
                 <div style={gtcCol} className="mb-4 d-grid align-items-center">
                     <div>
@@ -125,12 +67,18 @@ const TicketSettingsTab = () => {
                                             <span></span>
 
                                         </div>
-                                        <button
-                                            onclick="deleteField(event)"
-                                            type="button"
-                                            className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
-                                            <FormMinusSvg />
-                                        </button>
+                                        <div className="d-flex">
+                                            <button
+                                                type="button"
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                <EditGreySvg />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                <DeleteGreySvg />
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <div className="fieldParent d-flex my-2">
@@ -144,12 +92,18 @@ const TicketSettingsTab = () => {
                                             <span></span>
 
                                         </div>
-                                        <button
-                                            onclick="deleteField(event)"
-                                            type="button"
-                                            className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
-                                            <FormMinusSvg />
-                                        </button>
+                                        <div className="d-flex">
+                                            <button
+                                                type="button"
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                <EditGreySvg />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                <DeleteGreySvg />
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <div className="fieldParent d-flex my-2">
@@ -163,12 +117,18 @@ const TicketSettingsTab = () => {
                                             <span></span>
 
                                         </div>
-                                        <button
-                                            onclick="deleteField(event)"
-                                            type="button"
-                                            className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
-                                            <FormMinusSvg />
-                                        </button>
+                                        <div className="d-flex">
+                                            <button
+                                                type="button"
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                <EditGreySvg />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                <DeleteGreySvg />
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <div className="fieldParent d-flex my-2">
@@ -182,12 +142,18 @@ const TicketSettingsTab = () => {
                                             <span></span>
 
                                         </div>
-                                        <button
-                                            onclick="deleteField(event)"
-                                            type="button"
-                                            className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
-                                            <FormMinusSvg />
-                                        </button>
+                                        <div className="d-flex">
+                                            <button
+                                                type="button"
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                <EditGreySvg />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                <DeleteGreySvg />
+                                            </button>
+                                        </div>
                                     </div>
 
                                     <div className="fieldParent d-flex my-2">
@@ -201,12 +167,18 @@ const TicketSettingsTab = () => {
                                             <span></span>
 
                                         </div>
-                                        <button
-                                            onclick="deleteField(event)"
-                                            type="button"
-                                            className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
-                                            <FormMinusSvg />
-                                        </button>
+                                        <div className="d-flex">
+                                            <button
+                                                type="button"
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                <EditGreySvg />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
+                                                <DeleteGreySvg />
+                                            </button>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -215,7 +187,7 @@ const TicketSettingsTab = () => {
                                     <button
                                         className="btn btn-link text-decoration-none text-at-blue-light"
                                         data-bs-toggle="modal"
-                                        data-bs-target="#addFieldModal">+ Add or Edit Status</button>
+                                        data-bs-target="#addFieldModal">+ Add Status</button>
                                 </div>
 
                                 <div id="changeActionBtn" className="text-end mt-4 d-none">
