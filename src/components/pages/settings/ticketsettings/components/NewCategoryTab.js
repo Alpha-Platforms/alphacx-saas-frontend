@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {connect} from "react-redux";
 import {httpPostMain} from "../../../../../helpers/httpMethods";
 import {NotificationManager} from "react-notifications";
@@ -18,10 +18,45 @@ const NewCategoryTab = ({categories, meta}) => {
         });
     };
 
-    const submitNewCategory = async(e) => {
+    // function to get the list of all ticket categories   const getTicketCategories
+    // = async () => {     const res = await httpGetMain("categories");     if
+    // (res?.status === "success") {       setCategories(res?.data?.categories);
+    //   // getAgents();     } else {       return
+    // NotificationManager.error(res?.er?.message, "Error", 4000);     }   };
+
+    const handleSubmit = (e) => {
         e.preventDefault();
+        if (newCategory.categoryId && newCategory.categoryId !== "") {
+            submitNewSubCategory();
+        } else {
+            submitNewCategory();
+        }
+    };
+
+    //   function to create new category
+    const submitNewCategory = async() => {
         setPolicyLoading(true);
-        const res = await httpPostMain("categories", newCategory);
+        const body = {
+            name: newCategory.name
+        };
+        const res = await httpPostMain("categories", body);
+        setPolicyLoading(false);
+        if (res
+            ?.status === "success" || res
+                ?.status === "Success") {
+            setNewCategory({});
+            NotificationManager.success(res.data.message, "Success", 4000);
+        } else {
+            console.error(res.er);
+            return NotificationManager.error(res
+                ?.er
+                    ?.message, "Error", 4000);
+        }
+    };
+    //   function to create new category
+    const submitNewSubCategory = async() => {
+        setPolicyLoading(true);
+        const res = await httpPostMain("sub-categories", newCategory);
         setPolicyLoading(false);
         if (res
             ?.status === "success" || res
@@ -36,6 +71,10 @@ const NewCategoryTab = ({categories, meta}) => {
         }
     };
 
+    useEffect(() => {
+        // getTicketCategories();
+    }, []);
+
     return (
         <div className="ticket-cat-tab">
             {policyLoading && (
@@ -44,7 +83,7 @@ const NewCategoryTab = ({categories, meta}) => {
                 </div>
             )}
             <div className="w-75">
-                <form className="tl-form" onSubmit={submitNewCategory}>
+                <form className="tl-form" onSubmit={handleSubmit}>
                     <div>
                         <div class="form-group mt-3 tl-col align-items-center">
                             <label class="f-14 d-inline" htmlFor="form-description">
@@ -66,10 +105,14 @@ const NewCategoryTab = ({categories, meta}) => {
                                 name="parent-category"
                                 id="parentCategory"
                                 className="form-select"
-                                aria-label="parent category">
-                                <option selected></option>
-                                <option value="cherry-picking">--</option>
-                                <option value="efficient">--</option>
+                                aria-label="parent category"
+                                name="categoryId"
+                                value={newCategory.categoryId || ""}
+                                onChange={handleChange}>
+                                <option value="">Select parent category</option>
+                                {categories.map((cat) => (
+                                    <option value={cat.id}>{cat.name}</option>
+                                ))}
                             </select>
                         </div>
                         <div class="form-group mt-4 tl-col">
