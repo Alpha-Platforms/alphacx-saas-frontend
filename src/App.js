@@ -318,7 +318,7 @@ const SiteRouter = connect(mapStateToProps, {
                 />
                 <SettingsLayoutRoute
                   exact
-                  path="/settings/ticket-settings"
+                  path="/settings/ticket"
                   pageName="Settings"
                   component={TicketSettings}
                 />

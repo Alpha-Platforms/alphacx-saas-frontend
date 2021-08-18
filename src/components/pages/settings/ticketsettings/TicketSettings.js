@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Tabs, Tab } from "react-bootstrap";
 import TicketCategoriesTab from "./components/TicketCategoriesTab";
 import TicketSettingsTab from "./components/TicketSettingsTab";
+import TicketStatusTab from './components/TicketStatusTab';
+import NewCategoryTab from './components/NewCategoryTab';
 import { Link } from "react-router-dom";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
 
@@ -19,7 +21,7 @@ const TicketSettings = () => {
             <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
             {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
                             className="img-fluid mx-2 me-3"></object> */}
-            <span>Ticket Settings</span>
+            <span>Ticket</span>
           </h6>
         </div>
         <div className="mt-4">
@@ -41,7 +43,22 @@ const TicketSettings = () => {
             </li>
             <li className="nav-item" role="presentation">
               <button
-                className={`nav-link px-0 ${
+                className={`nav-link px-0 me-5 ${
+                  tabKey === "ticket-status" && "active"
+                } text-muted`}
+                id="pills-ticket-tab"
+                onClick={() => setTabKey("ticket-status")}
+                type="button"
+                role="tab"
+                aria-controls="ticket-categoriese-view"
+                aria-selected="false"
+              >
+                Ticket Stage
+              </button>
+            </li>
+            <li className="nav-item px-0" role="presentation">
+              <button
+                className={`nav-link px-0 me-5 ${
                   tabKey === "ticket-categories" && "active"
                 } text-muted`}
                 id="pills-ticket-tab"
@@ -52,6 +69,21 @@ const TicketSettings = () => {
                 aria-selected="false"
               >
                 Ticket Categories
+              </button>
+            </li>
+            <li className="nav-item" role="presentation">
+              <button
+                className={`nav-link px-0 ${
+                  tabKey === "new-category" && "active"
+                } text-muted`}
+                id="pills-ticket-tab"
+                onClick={() => setTabKey("new-category")}
+                type="button"
+                role="tab"
+                aria-controls="ticket-categoriese-view"
+                aria-selected="false"
+              >
+                New Category
               </button>
             </li>
           </ul>
@@ -73,6 +105,15 @@ const TicketSettings = () => {
             <Tab eventKey="ticket-categories" className="">
               <TicketCategoriesTab />
             </Tab>
+
+            <Tab eventKey="ticket-status" className="">
+              <TicketStatusTab />
+            </Tab>
+
+            <Tab eventKey="new-category" className="">
+              <NewCategoryTab />
+            </Tab>
+
           </Tabs>
         </div>
       </div>
