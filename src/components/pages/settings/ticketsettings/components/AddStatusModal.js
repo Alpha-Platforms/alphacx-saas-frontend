@@ -8,44 +8,15 @@ import {ReactComponent as FormMinusSvg} from '../../../../../assets/icons/form-m
 import {uuid} from '../../../../../helper';
 
 const AddStatusModal = ({createModalShow, setCreateModalShow}) => {
-    const [modalStatuses,
-        setModalStatuses] = useState([
-        {
-            id: uuid(),
-            status: ""
-        }
-    ]);
+    const [modalStatus,
+        setModalStatus] = useState('');
 
-    console.log("modalStatuses: ", modalStatuses);
-
-    function handleInputChange(e) {
-        const {id} = this;
-
-        setModalStatuses(prev => {
-            return prev.map(x => {
-                if (x.id === id) {
-                    return {...x, status: e.target.value};
-                } else {
-                    return x;
-                }
-            })
-        });
-    }
-
-    const addStatusBox = () => {
-        setModalStatuses(prev => ([...prev, {id: uuid(), status: ''}]));
-    }
-
-    function removeStatusBox() {
-        const {id} = this;
-        setModalStatuses(prev => prev.filter(x => x.id !==  id));
+    const handleInputChange = e => {
+        setModalStatus(e.target.value);
     }
 
     const handleCancelClick = () => {
-        setModalStatuses([{
-            id: uuid(),
-            status: ""
-        }]);
+        setModalStatus('');
         setCreateModalShow(false);
     }
 
@@ -58,41 +29,19 @@ const AddStatusModal = ({createModalShow, setCreateModalShow}) => {
             centered>
             <Modal.Body>
                 <div className="modal-body ">
-                    <h3 className="f-16 text-black">Add New Ticket Status</h3>
+                    <h3 className="f-16 text-black">Add New Ticket Stage</h3>
                     <form action="">
                         <div className="" id="ticketFieldWrapper">
 
-                            {modalStatuses && modalStatuses.map(({
-                                id,
-                                status
-                            }, idx) => <div key={idx} className="d-flex my-2">
-                                <button
-                                    type="button"
-                                    className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
-                                    <HamburgerSvg/>
-                                </button>
+                            <div className="d-flex my-4">
                                 <div className="w-100 d-flex align-items-center">
                                     <input
                                         type="text"
                                         name="field-option"
                                         className="form-control form-control-sm"
-                                        onChange={handleInputChange.bind({id})}
-                                        value={status}/>
+                                        value={modalStatus}
+                                        onChange={handleInputChange}/>
                                 </div>
-                                <div className="d-flex">
-                                    <button
-                                        type="button"
-                                        onClick={removeStatusBox.bind({id})}
-                                        className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
-                                        <FormMinusSvg/>
-                                    </button>
-                                </div>
-                            </div>)}
-
-                            <div>
-                                <button
-                                    type="button"
-                                    className="no-focus btn btn-link f-12 text-decoration-none text-at-blue-light" onClick={addStatusBox}>+ Add new ticket status</button>
                             </div>
 
                         </div>
