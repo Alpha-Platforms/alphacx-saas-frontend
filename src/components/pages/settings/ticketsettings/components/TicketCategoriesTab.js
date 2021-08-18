@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MaterialTable from "material-table";
 import {
   ThemeProvider as MuiThemeProvider,
@@ -17,6 +17,7 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 
 const TicketCategoriesTab = ({ categories, meta }) => {
   const [changingRow, setChangingRow] = useState(false);
+  //   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState({});
   const [policyLoading, setPolicyLoading] = useState(false);
   const tableTheme = createTheme({
@@ -35,10 +36,44 @@ const TicketCategoriesTab = ({ categories, meta }) => {
     setNewCategory({ ...newCategory, [name]: value });
   };
 
-  const submitNewCategory = async (e) => {
+  // function to get the list of all ticket categories
+  //   const getTicketCategories = async () => {
+  //     const res = await httpGetMain("categories");
+  //     if (res?.status === "success") {
+  //       setCategories(res?.data?.categories);
+  //       // getAgents();
+  //     } else {
+  //       return NotificationManager.error(res?.er?.message, "Error", 4000);
+  //     }
+  //   };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
+    if (newCategory.categoryId && newCategory.categoryId !== "") {
+      submitNewSubCategory();
+    } else {
+      submitNewCategory();
+    }
+  };
+
+  //   function to create new category
+  const submitNewCategory = async () => {
     setPolicyLoading(true);
-    const res = await httpPostMain("categories", newCategory);
+    const body = { name: newCategory.name };
+    const res = await httpPostMain("categories", body);
+    setPolicyLoading(false);
+    if (res?.status === "success" || res?.status === "Success") {
+      setNewCategory({});
+      NotificationManager.success(res.data.message, "Success", 4000);
+    } else {
+      console.error(res.er);
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
+  //   function to create new category
+  const submitNewSubCategory = async () => {
+    setPolicyLoading(true);
+    const res = await httpPostMain("sub-categories", newCategory);
     setPolicyLoading(false);
     if (res?.status === "success" || res?.status === "Success") {
       setNewCategory({});
@@ -49,6 +84,9 @@ const TicketCategoriesTab = ({ categories, meta }) => {
     }
   };
 
+  useEffect(() => {
+    // getTicketCategories();
+  }, []);
   return (
     <div className="ticket-cat-tab">
       {policyLoading && (
@@ -61,7 +99,7 @@ const TicketCategoriesTab = ({ categories, meta }) => {
         </div>
       )}
       <div className="tct-left">
-        <form className="tl-form" onSubmit={submitNewCategory}>
+        <form className="tl-form" onSubmit={handleSubmit}>
           <div>
             <div class="form-group mt-3 tl-col align-items-center">
               <label class="f-14 d-inline" htmlFor="form-description">
@@ -85,10 +123,14 @@ const TicketCategoriesTab = ({ categories, meta }) => {
                 id="parentCategory"
                 className="form-select"
                 aria-label="parent category"
+                name="categoryId"
+                value={newCategory.categoryId || ""}
+                onChange={handleChange}
               >
-                <option selected></option>
-                <option value="cherry-picking">--</option>
-                <option value="efficient">--</option>
+                <option value="">Select parent category</option>
+                {categories.map((cat) => (
+                  <option value={cat.id}>{cat.name}</option>
+                ))}
               </select>
             </div>
             <div class="form-group mt-4 tl-col">
