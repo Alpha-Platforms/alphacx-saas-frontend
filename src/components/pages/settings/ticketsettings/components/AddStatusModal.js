@@ -51,9 +51,9 @@ const AddStatusModal = ({createModalShow, setCreateModalShow}) => {
                                 style={{
                                 borderColor: "var(--at-blue-light)"
                             }}
-                                className="btn btn-sm btn-outline-secondary w-25 me-2 text-at-blue-light reset-btn-outline"
+                                className="btn btn-sm btn-outline-secondary px-3 me-2 text-at-blue-light reset-btn-outline"
                                 type="button" onClick={handleCancelClick}>Cancel</button>
-                            <button type="button" className="btn btn-custom btn-sm w-25 d-inline-block">Save Changes</button>
+                            <button type="button" className="btn btn-custom btn-sm  px-3 d-inline-block">Add Stage</button>
 
                         </div>
 
