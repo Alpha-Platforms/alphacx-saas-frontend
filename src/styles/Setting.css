@@ -66,8 +66,6 @@
 
 /* * >>>>>> TICKET SETTINGS <<<<<<< */
 .ticket-cat-tab {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
 }
 
 .ticket-cat-tab > div {
