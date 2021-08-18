@@ -107,6 +107,7 @@ export default function Conversation() {
   const [channel, setchannel] = useState("All");
   const [status, setstatus] = useState("All");
   const [activeChat, setActiveChat] = useState(1);
+  const [updateTickStatusS, setupdateTickStatusS] = useState("");
   useEffect(() => {
     // getTickets();
     sortMsges(msgHistory);
@@ -219,6 +220,8 @@ export default function Conversation() {
   };
 
   const replyTicket = async (reply, attachment) => {
+    scollPosSendMsg();
+
     let filterSentTick = tickets.filter((tic) => {
       return tic.id == singleTicketFullInfo.id;
     });
@@ -257,6 +260,7 @@ export default function Conversation() {
       `tickets/${singleTicketFullInfo.id}/replies`,
       data
     );
+
     if (res?.status == "success") {
       // setsendingReply(false);
       // ReloadloadSingleMessage();
@@ -345,6 +349,7 @@ export default function Conversation() {
       console.log(res?.data[0]?.history);
       setLoadSingleTicket(false);
       checkRes();
+      scollPosSendMsgList();
     } else {
       setLoadSingleTicket(false);
       return NotificationManager.error(res.er.message, "Error", 4000);
@@ -363,6 +368,8 @@ export default function Conversation() {
   };
 
   const updateTicket = async (status) => {
+    console.log(RSTicketStage);
+
     // if (categoryUpdate == "") {
     //   NotificationManager.error("You need to update category to continue!");
     // }
@@ -371,10 +378,10 @@ export default function Conversation() {
     }
 
     let data = {
-      statusId: status,
+      statusId: RSTicketStage.value,
       priorityId: ticket[0].priority.id,
       assigneeId: ticket[0].assignee.id,
-      categoryId: categoryUpdate,
+      categoryId: RSTicketCate.value,
     };
     console.log(data);
     const res = await httpPatchMain(`tickets/${ticket[0].id}`);
@@ -481,6 +488,14 @@ export default function Conversation() {
     false
   );
 
+  function scollPosSendMsg(e) {
+    window.location.href = "#msgListTop";
+  }
+
+  function scollPosSendMsgList(e) {
+    window.location.href = "#lastMsg";
+  }
+
   return (
     <React.Fragment>
       <div className="conversation-wrap codei-ui-andy-setDefaults">
@@ -550,6 +565,7 @@ export default function Conversation() {
               filterTicketsState={filterTicketsState}
               activeChat={activeChat}
               setActiveChat={setActiveChat}
+              scollPosSendMsgList={scollPosSendMsgList}
             />
           </div>
 
@@ -581,7 +597,7 @@ export default function Conversation() {
                 />
               </div>
             ) : (
-              <div className="conversation-layout-col-two-chatCol">
+              <div className="conversation-layout-col-two-chatCol vgb">
                 {" "}
                 {/* CHAT HEADER BOX SECTION */}
                 {/* {noResponseFound ? (
@@ -889,6 +905,7 @@ export default function Conversation() {
                         </div>
                       );
                     })}
+                    <span id="lastMsg"></span>
 
                     {/* <div
                     className="msgRepliesSectionChattsdw"
@@ -1090,7 +1107,7 @@ export default function Conversation() {
                   options={
                     // populate 'options' prop from $Category, with names remapped
                     Category.map((data) => {
-                      return { value: data.name, label: data.name };
+                      return { value: data.id, label: data.name };
                     })
                   }
                 />
@@ -1124,7 +1141,7 @@ export default function Conversation() {
                     // populate 'options' prop from $Category, with names remapped
                     // Andy, replace Category below with whichever const holds list of priorities
                     Statues.map((data) => {
-                      return { value: data.name, label: data.status };
+                      return { value: data.id, label: data.status };
                     })
                   }
                 />
@@ -1142,7 +1159,7 @@ export default function Conversation() {
                   options={
                     // populate 'options' prop from $Statues, with names remapped
                     Category.map((data) => {
-                      return { value: data.name, label: data.name };
+                      return { value: data.id, label: data.name };
                     })
                   }
                 />
@@ -1271,7 +1288,9 @@ export default function Conversation() {
               </div>
             )}
             <div className="closeTicketModdalj">
-              <button type="submit">Update</button>
+              <button type="submit" onClick={updateTicket}>
+                Update
+              </button>
             </div>
           </div>
         </div>
