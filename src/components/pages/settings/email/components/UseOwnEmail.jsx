@@ -24,7 +24,7 @@ const UseOwnEmail = ({ state, setState }) => {
   };
 
   return (
-    <div class="card-body" id="mail-server">
+    <div class="card-body " id="mail-server">
       <p>Email system</p>
       <div class="row gx-3">
         <div class="col-md-3 text-center">
