@@ -18,6 +18,7 @@ import TicketStageIcon from "../../../assets/icons/ticketstage.svg";
 import TicketCategoriesIcon from "../../../assets/icons/Ticketcategory.svg";
 import TicketDueDateIcon from "../../../assets/icons/ticketduedate.svg";
 import TicketSourceIcon from "../../../assets/icons/ticketsource.svg";
+import { dateFormater } from "../../helpers/dateFormater";
 
 export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
   const [tags, setTags] = useState([
@@ -48,13 +49,15 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
             {ticket[0]?.customer?.avatar ? (
               <img src={ticket[0]?.customer?.avatar} alt="" />
             ) : (
-              <img src={userImg} alt="" />
-              // <div className="userProfilePicConNoImg">
-              //   <p>{`${UserInfo?.firstname?.slice(
-              //     0,
-              //     1
-              //   )} ${UserInfo?.lastname?.slice(0, 1)}`}</p>
-              // </div>
+              // <img src={userImg} alt="" />
+              <div className="userProfilePicConNoImgj">
+                <p
+                  style={{ fontSize: "30px!important" }}
+                >{`${UserInfo?.firstname?.slice(
+                  0,
+                  1
+                )} ${UserInfo?.lastname?.slice(0, 1)}`}</p>
+              </div>
             )}
             {/* 
             <p className="font-weight-bold"><b>{`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(
@@ -121,7 +124,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                         />
                       ) : (
                         <div
-                          className="userProfilePicConNoImg"
+                          className="j"
                           style={{
                             width: "30px",
                             height: "30px",
@@ -199,7 +202,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                         />
                       ) : (
                         <div
-                          className="userProfilePicConNoImg"
+                          className="j"
                           style={{
                             width: "30px",
                             height: "30px",
@@ -434,7 +437,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
             );
           })}
         </div> */}
-        {/* <div className="container-timeline">
+        <div className="container-timeline">
           <div className="box">
             <div className="borderContaner">
               <div className="circle"></div>
@@ -442,49 +445,46 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
             </div>
             <div className="textTimeLineSec">
               <span>
-                consectetur adipiscing elit. Quis pellentesque vitae nisi nulla.
-                Diam elit, ipsum id rhoncus
+                This message is assigned to{" "}
+                {`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(
+                  ticket[0]?.assignee?.lastname
+                )}`}
               </span>
               <div className="timeLinehashtags">
-                <div>#53467</div>
-                <div>13 March - 31 July, 2021</div>
-              </div>
-            </div>
-          </div>
-          <div className="box">
-            <div className="borderContaner">
-              <div className="circle"></div>
-              <div className="img"></div>
-            </div>
-            <div className="textTimeLineSec">
-              <span>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quis
-                pellentesque vitae nisi nulla. Diam elit, ipsum id rhoncus
-              </span>
-              <div className="timeLinehashtags">
-                <div style={{ background: "#DAECF8" }}>#53467</div>
-                <div>13 March - 31 July, 2021</div>
+                <div style={{ textTransform: "uppercase" }}>
+                  #{ticket[0]?.id.slice(ticket[0]?.id?.length - 8)}
+                </div>
+                <div>{dateFormater(ticket[0].created_at)}</div>
               </div>
             </div>
           </div>
 
-          <div className="box">
-            <div className="borderContaner">
-              <div className="circle"></div>
-              <div style={{ height: "0px" }} className="img"></div>
-            </div>
-            <div className="textTimeLineSec">
-              <span>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quis
-                pellentesque vitae nisi nulla. Diam elit, ipsum id rhoncus
-              </span>
-              <div className="timeLinehashtags">
-                <div>#53467</div>
-                <div>13 March - 31 July, 2021</div>
+          {ticket[0].history.length == 0 ? (
+            ""
+          ) : (
+            <div className="box">
+              <div className="borderContaner">
+                <div className="circle"></div>
+                <div className="img"></div>
+              </div>
+              <div className="textTimeLineSec">
+                <span>
+                  {`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(
+                    ticket[0]?.assignee?.lastname
+                  )}`}{" "}
+                  picked up this chat
+                </span>
+                <div className="timeLinehashtags">
+                  <div style={{ textTransform: "uppercase" }}>
+                    #{ticket[0]?.id.slice(ticket[0]?.id?.length - 8)}
+                  </div>
+                  <div>{dateFormater(ticket[0].created_at)}</div>
+                  {console.log(ticket[0])}
+                </div>
               </div>
             </div>
-          </div>
-        </div> */}
+          )}
+        </div>
       </div>
     </div>
   );

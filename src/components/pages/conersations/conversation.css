@@ -493,6 +493,24 @@
   margin-bottom: 0;
 }
 
+.userProfilePicConNoImgj {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: #006298;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.userProfilePicConNoImgj p {
+  color: white !important;
+  font-weight: 600 !important;
+  font-size: 30px !important;
+  margin-bottom: 0;
+  text-transform: capitalize;
+}
+
 .userProfilePicCon p {
   color: #040930;
   font-size: 14.5px;
