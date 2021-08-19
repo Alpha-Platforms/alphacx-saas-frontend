@@ -40,7 +40,6 @@ const AddStatusModal = ({createModalShow, setCreateModalShow, isEditing, editInf
                 status: editInfo.status
             }));
         }
-        console.log('ddd');
     }, [isEditing, createModalShow])
 
     const handleModalHide = () => {

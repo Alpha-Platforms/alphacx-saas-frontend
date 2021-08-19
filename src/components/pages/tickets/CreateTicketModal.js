@@ -25,7 +25,8 @@ const CreateTicketModal = ({
     resetTicketCreated,
     customers,
     // setChangingRow,
-    subCategories
+    subCategories,
+    tags
 }) => {
     const [selectedTags,
         setSelectedTags] = useState([]);
@@ -400,18 +401,7 @@ const CreateTicketModal = ({
                                     isMulti
                                     options={
                                         // populate 'options' prop from $agents, with names remapped
-                                        [
-                                            'Customer Data',
-                                            'Active',
-                                            'Billing',
-                                            'Important',
-                                            'Gillete Group',
-                                            'Oil & Gas',
-                                            'Enquiry',
-                                            'Pharmaceuticals',
-                                            'Telecommunications',
-                                            'Technology'
-                                        ].map(item => {
+                                        tags?.map(item => {
                                         return {value: item,label: item}
                                         })
                                     }
@@ -451,7 +441,8 @@ const mapStateToProps = (state, ownProps) => ({
     agents: state.agent.agents,
     groups: state.group.groups,
     isTicketCreated: state.ticket.isTicketCreated,
-    customers: state.customer.customers
+    customers: state.customer.customers,
+    tags: state.tag.tags?.tags_names?.tags
 })
 
 export default connect(mapStateToProps, {addTicket, getPaginatedTickets, resetTicketCreated})(CreateTicketModal);
