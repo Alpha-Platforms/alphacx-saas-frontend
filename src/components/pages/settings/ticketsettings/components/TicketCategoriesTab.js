@@ -84,7 +84,7 @@ const TicketCategoriesTab = ({ categories, meta }) => {
                 data={categories.map(({ name }) => ({
                   category: name,
                   parentCategory: "complaint",
-                  description: "Lorem ipsum dolor sit amet...",
+                  description: "",
                 }))}
                 options={{
                   search: false,

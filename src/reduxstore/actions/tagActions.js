@@ -12,7 +12,7 @@ export const getTags = () => (dispatch, getState) => {
 	axios.get(`${config.stagingBaseUrl}/tags`, userTokenConfig(getState))
 		.then(res => dispatch({
 			type: types.GET_TAGS,
-			payload: (res.data && res.data.status === "Success") ? res.data.data : {}
+			payload: res.data.status === "success" ? res.data?.data : {}
 		}))
 		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 }

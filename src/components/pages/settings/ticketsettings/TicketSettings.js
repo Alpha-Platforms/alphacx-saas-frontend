@@ -38,7 +38,7 @@ const TicketSettings = () => {
                 aria-controls="customer-field-view"
                 aria-selected="true"
               >
-                Ticket Settings
+                Ticket Distribution
               </button>
             </li>
             <li className="nav-item" role="presentation">
