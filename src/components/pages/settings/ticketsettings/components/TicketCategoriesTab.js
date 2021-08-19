@@ -14,6 +14,7 @@ import { Dropdown } from "react-bootstrap";
 import { httpPostMain } from "../../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
+import { TablePagination, TablePaginationProps } from "@material-ui/core";
 
 const TicketCategoriesTab = ({ categories, meta }) => {
   const [changingRow, setChangingRow] = useState(false);
@@ -27,6 +28,49 @@ const TicketCategoriesTab = ({ categories, meta }) => {
       },
     },
   });
+
+
+
+  const mixedCat = [];
+
+  categories.forEach(cat => {
+    if (cat.subCategories.length === 0) {
+      mixedCat.push({category: cat.name, parentCategory: ''});
+    } else {
+      cat.subCategories.forEach(c => mixedCat.push({category: c.name, parentCategory: cat.name}));
+    }
+  });
+
+
+  function AlphacxMTPagination(props: TablePaginationProps) {
+    const {
+      ActionsComponent,
+      onChangePage,
+      onChangeRowsPerPage,
+      ...tablePaginationProps
+    } = props;
+  
+    return (
+      <TablePagination
+        {...tablePaginationProps}
+        // @ts-expect-error onChangePage was renamed to onPageChange
+        onPageChange={onChangePage}
+        onRowsPerPageChange={onChangeRowsPerPage}
+        ActionsComponent={(subprops) => {
+          const { onPageChange, ...actionsComponentProps } = subprops;
+          return (
+            // @ts-expect-error ActionsComponent is provided by material-table
+            <ActionsComponent
+              {...actionsComponentProps}
+              onChangePage={onPageChange}
+            />
+          );
+        }}
+      />
+    );
+  }
+
+
 
   
   return (
@@ -47,6 +91,7 @@ const TicketCategoriesTab = ({ categories, meta }) => {
                   {
                     title: "Category",
                     field: "category",
+                    width: '50%'
                   },
                   {
                     title: "Parent Category",
@@ -81,17 +126,17 @@ const TicketCategoriesTab = ({ categories, meta }) => {
                     ),
                   },
                 ]}
-                data={categories.map(({ name }) => ({
-                  category: name,
-                  parentCategory: "complaint",
+                data={mixedCat.map(({ category, parentCategory }) => ({
+                  category,
+                  parentCategory,
                   description: "",
                 }))}
                 options={{
                   search: false,
                   selection: true,
                   // exportButton: true,
-                  tableLayout: "auto",
-                  paging: true,
+                  // tableLayout: "auto",
+                  // paging: true,
                   pageSize: 10,
                   headerStyle: {
                     backgroundColor: "#f8f9fa",
@@ -103,7 +148,7 @@ const TicketCategoriesTab = ({ categories, meta }) => {
                 }}
                 components={
                   {
-                    // Pagination: AlphacxMTPagination
+                    Pagination: AlphacxMTPagination
                   }
                 }
               />
