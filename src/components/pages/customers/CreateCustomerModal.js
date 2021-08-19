@@ -26,8 +26,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     // }
 
     const handleTagSelection = tags => {
-        const realTags = tags.map(tag => tag.value);
-        setSelectedTags(realTags);
+        setSelectedTags(tags);
     }
 
     // update state with inputs from user
@@ -47,7 +46,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
             NotificationManager.error("Fill up the required fields", 'Error');
         } else {
             setCreatingCust(true);
-            const res = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, phone_number: workphone, organisation, tags: selectedTags});
+            const res = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, phone_number: workphone, organisation, tags: selectedTags.map(tag => tag.value)});
             if (res.status === "success") {
                 NotificationManager.success(res?.message, 'Success');
                 setCreateModalShow(false);
@@ -63,6 +62,10 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     const handleModalHide = () => {
         setCreateModalShow(false);
         setCreatingCust(false);
+    }
+
+    const handleTagCreation = () => {
+        console.log('should create tag');
     }
 
     return (
@@ -177,6 +180,8 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                     }}
                                     isClearable={false}
                                     isMulti
+                                    onCreateOption={handleTagCreation}
+                                    value={selectedTags}
                                     options={
                                         // populate 'options' prop from $agents, with names remapped
                                         tags?.map(item => {
