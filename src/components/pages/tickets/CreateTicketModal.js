@@ -237,230 +237,193 @@ const CreateTicketModal = ({
     const [RSTicketDueDate, setRSTicketDueDate] = useState("");
 
     return (
-        <Modal 
-        open={openSaveTicketModal}
-        onClose={openSaveTicketModal} center>
-            <div className="saveTicketWrapModal">
-            <div className="modalHeaderSaveT">
-                Kindly update ticket before closing the chat
-            </div>
-
-            <div className="saveTicketModalForm">
-                <div className="ticketmodalInput-twoCol">
-                <div className="ticketmodalInputWrapMain">
-                    <label htmlFor="">Customer</label>
-                    <input
-                    value="weird"
-                    type="text"
-                    disabled
-                    />
-                </div>
-
-                {/* 
-                Andy's setters
-                setCategoryUpdate,
-                updateTicket              
-                */}
-
-                <div className="ticketmodalInputWrapMain">
-                    <label htmlFor="">Category</label>
-                    <RSelect
-                    className="rselectfield"
-                    style={{ fontSize: "12px" }}
-                    onChange={(value, actionMeta) => {
-                        setRSTicketCate(value);
-                    }}
-                    isClearable={false}
-                    options={
-                        // populate 'options' prop from $Category, with names remapped
-                        Category.map((data) => {
-                        return { value: data.id, label: data.name };
-                        })
-                    }
-                    />
-                </div>
-                </div>
-
-                <div className="ticketmodalInput-OneCol">
-                <div className="ticketmodalInputWrapMainOne">
-                    <label htmlFor="">Subject</label>
-                    <input
-                    type="text"
-                    value=""
-                    type="text"
-                    disabled
-                    style={{ fontSize: "12px" }}
-                    />
-                </div>
-                </div>
-
-                <div className="ticketmodalInput-twoCol">
-                <div className="ticketmodalInputWrapMain">
-                    <label htmlFor="">Stage</label>
-                    <RSelect
-                    className="rselectfield"
-                    style={{ fontSize: "12px" }}
-                    onChange={(value, actionMeta) => {
-                        setRSTicketStage(value);
-                    }}
-                    isClearable={false}
-                    options={
-                        // populate 'options' prop from $Category, with names remapped
-                        // Andy, replace Category below with whichever const holds list of priorities
-                        ticketStatuses.map((data) => {
-                        return { value: data.id, label: data.status };
-                        })
-                    }
-                    />
-                </div>
-
-                <div className="ticketmodalInputWrapMain">
-                    <label htmlFor="">Priority</label>
-                    <RSelect
-                    className="rselectfield"
-                    style={{ fontSize: "12px" }}
-                    onChange={(value, actionMeta) => {
-                        setRSTicketStage(value);
-                    }}
-                    isClearable={false}
-                    options={
-                        // populate 'options' prop from $Statues, with names remapped
-                        Category.map((data) => {
-                        return { value: data.id, label: data.name };
-                        })
-                    }
-                    />
-                </div>
-                </div>
-
-                <div className="descriptionWrap">
-                <label htmlFor="">Remarks</label>
-                <textarea
-                    style={{ padding: "10px" }}
-                    value=""
-                    style={{ fontSize: "12px", padding: "7px" }}
-                ></textarea>
-                </div>
-
-                <p
-                className="btn mt-3 p-0 text-start"
-                role="button"
-                style={{
-                    fontSize: "0.8rem",
-                    fontWeight: "bold",
-                    marginBottom: 0,
-                    color: "#006298!important",
-                }}
-                onClick={() => setIsAdditionalOptionVisible((v) => !v)}
-                >
-                Additional Options
-                </p>
-
-                {isAdditionalOptionVisible && (
-                <div className="additional-options">
-                    <div className="ticketmodalInput-OneCol">
-                    <div className="ticketmodalInputWrapMainOne">
-                        <label htmlFor="">Assigned To</label>
-                        <input
-                        type="text"
-                        value=""
-                        type="text"
-                        disabled
-                        style={{ fontSize: "12px" }}
-                        />
-                    </div>
-                    </div>
-
-                    <div className="ticketmodalInput-twoCol">
-                    <div
-                        className="ticketmodalInputWrapMain"
-                        style={{ width: "100%" }}
-                    >
-                        <label htmlFor="">Ticket Due Date</label>
-                        <div style={{ display: "flex", gap: "1rem" }}>
-                        <div className="thirdselects">
-                            <RSelect
-                            className="rselectfield"
-                            style={{ fontSize: "12px" }}
-                            onChange={(value, actionMeta) => {
-                                setRSTicketStage(value);
-                            }}
-                            isClearable={false}
-                            options={[
-                                { value: 1, label: 1 },
-                                { value: 2, label: 2 },
-                                { value: 3, label: 3 },
-                                { value: 4, label: 4 },
-                                { value: 5, label: 5 },
-                                { value: 6, label: 6 },
-                                { value: 7, label: 7 },
-                            ]}
-                            />
-                            <label htmlFor="">Days</label>
-                        </div>
-                        <div className="thirdselects">
-                            <RSelect
-                            className="rselectfield"
-                            style={{ fontSize: "12px" }}
-                            onChange={(value, actionMeta) => {
-                                setRSTicketStage(value);
-                            }}
-                            isClearable={false}
-                            options={[
-                                { value: 1, label: 1 },
-                                { value: 2, label: 2 },
-                                { value: 3, label: 3 },
-                                { value: 4, label: 4 },
-                                { value: 5, label: 5 },
-                                { value: 6, label: 6 },
-                                { value: 7, label: 7 },
-                            ]}
-                            />
-                            <label htmlFor="">Hours</label>
-                        </div>
-                        <div className="thirdselects">
-                            <RSelect
-                            className="rselectfield"
-                            style={{ fontSize: "12px" }}
-                            onChange={(value, actionMeta) => {
-                                setRSTicketStage(value);
-                            }}
-                            isClearable={false}
-                            options={[
-                                { value: 1, label: 1 },
-                                { value: 2, label: 2 },
-                                { value: 3, label: 3 },
-                                { value: 4, label: 4 },
-                                { value: 5, label: 5 },
-                                { value: 6, label: 6 },
-                                { value: 7, label: 7 },
-                            ]}
-                            />
-                            <label htmlFor="">Minutes</label>
-                        </div>
-                        </div>
-                    </div>
-                    </div>
-
-                    <div>
-                    <label htmlFor="">Tags</label>
-                    <RSelect
-                        className="rselectfield mt-4"
-                        onChange={(value, actionMeta) => setRSCustomerName(value)}
-                        isMulti
-                    />
-                    </div>
-                </div>
-                )}
-                <div className="closeTicketModdalj">
-                <button type="submit" onClick={ () => {} }>
-                    Update
-                </button>
-                </div>
-            </div>
-            </div>
-        </Modal>
+        <Modal
+            // show={createModalShow}
+            // onHide={handleModalHide}
+            open={createModalShow} onClose={handleModalHide}
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            >
+            {/* <Modal.Body> */}
+                <div className="saveTicketWrapModal p-4 pb-1">
+                    <h5 className="mb-3">Create New Ticket</h5>
+                    <form className="needs-validation mb-4" onSubmit={e => e.preventDefault()}>
+                        <div className="row">
+                            <div className="col-6 mt-2 position-relative">
+                                <label htmlFor="customer" className="form-label">Customer</label>
+                                {/* <select
+                                    className="form-select"
+                                    name="customer"
+                                    aria-label="Customer select"
+                                    onChange={handleModalInput}>
+                                    <option value=""></option>
+                                    {customers && customers.map(({id, firstname, lastname}) => <option value={id}>{`${wordCapitalize(firstname)} ${wordCapitalize(lastname)}`}</option>)}
+                                </select> */}
+                                <input
+                                    type="text"
+                                    name="customer"
+                                    className="form-control"
+                                    autoComplete="off"
+                                    ref={custInputRef}
+                                    onChange={handleCustomerSearch}/> {custSearch.openPreview && <div className="cust-search-preview">
+                                    {custSearch.isLoading && <div
+                                        style={{
+                                        textAlign: 'center'
+                                    }}><BeatLoader loading={true} color={"#006298"} margin={5} size={7}/></div>}
+                                    <ul>{(custSearch.gottenCust.length !== 0) && custSearch.gottenCust.map(({firstname, lastname, id}) => <li onClick={handleCustClick.bind({id, firstname, lastname})}>{`${firstname} ${lastname}`}</li>)}</ul>
+                                </div>}
+                                <span className="text-at-blue-light f-12 d-inline-block w-100 text-end">Add Customer</span>
+                            </div>
     
+                            <div className="col-6 mt-2">
+                                <label htmlFor="status" className="form-label">Stage</label>
+                                <select
+                                    className="form-select"
+                                    name="status"
+                                    aria-label="Status select"
+                                    onChange={handleModalInput}>
+                                    <option value=""></option>
+                                    {statuses && statuses.map(({id, status}) => <option value={id}>{status}</option>)}
+                                </select>
+                            </div>
+    
+                            
+                        </div>
+                        <div className="row mb-3">
+                            <div className="col-6 mt-2">
+                                <label htmlFor="category" className="form-label">Category</label>
+                                <select
+                                    className="form-select"
+                                    name="category"
+                                    aria-label="Category select"
+                                    onChange={handleModalInput}>
+                                    <option value=""></option>
+                                    {categories && categories.map(({id, name}) => <option value={id}>{name}</option>)}
+                                </select>
+                            </div>
+    
+                            <div className="col-6 mt-2">
+                                <label htmlFor="category" className="form-label">Sub Category (optional)</label>
+                                <select
+                                    className="form-select"
+                                    name="subcategory"
+                                    aria-label="Sub Category select"
+                                    // disabled={subCatLoading ? true : subCat ? false : true}
+                                    onChange={handleModalInput}>
+                                    <option value=""></option>
+                                    {subCategories && subCategories.map(({id, category_id, name}) => <option value={id}>{name}</option>)}
+                                </select>
+                            </div>
+    
+                        </div>
+                        <div className="row g-3 ">
+                            <div className="col-12 mt-3">
+                                <label htmlFor="subject" className="form-label">Subject</label>
+                                <input
+                                    type="text"
+                                    name="subject"
+                                    className="form-control"
+                                    onChange={handleModalInput}/>
+                            </div>
+    
+                            <div className="col-12 mt-3">
+                                <label htmlFor="description" className="form-label">Description!</label>
+                                <textarea
+                                    name="description"
+                                    id="description"
+                                    className="form-control ct-description"
+                                    onChange={handleModalInput}></textarea>
+                            </div>
+                        </div>
+                        
+                        { false &&
+                            <div className="">
+                                <div className="row">
+            
+                                    <div className="col-6 mt-3 position-relative">
+                                        <label htmlFor="priority" className="form-label">Priority</label>
+                                        <select
+                                            className="form-select"
+                                            name="priority"
+                                            aria-label="Priority select"
+                                            onChange={handleModalInput}>
+                                            <option value="Medium">Medium</option>
+                                            {priorities && priorities.map(({id, name}) => name !== "Medium" && <option value={id}>{name}</option>)}
+                                        </select>
+                                    </div>
+            
+                                    <div className="col-6 mt-3">
+                                        <label htmlFor="priority" className="form-label">Team</label>
+                                        <select
+                                            className="form-select"
+                                            name="group"
+                                            aria-label="Category select"
+                                            onChange={handleModalInput}>
+                                            <option value=""></option>
+                                            {groups && groups.map(({id, name}) => <option value={id}>{name}</option>)}
+                                        </select>
+                                    </div>
+                                </div>
+            
+                                <div className="row">
+                                    <div className="mt-3">
+                                        <label htmlFor="assignee" className="form-label">Assigned To</label>
+                                        <select
+                                            className="form-select"
+                                            name="assignee"
+                                            aria-label="Category select"
+                                            onChange={handleModalInput}>
+                                            <option value=""></option>
+                                            {agents && agents.map(({id, firstname, lastname}) => <option value={id}>{`${firstname} ${lastname}`}</option>)}
+                                        </select>
+                                    </div>
+                                </div>
+            
+                                <div className="row">
+            
+                                    <div className="col-12 mt-3 tags-select-wrapper">
+                                        <label htmlFor="title" className="form-label">Tags</label>
+                                        <RSelect className="rselectfield"
+                                            style={{ fontSize: "12px" }}
+                                            onChange={ (value, actionMeta) => {
+                                                handleTagSelection(value);
+                                            }}
+                                            isClearable={false}
+                                            isMulti
+                                            options={
+                                                // populate 'options' prop from $agents, with names remapped
+                                                tags?.map(item => {
+                                                return {value: item,label: item}
+                                                })
+                                            }
+                                        />
+                                    </div>
+            
+                                    <div className="col-12 mt-3">
+                                        <label htmlFor="title" className="form-label">Attachment (If Any)</label>
+                                        <div
+                                            id="ticket-ath-box"
+                                            className="border border-1 d-block text-center f-14 p-3"><img src={PinIcon} alt=""/>
+                                            <span className="text-at-blue-light">Add file</span>&nbsp;
+                                            <span>or drag file here</span>
+                                        </div>
+                                    </div>
+            
+                                </div>
+            
+                                <div className="mt-3 mt-sm-3 pt-3 text-end">
+                                    <button
+                                        type="button"
+                                        onClick={handleTicketCreation}
+                                        disabled={creatingTicket}
+                                        className="btn btn-sm bg-at-blue-light  py-1 px-4">{creatingTicket ? 'Creating...' : 'Create'}</button>
+                                </div>
+                            </div>
+                        }
+                    </form>
+                </div>
+            {/* </Modal.Body> */}
+        </Modal>
     )
 }
 
