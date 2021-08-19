@@ -7,10 +7,14 @@ import {ReactComponent as HamburgerSvg} from '../../../../../assets/icons/hambur
 // import {ReactComponent as EditGreySvg} from '../../../../../assets/icons/Edit-grey.svg';
 import {ReactComponent as FormMinusSvg} from '../../../../../assets/icons/form-minus.svg';
 import {uuid} from '../../../../../helper';
+import { updateStatus } from './../../../../../reduxstore/actions/statusActions';
+import {NotificationManager} from 'react-notifications';
+import { setCurrentAgentLoading } from './../../../../../reduxstore/actions/agentActions';
 
-const AddStatusModal = ({createModalShow, setCreateModalShow, isEditing, editInfo}) => {
+const AddStatusModal = ({createModalShow, setCreateModalShow, isEditing, editInfo, updateStatus}) => {
     const [modalStatus,
         setModalStatus] = useState({id: '', status: ''});
+    const [editing, setEditing] = useState(false);
 
     const handleInputChange = e => {
         setModalStatus(prev => ({
@@ -42,6 +46,24 @@ const AddStatusModal = ({createModalShow, setCreateModalShow, isEditing, editInf
     const handleModalHide = () => {
         setCreateModalShow(false);
         setModalStatus(prev => ({...prev, id: '', status: ''}));
+    }
+
+    const updateSuccess = () => {
+        setEditing(false);
+        setCreateModalShow(false);
+        setModalStatus(prev => ({...prev, id: '', status: ''}));
+        NotificationManager.success('Status updated successfully', 'Success');
+    }
+    
+    const updateFailed = () => {
+        setEditing(false);
+        NotificationManager.error('An error occurred', 'Error');
+    }
+
+    const handleStatusUpdate = () => {
+        setEditing(true);
+        const {id, status} = modalStatus;
+        updateStatus(id, {status}, updateSuccess, updateFailed);
     }
 
     //create user modal
@@ -77,7 +99,7 @@ const AddStatusModal = ({createModalShow, setCreateModalShow, isEditing, editInf
                             }}
                                 className="btn btn-sm btn-outline-secondary px-3 me-2 text-at-blue-light reset-btn-outline"
                                 type="button" onClick={handleCancelClick}>Cancel</button>
-                            {!isEditing ? <button type="button" className="btn btn-custom btn-sm  px-3 d-inline-block">Add Stage</button> : <button type="button" className="btn btn-custom btn-sm  px-3 d-inline-block">Edit Stage</button>}
+                            {!isEditing ? <button type="button" className="btn btn-custom btn-sm  px-3 d-inline-block">Add Stage</button> : <button onClick={handleStatusUpdate} type="button" disabled={editing} className="btn btn-custom btn-sm  px-3 d-inline-block">{editing ? 'Editing...' : 'Edit'} Stage</button>}
 
                         </div>
 
@@ -90,4 +112,4 @@ const AddStatusModal = ({createModalShow, setCreateModalShow, isEditing, editInf
 
 const mapStateToProps = (state, ownProps) => ({});
 
-export default connect(mapStateToProps, null)(AddStatusModal);
+export default connect(mapStateToProps, {updateStatus})(AddStatusModal);
