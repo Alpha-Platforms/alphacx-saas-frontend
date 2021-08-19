@@ -15,6 +15,7 @@ export default function MessageList({
   filterTicketsState,
   activeChat,
   setActiveChat,
+  scollPosSendMsgList,
 }) {
   const [renderTicket, setRenderTicket] = useState([]);
   useEffect(() => {
@@ -55,11 +56,13 @@ export default function MessageList({
                 index + 1 == activeChat ? "message-listmain-active" : ""
               }`}
               onClick={() => {
+                scollPosSendMsgList();
                 loadSingleMessage(data);
                 setTingleTicketFullInfo(data);
                 setTicketId(data.id);
                 setActiveChat(index + 1);
               }}
+              id="msgListTop"
             >
               <div className="message-user-img">
                 {data.customer.avatar == null ? (
@@ -80,9 +83,9 @@ export default function MessageList({
                   data?.customer?.firstname
                 )} ${capitalizeFirstLetter(data?.customer?.lastname)}`}</p>
                 <p className="senderMSG">
-                  {data.customer.description == null
+                  {data.subject == null
                     ? ""
-                    : truncateWithEllipses(data.customer.description, 30)}
+                    : truncateWithEllipses(data.subject, 30)}
                 </p>
                 <div className="msg-badges">
                   <div

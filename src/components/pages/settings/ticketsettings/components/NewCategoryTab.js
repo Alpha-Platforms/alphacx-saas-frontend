@@ -3,8 +3,10 @@ import {connect} from "react-redux";
 import {httpPostMain} from "../../../../../helpers/httpMethods";
 import {NotificationManager} from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
+import {getCategories} from '../../../../../reduxstore/actions/categoryActions';
+import {getSubCategories} from '../../../../../reduxstore/actions/subCategoryActions';
 
-const NewCategoryTab = ({categories, meta}) => {
+const NewCategoryTab = ({categories, meta, getCategories, getSubCategories, isCatLoading}) => {
     const [newCategory,
         setNewCategory] = useState({});
     const [policyLoading,
@@ -17,6 +19,8 @@ const NewCategoryTab = ({categories, meta}) => {
             [name]: value
         });
     };
+
+    console.log(newCategory);
 
     // function to get the list of all ticket categories   const getTicketCategories
     // = async () => {     const res = await httpGetMain("categories");     if
@@ -46,6 +50,7 @@ const NewCategoryTab = ({categories, meta}) => {
                 ?.status === "Success") {
             setNewCategory({});
             NotificationManager.success(res.data.message, "Success", 4000);
+            getCategories();
         } else {
             console.error(res.er);
             return NotificationManager.error(res
@@ -63,6 +68,7 @@ const NewCategoryTab = ({categories, meta}) => {
                 ?.status === "Success") {
             setNewCategory({});
             NotificationManager.success(res.data.message, "Success", 4000);
+            getCategories();
         } else {
             console.error(res.er);
             return NotificationManager.error(res
@@ -77,7 +83,7 @@ const NewCategoryTab = ({categories, meta}) => {
 
     return (
         <div className="ticket-cat-tab">
-            {policyLoading && (
+            {(policyLoading || isCatLoading) && (
                 <div className={`cust-table-loader ${policyLoading && "add-loader-opacity"}`}>
                     <ScaleLoader loading={policyLoading} color={"#006298"}/>
                 </div>
@@ -138,6 +144,6 @@ const NewCategoryTab = ({categories, meta}) => {
     );
 };
 
-const mapStateToProps = (state, ownProps) => ({categories: state.category.categories, meta: state.category.meta});
+const mapStateToProps = (state, ownProps) => ({categories: state.category.categories, meta: state.category.meta, isCatLoading: state.category.isCategoriesLoading});
 
-export default connect(mapStateToProps, null)(NewCategoryTab);
+export default connect(mapStateToProps, {getCategories, getSubCategories})(NewCategoryTab);

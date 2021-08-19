@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Layout from "../Layout/index.jsx";
 import { Route } from "react-router-dom";
 import { LayoutContext } from "../../context/layoutContext";
-
+import jwtDecode from "jwt-decode";
 const DefaultLayout = ({ children, routeType, pageName, ...rest }) => {
   let browserRouter = children.props.history.push;
   let fullProps = children.props;
@@ -38,11 +38,32 @@ const DefaultLayoutRoute = ({
   pageName,
   ...rest
 }) => {
+  const [valid, setValid] = useState("loading");
+  useEffect(() => {
+    ValidateToken();
+  }, [valid]);
+  const ValidateToken = () => {
+    let token = localStorage.getItem("token");
+    if (token == undefined || token == null || token == "") {
+      localStorage.clear();
+      return setValid(false);
+    }
+    if (jwtDecode(token).exp < Date.now() / 1000) {
+      localStorage.clear();
+      return setValid(false);
+    }
+    setValid(true);
+  };
+
   return (
     <Route
       {...rest}
       render={(matchProps) => {
-        return (
+        return valid == "loading" ? (
+          ""
+        ) : valid == false ? (
+          (window.location.href = "/")
+        ) : (
           <DefaultLayout
             routeType={routeType}
             page={rest.page}
