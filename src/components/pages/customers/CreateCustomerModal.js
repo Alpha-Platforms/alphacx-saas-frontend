@@ -168,7 +168,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                 </div>
                             </div> */}
 
-                            <div className="col-12 mt-3">
+                            <div className="col-12 mt-3 tags-select-wrapper">
                                 <label htmlFor="title" className="form-label">Tags</label>
                                 <RSelect className="rselectfield"
                                     style={{ fontSize: "12px" }}

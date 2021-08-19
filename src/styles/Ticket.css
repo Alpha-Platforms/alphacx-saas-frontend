@@ -265,3 +265,9 @@ background: transparent;
 .scale-9 {
     transform: scale(0.9) !important;
 }
+
+.tags-select-wrapper > div.rselectfield > div:nth-of-type(2) {
+    position: relative !important;
+    z-index: 10 !important;
+    top: 0;
+}
