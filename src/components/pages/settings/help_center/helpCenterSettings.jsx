@@ -88,9 +88,17 @@ const HelpCenterSettings = () => {
           </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item eventKey="1">
-              <Link to="/settings/users/personal-info-settings">
-                <span className="black-text">Edit</span>
-              </Link>
+              <span
+                className="black-text"
+                onClick={() => {
+                  // console.log(articles.articles[rowData.tableData.id].id);
+                  window.location.href = `/settings/help-center/edit/${
+                    articles.articles[rowData.tableData.id].id
+                  }`;
+                }}
+              >
+                Edit
+              </span>
             </Dropdown.Item>
             <Dropdown.Item eventKey="2">
               <span className="black-text">Delete</span>
