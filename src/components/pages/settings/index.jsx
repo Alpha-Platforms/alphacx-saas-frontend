@@ -182,7 +182,7 @@ function SettingsHome({signedUser}) {
 
         <div className="setting-link-item border rounded bg-light">
           <Link
-            to="/settings/ticket-settings"
+            to="/settings/tickets"
             className="d-block cursor text-decoration-none"
           >
             <div className="d-flex align-items-center p-md-4">

@@ -28,6 +28,17 @@ const statusReducer = (state = initialState, action) => {
 			return {
 				...state
 			}
+			case types.UPDATE_STATUS:
+				return {
+					...state,
+					statuses: state.statuses.map(x => {
+						if (x.id === action.payload.data.id) {
+							return action.payload.data;
+						} else {
+							return x;
+						}
+					})
+				}
 		default:
 			return state;
 	}
