@@ -137,6 +137,7 @@ export default function Conversation() {
       console.log("msg>>>", msg);
 
       setMsgHistory((item) => [...item, msg]);
+      scollPosSendMsgList();
       // sortMsges((item) => [...item, msg]);
     });
     return () => {
@@ -262,6 +263,8 @@ export default function Conversation() {
     );
 
     if (res?.status == "success") {
+      scollPosSendMsgList();
+
       // setsendingReply(false);
       // ReloadloadSingleMessage();
       setEditorState(initialState);

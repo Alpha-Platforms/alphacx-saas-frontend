@@ -83,9 +83,9 @@ export default function MessageList({
                   data?.customer?.firstname
                 )} ${capitalizeFirstLetter(data?.customer?.lastname)}`}</p>
                 <p className="senderMSG">
-                  {data.customer.description == null
+                  {data.subject == null
                     ? ""
-                    : truncateWithEllipses(data.customer.description, 30)}
+                    : truncateWithEllipses(data.subject, 30)}
                 </p>
                 <div className="msg-badges">
                   <div
