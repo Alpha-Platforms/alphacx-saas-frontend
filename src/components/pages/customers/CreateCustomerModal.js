@@ -5,7 +5,7 @@ import {addCustomer, getPaginatedCustomers} from '../../../reduxstore/actions/cu
 import {connect} from 'react-redux';
 import RSelect from 'react-select/creatable';
 
-const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers}) => {
+const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers, tags}) => {
 
     const [selectedTags,
         setSelectedTags] = useState([]);
@@ -179,18 +179,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                     isMulti
                                     options={
                                         // populate 'options' prop from $agents, with names remapped
-                                        [
-                                            'Customer Data',
-                                            'Active',
-                                            'Billing',
-                                            'Important',
-                                            'Gillete Group',
-                                            'Oil & Gas',
-                                            'Enquiry',
-                                            'Pharmaceuticals',
-                                            'Telecommunications',
-                                            'Technology'
-                                        ].map(item => {
+                                        tags?.map(item => {
                                         return {value: item,label: item}
                                         })
                                     }
@@ -214,6 +203,6 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     )
 }
 
-const mapStateToProps = (state, ownProps) => ({prop: state.prop});
+const mapStateToProps = (state, ownProps) => ({tags: state.tag.tags?.tags_names?.tags});
 
 export default connect(mapStateToProps, {getPaginatedCustomers})(CreateCustomerModal);
