@@ -397,7 +397,15 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
             )}
             <div className="ticktTagsgfs3">
               {ticket[0]?.tags == null ? (
-                <p style={{ fontSize: "11px" }}>No tag found</p>
+                <p
+                  style={{
+                    fontSize: "11px",
+                    textAlign: "center",
+                    // margin: "auto",
+                  }}
+                >
+                  No tag found
+                </p>
               ) : (
                 ticket[0]?.tags?.map((data) => {
                   return <div>{data}</div>;
@@ -426,7 +434,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
             );
           })}
         </div> */}
-        <div className="container-timeline">
+        {/* <div className="container-timeline">
           <div className="box">
             <div className="borderContaner">
               <div className="circle"></div>
@@ -476,7 +484,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

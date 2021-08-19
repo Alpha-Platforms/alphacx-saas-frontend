@@ -841,6 +841,7 @@ select {
   border: 1px solid rgba(0, 98, 152, 0.15) !important;
   height: 100% !important;
   border-radius: 9px !important;
+  padding: 2.5px;
 }
 
 .rdw-editor-toolbar {
@@ -952,14 +953,14 @@ select {
 }
 .conversationCommentBox {
   width: 100%;
-  height: 22%;
+  height: 24%;
   overflow: hidden;
   padding-left: 30px;
   padding-right: 30px;
   margin-top: 12px;
   background-color: #fafafa;
   padding-top: 20px;
-  margin-bottom: 17px;
+  /* margin-bottom: 17px; */
 }
 
 .custormChatHeaderInfo {

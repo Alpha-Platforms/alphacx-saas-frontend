@@ -8,7 +8,7 @@ import { httpGet } from "../../helpers/httpMethods";
 import { httpPatchMain, httpPostMain } from "../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import { hideLoader, showLoader } from "../../helpers/loader";
-
+import RightArrow from "../../../assets/imgF/arrow_right.png";
 // console.log(window);
 const FB = window.FB;
 
@@ -136,13 +136,17 @@ export default function SocialIntegrations() {
   };
   return (
     <div className="socialIntergratingPage">
-      {" "}
-      <div className="">
-        <Breadcrumb>
-          <Breadcrumb.Item>Settings</Breadcrumb.Item>
-          <Breadcrumb.Item active>Integration Settings</Breadcrumb.Item>
-        </Breadcrumb>
-      </div>
+      <div id="mainContentHeader" className="breadcrumb">
+        <h6 className="text-muted f-14">
+          <Link to="/settings">
+            <span className="text-custom">Settings</span>
+          </Link>{" "}
+          <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
+          {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
+                            className="img-fluid mx-2 me-3"></object> */}
+          <span>Integration Settings</span>
+        </h6>
+      </div>{" "}
       <div className="pageHeaderInter">
         <p>Integrate Social Accounts</p>
       </div>
@@ -186,7 +190,7 @@ export default function SocialIntegrations() {
             Connect via <span style={{ color: "#006298" }}>Twillio</span>{" "}
           </p>
 
-          <div className="sIntergrationForm">
+          <div className="mt-4 mb-5 col-md-8">
             {/* <div className="inputContainInter">
               <label htmlFor="">
                 Specify this address in the Webhook field in console:
@@ -194,35 +198,49 @@ export default function SocialIntegrations() {
               <input type="text" name="" />
             </div> */}
 
-            <div className="inputContainInter">
-              <label htmlFor="">Account SID:</label>
-              <input
-                type="text"
-                name="twillo_account_sid"
-                onChange={handleWhatsappChange}
-                value={whatsappConfig.twillo_account_sid}
-              />
+            <div className="mb-3">
+              <div className="mb-3">
+                <label for="organisation-name" className="form-label">
+                  Account SID:
+                </label>
+                <input
+                  type="text"
+                  name="twillo_account_sid"
+                  onChange={handleWhatsappChange}
+                  value={whatsappConfig.twillo_account_sid}
+                  className="form-control"
+                  id="organisation-name"
+                />
+              </div>
+              <div className="mb-3">
+                <label for="organisation-name" className="form-label">
+                  Auth Token:
+                </label>
+                <input
+                  type="text"
+                  name="twillo_auth_token"
+                  onChange={handleWhatsappChange}
+                  value={whatsappConfig.twillo_auth_token}
+                  className="form-control"
+                  id="organisation-name"
+                />
+              </div>
+
+              <div className="mb-3">
+                <label for="organisation-name" className="form-label">
+                  Account phone number:
+                </label>
+                <input
+                  type="text"
+                  name="twillo_no"
+                  onChange={handleWhatsappChange}
+                  value={whatsappConfig.twillo_no}
+                  className="form-control"
+                  id="organisation-name"
+                />
+              </div>
             </div>
 
-            <div className="inputContainInter">
-              <label htmlFor="">Auth Token:</label>
-              <input
-                type="text"
-                name="twillo_auth_token"
-                onChange={handleWhatsappChange}
-                value={whatsappConfig.twillo_auth_token}
-              />
-            </div>
-
-            <div className="inputContainInter">
-              <label htmlFor="">Account phone number:</label>
-              <input
-                type="text"
-                name="twillo_no"
-                onChange={handleWhatsappChange}
-                value={whatsappConfig.twillo_no}
-              />
-            </div>
             <div className="buttonSubSocialInt">
               <button onClick={handleConnectWhatsApp}>Connect</button>
             </div>
@@ -294,6 +312,7 @@ export default function SocialIntegrations() {
       ) : (
         ""
       )}
+      <div className="mt-4 mb-5 col-md-8"></div>
     </div>
   );
 }
