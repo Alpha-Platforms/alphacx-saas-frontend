@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
 
 const TicketSettings = () => {
-  const [tabKey, setTabKey] = useState("ticket-settings");
+  const [tabKey, setTabKey] = useState("ticket-categories");
 
   return (
     <div>
@@ -83,7 +83,7 @@ const TicketSettings = () => {
                 aria-controls="ticket-categoriese-view"
                 aria-selected="false"
               >
-                New Category
+                Add Category
               </button>
             </li>
           </ul>
