@@ -143,9 +143,6 @@ const NewArticle = () => {
     if (res?.status == "success") {
       let categories = res?.data;
       setCategories(categories);
-      if (articleId && articleId !== "") {
-        fetchArticleDetails(categories);
-      }
     } else {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
@@ -205,15 +202,8 @@ const NewArticle = () => {
         ...newPost,
         title,
         richText: body,
-        categoryId,
         folderId: folder.id,
       });
-
-      let selectedCategory = categories.filter(
-        (item) => item.id === categoryId
-      );
-
-      setFolders(selectedCategory[0]?.folders);
 
       // convert rich text to plain text in editor
       const blocksFromHTML = convertFromHTML(body);
@@ -266,12 +256,11 @@ const NewArticle = () => {
     const data = {
       title: newPost.title,
       body: newPost.richText,
-      folderId: newPost.folderId,
     };
     console.clear();
     console.log("article", data);
 
-    const res = await httpPatchMain(`article/${articleId}`, data);
+    const res = await httpPatchMain(`articles/${articleId}`, data);
 
     if (res?.status == "success") {
       setPolicyLoading(false);
@@ -285,7 +274,11 @@ const NewArticle = () => {
   };
 
   useEffect(() => {
-    fetchCategories();
+    if (!articleId) {
+      fetchCategories();
+    } else {
+      fetchArticleDetails(categories);
+    }
   }, []);
 
   useEffect(() => {
@@ -527,16 +520,18 @@ const NewArticle = () => {
             </div>
 
             <div className="toogles">
-              <div className="toogle mb-4">
-                <p>Published globally</p>
-                <button
-                  className={newPost.publishGlobal ? "active" : ""}
-                  onClick={handlePublish}
-                >
-                  <div className="ball"></div>
-                </button>
-              </div>
-              <div className="toogle">
+              {!articleId && (
+                <div className="toogle mb-4">
+                  <p>Published globally</p>
+                  <button
+                    className={newPost.publishGlobal ? "active" : ""}
+                    onClick={handlePublish}
+                  >
+                    <div className="ball"></div>
+                  </button>
+                </div>
+              )}
+              {/* <div className="toogle">
                 <p>Published in English</p>
                 <button
                   className={newPost.publishEnglish ? "active" : ""}
@@ -549,7 +544,7 @@ const NewArticle = () => {
                 >
                   <div className="ball"></div>
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
