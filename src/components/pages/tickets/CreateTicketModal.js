@@ -9,7 +9,9 @@ import {getPaginatedTickets} from '../../../reduxstore/actions/ticketActions';
 import {getInstantSearchedCustomers} from '../../../reduxstore/actions/customerActions';
 import BeatLoader from 'react-spinners/BeatLoader';
 import { getSubCategory } from './../../../reduxstore/actions/categoryActions';
-import RSelect from 'react-select/creatable';
+import RSelect from 'react-select';
+import RCreatable from 'react-select/creatable';
+import AsyncSelect from 'react-select/async';
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 import {
     httpGetMain,
@@ -229,6 +231,32 @@ const CreateTicketModal = ({
         }));
     }
 
+    const filtered = (userInput) => {
+        const cities = [
+            {label: "lagos", value: "lagos"},
+            {label: "canada", value: "canada"},
+            {label: "abuja", value: "abuja"},
+            {label: "san francisco", value: "san francisco"},
+            {label: "miami", value: "miami"},
+            {label: "washington dc", value: "washington dc"},
+            {label: "port harcourt", value: "port harcourt"}
+        ];
+        return cities.filter(item => {
+            item.label.includes(userInput.toLowerCase())
+        })
+    }
+    const promisefn = (inputValue) => {
+        //    fetch('https://jsonplaceholder.typicode.com/todos/1')
+
+        new Promise(resolve => {
+            setTimeout(() => {
+                resolve(filtered(inputValue))
+            }, 1000);
+        })
+
+        
+    }
+
     const [Category, setCategory] = useState([]);
     const [openSaveTicketModal, setopenSaveTicketModal] = useState(false);
     const [ticketStatuses, setTicketStatuses] = useState([]);
@@ -303,6 +331,17 @@ const CreateTicketModal = ({
                 <div className="saveTicketWrapModal p-4 pb-1">
                     <p className="fs-5">Create New Ticket</p>
                     <form className="needs-validation mb-4" onSubmit={e => e.preventDefault()}>
+
+
+
+<AsyncSelect loadOptions={promisefn} />
+
+
+
+
+
+
+
                         <div className="row mb-3">
                             <div className="col-6 mt-2 position-relative">
                                 <label htmlFor="customer" className="form-label">Customer</label>
@@ -359,6 +398,7 @@ const CreateTicketModal = ({
                                         // handleTagSelection(value);
                                     }}
                                     isClearable={false}
+                                    // onMenuOpen={prevCategoriesAndSubs}
                                     isMulti={false}
                                     options={categoriesAndSubs}
                                 />
@@ -373,6 +413,7 @@ const CreateTicketModal = ({
                                         // handleTagSelection(value);
                                     }}
                                     isClearable={false}
+                                    noOptionsMessage={() => "No options available!"}
                                     isMulti={false}
                                     options={
                                         // populate 'options' prop from $agents, with names remapped
@@ -509,7 +550,7 @@ const CreateTicketModal = ({
             
                                     <div className="col-12 mt-3 tags-select-wrapper">
                                         <label htmlFor="title" className="form-label">Tags</label>
-                                        <RSelect className="rselectfield"
+                                        <RCreatable className="rselectfield"
                                             style={{ fontSize: "12px" }}
                                             onChange={ (value, actionMeta) => {
                                                 handleTagSelection(value);
@@ -536,16 +577,16 @@ const CreateTicketModal = ({
                                     </div>
             
                                 </div>
-            
-                                <div className="mt-3 mt-sm-3 pt-3 text-end">
-                                    <button
-                                        type="button"
-                                        onClick={handleTicketCreation}
-                                        disabled={creatingTicket}
-                                        className="btn bg-at-blue-light  py-1 px-4">{creatingTicket ? 'Creating...' : 'Create'}</button>
-                                </div>
                             </div>
                         }
+            
+                        <div className="mt-3 mt-sm-3 pt-3 text-end">
+                            <button
+                                type="button"
+                                onClick={handleTicketCreation}
+                                disabled={creatingTicket}
+                                className="btn bg-at-blue-light  py-1 px-4">{creatingTicket ? 'Creating...' : 'Create'}</button>
+                        </div>
                     </form>
                 </div>
             {/* </Modal.Body> */}
