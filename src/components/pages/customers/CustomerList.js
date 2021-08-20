@@ -123,7 +123,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                     <div
                         className={`user-initials ${contact.theme
                         ? contact.theme
-                        : themes[Math.floor(Math.random() * 4)]}`}>{getUserInitials(`${contact.firstname} ${contact.lastname}`)}</div>
+                        : themes[Math.floor(Math.random() * 4)]}`}>{contact.avatar ? <img src={contact.avatar} className="cust-avatar" alt="" /> : getUserInitials(`${contact.firstname} ${contact.lastname}`)}</div>
                     <div className="ms-2 mt-1">
                         <Link to={`/customers/${contact.id}`} style={{ textTransform: 'capitalize' }}>{`${contact.firstname} ${contact.lastname}`}</Link>
                     </div>
@@ -171,9 +171,10 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                     email,
                     phone_number,
                     theme,
-                    id}) => ({
+                    id,
+                    avatar}) => ({
                     title: title ? title :`Mr.`,
-                    contact: {firstname, lastname, theme, id},
+                    contact: {firstname, lastname, theme, id, avatar},
                     organisation: company ? company : 'Gillete',
                     emailAddress: email,
                     workphone: phone_number,
@@ -291,9 +292,10 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                 email,
                                 phone_number,
                                 theme,
-                                id}) => ({
+                                id,
+                                avatar}) => ({
                                 title: title ? title :`Mr.`,
-                                contact: {firstname, lastname, theme, id},
+                                contact: {firstname, lastname, theme, id, avatar},
                                 organisation: company ? company : 'Gillete',
                                 emailAddress: email,
                                 workphone: phone_number,

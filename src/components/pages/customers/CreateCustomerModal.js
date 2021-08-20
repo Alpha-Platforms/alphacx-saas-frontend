@@ -257,4 +257,4 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
 
 const mapStateToProps = (state, ownProps) => ({tags: state.tag.tags?.tags_names?.tags, customers: state.customer.customers});
 
-export default connect(mapStateToProps, {getPaginatedCustomers, updateCustomer, getPaginatedCustomers})(CreateCustomerModal);
+export default connect(mapStateToProps, {getPaginatedCustomers, updateCustomer})(CreateCustomerModal);
