@@ -612,3 +612,7 @@
   position: relative;
   left: -8px;
 }
+
+.dd_menu li:hover {
+  background-color: #d2e7ff;
+}
