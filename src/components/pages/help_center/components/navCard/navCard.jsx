@@ -3,17 +3,22 @@ import { Link } from "react-router-dom";
 import { HelpNavIcon } from "../../../../../assets/images/svgs";
 import "./navCard.scss";
 
-const NavCard = ({ title, icon, items, link }) => {
+const NavCard = ({ title, icon, folders, id }) => {
   return (
     <div className="nav-card">
-      <Link to={`/help${link}` || "/help"}>
+      <Link
+        to={
+          `/help/${title.toLowerCase().replaceAll(" ", "-")}?id=${id}` ||
+          "/help"
+        }
+      >
         <div className="nav-icon">
           <HelpNavIcon name={icon} size={50} />
         </div>
         <p className="title">{title}</p>
         <div className="description">
-          {items.map((item, i) => (
-            <p key={i}>{item}</p>
+          {folders.map((item, i) => (
+            <p key={i}>{item.name}</p>
           ))}
         </div>
       </Link>

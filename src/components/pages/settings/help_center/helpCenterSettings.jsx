@@ -16,15 +16,19 @@ import {
   createTheme,
 } from "@material-ui/core/styles";
 import "../../../../styles/Ticket.css";
+import Swal from "sweetalert2";
+import { wordCapitalize } from "../../../../helper";
 
 const HelpCenterSettings = () => {
   const [articles, setArticles] = useState([]);
+  const [meta, setMeta] = useState({});
   const fetchAllArticles = async () => {
-    const res = await httpGetMain("articles/categories");
+    const res = await httpGetMain("articles");
     if (res?.status == "success") {
       console.clear();
       console.log("articles", res);
-      setArticles(res?.data[0].folders[1]);
+      setArticles(res?.data?.articles);
+      setMeta(res?.data?.meta);
       // setLoadingTicks(true);
       // setTickets(res?.data?.tickets);
       // setLoadingTicks(false);
@@ -38,6 +42,28 @@ const HelpCenterSettings = () => {
     newArticles.articles[index].checked = e.target.checked;
     setArticles(newArticles);
   };
+
+  function handlePublishChange() {
+    const { title, isPublished } = this;
+
+    Swal.fire({
+      title: isPublished ? "Unpublish?" : "Publish?",
+      text: `Do you want to ${
+        isPublished ? "unpublish" : "publish"
+      } "${wordCapitalize(title)}"?`,
+      showCancelButton: true,
+      confirmButtonColor: "#006298",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log("Deactivate or  user");
+      } else {
+        console.log("Do nothing");
+      }
+    });
+  }
 
   const tableTheme = createTheme({
     palette: {
@@ -57,8 +83,22 @@ const HelpCenterSettings = () => {
       width: "40%",
     },
     {
-      title: "Status",
-      field: "status",
+      title: "Publish",
+      field: "publish",
+      render: (rowData) => (
+        <div class="form-check form-switch">
+          <input
+            className="form-check-input form-check-input-lg mt-1"
+            checked={rowData.isPublished}
+            readOnly={true}
+            onChange={handlePublishChange.bind({
+              title: rowData.title,
+              isPublished: rowData.isPublished,
+            })}
+            type="checkbox"
+          />
+        </div>
+      ),
     },
     {
       title: "Page Views",
@@ -93,7 +133,7 @@ const HelpCenterSettings = () => {
                 onClick={() => {
                   // console.log(articles.articles[rowData.tableData.id].id);
                   window.location.href = `/settings/help-center/edit/${
-                    articles.articles[rowData.tableData.id].id
+                    articles[rowData.tableData.id].id
                   }`;
                 }}
               >
@@ -121,9 +161,9 @@ const HelpCenterSettings = () => {
       <TablePagination
         {...tablePaginationProps}
         rowsPerPageOptions={[10, 20, 30]}
-        rowsPerPage={5}
-        count={20}
-        page={1 - 1}
+        rowsPerPage={meta?.itemsPerPage || 10}
+        count={Number(meta?.totalItems || 20)}
+        page={(meta?.currentPage || 1) - 1}
         onPageChange={onChangePage}
         // when the number of rows per page changes
         onRowsPerPageChange={(event) => {
@@ -151,10 +191,8 @@ const HelpCenterSettings = () => {
   };
 
   useEffect(() => {
-    if (articles.length === 0) {
-      fetchAllArticles();
-    }
-  }, [articles]);
+    fetchAllArticles();
+  }, []);
   return (
     <div class="settings-email help-center-settings">
       <div class="card card-body bg-white border-0 mt-4">
@@ -181,45 +219,43 @@ const HelpCenterSettings = () => {
           </div>
         </div>
 
-        {articles?.articles?.length > 0 && (
-          <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
-            <div
-              id="alphacxMTable"
-              className="pb-5 acx-ticket-cust-table acx-ticket-table p-4"
-            >
-              <MuiThemeProvider theme={tableTheme}>
-                <MaterialTable
-                  columns={tableColumns}
-                  title=""
-                  icons={tableIcons}
-                  data={articles?.articles?.map(({ title }) => ({
-                    title,
-                    status: "Published",
-                    views: "100",
-                    author: "Dabo Etela",
-                    created_at: "12-05-2021",
-                    modified_at: "12-05-2021",
-                  }))}
-                  options={{
-                    search: true,
-                    selection: true,
-                    // exportButton: true,
-                    tableLayout: "auto",
-                    paging: true,
-                    pageSize: 10,
-                    headerStyle: {
-                      // backgroundColor: '#f8f9fa'
-                      backgroundColor: "#fefdfd",
-                    },
-                  }}
-                  components={{
-                    Pagination: AlphacxMTPagination,
-                  }}
-                />
-              </MuiThemeProvider>
-            </div>
+        <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
+          <div
+            id="alphacxMTable"
+            className="pb-5 acx-ticket-cust-table acx-ticket-table p-4"
+          >
+            <MuiThemeProvider theme={tableTheme}>
+              <MaterialTable
+                columns={tableColumns}
+                title=""
+                icons={tableIcons}
+                data={articles?.map(({ title, created_at, updated_at }) => ({
+                  title,
+                  views: "100",
+                  author: "Dabo Etela",
+                  created_at: created_at.split(" ")[0],
+                  modified_at: updated_at.split(" ")[0],
+                }))}
+                options={{
+                  search: true,
+                  selection: true,
+                  // exportButton: true,
+                  tableLayout: "auto",
+                  paging: true,
+                  pageSize: 10,
+                  headerStyle: {
+                    // backgroundColor: '#f8f9fa'
+                    backgroundColor: "#fefdfd",
+                  },
+                }}
+                components={{
+                  Pagination: AlphacxMTPagination,
+                }}
+              />
+            </MuiThemeProvider>
           </div>
-        )}
+        </div>
+
         {!articles?.articles && (
           <div class="text-center empty-state">
             <img src={EmptyArticle} alt="no article" class="img-fluid mb-4" />

@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SearchIconNavbr, SendIcon } from "../../../assets/images/svgs";
 import HelpNavBar from "../../Layout/helpNavBar";
 import Accordion from "./components/accordion/Accordion";
@@ -7,51 +6,40 @@ import NavCard from "./components/navCard/navCard";
 import { faqs } from "./faq";
 import "./helpCenter.scss";
 import LogoBG from "../../../assets/imgF/logoBG.png";
+import { httpGetMain } from "../../../helpers/httpMethods";
+import { NotificationManager } from "react-notifications";
 
 const HelpCenter = () => {
-  const navigation = [
-    {
-      icon: "work",
-      link: "/get-started",
-      title: "Get Started",
-      items: ["Importing Customers", "Creating Tickets"],
-    },
-    {
-      icon: "account",
-      link: "/my-account",
-      title: "My Account",
-      items: ["Profile Update", "Change Password"],
-    },
-    {
-      icon: "subscription",
-      link: "/subscription-&-license",
-      title: "Subscription & License",
-      items: ["Subcription Activation", "License Upgrade"],
-    },
-    {
-      icon: "users",
-      link: "/user-management",
-      title: "User Management",
-      items: ["Import Users", "User Groups", "AD/LDAP Integration"],
-    },
-    {
-      icon: "settings",
-      link: "/integrations",
-      title: "Integrations",
-      items: ["My SQL Integration", "API Import and Sync"],
-    },
-    {
-      icon: "document",
-      link: "/forms-&-survey",
-      title: "Forms & Survey",
-      items: ["Form Builder", "Survey Creation"],
-    },
+  const [categories, setCategories] = useState([]);
+  const icons = [
+    "work",
+    "account",
+    "subscription",
+    "users",
+    "settings",
+    "document",
   ];
   const [search, setSearch] = useState("");
 
   const handleChange = (e) => {
     setSearch(e.value);
   };
+
+  const fetchCategories = async () => {
+    const res = await httpGetMain("articles/categories");
+    if (res?.status == "success") {
+      let categories = res?.data;
+      console.clear();
+      console.log(categories);
+      setCategories(categories);
+    } else {
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
   return (
     <>
       <HelpNavBar />
@@ -78,13 +66,14 @@ const HelpCenter = () => {
         </div>
         <div className="navigation-cards">
           <div className="nav-cards">
-            {navigation.map((nav, i) => (
+            {categories.map((cat, i) => (
               <NavCard
                 key={`item-${i + 1}`}
-                icon={nav.icon}
-                title={nav.title}
-                items={nav.items}
-                link={nav.link}
+                icon={icons[i]}
+                title={cat.name}
+                folders={cat.folders}
+                id={cat.id}
+                // link={nav.link}
               />
             ))}
           </div>
