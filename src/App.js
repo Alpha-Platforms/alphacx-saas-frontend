@@ -96,7 +96,7 @@ const SiteRouter = connect(mapStateToProps, {
   getPaginatedCustomers,
   getPaginatedUsers,
   getTags,
-  getSubCategories
+  getSubCategories,
 })(
   ({
     loginTenant,
@@ -114,7 +114,7 @@ const SiteRouter = connect(mapStateToProps, {
     getPaginatedCustomers,
     getPaginatedUsers,
     getTags,
-    getSubCategories
+    getSubCategories,
   }) => {
     useEffect(() => {
       loginTenant({ domain: "techpoint" });
@@ -313,6 +313,12 @@ const SiteRouter = connect(mapStateToProps, {
                 <SettingsLayoutRoute
                   exact
                   path="/settings/help-center/article"
+                  pageName="Settings"
+                  component={NewArticle}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/help-center/edit/:articleId"
                   pageName="Settings"
                   component={NewArticle}
                 />

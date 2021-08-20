@@ -84,7 +84,7 @@ function Dropdown() {
                     padding: "0.5rem 0",
                     backgroundColor: "#006298",
                     borderRadius: "3px",
-                    width: "6.5rem",
+                    width: "7rem",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center"
@@ -107,18 +107,19 @@ function Dropdown() {
                   <ul className="dd_menu list-unstyled"
                     style={{ 
                         border: "solid 1px #ddd",
-                        padding: "0.25rem 0.75rem 0.5rem",
+                        // padding: "0.25rem 0.75rem 0.5rem",
                         backgroundColor: "white",
                         borderRadius: "3px",
                         marginTop: "0px",
-                        width: "6rem",
-                        position: "fixed"
+                        width: "7rem",
+                        position: "fixed",
+                        textAlign: "center"
                     }}
                   >
-                      <li style={{borderBottom: "solid 1px #CCC"}}>
+                      <li style={{}}>
                         <button className="dd_item btn rounded-0" onClick={() => setCreateTicketModalShow(true)}>Ticket</button>
                       </li>
-                      <li style={{borderBottom: "solid 1px #CCC"}}>
+                      <li style={{}}>
                         <button className="dd_item btn rounded-0" onClick={() => setCreateCustModalShow(true)}>Contact</button>
                       </li>
                   </ul>

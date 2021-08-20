@@ -137,6 +137,7 @@ export default function Conversation() {
       console.log("msg>>>", msg);
 
       setMsgHistory((item) => [...item, msg]);
+      scollPosSendMsgList();
       // sortMsges((item) => [...item, msg]);
     });
     return () => {
@@ -262,6 +263,8 @@ export default function Conversation() {
     );
 
     if (res?.status == "success") {
+      scollPosSendMsgList();
+
       // setsendingReply(false);
       // ReloadloadSingleMessage();
       setEditorState(initialState);
@@ -1072,9 +1075,9 @@ export default function Conversation() {
       </div>
       <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal} center>
         <div className="saveTicketWrapModal">
-          <div className="modalHeaderSaveT">
+          <p className="fs-5">
             Kindly update ticket before closing the chat
-          </div>
+          </p>
 
           <div className="saveTicketModalForm">
             <div className="ticketmodalInput-twoCol">

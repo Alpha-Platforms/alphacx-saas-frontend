@@ -1265,3 +1265,8 @@ a object {
 .whitespace-nowrap {
   white-space: nowrap;
 }
+
+/* Bootstrap adjustment */
+.form-check-input {
+  margin-top: .2em!important;
+}
