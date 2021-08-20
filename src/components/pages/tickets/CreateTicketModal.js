@@ -425,7 +425,7 @@ const CreateTicketModal = ({
                                 type="button"
                                 onClick={handleTicketCreation}
                                 disabled={creatingTicket}
-                                className="btn btn-sm bg-at-blue-light  py-1 px-4">{creatingTicket ? 'Creating...' : 'Create'}</button>
+                                className="btn bg-at-blue-light  py-1 px-4">{creatingTicket ? 'Creating...' : 'Create'}</button>
                         </div>
                     </form>
                 </div>

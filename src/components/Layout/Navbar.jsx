@@ -131,6 +131,7 @@ function Dropdown() {
               <CreateCustomerModal 
                 createModalShow={createCustModalShow} 
                 setCreateModalShow={setCreateCustModalShow} 
+                isEditing={false}
                 // setChangingRow={setChangingRow} 
               />
           </div>

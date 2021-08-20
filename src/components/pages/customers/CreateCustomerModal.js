@@ -1,17 +1,18 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Modal} from 'react-responsive-modal';
 import {NotificationManager} from 'react-notifications';
-import {addCustomer, getPaginatedCustomers} from '../../../reduxstore/actions/customerActions';
+import {addCustomer, getPaginatedCustomers, updateCustomer} from '../../../reduxstore/actions/customerActions';
 import {connect} from 'react-redux';
 import RSelect from 'react-select/creatable';
 
-const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers, tags}) => {
+const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers, tags, isEditing, customerId, customers, updateCustomer}) => {
 
     const [selectedTags,
         setSelectedTags] = useState([]);
     const [modalInputs,
         setModalInputs] = useState({firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: ''});
     const [creatingCust, setCreatingCust] = useState(false);
+    const [editingCust, setEditingCust] = useState(false);
 
     // function handleTagSelection() {
     //     const {tag} = this;
@@ -40,6 +41,24 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
         }));
     }
 
+    
+    useEffect(() => {
+        if (createModalShow && isEditing && customerId) {
+            console.log(customerId);
+            console.log("foundee: ", customers.find(cust => cust.id === customerId));
+
+            const {firstname, lastname, phone_number, email, organisation} = customers.find(cust => cust.id === customerId);
+            setModalInputs(prev => ({
+                ...prev,
+                firstname,
+                lastname,
+                workphone: phone_number,
+                emailaddress: email
+            }));
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [createModalShow]);
+
     const handleCustomerCreation = async () => {
         const {firstname, lastname, workphone, emailaddress, organisation} = modalInputs;
         if (!firstname || !lastname || !workphone || !emailaddress) {
@@ -56,6 +75,30 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
             } else {
                 setCreatingCust(false);
             }
+        }
+    }
+
+    const custEditSuccess = () => {
+        NotificationManager.success('Customer updated successfully', 'Success');
+        getPaginatedCustomers(10, 1);
+        setEditingCust(false);
+        setModalInputs(prev => ({...prev, firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: ''}));
+        setCreateModalShow(false);
+    }
+    
+    const custEditFail = () => {
+        NotificationManager.error('Oops, an error occured', 'Error');
+        setEditingCust(false);
+    }
+
+    const handleCustomerEdit = () => {
+        const {firstname, lastname, workphone, emailaddress, organisation} = modalInputs;
+        if (!firstname || !lastname || !workphone || !emailaddress) {
+            NotificationManager.error("Fill up the required fields", 'Error');
+        } else {
+            setEditingCust(true);
+            const newCustomer = {firstName: firstname, lastName: lastname, email: emailaddress, phone_number: workphone, organisation, tags: selectedTags.map(tag => tag.value)};
+            updateCustomer(customerId, newCustomer, custEditSuccess, custEditFail);
         }
     }
 
@@ -194,11 +237,15 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                         </div>
 
                         <div className="mt-3 mt-sm-3 pt-3 text-end">
-                            <button
+                            {!isEditing ? <button
                                 type="button"
-                                className="btn btn-sm bg-at-blue-light  py-1 px-4"
+                                className="btn bg-at-blue-light  py-1 px-4"
                                 disabled={creatingCust}
-                                onClick={handleCustomerCreation}>{creatingCust ? 'Creating...' : 'Create'}</button>
+                                onClick={handleCustomerCreation}>{creatingCust ? 'Creating...' : 'Create'}</button> : <button
+                                type="button"
+                                className="btn bg-at-blue-light  py-1 px-4"
+                                disabled={editingCust}
+                                onClick={handleCustomerEdit}>{editingCust ? 'Editing...' : 'Edit'}</button>}
                         </div>
 
                     </form>
@@ -208,6 +255,6 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     )
 }
 
-const mapStateToProps = (state, ownProps) => ({tags: state.tag.tags?.tags_names?.tags});
+const mapStateToProps = (state, ownProps) => ({tags: state.tag.tags?.tags_names?.tags, customers: state.customer.customers});
 
-export default connect(mapStateToProps, {getPaginatedCustomers})(CreateCustomerModal);
+export default connect(mapStateToProps, {getPaginatedCustomers, updateCustomer, getPaginatedCustomers})(CreateCustomerModal);

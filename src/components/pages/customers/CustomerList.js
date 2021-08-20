@@ -29,6 +29,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
     const [custLoading,
         setCustLoading] = useState(false);
     const [changingRow, setChangingRow] = useState(false);
+    const [customerId, setCustomerId] = useState('');
     // const [selectedRows, setSelectedRows] = useState([]);
     let selectedRows = [];
 
@@ -65,6 +66,14 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                 },
             },
         });
+
+        function handleEditClick () {
+
+            setCustomerId(this.customerId);
+            setCreateModalShow(true);
+
+        }
+
         
         const AlphacxMTPagination = props => {
             const {
@@ -141,8 +150,8 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                                 <span className="cust-table-dots"><DotSvg/></span>
                                             </Dropdown.Toggle>
                                             <Dropdown.Menu>
-                                                <Dropdown.Item eventKey="1">Edit</Dropdown.Item>
-                                                <Dropdown.Item eventKey="2">Delete</Dropdown.Item>
+                                                <Dropdown.Item eventKey="1" onClick={handleEditClick.bind({customerId: rowData.contact.id})}><span className="black-text">Edit</span></Dropdown.Item>
+                                                <Dropdown.Item eventKey="2"><span className="black-text">Delete</span></Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown>)
                 // render: rowData => (<div><span className="cust-table-dots"><DotSvg/></span></div>)
@@ -377,7 +386,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                 </div>
             </div> */}
 
-               <CreateCustomerModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} setChangingRow={setChangingRow} />
+               <CreateCustomerModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} setChangingRow={setChangingRow} isEditing={true} customerId={customerId} />
 
                 {/* Upload csv modal */}
                 <Modal
