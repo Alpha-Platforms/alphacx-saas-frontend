@@ -9,44 +9,56 @@ import Accordion from "../components/accordion/Accordion";
 import StarRating from "../components/starRating/starRating";
 import matter from "gray-matter";
 import ReactMarkdown from "react-markdown";
+import { httpGetMain } from "../../../../helpers/httpMethods";
+import { useLocation } from "react-router-dom";
+import { NotificationManager } from "react-notifications";
+import ScaleLoader from "react-spinners/ScaleLoader";
 
 const Article = () => {
+  let query = useQuery();
   const file_name = "blog-one.md";
-  const [articleContent, setArticleContent] = useState("");
 
-  async function getMarkdownFile(title) {
-    // const { post } = params;
-    const content = await import(`./article_markdowns/${title}`);
-    const data = matter(content.default);
-
-    console.log(JSON.stringify(data));
-    setArticleContent(JSON.stringify(data));
-
-    // return {
-    //   props: {
-    //     markdown: JSON.stringify(data),
-    //   },
-    // };
+  const [policyLoading, setPolicyLoading] = useState(false);
+  const [articleContent, setArticleContent] = useState({});
+  function useQuery() {
+    return new URLSearchParams(useLocation().search);
   }
+  const fetchArticleDetails = async (categories) => {
+    setPolicyLoading(true);
+    const res = await httpGetMain(`article/${query.get("id")}`);
+    if (res?.status == "success") {
+      console.log(res);
+      setArticleContent(res?.data);
+      setPolicyLoading(false);
+    } else {
+      setPolicyLoading(false);
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
   useEffect(() => {
-    // getMarkdownFile(file_name);
-    import(`./article_markdowns/${file_name}`)
-      .then((res) => {
-        fetch(res.default)
-          .then((res) => res.text())
-          .then((res) => setArticleContent(res))
-          .catch((err) => console.log(err));
-      })
-      .catch((err) => console.log(err));
-  });
+    fetchArticleDetails();
+  }, []);
   return (
     <>
       <HelpNavBar activeBG={true} />
       <TopBar />
       <div className="help-article">
+        {policyLoading && (
+          <div
+            className={`cust-table-loader ${
+              policyLoading && "add-loader-opacity"
+            }`}
+          >
+            <ScaleLoader loading={policyLoading} color={"#006298"} />
+          </div>
+        )}
         <div className="content">
-          {/* <Markdown>{post}</Markdown> */}
-          <ReactMarkdown children={articleContent} className="line-break" />
+          <h3 className="title mb-5">{articleContent?.title}</h3>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: `<span>${articleContent.body}</span>`,
+            }}
+          />
           <div className="attachments">
             <Accordion question="Article Attachments" />
           </div>
