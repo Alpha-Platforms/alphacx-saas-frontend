@@ -306,6 +306,14 @@ const CreateTicketModal = ({
                         <div className="row mb-3">
                             <div className="col-6 mt-2 position-relative">
                                 <label htmlFor="customer" className="form-label">Customer</label>
+                                {/* <select
+                                    className="form-select"
+                                    name="customer"
+                                    aria-label="Customer select"
+                                    onChange={handleModalInput}>
+                                    <option value=""></option>
+                                    {customers && customers.map(({id, firstname, lastname}) => <option value={id}>{`${wordCapitalize(firstname)} ${wordCapitalize(lastname)}`}</option>)}
+                                </select> */}
                                 <input
                                     type="text"
                                     name="customer"
@@ -355,7 +363,6 @@ const CreateTicketModal = ({
                                     options={categoriesAndSubs}
                                 />
                             </div>
-
 
                             <div className="col-6 mt-2 position-relative">
 
@@ -420,6 +427,17 @@ const CreateTicketModal = ({
             
                                 <div className="row">
 
+                            <div className="col-6 mt-3 position-relative">
+                                <label htmlFor="priority" className="form-label">Priority</label>
+                                <select
+                                    className="form-select"
+                                    name="priority"
+                                    aria-label="Priority select"
+                                    onChange={handleModalInput}>
+                                    <option value="Medium">Medium</option>
+                                    {priorities && priorities.map(({id, name}) => name !== "Medium" && <option value={id}>{name}</option>)}
+                                </select>
+                            </div>
 
                                     <div className="d-flex">
 
@@ -534,7 +552,6 @@ const CreateTicketModal = ({
         </Modal>
     )
 }
-
 const mapStateToProps = (state, ownProps) => ({
     priorities: state.priority.priorities,
     categories: state.category.categories,
@@ -548,4 +565,3 @@ const mapStateToProps = (state, ownProps) => ({
 })
 
 export default connect(mapStateToProps, {addTicket, getPaginatedTickets, resetTicketCreated})(CreateTicketModal);
-

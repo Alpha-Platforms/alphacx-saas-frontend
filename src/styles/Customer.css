@@ -161,3 +161,11 @@
     margin-left: 18.5rem;
     transform: translateY(4px);
 }
+
+.cust-avatar {
+    max-width: 100%;
+    max-width: 100%;
+    border-radius: 100rem;
+    display: inline-block;
+    transform: translateY(-2px) scale(1.05);
+}
