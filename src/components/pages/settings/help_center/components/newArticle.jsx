@@ -3,7 +3,12 @@ import RightArrow from "../../../../../assets/imgF/arrow_right.png";
 import EmptyArticle from "../../../../../assets/images/empty_article.png";
 import "./newArticle.scss";
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState, convertToRaw, ContentState } from "draft-js";
+import {
+  EditorState,
+  convertToRaw,
+  ContentState,
+  convertFromHTML,
+} from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import AddCategory from "../../../../../assets/imgF/addCategory.png";
 import boldB from "../../../../../assets/imgF/boldB.png";
@@ -15,12 +20,20 @@ import TextAlignLeft from "../../../../../assets/imgF/TextAlignLeft.png";
 import TextAlignCenter from "../../../../../assets/imgF/TextAlignCenter.png";
 import TextAlignRight from "../../../../../assets/imgF/TextAlignRight.png";
 import { useEffect } from "react";
-import { httpGetMain, httpPostMain } from "../../../../../helpers/httpMethods";
+import {
+  httpGetMain,
+  httpPatchMain,
+  httpPostMain,
+} from "../../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
+import ScaleLoader from "react-spinners/ScaleLoader";
 
 // 67796966-e0c2-44db-b184-cc4a7e19bee0
 const NewArticle = () => {
+  let { articleId } = useParams();
+
   const initialState = EditorState.createWithContent(
     ContentState.createFromText("")
   );
@@ -34,28 +47,57 @@ const NewArticle = () => {
     title: "",
     body: "",
     richText: "",
-    category: [],
+    categoryId: "",
+    folderId: "",
     tag: [],
     publishGlobal: false,
     publishEnglish: false,
   });
+  const [policyLoading, setPolicyLoading] = useState(false);
   const [categories, setCategories] = useState([]);
-
+  const [folders, setFolders] = useState([]);
   const [editorState, setEditorState] = useState(initialState);
 
-  const addCategory = (value) => {
-    let newCategory = [...newPost.category, value];
-    setNewPost({ ...newPost, category: newCategory });
-    setCompState({ ...compState, showCategories: false });
-    setCategories(categories.filter((item) => item.id !== value.id));
+  const handleChange = (e) => {
+    const { value, name } = e.target;
+    setNewPost({ ...newPost, [name]: value });
   };
-  const removeCategory = (value) => {
-    setNewPost({
-      ...newPost,
-      category: newPost.category.filter((item) => item.id !== value.id),
+
+  const handlePublish = () => {
+    const { publishGlobal } = newPost;
+    Swal.fire({
+      title: publishGlobal ? "Unpublish?" : "Publish?",
+      text: `Do you want to ${
+        publishGlobal ? "unpublish" : "publish"
+      } Article on Save?`,
+      showCancelButton: true,
+      confirmButtonColor: "#006298",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log("Publish");
+        setNewPost({ ...newPost, publishGlobal: !publishGlobal });
+      } else {
+        console.log("Do nothing");
+      }
     });
-    setCategories([...categories, value]);
   };
+
+  // const addCategory = (value) => {
+  //   let newCategory = [...newPost.category, value];
+  //   setNewPost({ ...newPost, category: newCategory });
+  //   setCompState({ ...compState, showCategories: false });
+  //   setCategories(categories.filter((item) => item.id !== value.id));
+  // };
+  // const removeCategory = (value) => {
+  //   setNewPost({
+  //     ...newPost,
+  //     category: newPost.category.filter((item) => item.id !== value.id),
+  //   });
+  //   setCategories([...categories, value]);
+  // };
 
   const onEditorStateChange = (editorState) => {
     // handleDescriptionValidation(editorState);
@@ -99,28 +141,145 @@ const NewArticle = () => {
   const fetchCategories = async () => {
     const res = await httpGetMain("articles/categories");
     if (res?.status == "success") {
-      console.clear();
-      console.log("categories", res?.data);
       let categories = res?.data;
       setCategories(categories);
+      if (articleId && articleId !== "") {
+        fetchArticleDetails(categories);
+      }
     } else {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
 
+  // function to get folders from selected category
+  const getFolders = () => {
+    setNewPost({ ...newPost, folderId: "" });
+    if (newPost.categoryId === "") {
+      setFolders([]);
+
+      return;
+    }
+    let selectedCategory = categories.filter(
+      (item) => item.id === newPost?.categoryId
+    );
+
+    setFolders(selectedCategory[0]?.folders);
+  };
+
+  const publishPost = async (id) => {
+    const res = await httpPatchMain(`articles/${id}/publish`);
+    setPolicyLoading(false);
+    if (res?.status == "success") {
+      console.log("res", res);
+      NotificationManager.success(res.message, "Success", 5000);
+
+      window.location.href = `/settings/help-center`;
+    } else {
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
+
+  // function to fetch article details if in edit mode
+  const fetchArticleDetails = async (categories) => {
+    setPolicyLoading(true);
+    const res = await httpGetMain(`article/${articleId}`);
+    if (res?.status == "success") {
+      let { title, body, folders } = res?.data;
+      console.clear();
+      // get category id
+      let folder = folders[0];
+      let categoryId;
+
+      for (var i = 0; i < categories.length; i++) {
+        for (var j = 0; j < categories[i].folders.length; j++) {
+          console.log("[" + i + "]" + "[" + j + "]");
+          if (categories[i].folders[j].id == folder.id) {
+            categoryId = categories[i].id;
+            console.log("found");
+            break;
+          }
+        }
+      }
+
+      setNewPost({
+        ...newPost,
+        title,
+        richText: body,
+        categoryId,
+        folderId: folder.id,
+      });
+
+      let selectedCategory = categories.filter(
+        (item) => item.id === categoryId
+      );
+
+      setFolders(selectedCategory[0]?.folders);
+
+      // convert rich text to plain text in editor
+      const blocksFromHTML = convertFromHTML(body);
+      const initialState = EditorState.createWithContent(
+        ContentState.createFromBlockArray(
+          blocksFromHTML.contentBlocks,
+          blocksFromHTML.entityMap
+        )
+      );
+
+      setEditorState(initialState);
+      setPolicyLoading(false);
+    } else {
+      setPolicyLoading(false);
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
+
+  // function to submut new article
   const handleSubmitNewArticle = async () => {
+    setPolicyLoading(true);
     const data = {
       title: newPost.title,
       body: newPost.richText,
-      folderId: "67796966-e0c2-44db-b184-cc4a7e19bee0",
+      folderId: newPost.folderId,
     };
+    console.clear();
     console.log("article", data);
 
     const res = await httpPostMain("articles", data);
+
     if (res?.status == "success") {
-      console.clear();
-      console.log("sent", res);
+      console.log("res", res);
+      if (newPost?.publishGlobal) {
+        publishPost(res?.data?.id);
+      }
+      setPolicyLoading(false);
+      NotificationManager.success(res.message, "Success", 4000);
+
+      window.location.href = `/settings/help-center`;
     } else {
+      setPolicyLoading(false);
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
+
+  // function to edit/patch existing articles
+  const handlePatchArticle = async () => {
+    setPolicyLoading(true);
+    const data = {
+      title: newPost.title,
+      body: newPost.richText,
+      folderId: newPost.folderId,
+    };
+    console.clear();
+    console.log("article", data);
+
+    const res = await httpPatchMain(`article/${articleId}`, data);
+
+    if (res?.status == "success") {
+      setPolicyLoading(false);
+      NotificationManager.success(res.message, "Success", 4000);
+
+      window.location.href = `/settings/help-center`;
+    } else {
+      setPolicyLoading(false);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
@@ -128,8 +287,22 @@ const NewArticle = () => {
   useEffect(() => {
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    getFolders();
+  }, [newPost?.categoryId]);
+
   return (
     <div className=" settings-email help-center-settings">
+      {policyLoading && (
+        <div
+          className={`cust-table-loader ${
+            policyLoading && "add-loader-opacity"
+          }`}
+        >
+          <ScaleLoader loading={policyLoading} color={"#006298"} />
+        </div>
+      )}
       <div className="card card-body bg-white border-0 p-5 mt-4">
         <div id="mainContentHeader">
           <h6 className="text-muted f-14">
@@ -262,17 +435,36 @@ const NewArticle = () => {
               >
                 <p>Preview</p>
               </Link>
-              <a
+              <button
                 className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
-                onClick={handleSubmitNewArticle}
+                onClick={
+                  articleId ? handlePatchArticle : handleSubmitNewArticle
+                }
+                disabled={
+                  (newPost.title === "" || newPost.richText === "",
+                  newPost.folderId === "")
+                }
               >
                 Save Changes
-              </a>
+              </button>
             </div>
 
             <div className="category mb-4">
               <p>Category</p>
-              <div className="category-holder">
+              <select
+                className="form-select form-select-sm f-14"
+                name="categoryId"
+                value={newPost?.categoryId || ""}
+                onChange={handleChange}
+              >
+                <option value="">Select Category</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+              {/* <div className="category-holder">
                 {newPost?.category.map((cat, i) => (
                   <div key={i} className="cat">
                     <p>{cat.name}</p>
@@ -291,7 +483,7 @@ const NewArticle = () => {
                   }}
                 />
 
-                {/* drop list to show all categories to select from ,, */}
+
 
                 {compState.showCategories && (
                   <div className={"drop-list"}>
@@ -302,7 +494,24 @@ const NewArticle = () => {
                     ))}
                   </div>
                 )}
-              </div>
+              </div> */}
+            </div>
+            <div className="category mb-4">
+              <p>Sub Category</p>
+              <select
+                className="form-select form-select-sm f-14"
+                name="folderId"
+                value={newPost?.folderId || ""}
+                onChange={handleChange}
+              >
+                <option value="">Select Sub-category</option>
+                {newPost.categoryId !== "" &&
+                  folders?.map((fol) => (
+                    <option key={fol.id} value={fol.id}>
+                      {fol.name}
+                    </option>
+                  ))}
+              </select>
             </div>
             <div className="category mb-4">
               <p>Tag</p>
@@ -322,12 +531,7 @@ const NewArticle = () => {
                 <p>Published globally</p>
                 <button
                   className={newPost.publishGlobal ? "active" : ""}
-                  onClick={() =>
-                    setNewPost({
-                      ...newPost,
-                      publishGlobal: !newPost.publishGlobal,
-                    })
-                  }
+                  onClick={handlePublish}
                 >
                   <div className="ball"></div>
                 </button>
