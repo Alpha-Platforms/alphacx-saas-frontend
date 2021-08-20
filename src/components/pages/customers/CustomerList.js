@@ -296,7 +296,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                 avatar}) => ({
                                 title: title ? title :`Mr.`,
                                 contact: {firstname, lastname, theme, id, avatar},
-                                organisation: company ? company : 'Gillete',
+                                organisation: company ? company : '',
                                 emailAddress: email,
                                 workphone: phone_number,
                                 tags: ''
