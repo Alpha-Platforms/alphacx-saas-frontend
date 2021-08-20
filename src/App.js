@@ -75,7 +75,6 @@ import CannedResponsesSettings from "./components/pages/settings/canned_response
 import NewCannedResponse from "./components/pages/settings/canned_responses/components/NewCannedResponse";
 import CustomerPortal from "./components/pages/help_center/customer_portal/CustomerPortal";
 import Dashboard from "./components/pages/dashboard/Dashboard";
-import CreateTicketModal from "./components/pages/tickets/CreateTicketModal";
 
 const mapStateToProps = (state, ownProps) => ({
   tenantToken: state.tenantAuth.tenantToken,
@@ -366,10 +365,6 @@ const SiteRouter = connect(mapStateToProps, {
                   pageName="Settings"
                   component={NewCannedResponse}
                 />
-
-                <Route path="ticketmodal" component={CreateTicketModal} />
-                {/* close linespace when you're done testing */}
-
               </SocketDataProvider>
             </LayoutProvider>
           </UserDataProvider>
