@@ -19,8 +19,7 @@ import Conversation from "./components/pages/conersations/conversation";
 import { Provider, connect } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./reduxstore/store";
-import { loginTenant } from "./reduxstore/actions/tenantAuthActions";
-import { loginUser } from "./reduxstore/actions/userAuthActions";
+import { loadUser } from "./reduxstore/actions/userAuthActions";
 import {
   getCustomers,
   getPaginatedCustomers,
@@ -77,14 +76,11 @@ import CustomerPortal from "./components/pages/help_center/customer_portal/Custo
 import Dashboard from "./components/pages/dashboard/Dashboard";
 
 const mapStateToProps = (state, ownProps) => ({
-  tenantToken: state.tenantAuth.tenantToken,
-  isTenantAuthenticated: state.tenantAuth.isTenantAuthenticated,
   isUserAuthenticated: state.userAuth.isUserAuthenticated,
 });
 
 const SiteRouter = connect(mapStateToProps, {
-  loginTenant,
-  loginUser,
+  loadUser,
   getCustomers,
   getTickets,
   getPaginatedTickets,
@@ -99,10 +95,7 @@ const SiteRouter = connect(mapStateToProps, {
   getSubCategories,
 })(
   ({
-    loginTenant,
-    loginUser,
-    isTenantAuthenticated,
-    tenantToken,
+    loadUser,
     isUserAuthenticated,
     // getCustomers,
     getPaginatedTickets,
@@ -116,23 +109,18 @@ const SiteRouter = connect(mapStateToProps, {
     getTags,
     getSubCategories,
   }) => {
-    useEffect(() => {
-      loginTenant({ domain: "techpoint" });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+
+    const siteUser = JSON.parse(localStorage.getItem('user'));
 
     useEffect(() => {
-      if (isTenantAuthenticated) {
-        // if the user's domain has been authenticated
-        loginUser({
-          email: "owen@etela.com",
-          password: "Kustormar",
-          tenantToken,
-        });
-      }
-
+      siteUser && loadUser(siteUser);
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isTenantAuthenticated]);
+    }, [siteUser]);
+
+
+    console.log('user from auth', JSON.parse(localStorage.getItem('user')));
+    console.log('user token from local', JSON.parse(localStorage.getItem('user')).token);
+
 
     useEffect(() => {
       if (isUserAuthenticated) {
@@ -151,6 +139,7 @@ const SiteRouter = connect(mapStateToProps, {
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
+
     return (
       <BrowserRouter>
         {/* Scroll Restoration */}
