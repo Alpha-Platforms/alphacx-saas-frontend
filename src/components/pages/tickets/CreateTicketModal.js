@@ -51,35 +51,47 @@ const CreateTicketModal = ({
     const [modalInputs,
         setModalInputs] = useState({
         customer: '',
-        category: '',
-        priority: 'Medium',
-        status: '',
+        // priority: 'Medium',
+        priority: '',
+        stage: '',
         subject: '',
         description: '',
         assignee: '',
         group: '',
+        category: '',
         subcategory: ''
     });
     // const [cancelExec, setCancelExec] = useState(false);
 
-    const handleModalInput = async e => {
-        // get name and curent value of component
-        const {name, value} = e.target;
+    const handleRSInput = async ({value}, {name}) => {
+        // {value}, {name} destructured - react-select onChange event takes inputValue and meta
+
         // set state of inputs in the modal
         setModalInputs(prevState => ({
             ...prevState,
             [name]: value
         }));
+    };
 
-        /* if (name === 'category' && modalInputs.category) {
-            setSubCatLoading(true);
-            const res = await getSubCategory(modalInputs.category);
-            if (res?.status === 'success') {
-                setSubCatLoading(false);
-                setSubCat(res?.data);
-            }
-        } */
-    }
+    const handleRSCategoryInput = async (v) => {
+        setModalInputs(prevState => ({
+            ...prevState,
+            category: v.subcate,
+            subcategory: v.value
+        }));
+    };
+
+    const handleModalInput = async e => {
+        const {name, value} = e.target;
+
+        // set state of inputs in the modal
+        setModalInputs(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    };
+
+    // FIND AND REMOVE - getSubCategory, setSubCatLoading, 
 
     // function handleTagSelection() {
     //     const {tag} = this;
@@ -105,34 +117,38 @@ const CreateTicketModal = ({
             customer,
             category,
             priority,
-            status,
+            stage,
             subject,
             description,
             assignee,
             group,
             subcategory
         } = modalInputs;
-        if (!customer || !category || !priority || !status || !subject || !description || !assignee || !group || !subcategory) {
+
+        if (!customer || !category || !priority || !stage || !subject || !description ) { // subcategory
             NotificationManager.error('All fields are required', 'Error', 5000);
+            console.log(modalInputs)
         } else {
             const newTicket = {
+                customer: customer,
                 priorityId: priority,
                 assigneeId: assignee,
                 description,
                 plainDescription: description,
-                categoryId: category,
-                // userId,
                 userId: customer,
                 groupId: group,
-                statusId: status,
+                statusId: stage,
                 subject,
                 tags: selectedTags,
+                categoryId: category,
                 subCategoryId: subcategory,
                 channel: 'system'
             };
 
             setCreatingTicket(true);
             addTicket(newTicket);
+            // console.log(newTicket)
+            
         }
     }
 
@@ -147,7 +163,7 @@ const CreateTicketModal = ({
             getPaginatedTickets(10, 1);
         }
 
-        prevCategoriesAndSubs()
+        prepCategoriesAndSubs()
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isTicketCreated])
@@ -158,55 +174,56 @@ const CreateTicketModal = ({
             .toUpperCase() + word.slice(1);
     }
 
-    const timeBeforeSearch = 1500;
-    let timeoutId;
 
-    const handleCustomerSearch = (e) => {
-        if (!navigator.onLine) 
-            return;
+    // OLD GET CUSTOMER SEARCH, JUST IN CASE //
+    // const timeBeforeSearch = 1500;
+    // let timeoutId;
+    // const handleCustomerSearch = (e) => {
+    //     if (!navigator.onLine) 
+    //         return;
         
-        // return NotificationManager.error('Check your network', 'Oops');
-        const {value} = e.target;
+    //     // return NotificationManager.error('Check your network', 'Oops');
+    //     const {value} = e.target;
 
-        if (!value) {
-            setCustSearch(prev => ({
-                ...prev,
-                openPreview: false
-            }))
-        }
+    //     if (!value) {
+    //         setCustSearch(prev => ({
+    //             ...prev,
+    //             openPreview: false
+    //         }))
+    //     }
 
-        if (timeoutId) 
-            clearTimeout(timeoutId);
+    //     if (timeoutId) 
+    //         clearTimeout(timeoutId);
         
-        timeoutId = setTimeout(async() => {
-            if (value) {
-                setCustSearch(prev => ({
-                    ...prev,
-                    openPreview: true,
-                    isLoading: true
-                }));
+    //     timeoutId = setTimeout(async() => {
+    //         if (value) {
+    //             setCustSearch(prev => ({
+    //                 ...prev,
+    //                 openPreview: true,
+    //                 isLoading: true
+    //             }));
 
-                const res = await getInstantSearchedCustomers(value);
-                if (res
-                    ?.data) {
-                    setCustSearch(prev => ({
-                        ...prev,
-                        isLoading: false,
-                        isLoaded: true,
-                        gottenCust: res.data.users
-                    }));
-                }
+    //             const res = await getInstantSearchedCustomers(value);
+    //             if (res
+    //                 ?.data) {
+    //                 setCustSearch(prev => ({
+    //                     ...prev,
+    //                     isLoading: false,
+    //                     isLoaded: true,
+    //                     gottenCust: res.data.users
+    //                 }));
+    //             }
 
-            } else {
-                setCustSearch(prev => ({
-                    ...prev,
-                    openPreview: false
-                }));
-            }
+    //         } else {
+    //             setCustSearch(prev => ({
+    //                 ...prev,
+    //                 openPreview: false
+    //             }));
+    //         }
 
-        }, timeBeforeSearch);
+    //     }, timeBeforeSearch);
 
-    }
+    // }
 
     const handleCustClick = function () {
         const {id, firstname, lastname} = this;
@@ -231,30 +248,25 @@ const CreateTicketModal = ({
         }));
     }
 
-    const filtered = (userInput) => {
-        const cities = [
-            {label: "lagos", value: "lagos"},
-            {label: "canada", value: "canada"},
-            {label: "abuja", value: "abuja"},
-            {label: "san francisco", value: "san francisco"},
-            {label: "miami", value: "miami"},
-            {label: "washington dc", value: "washington dc"},
-            {label: "port harcourt", value: "port harcourt"}
-        ];
-        return cities.filter(item => {
-            item.label.includes(userInput.toLowerCase())
+    const getSearchedCustomers = async (userInput) => {
+        const res = await fetch(`https://kustormar-staging.herokuapp.com/v1/users?role=Customer&search=${userInput}`, {
+            headers: {
+                Authorization: `Bearer ${JSON.parse(localStorage.getItem("user")).token}`
+            }
         })
-    }
-    const promisefn = (inputValue) => {
-        //    fetch('https://jsonplaceholder.typicode.com/todos/1')
-
-        new Promise(resolve => {
-            setTimeout(() => {
-                resolve(filtered(inputValue))
-            }, 1000);
-        })
-
-        
+        const data = await res.json()
+        if(data.status === "success"){
+            let remappedData = []
+            data.data.users.forEach(item => {
+                if((item.firstname+item.lastname).toLowerCase().includes(userInput.toLowerCase())){
+                    remappedData.push({label: item.firstname+" "+item.lastname, value: item.id})
+                }
+            })
+            return remappedData;
+            // return remappedData.filter(item => {
+            //     item.label.includes(userInput.toLowerCase())
+            // })
+        }
     }
 
     const [Category, setCategory] = useState([]);
@@ -263,6 +275,7 @@ const CreateTicketModal = ({
     const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(false)
     const [assignType, setAssignType] = useState('teams')
     const [categoriesAndSubs, setCategoriesAndSubs] = useState([])
+    const [searchedCustomers, setSearchedCustomers] = useState([])
     
 
     /* UPDATE MODAL FORM VALUES */
@@ -276,14 +289,12 @@ const CreateTicketModal = ({
     const [RSTicketDueDate, setRSTicketDueDate] = useState("");
     const [RSTeams, setRSTeams] = useState([])
 
-    const prevCategoriesAndSubs = () => {
+    const prepCategoriesAndSubs = () => {
         categories.forEach(item => {
-            if (item.subCategories.length === 0) {
-                setCategoriesAndSubs(prev => [...prev, {'value':item.id, 'label':item.name}])
-            } else {
-                setCategoriesAndSubs(prev => [...prev, {'value':item.id, 'label':item.name}])
+            setCategoriesAndSubs(prev => [...prev, {'value':item.id, 'label':item.name, 'subcate': item.id}])
+            if (item.subCategories.length > 0) {
                 item.subCategories.forEach(sub => {
-                    setCategoriesAndSubs(prev => [...prev, {'value':sub.id, 'label':sub.name}])
+                    setCategoriesAndSubs(prev => [...prev, {'value':sub.id, 'label':sub.name, 'subcate': item.id}])
                 });
             }
         })
@@ -334,48 +345,22 @@ const CreateTicketModal = ({
 
 
 
-<AsyncSelect loadOptions={promisefn} />
-
-
-
-
-
-
-
                         <div className="row mb-3">
                             <div className="col-6 mt-2 position-relative">
                                 <label htmlFor="customer" className="form-label">Customer</label>
-                                {/* <select
-                                    className="form-select"
+                                <AsyncSelect 
+                                    loadOptions={getSearchedCustomers}
                                     name="customer"
-                                    aria-label="Customer select"
-                                    onChange={handleModalInput}>
-                                    <option value=""></option>
-                                    {customers && customers.map(({id, firstname, lastname}) => <option value={id}>{`${wordCapitalize(firstname)} ${wordCapitalize(lastname)}`}</option>)}
-                                </select> */}
-                                <input
-                                    type="text"
-                                    name="customer"
-                                    className="form-control"
-                                    autoComplete="off"
-                                    ref={custInputRef}
-                                    onChange={handleCustomerSearch}/> {custSearch.openPreview && <div className="cust-search-preview">
-                                    {custSearch.isLoading && <div
-                                        style={{
-                                        textAlign: 'center'
-                                    }}><BeatLoader loading={true} color={"#006298"} margin={5} size={7}/></div>}
-                                    <ul>{(custSearch.gottenCust.length !== 0) && custSearch.gottenCust.map(({firstname, lastname, id}) => <li onClick={handleCustClick.bind({id, firstname, lastname})}>{`${firstname} ${lastname}`}</li>)}</ul>
-                                </div>}
-                                
+                                    onChange={handleRSInput}
+                                />                                
                             </div>
     
                             <div className="col-6 mt-2">
                                 <label htmlFor="status" className="form-label">Stage</label>
                                 <RSelect className="rselectfield"
                                     style={{ fontSize: "12px" }}
-                                    onChange={ (value, actionMeta) => {
-                                        // handleTagSelection(value);
-                                    }}
+                                    name="stage"
+                                    onChange={handleRSInput}
                                     isClearable={false}
                                     isMulti={false}
                                     options={
@@ -390,15 +375,14 @@ const CreateTicketModal = ({
                             
                         </div>
                         <div className="row mb-3">
-                            <div className="col-6 mt-2 tags-select-wrapper">
+                            <div className="col-6 mt-2">
                                 <label htmlFor="title" className="form-label">Categories</label>
                                 <RSelect className="rselectfield" 
                                     style={{ fontSize: "12px" }}
-                                    onChange={ (value, actionMeta) => {
-                                        // handleTagSelection(value);
-                                    }}
+                                    name="category"
+                                    onChange={handleRSCategoryInput}
                                     isClearable={false}
-                                    // onMenuOpen={prevCategoriesAndSubs}
+                                    maxMenuHeight={200}
                                     isMulti={false}
                                     options={categoriesAndSubs}
                                 />
@@ -409,11 +393,11 @@ const CreateTicketModal = ({
                                 <label htmlFor="priority" className="form-label">Priority</label>
                                 <RSelect className="rselectfield"
                                     style={{ fontSize: "12px" }}
-                                    onChange={ (value, actionMeta) => {
-                                        // handleTagSelection(value);
-                                    }}
+                                    name="priority"
+                                    onChange={handleRSInput}
                                     isClearable={false}
                                     noOptionsMessage={() => "No options available!"}
+                                    placeholder="Medium"
                                     isMulti={false}
                                     options={
                                         // populate 'options' prop from $agents, with names remapped
@@ -434,7 +418,8 @@ const CreateTicketModal = ({
                                     type="text"
                                     name="subject"
                                     className="form-control"
-                                    onChange={handleModalInput}/>
+                                    onChange={handleModalInput}
+                                />
                             </div>
 
                         </div>
@@ -445,7 +430,8 @@ const CreateTicketModal = ({
                                 name="description"
                                 id="description"
                                 className="form-control ct-description"
-                                onChange={handleModalInput}></textarea>
+                                onChange={handleModalInput}
+                            ></textarea>
                         </div>
 
                         <p
@@ -463,22 +449,10 @@ const CreateTicketModal = ({
                         </p>
                         
                         { isAdditionalOptionVisible &&
-                            <div className="">
+                            <div className="mb-3">
                                 {/* groups agents */}
             
                                 <div className="row">
-
-                            <div className="col-6 mt-3 position-relative">
-                                <label htmlFor="priority" className="form-label">Priority</label>
-                                <select
-                                    className="form-select"
-                                    name="priority"
-                                    aria-label="Priority select"
-                                    onChange={handleModalInput}>
-                                    <option value="Medium">Medium</option>
-                                    {priorities && priorities.map(({id, name}) => name !== "Medium" && <option value={id}>{name}</option>)}
-                                </select>
-                            </div>
 
                                     <div className="d-flex">
 
@@ -547,6 +521,24 @@ const CreateTicketModal = ({
                                             />)
                                         }
                                     </div>
+
+                                    <div className="col-12 mt-3 d-flex align-items-center flex-wrap" >
+                                        
+                                        <label htmlFor="" className="w-100 mb-2">Ticket Due In</label>
+
+                                        <div className="input-group w-25 me-3">
+                                            <input type="number" className="form-control" ariaLabel="Recipient's username" ariaDescribedby="basic-addon2" />
+                                            <span class="input-group-text" id="basic-addon2">Days</span>
+                                        </div>
+                                        <div className="input-group w-25">
+                                            <input type="number" className="form-control" ariaLabel="Recipient's username" ariaDescribedby="basic-addon2" />
+                                            <span class="input-group-text" id="basic-addon2">Hours</span>
+                                        </div>
+                                    
+                                    </div>
+
+
+
             
                                     <div className="col-12 mt-3 tags-select-wrapper">
                                         <label htmlFor="title" className="form-label">Tags</label>
@@ -557,6 +549,7 @@ const CreateTicketModal = ({
                                             }}
                                             isClearable={false}
                                             isMulti
+                                            placeholder="Select or create new tags"
                                             options={
                                                 // populate 'options' prop from $agents, with names remapped
                                                 tags?.map(item => {
@@ -580,7 +573,7 @@ const CreateTicketModal = ({
                             </div>
                         }
             
-                        <div className="mt-3 mt-sm-3 pt-3 text-end">
+                        <div className="text-end">
                             <button
                                 type="button"
                                 onClick={handleTicketCreation}
