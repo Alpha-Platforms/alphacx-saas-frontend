@@ -146,8 +146,8 @@ const CreateTicketModal = ({
             };
 
             setCreatingTicket(true);
-            addTicket(newTicket);
-            // console.log(newTicket)
+            // addTicket(newTicket);
+            console.log(newTicket)
             
         }
     }
