@@ -12,6 +12,7 @@ import {httpPost} from "../../../helpers/httpMethods";
 import {css} from "@emotion/react";
 import ClipLoader from "react-spinners/ClipLoader";
 import {CSSTransition} from 'react-transition-group';
+import {countries} from '../../../components/shared/countries';
 
 const override = css ``;
 
@@ -36,14 +37,14 @@ const Login = ({history}) => {
 
     const [activeForm,
         setActiveForm] = useState('form-one');
-    const [menuHeight, setMenuHeight] = useState(null);
+    const [menuHeight,
+        setMenuHeight] = useState(null);
 
     const calcHeight = el => {
-      const height = el.offsetHeight;
-      console.log("height => ", height);
-      setMenuHeight(height);
+        const height = el.offsetHeight;
+        console.log("height => ", height);
+        setMenuHeight(height);
     }
-
 
     useEffect(() => {}, []);
 
@@ -111,9 +112,10 @@ const Login = ({history}) => {
     };
 
     const checkContinue = () => {
-      const {firstName, lastName, email, password} = userInput;
-      if (!firstName || !lastName || !email || !password) return true;
-      return false
+        const {firstName, lastName, email, password} = userInput;
+        if (!firstName || !lastName || !email || !password) 
+            return true;
+        return false
     }
 
     return (
@@ -126,7 +128,10 @@ const Login = ({history}) => {
                 <img src={Logo} alt=""/>
             </div>
 
-            <div className={`login-container ${activeForm === 'form-one' ? 'lcon-height1' : 'lcon-height2'}`}>
+            <div
+                className={`login-container ${activeForm === 'form-one'
+                ? 'lcon-height1'
+                : 'lcon-height2'}`}>
                 <form>
                     <div
                         className="Auth-header"
@@ -137,7 +142,11 @@ const Login = ({history}) => {
                         <p>Create an account for your business</p>
                     </div>
 
-                    <div className="input-main-wrap regform-wrapper" style={{ minHeight: `${menuHeight}px` }}>
+                    <div
+                        className="input-main-wrap regform-wrapper"
+                        style={{
+                        minHeight: `${menuHeight}px`
+                    }}>
                         <CSSTransition
                             in={activeForm === "form-one"}
                             unmountOnExit
@@ -200,7 +209,10 @@ const Login = ({history}) => {
                                 </div>
 
                                 <div className="submit-auth-btn">
-                                    <button type="button" disabled={checkContinue()} onClick={() => setActiveForm('form-two')}>Continue
+                                    <button
+                                        type="button"
+                                        disabled={checkContinue()}
+                                        onClick={() => setActiveForm('form-two')}>Continue
                                     </button>
                                 </div>
                             </div>
@@ -233,20 +245,38 @@ const Login = ({history}) => {
                                             onChange={handleChange}
                                             name="domain"
                                             autocomplete="off"
-                                            value={userInput.domain}/><span>.alphacx.co</span></div>
-                                        
+                                            value={userInput.domain}/>
+                                            <span>.alphacx.co</span>
+                                        </div>
+
                                     </div>
                                 </div>
 
                                 <div className="input-main-wrap">
                                     <div className="input-wrap mt-2">
                                         <label htmlFor="">Country</label>
-                                        <input
+                                        {/* <input
                                             type="text"
                                             onChange={handleChange}
                                             name="region"
                                             autocomplete="off"
-                                            value={userInput.region}/>
+                                            value={userInput.region}/> */}
+                                        <div className="country-field">
+                                            <select
+                                                name="region"
+                                                id="country"
+                                                onChange={handleChange}
+                                                value={userInput.region}
+                                                aria-label="Select Country">
+                                                <option value="">Select country</option>
+                                                {countries.map((country, i) => (
+                                                    <option key={i} value={country.name}>
+                                                        {country.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+
                                     </div>
                                 </div>
                                 <div className="haveAnAccou">

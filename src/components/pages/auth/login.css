@@ -97,6 +97,23 @@
   padding-left: 8px;
 }
 
+.country-field select {
+  display: inline-block;
+  width: 100%;
+  background: rgba(214, 214, 214, 0.3);
+  border: 0.5px solid #d6d6d6;
+  border-radius: 5px;
+  height: 45px;
+  color: rgba(0, 0, 0, 0.5);
+  /* margin-top: 5px !important; */
+  font-size: 13px;
+  outline: none;
+  padding-left: 8px;
+  -moz-appearance:none; /* Firefox */
+  -webkit-appearance:none; /* Safari and Chrome */
+  appearance:none;
+}
+
 .domain-field {
   display: flex;
   justify-content: space-between;
