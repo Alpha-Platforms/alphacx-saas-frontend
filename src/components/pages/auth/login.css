@@ -41,7 +41,7 @@
   height: -moz-fit-content;
   height: fit-content;
   margin-top: 30px;
-  padding: 40px 30px 30px 40px;
+  padding: 40px;
   position: relative;
   z-index: 3;
   margin-bottom: 30px;
@@ -91,11 +91,61 @@
   border-radius: 5px;
   height: 45px;
   color: rgba(0, 0, 0, 0.5);
-  margin-top: 5px !important;
+  /* margin-top: 5px !important; */
   font-size: 13px;
   outline: none;
   padding-left: 8px;
 }
+
+.country-field select {
+  display: inline-block;
+  width: 100%;
+  background: rgba(214, 214, 214, 0.3);
+  border: 0.5px solid #d6d6d6;
+  border-radius: 5px;
+  height: 45px;
+  color: rgba(0, 0, 0, 0.5);
+  /* margin-top: 5px !important; */
+  font-size: 13px;
+  outline: none;
+  padding-left: 8px;
+  -moz-appearance:none; /* Firefox */
+  -webkit-appearance:none; /* Safari and Chrome */
+  appearance:none;
+}
+
+.domain-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 0.5px solid #d6d6d6 !important;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.domain-field span {
+  display: inline-block;
+  background: #0796f7;
+  height: 45px;
+  width: 7rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+.domain-field input {
+  width: 100%;
+  display: inline-block;
+  background: rgba(214, 214, 214, 0.3);
+  height: 45px;
+  color: rgba(0, 0, 0, 0.5);
+  /* margin-top: 5px !important; */
+  font-size: 13px;
+  outline: none;
+  padding-left: 8px;
+}
+
 .input-wrap-with-two-inputes {
   display: flex;
   justify-content: space-between;
@@ -121,14 +171,14 @@
 .input-wrap label {
   font-size: 14px;
   line-height: 19px;
-  padding-bottom: 10px;
+  padding-bottom: 5px;
   color: rgba(0, 0, 0, 0.5);
 }
 
 .inputWrapTwo label {
   font-size: 14px;
   line-height: 19px;
-  padding-bottom: 10px;
+  padding-bottom: 5px;
   color: rgba(0, 0, 0, 0.5);
 }
 
@@ -147,15 +197,20 @@
 
 .haveAnAccou {
   display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  margin-top: 3px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+  padding-top: 10px;
   font-size: 19px;
 }
 
 .haveAnAccou a {
   color: #0067dd;
-  font-size: 11px;
+  font-size: 13px;
+}
+
+.haveAnAccou button {
+  font-size: 13px;
 }
 
 .submit-auth-btn {
@@ -214,4 +269,74 @@
   .login-container {
     padding: 40px 25px 30px 25px;
   }
+}
+
+.regform-primary-enter {
+  position: relative;
+  /* position: absolute; */
+  transform: translateX(-110%);
+}
+
+.regform-primary-enter-active {
+  transform: translateX(0%);
+  transition: all 0.5s ease;
+}
+
+.regform-primary-exit {
+  position: absolute;
+  top: 0;
+  /* position: relative; */
+}
+
+.regform-primary-exit-active {
+  transform: translateX(-110%);
+  transition: all 0.5s ease;
+}
+
+
+.regform-secondary-enter {
+  position: relative;
+  /* position: absolute; */
+  transform: translateX(110%);
+}
+
+.regform-secondary-enter-active {
+  transform: translateX(0%);
+  transition: all 0.5s ease;
+}
+
+.regform-secondary-exit {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  /* transform: translateX(110%); */
+  /* display: none; */
+}
+
+.regform-secondary-exit-active {
+  transform: translateX(110%);
+  transition: all 0.5s ease;
+}
+
+.regform-wrapper {
+  transition: all 0.5s ease !important;
+  position: relative;
+}
+
+.login-container {
+  overflow: hidden !important;
+  transition: height 0.5s ease;
+  /* height: 34rem; */
+}
+
+.lcon-height1 {
+  height: 32rem !important;
+}
+
+.lcon-height2 {
+  height: 33.5rem !important;
+}
+
+.regform {
+  top: 0 !important;
 }
