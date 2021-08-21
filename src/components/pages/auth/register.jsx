@@ -145,6 +145,7 @@ const Login = ({ history }) => {
                   type="text"
                   onChange={handleChange}
                   name="firstName"
+                  autocomplete="off"
                   value={userInput.firstName}
                 />
               </div>
@@ -155,6 +156,7 @@ const Login = ({ history }) => {
                   type="text"
                   onChange={handleChange}
                   name="lastName"
+                  autocomplete="off"
                   value={userInput.lastName}
                 />
               </div>
@@ -167,6 +169,7 @@ const Login = ({ history }) => {
                   type="text"
                   onChange={handleChange}
                   name="email"
+                  autocomplete="off"
                   value={userInput.email}
                 />
               </div>
@@ -178,6 +181,7 @@ const Login = ({ history }) => {
                 type={`${showPassword ? "text" : "password"}`}
                 onChange={handleChange}
                 name="password"
+                autocomplete="new-password"
                 value={userInput.password}
               />
               <div className="passworEye">
@@ -196,6 +200,7 @@ const Login = ({ history }) => {
                   type="text"
                   onChange={handleChange}
                   name="companyName"
+                  autocomplete="off"
                   value={userInput.companyName}
                 />
               </div>
@@ -208,6 +213,7 @@ const Login = ({ history }) => {
                   type="text"
                   onChange={handleChange}
                   name="domain"
+                  autocomplete="off"
                   value={userInput.domain}
                 />
               </div>
@@ -220,6 +226,7 @@ const Login = ({ history }) => {
                   type="text"
                   onChange={handleChange}
                   name="region"
+                  autocomplete="off"
                   value={userInput.region}
                 />
               </div>
