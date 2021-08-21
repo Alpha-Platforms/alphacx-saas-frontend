@@ -117,11 +117,6 @@ const SiteRouter = connect(mapStateToProps, {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [siteUser]);
 
-
-    console.log('user from auth', JSON.parse(localStorage.getItem('user')));
-    console.log('user token from local', JSON.parse(localStorage.getItem('user')).token);
-
-
     useEffect(() => {
       if (isUserAuthenticated) {
         // getCustomers();
