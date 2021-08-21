@@ -2,7 +2,7 @@ import * as types from '../types';
 
 const initialState = {
     // userToken: localStorage.getItem(config.localStorageUserTokenId),
-    userToken: JSON.parse(localStorage.getItem('user')).token,
+    userToken: JSON.parse(localStorage.getItem('user'))?.token,
     user: null,
     isUserLoading: true,
     isUserAuthenticated: false
