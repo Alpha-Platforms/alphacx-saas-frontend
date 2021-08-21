@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import HelpNavBar from "../../../Layout/helpNavBar";
 import TopBar from "../components/topBar/topBar";
-import Markdown from "markdown-to-jsx";
+
 import Approve from "../../../../assets/icons/approve.png";
 import Reject from "../../../../assets/icons/reject.png";
 import "./article.scss";
 import Accordion from "../components/accordion/Accordion";
 import StarRating from "../components/starRating/starRating";
 import matter from "gray-matter";
-import ReactMarkdown from "react-markdown";
+
 import { httpGetMain } from "../../../../helpers/httpMethods";
 import { useLocation } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
@@ -92,17 +92,3 @@ const Article = () => {
 };
 
 export default Article;
-
-// export async function getServerSideProps({ params }) {
-//   const { article } = params;
-//   const content = await import(`./article_markdowns/${post}.md`);
-//   const data = matter(content.default);
-
-//   console.log(data);
-
-//   return {
-//     props: {
-//       markdown: JSON.stringify(data),
-//     },
-//   };
-// }
