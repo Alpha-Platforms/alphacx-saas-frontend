@@ -18,7 +18,7 @@ export const getCustomers = () => (dispatch, getState) => {
         .get(`${config.stagingBaseUrl}/users?role=Customer`, userTokenConfig(getState))
         .then(res => dispatch({
             type: types.GET_CUSTOMERS,
-            payload: res.data && res.data.status === "success"
+            payload: res.data && res.data?.status === "success"
                 ? res.data.data
                 : {}
         }))
@@ -51,7 +51,7 @@ export const getPaginatedCustomers = (itemsPerPage, currentPage) => (dispatch, g
         .get(`${config.stagingBaseUrl}/users?role=Customer&per_page=${itemsPerPage}&page=${currentPage}`, userTokenConfig(getState))
         .then(res => dispatch({
             type: types.GET_CUSTOMERS,
-            payload: (res.data && res.data.status === "success")
+            payload: (res.data && res.data?.status === "success")
                 ? res.data.data
                 : {}
         }))
@@ -87,7 +87,7 @@ export const updateCustomer = (customerId, newCustomer, successCallback, failure
 			successCallback && successCallback();
 		})
 		.catch(err => {
-			dispatch(returnErrors(err.response.data, err.response.status))
+			dispatch(returnErrors(err.response.data, err.response?.status))
 			failureCallback && failureCallback();
 		});
 
@@ -143,11 +143,11 @@ export const getPaginatedCurrentCustomerTickets = (itemsPerPage, currentPage, cu
         .get(`${config.stagingBaseUrl}/customer/${customerId}/tickets?per_page=${itemsPerPage}&page=${currentPage}`, userTokenConfig(getState))
         .then(res => dispatch({
             type: types.GET_CURRENT_CUSTOMER_TICKETS,
-            payload: (res.data && res.data.status === "success")
+            payload: (res.data && res.data?.status === "success")
                 ? res.data.data
                 : {}
         }))
-        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+        .catch(err => dispatch(returnErrors(err.response.data, err.response?.status)));
 }
 
 export const setCustomersLoading = () => {

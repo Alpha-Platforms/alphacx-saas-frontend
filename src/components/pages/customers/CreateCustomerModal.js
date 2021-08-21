@@ -4,6 +4,7 @@ import {NotificationManager} from 'react-notifications';
 import {addCustomer, getPaginatedCustomers, updateCustomer} from '../../../reduxstore/actions/customerActions';
 import {connect} from 'react-redux';
 import RSelect from 'react-select/creatable';
+import PinIcon from '../../../assets/icons/pin.svg';
 
 const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers, tags, isEditing, customerId, customers, updateCustomer}) => {
 
@@ -150,7 +151,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                         </div>
                         <div className="row">
                             <div className="col-6 mt-3">
-                                <label htmlFor="workphone" className="form-label">Workphone</label>
+                                <label htmlFor="workphone" className="form-label">Work Phone</label>
                                 <input
                                     type="tel"
                                     name="workphone"
@@ -233,6 +234,16 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                     }
                                 />
                             </div>
+
+                            <div className="col-12 mt-3">
+                                        <label htmlFor="title" className="form-label">Attachment (If Any)</label>
+                                        <div
+                                            id="ticket-ath-box"
+                                            className="border border-1 d-block text-center f-14 p-3"><img src={PinIcon} alt=""/>
+                                            <span className="text-at-blue-light">Add file</span>&nbsp;
+                                            <span>or drag file here</span>
+                                        </div>
+                                    </div>
 
                         </div>
 
