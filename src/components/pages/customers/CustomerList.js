@@ -29,6 +29,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
     const [custLoading,
         setCustLoading] = useState(false);
     const [changingRow, setChangingRow] = useState(false);
+    const [customerId, setCustomerId] = useState('');
     // const [selectedRows, setSelectedRows] = useState([]);
     let selectedRows = [];
 
@@ -65,6 +66,14 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                 },
             },
         });
+
+        function handleEditClick () {
+
+            setCustomerId(this.customerId);
+            setCreateModalShow(true);
+
+        }
+
         
         const AlphacxMTPagination = props => {
             const {
@@ -114,7 +123,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                     <div
                         className={`user-initials ${contact.theme
                         ? contact.theme
-                        : themes[Math.floor(Math.random() * 4)]}`}>{getUserInitials(`${contact.firstname} ${contact.lastname}`)}</div>
+                        : themes[Math.floor(Math.random() * 4)]}`}>{contact.avatar ? <img src={contact.avatar} className="cust-avatar" alt="" /> : getUserInitials(`${contact.firstname} ${contact.lastname}`)}</div>
                     <div className="ms-2 mt-1">
                         <Link to={`/customers/${contact.id}`} style={{ textTransform: 'capitalize' }}>{`${contact.firstname} ${contact.lastname}`}</Link>
                     </div>
@@ -141,8 +150,8 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                                 <span className="cust-table-dots"><DotSvg/></span>
                                             </Dropdown.Toggle>
                                             <Dropdown.Menu>
-                                                <Dropdown.Item eventKey="1">Edit</Dropdown.Item>
-                                                <Dropdown.Item eventKey="2">Delete</Dropdown.Item>
+                                                <Dropdown.Item eventKey="1" onClick={handleEditClick.bind({customerId: rowData.contact.id})}><span className="black-text">Edit</span></Dropdown.Item>
+                                                <Dropdown.Item eventKey="2"><span className="black-text">Delete</span></Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown>)
                 // render: rowData => (<div><span className="cust-table-dots"><DotSvg/></span></div>)
@@ -162,9 +171,10 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                     email,
                     phone_number,
                     theme,
-                    id}) => ({
+                    id,
+                    avatar}) => ({
                     title: title ? title :`Mr.`,
-                    contact: {firstname, lastname, theme, id},
+                    contact: {firstname, lastname, theme, id, avatar},
                     organisation: company ? company : 'Gillete',
                     emailAddress: email,
                     workphone: phone_number,
@@ -282,10 +292,11 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                 email,
                                 phone_number,
                                 theme,
-                                id}) => ({
+                                id,
+                                avatar}) => ({
                                 title: title ? title :`Mr.`,
-                                contact: {firstname, lastname, theme, id},
-                                organisation: company ? company : 'Gillete',
+                                contact: {firstname, lastname, theme, id, avatar},
+                                organisation: company ? company : '',
                                 emailAddress: email,
                                 workphone: phone_number,
                                 tags: ''
@@ -377,7 +388,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                 </div>
             </div> */}
 
-               <CreateCustomerModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} setChangingRow={setChangingRow} />
+               <CreateCustomerModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} setChangingRow={setChangingRow} isEditing={true} customerId={customerId} />
 
                 {/* Upload csv modal */}
                 <Modal

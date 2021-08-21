@@ -77,6 +77,23 @@ export const addCustomer = async(newCustomer) => {
 }
 
 // valid redux action
+export const updateCustomer = (customerId, newCustomer, successCallback, failureCallback) => (dispatch, getState) => {
+
+	//Request body
+	const body = JSON.stringify(newCustomer);
+
+	axios.patch(`${config.stagingBaseUrl}/customer/${customerId}`, body, userTokenConfig(getState))
+		.then(res => {
+			successCallback && successCallback();
+		})
+		.catch(err => {
+			dispatch(returnErrors(err.response.data, err.response.status))
+			failureCallback && failureCallback();
+		});
+
+}
+
+// valid redux action
 export const getCurrentCustomer = (id) => (dispatch, getState) => {
     if (!navigator.onLine) {
         return NotificationManager.error('Please check your internet', 'Opps!', 3000);
