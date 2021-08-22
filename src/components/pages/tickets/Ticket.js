@@ -345,7 +345,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       setLoadSingleTicket(true);
       setTingleTicketFullInfo();
       setTicket([]);
-      let swData = { assigneeId: assignee.id, userId: customer.id };
+      let swData = { assigneeId: assignee.id  || '', userId: customer.id  || '' };
       UserInfo.id && AppSocket.io.leave(`${UserInfo.id}${assignee.id}`);
       AppSocket.io.emit("join_private", swData);
       const res = await httpGetMain(`tickets/${id}`);
@@ -392,7 +392,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       let data = {
         statusId: status,
         priorityId: ticket[0].priority.id,
-        assigneeId: ticket[0].assignee.id,
+        assigneeId: ticket[0].assignee.id  || '',
         categoryId: categoryUpdate,
       };
       console.log(data);
@@ -717,7 +717,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                       </div>
                     </div>
                     <div className="msgbodyticketHeader">
-                      {capitalize(ticket[0]?.description)}
+                      {capitalize(ticket[0]?.description  || '')}
                     </div>
                     <div className="msgAssingedToee3">
                       This message is assigned to{" "}
@@ -725,7 +725,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                         {" "}
                         {`${capitalize(
                           ticket[0]?.assignee?.firstname
-                        )} ${capitalize(ticket[0]?.assignee?.lastname)}`}
+                        )} ${capitalize(ticket[0]?.assignee?.lastname  || '')}`}
                       </span>
                     </div>
 
@@ -737,7 +737,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                         {" "}
                         {`${capitalize(
                           ticket[0]?.assignee?.firstname
-                        )} ${capitalize(ticket[0]?.assignee?.lastname)}`}
+                        )} ${capitalize(ticket[0]?.assignee?.lastname || '')}`}
                       </span>{" "}
                       picked up this chat
                     </div>

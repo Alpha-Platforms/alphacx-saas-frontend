@@ -68,8 +68,8 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
               className="mb-0 text-capitalize mt-2 pb-0"
             >
               <Link to="/settings/users">
-                <b>{`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(
-                  ticket[0]?.customer?.lastname
+                <b>{`${capitalize(ticket[0]?.customer?.firstname  || '')} ${capitalize(
+                  ticket[0]?.customer?.lastname  || ''
                 )}`}</b>
               </Link>
             </h6>
@@ -149,8 +149,8 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
             </p> */}
                   <p>
                     <Link to="/settings/users">{`${capitalize(
-                      ticket[0]?.assignee?.firstname
-                    )} ${capitalize(ticket[0]?.assignee?.lastname)}`}</Link>
+                      ticket[0]?.assignee?.firstname  || ''
+                    )} ${capitalize(ticket[0]?.assignee?.lastname  || '')}`}</Link>
                   </p>
                 </div>
 
@@ -227,8 +227,8 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
             </p> */}
                   <p>
                     <Link to="/settings/users">{`${capitalize(
-                      ticket[0]?.assignee?.firstname
-                    )} ${capitalize(ticket[0]?.assignee?.lastname)}`}</Link>
+                      ticket[0]?.assignee?.firstname  || ''
+                    )} ${capitalize(ticket[0]?.assignee?.lastname  || '')}`}</Link>
                   </p>
                 </div>
 
@@ -446,8 +446,8 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
             <div className="textTimeLineSec">
               <span>
                 This message is assigned to{" "}
-                {`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(
-                  ticket[0]?.assignee?.lastname
+                {`${capitalize(ticket[0]?.assignee?.firstname  || '')} ${capitalize(
+                  ticket[0]?.assignee?.lastname  || ''
                 )}`}
               </span>
               <div className="timeLinehashtags">
@@ -469,8 +469,8 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
               </div>
               <div className="textTimeLineSec">
                 <span>
-                  {`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(
-                    ticket[0]?.assignee?.lastname
+                  {`${capitalize(ticket[0]?.assignee?.firstname  || '')} ${capitalize(
+                    ticket[0]?.assignee?.lastname  || ''
                   )}`}{" "}
                   picked up this chat
                 </span>

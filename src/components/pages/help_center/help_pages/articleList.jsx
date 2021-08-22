@@ -1,9 +1,8 @@
-import { Link } from "@material-ui/icons";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { NotificationManager } from "react-notifications";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, Link } from "react-router-dom";
 import { HelpNavIcon } from "../../../../assets/images/svgs";
 import { httpGetMain } from "../../../../helpers/httpMethods";
 import HelpNavBar from "../../../Layout/helpNavBar";
@@ -34,20 +33,6 @@ const ArticleList = () => {
     return new URLSearchParams(useLocation().search);
   }
 
-  //   function that fetches all available categories
-  //    that can be added to an article
-  const fetchCategories = async () => {
-    const res = await httpGetMain("articles/categories");
-    if (res?.status == "success") {
-      let categories = res?.data;
-      console.clear();
-      console.log(categories);
-      setCategories(categories);
-    } else {
-      return NotificationManager.error(res?.er?.message, "Error", 4000);
-    }
-  };
-
   const fetchAllArticles = async () => {
     const res = await httpGetMain(`articles/categories/${query.get("id")}`);
     setPolicyLoading(false);
@@ -59,6 +44,8 @@ const ArticleList = () => {
       }
       console.clear();
       console.log("articles", articles);
+      console.log(pageUrl);
+
       setArticles(articles);
     } else {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
@@ -98,21 +85,21 @@ const ArticleList = () => {
         </div>
         <div className="articles">
           {articles.map((item, i) => (
-            <a
+            <Link
               key={i}
-              href={
-                pageUrl +
-                "/" +
-                item.title.toLowerCase().replaceAll(" ", "-") +
-                "?id=" +
-                item.id
-              }
+              to={`${pageUrl}/${item?.title
+                ?.toLowerCase()
+                .replace(/ /g, "-")
+                .replace("?", "")}?id=${item?.id}`}
             >
               <div className="article-link">
                 <h3 className="title">{item?.title}</h3>
                 {/* <p className="description">{item.solution}</p> */}
               </div>
-            </a>
+            </Link>
+            // /${item.title
+            //   .toLowerCase()
+            //   .replaceAll(" ", "-")}?id=${item.id}
           ))}
         </div>
         <div className="sidebar">

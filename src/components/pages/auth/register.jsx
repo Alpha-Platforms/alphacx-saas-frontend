@@ -207,6 +207,10 @@ const Login = ({history}) => {
                                             onClick={() => setShowPassword(!showPassword)}/>
                                     </div>
                                 </div>
+                                <div className="haveAnAccou">
+                                    <span></span>
+                                    <a href="/">Already have an account? Login</a>
+                                </div>
 
                                 <div className="submit-auth-btn">
                                     <button
