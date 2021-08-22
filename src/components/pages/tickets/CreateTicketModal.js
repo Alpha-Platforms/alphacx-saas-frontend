@@ -51,7 +51,6 @@ const CreateTicketModal = ({
     const [modalInputs,
         setModalInputs] = useState({
         customer: '',
-        // priority: 'Medium',
         priority: '',
         stage: '',
         subject: '',
@@ -59,7 +58,9 @@ const CreateTicketModal = ({
         assignee: '',
         group: '',
         category: '',
-        subcategory: ''
+        subcategory: '',
+        dueDays: 0,
+        dueHours: 0
     });
     // const [cancelExec, setCancelExec] = useState(false);
 
@@ -122,32 +123,35 @@ const CreateTicketModal = ({
             description,
             assignee,
             group,
-            subcategory
+            subcategory,
+            dueDays,
+            dueHours
         } = modalInputs;
 
-        if (!customer || !category || !priority || !stage || !subject || !description ) { // subcategory
+        if (!customer || !category || !stage || !subject || !description ) { // subcategory
             NotificationManager.error('All fields are required', 'Error', 5000);
             console.log(modalInputs)
         } else {
             const newTicket = {
-                customer: customer,
-                priorityId: priority,
-                assigneeId: assignee,
+                customer,
+                priorityId: priority || "5a6635d0-0561-11ea-8d71-362b9e155667",
+                assigneeId: assignee || null,
                 description,
                 plainDescription: description,
                 userId: customer,
-                groupId: group,
                 statusId: stage,
                 subject,
-                tags: selectedTags,
                 categoryId: category,
                 subCategoryId: subcategory,
-                channel: 'system'
+                channel: 'system',
+                tags: selectedTags || null,
+                groupId: group || null,
+                dueDate: (dueDays * 24) + dueHours
             };
 
             setCreatingTicket(true);
-            // addTicket(newTicket);
-            console.log(newTicket)
+            addTicket(newTicket);
+            // console.log(newTicket)
             
         }
     }
@@ -275,7 +279,6 @@ const CreateTicketModal = ({
     const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(false)
     const [assignType, setAssignType] = useState('teams')
     const [categoriesAndSubs, setCategoriesAndSubs] = useState([])
-    const [searchedCustomers, setSearchedCustomers] = useState([])
     
 
     /* UPDATE MODAL FORM VALUES */
@@ -291,7 +294,8 @@ const CreateTicketModal = ({
 
     const prepCategoriesAndSubs = () => {
         categories.forEach(item => {
-            setCategoriesAndSubs(prev => [...prev, {'value':item.id, 'label':item.name, 'subcate': item.id}])
+            // Leave the below line commented until Olumide implemented nullable sub-categories
+            // setCategoriesAndSubs(prev => [...prev, {'value':item.id, 'label':item.name, 'subcate': item.id}])
             if (item.subCategories.length > 0) {
                 item.subCategories.forEach(sub => {
                     setCategoriesAndSubs(prev => [...prev, {'value':sub.id, 'label':sub.name, 'subcate': item.id}])
@@ -488,15 +492,14 @@ const CreateTicketModal = ({
                                         </div>
                                     </div>
 
-                                    <div className="col-12 tags-select-wrapper">
+                                    <div className="col-12">
                                         {assignType === 'teams'?
                                             (<RSelect className="rselectfield"
                                                 style={{ fontSize: "12px" }}
-                                                onChange={ (value, actionMeta) => {
-                                                    // handleTagSelection(value);
-                                                }}
+                                                onChange={handleRSInput}
                                                 isClearable={false}
-                                                isMulti
+                                                // isMulti
+                                                name="assignee"
                                                 options={
                                                     // populate 'options' prop from $agents, with names remapped
                                                     groups?.map(item => {
@@ -507,11 +510,10 @@ const CreateTicketModal = ({
                                             :
                                             (<RSelect className="rselectfield"
                                                 style={{ fontSize: "12px" }}
-                                                onChange={ (value, actionMeta) => {
-                                                    // handleTagSelection(value);
-                                                }}
+                                                onChange={handleRSInput}
                                                 isClearable={false}
-                                                isMulti
+                                                // isMulti
+                                                name="assignee"
                                                 options={
                                                     // populate 'options' prop from $agents, with names remapped
                                                     agents?.map(item => {
@@ -527,11 +529,18 @@ const CreateTicketModal = ({
                                         <label htmlFor="" className="w-100 mb-2">Ticket Due In</label>
 
                                         <div className="input-group w-25 me-3">
-                                            <input type="number" className="form-control" ariaLabel="Recipient's username" ariaDescribedby="basic-addon2" />
+                                            <input type="number" className="form-control" 
+                                            name="dueDays"
+                                            onChange={handleModalInput} 
+                                            ariaLabel="Recipient's username" 
+                                            ariaDescribedby="basic-addon2" />
                                             <span class="input-group-text" id="basic-addon2">Days</span>
                                         </div>
                                         <div className="input-group w-25">
-                                            <input type="number" className="form-control" ariaLabel="Recipient's username" ariaDescribedby="basic-addon2" />
+                                            <input type="number" className="form-control" 
+                                            name="dueHours"
+                                            onChange={handleModalInput}
+                                            ariaLabel="Recipient's username" ariaDescribedby="basic-addon2" />
                                             <span class="input-group-text" id="basic-addon2">Hours</span>
                                         </div>
                                     
