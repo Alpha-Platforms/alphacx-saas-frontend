@@ -135,7 +135,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                 title: 'Email Address',
                 field: 'emailAddress'
             }, {
-                title: 'Workphone',
+                title: 'Work Phone',
                 field: 'workphone'
             }, {
                 title: 'Tags',

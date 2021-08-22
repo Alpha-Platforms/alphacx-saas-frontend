@@ -146,21 +146,14 @@ const UserList = ({
         <h5 className="my-3 f-16 fw-500 text-dark">User Management</h5>
         <div className="d-flex justify-content-between align-items-center flex-row">
           <div>
-            <p className="w-50 text-custom-gray f-12">
-              Service level Agreement(SLA) Policies help you setup and maintain
-              targets for the duration within which your teams respond and
-              resolve rickets. Learn more
-            </p>
-            <p className="text-custom-gray f-12">
-              <i className="bi bi-info-circle"></i>The first matching SLA policy
-              will be applied to tickets with matching conditions
-            </p>
+            
+            <p className="text-custom-gray f-12"></p>
           </div>
           <div>
             <Dropdown className="new-user-dropdown" id="new-user-dropdown">
               <Dropdown.Toggle
                 id="dropdown-basic"
-                className="btn btn-custom btn-sm dropdown-toggle px-3 bg-at-blue-light"
+                className="btn btn-custom btn-sm dropdown-toggle px-4 bg-at-blue-light py-2"
               >
                 <span>New User</span> <ArrowDownSvg />
               </Dropdown.Toggle>
