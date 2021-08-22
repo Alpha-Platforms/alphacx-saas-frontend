@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import "./helpCenter.scss";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
 import EmptyArticle from "../../../../assets/images/empty_article.png";
-import { httpGetMain } from "../../../../helpers/httpMethods";
+import { httpGetMain, httpPatchMain } from "../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -16,35 +16,82 @@ import {
   createTheme,
 } from "@material-ui/core/styles";
 import "../../../../styles/Ticket.css";
+import ScaleLoader from "react-spinners/ScaleLoader";
 import Swal from "sweetalert2";
 import { wordCapitalize } from "../../../../helper";
 
 const HelpCenterSettings = () => {
   const [articles, setArticles] = useState([]);
+  const [page, setPage] = useState(1);
   const [meta, setMeta] = useState({});
+  const [policyLoading, setPolicyLoading] = useState(false);
+
+  // function to fetch all articles for user
   const fetchAllArticles = async () => {
-    const res = await httpGetMain("articles");
+    setPolicyLoading(true);
+    const res = await httpGetMain(`articles?page=${page}`);
+    setPolicyLoading(false);
     if (res?.status == "success") {
       console.clear();
       console.log("articles", res);
       setArticles(res?.data?.articles);
       setMeta(res?.data?.meta);
-      // setLoadingTicks(true);
-      // setTickets(res?.data?.tickets);
-      // setLoadingTicks(false);
     } else {
-      // setLoadingTicks(false);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
-  const handleCheck = (e, index) => {
-    let newArticles = articles;
-    newArticles.articles[index].checked = e.target.checked;
-    setArticles(newArticles);
+  // const handleCheck = (e, index) => {
+  //   let newArticles = articles;
+  //   newArticles.articles[index].checked = e.target.checked;
+  //   setArticles(newArticles);
+  // };
+
+  // function to publish articles
+  const publishArticle = async (id, index) => {
+    console.log("publishing");
+    setPolicyLoading(true);
+    const res = await httpPatchMain(`articles/${id}/publish`);
+    setPolicyLoading(false);
+
+    if (res?.status == "success") {
+      NotificationManager.success(res?.message, "Success", 4000);
+      let newArticles = articles;
+      newArticles[index] = {
+        ...newArticles[index],
+        isPublished: !newArticles[index].isPublished,
+      };
+
+      setArticles([]);
+      setArticles(newArticles);
+    } else {
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+  };
+  // function to unpublish articles
+  const unPublishArticle = async (id, index) => {
+    setPolicyLoading(true);
+    const res = await httpPatchMain(`articles/${id}/unpublish`);
+    setPolicyLoading(false);
+    if (res?.status == "success") {
+      NotificationManager.success(res?.message, "Success", 4000);
+      let newArticles = articles;
+      newArticles[index] = {
+        ...newArticles[index],
+        isPublished: !newArticles[index].isPublished,
+      };
+
+      setArticles([]);
+      setArticles(newArticles);
+    } else {
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
   };
 
+  // function to trigger popup modal for publish/unpublish confirmation
   function handlePublishChange() {
-    const { title, isPublished } = this;
+    const { title, isPublished, id, rowData } = this;
+    const articleId = articles[id].id;
+    console.log(rowData);
 
     Swal.fire({
       title: isPublished ? "Unpublish?" : "Publish?",
@@ -58,7 +105,11 @@ const HelpCenterSettings = () => {
       cancelButtonText: "No",
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log("Deactivate or  user");
+        if (isPublished) {
+          unPublishArticle(articleId, id);
+        } else {
+          publishArticle(articleId, id);
+        }
       } else {
         console.log("Do nothing");
       }
@@ -84,7 +135,7 @@ const HelpCenterSettings = () => {
     },
     {
       title: "Publish",
-      field: "publish",
+      field: "isPublished",
       render: (rowData) => (
         <div class="form-check form-switch">
           <input
@@ -94,6 +145,8 @@ const HelpCenterSettings = () => {
             onChange={handlePublishChange.bind({
               title: rowData.title,
               isPublished: rowData.isPublished,
+              id: rowData.tableData.id,
+              rowData: rowData,
             })}
             type="checkbox"
           />
@@ -176,6 +229,8 @@ const HelpCenterSettings = () => {
             <ActionsComponent
               {...actionsComponentProps}
               onChangePage={(event, newPage) => {
+                console.log("changing page", newPage);
+                setPage(newPage + 1);
                 // fetch tickets with new current page
                 // getPaginatedTickets(meta.itemsPerPage, newPage + 1);
               }}
@@ -192,9 +247,19 @@ const HelpCenterSettings = () => {
 
   useEffect(() => {
     fetchAllArticles();
-  }, []);
+  }, [page]);
+
   return (
     <div class="settings-email help-center-settings">
+      {policyLoading && (
+        <div
+          className={`cust-table-loader ${
+            policyLoading && "add-loader-opacity"
+          }`}
+        >
+          <ScaleLoader loading={policyLoading} color={"#006298"} />
+        </div>
+      )}
       <div class="card card-body bg-white border-0 mt-4">
         <div id="mainContentHeader">
           <h6 className="text-muted f-14">
@@ -229,13 +294,16 @@ const HelpCenterSettings = () => {
                 columns={tableColumns}
                 title=""
                 icons={tableIcons}
-                data={articles?.map(({ title, created_at, updated_at }) => ({
-                  title,
-                  views: "100",
-                  author: "Dabo Etela",
-                  created_at: created_at.split(" ")[0],
-                  modified_at: updated_at.split(" ")[0],
-                }))}
+                data={articles?.map(
+                  ({ title, created_at, updated_at, isPublished }) => ({
+                    title,
+                    isPublished,
+                    views: "100",
+                    author: "Dabo Etela",
+                    created_at: created_at.split(" ")[0],
+                    modified_at: updated_at.split(" ")[0],
+                  })
+                )}
                 options={{
                   search: true,
                   selection: true,
@@ -256,21 +324,6 @@ const HelpCenterSettings = () => {
           </div>
         </div>
 
-        {!articles?.articles && (
-          <div class="text-center empty-state">
-            <img src={EmptyArticle} alt="no article" class="img-fluid mb-4" />
-            <p class="text-center">
-              You currently have no Help Center Article record at <br />
-              the moment
-            </p>
-            <Link
-              class="btn btn-sm btn-primary"
-              to="/settings/help-center/article"
-            >
-              New Article
-            </Link>
-          </div>
-        )}
         {/* {articles?.articles?.length > 0 && (
               <div className="pagination">
                 <p>Showing 1-1 of 1 entries</p>

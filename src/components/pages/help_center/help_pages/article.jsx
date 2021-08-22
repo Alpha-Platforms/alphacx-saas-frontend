@@ -23,12 +23,27 @@ const Article = () => {
   function useQuery() {
     return new URLSearchParams(useLocation().search);
   }
+
+  //   function that fetches all available categories
+  //    that can be added to an article
+  const fetchCategory = async (id) => {
+    console.clear();
+    console.log("running", id);
+    const res = await httpGetMain(`articles/folder/${id}`);
+    if (res?.status == "success") {
+      let categories = res?.data;
+      console.clear();
+      console.log(categories);
+    }
+  };
+
   const fetchArticleDetails = async (categories) => {
     setPolicyLoading(true);
     const res = await httpGetMain(`article/${query.get("id")}`);
     if (res?.status == "success") {
       console.log(res);
       setArticleContent(res?.data);
+      fetchCategory(res?.data?.folders[0].id);
       setPolicyLoading(false);
     } else {
       setPolicyLoading(false);
