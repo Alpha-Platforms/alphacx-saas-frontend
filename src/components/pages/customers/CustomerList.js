@@ -224,7 +224,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                         <div>
                         </div> */}
 
-                        <div className="btn-toolbar mb-md-0 cust-table-btns-wrapper" style={{ zIndex: 40 }}>
+                        <div className="btn-toolbar mb-md-0 cust-table-btns-wrapper" style={{ zIndex: 2 }}>
                             {/* <button
                                 type="button"
                                 className="btn btn-sm bg-at-blue-light px-md-3 mx-1"
@@ -277,7 +277,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
 
                     </div>
 
-                    <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table">
+                    <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table" style={{ zIndex: 1 }}>
                     {(customers && !changingRow) && <MuiThemeProvider theme={tableTheme}>
                         <MaterialTable
                             title = ""
