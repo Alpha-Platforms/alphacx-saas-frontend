@@ -346,15 +346,15 @@ const TicketList = ({
                     status,
                     assignee,
                   }) => ({
-                    name: `${customer.firstname} ${customer.lastname}`,
-                    customerId: customer.id,
+                    name: `${customer?.firstname} ${customer?.lastname}`,
+                    customerId: customer?.id,
                     ticketId: id,
-                    email: customer.email,
-                    subject: `${subject.substr(0, 25)}...`,
-                    category: category.name,
+                    email: customer?.email,
+                    subject: `${subject?.substr(0, 25)}...`,
+                    category: category?.name,
                     created: moment(created_at).format("DD MMM, YYYY"),
                     status: status?.status,
-                    assignedTo: `${assignee.firstname} ${assignee.lastname}`,
+                    assignedTo: `${assignee?.firstname || ''} ${assignee?.lastname || ''}`,
                   })
                 )}
                 options={{
