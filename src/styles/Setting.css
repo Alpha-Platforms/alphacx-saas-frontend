@@ -1,7 +1,7 @@
 /* * USER */
 .new-user-dropdown > div {
     transform: translateY(2.5rem) !important;
-    box-shadow: 0px 0px 20px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.1);
     width: 100%;
 }
 
@@ -22,7 +22,6 @@
     align-items: center;
 }
 
-
 /* * FIELD */
 .field-tab-wrapper .nav-tabs {
     border-bottom: none;
@@ -35,19 +34,29 @@
     overflow: hidden;
 }
 
-#alphacxMTable.acx-user-table > div > div:nth-child(1) {
-    display: none !important;
+#alphacxMTable.acx-user-table-2 {
+    margin-top: 2rem;
+}
+
+#alphacxMTable.acx-user-table-2 table:nth-of-type(1) th:nth-of-type(1) {
+    font-size: 1.2rem;
+    padding-left: 1.3rem !important;
+}
+
+#alphacxMTable.acx-user-table-2 table:nth-of-type(1) td:nth-of-type(1) {
+    padding-left: 1.8rem !important;
 }
 
 #alphacxMTable.acx-user-table > div > div:nth-child(1) {
     display: none !important;
 }
-
+#alphacxMTable.acx-user-table > div > div:nth-child(1) {
+    display: none !important;
+}
 #alphacxMTable.acx-group-table > div > div:nth-child(1) > div:nth-child(2) {
     padding-left: 0;
     margin-left: -1rem;
 }
-
 #alphacxMTable.acx-group-table > div > div:nth-child(2) {
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 8px;
@@ -65,13 +74,11 @@
 }
 
 /* * >>>>>> TICKET SETTINGS <<<<<<< */
-.ticket-cat-tab {
-}
+.ticket-cat-tab {}
 
 .ticket-cat-tab > div {
     min-height: 20rem;
 }
-
 .ticket-cat-tab > div:nth-child(1) {
     margin-right: 1rem;
 }
@@ -102,5 +109,5 @@
     width: 6rem;
     height: 6rem;
     right: 0;
-    border: 1px solid #f1f1f1
+    border: 1px solid #f1f1f1;
 }

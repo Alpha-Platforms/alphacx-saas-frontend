@@ -149,7 +149,7 @@ const UserList = ({
             
             <p className="text-custom-gray f-12"></p>
           </div>
-          <div>
+          <div className="mt-3">
             <Dropdown className="new-user-dropdown" id="new-user-dropdown">
               <Dropdown.Toggle
                 id="dropdown-basic"
@@ -183,7 +183,7 @@ const UserList = ({
                         placeholder="Search agents"/> */}
         </div>
 
-        <div id="alphacxMTable" className="mb-3 acx-user-table">
+        <div id="alphacxMTable" className="mb-3 acx-user-table acx-user-table-2">
           {agents && !changingRow && (
             <MuiThemeProvider theme={tableTheme}>
               <MaterialTable
@@ -283,7 +283,7 @@ const UserList = ({
                 )}
                 options={{
                   search: false,
-                  selection: true,
+                  selection: false,
                   // exportButton: true,
                   tableLayout: "auto",
                   paging: true,
