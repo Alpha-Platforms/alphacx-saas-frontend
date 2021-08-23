@@ -185,3 +185,7 @@
     margin-right: 0 !important;
 
 }
+
+#alphacxMTable.acx-cust-table th {
+    white-space: nowrap;
+}
