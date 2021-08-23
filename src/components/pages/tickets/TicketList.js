@@ -114,6 +114,34 @@ const TicketList = ({
     }
   };
 
+  const getRatingStar = (rating = 0) => {
+    
+    if (!rating) {
+      rating = 0;
+    } else if (typeof rating?.value !== "number") {
+      rating = 0;
+    } else {
+      rating = rating?.value;
+    }
+
+    const ratingArr = [];
+
+    for (let i = 1; i <= 5; i++) {
+      if (i <= rating)  {
+        ratingArr.push(true)
+      } else {
+        ratingArr.push(false);
+      }
+
+    }
+
+    return (<div className={"table-ratings"}>
+              {ratingArr.map(x => <span className="table-ratings-span">{x ? <StarYellowSvg /> : <StarUnactiveSvg />}</span>)}
+              
+          </div>);
+
+  }
+
   const tableColumns = [
     {
       title: "Name",
@@ -198,25 +226,7 @@ const TicketList = ({
     {
       title: "Ratings",
       field: "rating",
-      render: (rowData) => (
-        <div className={"table-ratings"}>
-          <span className="table-ratings-span">
-            <StarYellowSvg />
-          </span>
-          <span className="me-1 table-ratings-span">
-            <StarUnactiveSvg />
-          </span>
-          <span className="me-1 table-ratings-span">
-            <StarUnactiveSvg />
-          </span>
-          <span className="me-1 table-ratings-span">
-            <StarUnactiveSvg />
-          </span>
-          <span className="me-1 table-ratings-span">
-            <StarUnactiveSvg />
-          </span>
-        </div>
-      ),
+      render: (rowData) => getRatingStar(rowData.rating),
     },
     {
       title: "Created",
@@ -345,6 +355,7 @@ const TicketList = ({
                     created_at,
                     status,
                     assignee,
+                    rating
                   }) => ({
                     name: `${customer?.firstname} ${customer?.lastname}`,
                     customerId: customer?.id,
@@ -355,6 +366,7 @@ const TicketList = ({
                     created: moment(created_at).format("DD MMM, YYYY"),
                     status: status?.status,
                     assignedTo: `${assignee?.firstname || ''} ${assignee?.lastname || ''}`,
+                    rating: rating
                   })
                 )}
                 options={{
