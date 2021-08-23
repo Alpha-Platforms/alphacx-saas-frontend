@@ -111,3 +111,31 @@
     right: 0;
     border: 1px solid #f1f1f1;
 }
+
+.ticket-dist-row1 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    grid-gap: 1rem;
+}
+
+.ticket-closes-wrapper {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.ticket-closes-wrapper span {
+    background-color: rgb(233, 236, 239);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 4rem;
+    color: black;
+}
+
+.ticket-closes-wrapper input {
+    border: none;
+}
