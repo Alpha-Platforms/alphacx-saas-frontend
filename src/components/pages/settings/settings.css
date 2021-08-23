@@ -111,7 +111,7 @@
 }
 
 #new-user-dropdown > div {
-  transform: translateY(1.75rem) !important;
+  transform: translateY(2.2rem) !important;
 }
 
 #new-user-dropdown > button::after {

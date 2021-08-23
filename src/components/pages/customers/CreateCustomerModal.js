@@ -122,7 +122,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
             centered>
             {/* <Modal.Body> */}
                 <div className="saveTicketWrapModal p-4 pb-1 mb-0">
-                    <h5 className="mb-3">Create New Customer</h5>
+                    <h5 className="mb-3">{!isEditing ? 'Create New' : 'Edit'} Customer</h5>
                     <form
                         className="needs-validation mb-4"
                         noValidate
