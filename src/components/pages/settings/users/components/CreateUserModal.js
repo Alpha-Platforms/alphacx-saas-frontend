@@ -3,6 +3,7 @@ import {Modal} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {NotificationManager} from 'react-notifications';
 import {addAgent, getAgents, resetAgentCreated} from '../../../../../reduxstore/actions/agentActions';
+import {countrycodes} from '../../../../shared/countrycodes';
 
 const CreateUserModal = ({
     createModalShow,
@@ -22,7 +23,8 @@ const CreateUserModal = ({
         phoneNumber: '',
         description: '',
         group: '',
-        role: 'Agent'
+        role: 'Agent',
+        ccode: '+234'
     });
     const [creatingUser, setCreatingUser] = useState(false);
 
@@ -95,7 +97,7 @@ const CreateUserModal = ({
                                     <input
                                         type="text"
                                         name="firstName"
-                                        className="form-control form-control-sm w-100"
+                                        className="form-control form-control w-100"
                                         id="fullName"
                                         value={modalInputs.firstName}
                                         onChange={handleModalInput}/>
@@ -105,7 +107,7 @@ const CreateUserModal = ({
                                     <label className="f-12" htmlFor="fullName">Last Name</label>
                                     <input
                                         type="text"
-                                        className="form-control form-control-sm w-100"
+                                        className="form-control form-control w-100"
                                         id="fullName"
                                         name="lastName"
                                         value={modalInputs.lastName}
@@ -116,26 +118,37 @@ const CreateUserModal = ({
                                 <label className="f-12" htmlFor="email">Email Address</label>
                                 <input
                                     type="email"
-                                    className="form-control form-control-sm"
+                                    className="form-control form-control"
                                     id="email"
                                     name="email"
                                     value={modalInputs.email}
                                     onChange={handleModalInput}/>
                             </div>
-                            <div className="form-group mt-3">
+                            <div className="mt-3">
+                                <label htmlFor="workphone" className="form-label">Work Phone</label>
+                                <div className="input-group mb-3 workphone-group">
+                                    <div className="input-group-prepend">
+                                        <select className="d-inline" name="ccode" id="ccode" value={modalInputs.ccode} onChange={handleModalInput}>
+                                            {countrycodes.sort((a, b) => Number(a.dial_code.slice(1)) - Number(b.dial_code.slice(1))).map(cc => <option value={cc.dial_code}>{cc.dial_code}</option>)}
+                                        </select>
+                                    </div>
+                                    <input type="tel" className="form-control" name="workphone" id="workphone" value={modalInputs.workphone} aria-label="work phone" aria-describedby="workphone" onChange={handleModalInput}/>
+                                </div>
+                            </div>
+                            {/* <div className="form-group mt-3">
                                 <label className="f-12" htmlFor="email">Phone Number</label>
                                 <input
                                     type="tel"
-                                    className="form-control form-control-sm"
+                                    className="form-control form-control"
                                     id="phoneNumber"
                                     name="phoneNumber"
                                     value={modalInputs.phonenumber}
                                     onChange={handleModalInput}/>
-                            </div>
+                            </div> */}
                             <div className="form-group mt-3">
                                 <label className="f-12" htmlFor="email">Description</label>
                                 <textarea
-                                    className="form-control form-control-sm"
+                                    className="form-control form-control"
                                     id="description"
                                     name="description"
                                     onChange={handleModalInput}
@@ -143,11 +156,11 @@ const CreateUserModal = ({
                             </div>
                             {/* <div className="form-group mt-3">
                                 <label className="f-12" htmlFor="#role">Role</label>
-                                <input type="text" className="form-control form-control-sm" id="role"/>
+                                <input type="text" className="form-control form-control" id="role"/>
                             </div> */}
                             <div className="form-group mt-3">
                                 <label className="f-12" htmlFor="level">Team</label>
-                                {/* <input type="text" className="form-control form-control-sm" id="level"/> */}
+                                {/* <input type="text" className="form-control form-control" id="level"/> */}
                                 <select
                                     name="group"
                                     className="form-select"
