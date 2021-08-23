@@ -173,7 +173,7 @@ const CreateUserModal = ({
                             <div className="text-end">
                                 <button
                                     type="button"
-                                    className="btn btn-custom btn-sm float-end w-25 mt-4 mb-2"
+                                    className="btn btn-custom float-end w-25 mt-4 mb-2"
                                     onClick={handleUserCreation}
                                     disabled={creatingUser}
                                     id="createUser">{creatingUser ? 'Creating...' : 'Create'}</button>
