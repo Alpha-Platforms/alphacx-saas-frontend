@@ -193,15 +193,15 @@ const AutomationSettings = () => {
       >
         <div className="p-5 w-100">
           <h6 className="mb-5">Are you sure you want to delete this Policy?</h6>
-          <div className="float-end mb-5">
+          <div className="d-flex justify-content-center">
             <a
-              className="btn btn-sm f-12 bg-outline-custom cancel px-4"
+              className="btn f-12 bg-outline-custom cancel px-4"
               onClick={() => SetOpenDeleteActionModal(false)}
             >
               Cancel
             </a>
             <a
-              className="btn btn-sm ms-2 f-12 bg-custom px-4"
+              className="btn ms-2 f-12 bg-custom px-4"
               onClick={deleteAutomation}
             >
               Confirm
