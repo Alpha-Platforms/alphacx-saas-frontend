@@ -125,7 +125,7 @@
 
 .domain-field span {
   display: inline-block;
-  background: #0796f7;
+  /* background: #0796f7; */
   height: 45px;
   width: 7rem;
   display: flex;
@@ -162,24 +162,8 @@
   border: 0.5px solid #d6d6d6;
   border-radius: 5px;
   height: 45px;
-  color: rgba(0, 0, 0, 0.5);
-  margin-top: 5px !important;
-  font-size: 13px;
   padding-left: 7px;
   outline: none;
-}
-.input-wrap label {
-  font-size: 14px;
-  line-height: 19px;
-  padding-bottom: 5px;
-  color: rgba(0, 0, 0, 0.5);
-}
-
-.inputWrapTwo label {
-  font-size: 14px;
-  line-height: 19px;
-  padding-bottom: 5px;
-  color: rgba(0, 0, 0, 0.5);
 }
 
 .passworEye {
@@ -339,4 +323,10 @@
 
 .regform {
   top: 0 !important;
+}
+
+/* add bg to react-select field - hack */
+.rselectfield div[class*=-control] {
+  background: #f3f3f3;
+  padding: 4px 0;
 }

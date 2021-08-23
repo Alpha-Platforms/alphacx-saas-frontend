@@ -65,14 +65,22 @@ const AddGroupModal = ({
               <label className="form-label" htmlFor="groupDesc">
                 Team Description
               </label>
-              <input
+              {/* <input
                 type="text"
                 id="groupDesc"
                 className="form-control"
                 name="description"
                 value={newTeam.description || ""}
                 onChange={handleChange}
-              />
+              /> */}
+
+              <textarea
+                id="groupDesc"
+                className="form-control"
+                name="description"
+                value={newTeam.description || ""}
+                onChange={handleChange}
+              ></textarea>
 
               <label className="form-label mt-2" htmlFor="groupDesc">
                 Ticket Category

@@ -106,21 +106,25 @@ function Dropdown() {
                   isVisible &&
                   <ul className="dd_menu list-unstyled"
                     style={{ 
-                        border: "solid 1px #ddd",
                         // padding: "0.25rem 0.75rem 0.5rem",
                         backgroundColor: "white",
                         borderRadius: "3px",
                         marginTop: "0px",
-                        width: "7rem",
                         position: "fixed",
                         textAlign: "center"
                     }}
                   >
                       <li style={{}}>
-                        <button className="dd_item btn rounded-0" onClick={() => setCreateTicketModalShow(true)}>Ticket</button>
+                        <button 
+                          className="dd_item btn rounded-0"                          
+                          onClick={() => setCreateTicketModalShow(true)}
+                          >Ticket</button>
                       </li>
                       <li style={{}}>
-                        <button className="dd_item btn rounded-0" onClick={() => setCreateCustModalShow(true)}>Contact</button>
+                        <button 
+                          className="dd_item btn rounded-0"
+                          onClick={() => setCreateCustModalShow(true)}
+                        >Contact</button>
                       </li>
                   </ul>
               }
