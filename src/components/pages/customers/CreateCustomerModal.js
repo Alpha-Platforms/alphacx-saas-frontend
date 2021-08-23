@@ -12,7 +12,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     const [selectedTags,
         setSelectedTags] = useState([]);
     const [modalInputs,
-        setModalInputs] = useState({firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: '', ccode: '+1'});
+        setModalInputs] = useState({firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: '', ccode: '+234'});
     const [creatingCust, setCreatingCust] = useState(false);
     const [editingCust, setEditingCust] = useState(false);
 
@@ -151,26 +151,15 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                             </div>
                         </div>
                         <div className="row">
-                            {/* <div className="col-6 mt-3">
-                                <label htmlFor="workphone" className="form-label">Work Phone</label>
-                                <input
-                                    type="tel"
-                                    name="workphone"
-                                    id="workphone"
-                                    className="form-control"
-                                    value={modalInputs.workphone}
-                                    onChange={handleModalInput}/>
-                            </div> */}
-
                             <div className="col-6 mt-3">
                                 <label htmlFor="workphone" className="form-label">Work Phone</label>
                                 <div className="input-group mb-3 workphone-group">
                                     <div className="input-group-prepend">
-                                        <select className="d-inline" name="ccode" id="ccode" onChange={handleModalInput}>
+                                        <select className="d-inline" name="ccode" id="ccode" value={modalInputs.ccode} onChange={handleModalInput}>
                                             {countrycodes.sort((a, b) => Number(a.dial_code.slice(1)) - Number(b.dial_code.slice(1))).map(cc => <option value={cc.dial_code}>{cc.dial_code}</option>)}
                                         </select>
                                     </div>
-                                    <input type="text" className="form-control" name="workphone" id="workphone" value={modalInputs.workphone} aria-label="work phone" aria-describedby="workphone" onChange={handleModalInput}/>
+                                    <input type="tel" className="form-control" name="workphone" id="workphone" value={modalInputs.workphone} aria-label="work phone" aria-describedby="workphone" onChange={handleModalInput}/>
                                 </div>
                             </div>
 
