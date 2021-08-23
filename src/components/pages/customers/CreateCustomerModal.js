@@ -5,13 +5,14 @@ import {addCustomer, getPaginatedCustomers, updateCustomer} from '../../../redux
 import {connect} from 'react-redux';
 import RSelect from 'react-select/creatable';
 import PinIcon from '../../../assets/icons/pin.svg';
+import {countrycodes} from '../../shared/countrycodes';
 
 const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers, tags, isEditing, customerId, customers, updateCustomer}) => {
 
     const [selectedTags,
         setSelectedTags] = useState([]);
     const [modalInputs,
-        setModalInputs] = useState({firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: ''});
+        setModalInputs] = useState({firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: '', ccode: '+1'});
     const [creatingCust, setCreatingCust] = useState(false);
     const [editingCust, setEditingCust] = useState(false);
 
@@ -61,12 +62,12 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     }, [createModalShow]);
 
     const handleCustomerCreation = async () => {
-        const {firstname, lastname, workphone, emailaddress, organisation} = modalInputs;
+        const {firstname, lastname, workphone, emailaddress, organisation, ccode} = modalInputs;
         if (!firstname || !lastname || !workphone || !emailaddress) {
             NotificationManager.error("Fill up the required fields", 'Error');
         } else {
             setCreatingCust(true);
-            const res = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, phone_number: workphone, organisation, tags: selectedTags.map(tag => tag.value)});
+            const res = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, phone_number: `${ccode}${workphone}`, organisation, tags: selectedTags.map(tag => tag.value)});
             if (res.status === "success") {
                 NotificationManager.success(res?.message, 'Success');
                 setCreateModalShow(false);
@@ -83,7 +84,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
         NotificationManager.success('Customer updated successfully', 'Success');
         getPaginatedCustomers(10, 1);
         setEditingCust(false);
-        setModalInputs(prev => ({...prev, firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: ''}));
+        setModalInputs(prev => ({...prev, firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: '', ccode: "+1"}));
         setCreateModalShow(false);
     }
     
@@ -93,12 +94,12 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     }
 
     const handleCustomerEdit = () => {
-        const {firstname, lastname, workphone, emailaddress, organisation} = modalInputs;
+        const {firstname, lastname, workphone, emailaddress, organisation, ccode} = modalInputs;
         if (!firstname || !lastname || !workphone || !emailaddress) {
             NotificationManager.error("Fill up the required fields", 'Error');
         } else {
             setEditingCust(true);
-            const newCustomer = {firstName: firstname, lastName: lastname, email: emailaddress, phone_number: workphone, organisation, tags: selectedTags.map(tag => tag.value)};
+            const newCustomer = {firstName: firstname, lastName: lastname, email: emailaddress, phone_number: `${ccode}${workphone}`, organisation, tags: selectedTags.map(tag => tag.value)};
             updateCustomer(customerId, newCustomer, custEditSuccess, custEditFail);
         }
     }
@@ -150,7 +151,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-6 mt-3">
+                            {/* <div className="col-6 mt-3">
                                 <label htmlFor="workphone" className="form-label">Work Phone</label>
                                 <input
                                     type="tel"
@@ -159,6 +160,18 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                     className="form-control"
                                     value={modalInputs.workphone}
                                     onChange={handleModalInput}/>
+                            </div> */}
+
+                            <div className="col-6 mt-3">
+                                <label htmlFor="workphone" className="form-label">Work Phone</label>
+                                <div className="input-group mb-3 workphone-group">
+                                    <div className="input-group-prepend">
+                                        <select className="d-inline" name="ccode" id="ccode" onChange={handleModalInput}>
+                                            {countrycodes.sort((a, b) => Number(a.dial_code.slice(1)) - Number(b.dial_code.slice(1))).map(cc => <option value={cc.dial_code}>{cc.dial_code}</option>)}
+                                        </select>
+                                    </div>
+                                    <input type="text" className="form-control" name="workphone" id="workphone" value={modalInputs.workphone} aria-label="work phone" aria-describedby="workphone" onChange={handleModalInput}/>
+                                </div>
                             </div>
 
                             <div className="col-6 mt-3">
