@@ -174,3 +174,14 @@
     white-space: nowrap;
 
 }
+
+.workphone-group select {
+    display: inline !important;
+    width: 4rem;
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+    padding-right: 0 !important;
+    margin-right: 0 !important;
+
+}
