@@ -613,6 +613,19 @@
   left: -8px;
 }
 
-.dd_menu li:hover {
+.dd_menu li button {
+  width: 7rem;
+  border: solid 1px #ddd!important;
+}
+.dd_menu li:nth-child(1)  button {
+  border-top-left-radius: 3px!important;
+  border-top-right-radius: 3px!important;
+}
+.dd_menu li:nth-child(2) button {
+  border-top: none!important;
+  border-bottom-left-radius: 3px!important;
+  border-bottom-right-radius: 3px!important;
+}
+.dd_menu li button:hover {
   background-color: #d2e7ff;
 }

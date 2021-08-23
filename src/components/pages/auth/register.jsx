@@ -13,6 +13,7 @@ import {css} from "@emotion/react";
 import ClipLoader from "react-spinners/ClipLoader";
 import {CSSTransition} from 'react-transition-group';
 import {countries} from '../../../components/shared/countries';
+import RSelect from 'react-select';
 
 const override = css ``;
 
@@ -156,7 +157,7 @@ const Login = ({history}) => {
                             <div className="regform">
                                 <div className="input-wrap-with-two-inputes">
                                     <div className="inputWrapTwo">
-                                        <label htmlFor="">First Name</label>
+                                        <label htmlFor="" className="form-label">First Name</label>
                                         <input
                                             type="text"
                                             onChange={handleChange}
@@ -166,7 +167,7 @@ const Login = ({history}) => {
                                     </div>
 
                                     <div className="inputWrapTwo">
-                                        <label htmlFor="">Last Name
+                                        <label htmlFor="" className="form-label">Last Name
                                         </label>
                                         <input
                                             type="text"
@@ -178,9 +179,9 @@ const Login = ({history}) => {
                                     </div>
                                 </div>
 
-                                <div className="input-main-wrap">
+                                <div className="input-main-wrap mt-2">
                                     <div className="input-wrap">
-                                        <label htmlFor="">Email Address</label>
+                                        <label htmlFor="" className="form-label">Email Address</label>
                                         <input
                                             type="text"
                                             onChange={handleChange}
@@ -191,7 +192,7 @@ const Login = ({history}) => {
                                 </div>
 
                                 <div className="input-wrap">
-                                    <label htmlFor="">Password</label>
+                                    <label htmlFor="" className="form-label">Password</label>
                                     <input
                                         type={`${showPassword
                                         ? "text"
@@ -231,7 +232,7 @@ const Login = ({history}) => {
                             <div className='regform mt-0'>
                                 <div className="input-main-wrap">
                                     <div className="input-wrap">
-                                        <label htmlFor="">Company Name</label>
+                                        <label htmlFor="" className="form-label">Company Name</label>
                                         <input
                                             type="text"
                                             onChange={handleChange}
@@ -241,46 +242,52 @@ const Login = ({history}) => {
                                     </div>
                                 </div>
 
-                                <div className="input-main-wrap">
-                                    <div className="mt-2">
-                                        <label htmlFor="">Domain</label>
+                                <div className="input-wrap">
+                                    {/* <div className="">
+                                        <label htmlFor="" className="form-label">Domain</label>
                                         <div className="domain-field"><input
                                             type="text"
                                             onChange={handleChange}
                                             name="domain"
                                             autocomplete="off"
                                             value={userInput.domain}/>
-                                            <span>.alphacx.co</span>
+                                            <span className="bg-secondary">.alphacx.co</span>
                                         </div>
 
+                                    </div> */}
+
+                                    <label htmlFor="" className="form-label">Domain</label>
+                                    <div className="input-group">
+                                        <input type="text" className="form-control" 
+                                        name="domain"
+                                        autocomplete="off"
+                                        onChange={handleChange}
+                                        value={userInput.domain}
+                                        ariaLabel="Recipient's username" 
+                                        ariaDescribedby="basic-addon2" />
+                                        <span class="input-group-text" id="basic-addon2">.alphacx.co</span>
                                     </div>
+
                                 </div>
 
-                                <div className="input-main-wrap">
-                                    <div className="input-wrap mt-2">
-                                        <label htmlFor="">Country</label>
-                                        {/* <input
-                                            type="text"
-                                            onChange={handleChange}
-                                            name="region"
-                                            autocomplete="off"
-                                            value={userInput.region}/> */}
-                                        <div className="country-field">
-                                            <select
-                                                name="region"
-                                                id="country"
-                                                onChange={handleChange}
-                                                value={userInput.region}
-                                                aria-label="Select Country">
-                                                <option value="">Select country</option>
-                                                {countries.map((country, i) => (
-                                                    <option key={i} value={country.name}>
-                                                        {country.name}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-
+                                <div className="input-wrap">
+                                    <div className="">
+                                        <label htmlFor="status" className="form-label">Country</label>
+                                        <RSelect className="rselectfield bg-light"
+                                            style={{ fontSize: "12px" }}
+                                            name="country"
+                                            placeholder="Search or select country"
+                                            onChange={(inputValue, meta) => {
+                                                console.log(inputValue.value)
+                                            }}
+                                            isClearable={false}
+                                            isMulti={false}
+                                            options={
+                                                countries?.map(item => {
+                                                    return {value: item.name, label: item.name}
+                                                })
+                                            }
+                                        />
                                     </div>
                                 </div>
                                 <div className="haveAnAccou">

@@ -44,6 +44,12 @@ const CreateTicketModal = ({
     const [subCatLoading, setSubCatLoading] = useState(false);
     const [subCat, setSubCat] = useState(null);
     const [creatingTicket, setCreatingTicket] = useState(false);
+    const [channels, setChannels] = useState([
+        'email',
+        'facebook',
+        'system',
+        'whatsapp'
+    ])
 
     // ref to customer input
     const custInputRef = useRef(null);
@@ -60,7 +66,8 @@ const CreateTicketModal = ({
         category: '',
         subcategory: '',
         dueDays: 0,
-        dueHours: 0
+        dueHours: 0,
+        channel: ''
     });
     // const [cancelExec, setCancelExec] = useState(false);
 
@@ -125,7 +132,8 @@ const CreateTicketModal = ({
             group,
             subcategory,
             dueDays,
-            dueHours
+            dueHours,
+            channel
         } = modalInputs;
 
         if (!customer || !category || !stage || !subject || !description ) { // subcategory
@@ -142,9 +150,9 @@ const CreateTicketModal = ({
                 statusId: stage,
                 subject,
                 categoryId: category,
-                subCategoryId: subcategory,
-                channel: 'system',
-                tags: selectedTags || null,
+                // subCategoryId: subcategory,
+                channel,
+                tags: selectedTags,
                 groupId: group || null,
                 dueDate: (dueDays * 24) + dueHours
             };
@@ -253,6 +261,7 @@ const CreateTicketModal = ({
     }
 
     const getSearchedCustomers = async (userInput) => {
+        // USE HTTPGETMAIN LATER
         const res = await fetch(`https://kustormar-staging.herokuapp.com/v1/users?role=Customer&search=${userInput}`, {
             headers: {
                 Authorization: `Bearer ${JSON.parse(localStorage.getItem("user")).token}`
@@ -267,9 +276,6 @@ const CreateTicketModal = ({
                 }
             })
             return remappedData;
-            // return remappedData.filter(item => {
-            //     item.label.includes(userInput.toLowerCase())
-            // })
         }
     }
 
@@ -384,11 +390,16 @@ const CreateTicketModal = ({
                                 <RSelect className="rselectfield" 
                                     style={{ fontSize: "12px" }}
                                     name="category"
-                                    onChange={handleRSCategoryInput}
+                                    // onChange={handleRSCategoryInput}
+                                    onChange={handleRSInput}
                                     isClearable={false}
                                     maxMenuHeight={200}
                                     isMulti={false}
-                                    options={categoriesAndSubs}
+                                    options={
+                                        categories?.map(item => {
+                                            return {value: item.id,label: item.name}
+                                        })
+                                    }
                                 />
                             </div>
 
@@ -550,6 +561,22 @@ const CreateTicketModal = ({
 
             
                                     <div className="col-12 mt-3 tags-select-wrapper">
+                                        <label htmlFor="title" className="form-label">Channel</label>
+                                        <RCreatable className="rselectfield"
+                                            style={{ fontSize: "12px" }}
+                                            onChange={handleRSInput}
+                                            name="channel"
+                                            isClearable={false}
+                                            isMulti={false}
+                                            options={
+                                                channels?.map(item => {
+                                                return {value: item,label: item}
+                                                })
+                                            }
+                                        />
+                                    </div>
+            
+                                    <div className="col-12 mt-3 tags-select-wrapper">
                                         <label htmlFor="title" className="form-label">Tags</label>
                                         <RCreatable className="rselectfield"
                                             style={{ fontSize: "12px" }}
@@ -560,7 +587,6 @@ const CreateTicketModal = ({
                                             isMulti
                                             placeholder="Select or create new tags"
                                             options={
-                                                // populate 'options' prop from $agents, with names remapped
                                                 tags?.map(item => {
                                                 return {value: item,label: item}
                                                 })
