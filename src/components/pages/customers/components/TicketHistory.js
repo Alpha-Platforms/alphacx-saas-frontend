@@ -65,11 +65,11 @@ const TicketHistory = ({ currentCustomerTicketsMeta, currentCustomerId, getPagin
             title: 'Category',
             field: 'category'
         }, {
-            title: 'Agent Assigned',
+            title: 'Assigned To',
             field: 'agentAssigned',
             render: rowData => <Link to="/settings/users">{rowData.agentAssigned}</Link>
         }, {
-            title: 'Status',
+            title: 'Stage',
             field: 'stage',
             render: rowData => <div className={`ticket-state ${getStatusColor(rowData.stage)}`}>
                     <Link to="#" className="btn btn-sm">{rowData.stage}</Link>
