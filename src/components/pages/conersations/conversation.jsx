@@ -333,7 +333,7 @@ export default function Conversation() {
     setLoadSingleTicket(true);
     setTingleTicketFullInfo();
     setTicket([]);
-    let swData = { assigneeId: assignee.id, userId: customer.id };
+    let swData = { assigneeId: assignee?.id || "", userId: customer?.id || "" };
     UserInfo.id && AppSocket.io.leave(`${UserInfo.id}${assignee.id}`);
     AppSocket.io.emit("join_private", swData);
     const res = await httpGetMain(`tickets/${id}`);
@@ -722,8 +722,8 @@ export default function Conversation() {
                       <span>
                         {" "}
                         {`${capitalize(
-                          ticket[0]?.assignee?.firstname
-                        )} ${capitalize(ticket[0]?.assignee?.lastname)}`}
+                          ticket[0]?.assignee?.firstname || ""
+                        )} ${capitalize(ticket[0]?.assignee?.lastname || "")}`}
                       </span>
                     </div>
 
@@ -734,8 +734,8 @@ export default function Conversation() {
                       <span>
                         {" "}
                         {`${capitalize(
-                          ticket[0]?.assignee?.firstname
-                        )} ${capitalize(ticket[0]?.assignee?.lastname)}`}
+                          ticket[0]?.assignee?.firstname || ""
+                        )} ${capitalize(ticket[0]?.assignee?.lastname || "")}`}
                       </span>{" "}
                       picked up this chat
                     </div>

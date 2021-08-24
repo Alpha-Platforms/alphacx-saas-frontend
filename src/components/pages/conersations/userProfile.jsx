@@ -130,15 +130,16 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                             height: "30px",
                             borderRadius: "50%",
                             marginRight: "19px",
+                            backgroundColor: '1px solid red'
                           }}
                         >
                           <span>{`${ticket[0]?.assignee?.firstname?.slice(
                             0,
                             1
-                          )} ${ticket[0]?.assignee?.lastname?.slice(
+                          ) || ''} ${ticket[0]?.assignee?.lastname?.slice(
                             0,
                             1
-                          )}`}</span>
+                          ) || '' }`}</span>
                         </div>
                       )}
                     </span>{" "}
@@ -149,7 +150,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
             </p> */}
                   <p>
                     <Link to="/settings/users">{`${capitalize(
-                      ticket[0]?.assignee?.firstname  || ''
+                      ticket[0]?.assignee?.firstname  || 'N/A'
                     )} ${capitalize(ticket[0]?.assignee?.lastname  || '')}`}</Link>
                   </p>
                 </div>
@@ -213,10 +214,10 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                           <span>{`${ticket[0]?.assignee?.firstname?.slice(
                             0,
                             1
-                          )} ${ticket[0]?.assignee?.lastname?.slice(
+                          ) || ''} ${ticket[0]?.assignee?.lastname?.slice(
                             0,
                             1
-                          )}`}</span>
+                          ) || ''}`}</span>
                         </div>
                       )}
                     </span>{" "}
