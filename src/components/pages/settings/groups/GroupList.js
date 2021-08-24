@@ -50,7 +50,35 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories 
     getTicketCategories();
   }, []);
 
-  const AlphacxMTPagination = (props) => {
+  function AlphacxMTPagination2(props: TablePaginationProps) {
+    const {
+      ActionsComponent,
+      onChangePage,
+      onChangeRowsPerPage,
+      ...tablePaginationProps
+    } = props;
+  
+    return (
+      <TablePagination
+        {...tablePaginationProps}
+        // @ts-expect-error onChangePage was renamed to onPageChange
+        onPageChange={onChangePage}
+        onRowsPerPageChange={onChangeRowsPerPage}
+        ActionsComponent={(subprops) => {
+          const { onPageChange, ...actionsComponentProps } = subprops;
+          return (
+            // @ts-expect-error ActionsComponent is provided by material-table
+            <ActionsComponent
+              {...actionsComponentProps}
+              onChangePage={onPageChange}
+            />
+          );
+        }}
+      />
+    );
+  }
+
+  /* const AlphacxMTPagination = (props) => {
     const {
       ActionsComponent,
       onChangePage,
@@ -89,7 +117,7 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories 
         }}
       />
     );
-  };
+  }; */
 
   const tableTheme = createTheme({
     palette: {
@@ -217,7 +245,7 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories 
                 }}
                 components={
                   {
-                    // Pagination: AlphacxMTPagination
+                    Pagination: AlphacxMTPagination2
                   }
                 }
               />

@@ -338,15 +338,15 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     const loadSingleMessage = async ({ id, customer, assignee, subject }) => {
       setShowAchive(false);
       setAchiveMsges([]);
-      getUser(customer.id);
+      getUser(customer?.id);
       setChatCol({ col1: "hideColOne", col2: "showColTwo" });
       setSenderInfo({ customer, subject });
       setMessageSenderId(id);
       setLoadSingleTicket(true);
       setTingleTicketFullInfo();
       setTicket([]);
-      let swData = { assigneeId: assignee.id  || '', userId: customer.id  || '' };
-      UserInfo.id && AppSocket.io.leave(`${UserInfo.id}${assignee.id}`);
+      let swData = { assigneeId: assignee?.id  || '', userId: customer?.id  || '' };
+      UserInfo.id && AppSocket.io.leave(`${UserInfo.id}${assignee?.id}`);
       AppSocket.io.emit("join_private", swData);
       const res = await httpGetMain(`tickets/${id}`);
       setfirstTimeLoad(false);
