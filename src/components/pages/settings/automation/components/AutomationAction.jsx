@@ -209,8 +209,9 @@ const AutomationAction = ({
             <img src={AddIcon} alt="" className="img-fluid me-1 mt-n5 " /> Add
             New Action
           </a>
-          {/* <a className="delete-resolution mx-4" onClick={deleteAction}> */}
-          {newPolicy.reminder.agreements.length > 1 && (
+          
+          {/* {newPolicy.reminder.agreements.length > 1 && ( */}
+          {true && (
             <a
               className="delete-resolution mx-4"
               onClick={() => SetOpenDeleteActionModal(true)}

@@ -16,8 +16,7 @@ import {
 import { NotificationManager } from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import AutomationAction from "./AutomationAction";
-
-import RSelect from "react-select/creatable";
+import RSelect from "react-select";
 
 const NewAutomationPolicy = () => {
   let router = useHistory();
@@ -29,34 +28,34 @@ const NewAutomationPolicy = () => {
     "open",
     "closed",
   ];
-  const [assignType, setAssignType] = useState("agent");
 
-  const [policyLoading, setPolicyLoading] = useState(false);
-  const [showAssign, setShowAssign] = useState(false);
-  const [showCategories, setShowCategories] = useState(false);
   const [ticketCategories, setTicketCategories] = useState([]);
   const [agents, setAgents] = useState([]);
   const [groups, setGroups] = useState([]);
   const [automationAgents, setAutomationAgents] = useState([]);
   const [automationTeams, setAutomationTeams] = useState([]);
   const [recipients, setRecipients] = useState([]);
+  const [assignType, setAssignType] = useState("agent");
+  const [policyLoading, setPolicyLoading] = useState(false);
+  const [showAssign, setShowAssign] = useState(false);
+  
+
   const [newPolicy, setNewPolicy] = useState({
     reminder: {
       agreements: policyID
         ? []
         : [
             {
-              name: "",
-              due_date: 0,
+              name: "hello",
+              due_date: 3,
               reminder: {
-                categories: [],
-
+                categories: [1,2,3],
                 agreement: [
                   {
-                    days: 0,
+                    days: 10,
                     action: "email",
-                    subject: "",
-                    body: "",
+                    subject: "subject",
+                    body: "body",
                   },
                 ],
               },
@@ -65,21 +64,85 @@ const NewAutomationPolicy = () => {
     },
   });
 
-  const handlechange = (e) => {
+
+//   const [newPolicy, setNewPolicy] = useState({
+//     name: newPolicyValues.name,
+//     dueDate: newPolicyValues.dueDate,
+//     reminder: {
+//         categories: newPolicyValues.reminderCategories,
+//         agreements: [
+//             {
+//                 hours: newPolicyValues.reminderAgreementsHours,
+//                 action: newPolicyValues.reminderAgreementsAction,
+//                 subject: newPolicyValues.reminderAgreementSubject,
+//                 body: newPolicyValues.reminderAgreementBody,
+//                 recipient: {
+//                     type: newPolicyValues.reminderAgreementRecipientType,
+//                     ids: [newPolicyValues.reminderAgreementRecipientIds]
+//                 }
+//             }
+//         ]
+//     }
+// })
+
+const [newPolicyValues, setNewPolicyValues] = useState({
+  name: "",
+  dueDate: "",
+  reminderCategories: [],
+  reminderAgreementsDays: "",
+  reminderAgreementsHours: "",
+  reminderAgreementsAction: "",
+  reminderAgreementSubject: "",
+  reminderAgreementBody: "",
+  reminderAgreementRecipientType: "",
+  reminderAgreementRecipientIds: ""
+})
+ const handleInputChange = (e) => {
+
     let { name, value } = e.target;
-    if (name === "days" && value > 30) {
-      value = 30;
-    }
-    if (name === "days" && value < 0) {
-      value = 0;
-    }
-    if (name === "hours" && value > 23) {
-      value = 23;
-    }
-    if (name === "hours" && value < 0) {
-      value = 0;
-    }
-    setNewPolicy({ ...newPolicy, [name]: value });
+    // if (name === "days" && value > 30) {
+    //   value = 30;
+    // }
+    // if (name === "days" && value < 0) {
+    //   value = 0;
+    // }
+    // if (name === "hours" && value > 23) {
+    //   value = 23;
+    // }
+    // if (name === "hours" && value < 0) {
+    //   value = 0;
+    // }
+
+    setNewPolicy({
+      ...newPolicy,
+      [name]: value
+    });
+
+    setTimeout(() => {
+      console.log(newPolicy);
+    }, 0);
+    
+  };
+
+  const handleRSMultiChange = (value, {name: rsName}) => {
+
+    // console.log(value)
+    // return;
+
+    let items = []
+    value.forEach(item => {
+      items.push(item.value)
+    })
+      
+    setNewPolicy({
+      ...newPolicy,
+      [rsName]: items
+    });
+
+    setTimeout(() => {
+      console.log(newPolicy);
+    }, 0);
+    
   };
 
   const handleRecipient = (e) => {
@@ -91,27 +154,6 @@ const NewAutomationPolicy = () => {
         ...newPolicy.reminder,
         recipient: { type: assignType, id: value },
       },
-    });
-  };
-
-  // function to add category id to automation categories array
-  const addCategory = (item) => {
-    let categories = newPolicy.reminder.categories
-      ? newPolicy.reminder.categories
-      : [];
-    categories.push(item.id);
-    setNewPolicy({
-      ...newPolicy,
-      reminder: { ...newPolicy.reminder, categories },
-    });
-  };
-  const removeCategory = (id) => {
-    let categories = newPolicy.reminder.categories;
-    categories = categories.filter((cat) => cat !== id);
-
-    setNewPolicy({
-      ...newPolicy,
-      reminder: { ...newPolicy.reminder, categories },
     });
   };
 
@@ -128,37 +170,6 @@ const NewAutomationPolicy = () => {
     let days = Math.floor(minuteToDays / 24);
     let hours = minuteToDays % 24;
   };
-
-  // const addAgent = (item) => {
-  //   let agents = newPolicy?.reminder?.assigned_to?.agent
-  //     ? newPolicy?.reminder?.assigned_to?.agent
-  //     : [];
-
-  //   agents.push(item.id);
-  //   setNewPolicy({
-  //     ...newPolicy,
-  //     reminder: { ...newPolicy.reminder, assigned_to: { agent: agents } },
-  //   });
-  // };
-  // const removeAgent = (id) => {
-  //   let agents = newPolicy?.reminder?.assigned_to?.agent;
-  //   agents = agents.filter((itm) => itm !== id);
-
-  //   setNewPolicy({
-  //     ...newPolicy,
-  //     reminder: { ...newPolicy.reminder, assigned_to: { agent: agents } },
-  //   });
-  // };
-
-  // const getAgents = async () => {
-  //   const res = await httpGetMain("agents");
-  //   if (res?.status === "success") {
-  //     console.log(res.data);
-  //     setAutomationAgents(res?.data);
-  //   } else {
-  //     return NotificationManager.error(res?.er?.message, "Error", 4000);
-  //   }
-  // };
 
   //function to Get automation information if in edit mode
   const getAutomationInfo = async () => {
@@ -178,7 +189,6 @@ const NewAutomationPolicy = () => {
     const res = await httpGetMain("categories");
     if (res?.status === "success") {
       setTicketCategories(res?.data?.categories);
-      // getAgents();
     } else {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
@@ -294,27 +304,30 @@ const NewAutomationPolicy = () => {
       )}
       <div className="card card-body bg-white border-0 p-0 ">
         <div className="col-md-8">
+
+          {/* Breadcrumb */}
           <div id="mainContentHeader">
             <h6 className="text-muted f-14">
               <Link to="/settings">
                 <span className="text-custom">Settings</span>
               </Link>{" "}
               <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
-              {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
-                            className="img-fluid mx-2 me-3"></object> */}
               <Link to="/settings/automation">
                 <span className="text-custom">Automations</span>
               </Link>
               <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
-              {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
-                            className="img-fluid mx-2 me-3"></object> */}
               <span>{policyID ? "Edit" : "New"} Automation</span>
             </h6>
           </div>
+
           <div id="setting-form">
+
+            {/* Page Title */}
             <h5 className="mt-3 mb-4 f-16 fw-bold">
               {policyID ? "Edit" : "New"} Automation
             </h5>
+
+            {/* Form beginning */}
             <form action="">
               <div className="form-group mt-3">
                 <label for="slaName" className="f-14 mb-1">
@@ -325,10 +338,14 @@ const NewAutomationPolicy = () => {
                   className="form-control form-control-sm"
                   id="slaName"
                   name="name"
-                  value={newPolicy?.name || ""}
-                  onChange={handlechange}
+                  // value={newPolicy?.name || ""}
+                  // onChange={e => {
+                  //   console.log(e.target.value);
+                  // }}
+                  onChange={handleInputChange}
                 />
               </div>
+
               <div className="form-group mt-3">
                 <label for="Desc" className="f-14 mb-1">
                   Description
@@ -338,50 +355,55 @@ const NewAutomationPolicy = () => {
                   rows="4"
                   id="Desc"
                   name="description"
-                  value={newPolicy?.description || ""}
-                  onChange={handlechange}
+                  // value={newPolicy?.description || ""}
+                  onChange={handleInputChange}
                 ></textarea>
               </div>
+
+              {/* Categories field */}
               <div className="form-group mt-3">
                 <label for="ticket" className="f-14 mb-1">
                   Ticket Categories
                 </label>
+                <RSelect 
+                  onChange={handleRSMultiChange}
+                  name="reminderCategories"
+                  isMulti
+                  options={[
+                    {label: "foo", value: "foo"},
+                    {label: "foo2", value: "foo2"}
+                  ]}
+                
+                />
+                
+              </div>
 
-                <div
-                  className="form-select form-control-sm f-14 ticket-category"
-                  onClick={() => setShowCategories(!showCategories)}
-                >
-                  {newPolicy?.reminder?.categories &&
-                    newPolicy?.reminder?.categories.map((cat, i) => (
-                      <div key={i} className="cat-tag">
-                        <p>
-                          {ticketCategories.length > 0 &&
-                            ticketCategories.filter(
-                              (item) => item.id === cat
-                            )[0].name}
-                        </p>
-                        <span onClick={() => removeCategory(cat)}>x</span>
-                      </div>
-                    ))}
-
-                  {showCategories && (
-                    <div className={"drop-list"}>
-                      {ticketCategories.length > 0 &&
-                        ticketCategories
-                          .filter((item) =>
-                            newPolicy?.reminder?.categories
-                              ? !newPolicy?.reminder?.categories.includes(
-                                  item.id
-                                )
-                              : ![].includes(item.id)
-                          )
-                          ?.map((item, i) => (
-                            <p key={i} onClick={() => addCategory(item)}>
-                              {item.name}
-                            </p>
-                          ))}
-                    </div>
-                  )}
+              {/* Duration */}
+              <div className="Resolution mt-3">
+                <label for="ticket" className="f-14 mb-1">
+                  Duration
+                </label>
+                
+                <div className="mb-3 d-flex align-items-center">
+                  <input
+                    type="number" max={30} max={0}
+                    className="number-input form-control form-control-sm"
+                    id="slaName"
+                    name="reminderAgreementsDays"
+                    // value={newPolicy?.days || 0}
+                    onChange={handleInputChange}
+                  />
+                  <span className="ps-2 me-2">Days</span>
+                  <input
+                    type="number" max={23} min={0}
+                    className="number-input form-control form-control-sm"
+                    id="slaName"
+                    name="reminderAgreementsHours"
+                    onkeydown="return false"
+                    // value={newPolicy?.hours || 0}
+                    onChange={handleInputChange}
+                  />
+                  <span className="ps-2 me-2">Hours</span>
                 </div>
               </div>
 
@@ -461,148 +483,16 @@ const NewAutomationPolicy = () => {
                     })
                   }
                 /> */}
+
               </div>
 
-              {/* <div className="form-group mt-3">
-                <div className="d-flex">
-                  <label for="slaName" className="f-14 mb-1 ">
-                    Assign To:
-                  </label>
-                  <div className="form-check" style={{ marginLeft: 20 }}>
-                    <input
-                      className="form-check-input"
-                      name="mail-radio"
-                      type="radio"
-                      id="radio-2"
-                      value="agent"
-                      checked={assignType === "agent"}
-                      onChange={(e) => setAssignType(e.target.value)}
-                    />
-                    <label className="form-check-label f-14" for="radio-2">
-                      Agents
-                    </label>
-                  </div>
-                  <div className="form-check" style={{ marginLeft: 10 }}>
-                    <input
-                      className="form-check-input"
-                      name="mail-radio"
-                      type="radio"
-                      id="radio-2"
-                      value="team"
-                      checked={assignType === "team"}
-                      onChange={(e) => setAssignType(e.target.value)}
-                    />
-                    <label className="form-check-label f-14" for="radio-2">
-                      Team
-                    </label>
-                  </div>
-                </div>
-
-                <div
-                  className="form-select form-control-sm f-14 ticket-category"
-                  onClick={() => setShowAssign(!showAssign)}
-                >
-                  {newPolicy?.reminder?.assigned_to?.agent &&
-                    newPolicy?.reminder?.assigned_to?.agent.map((agent, i) => (
-                      <div key={i} className="cat-tag">
-                        <p>
-                          <a
-                            style={{
-                              backgroundColor: "#006298",
-                              padding: "5px 6px",
-                              color: "white",
-                              borderRadius: 20,
-                              marginRight: 10,
-                            }}
-                          >
-                            {automationAgents.length > 0 &&
-                              automationAgents
-                                .filter((item) => item.id === agent)[0]
-                                .firstname.charAt(0)
-                                .toUpperCase()}
-                            {automationAgents.length > 0 &&
-                              automationAgents
-                                .filter((item) => item.id === agent)[0]
-                                .lastname.charAt(0)
-                                .toUpperCase()}
-                          </a>
-                          {automationAgents.length > 0 &&
-                            automationAgents.filter(
-                              (item) => item.id === agent
-                            )[0].email}
-                        </p>
-                        <span onClick={() => removeAgent(agent)}>x</span>
-                      </div>
-                    ))}
-                  {showAssign && (
-                    <div className={"drop-list"}>
-                      {automationAgents
-                        .filter(
-                          (item) =>
-                            !newPolicy?.reminder?.assigned_to?.agent.includes(
-                              item.id
-                            )
-                        )
-                        ?.map((item, i) => (
-                          <p key={i} onClick={() => addAgent(item)}>
-                            <a
-                              style={{
-                                backgroundColor: "#006298",
-                                padding: "5px 6px",
-                                color: "white",
-                                borderRadius: 20,
-                                marginRight: 10,
-                              }}
-                            >
-                              {item.firstname.charAt(0).toUpperCase()}
-                              {item.lastname.charAt(0).toUpperCase()}
-                            </a>
-                            {item.email}
-                          </p>
-                        ))}
-                    </div>
-                  )}
-                </div>
-              </div> */}
-
-              <div className="Resolution mt-3">
-                <label for="ticket" className="f-14 mb-1">
-                  Duration
-                </label>
-
-                {/* resolution-form mt-3 mb-4 d-flex align-items-center f-12  */}
-                <div className="mb-3 d-flex align-items-center">
-                  <input
-                    type="number"
-                    max={30}
-                    max={0}
-                    className="number-input form-control form-control-sm"
-                    id="slaName"
-                    name="days"
-                    value={newPolicy?.days || 0}
-                    onChange={handlechange}
-                  />
-                  <span className="ps-2 me-2">Days</span>
-                  <input
-                    type="number"
-                    max={23}
-                    min={0}
-                    className="number-input form-control form-control-sm"
-                    id="slaName"
-                    name="hours"
-                    onkeydown="return false"
-                    value={newPolicy?.hours || 0}
-                    onChange={handlechange}
-                  />
-                  <span className="ps-2 me-2">Hours</span>
-                </div>
-              </div>
-              <div id="resolution-wrapper mt-4">
+              <div className="resolution-wrapper mt-4">
                 <label for="ticket" className="d-flex p-2 acx-bg-blue-light-30">
                   Actions
                 </label>
                 {/* <div className="card my-4 f-12"> */}
                 {newPolicy?.reminder?.agreements.map((agreement, i) => (
+                // {[1].map((agreement, i) => (
                   <AutomationAction
                     key={i}
                     newPolicy={newPolicy}
@@ -613,8 +503,10 @@ const NewAutomationPolicy = () => {
                   />
                 ))}
 
-                {/* <div className="card-footer bg-light" id="customer-choice">
-                    <a className="addNewResolution" onClick={addAction}>
+                <div className="card-footer bg-light" id="customer-choice">
+                    <a className="addNewResolution" 
+                      onClick={addAction}
+                    >
                       <img
                         src={AddIcon}
                         alt=""
@@ -630,10 +522,10 @@ const NewAutomationPolicy = () => {
                       />{" "}
                       Delete Action
                     </a>
-                  </div>
-                </div> */}
+                </div>
+
               </div>
-            </form>
+         
 
             <div className="float-end mb-5">
               <Link
@@ -651,6 +543,7 @@ const NewAutomationPolicy = () => {
                 Save Changes
               </a>
             </div>
+            </form>
           </div>
         </div>
       </div>
