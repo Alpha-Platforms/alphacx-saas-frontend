@@ -67,10 +67,10 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
               style={{ color: "#6c757d" }}
               className="mb-0 text-capitalize mt-2 pb-0"
             >
-              <Link to={`/customers/${ticket[0]?.customer?.id}`}>
-                <span>{`${capitalize(ticket[0]?.customer?.firstname  || '')} ${capitalize(
+              <Link to="/settings/users">
+                <b>{`${capitalize(ticket[0]?.customer?.firstname  || '')} ${capitalize(
                   ticket[0]?.customer?.lastname  || ''
-                )}`}</span>
+                )}`}</b>
               </Link>
             </h6>
             {isTicketDetails && (
@@ -85,6 +85,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                 </p>
               </Fragment>
             )}
+            {/* <p>{` Marvin McKinney`}</p> */}
           </div>
 
           <div className="userProfileAboutCovers">
@@ -129,15 +130,16 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                             height: "30px",
                             borderRadius: "50%",
                             marginRight: "19px",
+                            backgroundColor: '1px solid red'
                           }}
                         >
                           <span>{`${ticket[0]?.assignee?.firstname?.slice(
                             0,
                             1
-                          )} ${ticket[0]?.assignee?.lastname?.slice(
+                          ) || ''} ${ticket[0]?.assignee?.lastname?.slice(
                             0,
                             1
-                          )}`}</span>
+                          ) || '' }`}</span>
                         </div>
                       )}
                     </span>{" "}
@@ -148,7 +150,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
             </p> */}
                   <p>
                     <Link to="/settings/users">{`${capitalize(
-                      ticket[0]?.assignee?.firstname  || ''
+                      ticket[0]?.assignee?.firstname  || 'N/A'
                     )} ${capitalize(ticket[0]?.assignee?.lastname  || '')}`}</Link>
                   </p>
                 </div>
@@ -212,10 +214,10 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                           <span>{`${ticket[0]?.assignee?.firstname?.slice(
                             0,
                             1
-                          )} ${ticket[0]?.assignee?.lastname?.slice(
+                          ) || ''} ${ticket[0]?.assignee?.lastname?.slice(
                             0,
                             1
-                          )}`}</span>
+                          ) || ''}`}</span>
                         </div>
                       )}
                     </span>{" "}

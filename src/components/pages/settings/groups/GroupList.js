@@ -23,7 +23,7 @@ import { ReactComponent as DotSvg } from "../../../../assets/icons/dots.svg";
 import { httpGetMain } from "../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 
-const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded }) => {
+const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories }) => {
   const [addGroupModalShow, setAddGroupModalShow] = useState(false);
   const [addMemberModalShow, setAddMemberModalShow] = useState(false);
   const [ticketCategories, setTicketCategories] = useState([]);
@@ -50,7 +50,35 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded }) => {
     getTicketCategories();
   }, []);
 
-  const AlphacxMTPagination = (props) => {
+  function AlphacxMTPagination2(props) {
+    const {
+      ActionsComponent,
+      onChangePage,
+      onChangeRowsPerPage,
+      ...tablePaginationProps
+    } = props;
+  
+    return (
+      <TablePagination
+        {...tablePaginationProps}
+        // @ts-expect-error onChangePage was renamed to onPageChange
+        onPageChange={onChangePage}
+        onRowsPerPageChange={onChangeRowsPerPage}
+        ActionsComponent={(subprops) => {
+          const { onPageChange, ...actionsComponentProps } = subprops;
+          return (
+            // @ts-expect-error ActionsComponent is provided by material-table
+            <ActionsComponent
+              {...actionsComponentProps}
+              onChangePage={onPageChange}
+            />
+          );
+        }}
+      />
+    );
+  }
+
+  /* const AlphacxMTPagination = (props) => {
     const {
       ActionsComponent,
       onChangePage,
@@ -89,7 +117,7 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded }) => {
         }}
       />
     );
-  };
+  }; */
 
   const tableTheme = createTheme({
     palette: {
@@ -140,7 +168,7 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded }) => {
           </div>
         </div>
 
-        <div id="alphacxMTable" className="pb-2 acx-group-table">
+        <div id="alphacxMTable" className="pb-2 acx-group-table acx-user-table-2">
           {groups && (
             <MuiThemeProvider theme={tableTheme}>
               <MaterialTable
@@ -161,12 +189,10 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded }) => {
                     field: "members",
                   },
                   {
-                    title: "Created",
-                    field: "created",
-                  },
-                  {
-                    title: "Updated",
-                    field: "updated",
+                    title: "Category",
+                    field: "category",
+                    width: '40%',
+                    render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">{rowData.category}</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">+2</span></div>),
                   },
                   {
                     title: "Action",
@@ -195,16 +221,16 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded }) => {
                     ),
                   },
                 ]}
-                data={groups.map(({ name, description }) => ({
+                data={groups.map(({ name, description, category_id }) => ({
                   name,
                   description,
                   members: 5,
-                  created: "13 Apr 2021",
+                  category: categories.find(cat => cat?.id === category_id)?.name,
                   updated: "21 Jul 2021",
                 }))}
                 options={{
                   search: true,
-                  selection: true,
+                  selection: false,
                   // exportButton: true,
                   tableLayout: "auto",
                   paging: true,
@@ -217,7 +243,7 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded }) => {
                 }}
                 components={
                   {
-                    // Pagination: AlphacxMTPagination
+                    Pagination: AlphacxMTPagination2
                   }
                 }
               />
@@ -260,6 +286,7 @@ const mapStateToProps = (state, ownProps) => ({
   groups: state.group.groups,
   meta: state.user.meta,
   isUsersLoaded: state.user.isUsersLoaded,
+  categories: state.category.categories
 });
 
 export default connect(mapStateToProps, null)(GroupList);
