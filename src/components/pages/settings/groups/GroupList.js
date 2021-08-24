@@ -168,7 +168,7 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories 
           </div>
         </div>
 
-        <div id="alphacxMTable" className="pb-2 acx-group-table acx-user-table-2">
+        <div id="alphacxMTable" className="pb-2 acx-group-table acx-user-table-2 fit-content">
           {groups && (
             <MuiThemeProvider theme={tableTheme}>
               <MaterialTable
