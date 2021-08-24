@@ -23,7 +23,7 @@ import { ReactComponent as DotSvg } from "../../../../assets/icons/dots.svg";
 import { httpGetMain } from "../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 
-const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded }) => {
+const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories }) => {
   const [addGroupModalShow, setAddGroupModalShow] = useState(false);
   const [addMemberModalShow, setAddMemberModalShow] = useState(false);
   const [ticketCategories, setTicketCategories] = useState([]);
@@ -140,7 +140,7 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded }) => {
           </div>
         </div>
 
-        <div id="alphacxMTable" className="pb-2 acx-group-table">
+        <div id="alphacxMTable" className="pb-2 acx-group-table acx-user-table-2">
           {groups && (
             <MuiThemeProvider theme={tableTheme}>
               <MaterialTable
@@ -161,12 +161,12 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded }) => {
                     field: "members",
                   },
                   {
-                    title: "Created",
-                    field: "created",
-                  },
-                  {
                     title: "Updated",
                     field: "updated",
+                  },
+                  {
+                    title: "Category",
+                    field: "category",
                   },
                   {
                     title: "Action",
@@ -195,16 +195,16 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded }) => {
                     ),
                   },
                 ]}
-                data={groups.map(({ name, description }) => ({
+                data={groups.map(({ name, description, category_id }) => ({
                   name,
                   description,
                   members: 5,
-                  created: "13 Apr 2021",
+                  category: categories.find(cat => cat?.id === category_id)?.name,
                   updated: "21 Jul 2021",
                 }))}
                 options={{
                   search: true,
-                  selection: true,
+                  selection: false,
                   // exportButton: true,
                   tableLayout: "auto",
                   paging: true,
@@ -260,6 +260,7 @@ const mapStateToProps = (state, ownProps) => ({
   groups: state.group.groups,
   meta: state.user.meta,
   isUsersLoaded: state.user.isUsersLoaded,
+  categories: state.category.categories
 });
 
 export default connect(mapStateToProps, null)(GroupList);
