@@ -338,7 +338,7 @@ const TicketList = ({
 
         <div
           id="alphacxMTable"
-          className="pb-5 acx-ticket-cust-table acx-ticket-table"
+          className="pb-5 acx-ticket-cust-table acx-ticket-table fit-content"
         >
           {tickets && !changingRow && (
             <MuiThemeProvider theme={tableTheme}>

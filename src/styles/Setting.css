@@ -36,7 +36,7 @@
 
 #alphacxMTable.acx-user-table tbody tr:empty,
 #alphacxMTable.fit-content tbody tr:empty {
-    display: none;
+    display: none !important;
 }
 
 #alphacxMTable.acx-user-table-2 {

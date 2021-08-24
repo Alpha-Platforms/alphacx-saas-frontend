@@ -253,7 +253,7 @@ const AutomationSettings = () => {
           <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
             <div
               id="alphacxMTable"
-              className="pb-5 acx-ticket-cust-table acx-ticket-table p-4"
+              className="pb-5 acx-ticket-cust-table acx-ticket-table fit-content p-4"
             >
               <MuiThemeProvider theme={tableTheme}>
                 <MaterialTable
