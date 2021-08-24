@@ -391,8 +391,8 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
   
       let data = {
         statusId: status,
-        priorityId: ticket[0].priority.id,
-        assigneeId: ticket[0].assignee.id  || '',
+        priorityId: ticket[0]?.priority?.id,
+        assigneeId: ticket[0]?.assignee?.id  || '',
         categoryId: categoryUpdate,
       };
       console.log(data);
@@ -724,7 +724,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                       <span>
                         {" "}
                         {`${capitalize(
-                          ticket[0]?.assignee?.firstname
+                          ticket[0]?.assignee?.firstname || ""
                         )} ${capitalize(ticket[0]?.assignee?.lastname  || '')}`}
                       </span>
                     </div>
@@ -736,7 +736,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                       <span>
                         {" "}
                         {`${capitalize(
-                          ticket[0]?.assignee?.firstname
+                          ticket[0]?.assignee?.firstname || ""
                         )} ${capitalize(ticket[0]?.assignee?.lastname || '')}`}
                       </span>{" "}
                       picked up this chat

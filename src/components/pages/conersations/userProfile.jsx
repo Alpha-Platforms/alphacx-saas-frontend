@@ -67,10 +67,10 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
               style={{ color: "#6c757d" }}
               className="mb-0 text-capitalize mt-2 pb-0"
             >
-              <Link to={`/customers/${ticket[0]?.customer?.id}`}>
-                <span>{`${capitalize(ticket[0]?.customer?.firstname  || '')} ${capitalize(
+              <Link to="/settings/users">
+                <b>{`${capitalize(ticket[0]?.customer?.firstname  || '')} ${capitalize(
                   ticket[0]?.customer?.lastname  || ''
-                )}`}</span>
+                )}`}</b>
               </Link>
             </h6>
             {isTicketDetails && (
@@ -85,6 +85,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                 </p>
               </Fragment>
             )}
+            {/* <p>{` Marvin McKinney`}</p> */}
           </div>
 
           <div className="userProfileAboutCovers">
