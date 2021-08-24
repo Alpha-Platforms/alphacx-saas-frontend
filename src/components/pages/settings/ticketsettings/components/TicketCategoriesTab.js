@@ -42,7 +42,7 @@ const TicketCategoriesTab = ({ categories, meta }) => {
   });
 
 
-  function AlphacxMTPagination(props: TablePaginationProps) {
+  function AlphacxMTPagination(props) {
     const {
       ActionsComponent,
       onChangePage,
