@@ -15,7 +15,7 @@ export const getTickets = () => (dispatch, getState) => {
         .then(res => dispatch({
             type: types.GET_TICKETS,
             payload: (res.data && res.data.status === "success")
-                ? res.data.data
+                ? res.data?.data
                 : {}
         }))
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
@@ -31,7 +31,7 @@ export const getPaginatedTickets = (itemsPerPage, currentPage) => (dispatch, get
         .then(res => dispatch({
             type: types.GET_TICKETS,
             payload: (res.data && res.data.status === "success")
-                ? res.data.data
+                ? res.data?.data
                 : {}
         }))
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
@@ -51,7 +51,7 @@ export const getSearchedTickets = (itemsPerPage, currentPage, searchVal) => (dis
         .then(res => dispatch({
             type: types.GET_TICKETS,
             payload: (res.data && res.data.status === "success")
-                ? res.data.data
+                ? res.data?.data
                 : {}
         }))
         .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
@@ -80,7 +80,7 @@ export const getCurrentTicket = (id) => (dispatch, getState) => {
             type: types.GET_CURRENT_TICKET,
             payload: res.data && res.data
                 ?.status === "success"
-                    ? res.data.data
+                    ? res.data?.data
                     : null
         })})
         .catch(err => {
@@ -106,7 +106,7 @@ export const getCurrentTicket = (id) => (dispatch, getState) => {
             .then(res => dispatch({
                 type: types.GET_CURRENT_TICKET,
                 payload: res.data && res.data?.status === "success"
-                    ? res.data.data
+                    ? res.data?.data
                     : null
             }))
             .catch(err => {

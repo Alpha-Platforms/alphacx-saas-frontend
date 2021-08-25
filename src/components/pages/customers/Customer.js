@@ -92,19 +92,19 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                             <div className="text-center mt-3">
                                 {/* <h4 style={{ textTransform: 'capitalize' }}>{`${currentCustomer.firstname} ${currentCustomer.lastname}`}</h4> */}
                                 <h6 className="mb-0 text-capitalize"><b>{`${currentCustomer.firstname} ${currentCustomer.lastname}`}</b></h6>
-                                <p className="text-muted f-13">jackmay@gmail.com</p>
+                                <p className="text-muted f-13">{currentCustomer.email}</p>
                             </div>
                         </div>
                         <hr className="op-1"/> {/* <!-- Customer date info --> */}
-                        <div className="py-3">
+                        <div className="py-3 pt-2">
                             <ul className="cust-profile-info">
-                                <li>
+                                {/* <li>
                                     <div><CircleIcon icon={WorkIcon}/></div>
                                     <div>
                                         <p className="pb-0 mb-0 f-12 text-muted op-9">Account ID</p>
                                         <p className="text-muted f-13">{id?.slice(0, 8).toUpperCase()}</p>
                                     </div>
-                                </li>
+                                </li> */}
                                 <li>
                                     <div><CircleIcon color="rgba(186, 104, 200, 0.25)" icon={CallIcon}/></div>
                                     <div>
@@ -143,11 +143,11 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                             </ul>
                             {/* <div className={"table-tags text-justify"}><span className="badge rounded-pill acx-bg-purple-30 px-2 py-2 me-1 my-1 f-8">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-2 py-2 me-1 my-1 f-8">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-2 py-2 me-1 my-1 f-8">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-2 py-2 me-1 my-1 f-8">Active</span><span className="badge rounded-pill acx-bg-blue-light-30 px-2 py-2 me-1 my-1 f-8">Urgent</span><span className="badge rounded-pill acx-bg-red-30 px-2 py-2 me-1 my-1 f-8">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-purple-30 px-2 py-2 me-1 my-1 f-8">High Value</span></div> */}
 
-                            <div className="ticktTagsgfs3">
+                            {/* <div className="ticktTagsgfs3">
                                 {tags.map((data) => {
                                     return data;
                                 })}
-                            </div>
+                            </div> */}
 
                         </div>
 
@@ -234,13 +234,6 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                             type="button"
                                             onClick={() => setTabKey('notes')}>Notes</button>
                                     </li>
-                                    {/* <li className="nav-item" role="presentation">
-                                        <button
-                                            className={`nav-link ${tabKey === 'timeline' && 'nav-active'} text-muted`}
-                                            id="pills-timeline-tab"
-                                            type="button"
-                                            onClick={() => setTabKey('timeline')}>Timeline</button>
-                                    </li> */}
                                 </ul>
                             </div>
                             <div className="d-flex align-items-md-center">

@@ -177,15 +177,53 @@
 
 .workphone-group select {
     display: inline !important;
-    width: 4rem;
+    /* width: 4rem; */
     -webkit-appearance: none;
        -moz-appearance: none;
             appearance: none;
     padding-right: 0 !important;
     margin-right: 0 !important;
-
+    padding-left: 1.7rem;
+    outline: none;
 }
 
 #alphacxMTable.acx-cust-table th {
     white-space: nowrap;
+}
+
+
+.workphone-dd-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.workphone-dd-wrapper > span:nth-of-type(1) {
+    width: 1.4rem;
+    height: 1.4rem;
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    padding-left: 0.3rem;
+}
+
+.workphone-dd-wrapper > span:nth-of-type(1) > img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.workphone-dropdown + ul {
+    position: absolute;
+    top: 2.2rem;
+    z-index: 2;
+    background-color: white;
+    box-shadow: 0px 0px 15px 2px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+    max-height: 10rem;
+    overflow: auto;
+}
+
+.workphone-dropdown + ul li {
+    list-style: none;
 }

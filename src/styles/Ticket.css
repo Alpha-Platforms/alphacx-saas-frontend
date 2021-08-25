@@ -271,3 +271,9 @@ background: transparent;
     z-index: 10 !important;
     top: 0;
 }
+
+.ticket-dleft li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+}
