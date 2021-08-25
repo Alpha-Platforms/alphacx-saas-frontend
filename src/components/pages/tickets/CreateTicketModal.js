@@ -465,12 +465,11 @@ const CreateTicketModal = ({
                         
                         { isAdditionalOptionVisible &&
                             <div className="mb-3">
-
+                                {/* groups agents */}
+            
                                 <div className="row">
 
-                                    {/* ASSIGNED TO TEAMS/AGENTS PUT ON HOLD */}
-
-                                    {/* <div className="d-flex">
+                                    <div className="d-flex">
 
                                         <label htmlFor="assignedto" className="form-label me-3">Assigned To</label>
                                         
@@ -509,9 +508,11 @@ const CreateTicketModal = ({
                                             (<RSelect className="rselectfield"
                                                 style={{ fontSize: "12px" }}
                                                 onChange={handleRSInput}
-                                                isClearable={false}                                                
+                                                isClearable={false}
+                                                // isMulti
                                                 name="assignee"
                                                 options={
+                                                    // populate 'options' prop from $agents, with names remapped
                                                     groups?.map(item => {
                                                         return {value: item.id,label: item.name}
                                                     })
@@ -521,20 +522,20 @@ const CreateTicketModal = ({
                                             (<RSelect className="rselectfield"
                                                 style={{ fontSize: "12px" }}
                                                 onChange={handleRSInput}
-                                                isClearable={false}                                                
+                                                isClearable={false}
+                                                // isMulti
                                                 name="assignee"
                                                 options={
+                                                    // populate 'options' prop from $agents, with names remapped
                                                     agents?.map(item => {
                                                         return {value: item.id,label: item.firstname +" "+ item.lastname}
                                                     })
                                                 }
                                             />)
                                         }
-                                    </div> */}
+                                    </div>
 
-                                    {/* DUE DATE PUT ON HOLD */}
-                                    
-                                    {/* <div className="col-12 mt-3 d-flex align-items-center flex-wrap" >
+                                    <div className="col-12 mt-3 d-flex align-items-center flex-wrap" >
                                         
                                         <label htmlFor="" className="w-100 mb-2">Ticket Due In</label>
 
@@ -554,7 +555,7 @@ const CreateTicketModal = ({
                                             <span class="input-group-text" id="basic-addon2">Hours</span>
                                         </div>
                                     
-                                    </div> */}
+                                    </div>
 
 
 

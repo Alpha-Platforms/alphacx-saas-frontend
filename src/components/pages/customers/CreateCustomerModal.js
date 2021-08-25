@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import RSelect from 'react-select/creatable';
 import PinIcon from '../../../assets/icons/pin.svg';
 import {countrycodes} from '../../shared/countrycodes';
+import ImageDefault from '../../../assets/svgicons/image-default.svg';
 
 const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers, tags, isEditing, customerId, customers, updateCustomer}) => {
 
@@ -15,6 +16,12 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
         setModalInputs] = useState({firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: '', ccode: '+234'});
     const [creatingCust, setCreatingCust] = useState(false);
     const [editingCust, setEditingCust] = useState(false);
+    const [showAddOption, setShowAddOption] = useState(false);
+    const [uploadInfo, setUploadInfo] = useState({
+        blob: null,
+        msg: 'Upload logo for customer profile.',
+        error: false
+    });
 
     // function handleTagSelection() {
     //     const {tag} = this;
@@ -113,6 +120,90 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
         console.log('should create tag');
     }
 
+    function DowncaretIcon() {
+        return (
+        <svg
+            width="10"
+            height="6"
+            viewBox="0 0 10 6"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+            d="M8.5 1.25L5 4.75L1.5 1.25"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            />
+        </svg>
+        );
+    }
+
+    
+const handleImgSelect = function (e) {
+	// store current input
+	const fileInput = e.target
+
+	// create a store for the current dimension and default info
+	let maxReqDimensions = {
+			width: 1500,
+			height: 1500
+		};
+
+	if (!fileInput.files.length) {
+		// No file is selected
+        setUploadInfo(prev => ({...prev, msg: 'No file is slected', error: true, blob: null}));
+        
+	} else {
+        // file selected
+        
+		// check if selected file is an image
+		if (fileInput.files[0].type.indexOf("image/") === -1) {
+			// Selected file is not an image
+            setUploadInfo(prev => ({...prev, msg: 'Selected file is not an image', error: true, blob: null}));
+		} else {
+			// Selected file is an image
+			/* 
+			 * read the selected image to get the file width and height
+			 */
+			// create a new file reader object
+			const reader = new FileReader();
+			reader.readAsDataURL(fileInput.files[0]);
+			reader.onload = function (e) {
+                // when reader has loaded
+
+				//create a new image object
+				const currentImage = new Image();
+				// set the source of the image to the base64 string from the file reader
+				currentImage.src = this.result;
+
+				currentImage.onload = function () {
+					const [currentImageHeight, currentImageWidth] = [this.height, this
+						.width
+					];
+
+					if (currentImageWidth > maxReqDimensions.width ||
+						currentImageHeight > maxReqDimensions.height) {
+						// current selected image dimesions are not acceptable
+                        setUploadInfo(prev => ({...prev, msg: `Selected image should have max dimension of ${maxReqDimensions.width}x${maxReqDimensions.height}`, error: true, blog: null}));
+					} else {
+						// current selected image dimensions are acceptable
+						const fileName = fileInput.files[0].name;
+                        const fileBlob = URL.createObjectURL(fileInput.files[0]);
+
+                        setUploadInfo(prev => ({...prev, blob: fileBlob, msg: fileName, error: false}));
+                        /* 
+                        when the image with the blob loads call the below method
+                        URL.revokeObjectURL(this.src);  where this.src is the blob created
+                        */
+					}
+				}
+			}
+		}
+	}
+}
+
     return (
         <Modal
             // show={createModalShow}
@@ -123,7 +214,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
             centered>
             {/* <Modal.Body> */}
                 <div className="saveTicketWrapModal p-4 pb-1 mb-0">
-                    <h5 className="mb-3">{!isEditing ? 'Create New' : 'Edit'} Customer</h5>
+                    <p5 className="fs-5 mb-3">{!isEditing ? 'Create New' : 'Edit'} Customer</p5>
                     <form
                         className="needs-validation mb-4"
                         noValidate
@@ -175,9 +266,25 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                             </div>
 
                         </div>
-                        <div className="row g-3 pt-3">
 
-                            <div className="col-12 mt-3">
+                        <p
+                            className="btn mt-3 mb-2 p-0 text-start"
+                            role="button"
+                            style={{
+                                fontSize: "0.8rem",
+                                fontWeight: "bold",
+                                marginBottom: 0,
+                                color: "#006298!important",
+                            }}
+                            onClick={() => setShowAddOption(x => !x)}
+                            >
+                            Additional Options <span><DowncaretIcon /></span>
+                        </p>
+                        
+
+                        {showAddOption && <div className="row g-3 pt-3">
+
+                            <div className="col-12 mt-1">
                                 <label htmlFor="organisation" className="form-label">Organisation (optional)</label>
                                 <input
                                     type="text"
@@ -187,35 +294,6 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                     value={modalInputs.organisation}
                                     onChange={handleModalInput}/>
                             </div>
-
-                            {/* <div className="col-12 mt-3">
-                                <label htmlFor="title" className="form-label">Tags</label>
-                                <div className="border rounded-2 p-3 py-2">
-                                    <label className="text-muted d-block f-12 op-6">Select Tag</label>
-                                    <div className="mt-1">
-                                        {[
-                                            'Customer Data',
-                                            'Active',
-                                            'Billing',
-                                            'Important',
-                                            'Gillete Group',
-                                            'Oil & Gas',
-                                            'Enquiry',
-                                            'Pharmaceuticals',
-                                            'Telecommunications',
-                                            'Technology'
-                                        ].map((x, idx) => <span
-                                            key={idx}
-                                            className={`badge rounded-pill ${selectedTags.includes(x)
-                                            ? 'acx-bg-blue-light-30-bg-25'
-                                            : 'acx-bg-blue-light-30'} px-3 py-2 my-1 me-1`}
-                                            onClick={handleTagSelection.bind({tag: x})}
-                                            style={{
-                                            cursor: 'pointer'
-                                        }}>{x}&nbsp; ×</span>)}
-                                    </div>
-                                </div>
-                            </div> */}
 
                             <div className="col-12 mt-3 tags-select-wrapper">
                                 <label htmlFor="title" className="form-label">Tags</label>
@@ -237,17 +315,68 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                 />
                             </div>
 
-                            <div className="col-12 mt-3">
-                                        <label htmlFor="title" className="form-label">Attachment (If Any)</label>
+                            <div>
+                                <div className="d-flex mb-4 mt-3">
+                                    <div
+                                        id="uploadPersonalPhotoInputImgPreview"
+                                        style={{
+                                        width: "6rem",
+                                        height: "6rem"
+                                    }}
+                                        className="
+                                            border border-1
+                                            rounded-3
+                                            me-5
+                                            d-flex
+                                            justify-content-center
+                                            align-items-center
+                                            ">
                                         <div
-                                            id="ticket-ath-box"
-                                            className="border border-1 d-block text-center f-14 p-3"><img src={PinIcon} alt=""/>
-                                            <span className="text-at-blue-light">Add file</span>&nbsp;
-                                            <span>or drag file here</span>
+                                            style={{
+                                            justifyContent: "center",
+                                            height: "100%",
+                                            width: "100%"
+                                        }}
+                                            className="ms-0 d-flex justify-content-between align-items-center">
+                                            {uploadInfo.blob ? (<img
+                                                        className="avatarImage"
+                                                        src={uploadInfo.blob}
+                                                        alt=""
+                                                        style={{
+                                                        maxWidth: '100%',
+                                                        maxHeight: '100%'
+                                                    }}/>)
+                                                    : <img
+                                                        src={ImageDefault}
+                                                        alt=""
+                                                        style={{
+                                                        paddingLeft: '2.1rem'
+                                                    }}
+                                                        className="pe-none"/>}
+                                                
                                         </div>
                                     </div>
+                                    <div>
+                                        <label
+                                            for="uploadPersonalPhotoInput"
+                                            className="btn btn-sm bg-at-blue-light px-4 py-1 mb-2 mt-1"
+                                            onClick={() => document.getElementById("accountLogo").click()}>
+                                            Upload Photo
+                                        </label>
+                                        <input type="file" name="accountLogo" id="accountLogo" onChange={handleImgSelect}/>
+                                        <p className="mb-0 text-at-red">
+                                            <small id="uploadPersonalPhotoInputError"></small>
+                                        </p>
+                                        <p className="uploadInfoWrapper">
+                                            <small id="uploadPersonalPhotoInputInfo" className={`${uploadInfo.error && 'text-danger'}`}>
+                                                {uploadInfo.msg}     
+                                            </small>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
 
-                        </div>
+                        </div>}
 
                         <div className="mt-3 mt-sm-3 pt-3 text-end">
                             {!isEditing ? <button
@@ -267,6 +396,10 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
         </Modal>
     )
 }
+
+
+
+
 
 const mapStateToProps = (state, ownProps) => ({tags: state.tag.tags?.tags_names?.tags, customers: state.customer.customers});
 
