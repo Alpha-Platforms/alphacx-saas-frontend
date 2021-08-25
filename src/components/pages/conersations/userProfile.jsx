@@ -76,12 +76,12 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
             {isTicketDetails && (
               <Fragment>
                 <p className="mb-0 pb-0 pt-1 f-12">
-                  {UserInfo?.email ? UserInfo?.email : "unavailable"}
+                  {UserInfo?.email ? UserInfo?.email : "N/A"}
                 </p>
                 <p className="pt-1 f-12">
                   {UserInfo?.phoneNumber
                     ? UserInfo?.phoneNumber
-                    : "unavailable"}
+                    : "N/A"}
                 </p>
               </Fragment>
             )}
@@ -113,7 +113,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                     <span className="psvgIcon">
                       {ticket[0]?.assignee?.avatar ? (
                         <img
-                          src={ticket[0]?.assignee?.avatar}
+                          src={ticket[0]?.assignee?.avatar || 'love'}
                           alt=""
                           style={{
                             width: "30px",
@@ -233,98 +233,84 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                   </p>
                 </div>
 
-                <ul className="cust-profile-info ps-0">
+                <ul className="ps-0 ticket-dleft">
                   <li className="ms-0">
-                    <div>
-                      <p className="pb-0 mb-0 f-12 text-muted op-9">ID</p>
-                      <p className="text-muted f-13 text-uppercase">
-                        #{ticket[0]?.id.slice(0, 8)}
-                      </p>
                       <CircleIcon
                         color="rgba(108, 65, 129, 0.25)"
                         icon={TicketIdIcon}
                       />
-                    </div>
-                    <div>
-                      <p className="pb-0 mb-0 f-12 text-muted op-9">Priority</p>
-                      <p className="text-muted f-13 text-capitalize">
-                        {ticket[0]?.priority?.name}
-                      </p>
-                    </div>
+                      <div>
+                        <p className="pb-0 mb-0 f-12 text-muted op-9">ID</p>
+                        <p className="text-muted f-13 text-uppercase">
+                          #{ticket[0]?.id.slice(0, 8)}
+                        </p>
+                      </div>
                   </li>
+
                   <li className="ms-0">
-                    <div>
-                      <p className="pb-0 mb-0 f-12 text-muted op-9">Stage</p>
-                      <p className="text-muted f-13">
-                        {ticket[0]?.status?.status}
-                      </p>
                       <CircleIcon
                         color="rgba(244, 13, 13, 0.25)"
                         icon={TicketPriorityIcon}
                       />
-                    </div>
-                    <div>
+                      <div>
+                      <p className="pb-0 mb-0 f-12 text-muted op-9">Priority</p>
+                      <p className="text-muted f-13 text-capitalize">
+                        {ticket[0]?.priority?.name}
+                      </p>
+                      </div>
+                  </li>
+
+                  <li className="ms-0">
+                      <CircleIcon
+                        color="rgba(7, 150, 247, 0.25)"
+                        icon={TicketStageIcon}
+                      />
+                      <div>
+                          <p className="pb-0 mb-0 f-12 text-muted op-9">Stage</p>
+                          <p className="text-muted f-13">
+                            {ticket[0]?.status?.status}
+                          </p>
+                      </div>
+                  </li>
+
+                  <li className="ms-0">
+                      <CircleIcon
+                        color="rgba(255, 159, 67, 0.25)"
+                        icon={TicketCategoriesIcon}
+                      />
+                      <div>
                       <p className="pb-0 mb-0 f-12 text-muted op-9">
                         Categories
                       </p>
                       <p className="text-muted f-13">
                         {ticket[0]?.category.name}
                       </p>
-                    </div>
+                      </div>
                   </li>
+
                   <li className="ms-0">
-                    <div>
-                      <p className="pb-0 mb-0 f-12 text-muted op-9">Due Date</p>
-                      <p className="text-muted f-13">N/A</p>
-                      <CircleIcon
-                        color="rgba(7, 150, 247, 0.25)"
-                        icon={TicketStageIcon}
-                      />
-                    </div>
-                    <div>
-                      <p className="pb-0 mb-0 f-12 text-muted op-9">Stage</p>
-                      <p className="text-muted f-13">Pending</p>
-                    </div>
-                  </li>
-                  <li className="ms-0">
-                    <div>
-                      <CircleIcon
-                        color="rgba(255, 159, 67, 0.25)"
-                        icon={TicketCategoriesIcon}
-                      />
-                    </div>
-                    <div>
-                      <p className="pb-0 mb-0 f-12 text-muted op-9">
-                        Categories
-                      </p>
-                      <p className="text-muted f-13">Enquiries</p>
-                    </div>
-                  </li>
-                  <li className="ms-0">
-                    <div>
                       <CircleIcon
                         color="rgba(247, 37, 133, 0.25)"
                         icon={TicketDueDateIcon}
                       />
-                    </div>
-                    <div>
+                      <div>
                       <p className="pb-0 mb-0 f-12 text-muted op-9">Due Date</p>
-                      <p className="text-muted f-13">31 August, 2021</p>
-                    </div>
+                      <p className="text-muted f-13">N/A</p>
+                      </div>
                   </li>
+
+
                   <li className="ms-0">
-                    <div>
                       <CircleIcon
                         color="rgba(17, 63, 100, 0.25)"
                         icon={TicketSourceIcon}
                       />
-                    </div>
-                    <div>
+                      <div>
                       <p className="pb-0 mb-0 f-12 text-muted op-9">
                         Ticket Source
                       </p>
                       <p className="text-muted f-13">Email</p>
-                    </div>
+                      </div>
                   </li>
                 </ul>
 
