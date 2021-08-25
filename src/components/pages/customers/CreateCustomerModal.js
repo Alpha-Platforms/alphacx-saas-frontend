@@ -114,6 +114,11 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     const handleModalHide = () => {
         setCreateModalShow(false);
         setCreatingCust(false);
+        setUploadInfo({
+            blob: null,
+            msg: 'Upload logo for customer profile.',
+            error: false
+        });
     }
 
     const handleTagCreation = () => {
@@ -342,6 +347,7 @@ const handleImgSelect = function (e) {
                                                         className="avatarImage"
                                                         src={uploadInfo.blob}
                                                         alt=""
+                                                        onLoad={() => uploadInfo.blob && URL.revokeObjectURL(uploadInfo.blob)}
                                                         style={{
                                                         maxWidth: '100%',
                                                         maxHeight: '100%'
