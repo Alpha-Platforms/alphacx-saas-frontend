@@ -1,13 +1,11 @@
 import {useState, useEffect} from 'react';
 import {ReactComponent as UploadSvg} from '../../../assets/svgicons/Upload.svg';
-import {ReactComponent as ImportSvg} from '../../../assets/svgicons/import.svg';
 import {Modal} from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../../../styles/Customer.css'
 import {getCustomers, getPaginatedCustomers} from '../../../reduxstore/actions/customerActions';
-// import {NotificationManager} from 'react-notifications';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import tableIcons from '../../../assets/materialicons/tableIcons';
@@ -30,22 +28,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
         setCustLoading] = useState(false);
     const [changingRow, setChangingRow] = useState(false);
     const [customerId, setCustomerId] = useState('');
-    // const [selectedRows, setSelectedRows] = useState([]);
     let selectedRows = [];
-
-        const getUserInitials = (name) => {
-            name = name.toUpperCase();
-            const nameArr = name.split(' ');
-            const firstInitial = nameArr[0] && nameArr[0][0];
-            const secondInitial = nameArr[1] && nameArr[1][0];
-            const result = `${firstInitial
-                ? firstInitial
-                : ''}${secondInitial
-                    ? secondInitial
-                    : ''}`;
-            return <span>{result}</span>;
-        }
-
 
         useEffect(() => {
             setCustLoading(!isCustomersLoaded);
@@ -141,7 +124,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                 title: 'Tags',
                 field: 'tags',
                 width: '40%',
-                render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">+2</span></div>)
+                // render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">+2</span></div>)
             }, {
                 title: '',
                 field: 'action',
@@ -154,7 +137,6 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                                 <Dropdown.Item eventKey="2"><span className="black-text">Delete</span></Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown>)
-                // render: rowData => (<div><span className="cust-table-dots"><DotSvg/></span></div>)
             }
         ];
 
@@ -212,7 +194,6 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
 
 
         return (
-            // <SideNavBar navbarTitle="Customer List" parentCap="container-fluid">
             <div>
                 {custLoading && <div className="cust-table-loader"><ScaleLoader loading={custLoading} color={"#006298"}/></div>}
 
@@ -220,51 +201,11 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
 
                     <div style={{ background: '#fefdfd' }}
                         className="d-flex justify-content-between flex-wrap rounded-top-04 flex-md-nowrap align-items-center p-4 position-relative">
-{/* 
-                        <div>
-                        </div> */}
 
                         <div className="btn-toolbar mb-md-0 cust-table-btns-wrapper" style={{ zIndex: 2 }}>
-                            {/* <button
-                                type="button"
-                                className="btn btn-sm bg-at-blue-light px-md-3 mx-1"
-                                onClick={() => setCreateModalShow(true)}>
-                                <span style={{ transform: 'scale(0.8)', display: 'inline-block' }}><ProfileSvg/></span>&nbsp;Add New Customer
-                            </button>
-
-                            <button
-                                type="button"
-                                className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3 reset-btn-outline"
-                                onClick={() => setUploadModalShow(true)}>
-                                <UploadSvg/>&nbsp;Import
-                            </button> */}
-
-                            {/* <button
-                                type="button"
-                                className="btn btn-sm btn-outline-secondary px-md-3 ms-md-3 reset-btn-outline"
-                                onClick={handlePDFExport}>
-                                <ImportSvg/>&nbsp;Export PDF
-                            </button>
-                            <button
-                                type="button"
-                                className="btn btn-sm btn-outline-secondary px-md-3 mx-md-3 reset-btn-outline"
-                                onClick={handleCSVExport}>
-                                <ImportSvg/>&nbsp;Export CSV
-                            </button> */}
-                            {/* <Dropdown>
-                                <Dropdown.Toggle id="export-dropdown" className="btn-outline-secondary reset-btn-outline btn">
-                                    <ImportSvg/>&nbsp;Export
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                    <Dropdown.Item as="button" onClick={handlePDFExport}>As PDF</Dropdown.Item>
-                                    <Dropdown.Item as="button" onClick={handleCSVExport}>As CSV</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown> */}
 
                             <Dropdown id="cust-export-dropdown">
                                 <Dropdown.Toggle id="export-dropdown" className="reset-btn-outline btn ticket-export-btn">
-                                    {/* <ImportSvg/>&nbsp;Export */}
                                     <SaveAlt />
                                 </Dropdown.Toggle>
 
@@ -363,30 +304,6 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                     </MuiThemeProvider>}
                 </div>
                 </div>
-
-                {/* <div className="card card-body bg-white border-0 p-5 mt-4">
-
-                <div id="settings" className="text-center py-5 my-5">
-                    <div>
-                        <TicketsEmptySvg/>
-                    </div>
-                    <p className="my-3">You have no customer record at the moment</p>
-                    <button
-                        type="button"
-                        className="btn btn-sm bg-at-blue px-md-3 mx-md-3"
-                        onClick={() => setCreateModalShow(true)}>
-                        <TicketStarSvg/>
-                        &nbsp; New Customer
-                    </button>
-
-                    <button
-                        type="button"
-                        className="btn btn-sm btn-outline-secondary px-md-3 mx-md-1">
-                        <UploadSvg/>&nbsp;Import
-                    </button>
-
-                </div>
-            </div> */}
 
                <CreateCustomerModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} setChangingRow={setChangingRow} isEditing={true} customerId={customerId} />
 
