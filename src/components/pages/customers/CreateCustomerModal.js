@@ -22,18 +22,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
         msg: 'Upload logo for customer profile.',
         error: false
     });
-
-    // function handleTagSelection() {
-    //     const {tag} = this;
-    //     if (selectedTags.includes(tag)) {
-    //         setSelectedTags(prevState => prevState.filter(x => x !== tag));
-    //     } else {
-    //         setSelectedTags(prevState => [
-    //             ...prevState,
-    //             tag
-    //         ]);
-    //     }
-    // }
+    const [workPhoneInput, setWorkPhoneInput] = useState(null);
 
     const handleTagSelection = tags => {
         setSelectedTags(tags);
@@ -53,9 +42,6 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     
     useEffect(() => {
         if (createModalShow && isEditing && customerId) {
-            console.log(customerId);
-            console.log("foundee: ", customers.find(cust => cust.id === customerId));
-
             const {firstname, lastname, phone_number, email, organisation} = customers.find(cust => cust.id === customerId);
             setModalInputs(prev => ({
                 ...prev,
@@ -209,6 +195,11 @@ const handleImgSelect = function (e) {
 	}
 }
 
+const workphoneChange = e => {
+    handleModalInput(e);
+
+}
+
     return (
         <Modal
             // show={createModalShow}
@@ -250,10 +241,15 @@ const handleImgSelect = function (e) {
                             <div className="col-6 mt-3">
                                 <label htmlFor="workphone" className="form-label">Work Phone</label>
                                 <div className="input-group mb-3 workphone-group">
-                                    <div className="input-group-prepend">
-                                        <select className="d-inline" name="ccode" id="ccode" value={modalInputs.ccode} onChange={handleModalInput}>
+                                    <div className="input-group-prepend workphone-dd-wrapper">
+                                    <span><img src={`https://www.countryflags.io/${countrycodes.find(x => x.dial_code === modalInputs.ccode)?.code || ''}/flat/64.png`} alt="" /></span><select className="d-inline" name="ccode" id="ccode" value={modalInputs.ccode} onChange={handleModalInput}>
                                             {countrycodes.sort((a, b) => Number(a.dial_code.slice(1)) - Number(b.dial_code.slice(1))).map(cc => <option value={cc.dial_code}>{cc.dial_code}</option>)}
                                         </select>
+                                        {/* <span className="workphone-dropdown">lite</span>
+                                        <ul>
+                                            {countrycodes.sort((a, b) => Number(a.dial_code.slice(1)) - Number(b.dial_code.slice(1))).map(cc => <li>
+                                                <span><img src={`https://www.countryflags.io/be/flat/64.png`} alt="" /></span> {cc.dial_code}</li>)}
+                                        </ul> */}
                                     </div>
                                     <input type="tel" className="form-control" name="workphone" id="workphone" value={modalInputs.workphone} aria-label="work phone" aria-describedby="workphone" onChange={handleModalInput}/>
                                 </div>
@@ -375,7 +371,7 @@ const handleImgSelect = function (e) {
                                         </p>
                                         <p className="uploadInfoWrapper">
                                             <small id="uploadPersonalPhotoInputInfo" className={`${uploadInfo.error && 'text-danger'}`}>
-                                                {uploadInfo.msg}     
+                                                {uploadInfo.msg}
                                             </small>
                                         </p>
                                     </div>
