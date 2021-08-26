@@ -153,7 +153,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
 
                         <hr className="op-1 mt-0"/>
 
-                        <div class="container-timeline">
+                        {/* <div class="container-timeline">
                             <div class="box">
                             <div class="borderContaner">
                                 <div class="circle"></div>
@@ -197,7 +197,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                 </div>
                             </div>
                             </div>
-                        </div>
+                        </div> */}
 
                         <div className="text-center mt-4">
                             <Button
