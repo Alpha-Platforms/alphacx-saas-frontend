@@ -58,17 +58,17 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
         return output;
     };
 
-    const [tags, setTags] = useState([
-        <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
-        <div style={{ color: "#F40D0D", background: "#FFEAEA " }}>Billing</div>,
-        <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
-        <div style={{ color: "#1E90FF", background: "#E3F1FF" }}>Billing</div>,
-        <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
-        <div style={{ color: "#1E90FF", background: "#E3F1FF" }}>Billing</div>,
-        <div style={{ color: "#F40D0D", background: "#FFEAEA " }}>Billing</div>,
-        <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
-        <div style={{ color: "#1E90FF", background: "#E3F1FF" }}>Billing</div>,
-      ]);
+    const tagColor = [
+        { item: ['a', 'b', 'c'], color: "#662D91", background: "#F8EEFF" },
+        { item: ['d', 'e', 'f'], color: "#F40D0D", background: "#FFEAEA" },
+        { item: ['g', 'h', 'i'], color: "#662D91", background: "#F8EEFF" },
+        { item: ['j', 'k', 'w'], color: "#1E90FF", background: "#E3F1FF" },
+        { item: ['l', 'm', 'n'], color: "#662D91", background: "#F8EEFF" },
+        { item: ['o', 'p'], color: "#1E90FF", background: "#E3F1FF" },
+        { item: ['q', 'r', 's'], color: "#F40D0D", background: "#FFEAEA" },
+        { item: ['t', 'u', 'v'], color: "#662D91", background: "#F8EEFF" },
+        { item: ['x', 'y', 'z'], color: "#1E90FF", background: "#E3F1FF" },
+      ];
 
     return (
         <Fragment>
@@ -143,11 +143,12 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                             </ul>
                             {/* <div className={"table-tags text-justify"}><span className="badge rounded-pill acx-bg-purple-30 px-2 py-2 me-1 my-1 f-8">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-2 py-2 me-1 my-1 f-8">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-2 py-2 me-1 my-1 f-8">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-2 py-2 me-1 my-1 f-8">Active</span><span className="badge rounded-pill acx-bg-blue-light-30 px-2 py-2 me-1 my-1 f-8">Urgent</span><span className="badge rounded-pill acx-bg-red-30 px-2 py-2 me-1 my-1 f-8">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-purple-30 px-2 py-2 me-1 my-1 f-8">High Value</span></div> */}
 
-                            {/* <div className="ticktTagsgfs3">
-                                {tags.map((data) => {
-                                    return data;
+                            <div className="ticktTagsgfs3">
+                                {currentCustomer?.tags?.map((data) => {
+                                    const dataColor = tagColor.find(x => x.item.indexOf(data[0].toLowerCase()) !== -1);
+                                    return <div style={{ color: dataColor?.color, background: dataColor.background }}>{data}</div>;
                                 })}
-                            </div> */}
+                            </div>
 
                         </div>
 
