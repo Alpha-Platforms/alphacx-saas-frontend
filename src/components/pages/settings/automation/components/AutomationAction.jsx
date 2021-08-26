@@ -4,6 +4,8 @@ import DeleteIcon from "../../../../../assets/icons/Delete.svg";
 import AddIcon from "../../../../../assets/icons/add.svg";
 import { Modal } from "react-responsive-modal";
 
+import {httpGetMain } from "../../../../../helpers/httpMethods";
+
 const AutomationAction = ({
   newPolicy,
   setNewPolicy,
@@ -11,10 +13,48 @@ const AutomationAction = ({
   agreement,
   index,
 }) => {
+  
   const [openDeleteActionModal, SetOpenDeleteActionModal] = useState(false);
   const [message, setMessage] = useState(agreement.body || "");
   const [placeholder, setPlaceholder] = useState("");
   const [availableDays, setAvailableDays] = useState();
+
+  const [agents, setAgents] = useState([]);
+  const [groups, setGroups] = useState([]);
+  const [assignType, setAssignType] = useState("agent");
+
+
+  // function to get the list of all users/agents
+  const getAgents = async () => {
+    const res = await httpGetMain("agents");
+    if (res?.status === "success") {
+      setAgents(res?.data);
+    }
+  };
+  // function to get the list of all groups
+  const getGroups = async () => {
+    const res = await httpGetMain("groups");
+    if (res?.status === "success" || res?.status === "Success") {
+      setGroups(res?.data);
+    }
+  };
+
+  const handleRecipient = (e) => {
+    const { value } = e.target;
+
+    setNewPolicy({
+      ...newPolicy,
+      reminder:{
+        ...newPolicy.reminder,
+        agreements:[
+          {
+            ...newPolicy.reminder.agreements,
+            recipient: { type: assignType, id: value }
+          }
+        ],
+      },
+    });
+  };
 
   const addAction = () => {
     setNewPolicy({
@@ -22,8 +62,10 @@ const AutomationAction = ({
       reminder: {
         ...newPolicy.reminder,
         agreements: [
-          ...newPolicy.reminder.agreements,
-          { day: 0, hours: 0, action: "email" },
+          {
+            ...newPolicy.reminder.agreements,
+            days: 0, hours: 0, action: "email"
+          }
         ],
       },
     });
@@ -53,36 +95,38 @@ const AutomationAction = ({
     setMessage(message + " " + shortCode.toUpperCase() + " ");
     setPlaceholder(" " + shortCode.toUpperCase() + " ");
   };
+
   const handleChange = (e) => {
     let { name, value } = e.target;
-    if (name === "day" && value > 30) {
-      value = 30;
-    }
-    if (name === "day" && value < 0) {
-      value = 0;
-    }
-    if (name === "hours" && value > 23) {
-      value = 23;
-    }
-    if (name === "hours" && value < 0) {
-      value = 0;
-    }
+
     let agreements = newPolicy.reminder.agreements;
     agreements[index] = { ...agreements[index], [name]: value };
+
     setNewPolicy({
       ...newPolicy,
-      reminder: { ...newPolicy.reminder, agreements },
+      reminder: {...newPolicy.reminder, agreements},
     });
   };
 
   useEffect(() => {
+
+    getAgents();
+    getGroups();
+    
     let agreements = newPolicy.reminder.agreements;
-    agreements[index] = { ...agreements[index], body: message };
+    agreements[index] = {...agreements[index], body: message};
+
     setNewPolicy({
       ...newPolicy,
-      reminder: { ...newPolicy.reminder, agreements },
+      reminder: {
+        ...newPolicy.reminder,
+        agreements
+      }
     });
-  }, [message]);
+  },
+    [message]
+  );
+
   return (
     <>
       <Modal
@@ -108,6 +152,8 @@ const AutomationAction = ({
           </div>
         </div>
       </Modal>
+
+
       <div className="card mt-2 mb-4">
         <div className="card-body border-0 p-3 automation-action">
           <div className="d-flex  flex-column assign">
@@ -119,8 +165,13 @@ const AutomationAction = ({
               className="form-select form-select-sm"
               id="assign"
               name="action"
-              value={agreement?.action || ""}
-              onChange={handleChange}
+              value={agreement?.action}
+              // onChange={handleChange}
+              onChange={
+                () => {
+                  console.log(newPolicy.reminder);
+                }
+              }
             >
               <option value="email">Email</option>
               <option value="whatsapp">WhatsApp</option>
@@ -134,8 +185,8 @@ const AutomationAction = ({
               min={0}
               className="number-input form-control form-control-sm"
               id="slaName"
-              name="day"
-              value={agreement?.day || 0}
+              name="days"
+              value={agreement?.days}
               onChange={handleChange}
             />
 
@@ -150,7 +201,7 @@ const AutomationAction = ({
               className="number-input form-control form-control-sm"
               id="slaName"
               name="hours"
-              value={agreement?.hours || 0}
+              value={agreement?.hours}
               onChange={handleChange}
             />
             <label for="hour" className="ps-2 me-2">
@@ -160,9 +211,7 @@ const AutomationAction = ({
             <label
               className="mb-n1"
               style={{
-                minWidth: 120,
-
-                fontSize: 16,
+                minWidth: 120,fontSize: 16,
               }}
             >
               before due date
@@ -177,10 +226,74 @@ const AutomationAction = ({
               className="form-control form-control-sm"
               id="slaName"
               name="subject"
-              value={agreement?.subject || ""}
+              value={agreement?.subject}
               onChange={handleChange}
             />
           </div>
+
+          {/* RECIPIENTS */}
+          {/* 
+          setAssignType
+          handleRecipient
+          groups
+          agents
+          newPolicy?.reminder?.recipient?.id
+          */}
+          <div className="form-group mt-3">
+            <label for="ticket" className="f-14 mb-1">
+              Recipients
+            </label>
+            <div className="d-flex">
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  name="mail-radio"
+                  type="radio"
+                  value="agent"
+                  checked={assignType === "agent"}
+                  onChange={(e) => setAssignType(e.target.value)}
+                />
+                <label className="form-check-label f-14" for="radio-2">
+                  Agent
+                </label>
+              </div>
+              <div className="form-check" style={{ marginLeft: 10 }}>
+                <input
+                  className="form-check-input"
+                  name="mail-radio"
+                  type="radio"
+                  value="group"
+                  checked={assignType === "group"}
+                  onChange={(e) => setAssignType(e.target.value)}
+                />
+                <label className="form-check-label f-14" for="radio-2">
+                  Group
+                </label>
+              </div>
+            </div>
+            <select
+              className="form-select form-select-sm f-14"
+              value={newPolicy?.reminder?.recipient?.id}
+              onChange={handleRecipient}
+            >
+              <option value="">Select recipient</option>
+
+              {assignType === "agent" &&
+                agents.map((agent) => (
+                  <option key={agent.id} value={agent.id}>
+                    {agent.firstname + " " + agent.lastname}
+                  </option>
+                ))}
+              {assignType === "group" &&
+                groups.map((group) => (
+                  <option key={group.id} value={group.id}>
+                    {group.name.toUpperCase()}
+                  </option>
+                ))}
+            </select>
+          </div>
+
+
           <div className="form-group mt-3">
             <label className="mb-1">Available Placeholders</label>
             <div className="available-placeholders">

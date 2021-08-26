@@ -162,8 +162,10 @@ const AutomationSettings = () => {
   const getAllAutomation = async () => {
     const res = await httpGetMain("sla");
     if (res?.status === "success") {
-      console.clear();
-      console.log(res?.data?.agreement);
+
+      // console.clear();
+      // console.log(res?.data?.agreement);
+
       setTableMeta(res?.data?.meta);
       setAutomationPolicies(res?.data?.agreement);
     } else {

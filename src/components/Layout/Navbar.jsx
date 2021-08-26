@@ -191,7 +191,6 @@ export default function Navbar({
       return;
     } else {
       let parse = JSON.parse(lUser);
-      console.log(parse);
       setlocalUser(parse.user);
     }
   };
