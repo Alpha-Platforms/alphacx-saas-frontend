@@ -36,7 +36,7 @@ const NewAutomationPolicy = () => {
   const [ticketCategories, setTicketCategories] = useState([]);
   const [automationAgents, setAutomationAgents] = useState([]);
   const [automationTeams, setAutomationTeams] = useState([]);
-  const [agreementList, setAgreementList] = useState(["agreement"]);
+  const [agreementList, setAgreementList] = useState([{id: 1}]);
 
   const [newPolicy, setNewPolicy] = useState({
     name: "",
@@ -310,7 +310,7 @@ const NewAutomationPolicy = () => {
 
               <div id="resolution-wrapper mt-4">
                 <label for="ticket" className="d-flex p-2 acx-bg-blue-light-30">
-                  Actions {agreementList.length}
+                  Actions
                 </label>
                 
                 {
@@ -327,16 +327,15 @@ const NewAutomationPolicy = () => {
                 }
 
                 {
-                  agreementList.map( (item, mi) =>
+                  agreementList.map( (item) =>
 
                 
                     
-                    (<div className="bg-secondary p-3 my-3">
+                    (<div className="bg-secondary p-3 my-3" key={item.id}>
                       <input 
                         className="form-control"
                         type="text"
                         name="city"
-                        value={item, mi}
                       />
 
                       <div className="d-flex justify-content-end">
@@ -344,7 +343,7 @@ const NewAutomationPolicy = () => {
                           className="btn btn-sm btn-primary"
                           onClick={(e) => {
                             e.preventDefault()
-                            setAgreementList(prev => [...prev, 'agreement']);
+                            setAgreementList(prev => [...prev, {id: prev.length+1}]);
                           }}
                         >
                           Add New
@@ -353,11 +352,11 @@ const NewAutomationPolicy = () => {
                           className="btn btn-sm btn-danger"
                           onClick={(e) => { 
                             e.preventDefault()
-                            let filteredAgreementList = agreementList.filter((item, fi) =>  fi !== mi)
+                            let filteredAgreementList = agreementList.filter((i) =>  item.id !== i.id)
                             setAgreementList(filteredAgreementList)
                           }}
                         >
-                          Remove {mi}
+                          Remove
                         </button>
                       </div>
                     </div>)
