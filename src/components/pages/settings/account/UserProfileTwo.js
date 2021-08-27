@@ -9,7 +9,7 @@ import {connect} from 'react-redux';
 import {getCurrentAgent} from '../../../../reduxstore/actions/agentActions';
 import { updateUser } from './../../../../reduxstore/actions/userActions';
 
-const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, currentAgent}) => {
+const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, currentAgent, groups}) => {
 
     const {id} = useParams();
 
@@ -75,7 +75,9 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
 
     useEffect(() => {
         if (currentAgent) {
-            const {firstname, lastname, email, role, avatar} = currentAgent;
+            const {firstname, lastname, email, role, avatar, group_id} = currentAgent;
+
+            console.log("lolo", currentAgent);
 
             setPersonalInfoInputs(prev => ({
                 ...prev,
@@ -86,11 +88,14 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                 avatar: {
                     ...prev.avatar,
                     currentAvatar: avatar
-                }
+                },
+                team: group_id
             }));
         }
 
     }, [currentAgent]);
+
+    console.log(personalInfoInputs);
 
     return (
         <div className="account-settings">
@@ -179,9 +184,10 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                                             </label>
                                             <input
                                                 type="text"
-                                                id="userrole"
-                                                name="userrole"
+                                                id="role"
+                                                name="role"
                                                 className="form-control"
+                                                disabled={true}
                                                 value={personalInfoInputs.role}
                                                 onChange={handleInputChange}/>
                                         </div>
@@ -189,13 +195,18 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                                             <label className="form-label" for="last-name">
                                                 Team
                                             </label>
-                                            <input
-                                                className="form-control"
-                                                type="text"
-                                                id="userteam"
-                                                name="userteam"
+                                            <select
+                                                id="team"
+                                                className="form-select"
+                                                aria-label="parent category"
+                                                name="team"
                                                 value={personalInfoInputs.team}
-                                                onChange={handleInputChange}/>
+                                                onChange={handleInputChange}>
+                                                <option value="">Select Team</option>
+                                                {groups.map(group => (
+                                                    <option value={group.id}>{group.name}</option>
+                                                ))}
+                                            </select>
                                         </div>
                                     </div>
 
@@ -247,7 +258,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                                     </div>
                                 </div>
 
-                                <div className="mb-4">
+                                <div className="mb-4 col-md-6">
                                     <label className="form-label" for="change-password">
                                         Change Password
                                     </label>
@@ -262,7 +273,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                                         Change Password
                                     </button> */}
                                 </div>
-                                <div className="mb-5">
+                                <div className="mb-5 text-end">
                                     <button
                                         type="button"
                                         className="btn btn-sm bg-at-blue-light text-white px-4"
@@ -281,6 +292,6 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
     );
 };
 
-const mapStateToProps = (state, ownProps) => ({agents: state.agent.agents, isAgentLoaded: state.agent.isAgentLoaded, isCurrentAgentLoaded: state.agent.isCurrentAgentLoaded, currentAgent: state.agent.currentAgent});
+const mapStateToProps = (state, ownProps) => ({agents: state.agent.agents, isAgentLoaded: state.agent.isAgentLoaded, isCurrentAgentLoaded: state.agent.isCurrentAgentLoaded, currentAgent: state.agent.currentAgent, groups: state.group.groups});
 
 export default connect(mapStateToProps, {getCurrentAgent})(UserProfileTwo);
