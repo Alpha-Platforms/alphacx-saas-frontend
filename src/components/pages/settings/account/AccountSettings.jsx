@@ -122,15 +122,17 @@ const AccountSettings = () => {
           {/* <!--* Start of Account Settings View --> */}
           <div className="d-flex justify-content-between col-md-8">
             <h3 className="fs-6 text-black">Account Settings</h3>
-            <button
-              type="button"
-              className="btn btn-sm bg-at-blue-light text-white px-4"
-            >
-              Save Changes
-            </button>
           </div>
 
-          <div className="mt-4 mb-5 col-md-8">
+          <div className="text-end col-md-8 mt-2">
+            <button
+                type="button"
+                className="btn btn-sm bg-at-blue-light text-white px-4"
+              >
+                Save Changes
+              </button>
+          </div>
+          <div className="mt-1 mb-5 col-md-8">
             <div className="mb-3">
               <label for="organisation-name" className="form-label">
                 Organisation Name
@@ -257,6 +259,7 @@ const AccountSettings = () => {
                   id="account-language"
                   className="form-select"
                   aria-label="Default select example"
+                  value="English"
                 >
                   <option value="">Select language</option>
                   {languages.map((lang, i) => (
@@ -287,7 +290,7 @@ const AccountSettings = () => {
               </select>
             </div>
 
-            <div className="row">
+            {/* <div className="row">
               <div className="mb-3 col-6">
                 <label for="work-days" className="form-label">
                   Work Days
@@ -376,7 +379,7 @@ const AccountSettings = () => {
                   &nbsp;&nbsp; Enable Two Factor Authentication
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div>
               <label className="d-block mb-2">Export Data</label>
