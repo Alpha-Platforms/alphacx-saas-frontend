@@ -20,8 +20,6 @@ const NewCategoryTab = ({categories, meta, getCategories, getSubCategories, isCa
         });
     };
 
-    console.log(newCategory);
-
     // function to get the list of all ticket categories   const getTicketCategories
     // = async () => {     const res = await httpGetMain("categories");     if
     // (res?.status === "success") {       setCategories(res?.data?.categories);
