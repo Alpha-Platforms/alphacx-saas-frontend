@@ -7,8 +7,10 @@ import RSelect from 'react-select/creatable';
 import PinIcon from '../../../assets/icons/pin.svg';
 import {countrycodes} from '../../shared/countrycodes';
 import ImageDefault from '../../../assets/svgicons/image-default.svg';
+import axios from 'axios';
+import {createTags} from '../../../reduxstore/actions/tagActions';
 
-const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers, tags, isEditing, customerId, customers, updateCustomer}) => {
+const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers, tags, isEditing, customerId, customers, updateCustomer, createTags}) => {
 
     const [selectedTags,
         setSelectedTags] = useState([]);
@@ -20,9 +22,11 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     const [uploadInfo, setUploadInfo] = useState({
         blob: null,
         msg: 'Upload logo for customer profile.',
-        error: false
+        error: false,
+        image: null
     });
     const [workPhoneInput, setWorkPhoneInput] = useState(null);
+    const [tagSelectLoading, setTagSelectLoading] = useState(false);
 
     const handleTagSelection = tags => {
         setSelectedTags(tags);
@@ -54,21 +58,58 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [createModalShow]);
 
+
     const handleCustomerCreation = async () => {
         const {firstname, lastname, workphone, emailaddress, organisation, ccode} = modalInputs;
         if (!firstname || !lastname || !workphone || !emailaddress) {
             NotificationManager.error("Fill up the required fields", 'Error');
         } else {
             setCreatingCust(true);
-            const res = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, phone_number: `${ccode}${workphone}`, organisation, tags: selectedTags.map(tag => tag.value)});
-            if (res.status === "success") {
-                NotificationManager.success(res?.message, 'Success');
-                setCreateModalShow(false);
-                setModalInputs({firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: ''});
-                getPaginatedCustomers(10, 1);
-                setCreatingCust(false);
+
+            if (uploadInfo.image) {
+                const data = new FormData();
+                data.append('file', uploadInfo.image);
+                data.append('upload_preset', 'i5bn3icr');
+                data.append('cloud_name', 'alphacx-co');
+                axios
+                    .post(`https://api.cloudinary.com/v1_1/alphacx-co/image/upload`, data)
+                    .then(async res => {
+                        console.log("cloudinary uploaded image: ", res.data, res.data?.url);
+                        const addRes = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, phone_number: `${ccode}${workphone}`, organisation, tags: selectedTags.map(tag => tag.value), avatar: res.data?.url });
+                        if (addRes.status === "success") {
+                            NotificationManager.success(res?.message, 'Success');
+                            setCreateModalShow(false);
+                            setModalInputs({firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: '', ccode: '+234'});
+                            setUploadInfo({
+                                blob: null,
+                                msg: 'Upload logo for customer profile.',
+                                error: false,
+                                image: null
+                            });
+                            getPaginatedCustomers(10, 1);
+                            setCreatingCust(false);
+                        } else {
+                            setCreatingCust(false);
+                            NotificationManager.error('An error occured', 'Error');
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        NotificationManager.error("Photo could not be uploaded", "Error");
+                        setCreatingCust(false);
+                    });
             } else {
-                setCreatingCust(false);
+                const res = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, phone_number: `${ccode}${workphone}`, organisation, tags: selectedTags.map(tag => tag.value)});
+                if (res.status === "success") {
+                    NotificationManager.success(res?.message, 'Success');
+                    setCreateModalShow(false);
+                    setModalInputs({firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: '', ccode: '+234'});
+                    getPaginatedCustomers(10, 1);
+                    setCreatingCust(false);
+                } else {
+                    setCreatingCust(false);
+                    NotificationManager.error('An error occured', 'Error');
+                }
             }
         }
     }
@@ -103,13 +144,35 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
         setUploadInfo({
             blob: null,
             msg: 'Upload logo for customer profile.',
-            error: false
+            error: false,
+            image: null
         });
     }
 
-    const handleTagCreation = () => {
-        console.log('should create tag');
+    console.log('selected Tags Structure', selectedTags);
+
+    const tagCreated = (newTags, newTag) => {
+        // new tag created successfully
+        
+        setSelectedTags(prev => ([...selectedTags, {value: newTag, label: newTag}]));
+        setTagSelectLoading(false);
     }
+
+    const tagNotCreated = () => {
+        // tag creation failed
+        NotificationManager.error("Tag could not be created, pls try again", "Error");
+        setTagSelectLoading(false);
+    }
+
+    const handleTagCreation = newTag => {
+        console.log('should create tag', newTag);
+        setTagSelectLoading(true);
+        const newTags = [...tags.map(tag => tag.value), newTag];
+
+        createTags(newTags, tagCreated, tagNotCreated, newTag);
+    }
+
+    console.log('selected tags: ', selectedTags.map(tag => tag.value));
 
     function DowncaretIcon() {
         return (
@@ -144,7 +207,7 @@ const handleImgSelect = function (e) {
 
 	if (!fileInput.files.length) {
 		// No file is selected
-        setUploadInfo(prev => ({...prev, msg: 'No file is slected', error: true, blob: null}));
+        setUploadInfo(prev => ({...prev, msg: 'No file is slected', error: true, blob: null, image: null}));
         
 	} else {
         // file selected
@@ -152,7 +215,7 @@ const handleImgSelect = function (e) {
 		// check if selected file is an image
 		if (fileInput.files[0].type.indexOf("image/") === -1) {
 			// Selected file is not an image
-            setUploadInfo(prev => ({...prev, msg: 'Selected file is not an image', error: true, blob: null}));
+            setUploadInfo(prev => ({...prev, msg: 'Selected file is not an image', error: true, blob: null, image: null}));
 		} else {
 			// Selected file is an image
 			/* 
@@ -177,13 +240,13 @@ const handleImgSelect = function (e) {
 					if (currentImageWidth > maxReqDimensions.width ||
 						currentImageHeight > maxReqDimensions.height) {
 						// current selected image dimesions are not acceptable
-                        setUploadInfo(prev => ({...prev, msg: `Selected image should have max dimension of ${maxReqDimensions.width}x${maxReqDimensions.height}`, error: true, blog: null}));
+                        setUploadInfo(prev => ({...prev, msg: `Selected image should have max dimension of ${maxReqDimensions.width}x${maxReqDimensions.height}`, error: true, blog: null, image: null}));
 					} else {
 						// current selected image dimensions are acceptable
 						const fileName = fileInput.files[0].name;
                         const fileBlob = URL.createObjectURL(fileInput.files[0]);
 
-                        setUploadInfo(prev => ({...prev, blob: fileBlob, msg: fileName, error: false}));
+                        setUploadInfo(prev => ({...prev, blob: fileBlob, msg: fileName, error: false, image: fileInput.files[0]}));
                         /* 
                         when the image with the blob loads call the below method
                         URL.revokeObjectURL(this.src);  where this.src is the blob created
@@ -210,7 +273,7 @@ const workphoneChange = e => {
             centered>
             {/* <Modal.Body> */}
                 <div className="saveTicketWrapModal p-4 pb-1 mb-0">
-                    <p5 className="fs-5 mb-3">{!isEditing ? 'Create New' : 'Edit'} Customer</p5>
+                    <p className="fs-5 mb-3">{!isEditing ? 'Create New' : 'Edit'} Customer</p>
                     <form
                         className="needs-validation mb-4"
                         noValidate
@@ -242,7 +305,7 @@ const workphoneChange = e => {
                                 <label htmlFor="workphone" className="form-label">Work Phone</label>
                                 <div className="input-group mb-3 workphone-group">
                                     <div className="input-group-prepend workphone-dd-wrapper">
-                                    <span><img src={`https://www.countryflags.io/${countrycodes.find(x => x.dial_code === modalInputs.ccode)?.code || ''}/flat/64.png`} alt="" /></span><select className="d-inline" name="ccode" id="ccode" value={modalInputs.ccode} onChange={handleModalInput}>
+                                    <span><img src={`https://www.countryflags.io/${countrycodes.find(x => x.dial_code === modalInputs.ccode)?.code || ''}/flat/64.png`} alt="" /></span><select className="d-inline mt-0" name="ccode" id="ccode" value={modalInputs.ccode} onChange={handleModalInput}>
                                             {countrycodes.sort((a, b) => Number(a.dial_code.slice(1)) - Number(b.dial_code.slice(1))).map(cc => <option value={cc.dial_code}>{cc.dial_code}</option>)}
                                         </select>
                                         {/* <span className="workphone-dropdown">lite</span>
@@ -277,6 +340,7 @@ const workphoneChange = e => {
                                 marginBottom: 0,
                                 color: "#006298!important",
                             }}
+
                             onClick={() => setShowAddOption(x => !x)}
                             >
                             Additional Options <span><DowncaretIcon /></span>
@@ -304,6 +368,8 @@ const workphoneChange = e => {
                                         handleTagSelection(value);
                                     }}
                                     isClearable={false}
+                                    isDisabled={tagSelectLoading}
+                                    isLoading={tagSelectLoading}
                                     isMulti
                                     onCreateOption={handleTagCreation}
                                     value={selectedTags}
@@ -360,7 +426,7 @@ const workphoneChange = e => {
                                     </div>
                                     <div>
                                         <label
-                                            for="uploadPersonalPhotoInput"
+                                            htmlFor="uploadPersonalPhotoInput"
                                             className="btn btn-sm bg-at-blue-light px-4 py-1 mb-2 mt-1"
                                             onClick={() => document.getElementById("accountLogo").click()}>
                                             Upload Photo
@@ -405,4 +471,4 @@ const workphoneChange = e => {
 
 const mapStateToProps = (state, ownProps) => ({tags: state.tag.tags?.tags_names?.tags, customers: state.customer.customers});
 
-export default connect(mapStateToProps, {getPaginatedCustomers, updateCustomer})(CreateCustomerModal);
+export default connect(mapStateToProps, {getPaginatedCustomers, updateCustomer, createTags})(CreateCustomerModal);

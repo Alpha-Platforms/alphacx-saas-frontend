@@ -103,5 +103,5 @@ export const RESET_USER_CREATED = "RESET_USER_CREATED";
 
 // TAGS
 export const GET_TAGS = "GET_TAGS";
-export const ADD_TAG = "ADD_TAG";
+export const ADD_TAGS = "ADD_TAGS";
 export const TAGS_LOADING = "TAGS_LOADING";
