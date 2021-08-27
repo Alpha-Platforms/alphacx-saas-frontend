@@ -25,7 +25,6 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
         error: false,
         image: null
     });
-    const [workPhoneInput, setWorkPhoneInput] = useState(null);
     const [tagSelectLoading, setTagSelectLoading] = useState(false);
 
     const handleTagSelection = tags => {
@@ -74,8 +73,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                 axios
                     .post(`https://api.cloudinary.com/v1_1/alphacx-co/image/upload`, data)
                     .then(async res => {
-                        console.log("cloudinary uploaded image: ", res.data, res.data?.url);
-                        const addRes = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, phone_number: `${ccode}${workphone}`, organisation, tags: selectedTags.map(tag => tag.value), avatar: res.data?.url });
+                        const addRes = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, phone_number: `${workphone}`, organisation, tags: selectedTags.map(tag => tag.value), avatar: res.data?.url });
                         if (addRes.status === "success") {
                             NotificationManager.success(res?.message, 'Success');
                             setCreateModalShow(false);
@@ -99,7 +97,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                         setCreatingCust(false);
                     });
             } else {
-                const res = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, phone_number: `${ccode}${workphone}`, organisation, tags: selectedTags.map(tag => tag.value)});
+                const res = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, phone_number: `${workphone}`, organisation, tags: selectedTags.map(tag => tag.value)});
                 if (res.status === "success") {
                     NotificationManager.success(res?.message, 'Success');
                     setCreateModalShow(false);
@@ -118,7 +116,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
         NotificationManager.success('Customer updated successfully', 'Success');
         getPaginatedCustomers(10, 1);
         setEditingCust(false);
-        setModalInputs(prev => ({...prev, firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: '', ccode: "+1"}));
+        setModalInputs(prev => ({...prev, firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: '', ccode: "+234"}));
         setCreateModalShow(false);
     }
     
@@ -133,7 +131,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
             NotificationManager.error("Fill up the required fields", 'Error');
         } else {
             setEditingCust(true);
-            const newCustomer = {firstName: firstname, lastName: lastname, email: emailaddress, phone_number: `${ccode}${workphone}`, organisation, tags: selectedTags.map(tag => tag.value)};
+            const newCustomer = {firstName: firstname, lastName: lastname, email: emailaddress, phone_number: `${workphone}`, organisation, tags: selectedTags.map(tag => tag.value)};
             updateCustomer(customerId, newCustomer, custEditSuccess, custEditFail);
         }
     }
@@ -149,7 +147,6 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
         });
     }
 
-    console.log('selected Tags Structure', selectedTags);
 
     const tagCreated = (newTags, newTag) => {
         // new tag created successfully
@@ -165,14 +162,11 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     }
 
     const handleTagCreation = newTag => {
-        console.log('should create tag', newTag);
         setTagSelectLoading(true);
         const newTags = [...tags.map(tag => tag.value), newTag];
 
         createTags(newTags, tagCreated, tagNotCreated, newTag);
     }
-
-    console.log('selected tags: ', selectedTags.map(tag => tag.value));
 
     function DowncaretIcon() {
         return (
