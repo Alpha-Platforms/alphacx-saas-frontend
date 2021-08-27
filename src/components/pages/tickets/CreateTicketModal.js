@@ -18,6 +18,7 @@ import {
     httpPostMain,
     httpPatchMain,
 } from "../../../helpers/httpMethods";
+import {createTags} from '../../../reduxstore/actions/tagActions';
 
 
 const CreateTicketModal = ({
@@ -35,10 +36,12 @@ const CreateTicketModal = ({
     customers,
     // setChangingRow,
     subCategories,
-    tags
+    tags,
+    createTags
 }) => {
     const [selectedTags,
         setSelectedTags] = useState([]);
+    const [tagSelectLoading, setTagSelectLoading] = useState(false);
     const [custSearch,
         setCustSearch] = useState({gottenCust: [], term: '', openPreview: false, isLoading: false, isLoaded: false});
     const [subCatLoading, setSubCatLoading] = useState(false);
@@ -113,9 +116,13 @@ const CreateTicketModal = ({
     //     }
     // }
 
-    const handleTagSelection = tags => {
+    /* const handleTagSelection = tags => {
         const realTags = tags.map(tag => tag.value);
         setSelectedTags(realTags);
+    } */
+
+    const handleTagSelection = tags => {
+        setSelectedTags(tags);
     }
 
     
@@ -319,6 +326,29 @@ const CreateTicketModal = ({
             return NotificationManager.error(res.er.message, "Error", 4000);
         }
     };
+
+
+    const tagCreated = (newTags, newTag) => {
+        // new tag created successfully
+        
+        setSelectedTags(prev => ([...selectedTags, {value: newTag, label: newTag}]));
+        setTagSelectLoading(false);
+    }
+
+    const tagNotCreated = () => {
+        // tag creation failed
+        NotificationManager.error("Tag could not be created, pls try again", "Error");
+        setTagSelectLoading(false);
+    }
+
+
+    const handleTagCreation = newTag => {
+        setTagSelectLoading(true);
+        const newTags = [...tags.map(tag => tag.value), newTag];
+
+        createTags(newTags, tagCreated, tagNotCreated, newTag);
+
+    }
 
     function DowncaretIcon() {
         return (
@@ -578,7 +608,7 @@ const CreateTicketModal = ({
             
                                     <div className="col-12 mt-3 tags-select-wrapper">
                                         <label htmlFor="title" className="form-label">Tags</label>
-                                        <RCreatable className="rselectfield"
+                                        {/* <RCreatable className="rselectfield"
                                             style={{ fontSize: "12px" }}
                                             onChange={ (value, actionMeta) => {
                                                 handleTagSelection(value);
@@ -591,7 +621,25 @@ const CreateTicketModal = ({
                                                 return {value: item,label: item}
                                                 })
                                             }
-                                        />
+                                        /> */}
+                                        <RCreatable className="rselectfield"
+                                            style={{ fontSize: "12px" }}
+                                            onChange={ (value, actionMeta) => {
+                                                handleTagSelection(value);
+                                            }}
+                                            isClearable={false}
+                                            isDisabled={tagSelectLoading}
+                                            isLoading={tagSelectLoading}
+                                            isMulti
+                                            onCreateOption={handleTagCreation}
+                                            value={selectedTags}
+                                            options={
+                                                // populate 'options' prop from $agents, with names remapped
+                                                tags?.map(item => {
+                                                return {value: item,label: item}
+                                                })
+                                            }
+                                        /> 
                                     </div>
             
                                     <div className="col-12 mt-3">
@@ -633,4 +681,4 @@ const mapStateToProps = (state, ownProps) => ({
     tags: state.tag.tags?.tags_names?.tags
 })
 
-export default connect(mapStateToProps, {addTicket, getPaginatedTickets, resetTicketCreated})(CreateTicketModal);
+export default connect(mapStateToProps, {addTicket, getPaginatedTickets, resetTicketCreated, createTags})(CreateTicketModal);
