@@ -237,11 +237,12 @@ const AccountSettings = () => {
                   id="account-timezone"
                   className="form-select"
                   aria-label="Default select example"
+                  value="W. Central Africa Standard Time"
                 >
-                  <option value="">Select time zone</option>
+                  <option>Select time zone</option>
                   {timezone.map((zone, i) => (
                     <option key={i} value={zone.value}>
-                      {zone.value}({zone.abbr})
+                      {zone.value}({zone.offset > 0 ? `GMT +${zone.offset}` : zone.offset < 0 ?  `GMT ${zone.offset}` : `GMT`})
                     </option>
                   ))}
                 </select>
