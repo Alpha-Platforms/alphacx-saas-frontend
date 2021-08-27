@@ -93,10 +93,10 @@ const TicketCategoriesTab = ({ categories, meta }) => {
                     field: "category",
                     width: '50%'
                   },
-                  {
-                    title: "Parent Category",
-                    field: "parentCategory",
-                  },
+                  // {
+                  //   title: "Parent Category",
+                  //   field: "parentCategory",
+                  // },
                   {
                     title: "Description",
                     field: "description",
