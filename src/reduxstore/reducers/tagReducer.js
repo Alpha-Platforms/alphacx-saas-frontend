@@ -22,6 +22,21 @@ const tagReducer = (state = initialState, action) => {
 				isTagsLoading: true,
 				isTagsLoaded: false
 			}
+		case types.ADD_TAGS:
+			if (Object.keys(state.tags).length !== 0) {
+				return {
+					...state,
+					tags: {
+						...state.tags,
+						tags_names: {
+							...state.tags?.tags_names,
+							tags: [...state.tags?.tags_names?.tags, action.payload]
+						}
+					}
+				}
+			} else {
+				return state
+			}
 		default:
 			return state;
 	}

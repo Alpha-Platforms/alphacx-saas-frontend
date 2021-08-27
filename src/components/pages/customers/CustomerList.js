@@ -126,7 +126,6 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                 width: '40%',
                 // render: ({rowData}) => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">+2</span></div>),
                 render: (rowData) => (<div className={"table-tags"}>{ rowData.tags.length > 0 && rowData.tags.map((tag, idx) => {
-                    console.log("tagsss: ", rowData.tags);
                     if (idx === 0) {
                         return <span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">{tag}</span>;
                     } else if (idx === 1) {
