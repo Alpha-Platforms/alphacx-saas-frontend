@@ -124,15 +124,8 @@ const AccountSettings = () => {
             <h3 className="fs-6 text-black">Account Settings</h3>
           </div>
 
-          <div className="text-end col-md-8 mt-2">
-            <button
-                type="button"
-                className="btn btn-sm bg-at-blue-light text-white px-4"
-              >
-                Save Changes
-              </button>
-          </div>
-          <div className="mt-1 mb-5 col-md-8">
+          
+          <div className="mt-3 mb-3 col-md-8">
             <div className="mb-3">
               <label for="organisation-name" className="form-label">
                 Organisation Name
@@ -381,24 +374,28 @@ const AccountSettings = () => {
               </div>
             </div> */}
 
-            <div>
+            {/* <div>
               <label className="d-block mb-2">Export Data</label>
               <button
                 className="btn btn-sm bg-at-blue-light px-4 py-1"
                 style={{ width: 120 }}
               >
                 Export{" "}
-                {/*
-                  <object
-                    data="../assets/alphatickets/icons/white-upload.svg"
-                    className="sm-align"
-                    type="image/svg+xml"
-                  ></object>
-                  */}
+                
               </button>
               &nbsp;&nbsp;
               <span>Export Data from your AlphaCX account</span>
-            </div>
+            </div> */}
+
+            
+          </div>
+          <div className="text-end col-md-8 mt-4 mb-4 pt-2 pb-3">
+            <button
+                type="button"
+                className="btn btn-sm bg-at-blue-light text-white px-4"
+              >
+                Save Changes
+              </button>
           </div>
         </div>
       </div>
