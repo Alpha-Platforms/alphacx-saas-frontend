@@ -70,7 +70,30 @@ export const updateUser = async (updatedUser) => {
         const res = await axios.patch(`${config.stagingBaseUrl}/users/${updatedUser.id}`, body, userTokenConfig(getState));
         return res.data;
     } catch (err) {
-        NotificationManager.error(err?.response?.data.message, 'Error');
+        // NotificationManager.error(err?.response?.data.message, 'Error');
+        return err?.response?.data;
+    }
+}
+
+// invalid redux action
+export const updateUserPassword = async (oldPassword, newPassword) => {
+    if (!navigator.onLine) {
+        return NotificationManager.error('Please check your internet', 'Opps!', 3000);
+    }
+
+	const passwords = {
+		oldPassword,
+		newPassword
+	}
+
+    //Request body
+    const body = JSON.stringify(passwords);
+
+    try {
+        const res = await axios.patch(`${config.stagingBaseUrl}/auth/change-password`, body, userTokenConfig(getState));
+        return res.data;
+    } catch (err) {
+        // NotificationManager.error(err?.response?.data.message, 'Error');
         return err?.response?.data;
     }
 }
