@@ -7,7 +7,7 @@ import {NotificationManager} from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import {connect} from 'react-redux';
 import {getCurrentAgent} from '../../../../reduxstore/actions/agentActions';
-import { updateUser } from './../../../../reduxstore/actions/userActions';
+import { updateUser, updateUserPassword } from './../../../../reduxstore/actions/userActions';
 
 const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, currentAgent, groups}) => {
 
@@ -26,11 +26,15 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
             currentAvatar: '',
             file: null,
             blob: null
-        }
+        },
+        oldPassword: '',
+        newPassword: ''
     });
 
+    console.log('setPersonalInfoInputs', personalInfoInputs);
+
     const updateUserInfo = async () => {
-        const {firstname, lastname, email, role, team} = personalInfoInputs;
+        const {firstname, lastname, email, role, team, oldPassword, newPassword} = personalInfoInputs;
         const updatedInfo = {
             id,
             firstname,
@@ -43,14 +47,35 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
 
         setAccountLoading(true);
 
-        const res = await updateUser(updatedInfo);
+        if ((oldPassword && !newPassword) || (!oldPassword && newPassword)) {
+            NotificationManager.error('Enter both passwords field or leave blank.', 'Error');
+            setAccountLoading(false);
+        } else if (oldPassword && newPassword) {
+            const pwdRes = await updateUserPassword(oldPassword, newPassword);
 
-        if (res?.status === 'success') {
-            NotificationManager.success('Info has been updated', 'Success');
+            if (pwdRes?.status === 'success') {
+                const userRes = await updateUser(updatedInfo);
+                if (userRes?.status === 'success') {
+                    NotificationManager.success('Info has been updated', 'Success');
+                } else {
+                    NotificationManager.error('Something went wrong');
+                }
+            } else if (pwdRes?.status === 'fail') {
+                NotificationManager.error(pwdRes?.message || 'Password is incorrect.', 'Failed');
+            } else {
+                NotificationManager.error('Something went wrong');            
+            }
             setAccountLoading(false);
         } else {
-            NotificationManager.error('Something went wrong');
-            setAccountLoading(false);
+            const userRes = await updateUser(updatedInfo);
+
+            if (userRes?.status === 'success') {
+                NotificationManager.success('Info has been updated', 'Success');
+                setAccountLoading(false);
+            } else {
+                NotificationManager.error('Something went wrong');
+                setAccountLoading(false);
+            }
         }
     }
 
@@ -212,6 +237,43 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
 
                                 </div>
 
+                                <div className="d-flex">
+                                    <div className="mb-4 me-2 col-md-6">
+                                        <label className="form-label" for="change-password">
+                                            Change Password
+                                        </label>
+                                        <input
+                                            className="form-control"
+                                            type="password"
+                                            name="oldPassword"
+                                            id="oldPassword"
+                                            value={personalInfoInputs.oldPassword || ""}
+                                            onChange={handleInputChange}
+                                            placeholder="Current Password"
+                                            />
+                                        {/* <button className="btn btn-sm bg-at-blue-light px-3 py-1 mt-3">
+                                            Change Password
+                                        </button> */}
+                                    </div>
+                                    <div className="mb-4 col-md-6">
+                                        <label className="form-label" for="change-password" style={{ visibility: "hidden" }}>
+                                            Change Password
+                                        </label>
+                                        <input
+                                            className="form-control"
+                                            type="password"
+                                            name="newPassword"
+                                            id="newPassword"
+                                            value={personalInfoInputs.newPassword || ""}
+                                            onChange={handleInputChange}
+                                            placeholder="New Password"
+                                            />
+                                        {/* <button className="btn btn-sm bg-at-blue-light px-3 py-1 mt-3">
+                                            Change Password
+                                        </button> */}
+                                    </div>
+                                </div>
+
                                 <div className="d-flex mb-3">
                                     <div
                                         id="uploadPersonalPhotoInputImgPreview"
@@ -236,6 +298,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                                                         alt=""/>)}
                                         </div>
                                     </div>
+                                    
                                     <div>
                                         <label
                                             for="uploadPersonalPhotoInput"
@@ -258,21 +321,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                                     </div>
                                 </div>
 
-                                <div className="mb-4 col-md-6">
-                                    <label className="form-label" for="change-password">
-                                        Change Password
-                                    </label>
-                                    <input
-                                        className="form-control"
-                                        type="password"
-                                        name="change_password"
-                                        id="change-password"
-                                        value={personalInfoInputs.change_password || ""}
-                                        onChange={handleInputChange}/>
-                                    {/* <button className="btn btn-sm bg-at-blue-light px-3 py-1 mt-3">
-                                        Change Password
-                                    </button> */}
-                                </div>
+                                
                                 <div className="mb-5 text-end">
                                     <button
                                         type="button"
