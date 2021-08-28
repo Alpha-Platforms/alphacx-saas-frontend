@@ -68,8 +68,8 @@ const TicketHistory = ({ currentCustomerTicketsMeta, currentCustomerId, getPagin
         // }, 
         {
             title: 'Assigned To',
-            field: 'agentAssigned',
-            render: rowData => <Link to="/settings/users">{rowData.agentAssigned}</Link>
+            field: 'agentAssignedId',
+            render: rowData => <Link to={`/settings/profile/${rowData.agentAssignedId}`}>{rowData.agentAssigned}</Link>
         }, 
         { 
             title: 'Stage',
@@ -153,7 +153,8 @@ const TicketHistory = ({ currentCustomerTicketsMeta, currentCustomerId, getPagin
                                 // category: category.name,
                                 // agentAssigned: `${assignee.firstname} ${assignee.lastname}`,
                                 agentAssigned: `${assignee?.firstname || ''} ${assignee?.lastname || ''}`,
-                                stage: status?.status
+                                stage: status?.status,
+                                agentAssignedId: `${assignee?.id}`
                             }))
                             }
                             options = {{
