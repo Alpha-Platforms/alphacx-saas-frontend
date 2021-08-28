@@ -161,7 +161,8 @@ function SettingsHome({signedUser}) {
           </Link>
         </div>
 
-        <div className="setting-link-item border rounded bg-light">
+{/*   ROLES */}
+        {/* <div className="setting-link-item border rounded bg-light">
           <Link
             to="/settings/roles"
             className="d-block cursor text-decoration-none"
@@ -178,7 +179,7 @@ function SettingsHome({signedUser}) {
               </div>
             </div>
           </Link>
-        </div>
+        </div> */}
 
         <div className="setting-link-item border rounded bg-light">
           <Link
@@ -270,7 +271,7 @@ function SettingsHome({signedUser}) {
           </Link>
         </div>
 
-        <div className="setting-link-item border rounded bg-light">
+        {/* <div className="setting-link-item border rounded bg-light">
           <Link
             to="/settings/canned-responses"
             className="d-block cursor text-decoration-none"
@@ -319,7 +320,7 @@ function SettingsHome({signedUser}) {
               </div>
             </div>
           </Link>
-        </div>
+        </div> */}
       </div>
     </>
   );
