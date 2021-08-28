@@ -127,10 +127,15 @@ const CreateUserModal = ({
                             <div className="mt-3">
                                 <label htmlFor="workphone" className="form-label">Work Phone</label>
                                 <div className="input-group mb-3 workphone-group">
-                                    <div className="input-group-prepend">
-                                        <select className="d-inline" name="ccode" id="ccode" value={modalInputs.ccode} onChange={handleModalInput}>
+                                    <div className="input-group-prepend workphone-dd-wrapper">
+                                    <span><img src={`https://www.countryflags.io/${countrycodes.find(x => x.dial_code === modalInputs.ccode)?.code || ''}/flat/64.png`} alt="" /></span><select className="d-inline mt-0" name="ccode" id="ccode" value={modalInputs.ccode} onChange={handleModalInput}>
                                             {countrycodes.sort((a, b) => Number(a.dial_code.slice(1)) - Number(b.dial_code.slice(1))).map(cc => <option value={cc.dial_code}>{cc.dial_code}</option>)}
                                         </select>
+                                        {/* <span className="workphone-dropdown">lite</span>
+                                        <ul>
+                                            {countrycodes.sort((a, b) => Number(a.dial_code.slice(1)) - Number(b.dial_code.slice(1))).map(cc => <li>
+                                                <span><img src={`https://www.countryflags.io/be/flat/64.png`} alt="" /></span> {cc.dial_code}</li>)}
+                                        </ul> */}
                                     </div>
                                     <input type="tel" className="form-control" name="workphone" id="workphone" value={modalInputs.workphone} aria-label="work phone" aria-describedby="workphone" onChange={handleModalInput}/>
                                 </div>
