@@ -9,7 +9,7 @@ import {connect} from 'react-redux';
 import {getCurrentAgent} from '../../../../reduxstore/actions/agentActions';
 import { updateUser, updateUserPassword } from './../../../../reduxstore/actions/userActions';
 
-const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, currentAgent, groups}) => {
+const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, currentAgent, groups, authenticatedUser}) => {
 
     const {id} = useParams();
 
@@ -237,7 +237,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
 
                                 </div>
 
-                                <div className="d-flex">
+                                {authenticatedUser?.email === currentAgent?.email && <div className="d-flex">
                                     <div className="mb-4 me-2 col-md-6">
                                         <label className="form-label" for="change-password">
                                             Change Password
@@ -272,7 +272,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                                             Change Password
                                         </button> */}
                                     </div>
-                                </div>
+                                </div>}
 
                                 <div className="d-flex mb-3">
                                     <div
@@ -341,6 +341,6 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
     );
 };
 
-const mapStateToProps = (state, ownProps) => ({agents: state.agent.agents, isAgentLoaded: state.agent.isAgentLoaded, isCurrentAgentLoaded: state.agent.isCurrentAgentLoaded, currentAgent: state.agent.currentAgent, groups: state.group.groups});
+const mapStateToProps = (state, ownProps) => ({agents: state.agent.agents, isAgentLoaded: state.agent.isAgentLoaded, isCurrentAgentLoaded: state.agent.isCurrentAgentLoaded, currentAgent: state.agent.currentAgent, groups: state.group.groups, authenticatedUser: state.userAuth.user});
 
 export default connect(mapStateToProps, {getCurrentAgent})(UserProfileTwo);
