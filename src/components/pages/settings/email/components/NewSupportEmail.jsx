@@ -14,7 +14,7 @@ const NewSupportEmail = () => {
     activeRadio: "own-server",
     mailServer: "incoming",
     mailServer: "incoming-only",
-    emailSystem: "gmail",
+    emailSystem: "imap",
     emailConfig: {
       tls: false,
     },
@@ -60,7 +60,7 @@ const NewSupportEmail = () => {
   };
   return (
     <div className="new-support-email">
-      <div class="card card-body bg-white border-0 ">
+      <div className="card card-body bg-white border-0 ">
         <div id="mainContentHeader">
           <h6 className="text-muted f-14">
             <Link to="/settings">
@@ -76,72 +76,72 @@ const NewSupportEmail = () => {
         </div>
 
         <div className="col-md-8">
-          <h5 class="mt-3 mb-2 f-16 fw-bold">Email Settings</h5>
-          <div class="form-group">
-            <label for="name" class="form-label f-14">
+          <h5 className="mt-3 mb-2 f-16 fw-bold">Email Settings</h5>
+          <div className="form-group">
+            <label for="name" className="form-label f-14">
               Name
             </label>
             <input
               type="tdiv.colext"
-              class="form-control form-control-sm"
+              className="form-control form-control-sm"
               id="name"
             />
-            <p class="description-text f-12 text-muted mt-1">
+            <p className="description-text f-12 text-muted mt-1">
               Name of the email to be used in the the ticket replies
             </p>
           </div>
-          <div class="form-group mt-2">
-            <label for="email" class="form-label f-14">
-              Your Support email <span class="text-danger">*</span>
+          <div className="form-group mt-2">
+            <label for="email" className="form-label f-14">
+              Your Support email <span className="text-danger">*</span>
             </label>
             <input
               type="text"
-              class="form-control form-control-sm "
+              className="form-control form-control-sm "
               id="email"
             />
-            <p class="description-text f-12 text-muted mt-1">
+            <p className="description-text f-12 text-muted mt-1">
               This serves as your Return-to address e.g bayo@yourcompany.com
             </p>
           </div>
-          {/* <div class="form-group mt-2">
-            <label for="group" class="form-label f-14">
+          {/* <div className="form-group mt-2">
+            <label for="group" className="form-label f-14">
               Assign to Group
             </label>
-            <select id="group" class="form-select">
+            <select id="group" className="form-select">
               <option>--</option>
               <option>--</option>
               <option>--</option>
             </select>
-            <p class="description-text f-12 text-muted mt-1">
+            <p className="description-text f-12 text-muted mt-1">
               New tickets in this email will be automaically assigned to a group
             </p>
           </div> */}
-          {/* <div class="form-group mt-2">
-            <label for="support" class="form-labedl f-14">
+          {/* <div className="form-group mt-2">
+            <label for="support" className="form-labedl f-14">
               Link support email with a product
             </label>
-            <select id="support" class="form-select">
+            <select id="support" className="form-select">
               <option>--</option>
               <option>--</option>
               <option>--</option>
             </select>
-            <p class="description-text f-12 text-muted mt-1">
+            <p className="description-text f-12 text-muted mt-1">
               if you want to link this email to a product first{" "}
               <span>
-                <a href="#" class="text-custom">
+                <a href="#" className="text-custom">
                   add product
                 </a>
               </span>
             </p>
           </div> */}
-          <div class="card mt-4">
-            <div class="card-header p-3">
-              <p class="f-16 fw-bold mb-3">Mail Server</p>
-              <div class="row">
-                {/* <div class="col-md-5">
-                    <div class="form-check">
+          <div className="card mt-4">
+            <div className="card-header p-3">
+              <p className="f-16 fw-bold mb-3">Mail Server</p>
+              <div className="row">
+                {/* <div className="col-md-5">
+                    <div className="form-check">
                       <input
-                        class="form-check-input"
+                        className="form-check-input"
                         type="radio"
                         id="radio-1"
                         name="mail-radio"
@@ -149,15 +149,15 @@ const NewSupportEmail = () => {
                         checked={state.activeRadio === "default-server"}
                         onChange={handleServerChange}
                       />
-                      <label class="form-check-label f-14" for="radio-1">
+                      <label className="form-check-label f-14" for="radio-1">
                         Default (Alphatickets)
                       </label>
                     </div>
                   </div> */}
-                <div class="col-md-7">
-                  <div class="form-check">
+                <div className="col-md-7">
+                  <div className="form-check">
                     <input
-                      class="form-check-input"
+                      className="form-check-input"
                       name="mail-radio"
                       type="radio"
                       id="radio-2"
@@ -165,7 +165,7 @@ const NewSupportEmail = () => {
                       checked={state.activeRadio === "own-server"}
                       onChange={handleServerChange}
                     />
-                    <label class="form-check-label f-14" for="radio-2">
+                    <label className="form-check-label f-14" for="radio-2">
                       Use your own mail server
                     </label>
                   </div>
@@ -177,18 +177,18 @@ const NewSupportEmail = () => {
               // ...
               // ...
               // ...
-              <div class="card-body d-block" id="default">
-                <div class="form-group">
-                  <label for="forward-mail" class="form-label f-14">
+              <div className="card-body d-block" id="default">
+                <div className="form-group">
+                  <label for="forward-mail" className="form-label f-14">
                     Forward Your Emails to
                   </label>
                   <input
                     type="text"
-                    class="form-control form-control-sm w-75"
+                    className="form-control form-control-sm w-75"
                     id="forward-mail"
                     placeholder="--"
                   />
-                  <a class=" text-custom f-12 mt-1">
+                  <a className=" text-custom f-12 mt-1">
                     How to convert your emails into Alphaticket tickets ?
                   </a>
                 </div>
@@ -201,15 +201,15 @@ const NewSupportEmail = () => {
               <UseOwnEmail state={state} setState={setState} />
             )}
           </div>
-          <div class="d-flex justify-content-end mb-1 mt-4 save-btn">
+          <div className="d-flex justify-content-end mb-1 mt-4 save-btn">
             <Link
               to="/settings/email"
-              class="btn btn-sm px-4 bg-outline-custom cancel"
+              className="btn btn-sm px-4 bg-outline-custom cancel"
             >
               Cancel
             </Link>
             <a
-              class="btn btn-sm px-4 bg-custom ms-3"
+              className="btn btn-sm px-4 bg-custom ms-3"
               id="save-changes"
               data-bs-toggle="modal"
               data-bs-target="#successModal"
@@ -223,22 +223,22 @@ const NewSupportEmail = () => {
 
       <Modal open={show} onClose={handleClose} center>
         <div
-          // class="modal fade"
+          // className="modal fade"
           id="successModal"
           tabindex="-1"
           aria-labelledby="successModal"
           aria-hidden="false"
         >
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content p-4 border-0">
-              <div class="modal-body text-center">
-                <div class="text-center">
-                  {/* <object data="../assets/alphatickets/icons/sucess.svg" class="img-fluid"></object> */}
-                  <h5 class="mt-4">Successful</h5>
-                  <p class="text-center">Email has been edited successfully</p>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content p-4 border-0">
+              <div className="modal-body text-center">
+                <div className="text-center">
+                  {/* <object data="../assets/alphatickets/icons/sucess.svg" className="img-fluid"></object> */}
+                  <h5 className="mt-4">Successful</h5>
+                  <p className="text-center">Email has been edited successfully</p>
                   <Link
                     to="/settings/email"
-                    class="btn btn-sm bg-at-blue text-white px-5 f-16"
+                    className="btn btn-sm bg-at-blue text-white px-5 f-16"
                     id="continue"
                   >
                     Continue

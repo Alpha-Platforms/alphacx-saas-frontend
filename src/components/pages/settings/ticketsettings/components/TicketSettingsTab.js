@@ -22,7 +22,7 @@ const TicketSettingsTab = ({statuses}) => {
 
     return (
         <div className="my-3 mt-4">
-            <div className="col-md-7">
+            <div className="col-md-6">
                 <div className="ticket-dist-row1">
                     <div className="">
                         <div>

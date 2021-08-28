@@ -99,7 +99,7 @@ const NotificationSettings = () => {
     },
     {
       name: "Welcome Message",
-      category: "WhatsApp",
+      category: "Email",
       subject: "Welcome to AlphaCX",
       description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     },
@@ -160,7 +160,7 @@ const NotificationSettings = () => {
           </h6>
         </div>
         <div className="d-flex justify-content-between align-baseline">
-          <h5 className="mt-3 mb-4 f-16 fw-bold">Email Management</h5>
+          <h5 className="mt-3 mb-4 f-16 fw-bold">Notification Management</h5>
           <div>
             <Link
               className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"

@@ -55,11 +55,11 @@ const NewEmailTemplate = () => {
                 <span className="text-custom">Notifications Settings</span>{" "}
               </Link>
               <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
-              <span>Email Template</span>
+              <span>Notification Template</span>
             </h6>
           </div>
           <div id="setting-form">
-            <h5 className="mt-3 mb-4 f-16 fw-bold">Create Email Template</h5>
+            <h5 className="mt-3 mb-4 f-16 fw-bold">Create Notification Template</h5>
             <form action="">
               <div className="form-group mt-3">
                 <label for="slaName" className="f-14 mb-1">

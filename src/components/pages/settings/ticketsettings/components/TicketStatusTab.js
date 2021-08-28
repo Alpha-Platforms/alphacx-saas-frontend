@@ -66,8 +66,10 @@ const TicketStatusTab = ({statuses}) => {
                                 </div>
 
                                 <div className="text-start mt-2">
+                                    {/* <button
+                                        className="btn btn-link text-decoration-none text-at-blue-light" disabled={true} onClick={openAddStage}>+ Add Stage</button> */}
                                     <button
-                                        className="btn btn-link text-decoration-none text-at-blue-light" disabled={true} onClick={openAddStage}>+ Add Stage</button>
+                                        className="btn btn-link text-decoration-none btn-sm disabled border" disabled={true} onClick={openAddStage}>+ Add Stage</button>
                                 </div>
 
                             </div>
