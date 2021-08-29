@@ -73,7 +73,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                 axios
                     .post(`https://api.cloudinary.com/v1_1/alphacx-co/image/upload`, data)
                     .then(async res => {
-                        const addRes = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, phone_number: workphone, organisation, tags: selectedTags.map(tag => tag.value), avatar: res.data?.url });
+                        const addRes = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, phoneNumber: workphone, organisation, tags: selectedTags.map(tag => tag.value), avatar: res.data?.url });
                         if (addRes.status === "success") {
                             NotificationManager.success(res?.message, 'Success');
                             setCreateModalShow(false);
@@ -97,7 +97,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                         setCreatingCust(false);
                     });
             } else {
-                const res = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, phone_number: workphone, organisation, tags: selectedTags.map(tag => tag.value)});
+                const res = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, phoneNumber: workphone, organisation, tags: selectedTags.map(tag => tag.value)});
                 if (res.status === "success") {
                     NotificationManager.success(res?.message, 'Success');
                     setCreateModalShow(false);
