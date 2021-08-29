@@ -191,11 +191,14 @@ const TicketList = ({
     {
       title: "Assigned to",
       field: "assignedTo",
-      render: (rowData) => (
+      render: (rowData) => rowData.assignedTo? 
+        
         <Link to={`/settings/profile/${rowData.assigneeId}`} style={{ textTransform: "capitalize" }}>
           {rowData.assignedTo}
         </Link>
-      ),
+         :
+         <span className="text-muted acx-fs-8">Unassigned</span>,
+
     },
     // {
     //     title: 'Status',
@@ -365,7 +368,7 @@ const TicketList = ({
                     category: category?.name,
                     created: moment(created_at).format("DD MMM, YYYY"),
                     status: status?.status,
-                    assignedTo: `${assignee?.firstname || ''} ${assignee?.lastname || ''}`,
+                    assignedTo: `${assignee?.firstname || ""}`,
                     rating: rating,
                     assigneeId: assignee?.id
                   })
