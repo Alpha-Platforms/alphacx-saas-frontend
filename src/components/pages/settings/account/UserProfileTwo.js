@@ -238,7 +238,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                                 </div>
 
                                 {authenticatedUser?.email === currentAgent?.email && <div className="d-flex">
-                                    <div className="mb-4 me-2 col-md-6">
+                                    <div className="mb-4 me-2 w-100">
                                         <label className="form-label" for="change-password">
                                             Change Password
                                         </label>
@@ -255,7 +255,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                                             Change Password
                                         </button> */}
                                     </div>
-                                    <div className="mb-4 col-md-6">
+                                    <div className="mb-4 w-100">
                                         <label className="form-label" for="change-password" style={{ visibility: "hidden" }}>
                                             Change Password
                                         </label>
