@@ -120,7 +120,7 @@ export const getCurrentTicket = (id) => (dispatch, getState) => {
 }
 
 export const addTicket = (newTicket) => (dispatch, getState) => {
-
+    
     //Request body
     const body = JSON.stringify(newTicket);
 
