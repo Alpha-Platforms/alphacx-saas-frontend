@@ -47,12 +47,12 @@ const EmailSettings = () => {
                             </Link>
                         </div>
                     </div>
-                    <div className="form-group">
+                    {/* <div className="form-group">
                         <input
                             type="search"
                             className="form-control form-control-sm f-12 search-bar mt-2 px-5 d-block w-50"
                             placeholder="Search email addresses"/>
-                    </div>
+                    </div> */}
                     <div className="text-center empty-state">
                         <div className="my-5 mb-4">
                           <EmailEmptySvg />
