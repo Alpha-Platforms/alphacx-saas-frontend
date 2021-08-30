@@ -178,7 +178,7 @@ const TicketList = ({
       field: "category",
     },
     {
-      title: "Status",
+      title: "Stage",
       field: "status",
       render: (rowData) => (
         <div className={`ticket-state ${getStatusColor(rowData.status)}`}>
@@ -191,11 +191,14 @@ const TicketList = ({
     {
       title: "Assigned to",
       field: "assignedTo",
-      render: (rowData) => (
-        <Link to="/settings/users" style={{ textTransform: "capitalize" }}>
+      render: (rowData) => rowData.assignedTo? 
+        
+        <Link to={`/settings/profile/${rowData.assigneeId}`} style={{ textTransform: "capitalize" }}>
           {rowData.assignedTo}
         </Link>
-      ),
+         :
+         <span className="text-muted acx-fs-8">Unassigned</span>,
+
     },
     // {
     //     title: 'Status',
@@ -365,8 +368,9 @@ const TicketList = ({
                     category: category?.name,
                     created: moment(created_at).format("DD MMM, YYYY"),
                     status: status?.status,
-                    assignedTo: `${assignee?.firstname || ''} ${assignee?.lastname || ''}`,
-                    rating: rating
+                    assignedTo: `${assignee?.firstname || ""}`,
+                    rating: rating,
+                    assigneeId: assignee?.id
                   })
                 )}
                 options={{

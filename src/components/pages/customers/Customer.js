@@ -21,10 +21,14 @@ import {getUserInitials} from '../../../helper';
 import TicketHistory from './components/TicketHistory';
 import Notes from './components/Notes';
 import Timeline from './components/Timeline';
+import CreateCustomerModal from './CreateCustomerModal';
 
 const CircleIcon = (props) => <span style={{ backgroundColor: props.color }} className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
 
 const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded, currentCustomer}) => {
+
+    const [createModalShow,
+        setCreateModalShow] = useState(false);
 
     const {id} = useParams();
 
@@ -70,6 +74,10 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
         { item: ['x', 'y', 'z'], color: "#1E90FF", background: "#E3F1FF" },
       ];
 
+    function handleEditClick () {
+        setCreateModalShow(true);
+    }
+
     return (
         <Fragment>
             {!isCurrentCustomerLoaded
@@ -109,7 +117,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                     <div><CircleIcon color="rgba(186, 104, 200, 0.25)" icon={CallIcon}/></div>
                                     <div>
                                         <p className="pb-0 mb-0 f-12 text-muted op-9">Work Phone</p>
-                                        <p className="text-muted f-13">{currentCustomer.phoneNumber ? currentCustomer.phoneNumber : currentCustomer.phone_number ? currentCustomer.phone_number : ''}</p>
+                                        <p className="text-muted f-13">{currentCustomer.phoneNumber ? currentCustomer.phoneNumber : currentCustomer.phone_number ? currentCustomer.phone_number : 'N/A'}</p>
                                     </div>
                                 </li>
                                 {/* <li>
@@ -200,11 +208,11 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                             </div>
                         </div> */}
 
-                        <div className="text-center mt-4">
+                        <div className="text-center my-4">
                             <Button
                                 className="bg-at-blue-light px-3"
                                 size="sm"
-                                onClick={() => setShowUpdate(true)}>Update Profile</Button>
+                                onClick={handleEditClick}>Update Profile</Button>
                         </div>
                     </div>
 
@@ -360,8 +368,9 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                     </form>
                 </div>
             </div>
-
             {/* <!-- end of profile update canvas --> */}
+
+            <CreateCustomerModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} isEditing={true} customerId={id} />
 
         </Fragment>
     )

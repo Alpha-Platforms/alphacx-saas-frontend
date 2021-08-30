@@ -257,19 +257,21 @@ export default function Navbar({
                   <BellIconNavbar />
                 </div>
 
-                <a href="/help">
+                <Link to="/help" target="_blank">
                   <HelpIcon />
-                </a>
+                </Link>
 
                 <div>
-                  <img
-                    src={localUser?.avatar}
-                    alt=""
-                    style={{
-                      width: 30,
-                      borderRadius: "50%",
-                    }}
-                  />
+                  <Link to={`/settings/profile/${localUser?.id}`}>
+                    <img
+                      src={localUser?.avatar}
+                      alt=""
+                      style={{
+                        width: 30,
+                        borderRadius: "50%",
+                      }}
+                    />
+                  </Link>
                 </div>
               </div>
             </div>

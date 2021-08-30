@@ -34,11 +34,15 @@ const TicketCategoriesTab = ({ categories, meta }) => {
   const mixedCat = [];
 
   categories.forEach(cat => {
-    if (cat.subCategories.length === 0) {
-      mixedCat.push({category: cat.name, parentCategory: ''});
-    } else {
-      cat.subCategories.forEach(c => mixedCat.push({category: c.name, parentCategory: cat.name}));
-    }
+
+    mixedCat.push({category: cat.name, parentCategory: ''});
+
+    // if (cat.subCategories.length === 0) {
+    //   mixedCat.push({category: cat.name, parentCategory: ''});
+    // } else {
+    //   cat.subCategories.forEach(c => mixedCat.push({category: c.name, parentCategory: cat.name}));
+    // }
+
   });
 
 
@@ -93,10 +97,10 @@ const TicketCategoriesTab = ({ categories, meta }) => {
                     field: "category",
                     width: '50%'
                   },
-                  {
-                    title: "Parent Category",
-                    field: "parentCategory",
-                  },
+                  // {
+                  //   title: "Parent Category",
+                  //   field: "parentCategory",
+                  // },
                   {
                     title: "Description",
                     field: "description",
@@ -126,11 +130,13 @@ const TicketCategoriesTab = ({ categories, meta }) => {
                     ),
                   },
                 ]}
+                
                 data={mixedCat.map(({ category, parentCategory }) => ({
                   category,
                   parentCategory,
                   description: "",
                 }))}
+
                 options={{
                   search: false,
                   selection: true,
