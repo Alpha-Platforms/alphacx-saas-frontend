@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./NotificationSettings.scss";
 import TripleDot from "../../../../assets/imgF/triple_dot.png";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
@@ -14,6 +13,11 @@ import {
   createTheme,
 } from "@material-ui/core/styles";
 import "../../../../styles/Ticket.css";
+import ScaleLoader from 'react-spinners/ScaleLoader';
+import {userTokenConfig} from '../../../../helper';
+import store from '../../../../reduxstore/store';
+import axios from 'axios';
+import {config} from '../../../../config/keys';
 
 const NotificationSettings = () => {
   const tableTheme = createTheme({
@@ -27,6 +31,34 @@ const NotificationSettings = () => {
     },
   });
   const [changingRow, setChangingRow] = useState(false);
+  const [custLoading, setCustLoading] = useState(false);
+
+  const [notifications, setNotifications] = useState(null);
+
+
+  const getEmailTemplate = () => {
+    axios
+        .get(`${config.stagingBaseUrl}/settings/config`, userTokenConfig(store.getState))
+        .then(res => {
+            if (res.data && res.data?.status === "success") {
+              setCustLoading(false);
+              console.log('returned body: ', res.data);
+              setNotifications([res.data?.data?.email_config?.template]);
+            }
+        })
+        .catch(err => console.log(err));
+  }
+
+  useEffect(() => {
+    setCustLoading(true);
+    console.log('body', JSON.stringify({type: "email"}));
+    getEmailTemplate();
+  }, []);
+
+  console.log('notifications: ', notifications);
+
+
+
   const tableColumns = [
     {
       title: "Name",
@@ -37,29 +69,30 @@ const NotificationSettings = () => {
       //   </Link>
       // ),
     },
-    {
-      title: "Notification Category",
-      field: "category",
-      width: "20px",
-      // render: (rowData) => (
-      //   <Link
-      //     to={`/tickets/${rowData.ticketId}`}
-      //     style={{ textTransform: "uppercase" }}
-      //   >
-      //     {rowData.ticketId.slice(-8)}
-      //   </Link>
-      // ),
-    },
+    // {
+    //   title: "Notification Category",
+    //   field: "category",
+    //   width: "20px",
+    //   // render: (rowData) => (
+    //   //   <Link
+    //   //     to={`/tickets/${rowData.ticketId}`}
+    //   //     style={{ textTransform: "uppercase" }}
+    //   //   >
+    //   //     {rowData.ticketId.slice(-8)}
+    //   //   </Link>
+
+    //   // ),
+    // },
     {
       title: "Subject",
       field: "subject",
       width: "40%",
     },
-    {
-      title: "Description",
-      field: "description",
-      width: "20%",
-    },
+    // {
+    //   title: "Description",
+    //   field: "description",
+    //   width: "20%",
+    // },
     {
       title: "",
       field: "dropdownAction",
@@ -84,26 +117,10 @@ const NotificationSettings = () => {
       ),
     },
   ];
-  const [notifications, setNotifications] = useState([
-    {
-      name: "Welcome Message",
-      category: "Email",
-      subject: "Welcome to AlphaCX",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    },
-    {
-      name: "Welcome Message",
-      category: "SMS",
-      subject: "Welcome to AlphaCX",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    },
-    {
-      name: "Welcome Message",
-      category: "Email",
-      subject: "Welcome to AlphaCX",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    },
-  ]);
+
+
+
+
 
   const AlphacxMTPagination = (props) => {
     const {
@@ -147,6 +164,7 @@ const NotificationSettings = () => {
   };
   return (
     <div className="notification-settings">
+    {custLoading && <div className="cust-table-loader"><ScaleLoader loading={custLoading} color={"#006298"}/></div>}
       <div className="card card-body bg-white border-0 ">
         <div id="mainContentHeader">
           <h6 className="text-muted f-14">
@@ -162,12 +180,13 @@ const NotificationSettings = () => {
         <div className="d-flex justify-content-between align-baseline">
           <h5 className="mt-3 mb-4 f-16 fw-bold">Notification Management</h5>
           <div>
-            <Link
+            <button
               className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
               to="/settings/notifications/email-template"
+              disabled={true}
             >
               Add Notification
-            </Link>
+            </button>
           </div>
         </div>
         <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
@@ -176,21 +195,19 @@ const NotificationSettings = () => {
             className="pb-5 acx-ticket-cust-table acx-ticket-table p-4"
           >
             <MuiThemeProvider theme={tableTheme}>
-              <MaterialTable
+              {notifications && <MaterialTable
                 columns={tableColumns}
                 title=""
                 icons={tableIcons}
                 data={notifications.map(
-                  ({ name, category, subject, description }) => ({
-                    name: name,
-                    category,
-                    subject,
-                    description: description.substring(0, 15) + "...",
+                  ({ subject }) => ({
+                    name: 'Ticket Email Notification',
+                    subject
                   })
                 )}
                 options={{
                   search: true,
-                  selection: true,
+                  selection: false,
                   // exportButton: true,
                   tableLayout: "auto",
                   paging: true,
@@ -203,7 +220,7 @@ const NotificationSettings = () => {
                 components={{
                   Pagination: AlphacxMTPagination,
                 }}
-              />
+              />}
             </MuiThemeProvider>
           </div>
         </div>

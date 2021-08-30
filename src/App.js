@@ -35,6 +35,7 @@ import { getSubCategories } from "./reduxstore/actions/subCategoryActions";
 import { getStatuses } from "./reduxstore/actions/statusActions";
 import { getGroups } from "./reduxstore/actions/groupActions";
 import { getTags } from "./reduxstore/actions/tagActions";
+import { getConfigs } from "./reduxstore/actions/configActions";
 import { getAgents } from "./reduxstore/actions/agentActions";
 import CustomerList from "./components/pages/customers/CustomerList";
 import CustomersNull from "./components/pages/customers/CustomersNull";
@@ -93,6 +94,7 @@ const SiteRouter = connect(mapStateToProps, {
   getPaginatedUsers,
   getTags,
   getSubCategories,
+  getConfigs
 })(
   ({
     loadUser,
@@ -108,6 +110,7 @@ const SiteRouter = connect(mapStateToProps, {
     getPaginatedUsers,
     getTags,
     getSubCategories,
+    getConfigs
   }) => {
 
     const siteUser = JSON.parse(localStorage.getItem('user'));
@@ -131,6 +134,7 @@ const SiteRouter = connect(mapStateToProps, {
         getAgents();
         getTags();
         getSubCategories();
+        getConfigs();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
