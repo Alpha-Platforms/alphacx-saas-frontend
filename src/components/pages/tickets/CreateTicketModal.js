@@ -50,7 +50,7 @@ const CreateTicketModal = ({
     const [channels, setChannels] = useState([
         'email',
         'facebook',
-        'system',
+        'helpdesk',
         'whatsapp'
     ])
 
@@ -143,9 +143,8 @@ const CreateTicketModal = ({
             channel
         } = modalInputs;
 
-        if (!customer || !category || !stage || !subject || !description ) { // subcategory
+        if (!customer || !category || !stage || !subject || !description ) {
             NotificationManager.error('All fields are required', 'Error', 5000);
-            console.log(modalInputs)
         } else {
             const newTicket = {
                 customer,
@@ -157,8 +156,7 @@ const CreateTicketModal = ({
                 statusId: stage,
                 subject,
                 categoryId: category,
-                // subCategoryId: subcategory,
-                channel,
+                channel: channel || "helpdesk",
                 tags: selectedTags,
                 groupId: group || null,
                 dueDate: (dueDays * 24) + dueHours
@@ -453,9 +451,8 @@ const CreateTicketModal = ({
                                 />
                             </div>
     
-                        </div>                        
+                        </div>   
                        
-                        
                         <div className="row">
                             <div className="col-12 mt-2">
                                 <label htmlFor="subject" className="form-label">Subject</label>
@@ -497,7 +494,8 @@ const CreateTicketModal = ({
                             <div className="mb-3">
                                 {/* groups agents */}
             
-                                <div className="row">
+                                {/* ASSIGNED-TO */}
+                                {/* <div className="row">
 
                                     <div className="d-flex">
 
@@ -539,10 +537,8 @@ const CreateTicketModal = ({
                                                 style={{ fontSize: "12px" }}
                                                 onChange={handleRSInput}
                                                 isClearable={false}
-                                                // isMulti
                                                 name="assignee"
                                                 options={
-                                                    // populate 'options' prop from $agents, with names remapped
                                                     groups?.map(item => {
                                                         return {value: item.id,label: item.name}
                                                     })
@@ -556,7 +552,6 @@ const CreateTicketModal = ({
                                                 // isMulti
                                                 name="assignee"
                                                 options={
-                                                    // populate 'options' prop from $agents, with names remapped
                                                     agents?.map(item => {
                                                         return {value: item.id,label: item.firstname +" "+ item.lastname}
                                                     })
@@ -564,8 +559,12 @@ const CreateTicketModal = ({
                                             />)
                                         }
                                     </div>
+                                </div> */}
 
-                                    <div className="col-12 mt-3 d-flex align-items-center flex-wrap" >
+                                <div className="row">
+
+                                    {/* DUE DATE */}
+                                    {/* <div className="col-12 mt-3 d-flex align-items-center flex-wrap" >
                                         
                                         <label htmlFor="" className="w-100 mb-2">Ticket Due In</label>
 
@@ -585,18 +584,19 @@ const CreateTicketModal = ({
                                             <span class="input-group-text" id="basic-addon2">Hours</span>
                                         </div>
                                     
-                                    </div>
+                                    </div> */}
 
 
+                                    {/* CHANNEL */}
 
-            
-                                    <div className="col-12 mt-3 tags-select-wrapper">
+                                    <div className="col-12 tags-select-wrapper">
                                         <label htmlFor="title" className="form-label">Channel</label>
                                         <RCreatable className="rselectfield"
                                             style={{ fontSize: "12px" }}
                                             onChange={handleRSInput}
                                             name="channel"
                                             isClearable={false}
+                                            placeholder="helpdesk"
                                             isMulti={false}
                                             options={
                                                 channels?.map(item => {
