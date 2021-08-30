@@ -11,6 +11,7 @@ import {connect} from 'react-redux';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import {getConfigs, updateEmailConfig} from './../../../../../reduxstore/actions/configActions';
 import {NotificationManager} from 'react-notifications';
+import {useHistory} from 'react-router-dom';
 
 const NewEmailTemplate = ({isConfigsLoaded, configs, getConfigs, updateEmailConfig}) => {
     const availablePlaceholders = ["name", "ticket", "category", "open", "closed"];
@@ -42,7 +43,7 @@ const NewEmailTemplate = ({isConfigsLoaded, configs, getConfigs, updateEmailConf
     }, [isConfigsLoaded]);
 
     const insertPlaceholder = (i) => {
-        const shortCode = `{{${availablePlaceholders[i]}}}`;
+        const shortCode = `{${availablePlaceholders[i]}}`;
         setNewTemplate({
             ...newTemplate,
             text: newTemplate.text + " " + shortCode + " "
@@ -62,8 +63,14 @@ const NewEmailTemplate = ({isConfigsLoaded, configs, getConfigs, updateEmailConf
         console.clear();
     };
 
+    const history = useHistory();
+
+    const redirectUser = () => {
+      history.push('/settings/notifications');
+    }
+
     const updateSuccess = () => {
-        getConfigs();
+        getConfigs(redirectUser);
         NotificationManager.success('Template updated successfully', 'Success');
     }
 
@@ -106,18 +113,7 @@ const NewEmailTemplate = ({isConfigsLoaded, configs, getConfigs, updateEmailConf
                     <div id="setting-form">
                         <h5 className="mt-3 mb-4 f-16 fw-bold">Edit Notification Template</h5>
                         <form action="">
-                            <div className="form-group mt-3">
-                                <label for="slaName" className="f-14 mb-1">
-                                    Name
-                                </label>
-                                <input
-                                    type="text"
-                                    className="form-control form-control-sm"
-                                    id="slaName"
-                                    name="name"
-                                    value={newTemplate.name || ""}
-                                    onChange={handleChange}/>
-                            </div>
+                            
 
                             {/* <div className="form-group mt-3">
                 <label for="ticket" className="f-14 mb-1">
@@ -148,6 +144,20 @@ const NewEmailTemplate = ({isConfigsLoaded, configs, getConfigs, updateEmailConf
                                     value={newTemplate.subject || ""}
                                     onChange={handleChange}/>
                             </div>
+
+                            <div className="form-group mt-3">
+                                <label for="slaName" className="f-14 mb-1">
+                                    Title
+                                </label>
+                                <input
+                                    type="text"
+                                    className="form-control form-control-sm"
+                                    id="slaName"
+                                    name="name"
+                                    value={newTemplate.name || ""}
+                                    onChange={handleChange}/>
+                            </div>
+
                             <div className="form-group mt-3 mb-4">
                                 <label className="f-14 mb-1">Available Placeholders</label>
                                 <div className="available-placeholders">
