@@ -55,7 +55,7 @@ const NotificationSettings = ({isConfigsLoaded, configs}) => {
 
   const tableColumns = [
     {
-      title: "Name",
+      title: "Title",
       field: "name",
       // render: (rowData) => (
       //   <Link to="#" style={{ textTransform: "capitalize" }}>
@@ -193,7 +193,7 @@ const NotificationSettings = ({isConfigsLoaded, configs}) => {
                 columns={tableColumns}
                 title=""
                 icons={tableIcons}
-                data={configs?.email_config?.template ? [configs?.email_config?.template].map(({subject}) => ({name: 'Ticket Email Template', subject})) : []}
+                data={configs?.email_config?.template ? [configs?.email_config?.template].map(({subject, title}) => ({name: title, subject})) : []}
                 options={{
                   search: true,
                   selection: false,
