@@ -233,7 +233,7 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories 
                   selection: false,
                   // exportButton: true,
                   tableLayout: "auto",
-                  paging: true,
+                  paging: false,
                   rowStyle: {
                     backgroundColor: "#fff",
                   },

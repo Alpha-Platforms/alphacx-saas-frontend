@@ -18,8 +18,9 @@ import {userTokenConfig} from '../../../../helper';
 import store from '../../../../reduxstore/store';
 import axios from 'axios';
 import {config} from '../../../../config/keys';
+import {connect} from 'react-redux';
 
-const NotificationSettings = () => {
+const NotificationSettings = ({isConfigsLoaded, configs}) => {
   const tableTheme = createTheme({
     palette: {
       primary: {
@@ -35,6 +36,13 @@ const NotificationSettings = () => {
 
   const [notifications, setNotifications] = useState(null);
 
+  useEffect(() => {
+    setCustLoading(!isConfigsLoaded);
+    if (isConfigsLoaded) {
+        setChangingRow(false);
+    }
+}, [isConfigsLoaded]);
+
 
   const getEmailTemplate = () => {
     axios
@@ -49,15 +57,10 @@ const NotificationSettings = () => {
         .catch(err => console.log(err));
   }
 
-  useEffect(() => {
+  /* useEffect(() => {
     setCustLoading(true);
-    console.log('body', JSON.stringify({type: "email"}));
     getEmailTemplate();
-  }, []);
-
-  console.log('notifications: ', notifications);
-
-
+  }, []); */
 
   const tableColumns = [
     {
@@ -192,19 +195,14 @@ const NotificationSettings = () => {
         <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
           <div
             id="alphacxMTable"
-            className="pb-5 acx-ticket-cust-table acx-ticket-table p-4"
+            className="pb-5 acx-ticket-cust-table acx-ticket-table acx-user-table-2 p-4 fit-content"
           >
             <MuiThemeProvider theme={tableTheme}>
-              {notifications && <MaterialTable
+              {configs && <MaterialTable
                 columns={tableColumns}
                 title=""
                 icons={tableIcons}
-                data={notifications.map(
-                  ({ subject }) => ({
-                    name: 'Ticket Email Notification',
-                    subject
-                  })
-                )}
+                data={configs?.email_config?.template ? [configs?.email_config?.template].map(({subject}) => ({name: 'Ticket Email Template', subject})) : []}
                 options={{
                   search: true,
                   selection: false,
@@ -240,4 +238,9 @@ const NotificationSettings = () => {
   );
 };
 
-export default NotificationSettings;
+const mapStateToProps = (state, ownProps) => ({
+  isConfigsLoaded: state.config.isConfigsLoaded,
+  configs: state.config.configs
+});
+
+export default connect(mapStateToProps, null)(NotificationSettings);

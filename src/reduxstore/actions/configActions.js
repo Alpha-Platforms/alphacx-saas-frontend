@@ -20,7 +20,6 @@ export const getConfigs = () => (dispatch, getState) => {
 		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 }
 
-
 export const setConfigsLoading = () => {
 	return {
 		type: types.CONFIGS_LOADING
