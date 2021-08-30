@@ -15,10 +15,27 @@ export const getConfigs = () => (dispatch, getState) => {
 				type: types.GET_CONFIGS,
 				payload: (res.data && res.data.status === "success") ? res.data?.data : null
 			})
-			console.log("CONFIG RESPONSE: ", res.data);
 		})
 		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 }
+
+
+
+// valid redux action
+export const updateEmailConfig = (emailConfig, successCallback, failureCallback) => (dispatch, getState) => {
+	// Request body
+	const body = JSON.stringify(emailConfig);
+	axios.patch(`${config.stagingBaseUrl}/settings/ticket-email-template`, body, userTokenConfig(getState))
+		.then(res => {
+			successCallback && successCallback();
+		})
+		.catch(err => {
+			dispatch(returnErrors(err.response.data, err.response?.status))
+			failureCallback && failureCallback();
+		});
+}
+
+
 
 export const setConfigsLoading = () => {
 	return {
