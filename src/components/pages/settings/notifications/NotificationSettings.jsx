@@ -19,6 +19,7 @@ import store from '../../../../reduxstore/store';
 import axios from 'axios';
 import {config} from '../../../../config/keys';
 import {connect} from 'react-redux';
+import {useHistory} from 'react-router-dom';
 
 const NotificationSettings = ({isConfigsLoaded, configs}) => {
   const tableTheme = createTheme({
@@ -31,6 +32,9 @@ const NotificationSettings = ({isConfigsLoaded, configs}) => {
       },
     },
   });
+
+  
+
   const [changingRow, setChangingRow] = useState(false);
   const [custLoading, setCustLoading] = useState(false);
 
@@ -43,19 +47,6 @@ const NotificationSettings = ({isConfigsLoaded, configs}) => {
     }
 }, [isConfigsLoaded]);
 
-
-  const getEmailTemplate = () => {
-    axios
-        .get(`${config.stagingBaseUrl}/settings/config`, userTokenConfig(store.getState))
-        .then(res => {
-            if (res.data && res.data?.status === "success") {
-              setCustLoading(false);
-              console.log('returned body: ', res.data);
-              setNotifications([res.data?.data?.email_config?.template]);
-            }
-        })
-        .catch(err => console.log(err));
-  }
 
   /* useEffect(() => {
     setCustLoading(true);

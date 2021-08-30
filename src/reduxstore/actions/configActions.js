@@ -4,7 +4,7 @@ import { config } from '../../config/keys';
 import { returnErrors } from './errorActions';
 import {userTokenConfig} from '../../helper';
 
-export const getConfigs = () => (dispatch, getState) => {
+export const getConfigs = (success) => (dispatch, getState) => {
 	if (!navigator.onLine) {
 		return;
 	}
@@ -15,6 +15,7 @@ export const getConfigs = () => (dispatch, getState) => {
 				type: types.GET_CONFIGS,
 				payload: (res.data && res.data.status === "success") ? res.data?.data : null
 			})
+			success && success();
 		})
 		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
 }
