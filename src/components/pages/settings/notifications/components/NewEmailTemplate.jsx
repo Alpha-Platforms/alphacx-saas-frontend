@@ -1,4 +1,4 @@
-import React from "react";
+import {useEffect} from 'react';
 import "./newEmailTemplate.scss";
 import "../NotificationSettings.scss";
 import RightArrow from "../../../../../assets/imgF/arrow_right.png";
@@ -7,8 +7,9 @@ import AddIcon from "../../../../../assets/icons/add.svg";
 import EditorBox from "../../../../reusables/EditorBox";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import {connect} from 'react-redux';
 
-const NewEmailTemplate = () => {
+const NewEmailTemplate = ({isConfigsLoaded, configs}) => {
   const availablePlaceholders = [
     "name",
     "ticket",
@@ -18,14 +19,33 @@ const NewEmailTemplate = () => {
   ];
   const [placeholder, setPlaceholder] = useState("");
   const [newTemplate, setNewTemplate] = useState({
-    message: "",
+    text: "",
+    subject: "",
+    name: ""
   });
+
+  useEffect(() => {
+    if (isConfigsLoaded) {
+        const emailTemplate = configs?.email_config?.template;
+
+        setNewTemplate(prev => ({
+          ...prev,
+          name: 'Ticket Email Template',
+          subject: emailTemplate?.subject || '',
+          text: emailTemplate?.ticket_template || ''
+        }))
+        setPlaceholder('Start typing...');
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConfigsLoaded]);
+
+  console.log("newTemplate: ", newTemplate);
+
   const insertPlaceholder = (i) => {
     const shortCode = `{{${availablePlaceholders[i]}}}`;
-
     setNewTemplate({
       ...newTemplate,
-      message: newTemplate.message + " " + shortCode + " ",
+      text: newTemplate.text + " " + shortCode + " ",
     });
     setPlaceholder(" " + shortCode + " ");
   };
@@ -39,6 +59,7 @@ const NewEmailTemplate = () => {
     console.clear();
     console.log("template", newTemplate);
   };
+
   return (
     <div className="new-email-template notification-settings">
       <div className="card card-body bg-white border-0 p-5">
@@ -59,7 +80,7 @@ const NewEmailTemplate = () => {
             </h6>
           </div>
           <div id="setting-form">
-            <h5 className="mt-3 mb-4 f-16 fw-bold">Create Notification Template</h5>
+            <h5 className="mt-3 mb-4 f-16 fw-bold">Edit Notification Template</h5>
             <form action="">
               <div className="form-group mt-3">
                 <label for="slaName" className="f-14 mb-1">
@@ -75,7 +96,7 @@ const NewEmailTemplate = () => {
                 />
               </div>
 
-              <div className="form-group mt-3">
+              {/* <div className="form-group mt-3">
                 <label for="ticket" className="f-14 mb-1">
                   Notification Category
                 </label>
@@ -91,7 +112,7 @@ const NewEmailTemplate = () => {
                   <option value="whatsapp">WhatsApp</option>
                   <option value="sms">SMS</option>
                 </select>
-              </div>
+              </div> */}
               <div className="form-group mt-3">
                 <label for="slaName" className="f-14 mb-1">
                   Subject
@@ -119,7 +140,7 @@ const NewEmailTemplate = () => {
                 <label className="f-14 mb-1">Description</label>
 
                 <EditorBox
-                  text={newTemplate.message}
+                  text={newTemplate.text}
                   textParent={newTemplate}
                   updateText={setNewTemplate}
                   textFormat={"plain"}
@@ -151,4 +172,10 @@ const NewEmailTemplate = () => {
   );
 };
 
-export default NewEmailTemplate;
+
+const mapStateToProps = (state, ownProps) => ({
+  isConfigsLoaded: state.config.isConfigsLoaded,
+  configs: state.config.configs
+});
+
+export default connect(mapStateToProps, null)(NewEmailTemplate);

@@ -39,7 +39,7 @@ const NotificationSettings = ({isConfigsLoaded, configs}) => {
   useEffect(() => {
     setCustLoading(!isConfigsLoaded);
     if (isConfigsLoaded) {
-        setChangingRow(false);
+        setCustLoading(false);
     }
 }, [isConfigsLoaded]);
 
@@ -108,7 +108,7 @@ const NotificationSettings = ({isConfigsLoaded, configs}) => {
           </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item eventKey="1">
-              <Link to="/settings/users/personal-info-settings">
+              <Link to="/settings/notifications/email-template">
                 <span className="black-text">Edit</span>
               </Link>
             </Dropdown.Item>
