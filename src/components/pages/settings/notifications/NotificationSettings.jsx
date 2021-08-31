@@ -200,14 +200,14 @@ const NotificationSettings = ({isConfigsLoaded, configs}) => {
                   // exportButton: true,
                   tableLayout: "auto",
                   paging: true,
-                  pageSize: 10,
+                  pageSize: 5,
                   headerStyle: {
                     // backgroundColor: '#f8f9fa'
                     backgroundColor: "#fefdfd",
                   },
                 }}
                 components={{
-                  Pagination: AlphacxMTPagination,
+                  // Pagination: AlphacxMTPagination,
                 }}
               />}
             </MuiThemeProvider>
