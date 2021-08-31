@@ -39,12 +39,12 @@ const TicketStatusTab = ({statuses}) => {
                                 <div className="fieldsWrapper pb-3" id="ticketFieldWrapper">
 
                                     {statuses && statuses.map(({status, id}, idx) => <div key={idx} className="fieldParent d-flex my-2">
-                                        <button
+                                        {/* <button
                                             type="button"
                                             className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
                                             <HamburgerSvg />
-                                        </button>
-                                        <div className="w-100 d-flex align-items-center justify-content-between ps-4">
+                                        </button> */}
+                                        <div className="w-100 d-flex align-items-center justify-content-between">
                                             <span>{status}</span>
                                             <span></span>
                                         </div>
@@ -55,19 +55,21 @@ const TicketStatusTab = ({statuses}) => {
                                                 className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                 <EditGreySvg />
                                             </button>
-                                            <button
+                                            {/* <button
                                                 type="button"
                                                 className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                                 <DeleteGreySvg />
-                                            </button>
+                                            </button> */}
                                         </div>
                                     </div>)}
 
                                 </div>
 
                                 <div className="text-start mt-2">
+                                    {/* <button
+                                        className="btn btn-link text-decoration-none text-at-blue-light" disabled={true} onClick={openAddStage}>+ Add Stage</button> */}
                                     <button
-                                        className="btn btn-link text-decoration-none text-at-blue-light" onClick={openAddStage}>+ Add Stage</button>
+                                        className="btn btn-link text-decoration-none btn-sm disabled border" disabled={true} onClick={openAddStage}>+ Add Stage</button>
                                 </div>
 
                             </div>

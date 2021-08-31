@@ -49,6 +49,27 @@ export const getSubCategory = async (categoryId) => {
 }
 
 
+export const updateCategory = (catInfo, success, failed) => (dispatch, getState) => {
+
+	//Request body
+	const body = JSON.stringify({name: catInfo.name});
+
+	axios.patch(`${config.stagingBaseUrl}/categories/${catInfo.id}`, body, userTokenConfig(getState))
+		.then(res => {
+			if(res.data && res.data?.status === "success") {
+				success && success();
+			} else {
+				failed && failed();
+			}
+		})
+		.catch(err => {
+			dispatch(returnErrors(err.response.data, err.response.status));
+			failed && failed();
+		});
+
+}
+
+
 export const setCategoriesLoading = () => {
 	return {
 		type: types.CATEGORIES_LOADING

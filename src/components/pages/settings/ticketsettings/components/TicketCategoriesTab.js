@@ -15,9 +15,16 @@ import { httpPostMain } from "../../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import { TablePagination, TablePaginationProps } from "@material-ui/core";
+import EditCatModal from './EditCatModal';
 
-const TicketCategoriesTab = ({ categories, meta }) => {
+const TicketCategoriesTab = ({ categories, meta, isCategoriesLoaded }) => {
   const [changingRow, setChangingRow] = useState(false);
+
+  const [createModalShow, setCreateModalShow] = useState(false);
+  const [currentCatInfo, setCurrentCatInfo] = useState(null);
+  const [custLoading, setCustLoading] = useState(false);
+
+
   const tableTheme = createTheme({
     palette: {
       primary: {
@@ -29,16 +36,27 @@ const TicketCategoriesTab = ({ categories, meta }) => {
     },
   });
 
+  useEffect(() => {
+      setCustLoading(!isCategoriesLoaded);
+      if (isCategoriesLoaded) {
+          setCustLoading(false);
+      }
+  }, [isCategoriesLoaded]);
+
 
 
   const mixedCat = [];
 
   categories.forEach(cat => {
-    if (cat.subCategories.length === 0) {
-      mixedCat.push({category: cat.name, parentCategory: ''});
-    } else {
-      cat.subCategories.forEach(c => mixedCat.push({category: c.name, parentCategory: cat.name}));
-    }
+
+    mixedCat.push({category: cat.name, parentCategory: '', catId: cat.id});
+
+    // if (cat.subCategories.length === 0) {
+    //   mixedCat.push({category: cat.name, parentCategory: ''});
+    // } else {
+    //   cat.subCategories.forEach(c => mixedCat.push({category: c.name, parentCategory: cat.name}));
+    // }
+
   });
 
 
@@ -70,11 +88,18 @@ const TicketCategoriesTab = ({ categories, meta }) => {
     );
   }
 
+  const openModal = function() {
+    const {id, name} = this;
+    setCurrentCatInfo({id, name});
+    setCreateModalShow(true);
+  }
+
 
 
   
   return (
     <div className="ticket-cat-tab">
+    {custLoading && <div className="cust-table-loader"><ScaleLoader loading={custLoading} color={"#006298"}/></div>}
       
       <div className="tct-right position-relative">
         {/* <btn className="tr-delete-btn btn btn-sm bg-at-blue-light px-2"><span style={{ transform: 'scale(0.9)' }} className="d-inline-block"><DeleteWhiteSvg/></span> Delete</btn> */}
@@ -93,10 +118,10 @@ const TicketCategoriesTab = ({ categories, meta }) => {
                     field: "category",
                     width: '50%'
                   },
-                  {
-                    title: "Parent Category",
-                    field: "parentCategory",
-                  },
+                  // {
+                  //   title: "Parent Category",
+                  //   field: "parentCategory",
+                  // },
                   {
                     title: "Description",
                     field: "description",
@@ -115,7 +140,7 @@ const TicketCategoriesTab = ({ categories, meta }) => {
                           </span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
-                          <Dropdown.Item eventKey="1">
+                          <Dropdown.Item eventKey="1" onClick={openModal.bind({id: rowData.catId, name: rowData.category})}>
                             <span className="black-text">Edit</span>
                           </Dropdown.Item>
                           <Dropdown.Item eventKey="2">
@@ -126,11 +151,14 @@ const TicketCategoriesTab = ({ categories, meta }) => {
                     ),
                   },
                 ]}
-                data={mixedCat.map(({ category, parentCategory }) => ({
+                
+                data={mixedCat.map(({ category, parentCategory, catId }) => ({
                   category,
                   parentCategory,
                   description: "",
+                  catId
                 }))}
+
                 options={{
                   search: false,
                   selection: true,
@@ -156,6 +184,7 @@ const TicketCategoriesTab = ({ categories, meta }) => {
           )}
         </div>
       </div>
+      <EditCatModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} currentCatInfo={currentCatInfo} />
     </div>
   );
 };
@@ -163,6 +192,7 @@ const TicketCategoriesTab = ({ categories, meta }) => {
 const mapStateToProps = (state, ownProps) => ({
   categories: state.category.categories,
   meta: state.category.meta,
+  isCategoriesLoaded: state.category.isCategoriesLoaded
 });
 
 export default connect(mapStateToProps, null)(TicketCategoriesTab);

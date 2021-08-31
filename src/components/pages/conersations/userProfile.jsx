@@ -67,7 +67,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
               style={{ color: "#6c757d" }}
               className="mb-0 text-capitalize mt-2 pb-0"
             >
-              <Link to="/settings/users">
+              <Link to={`/customers/${JSON.parse(localStorage.getItem("user")).user.id}`}>
                 <b>{`${capitalize(ticket[0]?.customer?.firstname  || '')} ${capitalize(
                   ticket[0]?.customer?.lastname  || ''
                 )}`}</b>
@@ -107,52 +107,49 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                   </p>
                 </div>
 
-                <div className="aboutUserColConv">
-                  <p>
-                    {" "}
-                    <span className="psvgIcon">
-                      {ticket[0]?.assignee?.avatar ? (
-                        <img
-                          src={ticket[0]?.assignee?.avatar || 'love'}
-                          alt=""
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            borderRadius: "50%",
-                            marginRight: "2px",
-                          }}
-                        />
-                      ) : (
-                        <div
-                          className="j"
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            borderRadius: "50%",
-                            marginRight: "19px",
-                            backgroundColor: '1px solid red'
-                          }}
-                        >
-                          <span>{`${ticket[0]?.assignee?.firstname?.slice(
-                            0,
-                            1
-                          ) || ''} ${ticket[0]?.assignee?.lastname?.slice(
-                            0,
-                            1
-                          ) || '' }`}</span>
-                        </div>
-                      )}
-                    </span>{" "}
-                    Assigned to
-                  </p>
-                  {/* <p>
-              {UserInfo?.phoneNumber ? UserInfo?.phoneNumber : "unavailable"}
-            </p> */}
-                  <p>
-                    <Link to="/settings/users">{`${capitalize(
-                      ticket[0]?.assignee?.firstname  || 'N/A'
-                    )} ${capitalize(ticket[0]?.assignee?.lastname  || '')}`}</Link>
-                  </p>
+                <div className="aboutUserColConv__"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: 6
+                  }}
+                >
+                  <div className="psvgIcon__"
+                    style={{marginRight: 17}}
+                  >
+                    {ticket[0]?.assignee?.avatar ? (
+                      <img
+                        // src={ticket[0]?.assignee?.avatar || 'love'}
+                        src="https://res.cloudinary.com/mchardex/image/upload/v1574292303/Test/adsixqftzm2wwwemzul2.jpg"
+                        alt=""
+                        style={{
+                          width: "30px", height: "30px",borderRadius: "50%", marginRight: "2px",
+                        }}
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          width: "30px", height: "30px",borderRadius: "50%", marginRight: "2px",
+                          backgroundColor: "currentColor"
+                        }}
+                      ></div>
+                    )}
+                  </div>
+
+                  <div>
+                    <p className="acx-fs-8">Assigned to</p>
+                      
+                    {
+                      ticket[0]?.assignee?
+                      (<Link to={`/settings/profile/${JSON.parse(localStorage.getItem("user")).user.id}`}>
+                        {`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(ticket[0]?.assignee?.lastname)}`}
+                      </Link>)
+                      :
+                      (<span>Unassigned</span>)
+                    }
+
+                  </div>
+                    
                 </div>
 
                 <div className="aboutUserColConv">

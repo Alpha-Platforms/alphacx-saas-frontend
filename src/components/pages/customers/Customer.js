@@ -21,10 +21,14 @@ import {getUserInitials} from '../../../helper';
 import TicketHistory from './components/TicketHistory';
 import Notes from './components/Notes';
 import Timeline from './components/Timeline';
+import CreateCustomerModal from './CreateCustomerModal';
 
 const CircleIcon = (props) => <span style={{ backgroundColor: props.color }} className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
 
 const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded, currentCustomer}) => {
+
+    const [createModalShow,
+        setCreateModalShow] = useState(false);
 
     const {id} = useParams();
 
@@ -58,17 +62,21 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
         return output;
     };
 
-    const [tags, setTags] = useState([
-        <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
-        <div style={{ color: "#F40D0D", background: "#FFEAEA " }}>Billing</div>,
-        <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
-        <div style={{ color: "#1E90FF", background: "#E3F1FF" }}>Billing</div>,
-        <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
-        <div style={{ color: "#1E90FF", background: "#E3F1FF" }}>Billing</div>,
-        <div style={{ color: "#F40D0D", background: "#FFEAEA " }}>Billing</div>,
-        <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
-        <div style={{ color: "#1E90FF", background: "#E3F1FF" }}>Billing</div>,
-      ]);
+    const tagColor = [
+        { item: ['a', 'b', 'c'], color: "#662D91", background: "#F8EEFF" },
+        { item: ['d', 'e', 'f'], color: "#F40D0D", background: "#FFEAEA" },
+        { item: ['g', 'h', 'i'], color: "#662D91", background: "#F8EEFF" },
+        { item: ['j', 'k', 'w'], color: "#1E90FF", background: "#E3F1FF" },
+        { item: ['l', 'm', 'n'], color: "#662D91", background: "#F8EEFF" },
+        { item: ['o', 'p'], color: "#1E90FF", background: "#E3F1FF" },
+        { item: ['q', 'r', 's'], color: "#F40D0D", background: "#FFEAEA" },
+        { item: ['t', 'u', 'v'], color: "#662D91", background: "#F8EEFF" },
+        { item: ['x', 'y', 'z'], color: "#1E90FF", background: "#E3F1FF" },
+      ];
+
+    function handleEditClick () {
+        setCreateModalShow(true);
+    }
 
     return (
         <Fragment>
@@ -109,7 +117,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                     <div><CircleIcon color="rgba(186, 104, 200, 0.25)" icon={CallIcon}/></div>
                                     <div>
                                         <p className="pb-0 mb-0 f-12 text-muted op-9">Work Phone</p>
-                                        <p className="text-muted f-13">{currentCustomer.phoneNumber ? currentCustomer.phoneNumber : currentCustomer.phone_number ? currentCustomer.phone_number : ''}</p>
+                                        <p className="text-muted f-13">{currentCustomer.phoneNumber ? currentCustomer.phoneNumber : currentCustomer.phone_number ? currentCustomer.phone_number : 'N/A'}</p>
                                     </div>
                                 </li>
                                 {/* <li>
@@ -143,17 +151,18 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                             </ul>
                             {/* <div className={"table-tags text-justify"}><span className="badge rounded-pill acx-bg-purple-30 px-2 py-2 me-1 my-1 f-8">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-2 py-2 me-1 my-1 f-8">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-2 py-2 me-1 my-1 f-8">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-2 py-2 me-1 my-1 f-8">Active</span><span className="badge rounded-pill acx-bg-blue-light-30 px-2 py-2 me-1 my-1 f-8">Urgent</span><span className="badge rounded-pill acx-bg-red-30 px-2 py-2 me-1 my-1 f-8">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-purple-30 px-2 py-2 me-1 my-1 f-8">High Value</span></div> */}
 
-                            {/* <div className="ticktTagsgfs3">
-                                {tags.map((data) => {
-                                    return data;
+                            <div className="ticktTagsgfs3">
+                                {currentCustomer?.tags?.map((data) => {
+                                    const dataColor = tagColor.find(x => x.item.indexOf(data[0].toLowerCase()) !== -1);
+                                    return <div style={{ color: dataColor?.color, background: dataColor.background }}>{data}</div>;
                                 })}
-                            </div> */}
+                            </div>
 
                         </div>
 
                         <hr className="op-1 mt-0"/>
 
-                        <div class="container-timeline">
+                        {/* <div class="container-timeline">
                             <div class="box">
                             <div class="borderContaner">
                                 <div class="circle"></div>
@@ -197,13 +206,13 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                 </div>
                             </div>
                             </div>
-                        </div>
+                        </div> */}
 
-                        <div className="text-center mt-4">
+                        <div className="text-center my-4">
                             <Button
                                 className="bg-at-blue-light px-3"
                                 size="sm"
-                                onClick={() => setShowUpdate(true)}>Update Profile</Button>
+                                onClick={handleEditClick}>Update Profile</Button>
                         </div>
                     </div>
 
@@ -359,8 +368,9 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                     </form>
                 </div>
             </div>
-
             {/* <!-- end of profile update canvas --> */}
+
+            <CreateCustomerModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} isEditing={true} customerId={id} />
 
         </Fragment>
     )

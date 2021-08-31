@@ -149,14 +149,14 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories 
           <div></div>
 
           <div className="btn-toolbar mb-md-0 mt-3">
-            <button
+            {/* <button
               onClick={() => setAddMemberModalShow(true)}
               type="button"
               className="btn border-1 border btn-sm btn-outline-secondary ps-md-3 ms-md-3 reset-btn-outline me-3"
             >
               <img src={ProfileIcon} alt="" />
               &nbsp;Add Member
-            </button>
+            </button> */}
 
             <button
               onClick={() => setAddGroupModalShow(true)}
@@ -233,7 +233,7 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories 
                   selection: false,
                   // exportButton: true,
                   tableLayout: "auto",
-                  paging: true,
+                  paging: false,
                   rowStyle: {
                     backgroundColor: "#fff",
                   },

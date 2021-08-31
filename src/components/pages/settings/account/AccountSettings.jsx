@@ -122,15 +122,10 @@ const AccountSettings = () => {
           {/* <!--* Start of Account Settings View --> */}
           <div className="d-flex justify-content-between col-md-8">
             <h3 className="fs-6 text-black">Account Settings</h3>
-            <button
-              type="button"
-              className="btn btn-sm bg-at-blue-light text-white px-4"
-            >
-              Save Changes
-            </button>
           </div>
 
-          <div className="mt-4 mb-5 col-md-8">
+          
+          <div className="mt-3 mb-3 col-md-8">
             <div className="mb-3">
               <label for="organisation-name" className="form-label">
                 Organisation Name
@@ -237,11 +232,12 @@ const AccountSettings = () => {
                   id="account-timezone"
                   className="form-select"
                   aria-label="Default select example"
+                  value="W. Central Africa Standard Time"
                 >
-                  <option value="">Select time zone</option>
+                  <option>Select time zone</option>
                   {timezone.map((zone, i) => (
                     <option key={i} value={zone.value}>
-                      {zone.value}({zone.abbr})
+                      {zone.value}({zone.offset > 0 ? `GMT +${zone.offset}` : zone.offset < 0 ?  `GMT ${zone.offset}` : `GMT`})
                     </option>
                   ))}
                 </select>
@@ -256,6 +252,7 @@ const AccountSettings = () => {
                   id="account-language"
                   className="form-select"
                   aria-label="Default select example"
+                  value="English"
                 >
                   <option value="">Select language</option>
                   {languages.map((lang, i) => (
@@ -286,7 +283,7 @@ const AccountSettings = () => {
               </select>
             </div>
 
-            <div className="row">
+            {/* <div className="row">
               <div className="mb-3 col-6">
                 <label for="work-days" className="form-label">
                   Work Days
@@ -375,26 +372,30 @@ const AccountSettings = () => {
                   &nbsp;&nbsp; Enable Two Factor Authentication
                 </div>
               </div>
-            </div>
+            </div> */}
 
-            <div>
+            {/* <div>
               <label className="d-block mb-2">Export Data</label>
               <button
                 className="btn btn-sm bg-at-blue-light px-4 py-1"
                 style={{ width: 120 }}
               >
                 Export{" "}
-                {/*
-                  <object
-                    data="../assets/alphatickets/icons/white-upload.svg"
-                    className="sm-align"
-                    type="image/svg+xml"
-                  ></object>
-                  */}
+                
               </button>
               &nbsp;&nbsp;
               <span>Export Data from your AlphaCX account</span>
-            </div>
+            </div> */}
+
+            
+          </div>
+          <div className="text-end col-md-8 mt-4 mb-4 pt-2 pb-3">
+            <button
+                type="button"
+                className="btn btn-sm bg-at-blue-light text-white px-4"
+              >
+                Save Changes
+              </button>
           </div>
         </div>
       </div>

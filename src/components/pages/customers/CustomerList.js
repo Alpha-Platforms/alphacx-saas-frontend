@@ -124,7 +124,21 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                 title: 'Tags',
                 field: 'tags',
                 width: '40%',
-                // render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">+2</span></div>)
+                // render: ({rowData}) => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">High Value</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">+2</span></div>),
+                render: (rowData) => (<div className={"table-tags"}>{ rowData.tags.length > 0 && rowData.tags.map((tag, idx) => {
+                    if (idx === 0) {
+                        return <span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">{tag}</span>;
+                    } else if (idx === 1) {
+                        return <span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">{tag}</span>;
+                    } else if (idx === 2) {
+                        return <span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1">{tag}</span>;
+                    } else if (idx === 3) {
+                        return <span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1">{tag}</span>;
+                    } else {
+                        return '';
+                    }
+                }) }
+                {rowData.tags.length > 4 && <span className="badge rounded-pill text-muted border px-2 py-1 my-1">+{rowData.tags.slice(4).length}</span>}</div>)
             }, {
                 title: '',
                 field: 'action',
@@ -154,13 +168,14 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                     phone_number,
                     theme,
                     id,
-                    avatar}) => ({
+                    avatar,
+                    tags}) => ({
                     title: title ? title :`Mr.`,
                     contact: {firstname, lastname, theme, id, avatar},
                     organisation: company ? company : 'Gillete',
                     emailAddress: email,
                     workphone: phone_number,
-                    tags: ''
+                    tags: tags.join(' ')
                 }));
                 exportTable(tableColumns, data, 'csv', 'CustomerExport');
             }
@@ -176,13 +191,14 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                     email,
                     phone_number,
                     theme,
-                    id}) => ({
+                    id,
+                    tags}) => ({
                     title: title ? title :`Mr.`,
                     contact: {firstname, lastname, theme, id},
                     organisation: company ? company : 'Gillete',
                     emailAddress: email,
                     workphone: phone_number,
-                    tags: ''
+                    tags: tags.join(' ')
                 }));
                 exportTable(tableColumns, data, 'pdf', 'CustomerExport');
             }
@@ -234,13 +250,14 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                 phone_number,
                                 theme,
                                 id,
-                                avatar}) => ({
+                                avatar,
+                                tags}) => ({
                                 title: title ? title :`Mr.`,
                                 contact: {firstname, lastname, theme, id, avatar},
                                 organisation: company ? company : '',
                                 emailAddress: email,
                                 workphone: phone_number,
-                                tags: ''
+                                tags: tags || []
                             }))
                             }
                             options = {{

@@ -22,7 +22,7 @@ const TicketSettingsTab = ({statuses}) => {
 
     return (
         <div className="my-3 mt-4">
-            <div className="w-75">
+            <div className="col-md-8">
                 <div className="ticket-dist-row1">
                     <div className="">
                         <div>
@@ -49,6 +49,7 @@ const TicketSettingsTab = ({statuses}) => {
                             <label htmlFor="ticket-closes" className="form-label">Ticket autoclose after</label>
                         </div>
                         <div
+                            style={{ width: '8.5rem'}}
                             id="ticket-closes-wrapper"
                             className="position-relative ticket-closes-wrapper">
                             <input

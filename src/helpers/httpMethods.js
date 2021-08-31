@@ -18,7 +18,11 @@ export const httpPostMain = async (url, postBody) => {
   }
   try {
     const res = await axios.post(`${baseUrlMain}/${url}`, postBody, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { 
+        Authorization: `Bearer ${token}`,
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json' 
+      },
     });
     return res.data;
   } catch (error) {
@@ -54,7 +58,11 @@ export const httpPost = async (url, postBody) => {
   }
   try {
     const res = await axios.post(`${baseUrl}/${url}`, postBody, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { 
+        Authorization: `Bearer ${token}`,
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json' 
+      },
     });
     return res.data;
   } catch (error) {
@@ -94,6 +102,7 @@ export const httpPostData = async (url, postBody) => {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "multipart/form-data",
+        'Access-Control-Allow-Origin': '*',
       },
     });
     return res.data;
@@ -123,7 +132,11 @@ export const httpGetMain = async (url) => {
   }
   try {
     const res = await axios.get(`${baseUrlMain}/${url}`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { 
+        Authorization: `Bearer ${token}`,
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json' 
+      },
     });
 
     return res.data;
@@ -156,7 +169,11 @@ export const httpGet = async (url) => {
   }
   try {
     const res = await axios.get(`${baseUrl}/api/${url}`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { 
+        Authorization: `Bearer ${token}`,
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json' 
+      },
     });
     return res.data;
   } catch (error) {
@@ -188,7 +205,10 @@ export const httpPut = async (url, postBody) => {
   }
   try {
     const res = await axios.put(`${baseUrl}/api/${url}`, postBody, {
-      headers: { Authorization: `Bearer ${localStorage.token}` },
+      headers: { 
+        Authorization: `Bearer ${localStorage.token}`,
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json'  },
     });
     return res.data;
   } catch (error) {
@@ -218,7 +238,11 @@ export const httpPatchMain = async (url, postBody) => {
 
   try {
     const res = await axios.patch(`${baseUrlMain}/${url}`, postBody, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { 
+        Authorization: `Bearer ${token}`,
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json' 
+      },
     });
     return res.data;
   } catch (error) {
@@ -248,7 +272,11 @@ export const httpDelete = async (url, postBody) => {
   }
   try {
     const res = await axios.delete(`${baseUrl}/api/${url}`, postBody, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { 
+        Authorization: `Bearer ${token}`,
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json' 
+      },
     });
     return res;
   } catch (error) {

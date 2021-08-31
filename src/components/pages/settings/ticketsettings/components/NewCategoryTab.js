@@ -20,8 +20,6 @@ const NewCategoryTab = ({categories, meta, getCategories, getSubCategories, isCa
         });
     };
 
-    console.log(newCategory);
-
     // function to get the list of all ticket categories   const getTicketCategories
     // = async () => {     const res = await httpGetMain("categories");     if
     // (res?.status === "success") {       setCategories(res?.data?.categories);
@@ -103,7 +101,7 @@ const NewCategoryTab = ({categories, meta, getCategories, getSubCategories, isCa
                                 value={newCategory.name || ""}
                                 onChange={handleChange}/>
                         </div>
-                        <div class="form-group mt-4 tl-col align-items-center">
+                        {/* <div class="form-group mt-4 tl-col align-items-center">
                             <label class="f-14 d-inline" htmlFor="form-description">
                                 Parent Category:
                             </label>
@@ -120,7 +118,7 @@ const NewCategoryTab = ({categories, meta, getCategories, getSubCategories, isCa
                                     <option value={cat.id}>{cat.name}</option>
                                 ))}
                             </select>
-                        </div>
+                        </div> */}
                         <div class="form-group mt-4 tl-col">
                             <label class="f-14 d-inline" htmlFor="form-description">
                                 Description:

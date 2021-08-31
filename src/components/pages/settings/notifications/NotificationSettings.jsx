@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./NotificationSettings.scss";
 import TripleDot from "../../../../assets/imgF/triple_dot.png";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
@@ -14,8 +13,15 @@ import {
   createTheme,
 } from "@material-ui/core/styles";
 import "../../../../styles/Ticket.css";
+import ScaleLoader from 'react-spinners/ScaleLoader';
+import {userTokenConfig} from '../../../../helper';
+import store from '../../../../reduxstore/store';
+import axios from 'axios';
+import {config} from '../../../../config/keys';
+import {connect} from 'react-redux';
+import {useHistory} from 'react-router-dom';
 
-const NotificationSettings = () => {
+const NotificationSettings = ({isConfigsLoaded, configs}) => {
   const tableTheme = createTheme({
     palette: {
       primary: {
@@ -26,10 +32,30 @@ const NotificationSettings = () => {
       },
     },
   });
+
+  
+
   const [changingRow, setChangingRow] = useState(false);
+  const [custLoading, setCustLoading] = useState(false);
+
+  const [notifications, setNotifications] = useState(null);
+
+  useEffect(() => {
+    setCustLoading(!isConfigsLoaded);
+    if (isConfigsLoaded) {
+        setCustLoading(false);
+    }
+}, [isConfigsLoaded]);
+
+
+  /* useEffect(() => {
+    setCustLoading(true);
+    getEmailTemplate();
+  }, []); */
+
   const tableColumns = [
     {
-      title: "Name",
+      title: "Title",
       field: "name",
       // render: (rowData) => (
       //   <Link to="#" style={{ textTransform: "capitalize" }}>
@@ -37,29 +63,30 @@ const NotificationSettings = () => {
       //   </Link>
       // ),
     },
-    {
-      title: "Notification Category",
-      field: "category",
-      width: "20px",
-      // render: (rowData) => (
-      //   <Link
-      //     to={`/tickets/${rowData.ticketId}`}
-      //     style={{ textTransform: "uppercase" }}
-      //   >
-      //     {rowData.ticketId.slice(-8)}
-      //   </Link>
-      // ),
-    },
+    // {
+    //   title: "Notification Category",
+    //   field: "category",
+    //   width: "20px",
+    //   // render: (rowData) => (
+    //   //   <Link
+    //   //     to={`/tickets/${rowData.ticketId}`}
+    //   //     style={{ textTransform: "uppercase" }}
+    //   //   >
+    //   //     {rowData.ticketId.slice(-8)}
+    //   //   </Link>
+
+    //   // ),
+    // },
     {
       title: "Subject",
       field: "subject",
       width: "40%",
     },
-    {
-      title: "Description",
-      field: "description",
-      width: "20%",
-    },
+    // {
+    //   title: "Description",
+    //   field: "description",
+    //   width: "20%",
+    // },
     {
       title: "",
       field: "dropdownAction",
@@ -72,7 +99,7 @@ const NotificationSettings = () => {
           </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item eventKey="1">
-              <Link to="/settings/users/personal-info-settings">
+              <Link to="/settings/notifications/email-template">
                 <span className="black-text">Edit</span>
               </Link>
             </Dropdown.Item>
@@ -84,26 +111,10 @@ const NotificationSettings = () => {
       ),
     },
   ];
-  const [notifications, setNotifications] = useState([
-    {
-      name: "Welcome Message",
-      category: "Email",
-      subject: "Welcome to AlphaCX",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    },
-    {
-      name: "Welcome Message",
-      category: "SMS",
-      subject: "Welcome to AlphaCX",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    },
-    {
-      name: "Welcome Message",
-      category: "WhatsApp",
-      subject: "Welcome to AlphaCX",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    },
-  ]);
+
+
+
+
 
   const AlphacxMTPagination = (props) => {
     const {
@@ -147,6 +158,7 @@ const NotificationSettings = () => {
   };
   return (
     <div className="notification-settings">
+    {custLoading && <div className="cust-table-loader"><ScaleLoader loading={custLoading} color={"#006298"}/></div>}
       <div className="card card-body bg-white border-0 ">
         <div id="mainContentHeader">
           <h6 className="text-muted f-14">
@@ -160,50 +172,44 @@ const NotificationSettings = () => {
           </h6>
         </div>
         <div className="d-flex justify-content-between align-baseline">
-          <h5 className="mt-3 mb-4 f-16 fw-bold">Email Management</h5>
+          <h5 className="mt-3 mb-4 f-16 fw-bold">Notification Management</h5>
           <div>
-            <Link
+            <button
               className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
               to="/settings/notifications/email-template"
+              disabled={true}
             >
               Add Notification
-            </Link>
+            </button>
           </div>
         </div>
         <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
           <div
             id="alphacxMTable"
-            className="pb-5 acx-ticket-cust-table acx-ticket-table p-4"
+            className="pb-5 acx-ticket-cust-table acx-ticket-table acx-user-table-2 p-4 fit-content"
           >
             <MuiThemeProvider theme={tableTheme}>
-              <MaterialTable
+              {configs && <MaterialTable
                 columns={tableColumns}
                 title=""
                 icons={tableIcons}
-                data={notifications.map(
-                  ({ name, category, subject, description }) => ({
-                    name: name,
-                    category,
-                    subject,
-                    description: description.substring(0, 15) + "...",
-                  })
-                )}
+                data={configs?.email_config?.template ? [configs?.email_config?.template].map(({subject, title}) => ({name: title, subject})) : []}
                 options={{
                   search: true,
-                  selection: true,
+                  selection: false,
                   // exportButton: true,
                   tableLayout: "auto",
                   paging: true,
-                  pageSize: 10,
+                  pageSize: 5,
                   headerStyle: {
                     // backgroundColor: '#f8f9fa'
                     backgroundColor: "#fefdfd",
                   },
                 }}
                 components={{
-                  Pagination: AlphacxMTPagination,
+                  // Pagination: AlphacxMTPagination,
                 }}
-              />
+              />}
             </MuiThemeProvider>
           </div>
         </div>
@@ -223,4 +229,9 @@ const NotificationSettings = () => {
   );
 };
 
-export default NotificationSettings;
+const mapStateToProps = (state, ownProps) => ({
+  isConfigsLoaded: state.config.isConfigsLoaded,
+  configs: state.config.configs
+});
+
+export default connect(mapStateToProps, null)(NotificationSettings);
