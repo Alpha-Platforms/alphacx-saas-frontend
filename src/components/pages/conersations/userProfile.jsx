@@ -466,7 +466,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                     #{ticket[0]?.id.slice(ticket[0]?.id?.length - 8)}
                   </div>
                   <div>{dateFormater(ticket[0].created_at)}</div>
-                  {console.log(ticket[0])}
+                  {/* {console.log(ticket[0])} */}
                 </div>
               </div>
             </div>

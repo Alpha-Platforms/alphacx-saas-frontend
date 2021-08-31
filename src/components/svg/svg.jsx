@@ -114,9 +114,9 @@ export const svg = () => {
           r="297"
           fill="none"
           stroke="#3ad29f"
-          stroke-miterlimit="10"
-          stroke-width="2"
-          stroke-dasharray="12"
+          strokeMiterlimit="10"
+          strokeWidth="2"
+          strokeDasharray="12"
         />
         <circle
           cx="361"
@@ -124,9 +124,9 @@ export const svg = () => {
           r="360"
           fill="none"
           stroke="#3ad29f"
-          stroke-miterlimit="10"
-          stroke-width="2"
-          stroke-dasharray="12"
+          strokeMiterlimit="10"
+          strokeWidth="2"
+          strokeDasharray="12"
         />
         <path
           d="M840.94,582.47a81.21,81.21,0,0,0-161-15.14l-249.59-6.77,2.74,42.88s-35.59,82.12,151.46,104v83H800.79v-138A81.16,81.16,0,0,0,840.94,582.47Z"

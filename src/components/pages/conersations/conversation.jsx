@@ -72,6 +72,7 @@ export default function Conversation() {
   const [SenderInfo, setSenderInfo] = useState(false);
   const [singleTicketFullInfo, setTingleTicketFullInfo] = useState(false);
   const [Category, setCategory] = useState([]);
+  const [Priority, setPriority] = useState([]);
   const [editorState, setEditorState] = useState(initialState);
   const [firstTimeLoad, setfirstTimeLoad] = useState(true);
   const [MessageSenderId, setMessageSenderId] = useState("");
@@ -81,13 +82,13 @@ export default function Conversation() {
     plainText: "",
     richText: "",
   });
-  const [Statues, setStatues] = useState([]);
+  const [Statuses, setStatuses] = useState([]);
   const [UserInfo, setUserInfo] = useState({});
   const [ChatCol, setChatCol] = useState({
     col1: "",
     col2: "",
   });
-  const [openSaveTicketModal, setopenSaveTicketModal] = useState(false);
+  const [openSaveTicketModal, setOpenSaveTicketModal] = useState(false);
   const [filterChat, setFilterChat] = useState("system");
   const [saveTicket, setSaveTicket] = useState({
     customer: "",
@@ -114,18 +115,19 @@ export default function Conversation() {
   }, [msgHistory]);
 
   useEffect(() => {
-    getStatues();
+    getStatuses();
     getCategories();
+    getPriorities();
   }, []);
   useEffect(() => {
     AppSocket.createConnection();
     AppSocket.io.on(`ws_tickets`, (data) => {
-      console.log("this are Ticketsss", data?.data?.tickets);
+      // console.log("this are Ticketsss", data?.data?.tickets);
       setwsTickets(data?.data?.tickets);
     });
     AppSocket.io.on(`message`, (data) => {
-      console.log("this are history msbsg", data);
-      console.log(UserInfo);
+      // console.log("this are history msbsg", data);
+      // console.log(UserInfo);
       let msg = {
         created_at: data.created_at,
         id: data.history.id,
@@ -146,7 +148,7 @@ export default function Conversation() {
   }, []);
 
   const sortMsges = (msgs) => {
-    console.log("msgHis", msgs);
+    // console.log("msgHis", msgs);
     let Today = [];
 
     let resultToday = msgs.filter((observation) => {
@@ -173,9 +175,9 @@ export default function Conversation() {
     setTodayMsges(resultToday);
     setYesterdayMsges(resultYesterday);
     setAchiveMsges(resultAchive);
-    console.log("Today>>>", resultToday);
+    /* console.log("Today>>>", resultToday);
     console.log("Yesterdat msg ", resultYesterday);
-    console.log("resultAchive msg ", resultAchive);
+    console.log("resultAchive msg ", resultAchive); */
   };
   useEffect(() => {
     setLoadingTicks(true);
@@ -190,7 +192,7 @@ export default function Conversation() {
     const richText = draftToHtml(convertToRaw(editorState.getCurrentContent()));
     setEditorState(editorState);
     setReplyTicket({ plainText, richText });
-    console.log(">>>>", richText, richText);
+    // console.log(">>>>", richText, richText);
   };
   const getTickets = async () => {
     const res = await httpGetMain("tickets?channel=whatsapp");
@@ -205,24 +207,25 @@ export default function Conversation() {
   };
 
   const filterTicket = (value, type) => {
-    if (type == "channel") {
+    if (type === "channel") {
       setchannel(value);
       AppSocket.createConnection();
-      let data = { channel: value == "All" ? "" : value, per_page: 100 };
+      let data = { channel: value === "All" ? "" : value, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, data);
     }
 
-    if (type == "status") {
+    if (type === "status") {
       setstatus(value);
       AppSocket.createConnection();
       let data = { status: value == "All" ? "" : value, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, data);
     }
+    setFilterTicketsState(value);
   };
 
   const replyTicket = async (reply, attachment) => {
     scollPosSendMsg();
-
+    // console.log(reply);
     let filterSentTick = tickets.filter((tic) => {
       return tic.id == singleTicketFullInfo.id;
     });
@@ -236,16 +239,16 @@ export default function Conversation() {
     filterSentTick[0]["updated_at"] = new Date();
     const newTicket = [...filterSentTick, ...filterSentTickAll];
     setTickets(newTicket);
-    console.log(filterSentTick);
+    // console.log(filterSentTick);
     const data = {
-      // type: "note",
+      type: "note",
       response: reply.richText,
       plainResponse: reply.plainText,
       phoneNumber: singleTicketFullInfo.customer.phone_number,
       // attachment: "",
     };
-    console.log(singleTicketFullInfo.customer.phone_number);
-    console.log(data);
+    // console.log(singleTicketFullInfo.customer.phone_number);
+    // console.log(data);
     // setsendingReply(true);
     const replyData = {
       attachment: null,
@@ -255,16 +258,16 @@ export default function Conversation() {
       // user: SenderInfo?.customer,
       user: ticket[0]?.assignee,
     };
-    console.log(replyData);
+    // console.log(replyData);
     setMsgHistory((item) => [...item, replyData]);
     const res = await httpPostMain(
       `tickets/${singleTicketFullInfo.id}/replies`,
       data
     );
 
-    if (res?.status == "success") {
+    if (res?.status === "success") {
       scollPosSendMsgList();
-
+      console.log(res);
       // setsendingReply(false);
       // ReloadloadSingleMessage();
       setEditorState(initialState);
@@ -272,6 +275,7 @@ export default function Conversation() {
     } else {
       // setLoadingTicks(false);
       setsendingReply(false);
+      console.log(res.er);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
@@ -280,7 +284,7 @@ export default function Conversation() {
     setLoadSingleTicket(true);
 
     const res = await httpGetMain(`tickets/${MessageSenderId}`);
-    if (res.status == "success") {
+    if (res.status === "success") {
       setTicket(res?.data);
       setLoadSingleTicket(false);
     } else {
@@ -289,11 +293,11 @@ export default function Conversation() {
     }
   };
 
-  const getStatues = async () => {
+  const getStatuses = async () => {
     const res = await httpGetMain(`statuses`);
-    if (res.status == "success") {
+    if (res.status === "success") {
       // getTickets();
-      setStatues(res?.data?.statuses);
+      setStatuses(res?.data?.statuses);
     } else {
       return NotificationManager.error(res.er.message, "Error", 4000);
     }
@@ -301,8 +305,16 @@ export default function Conversation() {
 
   const getCategories = async () => {
     const res = await httpGetMain(`categories`);
-    if (res.status == "success") {
+    if (res.status === "success") {
       setCategory(res?.data?.categories);
+    } else {
+      return NotificationManager.error(res.er.message, "Error", 4000);
+    }
+  };
+  const getPriorities = async () => {
+    const res = await httpGetMain(`priorities`);
+    if (res.status === "success") {
+      setPriority(res?.data?.priorities);
     } else {
       return NotificationManager.error(res.er.message, "Error", 4000);
     }
@@ -311,8 +323,8 @@ export default function Conversation() {
   const upTicketStatus = async (id) => {
     const data = { statusId: id };
     const res = await httpPatchMain(`tickets/${TicketId}`, data);
-    if (res.status == "success") {
-      // setStatues(res?.data?.statuses);
+    if (res.status === "success") {
+      // setStatuses(res?.data?.statuses);
       return NotificationManager.success(
         "Ticket status update successfully",
         "Success",
@@ -338,7 +350,7 @@ export default function Conversation() {
     AppSocket.io.emit("join_private", swData);
     const res = await httpGetMain(`tickets/${id}`);
     setfirstTimeLoad(false);
-    if (res.status == "success") {
+    if (res.status === "success") {
       setTicket(res?.data);
       setMsgHistory(res?.data[0]?.history);
       // sortMsges(res?.data[0]?.history);
@@ -349,7 +361,6 @@ export default function Conversation() {
         subject: res?.data[0].subject,
         description: res?.data[0].history,
       });
-      console.log(res?.data[0]?.history);
       setLoadSingleTicket(false);
       checkRes();
       scollPosSendMsgList();
@@ -371,38 +382,37 @@ export default function Conversation() {
   };
 
   const updateTicket = async (status) => {
-    console.log(RSTicketStage);
-
+    // console.log(RSTicketStage);
     // if (categoryUpdate == "") {
     //   NotificationManager.error("You need to update category to continue!");
     // }
-    if (status == "") {
+    if (status === "") {
       return;
     }
 
     let data = {
-      statusId: RSTicketStage.value,
-      priorityId: ticket[0].priority.id,
-      assigneeId: ticket[0].assignee.id,
-      categoryId: RSTicketCate.value,
+      statusId: `${RSTicketStage.value || ticket[0].status.id}`,
+      priorityId: `${RSTicketPriority.value || ticket[0].priority.id}`,
+      assigneeId: ticket[0]?.assignee?.id  || '',
+      categoryId: `${RSTicketCategory.value || ticket[0].category.id}`,
     };
-    console.log(data);
-    const res = await httpPatchMain(`tickets/${ticket[0].id}`);
-    // updateTicketBo(true)
-    if (res.status == "success") {
-      console.log(res);
+    const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
+    if (res.status === "success") {
       closeSaveTicketModal();
       NotificationManager.success(
         "Ticket status successfully updated",
         "Success"
       );
+      AppSocket.createConnection();
+      let data = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
+      AppSocket.io.emit(`ws_tickets`, data);
     } else {
       return NotificationManager.error(res.er.message, "Error", 4000);
     }
   };
 
   const closeSaveTicketModal = () => {
-    setopenSaveTicketModal(!openSaveTicketModal);
+    setOpenSaveTicketModal(!openSaveTicketModal);
     setSaveTicket({
       customer: "",
       subject: "",
@@ -479,7 +489,7 @@ export default function Conversation() {
 
   /* UPDATE MODAL FORM VALUES */
   const [RSCustomerName, setRSCustomerName] = useState("");
-  const [RSTicketCate, setRSTicketCate] = useState("");
+  const [RSTicketCategory, setRSTicketCategory] = useState("");
   const [RSTickeSubject, setRSTickeSubject] = useState("");
   const [RSTicketStage, setRSTicketStage] = useState("");
   const [RSTicketPriority, setRSTicketPriority] = useState("");
@@ -540,7 +550,7 @@ export default function Conversation() {
                     value={status}
                   >
                     <MenuItem value="All">Stages</MenuItem>
-                    {Statues?.map((data) => {
+                    {Statuses?.map((data) => {
                       return <MenuItem value={data.id}>{data.status}</MenuItem>;
                     })}
                   </Select>
@@ -1104,7 +1114,7 @@ export default function Conversation() {
                   className="rselectfield"
                   style={{ fontSize: "12px" }}
                   onChange={(value, actionMeta) => {
-                    setRSTicketCate(value);
+                    setRSTicketCategory(value);
                   }}
                   isClearable={false}
                   options={
@@ -1123,7 +1133,6 @@ export default function Conversation() {
                 <input
                   type="text"
                   value={`${saveTicket.subject} `}
-                  type="text"
                   disabled
                   style={{ fontSize: "12px" }}
                 />
@@ -1143,7 +1152,7 @@ export default function Conversation() {
                   options={
                     // populate 'options' prop from $Category, with names remapped
                     // Andy, replace Category below with whichever const holds list of priorities
-                    Statues.map((data) => {
+                    Statuses.map((data) => {
                       return { value: data.id, label: data.status };
                     })
                   }
@@ -1156,12 +1165,12 @@ export default function Conversation() {
                   className="rselectfield"
                   style={{ fontSize: "12px" }}
                   onChange={(value, actionMeta) => {
-                    setRSTicketStage(value);
+                    setRSTicketPriority(value);
                   }}
                   isClearable={false}
                   options={
-                    // populate 'options' prop from $Statues, with names remapped
-                    Category.map((data) => {
+                    // populate 'options' prop from $Statuses, with names remapped
+                    Priority.map((data) => {
                       return { value: data.id, label: data.name };
                     })
                   }
@@ -1172,11 +1181,10 @@ export default function Conversation() {
             <div className="descriptionWrap">
               <label htmlFor="">Remarks</label>
               <textarea
-                style={{ padding: "10px" }}
                 value={`${saveTicket?.description?.map((data) => {
                   return data?.plain_response;
                 })} `}
-                style={{ fontSize: "12px", padding: "7px" }}
+                style={{ fontSize: "12px", padding: "10px" }}
               ></textarea>
             </div>
 

@@ -28,33 +28,30 @@ export const ValidateEmail = (expression) => {
 
 
 
-export const validatePassword=(pw)=>{
-  if(pw == "") {  
+export const validatePassword = (pw) => {
+  if (pw === "") {
     return (error = "Password must not be empty.");
- }  
-  
-//minimum password length validation  
- if(pw.length < 8) {  
-  return (error = "Password must be greater than 8 charater."); 
-   
- }  
- 
-//maximum length of password validation  
- if(pw.length > 15) {  
-  return (error = "Password must not be greater than 15 charater.");
- } 
- 
+  }
 
-if (pw.search(/[a-z]/i) < 0) {
- return error="Your password must contain at least one letter.";
-}
-// if (pw.search(/[0-9]/) < 0) {
-//  return  error="Your password must contain at least one digit."; 
-// }
+  //minimum password length validation  
+  if (pw.length < 8) {
+    return (error = "Password must be greater than 8 character.");
+
+  }
+
+  //maximum length of password validation  
+  if (pw.length > 15) {
+    return (error = "Password must not be greater than 15 character.");
+  }
 
 
- 
- else {  
-  return (error = "Looks Good!");
- }  
+  if (pw.search(/[a-z]/i) < 0) {
+    return error = "Your password must contain at least one letter.";
+  }
+  // if (pw.search(/[0-9]/) < 0) {
+  //  return  error="Your password must contain at least one digit."; 
+  // }
+  else {
+    return (error = "Looks Good!");
+  }
 }

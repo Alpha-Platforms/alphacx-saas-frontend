@@ -63,7 +63,6 @@ export default function SigleChat({
               )} ${SenderInfo?.customer?.lastname?.slice(0, 1)}`}</p>
             </div>
           )}
-
           <div className="single-chat-user-name">
             <p>{`${capitalizeFirstLetter(
               SenderInfo?.customer?.firstname

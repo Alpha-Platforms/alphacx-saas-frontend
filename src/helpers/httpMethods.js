@@ -129,7 +129,7 @@ export const httpGetMain = async (url) => {
     return res.data;
   } catch (error) {
     // hideLoader();
-    console.log("eeeeeeee", error.response.data.message);
+    // console.log("eeeeeeee", error.response.data.message);
     if (
       error.response.data.message ===
       "Unauthorized, Your token is invalid or expired"
@@ -233,7 +233,7 @@ export const httpPatchMain = async (url, postBody) => {
       "Unauthorized, Your token is invalid or expired"
     ) {
     }
-    console.log("token", token);
+    // console.log("token", token);
     return { er: error.response.data };
   }
 };
