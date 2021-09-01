@@ -31,7 +31,8 @@ const NewEmailTemplate = ({isConfigsLoaded, configs, getConfigs, updateEmailConf
 
             setNewTemplate(prev => ({
                 ...prev,
-                name: 'Ticket Email Template',
+                name: emailTemplate
+                ?.title || '',
                 subject: emailTemplate
                     ?.subject || '',
                 text: emailTemplate
@@ -169,7 +170,7 @@ const NewEmailTemplate = ({isConfigsLoaded, configs, getConfigs, updateEmailConf
                                 </div>
                             </div>
                             <div className="form-group mt-3 mb-5">
-                                <label className="f-14 mb-1">Description</label>
+                                <label className="f-14 mb-1">Body</label>
 
                                 <EditorBox
                                     text={newTemplate.text}

@@ -55,7 +55,7 @@ const NotificationSettings = ({isConfigsLoaded, configs}) => {
 
   const tableColumns = [
     {
-      title: "Name",
+      title: "Title",
       field: "name",
       // render: (rowData) => (
       //   <Link to="#" style={{ textTransform: "capitalize" }}>
@@ -193,21 +193,21 @@ const NotificationSettings = ({isConfigsLoaded, configs}) => {
                 columns={tableColumns}
                 title=""
                 icons={tableIcons}
-                data={configs?.email_config?.template ? [configs?.email_config?.template].map(({subject}) => ({name: 'Ticket Email Template', subject})) : []}
+                data={configs?.email_config?.template ? [configs?.email_config?.template].map(({subject, title}) => ({name: title, subject})) : []}
                 options={{
                   search: true,
                   selection: false,
                   // exportButton: true,
                   tableLayout: "auto",
                   paging: true,
-                  pageSize: 10,
+                  pageSize: 5,
                   headerStyle: {
                     // backgroundColor: '#f8f9fa'
                     backgroundColor: "#fefdfd",
                   },
                 }}
                 components={{
-                  Pagination: AlphacxMTPagination,
+                  // Pagination: AlphacxMTPagination,
                 }}
               />}
             </MuiThemeProvider>
