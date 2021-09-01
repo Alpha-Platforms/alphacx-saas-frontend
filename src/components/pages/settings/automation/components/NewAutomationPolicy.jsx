@@ -30,6 +30,7 @@ const NewAutomationPolicy = () => {
     "open",
     "closed",
   ];
+
   const [policyLoading, setPolicyLoading] = useState(false);
   const [showAssign, setShowAssign] = useState(false);
   const [showCategories, setShowCategories] = useState(false);
@@ -37,6 +38,15 @@ const NewAutomationPolicy = () => {
   const [automationAgents, setAutomationAgents] = useState([]);
   const [automationTeams, setAutomationTeams] = useState([]);
   const [agreementList, setAgreementList] = useState([{id: 1}]);
+
+  // NEW STATE
+  const [slaBody, setSlaBody] = useState({
+    title: "",
+    categories: []
+  })
+
+  const [actionData, setActionData] = useState([])
+  //
 
   const [newPolicy, setNewPolicy] = useState({
     name: "",
@@ -55,22 +65,30 @@ const NewAutomationPolicy = () => {
     ]
   });
 
+  const fnFromParent = actionData => {
+    setActionData(actionData)
+  }
+
+
   const handlechange = (e) => {
 
     let { name, value } = e.target;
-    setNewPolicy({ ...newPolicy, [name]: value });
+
+    setPolicyLoading(true);
+
+    setSlaBody(prev => {
+      return {...prev, [name]: value}
+    })
+
+    // setNewPolicy({ ...newPolicy, [name]: value });
     
   };
+
+  useEffect(() => {
+    setPolicyLoading(false);
+    console.log(slaBody);
+  },[slaBody])
   
-  const handleCategoriesChange = (value) => {
-    setNewPolicy({
-      ...newPolicy,
-      reminder:{
-        ...newPolicy.reminder,
-        categories: value
-      }
-    });
-  }
 
   // const convertToMinutes = (days, hours) => {
   //   let daysToMins = days * 24;
@@ -87,7 +105,7 @@ const NewAutomationPolicy = () => {
   // };
 
 
-  // FUNCTION TO GET THE LIST OF LIST TICKET CATEGORIES
+  // FUNCTION TO GET THE LIST OF TICKET CATEGORIES
   const getTicketCategories = async () => {
     const res = await httpGetMain("categories");
     if (res?.status === "success") {
@@ -103,37 +121,18 @@ const NewAutomationPolicy = () => {
   const submitAutomationPolicy = async () => {
     setPolicyLoading(true);
 
-    let convertedAgreements = newPolicy.reminder.agreements;
-
-    // for (let index = 0; index < convertedAgreements.length; index++) {
-    //   convertedAgreements[index] = {
-    //     ...convertedAgreements[index],
-    //     days: convertedAgreements[index].dueDays + convertedAgreements[index].dueHours
-        
-    //   };
-    // }
 
     const body = {
-      name: newPolicy.name,
-      // dueDate: convertToMinutes(newPolicy.dueDays, newPolicy.dueHours),
-      days: newPolicy.dueDays,
-      hours: newPolicy.dueHours,
-      
-      reminder: {
-        categories: newPolicy.reminder.categories,
-        agreements: [convertedAgreements],
-        // recipient: newPolicy.reminder.recipient,
-      },
+      // construct request body with swagger blueprint
     };
-
-
-    console.log(body);
 
     // const res = await httpPostMain("sla", body);
 
-    setPolicyLoading(false);
-
-    return;
+    setTimeout(() => {
+      setPolicyLoading(false);
+      console.log(actionData);
+    }, 2000);
+    
 
     // if (res?.status === "success") {
     //   router.push("/settings/automation");
@@ -246,8 +245,8 @@ const NewAutomationPolicy = () => {
                   type="text"
                   className="form-control form-control-sm"
                   id="slaName"
-                  name="name"
-                  value={newPolicy?.name}
+                  name="title"
+                  value={slaBody.title}
                   onChange={handlechange}
                 />
               </div>
@@ -265,7 +264,6 @@ const NewAutomationPolicy = () => {
                 </label>
                 <RSelect 
                   className=""
-                  onChange={handleCategoriesChange}
                   isMulti
                   options={[
                     {value: "foo", label: "foobar"},
@@ -314,55 +312,18 @@ const NewAutomationPolicy = () => {
                 </label>
                 
                 {
-                  // newPolicy?.reminder?.agreements.map((agreement, i) => (
-                  //   <AutomationAction
-                  //     key={i}
-                  //     newPolicy={newPolicy}
-                  //     setNewPolicy={setNewPolicy}
-                  //     availablePlaceholders={availablePlaceholders}
-                  //     agreement={agreement}
-                  //     index={i}
-                  //   />
-                  // ))
+                  newPolicy?.agreements?.map((agreement, i) => (
+                    <AutomationAction
+                      key={i}
+                      newPolicy={newPolicy}
+                      setNewPolicy={setNewPolicy}
+                      availablePlaceholders={availablePlaceholders}
+                      agreement={agreement}
+                      index={i}
+                      fnFromParent={fnFromParent}
+                    />
+                  ))
                 }
-
-                {
-                  agreementList.map( (item) =>
-
-                
-                    
-                    (<div className="bg-secondary p-3 my-3" key={item.id}>
-                      <input 
-                        className="form-control"
-                        type="text"
-                        name="city"
-                      />
-
-                      <div className="d-flex justify-content-end">
-                        <button 
-                          className="btn btn-sm btn-primary"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            setAgreementList(prev => [...prev, {id: prev.length+1}]);
-                          }}
-                        >
-                          Add New
-                        </button>
-                        <button 
-                          className="btn btn-sm btn-danger"
-                          onClick={(e) => { 
-                            e.preventDefault()
-                            let filteredAgreementList = agreementList.filter((i) =>  item.id !== i.id)
-                            setAgreementList(filteredAgreementList)
-                          }}
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>)
-
-                  
-                )}
 
               </div>
             </form>
