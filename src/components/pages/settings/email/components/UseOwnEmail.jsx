@@ -192,7 +192,7 @@ const UseOwnEmail = ({ state, setState }) => {
             <div>
               <div className="form-group mt-3">
                 <label className="form-label">Authentication</label>
-                <select className="form-select w-75">
+                <select className="form-select w-75" disabled={true}>
                   <option>plain</option>
                   <option>plain</option>
                   <option>plain</option>
