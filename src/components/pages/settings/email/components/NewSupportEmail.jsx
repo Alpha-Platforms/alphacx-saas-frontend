@@ -3,7 +3,7 @@ import { useState } from "react";
 import "./newSupportEmail.scss";
 import UseOwnEmail from "./UseOwnEmail";
 import RightArrow from "../../../../../assets/imgF/arrow_right.png";
-import { httpPostMain } from "../../../../../helpers/httpMethods";
+import { httpPatchMain } from "../../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import { Modal } from "react-responsive-modal";
 import { Link } from "react-router-dom";
@@ -36,7 +36,7 @@ const NewSupportEmail = () => {
     console.clear();
     const { email, port, tls, host, password } = state.emailConfig;
     const data = {
-      email: email,
+      email,
       password,
       host,
       port,
@@ -45,7 +45,7 @@ const NewSupportEmail = () => {
 
     console.log("data", data);
 
-    const res = await httpPostMain("setting/email-config", data);
+    const res = await httpPatchMain("settings/email-config", data);
     if (res?.status === "success") {
       console.clear();
       console.log(res.data);
@@ -58,6 +58,8 @@ const NewSupportEmail = () => {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
+
+  console.log("support email state: ", state);
   return (
     <div className="new-support-email">
       <div className="card card-body bg-white border-0 ">
