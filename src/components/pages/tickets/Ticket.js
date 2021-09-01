@@ -93,6 +93,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       // setMsgHistory,
       // msgHistory,
     } = useContext(SocketDataContext);
+    const [Tags, setTags] = useState([]);
     const [loadSelectedMsg, setloadSelectedMsg] = useState("");
     const [tickets, setTickets] = useState([]);
     const [filterTicketsState, setFilterTicketsState] = useState([]);
@@ -138,6 +139,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     const [Channel, setChannel] = useState("All");
     const [Status, setStatus] = useState("All");
     // UPDATE MODAL FORM VALUES
+    const [RSCustomerTags, setRSCustomerTags] = useState([]);
     const [RSTicketCategory, setRSTicketCategory] = useState("");
     const [RSTicketStage, setRSTicketStage] = useState("");
     const [RSTicketPriority, setRSTicketPriority] = useState("");
@@ -151,6 +153,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       getStatuses();
       getCategories();
       getPriorities();
+      getTags();
     }, []);
     useEffect(() => {
       AppSocket.createConnection();
@@ -316,6 +319,14 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       const res = await httpGetMain(`priorities`);
       if (res.status === "success") {
         setPriority(res?.data?.priorities);
+      } else {
+        return NotificationManager.error(res.er.message, "Error", 4000);
+      }
+    };
+    const getTags = async () => {
+      const res = await httpGetMain(`tags`);
+      if (res.status === "success") {
+        setTags(res?.data?.tags_names.tags);
       } else {
         return NotificationManager.error(res.er.message, "Error", 4000);
       }
@@ -1061,17 +1072,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
           </div>
 
           {/* CHAT COL TWO END */}
-
-
-  
-
-
-
-
-
-
-                        
-
                     </div>
 
                 </div>}
@@ -1108,15 +1108,19 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                 <label htmlFor="">Category</label>
                 <RSelect className="rselectfield"
                   style={{ fontSize: "12px" }}
-                  onChange={ (value, actionMeta) => {
-                    setRSTicketCategory(value);
-                  }}
                   isClearable={false}
                   isMulti
+                  onChange={(value, actionMeta) => {
+                    setRSTicketCategory(value);
+                  }}
+                  defaultValue={{
+                    value: ticket[0]?.category?.id , 
+                    label: ticket[0]?.category?.name
+                  }}
                   options={
                     // populate 'options' prop from $Category, with names remapped
-                    Category.map(data => {
-                      return {value: data.name,label: data.name}
+                    Category.map((data) => {
+                      return { value: data.id, label: data.name };
                     })
                   }
                 />
@@ -1128,7 +1132,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                 <label htmlFor="">Subject</label>
                 <input
                   type="text"
-                  value={`${saveTicket.subject} `}
+                  value={`${ticket[0]?.subject}`}
                   disabled
                   style={{ fontSize: "12px" }}
                 />
@@ -1142,16 +1146,19 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                 <label htmlFor="">Stage</label>
                 <RSelect className="rselectfield"
                   style={{ fontSize: "12px" }}
-                  onChange={ (value, actionMeta) => {
+                  isClearable={false}
+                  onChange={(value, actionMeta) => {
                     setRSTicketStage(value);
                   }}
-                  isClearable={false}
-
+                  defaultValue={{
+                    value: ticket[0]?.status?.id , 
+                    label: ticket[0]?.status?.status
+                  }}
                   options={
                     // populate 'options' prop from $Category, with names remapped
                     // Andy, replace Category below with whichever const holds list of priorities
-                    Statuses.map(data => {
-                      return {value: data.name,label: data.status}
+                    Statuses.map((data) => {
+                      return { value: data.id, label: data.status };
                     })
                   }
                 />
@@ -1161,11 +1168,14 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                 <label htmlFor="">Priority</label>
                 <RSelect className="rselectfield"
                   style={{ fontSize: "12px" }}
-                  onChange={ (value, actionMeta) => {
+                  isClearable={false}
+                  onChange={(value, actionMeta) => {
                     setRSTicketPriority(value);
                   }}
-                  isClearable={false}
-
+                  defaultValue={{
+                    value: ticket[0]?.priority?.id , 
+                    label: ticket[0]?.priority?.name
+                  }}
                   options={
                     // populate 'options' prop from $Statuses, with names remapped
                     Priority.map((data) => {
@@ -1179,12 +1189,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
 
             <div className="descriptionWrap">
               <label htmlFor="">Remarks</label>
-              <textarea
-                value={`${saveTicket?.description?.map((data) => {
-                  return data?.plain_response;
-                })} `}
-                style={{ fontSize: "12px", padding: "10px" }}
-              ></textarea>
+              <textarea value={`${ticket[0]?.description}`} style={{ fontSize: "12px", padding: "10px" }}></textarea>
             </div>
               
             <p className="btn mt-3 p-0 text-start" 
@@ -1199,7 +1204,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                   <label htmlFor="">Assigned To</label>
                   <input
                     type="text"
-                    value={`${saveTicket.subject} `}
+                    value={`${ticket[0]?.assignee?.firstname} ${ticket[0]?.assignee?.lastname}`}
                     disabled
                     style={{ fontSize: "12px" }}
                   />
@@ -1210,35 +1215,37 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
 
                 <div className="ticketmodalInputWrapMain" style={{width: "100%" }}>
                   <label htmlFor="">Ticket Due Date</label>
-                  <div style={{ display: "flex", gap: "1rem"}}>
+                  <div style={{  display: "flex", gap: "0", justifyContent: "start"}}>
                     <div className="thirdselects">
-                    <RSelect className="rselectfield"
-                      style={{ fontSize: "12px" }}
-                      onChange={ (value, actionMeta) => {
-                        setRSTicketStage(value);
-                      }}
-                      isClearable={false}
-
-                      options={[
-                        {value: 1, label: 1},
-                        {value: 2, label: 2},
-                        {value: 3, label: 3},
-                        {value: 4, label: 4},
-                        {value: 5, label: 5},
-                        {value: 6, label: 6},
-                        {value: 7, label: 7},
-                      ]}
-                    />
+                      <RSelect className="rselectfield"
+                        style={{ fontSize: "12px" }}
+                        // onChange={ (value, actionMeta) => {
+                        //   setRSTicketStage(value);
+                        // }}
+                        placeholder={""}
+                        maxMenuHeight={140}
+                        isClearable={false}
+                        options={[
+                          {value: 1, label: 1},
+                          {value: 2, label: 2},
+                          {value: 3, label: 3},
+                          {value: 4, label: 4},
+                          {value: 5, label: 5},
+                          {value: 6, label: 6},
+                          {value: 7, label: 7},
+                        ]}
+                      />
                       <label htmlFor="">Days</label>
                     </div>
                     <div className="thirdselects">
                       <RSelect className="rselectfield"
                         style={{ fontSize: "12px" }}
-                        onChange={ (value, actionMeta) => {
-                          setRSTicketStage(value);
-                        }}
+                        // onChange={ (value, actionMeta) => {
+                        //   setRSTicketStage(value);
+                        // }}
+                        placeholder={""}
+                        maxMenuHeight={140}
                         isClearable={false}
-
                         options={[
                           {value: 1, label: 1},
                           {value: 2, label: 2},
@@ -1254,9 +1261,11 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                     <div className="thirdselects">
                       <RSelect className="rselectfield"
                         style={{ fontSize: "12px" }}
-                        onChange={ (value, actionMeta) => {
-                          setRSTicketStage(value);
-                        }}
+                        // onChange={ (value, actionMeta) => {
+                        //   setRSTicketStage(value);
+                        // }}
+                        placeholder={""}
+                        maxMenuHeight={140}
                         isClearable={false}
 
                         options={[
@@ -1276,10 +1285,22 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                 </div>
               </div>
 
-              <div>
+              <div className="mt-4">
               <label htmlFor="">Tags</label>
-                <RSelect className="rselectfield mt-4"
-                  onChange={ (value, actionMeta) => setRSCustomerName(value)}
+                <RSelect className="rselectfield"
+                  menuPlacement={"top"}
+                  onChange={(value, actionMeta) => setRSCustomerTags([value])}
+                  defaultValue={
+                    ticket[0]?.customer?.tags ? ticket[0]?.customer?.tags.map((data) => {
+                      return { value: data, label: data};
+                    }) :  null
+                  }
+                  options={
+                    // populate 'options' prop from $Tags remapped
+                    Tags.map((data) => {
+                      return { value: data, label: data};
+                    })
+                  }
                   isMulti
                 />
               </div>

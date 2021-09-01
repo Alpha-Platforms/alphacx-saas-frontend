@@ -73,6 +73,7 @@ export default function Conversation() {
   const [singleTicketFullInfo, setTingleTicketFullInfo] = useState(false);
   const [Category, setCategory] = useState([]);
   const [Priority, setPriority] = useState([]);
+  const [Tags, setTags] = useState([]);
   const [editorState, setEditorState] = useState(initialState);
   const [firstTimeLoad, setfirstTimeLoad] = useState(true);
   const [MessageSenderId, setMessageSenderId] = useState("");
@@ -118,6 +119,7 @@ export default function Conversation() {
     getStatuses();
     getCategories();
     getPriorities();
+    getTags();
   }, []);
   useEffect(() => {
     AppSocket.createConnection();
@@ -319,6 +321,14 @@ export default function Conversation() {
       return NotificationManager.error(res.er.message, "Error", 4000);
     }
   };
+  const getTags = async () => {
+    const res = await httpGetMain(`tags`);
+    if (res.status === "success") {
+      setTags(res?.data?.tags_names.tags);
+    } else {
+      return NotificationManager.error(res.er.message, "Error", 4000);
+    }
+  };
 
   const upTicketStatus = async (id) => {
     const data = { statusId: id };
@@ -489,6 +499,7 @@ export default function Conversation() {
 
   /* UPDATE MODAL FORM VALUES */
   const [RSCustomerName, setRSCustomerName] = useState("");
+  const [RSCustomerTags, setRSCustomerTags] = useState([]);
   const [RSTicketCategory, setRSTicketCategory] = useState("");
   const [RSTickeSubject, setRSTickeSubject] = useState("");
   const [RSTicketStage, setRSTicketStage] = useState("");
@@ -1113,10 +1124,14 @@ export default function Conversation() {
                 <RSelect
                   className="rselectfield"
                   style={{ fontSize: "12px" }}
+                  isClearable={false}
                   onChange={(value, actionMeta) => {
                     setRSTicketCategory(value);
                   }}
-                  isClearable={false}
+                  defaultValue={{
+                    value: ticket[0]?.category?.id , 
+                    label: ticket[0]?.category?.name
+                  }}
                   options={
                     // populate 'options' prop from $Category, with names remapped
                     Category.map((data) => {
@@ -1132,7 +1147,7 @@ export default function Conversation() {
                 <label htmlFor="">Subject</label>
                 <input
                   type="text"
-                  value={`${saveTicket.subject} `}
+                  value={`${ticket[0]?.subject} `}
                   disabled
                   style={{ fontSize: "12px" }}
                 />
@@ -1149,6 +1164,10 @@ export default function Conversation() {
                     setRSTicketStage(value);
                   }}
                   isClearable={false}
+                  defaultValue={{
+                    value: ticket[0]?.status?.id , 
+                    label: ticket[0]?.status?.status
+                  }}
                   options={
                     // populate 'options' prop from $Category, with names remapped
                     // Andy, replace Category below with whichever const holds list of priorities
@@ -1168,6 +1187,10 @@ export default function Conversation() {
                     setRSTicketPriority(value);
                   }}
                   isClearable={false}
+                  defaultValue={{
+                    value: ticket[0]?.priority?.id , 
+                    label: ticket[0]?.priority?.name
+                  }}
                   options={
                     // populate 'options' prop from $Statuses, with names remapped
                     Priority.map((data) => {
@@ -1181,9 +1204,10 @@ export default function Conversation() {
             <div className="descriptionWrap">
               <label htmlFor="">Remarks</label>
               <textarea
-                value={`${saveTicket?.description?.map((data) => {
-                  return data?.plain_response;
-                })} `}
+                value={ticket[0]?.description}
+                // value={`${saveTicket?.description?.map((data) => {
+                //   return data?.plain_response;
+                // })} `}
                 style={{ fontSize: "12px", padding: "10px" }}
               ></textarea>
             </div>
@@ -1209,8 +1233,7 @@ export default function Conversation() {
                     <label htmlFor="">Assigned To</label>
                     <input
                       type="text"
-                      value={`${saveTicket.subject} `}
-                      type="text"
+                      value={`${ticket[0]?.assignee?.firstname} ${ticket[0]?.assignee?.lastname}`}
                       disabled
                       style={{ fontSize: "12px" }}
                     />
@@ -1223,14 +1246,16 @@ export default function Conversation() {
                     style={{ width: "100%" }}
                   >
                     <label htmlFor="">Ticket Due Date</label>
-                    <div style={{ display: "flex", gap: "1rem" }}>
+                    <div style={{ display: "flex", gap: "0", justifyContent: "start" }}>
                       <div className="thirdselects">
                         <RSelect
                           className="rselectfield"
                           style={{ fontSize: "12px" }}
-                          onChange={(value, actionMeta) => {
-                            setRSTicketStage(value);
-                          }}
+                          // onChange={(value, actionMeta) => {
+                          //   setRSTicketStage(value);
+                          // }}
+                          placeholder={""}
+                          maxMenuHeight={140}
                           isClearable={false}
                           options={[
                             { value: 1, label: 1 },
@@ -1248,9 +1273,8 @@ export default function Conversation() {
                         <RSelect
                           className="rselectfield"
                           style={{ fontSize: "12px" }}
-                          onChange={(value, actionMeta) => {
-                            setRSTicketStage(value);
-                          }}
+                          placeholder={""}
+                          maxMenuHeight={140}
                           isClearable={false}
                           options={[
                             { value: 1, label: 1 },
@@ -1268,9 +1292,8 @@ export default function Conversation() {
                         <RSelect
                           className="rselectfield"
                           style={{ fontSize: "12px" }}
-                          onChange={(value, actionMeta) => {
-                            setRSTicketStage(value);
-                          }}
+                          placeholder={""}
+                          maxMenuHeight={140}
                           isClearable={false}
                           options={[
                             { value: 1, label: 1 },
@@ -1288,11 +1311,23 @@ export default function Conversation() {
                   </div>
                 </div>
 
-                <div>
+                <div className="mt-4">
                   <label htmlFor="">Tags</label>
                   <RSelect
-                    className="rselectfield mt-4"
-                    onChange={(value, actionMeta) => setRSCustomerName(value)}
+                    className="rselectfield"
+                    menuPlacement={"top"}
+                    onChange={(value, actionMeta) => setRSCustomerTags([value])}
+                    defaultValue={
+                      ticket[0]?.customer?.tags ? ticket[0]?.customer?.tags.map((data) => {
+                        return { value: data, label: data};
+                      }) :  null
+                    }
+                    options={
+                      // populate 'options' prop from $Tags remapped
+                      Tags.map((data) => {
+                        return { value: data, label: data};
+                      })
+                    }
                     isMulti
                   />
                 </div>
