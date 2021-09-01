@@ -159,7 +159,8 @@ const NewArticle = () => {
     let selectedCategory = categories.filter(
       (item) => item.id === newPost?.categoryId
     );
-
+    let folderId = selectedCategory[0]?.folders[0].id;
+    setNewPost({ ...newPost, folderId });
     setFolders(selectedCategory[0]?.folders);
   };
 
@@ -489,7 +490,7 @@ const NewArticle = () => {
                 )}
               </div> */}
             </div>
-            <div className="category mb-4">
+            {/* <div className="category mb-4">
               <p>Sub Category</p>
               <select
                 className="form-select form-select-sm f-14"
@@ -505,7 +506,7 @@ const NewArticle = () => {
                     </option>
                   ))}
               </select>
-            </div>
+            </div> */}
             <div className="category mb-4">
               <p>Tag</p>
               <div className="category-holder">
