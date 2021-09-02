@@ -34,7 +34,7 @@ const ArticleList = () => {
   }
 
   const fetchAllArticles = async () => {
-    const res = await httpGetMain(`articles/categories/${query.get("id")}`);
+    const res = await httpGetMain(`articles/categories/${query.get("cat")}`);
     setPolicyLoading(false);
     if (res?.status == "success") {
       let folders = res?.data?.folders;
@@ -90,7 +90,7 @@ const ArticleList = () => {
               to={`${pageUrl}/${item?.title
                 ?.toLowerCase()
                 .replace(/ /g, "-")
-                .replace("?", "")}?id=${item?.id}`}
+                .replace("?", "")}?id=${item?.id}&cat=${query.get("cat")}`}
             >
               <div className="article-link">
                 <h3 className="title">{item?.title}</h3>
