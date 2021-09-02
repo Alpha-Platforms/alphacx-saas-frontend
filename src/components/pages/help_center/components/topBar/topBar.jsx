@@ -4,9 +4,10 @@ import { Link, useLocation } from "react-router-dom";
 import { SearchIconNavbr } from "../../../../../assets/images/svgs";
 import "./topBar.scss";
 
-const TopBar = () => {
+const TopBar = ({ categoryId }) => {
   const location = useLocation();
   const [links, setLinks] = useState([]);
+
   useEffect(() => {
     let pagelinks = location.pathname.split("/");
     pagelinks.shift();
@@ -18,14 +19,22 @@ const TopBar = () => {
     <div className="top-bar">
       <div className="breadcrumbs">
         <Link to="/help">
-          <p className="link">Home</p>
+          <p className="link active">Home</p>
         </Link>
         {links.map((link, i) => (
           <p
             key={i}
-            className={`link ${i === links.length - 1 ? "active" : ""}`}
+            className={`link ${i === links.length - 2 ? "active" : ""}`}
           >
-            <Link to={`/help/${link}`}>{link.replaceAll("-", " ")}</Link>
+            {i === links.length - 2 ? (
+              <Link
+                to={`/help/${link}${categoryId ? "?cat=" + categoryId : ""}`}
+              >
+                {link.replaceAll("-", " ")}
+              </Link>
+            ) : (
+              link.replaceAll("-", " ")
+            )}
           </p>
         ))}
       </div>
