@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./newSupportEmail.scss";
 import UseOwnEmail from "./UseOwnEmail";
 import RightArrow from "../../../../../assets/imgF/arrow_right.png";
@@ -7,18 +7,21 @@ import { httpPatchMain } from "../../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import { Modal } from "react-responsive-modal";
 import { Link } from "react-router-dom";
+import {connect} from 'react-redux';
+import { getConfigs } from './../../../../../reduxstore/actions/configActions';
 
-const NewSupportEmail = () => {
+const NewSupportEmail = ({configs, getConfigs}) => {
   const [defaultServer, setDefaultServer] = useState(false);
-  const [state, setState] = useState({
+  const [emailState, setEmailState] = useState({
     activeRadio: "own-server",
     // mailServer: "incoming",
     mailServer: "incoming-only",
     emailSystem: "imap",
     emailConfig: {
-      tls: false,
+      tls: false
     },
   });
+  
   const [show, setShow] = useState(false);
 
   const handleClose = () => {
@@ -29,12 +32,12 @@ const NewSupportEmail = () => {
 
   const handleServerChange = (e) => {
     if (e.target.checked) {
-      setState({ ...state, activeRadio: e.target.value });
+      setEmailState({ ...emailState, activeRadio: e.target.value });
     }
   };
   const handleSubmit = async () => {
     console.clear();
-    const { email, port, tls, host, password } = state.emailConfig;
+    const { email, port, tls, host, password } = emailState.emailConfig;
     const data = {
       email_config: {
         email,
@@ -49,6 +52,7 @@ const NewSupportEmail = () => {
     if (res?.status === "success") {
       console.clear();
       handleShow();
+      getConfigs();
       // setDashInfo({
       //   ...dashInfo,
       //   totalTickets: parseInt(res?.data?.meta?.totalItems),
@@ -57,6 +61,22 @@ const NewSupportEmail = () => {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
+
+  useEffect(() => {
+    if (configs) {
+      setEmailState(prev => ({
+        ...prev,
+        emailConfig: {
+          ...prev.emailConfig,
+          tls: configs?.email_config?.tls || false,
+          host: configs?.email_config?.host || '',
+          email: configs?.email_config?.email || '',
+          port: configs?.email_config?.port || '',
+          password: configs?.email_config?.password || '',
+        }
+      }));
+    }
+  }, [configs]);
 
   return (
     <div className="new-support-email">
@@ -148,7 +168,7 @@ const NewSupportEmail = () => {
                         id="radio-1"
                         name="mail-radio"
                         value="default-server"
-                        checked={state.activeRadio === "default-server"}
+                        checked={emailState.activeRadio === "default-server"}
                         onChange={handleServerChange}
                       />
                       <label className="form-check-label f-14" for="radio-1">
@@ -164,7 +184,7 @@ const NewSupportEmail = () => {
                       type="radio"
                       id="radio-2"
                       value="own-server"
-                      checked={state.activeRadio === "own-server"}
+                      checked={emailState.activeRadio === "own-server"}
                       onChange={handleServerChange}
                     />
                     <label className="form-check-label f-14" for="radio-2">
@@ -174,7 +194,7 @@ const NewSupportEmail = () => {
                 </div>
               </div>
             </div>
-            {state.activeRadio === "default-server" ? (
+            {emailState.activeRadio === "default-server" ? (
               // Default server form start
               // ...
               // ...
@@ -200,7 +220,7 @@ const NewSupportEmail = () => {
               // ...
               // ...
               // ...
-              <UseOwnEmail state={state} setState={setState} />
+              <UseOwnEmail emailState={emailState} setEmailState={setEmailState} />
             )}
           </div>
           <div className="d-flex justify-content-end mb-1 mt-4 save-btn">
@@ -255,4 +275,8 @@ const NewSupportEmail = () => {
   );
 };
 
-export default NewSupportEmail;
+const mapStateToProps = (state, ownProps) => ({
+  configs: state.config.configs
+});
+
+export default connect(mapStateToProps, {getConfigs})(NewSupportEmail);
