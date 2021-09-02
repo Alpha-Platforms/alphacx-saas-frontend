@@ -3,7 +3,7 @@ import { useState } from "react";
 import "./newSupportEmail.scss";
 import UseOwnEmail from "./UseOwnEmail";
 import RightArrow from "../../../../../assets/imgF/arrow_right.png";
-import { httpPostMain } from "../../../../../helpers/httpMethods";
+import { httpPatchMain } from "../../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import { Modal } from "react-responsive-modal";
 import { Link } from "react-router-dom";
@@ -12,7 +12,7 @@ const NewSupportEmail = () => {
   const [defaultServer, setDefaultServer] = useState(false);
   const [state, setState] = useState({
     activeRadio: "own-server",
-    mailServer: "incoming",
+    // mailServer: "incoming",
     mailServer: "incoming-only",
     emailSystem: "imap",
     emailConfig: {
@@ -36,19 +36,18 @@ const NewSupportEmail = () => {
     console.clear();
     const { email, port, tls, host, password } = state.emailConfig;
     const data = {
-      email: email,
-      password,
-      host,
-      port,
-      tls,
+      email_config: {
+        email,
+        password,
+        host,
+        port,
+        tls,
+      }
     };
 
-    console.log("data", data);
-
-    const res = await httpPostMain("setting/email-config", data);
+    const res = await httpPatchMain("settings/email-config", JSON.stringify(data));
     if (res?.status === "success") {
       console.clear();
-      console.log(res.data);
       handleShow();
       // setDashInfo({
       //   ...dashInfo,
@@ -58,6 +57,7 @@ const NewSupportEmail = () => {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
+
   return (
     <div className="new-support-email">
       <div className="card card-body bg-white border-0 ">
@@ -85,6 +85,7 @@ const NewSupportEmail = () => {
               type="tdiv.colext"
               className="form-control form-control-sm"
               id="name"
+              disabled={true}
             />
             <p className="description-text f-12 text-muted mt-1">
               Name of the email to be used in the the ticket replies
@@ -98,6 +99,7 @@ const NewSupportEmail = () => {
               type="text"
               className="form-control form-control-sm "
               id="email"
+              disabled={true}
             />
             <p className="description-text f-12 text-muted mt-1">
               This serves as your Return-to address e.g bayo@yourcompany.com
