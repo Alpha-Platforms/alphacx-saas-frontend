@@ -31,7 +31,7 @@ const Login = ({ history }) => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (userInput.domain == "") {
+    if (userInput.domain === "") {
       return NotificationManager.warning(
         "Domain is required",
         "Validation Warning",
@@ -44,7 +44,7 @@ const Login = ({ history }) => {
     };
     setLoading(true);
     const res = await httpPost(`auth/login`, data);
-    if (res.status == "success") {
+    if (res.status === "success") {
       setLoading(false);
       console.log(res?.status);
       localStorage.setItem("user", JSON.stringify(res.data));
