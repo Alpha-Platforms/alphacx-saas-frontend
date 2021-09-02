@@ -69,64 +69,6 @@ function SettingsHome({signedUser}) {
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <Link
-            to="settings/automation"
-            className="d-block cursor text-decoration-none"
-          >
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={AutomationIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Automation</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Automate notifications, responses and durations
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="setting-link-item border rounded bg-light">
-          <Link
-            to="/settings/account"
-            className="d-block cursor text-decoration-none"
-          >
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={ShieldIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Account</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Access your profile and account subscriptions
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="setting-link-item border rounded bg-light">
-          <Link
-            to="/settings/email"
-            className="d-block cursor text-decoration-none"
-          >
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={MailLightIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Email</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Configure inbound and outbound email settings for your
-                  organization
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="setting-link-item border rounded bg-light">
           <Link to={`/settings/profile/${signedUser.id}`} className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
@@ -155,6 +97,64 @@ function SettingsHome({signedUser}) {
                 <h6 className="text-dark mb-0">Teams</h6>
                 <p className="acx-fs-8 lh-1 mt-1 text-muted">
                   Organize users in your organization
+                </p>
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        <div className="setting-link-item border rounded bg-light">
+          <Link
+            to="/settings/account"
+            className="d-block cursor text-decoration-none"
+          >
+            <div className="d-flex align-items-center p-md-4">
+              <div className="">
+                <img src={ShieldIcon} alt="" />
+              </div>
+              <div className="ms-3">
+                <h6 className="text-dark mb-0">Account</h6>
+                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                  Access your profile and account subscriptions
+                </p>
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        <div className="setting-link-item border rounded bg-light">
+          <Link
+            to="settings/automation"
+            className="d-block cursor text-decoration-none"
+          >
+            <div className="d-flex align-items-center p-md-4">
+              <div className="">
+                <img src={AutomationIcon} alt="" />
+              </div>
+              <div className="ms-3">
+                <h6 className="text-dark mb-0">Automation</h6>
+                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                  Automate notifications, responses and durations
+                </p>
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        <div className="setting-link-item border rounded bg-light">
+          <Link
+            to="/settings/email"
+            className="d-block cursor text-decoration-none"
+          >
+            <div className="d-flex align-items-center p-md-4">
+              <div className="">
+                <img src={MailLightIcon} alt="" />
+              </div>
+              <div className="ms-3">
+                <h6 className="text-dark mb-0">Email</h6>
+                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                  Configure inbound and outbound email settings for your
+                  organization
                 </p>
               </div>
             </div>
@@ -201,19 +201,15 @@ function SettingsHome({signedUser}) {
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <Link
-            to="/settings/help-center"
-            className="d-block cursor text-decoration-none"
-          >
+          <Link to="/settings/integrations" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
-                <img src={SearchBlueIcon} alt="" />
+                <img src={SocialBlurbIcon} alt="" />
               </div>
               <div className="ms-3">
-                <h6 className="text-dark mb-0">Help Centre</h6>
+                <h6 className="text-dark mb-0">Integrations</h6>
                 <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Learn how to use AlphaCX, fix a problem and get answers to
-                  your questions
+                  Connect social channels to your app.
                 </p>
               </div>
             </div>
@@ -240,6 +236,26 @@ function SettingsHome({signedUser}) {
         </div>
 
         <div className="setting-link-item border rounded bg-light">
+          <Link
+            to="/settings/help-center"
+            className="d-block cursor text-decoration-none"
+          >
+            <div className="d-flex align-items-center p-md-4">
+              <div className="">
+                <img src={SearchBlueIcon} alt="" />
+              </div>
+              <div className="ms-3">
+                <h6 className="text-dark mb-0">Help Centre</h6>
+                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                  Learn how to use AlphaCX, fix a problem and get answers to
+                  your questions
+                </p>
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        <div className="setting-link-item border rounded bg-light">
           <Link to="#" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
@@ -249,22 +265,6 @@ function SettingsHome({signedUser}) {
                 <h6 className="text-dark mb-0">Customer Satisfaction</h6>
                 <p className="acx-fs-8 lh-1 mt-1 text-muted">
                   Setup ratings for customer feedback
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="setting-link-item border rounded bg-light">
-          <Link to="/settings/integrations" className="d-block cursor text-decoration-none">
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={SocialBlurbIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Integrations</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Connect social channels to your app.
                 </p>
               </div>
             </div>
