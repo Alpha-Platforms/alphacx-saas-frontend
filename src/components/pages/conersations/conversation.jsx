@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { UserDataContext } from "../../../context/userContext";
 import "./conversation.css";
 import { Modal } from "react-responsive-modal";
+import PinIcon from '../../../assets/icons/pin.svg';
 import MessageList from "./messageList";
 import searchIcon from "../../../assets/imgF/Search.png";
 import NoChatFound from "./noChatFound";
@@ -110,6 +111,20 @@ export default function Conversation() {
   const [status, setstatus] = useState("All");
   const [activeChat, setActiveChat] = useState(1);
   const [updateTickStatusS, setupdateTickStatusS] = useState("");
+  
+  /* UPDATE MODAL FORM VALUES */
+  const [RSCustomerName, setRSCustomerName] = useState("");
+  const [RSTicketTags, setRSTicketTags] = useState([]);
+  const [RSTicketCategory, setRSTicketCategory] = useState("");
+  const [RSTicketSubject, setRSTicketSubject] = useState("");
+  const [RSTicketStage, setRSTicketStage] = useState("");
+  const [RSTicketPriority, setRSTicketPriority] = useState("");
+  const [RSTicketRemarks, setRSTicketRemarks] = useState("");
+  const [RSTicketAssignedAgent, setRSTicketAssignedAgent] = useState("");
+
+  const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(
+    false
+  );
   useEffect(() => {
     // getTickets();
     sortMsges(msgHistory);
@@ -392,19 +407,17 @@ export default function Conversation() {
   };
 
   const updateTicket = async (status) => {
-    // console.log(RSTicketStage);
-    // if (categoryUpdate == "") {
-    //   NotificationManager.error("You need to update category to continue!");
-    // }
     if (status === "") {
       return;
     }
 
     let data = {
-      statusId: `${RSTicketStage.value || ticket[0].status.id}`,
-      priorityId: `${RSTicketPriority.value || ticket[0].priority.id}`,
-      assigneeId: ticket[0]?.assignee?.id  || '',
-      categoryId: `${RSTicketCategory.value || ticket[0].category.id}`,
+      statusId: RSTicketStage,
+      priorityId: RSTicketPriority,
+      categoryId: RSTicketCategory,
+      subject: RSTicketSubject,
+      description: RSTicketRemarks,
+      tags: (!Array.isArray(RSTicketTags) || !RSTicketTags.length) ? null : RSTicketTags,
     };
     const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
     if (res.status === "success") {
@@ -429,6 +442,14 @@ export default function Conversation() {
       description: [],
       category: "",
     });
+    if(openSaveTicketModal){
+      setRSTicketStage(ticket[0]?.status?.id);
+      setRSTicketPriority(ticket[0].priority.id);
+      setRSTicketCategory(ticket[0].category.id);
+      setRSTicketSubject(ticket[0].subject);
+      setRSTicketRemarks(ticket[0].description);
+      setRSTicketTags(ticket[0].tags);
+    }
   };
 
   function createMarkup(data) {
@@ -496,21 +517,6 @@ export default function Conversation() {
       resolve({ data: { link: imageObject.localSrc } });
     });
   };
-
-  /* UPDATE MODAL FORM VALUES */
-  const [RSCustomerName, setRSCustomerName] = useState("");
-  const [RSCustomerTags, setRSCustomerTags] = useState([]);
-  const [RSTicketCategory, setRSTicketCategory] = useState("");
-  const [RSTickeSubject, setRSTickeSubject] = useState("");
-  const [RSTicketStage, setRSTicketStage] = useState("");
-  const [RSTicketPriority, setRSTicketPriority] = useState("");
-  const [RSTicketRemarks, setRSTicketRemarks] = useState("");
-  const [RSTicketAssignedAgent, setRSTicketAssignedAgent] = useState("");
-  const [RSTicketDueDate, setRSTicketDueDate] = useState("");
-
-  const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(
-    false
-  );
 
   function scollPosSendMsg(e) {
     window.location.href = "#msgListTop";
@@ -1094,6 +1100,7 @@ export default function Conversation() {
           {/* CHAT COL THREE END */}
         </div>
       </div>
+      {/* Modal area starts here */}
       <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal} center>
         <div className="saveTicketWrapModal">
           <p className="fs-5">
@@ -1125,8 +1132,8 @@ export default function Conversation() {
                   className="rselectfield"
                   style={{ fontSize: "12px" }}
                   isClearable={false}
-                  onChange={(value, actionMeta) => {
-                    setRSTicketCategory(value);
+                  onChange={(newValue, actionMeta) => {
+                    setRSTicketCategory(newValue.value);
                   }}
                   defaultValue={{
                     value: ticket[0]?.category?.id , 
@@ -1142,26 +1149,14 @@ export default function Conversation() {
               </div>
             </div>
 
-            <div className="ticketmodalInput-OneCol">
-              <div className="ticketmodalInputWrapMainOne">
-                <label htmlFor="">Subject</label>
-                <input
-                  type="text"
-                  value={`${ticket[0]?.subject} `}
-                  disabled
-                  style={{ fontSize: "12px" }}
-                />
-              </div>
-            </div>
-
             <div className="ticketmodalInput-twoCol">
               <div className="ticketmodalInputWrapMain">
                 <label htmlFor="">Stage</label>
                 <RSelect
                   className="rselectfield"
                   style={{ fontSize: "12px" }}
-                  onChange={(value, actionMeta) => {
-                    setRSTicketStage(value);
+                  onChange={(newValue, actionMeta) => {
+                    setRSTicketStage(newValue.value);
                   }}
                   isClearable={false}
                   defaultValue={{
@@ -1170,7 +1165,6 @@ export default function Conversation() {
                   }}
                   options={
                     // populate 'options' prop from $Category, with names remapped
-                    // Andy, replace Category below with whichever const holds list of priorities
                     Statuses.map((data) => {
                       return { value: data.id, label: data.status };
                     })
@@ -1183,12 +1177,12 @@ export default function Conversation() {
                 <RSelect
                   className="rselectfield"
                   style={{ fontSize: "12px" }}
-                  onChange={(value, actionMeta) => {
-                    setRSTicketPriority(value);
+                  onChange={(newValue, actionMeta) => {
+                    setRSTicketPriority(newValue.value);
                   }}
                   isClearable={false}
                   defaultValue={{
-                    value: ticket[0]?.priority?.id , 
+                    value: ticket[0]?.priority?.id, 
                     label: ticket[0]?.priority?.name
                   }}
                   options={
@@ -1201,15 +1195,24 @@ export default function Conversation() {
               </div>
             </div>
 
+            <div className="ticketmodalInput-OneCol">
+              <div className="ticketmodalInputWrapMainOne">
+                <label htmlFor="">Subject</label>
+                <input
+                  type="text"
+                  defaultValue={`${ticket[0]?.subject}`}
+                  onChange={(e) => setRSTicketSubject(e.target.value)}
+                  style={{ fontSize: "12px" }}
+                />
+              </div>
+            </div>
+
             <div className="descriptionWrap">
               <label htmlFor="">Remarks</label>
               <textarea
-                value={ticket[0]?.description}
-                // value={`${saveTicket?.description?.map((data) => {
-                //   return data?.plain_response;
-                // })} `}
+                onChange={(e) => setRSTicketRemarks(e.target.value)}
                 style={{ fontSize: "12px", padding: "10px" }}
-              ></textarea>
+              >{ticket[0]?.description}</textarea>
             </div>
 
             <p
@@ -1239,84 +1242,15 @@ export default function Conversation() {
                     />
                   </div>
                 </div>
-
-                <div className="ticketmodalInput-twoCol">
-                  <div
-                    className="ticketmodalInputWrapMain"
-                    style={{ width: "100%" }}
-                  >
-                    <label htmlFor="">Ticket Due Date</label>
-                    <div style={{ display: "flex", gap: "0", justifyContent: "start" }}>
-                      <div className="thirdselects">
-                        <RSelect
-                          className="rselectfield"
-                          style={{ fontSize: "12px" }}
-                          // onChange={(value, actionMeta) => {
-                          //   setRSTicketStage(value);
-                          // }}
-                          placeholder={""}
-                          maxMenuHeight={140}
-                          isClearable={false}
-                          options={[
-                            { value: 1, label: 1 },
-                            { value: 2, label: 2 },
-                            { value: 3, label: 3 },
-                            { value: 4, label: 4 },
-                            { value: 5, label: 5 },
-                            { value: 6, label: 6 },
-                            { value: 7, label: 7 },
-                          ]}
-                        />
-                        <label htmlFor="">Days</label>
-                      </div>
-                      <div className="thirdselects">
-                        <RSelect
-                          className="rselectfield"
-                          style={{ fontSize: "12px" }}
-                          placeholder={""}
-                          maxMenuHeight={140}
-                          isClearable={false}
-                          options={[
-                            { value: 1, label: 1 },
-                            { value: 2, label: 2 },
-                            { value: 3, label: 3 },
-                            { value: 4, label: 4 },
-                            { value: 5, label: 5 },
-                            { value: 6, label: 6 },
-                            { value: 7, label: 7 },
-                          ]}
-                        />
-                        <label htmlFor="">Hours</label>
-                      </div>
-                      <div className="thirdselects">
-                        <RSelect
-                          className="rselectfield"
-                          style={{ fontSize: "12px" }}
-                          placeholder={""}
-                          maxMenuHeight={140}
-                          isClearable={false}
-                          options={[
-                            { value: 1, label: 1 },
-                            { value: 2, label: 2 },
-                            { value: 3, label: 3 },
-                            { value: 4, label: 4 },
-                            { value: 5, label: 5 },
-                            { value: 6, label: 6 },
-                            { value: 7, label: 7 },
-                          ]}
-                        />
-                        <label htmlFor="">Minutes</label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 <div className="mt-4">
                   <label htmlFor="">Tags</label>
                   <RSelect
                     className="rselectfield"
+                    closeMenuOnSelect={false}
                     menuPlacement={"top"}
-                    onChange={(value, actionMeta) => setRSCustomerTags([value])}
+                    onChange={selectedOptions => {
+                      setRSTicketTags(selectedOptions.map((item) => { return item.value} ))
+                    }}
                     defaultValue={
                       ticket[0]?.customer?.tags ? ticket[0]?.customer?.tags.map((data) => {
                         return { value: data, label: data};
@@ -1330,6 +1264,21 @@ export default function Conversation() {
                     }
                     isMulti
                   />
+                </div>
+                <div className="col-12 mt-3">
+                  <label htmlFor="title" className="form-label">Attachment (If Any)</label>
+                  <div
+                      id="ticket-ath-box"
+                      className="border border-1 d-block text-center f-14 p-3 position-relative">
+                      <img src={PinIcon} alt=""/>
+                      <span className="text-at-blue-light">Add file</span>&nbsp;
+                      <span>or drag file here</span>
+                      <input type="file" 
+                        className="position-absolute top-0 bottom-0 end-0 start-0 w-100 h-100" 
+                        style={{ "zIndex": 1200 }}
+                        // onChange={} 
+                        />
+                  </div>
                 </div>
               </div>
             )}
