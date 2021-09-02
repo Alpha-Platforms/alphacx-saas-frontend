@@ -48,10 +48,10 @@ const CreateTicketModal = ({
     const [subCat, setSubCat] = useState(null);
     const [creatingTicket, setCreatingTicket] = useState(false);
     const [channels, setChannels] = useState([
-        'email',
-        'facebook',
-        'helpdesk',
-        'whatsapp'
+        'Email',
+        'Facebook',
+        'Helpdesk',
+        'WhatsApp'
     ])
 
     // ref to customer input
@@ -265,9 +265,24 @@ const CreateTicketModal = ({
         }));
     }
 
+    const searchTypeChecker = (query) => {
+        let searchType = "";
+        if(Number(query)){
+            searchType = "phone_number"
+        } else if(/\S+@\S+\.\S+/.test(query)){
+            searchType = "email"
+        } else {
+            searchType = "lastname"
+        }
+        return searchType;
+    }
+
     const getSearchedCustomers = async (userInput) => {
         // USE HTTPGETMAIN LATER
-        const res = await fetch(`https://kustormar-staging.herokuapp.com/v1/users?role=Customer&search=${userInput}`, {
+
+        const searchType = searchTypeChecker(userInput)
+
+        const res = await fetch(`https://kustormar-staging.herokuapp.com/v1/users?role=Customer&searchType=${searchType}&search=${userInput}`, {
             headers: {
                 Authorization: `Bearer ${JSON.parse(localStorage.getItem("user")).token}`
             }
@@ -276,13 +291,17 @@ const CreateTicketModal = ({
         if(data.status === "success"){
             let remappedData = []
             data.data.users.forEach(item => {
-                if((item.firstname+item.lastname).toLowerCase().includes(userInput.toLowerCase())){
-                    remappedData.push({label: item.firstname+" "+item.lastname, value: item.id})
-                }
+                
+                // if((item.firstname+item.lastname).toLowerCase().includes(userInput.toLowerCase())){
+                // } no filtering needed anymore
+
+                remappedData.push({label: item.firstname+" "+item.lastname, value: item.id})
             })
             return remappedData;
         }
     }
+
+
 
     const [Category, setCategory] = useState([]);
     const [openSaveTicketModal, setopenSaveTicketModal] = useState(false);
@@ -389,7 +408,9 @@ const CreateTicketModal = ({
                                 <AsyncSelect 
                                     loadOptions={getSearchedCustomers}
                                     name="customer"
+                                    placeholder="Lastname, Email or Phone"
                                     onChange={handleRSInput}
+                                    defaultOptions={true}
                                 />                                
                             </div>
     
