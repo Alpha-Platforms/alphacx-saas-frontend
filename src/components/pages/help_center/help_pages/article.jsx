@@ -56,7 +56,7 @@ const Article = () => {
   return (
     <>
       <HelpNavBar activeBG={true} />
-      <TopBar />
+      <TopBar categoryId={query.get("cat")} />
       <div className="help-article">
         {policyLoading && (
           <div

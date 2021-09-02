@@ -8,7 +8,7 @@ const NavCard = ({ title, icon, folders, id }) => {
     <div className="nav-card">
       <Link
         to={
-          `/help/${title.toLowerCase().replaceAll(" ", "-")}?id=${id}` ||
+          `/help/${title.toLowerCase().replaceAll(" ", "-")}?cat=${id}` ||
           "/help"
         }
       >

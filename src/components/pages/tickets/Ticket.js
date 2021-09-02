@@ -3,6 +3,7 @@ import TicketIcon from '../../../assets/svgicons/Ticket.svg';
 import WorkIcon from '../../../assets/svgicons/Work.svg';
 import ProfileLightIcon from '../../../assets/svgicons/Profile-Light.svg';
 import FolderIcon from '../../../assets/icons/Folder.svg';
+import PinIcon from '../../../assets/icons/pin.svg';
 import '../../../styles/Ticket.css';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import {connect} from 'react-redux';
@@ -50,7 +51,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
   const {id} = useParams();
   
   const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(false)
-  const [RSTicketCate, setRSTicketCate] = useState("")
 
     useEffect(() => {
         // get current ticket when component mounts
@@ -94,6 +94,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       // setMsgHistory,
       // msgHistory,
     } = useContext(SocketDataContext);
+    const [Tags, setTags] = useState([]);
     const [loadSelectedMsg, setloadSelectedMsg] = useState("");
     const [tickets, setTickets] = useState([]);
     const [filterTicketsState, setFilterTicketsState] = useState([]);
@@ -103,6 +104,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     const [SenderInfo, setSenderInfo] = useState(false);
     const [singleTicketFullInfo, setTingleTicketFullInfo] = useState(false);
     const [Category, setCategory] = useState([]);
+    const [Priority, setPriority] = useState([]);
     const [editorState, setEditorState] = useState(initialState);
     const [firstTimeLoad, setfirstTimeLoad] = useState(true);
     const [MessageSenderId, setMessageSenderId] = useState("");
@@ -112,7 +114,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       plainText: "",
       richText: "",
     });
-    const [Statues, setStatues] = useState([]);
+    const [Statuses, setStatuses] = useState([]);
     const [UserInfo, setUserInfo] = useState({});
     const [ChatCol, setChatCol] = useState({
       col1: "",
@@ -135,9 +137,16 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     const [YesterdayMsges, setYesterdayMsges] = useState([]);
     const [AchiveMsges, setAchiveMsges] = useState([]);
     const [ShowAchive, setShowAchive] = useState(false);
-    const [channel, setchannel] = useState("All");
-    const [status, setstatus] = useState("All");
+    const [Channel, setChannel] = useState("All");
+    const [Status, setStatus] = useState("All");
+    // UPDATE MODAL FORM VALUES
+    const [RSCustomerTags, setRSCustomerTags] = useState([]);
+    const [RSTicketTags, setRSTicketTags] = useState([]);
+    const [RSTicketCategory, setRSTicketCategory] = useState("");
+    const [RSTicketSubject, setRSTicketSubject] = useState("");
     const [RSTicketStage, setRSTicketStage] = useState("");
+    const [RSTicketPriority, setRSTicketPriority] = useState("");
+    const [RSTicketRemarks, setRSTicketRemarks] = useState("");
     const [RSCustomerName, setRSCustomerName] = useState("")
     useEffect(() => {
       // getTickets();
@@ -145,18 +154,17 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     }, [msgHistory]);
   
     useEffect(() => {
-      getStatues();
+      getStatuses();
       getCategories();
+      getPriorities();
+      getTags();
     }, []);
     useEffect(() => {
       AppSocket.createConnection();
       AppSocket.io.on(`ws_tickets`, (data) => {
-        console.log("this are Ticketsss", data?.data?.tickets);
         setwsTickets(data?.data?.tickets);
       });
       AppSocket.io.on(`message`, (data) => {
-        console.log("this are history msbsg", data);
-        console.log(UserInfo);
         let msg = {
           created_at: data.created_at,
           id: data.history.id,
@@ -165,7 +173,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
           type: "reply",
           user: data.user,
         };
-        console.log("msg>>>", msg);
   
         setMsgHistory((item) => [...item, msg]);
         // sortMsges((item) => [...item, msg]);
@@ -176,7 +183,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     }, []);
   
     const sortMsges = (msgs) => {
-      console.log("msgHis", msgs);
       let Today = [];
   
       let resultToday = msgs.filter((observation) => {
@@ -203,9 +209,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       setTodayMsges(resultToday);
       setYesterdayMsges(resultYesterday);
       setAchiveMsges(resultAchive);
-      console.log("Today>>>", resultToday);
-      console.log("Yesterdat msg ", resultYesterday);
-      console.log("resultAchive msg ", resultAchive);
     };
     useEffect(() => {
       setLoadingTicks(true);
@@ -220,7 +223,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       const richText = draftToHtml(convertToRaw(editorState.getCurrentContent()));
       setEditorState(editorState);
       setReplyTicket({ plainText, richText });
-      console.log(">>>>", richText, plainText);
     };
     const getTickets = async () => {
       const res = await httpGetMain("tickets?channel=whatsapp");
@@ -235,23 +237,22 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     };
   
     const filterTicket = (value, type) => {
-      if (type == "channel") {
-        setchannel(value);
+      if (type === "channel") {
+        setChannel(value);
         AppSocket.createConnection();
         let data = { channel: value == "All" ? "" : value, per_page: 100 };
         AppSocket.io.emit(`ws_tickets`, data);
       }
   
-      if (type == "status") {
-        setstatus(value);
+      if (type === "status") {
+        setStatus(value);
         AppSocket.createConnection();
-        let data = { status: value == "All" ? "" : value, per_page: 100 };
+        let data = { status: value === "All" ? "" : value, per_page: 100 };
         AppSocket.io.emit(`ws_tickets`, data);
       }
     };
   
     const replyTicket = async (reply, attachment) => {
-      console.log(reply);
       const data = {
         // type: "note",
         response: reply.richText,
@@ -270,7 +271,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         // user: SenderInfo?.customer,
         user: ticket[0]?.assignee,
       };
-      console.log(replyData);
       setMsgHistory((item) => [...item, replyData]);
       const res = await httpPostMain(
         `tickets/${currentTicket.id}/replies`,
@@ -301,11 +301,11 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       }
     };
   
-    const getStatues = async () => {
+    const getStatuses = async () => {
       const res = await httpGetMain(`statuses`);
       if (res.status == "success") {
         // getTickets();
-        setStatues(res?.data?.statuses);
+        setStatuses(res?.data?.statuses);
       } else {
         return NotificationManager.error(res.er.message, "Error", 4000);
       }
@@ -319,12 +319,27 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         return NotificationManager.error(res.er.message, "Error", 4000);
       }
     };
+    const getPriorities = async () => {
+      const res = await httpGetMain(`priorities`);
+      if (res.status === "success") {
+        setPriority(res?.data?.priorities);
+      } else {
+        return NotificationManager.error(res.er.message, "Error", 4000);
+      }
+    };
+    const getTags = async () => {
+      const res = await httpGetMain(`tags`);
+      if (res.status === "success") {
+        setTags(res?.data?.tags_names.tags);
+      } else {
+        return NotificationManager.error(res.er.message, "Error", 4000);
+      }
+    };
   
     const upTicketStatus = async (id) => {
       const data = { statusId: id };
       const res = await httpPatchMain(`tickets/${TicketId}`, data);
       if (res.status == "success") {
-        // setStatues(res?.data?.statuses);
         return NotificationManager.success(
           "Ticket status update successfully",
           "Success",
@@ -361,7 +376,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
           subject: res?.data[0].subject,
           description: res?.data[0].history,
         });
-        console.log(res?.data[0]?.history);
         setLoadSingleTicket(false);
         checkRes();
       } else {
@@ -382,24 +396,21 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     };
   
     const updateTicket = async (status) => {
-      // if (categoryUpdate == "") {
-      //   NotificationManager.error("You need to update category to continue!");
-      // }
-      if (status == "") {
+      if (status === "") {
         return;
       }
   
       let data = {
-        statusId: status,
-        priorityId: ticket[0]?.priority?.id,
-        assigneeId: ticket[0]?.assignee?.id  || '',
-        categoryId: categoryUpdate,
+        statusId: RSTicketStage,
+        priorityId: RSTicketPriority,
+        categoryId: RSTicketCategory,
+        subject: RSTicketSubject,
+        description: RSTicketRemarks,
+        tags: (!Array.isArray(RSTicketTags) || !RSTicketTags.length) ? null : RSTicketTags,
       };
-      console.log(data);
-      const res = await httpPatchMain(`tickets/${ticket[0].id}`);
+      const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
       // updateTicketBo(true)
-      if (res.status == "success") {
-        console.log(res);
+      if (res.status === "success") {
         closeSaveTicketModal();
         NotificationManager.success(
           "Ticket status successfully updated",
@@ -418,6 +429,14 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         description: [],
         category: "",
       });
+      if(openSaveTicketModal){
+        setRSTicketStage(ticket[0]?.status?.id);
+        setRSTicketPriority(ticket[0].priority.id);
+        setRSTicketCategory(ticket[0].category.id);
+        setRSTicketSubject(ticket[0].subject);
+        setRSTicketRemarks(ticket[0].description);
+        setRSTicketTags(ticket[0].tags);
+      }
     };
   
     function createMarkup(data) {
@@ -493,7 +512,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
 
       if (isCurrentTicketLoaded && currentTicket) {
         loadSingleMessage(currentTicket);
-        console.log('loading messages');
       }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1065,17 +1083,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
           </div>
 
           {/* CHAT COL TWO END */}
-
-
-  
-
-
-
-
-
-
-                        
-
                     </div>
 
                 </div>}
@@ -1088,9 +1095,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
           </div>
 
           <div className="saveTicketModalForm">
-            
             <div className="ticketmodalInput-twoCol">
-
               <div className="ticketmodalInputWrapMain">
                 <label htmlFor="">Customer</label>
                 <input
@@ -1110,17 +1115,67 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
 
               <div className="ticketmodalInputWrapMain">
                 <label htmlFor="">Category</label>
-                <RSelect className="rselectfield"
+                <RSelect
+                  className="rselectfield"
                   style={{ fontSize: "12px" }}
-                  onChange={ (value, actionMeta) => {
-                    setRSTicketCate(value);
-                  }}
                   isClearable={false}
-                  isMulti
+                  onChange={(newValue, actionMeta) => {
+                    setRSTicketCategory(newValue.value);
+                  }}
+                  defaultValue={{
+                    value: ticket[0]?.category?.id , 
+                    label: ticket[0]?.category?.name
+                  }}
                   options={
                     // populate 'options' prop from $Category, with names remapped
-                    Category.map(data => {
-                      return {value: data.name,label: data.name}
+                    Category.map((data) => {
+                      return { value: data.id, label: data.name };
+                    })
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="ticketmodalInput-twoCol">
+              <div className="ticketmodalInputWrapMain">
+                <label htmlFor="">Stage</label>
+                <RSelect
+                  className="rselectfield"
+                  style={{ fontSize: "12px" }}
+                  onChange={(newValue, actionMeta) => {
+                    setRSTicketStage(newValue.value);
+                  }}
+                  isClearable={false}
+                  defaultValue={{
+                    value: ticket[0]?.status?.id , 
+                    label: ticket[0]?.status?.status
+                  }}
+                  options={
+                    // populate 'options' prop from $Category, with names remapped
+                    Statuses.map((data) => {
+                      return { value: data.id, label: data.status };
+                    })
+                  }
+                />
+              </div>
+
+              <div className="ticketmodalInputWrapMain">
+                <label htmlFor="">Priority</label>
+                <RSelect
+                  className="rselectfield"
+                  style={{ fontSize: "12px" }}
+                  onChange={(newValue, actionMeta) => {
+                    setRSTicketPriority(newValue.value);
+                  }}
+                  isClearable={false}
+                  defaultValue={{
+                    value: ticket[0]?.priority?.id, 
+                    label: ticket[0]?.priority?.name
+                  }}
+                  options={
+                    // populate 'options' prop from $Statuses, with names remapped
+                    Priority.map((data) => {
+                      return { value: data.id, label: data.name };
                     })
                   }
                 />
@@ -1132,172 +1187,92 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                 <label htmlFor="">Subject</label>
                 <input
                   type="text"
-                  value={`${saveTicket.subject} `}
-                  type="text"
-                  disabled
+                  defaultValue={`${ticket[0]?.subject}`}
+                  onChange={(e) => setRSTicketSubject(e.target.value)}
                   style={{ fontSize: "12px" }}
                 />
               </div>
             </div>
-
-
-            <div className="ticketmodalInput-twoCol">
-
-              <div className="ticketmodalInputWrapMain">
-                <label htmlFor="">Stage</label>
-                <RSelect className="rselectfield"
-                  style={{ fontSize: "12px" }}
-                  onChange={ (value, actionMeta) => {
-                    setRSTicketStage(value);
-                  }}
-                  isClearable={false}
-
-                  options={
-                    // populate 'options' prop from $Category, with names remapped
-                    // Andy, replace Category below with whichever const holds list of priorities
-                    Statues.map(data => {
-                      return {value: data.name,label: data.status}
-                    })
-                  }
-                />
-              </div>
-
-              <div className="ticketmodalInputWrapMain">
-                <label htmlFor="">Priority</label>
-                <RSelect className="rselectfield"
-                  style={{ fontSize: "12px" }}
-                  onChange={ (value, actionMeta) => {
-                    setRSTicketStage(value);
-                  }}
-                  isClearable={false}
-
-                  options={
-                    // populate 'options' prop from $Statues, with names remapped
-                    Category.map(data => {
-                      return {value: data.name,label: data.name}
-                    })
-                  }
-                />
-              </div>
-            </div>
-            
 
             <div className="descriptionWrap">
               <label htmlFor="">Remarks</label>
               <textarea
-                style={{ padding: "10px" }}
-                value={`${saveTicket?.description?.map((data) => {
-                  return data?.plain_response;
-                })} `}
-                style={{ fontSize: "12px", padding: "7px" }}
-              ></textarea>
+                onChange={(e) => setRSTicketRemarks(e.target.value)}
+                style={{ fontSize: "12px", padding: "10px" }}
+              >{ticket[0]?.description}</textarea>
             </div>
-              
-            <p className="btn mt-3 p-0 text-start" 
-            role="button"
-              style={{ fontSize: "0.8rem", fontWeight: "bold", marginBottom: 0, color: "#006298!important" }}
-              onClick={() => setIsAdditionalOptionVisible(v => !v)}>Additional Options</p>import { RSelect } from 'react-select/creatable';
 
+            <p
+              className="btn mt-3 p-0 text-start"
+              role="button"
+              style={{
+                fontSize: "0.8rem",
+                fontWeight: "bold",
+                marginBottom: 0,
+                color: "#006298!important",
+              }}
+              onClick={() => setIsAdditionalOptionVisible((v) => !v)}
+            >
+              Additional Options
+            </p>
 
-            { isAdditionalOptionVisible && (
-
-            <div className="additional-options">
-              <div className="ticketmodalInput-OneCol">
-                <div className="ticketmodalInputWrapMainOne">
-                  <label htmlFor="">Assigned To</label>
-                  <input
-                    type="text"
-                    value={`${saveTicket.subject} `}
-                    type="text"
-                    disabled
-                    style={{ fontSize: "12px" }}
+            {isAdditionalOptionVisible && (
+              <div className="additional-options">
+                <div className="ticketmodalInput-OneCol">
+                  <div className="ticketmodalInputWrapMainOne">
+                    <label htmlFor="">Assigned To</label>
+                    <input
+                      type="text"
+                      value={`${ticket[0]?.assignee?.firstname} ${ticket[0]?.assignee?.lastname}`}
+                      disabled
+                      style={{ fontSize: "12px" }}
+                    />
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <label htmlFor="">Tags</label>
+                  <RSelect
+                    className="rselectfield"
+                    closeMenuOnSelect={false}
+                    menuPlacement={"top"}
+                    onChange={selectedOptions => {
+                      setRSTicketTags(selectedOptions.map((item) => { return item.value} ))
+                    }}
+                    defaultValue={
+                      ticket[0]?.customer?.tags ? ticket[0]?.customer?.tags.map((data) => {
+                        return { value: data, label: data};
+                      }) :  null
+                    }
+                    options={
+                      // populate 'options' prop from $Tags remapped
+                      Tags.map((data) => {
+                        return { value: data, label: data};
+                      })
+                    }
+                    isMulti
                   />
                 </div>
-              </div>
-
-              <div className="ticketmodalInput-twoCol">
-
-                <div className="ticketmodalInputWrapMain" style={{width: "100%" }}>
-                  <label htmlFor="">Ticket Due Date</label>
-                  <div style={{ display: "flex", gap: "1rem"}}>
-                    <div className="thirdselects">
-                    <RSelect className="rselectfield"
-                      style={{ fontSize: "12px" }}
-                      onChange={ (value, actionMeta) => {
-                        setRSTicketStage(value);
-                      }}
-                      isClearable={false}
-
-                      options={[
-                        {value: 1, label: 1},
-                        {value: 2, label: 2},
-                        {value: 3, label: 3},
-                        {value: 4, label: 4},
-                        {value: 5, label: 5},
-                        {value: 6, label: 6},
-                        {value: 7, label: 7},
-                      ]}
-                    />
-                      <label htmlFor="">Days</label>
-                    </div>
-                    <div className="thirdselects">
-                      <RSelect className="rselectfield"
-                        style={{ fontSize: "12px" }}
-                        onChange={ (value, actionMeta) => {
-                          setRSTicketStage(value);
-                        }}
-                        isClearable={false}
-
-                        options={[
-                          {value: 1, label: 1},
-                          {value: 2, label: 2},
-                          {value: 3, label: 3},
-                          {value: 4, label: 4},
-                          {value: 5, label: 5},
-                          {value: 6, label: 6},
-                          {value: 7, label: 7},
-                        ]}
-                      />
-                      <label htmlFor="">Hours</label>
-                    </div>
-                    <div className="thirdselects">
-                      <RSelect className="rselectfield"
-                        style={{ fontSize: "12px" }}
-                        onChange={ (value, actionMeta) => {
-                          setRSTicketStage(value);
-                        }}
-                        isClearable={false}
-
-                        options={[
-                          {value: 1, label: 1},
-                          {value: 2, label: 2},
-                          {value: 3, label: 3},
-                          {value: 4, label: 4},
-                          {value: 5, label: 5},
-                          {value: 6, label: 6},
-                          {value: 7, label: 7},
-                        ]}
-                      />
-                      <label htmlFor="">Minutes</label>
-                    </div>
-                    
+                <div className="col-12 mt-3">
+                  <label htmlFor="title" className="form-label">Attachment (If Any)</label>
+                  <div
+                      id="ticket-ath-box"
+                      className="border border-1 d-block text-center f-14 p-3 position-relative">
+                      <img src={PinIcon} alt=""/>
+                      <span className="text-at-blue-light">Add file</span>&nbsp;
+                      <span>or drag file here</span>
+                      <input type="file" 
+                        className="position-absolute top-0 bottom-0 end-0 start-0 w-100 h-100" 
+                        style={{ "zIndex": 1200 }}
+                        // onChange={} 
+                        />
                   </div>
                 </div>
               </div>
-
-              <div>
-              <label htmlFor="">Tags</label>
-                <RSelect className="rselectfield mt-4"
-                  onChange={ (value, actionMeta) => setRSCustomerName(value)}
-                  isMulti
-                />
-              </div>
-
-            </div> 
-
             )}
             <div className="closeTicketModdalj">
-              <button type="submit">Update</button>
+              <button type="submit" onClick={updateTicket}>
+                Update
+              </button>
             </div>
           </div>
         </div>

@@ -20,7 +20,7 @@ export const SocketDataProvider = (props) => {
       // window.location.href = "/";
     } else {
       setuser(lUser)
-      console.log(lUser);
+      // console.log(lUser);
     }
   };
 
