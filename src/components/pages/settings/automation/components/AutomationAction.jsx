@@ -4,6 +4,8 @@ import DeleteIcon from "../../../../../assets/icons/Delete.svg";
 import AddIcon from "../../../../../assets/icons/add.svg";
 import { Modal } from "react-responsive-modal";
 
+import { connect } from "react-redux";
+
 import RSelect from "react-select";
 import {httpGetMain } from "../../../../../helpers/httpMethods";
 
@@ -14,7 +16,11 @@ const AutomationAction = ({
   agreement,
   index,
 
-  fnFromParent
+  fnFromParent,
+
+  agentt,
+  teams
+
 }) => {
   
   const [action, setAction] = useState({});
@@ -25,29 +31,19 @@ const AutomationAction = ({
   const [placeholder, setPlaceholder] = useState("");
   const [availableDays, setAvailableDays] = useState();
 
-  const [agents, setAgents] = useState([]);
-  const [groups, setGroups] = useState([]);
   const [assignType, setAssignType] = useState("agent");
 
+  const [RSAgents, setRSAgents] = useState([]);
+  const [RSTeams, setRSTeams] = useState([]);
 
-  // function to get the list of all users/agents
-  const getAgents = async () => {
-    const res = await httpGetMain("agents");
-    if (res?.status === "success") {
-      setAgents(res?.data);
-    }
+  const [actionChannels] = useState([
+    {label: "Email", value: "Email"},
+    {label: "WhatsApp", value: "WhatsApp"},
+    {label: "SMS", value: "SMS"}
+  ])
 
-    console.log("zeelz", agents)
 
-  };
-  // function to get the list of all groups
-  const getGroups = async () => {
-    const res = await httpGetMain("groups");
-    if (res?.status === "success" || res?.status === "Success") {
-      setGroups(res?.data);
-    }
-  };
-
+// F U N C T I O N S
   const addAction = () => {
     
   };
@@ -68,67 +64,66 @@ const AutomationAction = ({
     setAction( prev => {
       return {...prev, [name]: value}
     })
-
-    console.log(action);
-    fnFromParent(action);
-    return;
-
-    let agreements = newPolicy.reminder.agreements;
-    agreements[index] = { ...agreements[index], [name]: value };
-
-    setNewPolicy({
-      ...newPolicy,
-      reminder: {...newPolicy.reminder, agreements},
-    });
-
   };
 
   const handleRSChange = (iValues, {name}) => {
-    const recipientIds = [];
-    iValues.map(item => {
-      recipientIds.push(item.value)
-    })
+    let data = iValues.value;
+
+    if (Array.isArray(iValues)) {
+      const recipientIds = [];
+      iValues.map(item => {
+        recipientIds.push(item.value)
+      })
+      data = recipientIds;
+
+    }
 
     setAction( prev => {
-      return {...prev, [name]: recipientIds}
+      return {...prev, [name]: data}
     })
-
-    console.log(action);
-
   }
 
   const loadRecipients = (type) => {
-      const mappedRecipients = [];
       if(type === 'agent'){
-        agents.map(item => {
-          mappedRecipients.push({value: item.id, label: item.firstname +" "+ item.lastname})
-        })
+        setActionRecipients(RSAgents);
       } else {
-        groups.map(item => {
-          mappedRecipients.push({value: item.id, label: item.name})
-        })
+        setActionRecipients(RSTeams);
       }
-
-      setActionRecipients(mappedRecipients);
       setAssignType(type);
-
   }
 
+  const mapRSelectPersonOptions = (persons, cb) => {
+    const mappedItems = [];    
+    persons.map(item => {
+      mappedItems.push({value: item.id, label: item.firstname +" "+ item.lastname})
+    })
+    return cb(mappedItems)
+  }
 
-  useEffect(() => 
-  {
-    getAgents();
-    getGroups();
-  },
-    [actionBody]
-  );
+  const mapRSelectNonPersonOptions = (entity, cb) => {
+    const mappedItems = [];    
+    entity.map(item => {
+      mappedItems.push({value: item.id, label: item.name})
+    })
+    return cb(mappedItems)
+  }
 
-  useEffect(() =>
-    {
-      loadRecipients(assignType);
-    }
-    ,[]
-  );
+  useEffect(() => {
+    loadRecipients(assignType);
+
+    mapRSelectNonPersonOptions(teams, (teams) => {
+      setRSTeams(teams)
+    })
+
+    mapRSelectPersonOptions(agentt, (agents) => {
+      setRSAgents(agents)
+    })
+
+  },[]);
+
+  useEffect(() => {
+    fnFromParent(action);
+  }, [action])
 
   return (
     <>
@@ -138,16 +133,14 @@ const AutomationAction = ({
           <div className="d-flex  flex-column assign">
             <label for="actionChannel">Send</label>
             
-            <select
-              className="form-select form-select-sm mt-2"
-              id="actionChannel"
+              {/* className="form-select form-select-sm mt-2" */}
+            <RSelect 
+              className=""
               name="actionChannel"
-              onChange={handleChange}
-            >
-              <option value="email">Email</option>
-              <option value="whatsapp">WhatsApp</option>
-              <option value="sms">SMS</option>
-            </select>
+              onChange={handleRSChange}
+              options={actionChannels}
+            />
+
           </div>
 
           <div className="mt-4 d-flex align-items-center">
@@ -213,20 +206,6 @@ const AutomationAction = ({
                 onChange={handleRSChange}
               />
             </div>
-
-              {/* onChange={handleRecipient} */}
-              {/* {assignType === "agent" &&
-                agents.map((agent) => (
-                  <option key={agent.id} value={agent.id}>
-                    {agent.firstname + " " + agent.lastname}
-                  </option>
-                ))}
-              {assignType === "group" &&
-                groups.map((group) => (
-                  <option key={group.id} value={group.id}>
-                    {group.name.toUpperCase()}
-                  </option>
-                ))} */}
 
           </div>
 
@@ -299,9 +278,16 @@ const AutomationAction = ({
         </div>
       </Modal>
 
-
     </>
   );
 };
 
-export default AutomationAction;
+const mapStateToProps = state => {
+  return {
+    categories: state.category.categories,
+    agentt: state.agent.agents,
+    teams: state.group.groups
+  }
+}
+
+export default connect(mapStateToProps)(AutomationAction);

@@ -17,10 +17,12 @@ import { NotificationManager } from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import AutomationAction from "./AutomationAction";
 
-import RSelect from "react-select/creatable";
+import RSelect from "react-select";
+import { connect } from "react-redux";
 // import { value } from "rumble-charts/lib/helpers";
 
-const NewAutomationPolicy = () => {
+const NewAutomationPolicy = ({categories}) => {
+
   let router = useHistory();
   let { policyID } = useParams();
   const availablePlaceholders = [
@@ -40,12 +42,17 @@ const NewAutomationPolicy = () => {
   const [agreementList, setAgreementList] = useState([{id: 1}]);
 
   // NEW STATE
-  const [slaBody, setSlaBody] = useState({
+  const [automationBody, setAutomationBody] = useState({
     title: "",
-    categories: []
+    categories: [],
+    durationDays: "",
+    durationHours: "",
+    actionData: []
   })
 
+  const [RSCategoriesOptions, setRSCategoriesOptions] = useState([]);
   const [actionData, setActionData] = useState([])
+
   //
 
   const [newPolicy, setNewPolicy] = useState({
@@ -65,30 +72,38 @@ const NewAutomationPolicy = () => {
     ]
   });
 
+  const mapRSelectNonPersonOptions = (entity, cb) => {
+    const mappedItems = [];    
+    entity.map(item => {
+      mappedItems.push({value: item.id, label: item.name})
+    })
+    return cb(mappedItems)
+  }
+
+
   const fnFromParent = actionData => {
     setActionData(actionData)
   }
 
 
   const handlechange = (e) => {
-
     let { name, value } = e.target;
-
-    setPolicyLoading(true);
-
-    setSlaBody(prev => {
+    setAutomationBody(prev => {
       return {...prev, [name]: value}
     })
-
-    // setNewPolicy({ ...newPolicy, [name]: value });
-    
   };
 
-  useEffect(() => {
-    setPolicyLoading(false);
-    console.log(slaBody);
-  },[slaBody])
-  
+  const handleRSChange = (iValues, {name}) => {
+    const categoryIds = [];
+    iValues.map(item => {
+      categoryIds.push(item.value)
+    })
+
+    setAutomationBody( prev => {
+      return {...prev, [name]: categoryIds}
+    })
+  }
+
 
   // const convertToMinutes = (days, hours) => {
   //   let daysToMins = days * 24;
@@ -119,30 +134,28 @@ const NewAutomationPolicy = () => {
 
   // FUNCTION TO CREATE AN ANIMATION
   const submitAutomationPolicy = async () => {
-    setPolicyLoading(true);
-
+    setAutomationBody(prev => {
+      return {...prev, actionData}
+    })
 
     const body = {
       // construct request body with swagger blueprint
     };
 
-    // const res = await httpPostMain("sla", body);
+    // dispatch an ACTION for redux to post it
 
-    setTimeout(() => {
-      setPolicyLoading(false);
-      console.log(actionData);
-    }, 2000);
-    
+    // const res = await httpPostMain("sla", actionData);
 
     // if (res?.status === "success") {
+    //   setPolicyLoading(false);
     //   router.push("/settings/automation");
     // } else {
     //   console.error(res.er);
+    //   setPolicyLoading(false);
     //   return NotificationManager.error(res?.er?.message, "Error", 4000);
     // }
 
   };
-
 
   // FUNCTION TO GET AUTOMATION INFORMATION IF IN EDIT MODE
   const getAutomationInfo = async () => {
@@ -170,8 +183,6 @@ const NewAutomationPolicy = () => {
 
     const body = {
       name: newPolicy.name,
-      // dueDate: convertToMinutes(newPolicy.days, newPolicy.hours),
-      // due_date: convertToMinutes(newPolicy.days, newPolicy.hours),
       description: newPolicy.description || "",
       reminder: {
         categories: newPolicy.reminder.categories,
@@ -191,9 +202,24 @@ const NewAutomationPolicy = () => {
   };
 
   useEffect(() => {
+    mapRSelectNonPersonOptions(categories, (cat) => {
+      setRSCategoriesOptions(cat)
+    })
+  },[])
 
+  useEffect(() => {
+      console.log(RSCategoriesOptions)
+  }, [RSCategoriesOptions])
+
+
+  useEffect(() => {
+    setPolicyLoading(false);
+    console.log(automationBody);
+  }, [automationBody])
+
+
+  useEffect(() => {
     // console.log(agreementList);
-
     getTicketCategories();
 
     if (policyID) {
@@ -201,6 +227,7 @@ const NewAutomationPolicy = () => {
       getAutomationInfo();
     }
   }, [newPolicy]);
+
 
   return (
     <div className="new-automation-policy">
@@ -246,16 +273,10 @@ const NewAutomationPolicy = () => {
                   className="form-control form-control-sm"
                   id="slaName"
                   name="title"
-                  value={slaBody.title}
+                  value={automationBody.title}
                   onChange={handlechange}
                 />
               </div>
-
-              {/* 
-              addCategory()
-              removeCategory()
-              setShowCategories()
-              */}
 
               {/* CATEGORIES SELECTOR */}
               <div className="form-group mt-3">
@@ -264,11 +285,11 @@ const NewAutomationPolicy = () => {
                 </label>
                 <RSelect 
                   className=""
+                  name="categories"
                   isMulti
-                  options={[
-                    {value: "foo", label: "foobar"},
-                    {value: "bar", label: "barbaz"}
-                  ]}
+                  isClearable={true}
+                  options={RSCategoriesOptions}
+                  onChange={handleRSChange}
                 />
               </div>
 
@@ -286,8 +307,8 @@ const NewAutomationPolicy = () => {
                     min={0}
                     className="number-input form-control form-control-sm"
                     id="slaName"
-                    name="dueDays"
-                    value={newPolicy?.dueDays}
+                    name="durationDays"
+                    value={automationBody?.dueDays}
                     onChange={handlechange}
                   />
                   <span className="ps-2 me-2">Days</span>
@@ -297,9 +318,9 @@ const NewAutomationPolicy = () => {
                     min={0}
                     className="number-input form-control form-control-sm"
                     id="slaName"
-                    name="dueHours"
+                    name="durationHours"
                     onkeydown="return false"
-                    value={newPolicy?.dueHours}
+                    value={automationBody?.dueHours}
                     onChange={handlechange}
                   />
                   <span className="ps-2 me-2">Hours</span>
@@ -351,4 +372,8 @@ const NewAutomationPolicy = () => {
   );
 };
 
-export default NewAutomationPolicy;
+const mapStateToProps = state => {
+  return {categories: state.category.categories}
+}
+
+export default connect(mapStateToProps)(NewAutomationPolicy)
