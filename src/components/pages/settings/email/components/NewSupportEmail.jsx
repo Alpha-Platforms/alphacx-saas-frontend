@@ -134,7 +134,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
               Name of the email to be used in the the ticket replies
             </p>
           </div>
-          <div className="form-group mt-2">
+          {/* <div className="form-group mt-2">
             <label for="email" className="form-label f-14">
               Your Support email <span className="text-danger">*</span>
             </label>
@@ -147,34 +147,39 @@ const NewSupportEmail = ({configs, getConfigs}) => {
             <p className="description-text f-12 text-muted mt-1">
               This serves as your Return-to address e.g bayo@yourcompany.com
             </p>
-          </div>
+          </div> */}
 
 
-          <div className="form-group mt-2">
-              <label className="form-label">
-                  Username<span className="text-danger">
-                      *</span>
-              </label>
-              <input
-                  type="text"
-                  className="form-control form-control-sm w-75"
-                  name="email"
-                  autoComplete="off"
-                  value={emailState.emailConfig.email || ""}
-                  onChange={handleConfigChange}/>
-          </div>
-          <div className="form-group mt-2">
-              <label className="form-label">
-                  Password<span className="text-danger">
-                      *</span>
-              </label>
-              <input
-                  type="password"
-                  className="form-control form-control-sm w-75"
-                  name="password"
-                  autoComplete="new-password"
-                  value={emailState.emailConfig.password || ""}
-                  onChange={handleConfigChange}/>
+          <div className="row">
+            <div className="form-group mt-2 col-6">
+                <label className="form-label">
+                    Your Support Email <span className="text-danger">
+                        *</span>
+                </label>
+                <input
+                    type="text"
+                    className="form-control form-control-sm"
+                    name="email"
+                    autoComplete="off"
+                    value={emailState.emailConfig.email || ""}
+                    onChange={handleConfigChange}/>
+                <p className="description-text f-12 text-muted mt-1">
+                  This serves as your Return-to address e.g bayo@yourcompany.com
+                </p>
+            </div>
+            <div className="form-group mt-2 col-6">
+                <label className="form-label">
+                    Password <span className="text-danger">
+                        *</span>
+                </label>
+                <input
+                    type="password"
+                    className="form-control form-control-sm"
+                    name="password"
+                    autoComplete="new-password"
+                    value={emailState.emailConfig.password || ""}
+                    onChange={handleConfigChange}/>
+            </div>
           </div>
 
           {/* <div className="form-group mt-2">
