@@ -23,7 +23,8 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
         blob: null,
         msg: 'Upload logo for customer profile.',
         error: false,
-        image: null
+        image: null,
+        ownAvatar: ''
     });
     const [tagSelectLoading, setTagSelectLoading] = useState(false);
 
@@ -45,7 +46,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     
     useEffect(() => {
         if (createModalShow && isEditing && customerId) {
-            const {firstname, lastname, phone_number, email, organisation, tags} = customers.find(cust => cust.id === customerId);
+            const {firstname, lastname, phone_number, email, organisation, tags, avatar} = customers.find(cust => cust.id === customerId);
             setModalInputs(prev => ({
                 ...prev,
                 firstname,
@@ -54,6 +55,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                 emailaddress: email
             }));
             setSelectedTags(Array.isArray(tags) ? tags.map(tag => ({value: tag.toLowerCase(), label: tag.toLowerCase()})) : []);
+            setUploadInfo(prev => ({ ...prev, ownAvatar: avatar }))
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [createModalShow]);
@@ -83,7 +85,8 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                 blob: null,
                                 msg: 'Upload logo for customer profile.',
                                 error: false,
-                                image: null
+                                image: null,
+                                ownAvatar: ''
                             });
                             getPaginatedCustomers(10, 1);
                             setCreatingCust(false);
@@ -146,7 +149,8 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
             blob: null,
             msg: 'Upload logo for customer profile.',
             error: false,
-            image: null
+            image: null,
+            ownAvatar: ''
         });
     }
 
@@ -205,7 +209,7 @@ const handleImgSelect = function (e) {
 
 	if (!fileInput.files.length) {
 		// No file is selected
-        setUploadInfo(prev => ({...prev, msg: 'No file is slected', error: true, blob: null, image: null}));
+        setUploadInfo(prev => ({...prev, msg: 'No file is slected', error: true, blob: null, image: null, ownAvatar: ''}));
         
 	} else {
         // file selected
@@ -213,7 +217,7 @@ const handleImgSelect = function (e) {
 		// check if selected file is an image
 		if (fileInput.files[0].type.indexOf("image/") === -1) {
 			// Selected file is not an image
-            setUploadInfo(prev => ({...prev, msg: 'Selected file is not an image', error: true, blob: null, image: null}));
+            setUploadInfo(prev => ({...prev, msg: 'Selected file is not an image', error: true, blob: null, image: null, ownAvatar: ''}));
 		} else {
 			// Selected file is an image
 			/* 
@@ -244,7 +248,7 @@ const handleImgSelect = function (e) {
 						const fileName = fileInput.files[0].name;
                         const fileBlob = URL.createObjectURL(fileInput.files[0]);
 
-                        setUploadInfo(prev => ({...prev, blob: fileBlob, msg: fileName, error: false, image: fileInput.files[0]}));
+                        setUploadInfo(prev => ({...prev, blob: fileBlob, msg: fileName, error: false, image: fileInput.files[0], ownAvatar: ''}));
                         /* 
                         when the image with the blob loads call the below method
                         URL.revokeObjectURL(this.src);  where this.src is the blob created
@@ -404,9 +408,9 @@ const workphoneChange = e => {
                                             width: "100%"
                                         }}
                                             className="ms-0 d-flex justify-content-between align-items-center">
-                                            {uploadInfo.blob ? (<img
+                                            {(uploadInfo.blob || uploadInfo.ownAvatar) ? (<img
                                                         className="avatarImage"
-                                                        src={uploadInfo.blob}
+                                                        src={uploadInfo.ownAvatar ? uploadInfo.ownAvatar : uploadInfo.blob}
                                                         alt=""
                                                         onLoad={() => uploadInfo.blob && URL.revokeObjectURL(uploadInfo.blob)}
                                                         style={{
