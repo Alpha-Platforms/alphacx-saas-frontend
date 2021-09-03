@@ -4,10 +4,10 @@ import Breadcrumb from "react-bootstrap/Breadcrumb";
 import "./settings.css";
 import whatsappImg from "../../../assets/imgF/WhatsApp.png";
 import facebookImg from "../../../assets/imgF/Facebook.png";
-import { httpGet } from "../../helpers/httpMethods";
-import { httpPatchMain, httpPostMain } from "../../../helpers/httpMethods";
+import { httpGet } from "../../../helpers/httpMethods";
+import { httpPatchMain, httpPostMain } from "../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
-import { hideLoader, showLoader } from "../../helpers/loader";
+import { hideLoader, showLoader } from "../../../helpers/loader";
 import RightArrow from "../../../assets/imgF/arrow_right.png";
 // console.log(window);
 const FB = window.FB;
@@ -29,7 +29,7 @@ export default function SocialIntegrations() {
           response.authResponse !== "undefined." &&
           response.authResponse !== undefined
         ) {
-          console.log("Welcome!  Fetching your information.... ", response);
+          // console.log("Welcome!  Fetching your information.... ", response);
 
           setFBData(response?.authResponse);
 
@@ -282,32 +282,6 @@ export default function SocialIntegrations() {
               {pageConnected ? "Page Connected" : "Connect Page"}
             </button>
           </div>
-
-          {/* <div
-            className="rpageDmatsoci"
-            style={{ marginBottom: "20px", marginTop: "30px" }}
-          ></div> */}
-
-          {/* <div className="sIntergrationForm">
-            <div className="inputContainInter">
-              <label htmlFor="">Auth ID:</label>
-              <input type="text" />
-            </div>
-
-            <div className="inputContainInter">
-              <label htmlFor="">Auth Token</label>
-              <input type="text" />
-            </div>
-
-            <div className="inputContainInter">
-              <label htmlFor="">Sender ID</label>
-              <input type="text" />
-            </div>
-
-            <div className="buttonSubSocialInt">
-              <button>Connect</button>
-            </div>
-          </div> */}
         </div>
       ) : (
         ""
