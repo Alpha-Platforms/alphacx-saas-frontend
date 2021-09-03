@@ -150,7 +150,9 @@ const UserList = ({
             <p className="text-custom-gray f-12"></p>
           </div>
           <div className="mt-3">
-            <Dropdown className="new-user-dropdown" id="new-user-dropdown">
+            <button className="btn btn-custom btn-sm px-4 bg-at-blue-light py-2" onClick={() => setCreateModalShow(true)}>New User</button>
+
+            {/* <Dropdown className="new-user-dropdown" id="new-user-dropdown">
               <Dropdown.Toggle
                 id="dropdown-basic"
                 className="btn btn-custom btn-sm dropdown-toggle px-4 bg-at-blue-light py-2"
@@ -173,7 +175,7 @@ const UserList = ({
                   Invite User
                 </Dropdown.Item>
               </Dropdown.Menu>
-            </Dropdown>
+            </Dropdown> */}
           </div>
         </div>
         <div className="form-group">
