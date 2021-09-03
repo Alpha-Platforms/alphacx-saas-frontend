@@ -237,25 +237,25 @@ const UserList = ({
                       </div>
                     ),
                   },
-                  {
-                    title: "",
-                    field: "dropdownAction",
-                    render: (rowData) => (
-                      <div>
-                        <DeleteGreySvg />
-                      </div>
-                    ),
-                    // render: rowData => (<Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
-                    //                             <Dropdown.Toggle variant="transparent" size="sm">
-                    //                                 <span className="cust-table-dots"><DotSvg/></span>
-                    //                             </Dropdown.Toggle>
-                    //                             <Dropdown.Menu>
-                    //                                 <Dropdown.Item eventKey="1"><Link to="/settings/users/personal-info-settings"><span className="black-text">Edit</span></Link></Dropdown.Item>
-                    //                                 <Dropdown.Item eventKey="2"><span className="black-text">Delete</span></Dropdown.Item>
-                    //                             </Dropdown.Menu>
-                    //                         </Dropdown>)
-                    // render: rowData => (<div><span className="cust-table-dots"><DotSvg/></span></div>)
-                  },
+                  // {
+                  //   title: "",
+                  //   field: "dropdownAction",
+                  //   render: (rowData) => (
+                  //     <div>
+                  //       <DeleteGreySvg />
+                  //     </div>
+                  //   ),
+                  //   // render: rowData => (<Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+                  //   //                             <Dropdown.Toggle variant="transparent" size="sm">
+                  //   //                                 <span className="cust-table-dots"><DotSvg/></span>
+                  //   //                             </Dropdown.Toggle>
+                  //   //                             <Dropdown.Menu>
+                  //   //                                 <Dropdown.Item eventKey="1"><Link to="/settings/users/personal-info-settings"><span className="black-text">Edit</span></Link></Dropdown.Item>
+                  //   //                                 <Dropdown.Item eventKey="2"><span className="black-text">Delete</span></Dropdown.Item>
+                  //   //                             </Dropdown.Menu>
+                  //   //                         </Dropdown>)
+                  //   // render: rowData => (<div><span className="cust-table-dots"><DotSvg/></span></div>)
+                  // },
                 ]}
                 data={agents.map(
                   ({
