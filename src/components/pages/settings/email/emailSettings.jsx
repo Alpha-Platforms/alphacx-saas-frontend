@@ -6,10 +6,19 @@ import NewSupportEmail from "./components/NewSupportEmail";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
 import {Link} from "react-router-dom";
 import {ReactComponent as EmailEmptySvg} from '../../../../assets/icons/Email-Empty.svg';
+import {connect} from 'react-redux';
+import MaterialTable from "material-table";
+import tableIcons from "../../../../assets/materialicons/tableIcons";
+import {
+  ThemeProvider as MuiThemeProvider,
+  createTheme,
+} from "@material-ui/core/styles";
+import { Dropdown } from "react-bootstrap";
+import { ReactComponent as DotSvg } from "../../../../assets/icons/dots.svg";
 
 import "./settingsEmail.scss";
 
-const EmailSettings = () => {
+const EmailSettings = ({configs}) => {
     let {action} = useParams();
     const [pageAction,
         setPageAction] = useState(action);
@@ -19,6 +28,57 @@ const EmailSettings = () => {
         console.clear();
         console.log(action);
     }, [action]);
+
+    const tableTheme = createTheme({
+        palette: {
+          primary: {
+            main: "rgba(0, 98, 152)",
+          },
+          secondary: {
+            main: "rgba(0, 98, 152)",
+          },
+        },
+      });
+
+      const tableColumns = [
+        {
+          title: "Email",
+          field: "email"
+        },
+        {
+          title: "Host",
+          field: "host"
+        },
+        {
+          title: "Port",
+          field: "port"
+        },
+        {
+          title: "",
+          field: "dropdownAction",
+          render: (rowData) => (
+            <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+              <Dropdown.Toggle variant="transparent" size="sm">
+                <span className="cust-table-dots">
+                  <DotSvg />
+                </span>
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item eventKey="1">
+                  <Link to="/settings/email/email-form">
+                    <span className="black-text">Edit</span>
+                  </Link>
+                </Dropdown.Item>
+                <Dropdown.Item eventKey="2">
+                  <span className="black-text">Delete</span>
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          ),
+        },
+      ];
+
+
     return pageAction === "email-form"
         ? (<NewSupportEmail/>)
         : (
@@ -47,13 +107,8 @@ const EmailSettings = () => {
                             </button>
                         </div>
                     </div>
-                    {/* <div className="form-group">
-                        <input
-                            type="search"
-                            className="form-control form-control-sm f-12 search-bar mt-2 px-5 d-block w-50"
-                            placeholder="Search email addresses"/>
-                    </div> */}
-                    <div className="text-center empty-state">
+
+                    {/* <div className="text-center empty-state">
                         <div className="my-5 mb-4">
                           <EmailEmptySvg />
                         </div>
@@ -66,11 +121,46 @@ const EmailSettings = () => {
                         <Link className="btn btn-sm btn-primary" to="/settings/email/email-form">
                             New support email
                         </Link>
-                    </div>
+                    </div> */}
                     <div id="result"></div>
+
+                    <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
+                    <div
+                        id="alphacxMTable"
+                        className="pb-5 acx-ticket-cust-table acx-ticket-table acx-user-table-2 p-4 fit-content"
+                    >
+                        <MuiThemeProvider theme={tableTheme}>
+                        {configs && <MaterialTable
+                            columns={tableColumns}
+                            title=""
+                            icons={tableIcons}
+                            data={configs?.email_config ? [configs?.email_config].map(({email, host, port}) => ({email, host, port})) : []}
+                            options={{
+                            search: true,
+                            selection: false,
+                            // exportButton: true,
+                            tableLayout: "auto",
+                            paging: true,
+                            pageSize: 5,
+                            headerStyle: {
+                                // backgroundColor: '#f8f9fa'
+                                backgroundColor: "#fefdfd",
+                            },
+                            }}
+                            components={{
+                            // Pagination: AlphacxMTPagination,
+                            }}
+                        />}
+                        </MuiThemeProvider>
+                    </div>
+                    </div>
                 </div>
             </div>
         );
 };
 
-export default EmailSettings;
+const mapStateToProps = (state, ownProps) => ({
+    configs: state.config.configs
+})
+
+export default connect(mapStateToProps, null)(EmailSettings);
