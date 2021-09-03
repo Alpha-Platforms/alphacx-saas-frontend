@@ -45,14 +45,14 @@ const NewAutomationPolicy = ({categories}) => {
   const [automationBody, setAutomationBody] = useState({
     title: "",
     categories: [],
-    durationDays: "",
-    durationHours: "",
-    actionData: []
+    durationDays: "0",
+    durationHours: "0",
+    action: []
   })
 
   const [RSCategoriesOptions, setRSCategoriesOptions] = useState([]);
-  const [actionData, setActionData] = useState([])
-
+  const [action, setAction] = useState([])
+  const [sumbitting, setSumbitting] = useState(false)
   //
 
   const [newPolicy, setNewPolicy] = useState({
@@ -81,8 +81,8 @@ const NewAutomationPolicy = ({categories}) => {
   }
 
 
-  const fnFromParent = actionData => {
-    setActionData(actionData)
+  const fnFromParent = action => {
+    setAction(action)
   }
 
 
@@ -120,40 +120,65 @@ const NewAutomationPolicy = ({categories}) => {
   // };
 
 
-  // FUNCTION TO GET THE LIST OF TICKET CATEGORIES
-  const getTicketCategories = async () => {
-    const res = await httpGetMain("categories");
-    if (res?.status === "success") {
-      setTicketCategories(res?.data?.categories);
-      // getAgents();
-    } else {
-      return NotificationManager.error(res?.er?.message, "Error", 4000);
-    }
-  };
 
 
   // FUNCTION TO CREATE AN ANIMATION
-  const submitAutomationPolicy = async () => {
+  const startSubmitAutomation = () => {
+    setSumbitting(true)
     setAutomationBody(prev => {
-      return {...prev, actionData}
+      return {...prev, action}
     })
+  }
 
-    const body = {
-      // construct request body with swagger blueprint
+  const submitAutomation = async () => {
+
+    setPolicyLoading(true);
+
+    setTimeout(() => {
+      console.log(requestBody);
+      setPolicyLoading(false);
+      return NotificationManager.success("Fake submit successful", "Success");
+      router.push("/settings/automation");
+    }, 1000);
+
+    const dueDate = Number(automationBody.durationDays) * 24 + Number(automationBody.durationHours);
+    const agreementHours = Number(automationBody.action.days) * 24 + Number(automationBody.action.hours);
+
+    const requestBody = {
+      "name": automationBody.title,
+      "dueDate": dueDate,
+      "reminder": {
+        "categories": [
+          automationBody.categories
+        ],
+        "agreements": [
+          {
+            "hours": agreementHours,
+            "action": automationBody.action.channel,
+            "subject": automationBody.action.subject,
+            "body": "Editor is being fixed",
+            "recipient": {
+              "type": "agent",
+              "ids": automationBody.action.recipients
+            }
+          }
+        ]
+      }
     };
+    
 
     // dispatch an ACTION for redux to post it
 
-    // const res = await httpPostMain("sla", actionData);
+    const res = await httpPostMain("sla", requestBody);
 
-    // if (res?.status === "success") {
-    //   setPolicyLoading(false);
-    //   router.push("/settings/automation");
-    // } else {
-    //   console.error(res.er);
-    //   setPolicyLoading(false);
-    //   return NotificationManager.error(res?.er?.message, "Error", 4000);
-    // }
+    if (res?.status === "success") {
+      setPolicyLoading(false);
+      router.push("/settings/automation");
+    } else {
+      console.error(res.er);
+      setPolicyLoading(false);
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
 
   };
 
@@ -208,25 +233,19 @@ const NewAutomationPolicy = ({categories}) => {
   },[])
 
   useEffect(() => {
-      console.log(RSCategoriesOptions)
-  }, [RSCategoriesOptions])
+    // Run submit when the flag is true
+    if(sumbitting) submitAutomation()
+  }, [sumbitting])
 
 
-  useEffect(() => {
-    setPolicyLoading(false);
-    console.log(automationBody);
-  }, [automationBody])
+  // useEffect(() => {
+  //   getTicketCategories();
 
-
-  useEffect(() => {
-    // console.log(agreementList);
-    getTicketCategories();
-
-    if (policyID) {
-      setPolicyLoading(true);
-      getAutomationInfo();
-    }
-  }, [newPolicy]);
+  //   if (policyID) {
+  //     setPolicyLoading(true);
+  //     getAutomationInfo();
+  //   }
+  // }, [newPolicy]);
 
 
   return (
@@ -359,7 +378,7 @@ const NewAutomationPolicy = ({categories}) => {
               <a
                 className="btn btn-sm ms-2 f-12 bg-custom px-4"
                 onClick={
-                  policyID ? updateAutomationPolicy : submitAutomationPolicy
+                  policyID ? updateAutomationPolicy : startSubmitAutomation
                 }
               >
                 Save Changes

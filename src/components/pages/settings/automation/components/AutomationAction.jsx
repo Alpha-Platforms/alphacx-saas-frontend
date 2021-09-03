@@ -24,7 +24,7 @@ const AutomationAction = ({
 }) => {
   
   const [action, setAction] = useState({});
-  const [actionRecipients, setActionRecipients] = useState([])
+  const [recipients, setRecipients] = useState([])
 
   const [openDeleteActionModal, SetOpenDeleteActionModal] = useState(false);
   const [actionBody, setActionBody] = useState(agreement.body || "");
@@ -85,9 +85,9 @@ const AutomationAction = ({
 
   const loadRecipients = (type) => {
       if(type === 'agent'){
-        setActionRecipients(RSAgents);
+        setRecipients(RSAgents);
       } else {
-        setActionRecipients(RSTeams);
+        setRecipients(RSTeams);
       }
       setAssignType(type);
   }
@@ -131,12 +131,13 @@ const AutomationAction = ({
       <div className="card mt-2 mb-4">
         <div className="card-body border-0 p-3 automation-action">
           <div className="d-flex  flex-column assign">
-            <label for="actionChannel">Send</label>
+            <label for="channel">Send</label>
             
               {/* className="form-select form-select-sm mt-2" */}
             <RSelect 
               className=""
-              name="actionChannel"
+              id="channel"
+              name="channel"
               onChange={handleRSChange}
               options={actionChannels}
             />
@@ -146,9 +147,9 @@ const AutomationAction = ({
           <div className="mt-4 d-flex align-items-center">
             
             <div className="input-group w-50 me-2">
-              <input type="number" name="actionDays" ariaLabel="Last name" className="form-control" onChange={handleChange} />
+              <input type="number" name="days" ariaLabel="Last name" className="form-control" onChange={handleChange} />
               <span className="input-group-text acx-fs-8">Days</span>
-              <input type="number" name="actionHours" ariaLabel="First name" className="form-control" onChange={handleChange} />
+              <input type="number" name="hours" ariaLabel="First name" className="form-control" onChange={handleChange} />
               <span className="input-group-text acx-fs-8">Hours</span>
             </div>
 
@@ -157,12 +158,12 @@ const AutomationAction = ({
           </div>
 
           <div className="form-group mt-3">
-            <label for="actionSubject">Subject</label>
+            <label for="subject">Subject</label>
             <input
               type="text"
               className="form-control mt-2"
-              id="actionSubject"
-              name="actionSubject"
+              id="subject"
+              name="subject"
               onChange={handleChange}
             />
           </div>
@@ -200,9 +201,9 @@ const AutomationAction = ({
               <RSelect 
                 className=""
                 isClearable={false}
-                name="actionRecipients"
+                name="recipients"
                 isMulti
-                options={actionRecipients}
+                options={recipients}
                 onChange={handleRSChange}
               />
             </div>
@@ -241,7 +242,6 @@ const AutomationAction = ({
             Add New Action
           </a>
           
-          {/* {newPolicy.reminder.agreements.length > 1 && ( */}
           {true && (
             <a
               className="delete-resolution mx-4"
