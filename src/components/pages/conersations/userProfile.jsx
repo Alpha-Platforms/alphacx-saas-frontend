@@ -56,21 +56,20 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                 >{`${UserInfo?.firstname?.slice(
                   0,
                   1
-                )} ${UserInfo?.lastname?.slice(0, 1)}`}</p>
+                )}${UserInfo?.lastname?.slice(0, 1)}`}</p>
               </div>
             )}
             {/* 
             <p className="font-weight-bold"><b>{`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(
               ticket[0]?.customer?.lastname
             )}`}</b></p> */}
-            <h6
-              style={{ color: "#6c757d" }}
+            <h6            
               className="mb-0 text-capitalize mt-2 pb-0"
             >
               <Link to={`/customers/${JSON.parse(localStorage.getItem("user")).user.id}`}>
-                <b>{`${capitalize(ticket[0]?.customer?.firstname  || '')} ${capitalize(
+                {`${capitalize(ticket[0]?.customer?.firstname  || '')} ${capitalize(
                   ticket[0]?.customer?.lastname  || ''
-                )}`}</b>
+                )}`}
               </Link>
             </h6>
             {isTicketDetails && (
@@ -85,7 +84,6 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                 </p>
               </Fragment>
             )}
-            {/* <p>{` Marvin McKinney`}</p> */}
           </div>
 
           <div className="userProfileAboutCovers">

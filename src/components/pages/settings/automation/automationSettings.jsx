@@ -209,6 +209,7 @@ const AutomationSettings = () => {
           </div>
         </div>
       </Modal>
+
       <div className="card card-body bg-white border-0 mt-4">
         <div id="mainContentHeader">
           <h6 className="text-muted f-14">
@@ -222,34 +223,26 @@ const AutomationSettings = () => {
           </h6>
         </div>
         <div id="settings">
-          <div className="d-flex justify-content-between align-baseline">
-            <h5 className="mt-3 mb-4 f-16 fw-bold">Automation</h5>
-            <div>
-              <Link
-                className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
-                to="automation/new-policy"
-              >
-                Add Automation
-              </Link>
-              {/* <a
-                className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
-                // onClick={handleSubmitNewArticle}
-              >
-                Add policy
-              </a> */}
+          <div>
+            <h5 className="mt-3 mb-4 f-16 fw-bold">Automation</h5>         
+          </div>  
+            
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <div className="w-50">
+              <p className="small mb-0">
+                Automation Policies help you setup and maintain targets for the duration within which your teams respond and resolve tickets.
+              </p>
+              <p className="text-muted acx-fs-8">First matching automation policy will be applied to tickets wuth matching
+                conditions</p>
             </div>
+            <Link
+              className="btn btn-sm bg-custom"
+              to="automation/new-policy"
+            >
+              Add Automation
+            </Link>
           </div>
-          <p className="w-50 f-12">
-            Service level Agreement(SLA) Policies help you setup and maintain
-            targets for the duration within which your teams respond and resolve
-            rickets. Learn more
-          </p>
 
-          <p className="mt-5 f-12">
-            {/* <object data="../assets/alphatickets/icons/info-icon.svg" className="me-1 img-fluid"></object>The */}
-            first matching SLA policy will be applied to tickets wuth matching
-            conditions
-          </p>
           <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
             <div
               id="alphacxMTable"
@@ -262,17 +255,6 @@ const AutomationSettings = () => {
                   icons={tableIcons}
                   data={automationPolicies.map(({ name, id }, i) => ({
                     name,
-                    // status: (
-                    //   <div className="form-check form-switch d-flex align-items-center">
-                    //     {/* <input
-                    //       className="form-check-input"
-                    //       type="checkbox"
-                    //       id="security-switch"
-                    //       checked
-
-                    //     /> */}
-                    //   </div>
-                    // ),
                   }))}
                   options={{
                     search: true,
@@ -293,36 +275,7 @@ const AutomationSettings = () => {
               </MuiThemeProvider>
             </div>
           </div>
-          {/* <table className="table mt-4">
-            <thead className="bg-custom f-14">
-              <tr>
-                <th className="ps-5 border-top-right">SLA Policy</th>
-                <th className="border-top-left">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {SLApolicies.map((policy, i) => (
-                <TableItem
-                  key={i}
-                  i={i}
-                  policy={policy}
-                  handleStatusToogle={handleStatusToogle}
-                />
-              ))}
-            </tbody>
-          </table> */}
-          {/* <div className="text-center m-5 p-5 empty-state">
-            <object data="../assets/alphatickets//icons/carousel.svg" className="img-fluid"></object>
-            <p className="text-center">
-              You currently have Policy record at <br /> the moment
-            </p>
-            <a
-              href="./automation-form.html"
-              className="btn btn-sm bg-custom mt-2 add-policy"
-            >
-              Add Automation
-            </a>
-          </div> */}
+          
         </div>
       </div>
     </div>
