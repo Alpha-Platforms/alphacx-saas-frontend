@@ -131,7 +131,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
             NotificationManager.error("Fill up the required fields", 'Error');
         } else {
             setEditingCust(true);
-            const newCustomer = {firstName: firstname, lastName: lastname, email: emailaddress, phone_number: `${workphone}`, organisation, tags: selectedTags.map(tag => tag.value)};
+            const newCustomer = {firstName: firstname, lastName: lastname, email: emailaddress, phoneNumber: `${workphone}`, organisation, tags: selectedTags.map(tag => tag.value)};
             updateCustomer(customerId, newCustomer, custEditSuccess, custEditFail);
         }
     }
