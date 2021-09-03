@@ -9,6 +9,7 @@ import {connect} from 'react-redux';
 import {getCurrentAgent} from '../../../../reduxstore/actions/agentActions';
 import { updateUser, updateUserPassword } from './../../../../reduxstore/actions/userActions';
 import ImageDefault from '../../../../assets/svgicons/image-default.svg';
+import axios from 'axios';
 
 const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, currentAgent, groups, authenticatedUser}) => {
 
@@ -35,7 +36,6 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
         ownAvatar: ''
     });
 
-    console.log('setPersonalInfoInputs', personalInfoInputs);
 
     const updateUserInfo = async () => {
         const {firstname, lastname, email, role, team, oldPassword, newPassword} = personalInfoInputs;
@@ -58,27 +58,80 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
             const pwdRes = await updateUserPassword(oldPassword, newPassword);
 
             if (pwdRes?.status === 'success') {
+
+                if (uploadInfo.image) {
+                    const data = new FormData();
+                    data.append('file', uploadInfo.image);
+                    data.append('upload_preset', 'i5bn3icr');
+                    data.append('cloud_name', 'alphacx-co');
+                    axios
+                        .post(`https://api.cloudinary.com/v1_1/alphacx-co/image/upload`, data)
+                        .then(async res => {
+
+                            const userRes = await updateUser({...updatedInfo, avatar: res.data?.url});
+                            if (userRes?.status === 'success') {
+                                NotificationManager.success('Info has been updated', 'Success');
+                            } else {
+                                NotificationManager.error('Something went wrong');
+                            }
+                            setAccountLoading(false);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            NotificationManager.error("Photo could not be uploaded", "Error");
+                            setAccountLoading(false);
+                        });
+                } else {
+                    const userRes = await updateUser(updatedInfo);
+                    if (userRes?.status === 'success') {
+                        NotificationManager.success('Info has been updated', 'Success');
+                    } else {
+                        NotificationManager.error('Something went wrong');
+                    }
+                    setAccountLoading(false);
+                    
+                }
+
+
+            } else if (pwdRes?.status === 'fail') {
+                NotificationManager.error(pwdRes?.message || 'Password is incorrect.', 'Failed');
+                setAccountLoading(false);
+            } else {
+                NotificationManager.error('Something went wrong');            
+                setAccountLoading(false);
+            }
+        } else {
+            if (uploadInfo.image) {
+                const data = new FormData();
+                data.append('file', uploadInfo.image);
+                data.append('upload_preset', 'i5bn3icr');
+                data.append('cloud_name', 'alphacx-co');
+                axios
+                    .post(`https://api.cloudinary.com/v1_1/alphacx-co/image/upload`, data)
+                    .then(async res => {
+
+                        const userRes = await updateUser({...updatedInfo, avatar: res.data?.url});
+                        if (userRes?.status === 'success') {
+                            NotificationManager.success('Info has been updated', 'Success');
+                        } else {
+                            NotificationManager.error('Something went wrong');
+                        }
+                        setAccountLoading(false);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        NotificationManager.error("Photo could not be uploaded", "Error");
+                        setAccountLoading(false);
+                    });
+            } else {
                 const userRes = await updateUser(updatedInfo);
                 if (userRes?.status === 'success') {
                     NotificationManager.success('Info has been updated', 'Success');
                 } else {
                     NotificationManager.error('Something went wrong');
                 }
-            } else if (pwdRes?.status === 'fail') {
-                NotificationManager.error(pwdRes?.message || 'Password is incorrect.', 'Failed');
-            } else {
-                NotificationManager.error('Something went wrong');            
-            }
-            setAccountLoading(false);
-        } else {
-            const userRes = await updateUser(updatedInfo);
-
-            if (userRes?.status === 'success') {
-                NotificationManager.success('Info has been updated', 'Success');
                 setAccountLoading(false);
-            } else {
-                NotificationManager.error('Something went wrong');
-                setAccountLoading(false);
+                
             }
         }
     }
