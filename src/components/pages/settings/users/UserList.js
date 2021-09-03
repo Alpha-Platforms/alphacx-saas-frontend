@@ -18,7 +18,7 @@ import { ReactComponent as DeleteSvg } from "../../../../assets/icons/Delete.svg
 import { ReactComponent as DeleteGreySvg } from "../../../../assets/icons/Delete-grey.svg";
 import { ReactComponent as ArrowDownSvg } from "../../../../assets/icons/arrow-down.svg";
 import { Link } from "react-router-dom";
-// import moment from 'moment';,
+import moment from 'moment';
 // import {ReactComponent as CardDesignSvg} from '../../../../assets/icons/Card-Design.svg';
 import Swal from "sweetalert2";
 import { wordCapitalize } from "../../../../helper";
@@ -277,8 +277,8 @@ const UserList = ({
                     group: groups.filter((x) => x.id === group_id)[0]?.name
                       ? groups.filter((x) => x.id === group_id)[0]?.name
                       : "Head Office",
-                    // created: moment(created_at).format('DD MMM, YYYY'),
-                    created: "13 Apr 2021",
+                    created: moment(created_at).format('DD MMM, YYYY'),
+                    // created: "13 Apr 2021",
                     contact: { firstname, lastname, id },
                     isActivated,
                   })
