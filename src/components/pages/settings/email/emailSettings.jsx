@@ -42,9 +42,9 @@ const EmailSettings = () => {
                 <span>Advanced Settings</span>
               </span>
             </a> */}
-                            <Link className="btn btn-primary btn-sm ms-2" to="/settings/email/email-form">
+                            <button disabled={true} className="btn btn-primary btn-sm ms-2" to="/settings/email/email-form">
                                 <span>New support email</span>
-                            </Link>
+                            </button>
                         </div>
                     </div>
                     {/* <div className="form-group">

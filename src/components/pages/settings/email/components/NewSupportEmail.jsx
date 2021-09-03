@@ -39,9 +39,14 @@ const NewSupportEmail = ({configs, getConfigs}) => {
     console.clear();
     const { email, port, tls, host, password } = emailState.emailConfig;
     const data = {
-      email_config: {
+      email_config: password ? {
         email,
         password,
+        host,
+        port,
+        tls,
+      } : {
+        email,
         host,
         port,
         tls,
@@ -72,11 +77,28 @@ const NewSupportEmail = ({configs, getConfigs}) => {
           host: configs?.email_config?.host || '',
           email: configs?.email_config?.email || '',
           port: configs?.email_config?.port || '',
-          password: configs?.email_config?.password || '',
+          // password: configs?.email_config?.password || '',
+          password: ''
         }
       }));
     }
   }, [configs]);
+
+
+  const handleConfigChange = (e) => {
+    let {name, value, type, checked} = e.target;
+    value = type === "checkbox"
+        ? checked
+        : value;
+
+    setEmailState({
+        ...emailState,
+        emailConfig: {
+            ...emailState.emailConfig,
+            [name]: value
+        }
+    });
+};
 
   return (
     <div className="new-support-email">
@@ -91,7 +113,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
               <span className="text-custom">Email</span>{" "}
             </Link>
             <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
-            <span>New Email</span>
+            <span>Email Settings</span>
           </h6>
         </div>
 
@@ -125,6 +147,35 @@ const NewSupportEmail = ({configs, getConfigs}) => {
               This serves as your Return-to address e.g bayo@yourcompany.com
             </p>
           </div>
+
+
+          <div className="form-group mt-2">
+              <label className="form-label">
+                  Username<span className="text-danger">
+                      *</span>
+              </label>
+              <input
+                  type="text"
+                  className="form-control form-control-sm w-75"
+                  name="email"
+                  autoComplete="off"
+                  value={emailState.emailConfig.email || ""}
+                  onChange={handleConfigChange}/>
+          </div>
+          <div className="form-group mt-2">
+              <label className="form-label">
+                  Password<span className="text-danger">
+                      *</span>
+              </label>
+              <input
+                  type="password"
+                  className="form-control form-control-sm w-75"
+                  name="password"
+                  autoComplete="new-password"
+                  value={emailState.emailConfig.password || ""}
+                  onChange={handleConfigChange}/>
+          </div>
+
           {/* <div className="form-group mt-2">
             <label for="group" className="form-label f-14">
               Assign to Group
