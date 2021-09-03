@@ -226,7 +226,8 @@ const AutomationAction = ({
             <label className="mb-1">Message</label>
 
             <EditorBox
-              text={actionBody || ""}
+              // text={actionBody || ""}
+              text={'Canada is next'}
               // textParent={newPolicy}
               textFormat={"plain"}
               updateText={setActionBody}
