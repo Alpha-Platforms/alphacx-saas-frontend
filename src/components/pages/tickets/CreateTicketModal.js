@@ -341,6 +341,7 @@ const CreateTicketModal = ({
 
 
     const handleTagCreation = newTag => {
+        newTag = newTag.toLowerCase();
         setTagSelectLoading(true);
         const newTags = [...tags.map(tag => tag.value), newTag];
 
@@ -636,6 +637,7 @@ const CreateTicketModal = ({
                                             options={
                                                 // populate 'options' prop from $agents, with names remapped
                                                 tags?.map(item => {
+                                                item = item.toLowerCase();
                                                 return {value: item,label: item}
                                                 })
                                             }

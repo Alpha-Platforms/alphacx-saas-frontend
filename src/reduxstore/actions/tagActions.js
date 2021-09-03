@@ -39,7 +39,6 @@ export const createTags = (newTags, success, failed, newTag) => (dispatch, getSt
 				type: types.ADD_TAGS,
 				payload: newTag
 			});
-			console.log('tags updated success');
         } else {
             failed();
         }

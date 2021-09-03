@@ -45,7 +45,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     
     useEffect(() => {
         if (createModalShow && isEditing && customerId) {
-            const {firstname, lastname, phone_number, email, organisation} = customers.find(cust => cust.id === customerId);
+            const {firstname, lastname, phone_number, email, organisation, tags} = customers.find(cust => cust.id === customerId);
             setModalInputs(prev => ({
                 ...prev,
                 firstname,
@@ -53,6 +53,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                 workphone: phone_number,
                 emailaddress: email
             }));
+            setSelectedTags(Array.isArray(tags) ? tags.map(tag => ({value: tag.toLowerCase(), label: tag.toLowerCase()})) : []);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [createModalShow]);
@@ -131,7 +132,8 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
             NotificationManager.error("Fill up the required fields", 'Error');
         } else {
             setEditingCust(true);
-            const newCustomer = {firstName: firstname, lastName: lastname, email: emailaddress, phoneNumber: `${workphone}`, organisation, tags: selectedTags.map(tag => tag.value)};
+            const newCustomer = {firstName: firstname, lastName: lastname, email: emailaddress, phoneNumber: `${workphone}`, organisation, tags: selectedTags.map(tag => tag.value.toLowerCase())};
+            console.log('new customer edit info: ', newCustomer);
             updateCustomer(customerId, newCustomer, custEditSuccess, custEditFail);
         }
     }
@@ -139,6 +141,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     const handleModalHide = () => {
         setCreateModalShow(false);
         setCreatingCust(false);
+        setEditingCust(false);
         setUploadInfo({
             blob: null,
             msg: 'Upload logo for customer profile.',
@@ -162,6 +165,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     }
 
     const handleTagCreation = newTag => {
+        newTag = newTag.toLowerCase();
         setTagSelectLoading(true);
         const newTags = [...tags.map(tag => tag.value), newTag];
 
@@ -370,6 +374,7 @@ const workphoneChange = e => {
                                     options={
                                         // populate 'options' prop from $agents, with names remapped
                                         tags?.map(item => {
+                                        item = item.toLowerCase();
                                         return {value: item,label: item}
                                         })
                                     }
