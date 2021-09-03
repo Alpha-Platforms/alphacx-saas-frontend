@@ -83,7 +83,7 @@ const NewEmailTemplate = ({isConfigsLoaded, configs, getConfigs, updateEmailConf
         setCustLoading(true);
         const newEmailTemplate = {
             template: {
-                title: configs?.email_config?.template?.title,
+                title: newTemplate.name,
                 subject: newTemplate.subject,
                 ticket_template: newTemplate.text
             }
