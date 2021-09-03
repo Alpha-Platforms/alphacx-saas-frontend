@@ -63,6 +63,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
       //   totalTickets: parseInt(res?.data?.meta?.totalItems),
       // });
     } else {
+      console.log('Error from notification: ', res);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };

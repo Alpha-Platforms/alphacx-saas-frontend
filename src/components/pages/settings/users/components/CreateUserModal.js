@@ -36,6 +36,7 @@ const CreateUserModal = ({
         }));
     }
 
+
     const handleUserCreation = () => {
         const {firstName, lastName, email, group, role, description, phoneNumber} = modalInputs;
 
@@ -84,9 +85,9 @@ const CreateUserModal = ({
                     <div className="d-flex justify-content-between align-items-center">
                         <h3 className="f-16">Create User Record</h3>
                         <div>
-                            <button
+                            {/* <button
                                 type="button"
-                                className="btn bg-outline-custom d-inline-block btn-sm px-5 f-12 text-at-blue-light">Import User</button>
+                                className="btn bg-outline-custom d-inline-block btn-sm px-5 f-12 text-at-blue-light">Import User</button> */}
                         </div>
                     </div>
                     <div>
@@ -137,7 +138,7 @@ const CreateUserModal = ({
                                                 <span><img src={`https://www.countryflags.io/be/flat/64.png`} alt="" /></span> {cc.dial_code}</li>)}
                                         </ul> */}
                                     </div>
-                                    <input type="tel" className="form-control" name="workphone" id="workphone" value={modalInputs.workphone} aria-label="work phone" aria-describedby="workphone" onChange={handleModalInput}/>
+                                    <input type="tel" className="form-control" name="phoneNumber" id="workphone" value={modalInputs.phoneNumber} aria-label="work phone" aria-describedby="workphone" onChange={handleModalInput}/>
                                 </div>
                             </div>
                             {/* <div className="form-group mt-3">
