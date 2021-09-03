@@ -192,52 +192,29 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                                     Use SSL
                                 </label>
                             </div>
-                            <div className="form-check">
+                            {/* <div className="form-check">
                                 <input className="form-check-input" type="checkbox"/>
                                 <label className="form-check-label">
                                     Delete emails from server after fetching ?
                                 </label>
-                            </div>
+                            </div> */}
                         </div>
 
                         <div>
-                            <div className="form-group mt-3">
+                            {/* <div className="form-group mt-3">
                                 <label className="form-label">Authentication</label>
                                 <select className="form-select w-75" disabled={true}>
                                     <option>plain</option>
                                     <option>plain</option>
                                     <option>plain</option>
                                 </select>
-                            </div>
-                            <div className="d-flex align-items-center mt-4 mb-4">
+                            </div> */}
+                            {/* <div className="d-flex align-items-center mt-4 mb-4">
                                 <div className="vertical-line"></div>
                                 <div className="ms-4 flex-grow-1">
-                                    <div className="form-group mt-2">
-                                        <label className="form-label">
-                                            Username<span className="text-danger">
-                                                *</span>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className="form-control form-control-sm w-75"
-                                            name="email"
-                                            value={emailState.emailConfig.email || ""}
-                                            onChange={handleConfigChange}/>
-                                    </div>
-                                    <div className="form-group mt-2">
-                                        <label className="form-label">
-                                            Password<span className="text-danger">
-                                                *</span>
-                                        </label>
-                                        <input
-                                            type="password"
-                                            className="form-control form-control-sm w-75"
-                                            name="password"
-                                            value={emailState.emailConfig.password || ""}
-                                            onChange={handleConfigChange}/>
-                                    </div>
+                                    
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 )}
