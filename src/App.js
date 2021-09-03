@@ -46,6 +46,7 @@ import Ticket from "./components/pages/tickets/Ticket";
 import SettingsHome from "./components/pages/settings";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import "./styles/Custom.css";
 import { SocketDataProvider } from "./context/socket";
 import ArticleList from "./components/pages/help_center/help_pages/articleList";
 import Article from "./components/pages/help_center/help_pages/article";
@@ -54,7 +55,10 @@ import SettingsEmail from "./components/pages/settings/email/emailSettings";
 import UserList from "./components/pages/settings/users/UserList";
 import UserPersonal from "./components/pages/settings/users/UserPersonal";
 import Fields from "./components/pages/settings/fields/Fields";
-import SocialIntegrations from "./components/pages/settings/socialIntegrations";
+// 
+import SocialIntegrations from "./components/pages/settings/social_integrations/index";
+import FacebookIntegration from "./components/pages/settings/social_integrations/FacebookIntegration";
+import WhatsappIntegration from "./components/pages/settings/social_integrations/WhatsappIntegration";
 
 import ScrollToTop from "./components/helpers/ScrollToTop";
 import GroupList from "./components/pages/settings/groups/GroupList";
@@ -194,19 +198,20 @@ const SiteRouter = connect(mapStateToProps, {
                   pageName="Customer"
                   component={Customer}
                 />
+                {/* tickets routes */}
                 <DefaultLayoutRoute
                   exact
                   path="/tickets"
                   pageName="Tickets"
                   component={TicketList}
                 />
-                {/* settings route start */}
                 <DefaultLayoutRoute
                   exact
                   path="/tickets/:id"
                   pageName="Ticket"
                   component={Ticket}
                 />
+                {/* settings route start */}
                 <SettingsLayoutRoute
                   exact
                   path="/settings"
@@ -328,12 +333,6 @@ const SiteRouter = connect(mapStateToProps, {
                   pageName="Settings"
                   component={SettingsEmail}
                 />
-                <SettingsLayoutRoute
-                  exact
-                  path="/settings/integrations"
-                  pageName="Integration Settings"
-                  component={SocialIntegrations}
-                />
 
                 <SettingsLayoutRoute
                   exact
@@ -358,6 +357,25 @@ const SiteRouter = connect(mapStateToProps, {
                   path="/settings/canned-response/new-response"
                   pageName="Settings"
                   component={NewCannedResponse}
+                />
+                {/* Social integration routes starts */}
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/integrations"
+                  pageName="Integration Settings"
+                  component={SocialIntegrations}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/integrations/facebook"
+                  pageName="Integration Settings"
+                  component={FacebookIntegration}
+                />
+                <SettingsLayoutRoute
+                  exact
+                  path="/settings/integrations/whatsapp"
+                  pageName="Integration Settings"
+                  component={WhatsappIntegration}
                 />
               </SocketDataProvider>
             </LayoutProvider>

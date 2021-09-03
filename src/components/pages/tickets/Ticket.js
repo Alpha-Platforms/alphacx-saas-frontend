@@ -114,6 +114,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       plainText: "",
       richText: "",
     });
+    const [Agents, setAgents] = useState([]);
     const [Statuses, setStatuses] = useState([]);
     const [UserInfo, setUserInfo] = useState({});
     const [ChatCol, setChatCol] = useState({
@@ -147,6 +148,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     const [RSTicketStage, setRSTicketStage] = useState("");
     const [RSTicketPriority, setRSTicketPriority] = useState("");
     const [RSTicketRemarks, setRSTicketRemarks] = useState("");
+    const [RSTicketAssignee, setRSTicketAssignee] = useState([]);
     const [RSCustomerName, setRSCustomerName] = useState("")
     useEffect(() => {
       // getTickets();
@@ -158,6 +160,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       getCategories();
       getPriorities();
       getTags();
+      getAgents();
     }, []);
     useEffect(() => {
       AppSocket.createConnection();
@@ -335,6 +338,15 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         return NotificationManager.error(res.er.message, "Error", 4000);
       }
     };
+
+    const getAgents = async () => {
+      const res = await httpGetMain(`agents`);
+      if (res.status === "success") {
+        setAgents(res?.data);
+      } else {
+        return NotificationManager.error(res.er.message, "Error", 4000);
+      }
+    };
   
     const upTicketStatus = async (id) => {
       const data = { statusId: id };
@@ -406,6 +418,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         categoryId: RSTicketCategory,
         subject: RSTicketSubject,
         description: RSTicketRemarks,
+        assigneeId: RSTicketAssignee,
         tags: (!Array.isArray(RSTicketTags) || !RSTicketTags.length) ? null : RSTicketTags,
       };
       const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
@@ -416,6 +429,14 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
           "Ticket status successfully updated",
           "Success"
         );
+        const res = await httpGetMain(`tickets/${ticket[0].id}`);
+        if (res.status === "success") {
+            setTicket(res?.data);
+            NotificationManager.success("Data updated", "Successful");
+        } else {
+          setLoadSingleTicket(false);
+          NotificationManager.info("please refresh your page to see changes");
+        }
       } else {
         return NotificationManager.error(res.er.message, "Error", 4000);
       }
@@ -429,16 +450,16 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         description: [],
         category: "",
       });
-      if(openSaveTicketModal){
-        setRSTicketStage(ticket[0]?.status?.id);
+      if(openSaveTicketModal){  
+        setRSTicketStage(ticket[0].status.id);
         setRSTicketPriority(ticket[0].priority.id);
         setRSTicketCategory(ticket[0].category.id);
         setRSTicketSubject(ticket[0].subject);
         setRSTicketRemarks(ticket[0].description);
         setRSTicketTags(ticket[0].tags);
+        setRSTicketAssignee(ticket[0].assignee.id);
       }
     };
-  
     function createMarkup(data) {
       return { __html: data };
     }
@@ -1221,11 +1242,23 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                 <div className="ticketmodalInput-OneCol">
                   <div className="ticketmodalInputWrapMainOne">
                     <label htmlFor="">Assigned To</label>
-                    <input
-                      type="text"
-                      value={`${ticket[0]?.assignee?.firstname} ${ticket[0]?.assignee?.lastname}`}
-                      disabled
-                      style={{ fontSize: "12px" }}
+                    <RSelect
+                      className="rselectfield"
+                      closeMenuOnSelect={true}
+                      menuPlacement={"top"}
+                      onChange={(newValue, actionMeta) => {
+                        setRSTicketAssignee(newValue.value);
+                      }}
+                      defaultValue={{
+                        value: ticket[0]?.assignee?.id , 
+                        label: `${ticket[0]?.assignee?.firstname}  ${ticket[0]?.assignee?.lastname}`
+                      }}
+                      options={
+                        // populate 'options' prop from $Category, with names remapped
+                        Agents.map((data) => {
+                          return { value: data.id, label: `${data.firstname}  ${data.lastname}` };
+                        })
+                      }
                     />
                   </div>
                 </div>
@@ -1239,7 +1272,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                       setRSTicketTags(selectedOptions.map((item) => { return item.value} ))
                     }}
                     defaultValue={
-                      ticket[0]?.customer?.tags ? ticket[0]?.customer?.tags.map((data) => {
+                      ticket[0]?.tags ? ticket[0]?.tags.map((data) => {
                         return { value: data, label: data};
                       }) :  null
                     }
