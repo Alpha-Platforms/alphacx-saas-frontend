@@ -135,9 +135,34 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
             NotificationManager.error("Fill up the required fields", 'Error');
         } else {
             setEditingCust(true);
-            const newCustomer = {firstName: firstname, lastName: lastname, email: emailaddress, phoneNumber: `${workphone}`, organisation, tags: selectedTags.map(tag => tag.value.toLowerCase())};
-            console.log('new customer edit info: ', newCustomer);
-            updateCustomer(customerId, newCustomer, custEditSuccess, custEditFail);
+            
+            
+            if (uploadInfo.image) {
+                const data = new FormData();
+                data.append('file', uploadInfo.image);
+                data.append('upload_preset', 'i5bn3icr');
+                data.append('cloud_name', 'alphacx-co');
+                axios
+                    .post(`https://api.cloudinary.com/v1_1/alphacx-co/image/upload`, data)
+                    .then(async res => {
+                        const newCustomer = {firstName: firstname, lastName: lastname, email: emailaddress, phoneNumber: `${workphone}`, organisation, tags: selectedTags.map(tag => tag.value.toLowerCase()), avatar: res.data?.url};
+
+                        updateCustomer(customerId, newCustomer, custEditSuccess, custEditFail);
+                        
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        NotificationManager.error("Photo could not be uploaded", "Error");
+                        setCreatingCust(false);
+                    });
+                } else {
+
+                    const newCustomer = {firstName: firstname, lastName: lastname, email: emailaddress, phoneNumber: `${workphone}`, organisation, tags: selectedTags.map(tag => tag.value.toLowerCase())};
+                    updateCustomer(customerId, newCustomer, custEditSuccess, custEditFail);
+                    
+            }
+
+
         }
     }
 
