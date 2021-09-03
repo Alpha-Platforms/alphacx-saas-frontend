@@ -36,16 +36,17 @@ const CreateUserModal = ({
         }));
     }
 
-    const handleUserCreation = () => {
-        const {firstName, lastName, email, group, role, description, phoneNumber} = modalInputs;
 
-        if (!firstName || !lastName || !email || !group || !description || !phoneNumber) {
+    const handleUserCreation = () => {
+        const {firstName, lastName, email, group, role, phoneNumber} = modalInputs;
+
+        if (!firstName || !lastName || !email || !group  || !phoneNumber) {
             // all field not available
             NotificationManager.error('All fields are required', 'Error');
         } else {
             setCreatingUser(true);
             // all fields are passed
-            addAgent({firstName, lastName, email, groupId: group, role, phoneNumber, description});
+            addAgent({firstName, lastName, email, groupId: group, role, phoneNumber});
         }
     }
 
@@ -84,9 +85,9 @@ const CreateUserModal = ({
                     <div className="d-flex justify-content-between align-items-center">
                         <h3 className="f-16">Create User Record</h3>
                         <div>
-                            <button
+                            {/* <button
                                 type="button"
-                                className="btn bg-outline-custom d-inline-block btn-sm px-5 f-12 text-at-blue-light">Import User</button>
+                                className="btn bg-outline-custom d-inline-block btn-sm px-5 f-12 text-at-blue-light">Import User</button> */}
                         </div>
                     </div>
                     <div>
@@ -128,7 +129,7 @@ const CreateUserModal = ({
                                 <label htmlFor="workphone" className="form-label">Work Phone</label>
                                 <div className="input-group mb-3 workphone-group">
                                     <div className="input-group-prepend workphone-dd-wrapper">
-                                    <span><img src={`https://www.countryflags.io/${countrycodes.find(x => x.dial_code === modalInputs.ccode)?.code || ''}/flat/64.png`} alt="" /></span><select className="d-inline mt-0" name="ccode" id="ccode" value={modalInputs.ccode} onChange={handleModalInput}>
+                                    <span><img src={`https://www.countryflags.io/${countrycodes.find(x => x.dial_code === modalInputs.ccode)?.code || ''}/flat/64.png`} alt="" /></span><select defaultValue="+234" className="d-inline mt-0" name="ccode" id="ccode" value={modalInputs.ccode} onChange={handleModalInput}>
                                             {countrycodes.sort((a, b) => Number(a.dial_code.slice(1)) - Number(b.dial_code.slice(1))).map(cc => <option value={cc.dial_code}>{cc.dial_code}</option>)}
                                         </select>
                                         {/* <span className="workphone-dropdown">lite</span>
@@ -137,7 +138,7 @@ const CreateUserModal = ({
                                                 <span><img src={`https://www.countryflags.io/be/flat/64.png`} alt="" /></span> {cc.dial_code}</li>)}
                                         </ul> */}
                                     </div>
-                                    <input type="tel" className="form-control" name="workphone" id="workphone" value={modalInputs.workphone} aria-label="work phone" aria-describedby="workphone" onChange={handleModalInput}/>
+                                    <input type="tel" className="form-control" name="phoneNumber" id="workphone" value={modalInputs.phoneNumber} aria-label="work phone" aria-describedby="workphone" onChange={handleModalInput}/>
                                 </div>
                             </div>
                             {/* <div className="form-group mt-3">
@@ -150,7 +151,7 @@ const CreateUserModal = ({
                                     value={modalInputs.phonenumber}
                                     onChange={handleModalInput}/>
                             </div> */}
-                            <div className="form-group mt-3">
+                            {/* <div className="form-group mt-3">
                                 <label className="f-12" htmlFor="email">Description</label>
                                 <textarea
                                     className="form-control form-control"
@@ -158,7 +159,7 @@ const CreateUserModal = ({
                                     name="description"
                                     onChange={handleModalInput}
                                     value={modalInputs.description}></textarea>
-                            </div>
+                            </div> */}
                             {/* <div className="form-group mt-3">
                                 <label className="f-12" htmlFor="#role">Role</label>
                                 <input type="text" className="form-control form-control" id="role"/>

@@ -332,7 +332,6 @@ const CreateTicketModal = ({
                 });
             }
         })
-        
     }
 
     const getTeams = async () => {
@@ -347,7 +346,6 @@ const CreateTicketModal = ({
 
     const tagCreated = (newTags, newTag) => {
         // new tag created successfully
-        
         setSelectedTags(prev => ([...selectedTags, {value: newTag, label: newTag}]));
         setTagSelectLoading(false);
     }
