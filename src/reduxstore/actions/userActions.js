@@ -18,7 +18,7 @@ export const getUsers = () => (dispatch, getState) => {
 			type: types.GET_USERS,
 			payload: (res.data && res.data.status === "success") ? res.data.data : {}
 		}))
-		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 
@@ -32,7 +32,7 @@ export const getPaginatedUsers = (itemsPerPage, currentPage) => (dispatch, getSt
 			type: types.GET_USERS,
 			payload: (res.data && res.data.status === "success") ? res.data.data : {}
 		}))
-		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 export const getSearchedUsers = (itemsPerPage, currentPage, searchVal) => (dispatch, getState) => {
@@ -47,7 +47,7 @@ export const getSearchedUsers = (itemsPerPage, currentPage, searchVal) => (dispa
 			type: types.GET_USERS,
 			payload: (res.data && res.data.status === "success") ? res.data.data : {}
 		}))
-		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 

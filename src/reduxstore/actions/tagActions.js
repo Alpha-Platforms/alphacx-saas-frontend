@@ -18,7 +18,7 @@ export const getTags = () => (dispatch, getState) => {
                     ?.data
                     : {}
         }))
-        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+        .catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 export const createTags = (newTags, success, failed, newTag) => (dispatch, getState) => {
@@ -43,7 +43,7 @@ export const createTags = (newTags, success, failed, newTag) => (dispatch, getSt
             failed();
         }
     }).catch(err => {
-        dispatch(returnErrors(err.response.data, err.response.status));
+        dispatch(returnErrors(err.response?.data, err.response?.status));
         failed();
     });
 }

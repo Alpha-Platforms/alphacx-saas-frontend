@@ -18,7 +18,7 @@ export const getTickets = () => (dispatch, getState) => {
                 ? res.data?.data
                 : {}
         }))
-        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+        .catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 export const getPaginatedTickets = (itemsPerPage, currentPage) => (dispatch, getState) => {
@@ -34,7 +34,7 @@ export const getPaginatedTickets = (itemsPerPage, currentPage) => (dispatch, get
                 ? res.data?.data
                 : {}
         }))
-        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+        .catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 export const getSearchedTickets = (itemsPerPage, currentPage, searchVal) => (dispatch, getState) => {
@@ -54,7 +54,7 @@ export const getSearchedTickets = (itemsPerPage, currentPage, searchVal) => (dis
                 ? res.data?.data
                 : {}
         }))
-        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+        .catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 /*  */
@@ -129,7 +129,7 @@ export const addTicket = (newTicket) => (dispatch, getState) => {
         .then(res => {
             dispatch({type: types.ADD_TICKET, payload: res.data})
         })
-        .catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+        .catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 export const resetTicketCreated = () => ({type: types.RESET_TICKET_CREATED});

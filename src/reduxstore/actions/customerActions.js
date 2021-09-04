@@ -87,7 +87,7 @@ export const updateCustomer = (customerId, newCustomer, successCallback, failure
 			successCallback && successCallback();
 		})
 		.catch(err => {
-			dispatch(returnErrors(err.response.data, err.response?.status))
+			dispatch(returnErrors(err.response?.data, err.response?.status))
 			failureCallback && failureCallback();
 		});
 
@@ -147,7 +147,7 @@ export const getPaginatedCurrentCustomerTickets = (itemsPerPage, currentPage, cu
                 ? res.data.data
                 : {}
         }))
-        .catch(err => dispatch(returnErrors(err.response.data, err.response?.status)));
+        .catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 export const setCustomersLoading = () => {
