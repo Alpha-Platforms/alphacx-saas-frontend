@@ -21,7 +21,7 @@ import { Link } from "react-router-dom";
 import moment from 'moment';
 // import {ReactComponent as CardDesignSvg} from '../../../../assets/icons/Card-Design.svg';
 import Swal from "sweetalert2";
-import { wordCapitalize } from "../../../../helper";
+import { wordCapitalize, getUserInitials } from "../../../../helper";
 
 import "../../../../styles/Setting.css";
 const UserList = ({
@@ -44,7 +44,7 @@ const UserList = ({
             if (isUsersLoaded) {
                 setChangingRow(false);
             }
-    }, [isUsersLoaded]); */
+          }, [isUsersLoaded]); */
 
   useEffect(() => {
     setUserLoading(!isAgentsLoaded);
@@ -52,7 +52,7 @@ const UserList = ({
       setChangingRow(false);
     }
   }, [isAgentsLoaded]);
-
+  
   function AlphacxMTPagination2(props) {
     const {
       ActionsComponent,
@@ -80,7 +80,7 @@ const UserList = ({
       />
     );
   }
-
+  
   const AlphacxMTPagination = (props) => {
     const {
       ActionsComponent,
@@ -122,6 +122,8 @@ const UserList = ({
     );
   };
 
+  const themes = ['red', 'blue', 'yellow', 'purple'];
+  
   const tableTheme = createTheme({
     palette: {
       primary: {
@@ -135,7 +137,7 @@ const UserList = ({
 
   function handleActiveChange() {
     const { name, isActivated } = this;
-
+    
     Swal.fire({
       title: isActivated ? "Deactivate?" : "Activate?",
       text: `Do you want to ${
@@ -154,6 +156,7 @@ const UserList = ({
       }
     });
   }
+
 
   return (
     <div>
@@ -223,12 +226,21 @@ const UserList = ({
                   {
                     title: "Name",
                     field: "name",
-                    render: (rowData) => (
-                      <Link
-                        to={`/settings/profile/${rowData.contact.id}`}
-                        style={{ textTransform: "capitalize" }}
-                      >{`${rowData.name}`}</Link>
-                    ),
+                    // render: (rowData) => (
+                    //   <Link
+                    //     to={`/settings/profile/${rowData.contact.id}`}
+                    //     style={{ textTransform: "capitalize" }}
+                    //   >{`${rowData.name}`}</Link>
+                    // ),
+                    render: ({contact}) => (<div className="d-flex user-initials-sm">
+                        <div
+                            className={`user-initials ${contact.theme
+                            ? contact.theme
+                            : themes[Math.floor(Math.random() * 4)]}`}>{contact.avatar ? <img src={contact.avatar} className="cust-avatar" alt="" /> : getUserInitials(`${contact.firstname} ${contact.lastname}`)}</div>
+                            <div className="ms-2 mt-1">
+                                <Link to={`/settings/profile/${contact.id}`} style={{ textTransform: 'capitalize' }}>{`${contact.firstname} ${contact.lastname}`}</Link>
+                            </div>
+                        </div>),
                     width: "10%",
                   },
                   {
@@ -297,6 +309,7 @@ const UserList = ({
                     isActivated,
                     id,
                     group_id,
+                    avatar
                   }) => ({
                     name: `${firstname} ${lastname}`,
                     emailAddress: email,
@@ -307,7 +320,7 @@ const UserList = ({
                       : "Head Office",
                     created: moment(created_at).format('DD MMM, YYYY'),
                     // created: "13 Apr 2021",
-                    contact: { firstname, lastname, id },
+                    contact: { firstname, lastname, id, avatar },
                     isActivated,
                   })
                 )}
