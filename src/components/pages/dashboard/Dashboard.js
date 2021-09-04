@@ -19,7 +19,7 @@ const DashboardTwo = () => {
                     <div className="dashboard-box-top my-3 px-2">
                         <div>Customer Satisfaction (CSAT)</div>
                         <div>
-                            <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+                            {/* <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
                                 <Dropdown.Toggle variant="transparent" size="sm">
                                     <span className="">Days</span> <i className="bi bi-chevron-expand"></i>
                                 </Dropdown.Toggle>
@@ -31,7 +31,7 @@ const DashboardTwo = () => {
                                         <span className="black-text">--</span>
                                     </Dropdown.Item>
                                 </Dropdown.Menu>
-                            </Dropdown>
+                            </Dropdown> */}
                         </div>
 
                     </div>

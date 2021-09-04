@@ -258,7 +258,7 @@ const TicketLineGraph = () => {
             <div className="dashboard-box-top px-2 py-3">
                 <div>Ticket Sources</div>
                 <div>
-                    <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+                    {/* <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
                         <Dropdown.Toggle variant="transparent" size="sm">
                             <span className="">Days</span>
                             <i className="bi bi-chevron-expand"></i>
@@ -271,7 +271,7 @@ const TicketLineGraph = () => {
                                 <span className="black-text">--</span>
                             </Dropdown.Item>
                         </Dropdown.Menu>
-                    </Dropdown>
+                    </Dropdown> */}
                 </div>
             </div>
             <div className="tclinegraph-wrapper">
