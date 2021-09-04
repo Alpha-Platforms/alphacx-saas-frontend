@@ -8,6 +8,8 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import {connect} from 'react-redux';
 import {getCurrentAgent} from '../../../../reduxstore/actions/agentActions';
 import { updateUser, updateUserPassword } from './../../../../reduxstore/actions/userActions';
+import ImageDefault from '../../../../assets/svgicons/image-default.svg';
+import axios from 'axios';
 
 const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, currentAgent, groups, authenticatedUser}) => {
 
@@ -22,16 +24,18 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
         email: '',
         role: '',
         team: '',
-        avatar: {
-            currentAvatar: '',
-            file: null,
-            blob: null
-        },
         oldPassword: '',
         newPassword: ''
     });
 
-    console.log('setPersonalInfoInputs', personalInfoInputs);
+    const [uploadInfo, setUploadInfo] = useState({
+        blob: null,
+        msg: 'Upload logo for customer profile.',
+        error: false,
+        image: null,
+        ownAvatar: ''
+    });
+
 
     const updateUserInfo = async () => {
         const {firstname, lastname, email, role, team, oldPassword, newPassword} = personalInfoInputs;
@@ -54,27 +58,80 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
             const pwdRes = await updateUserPassword(oldPassword, newPassword);
 
             if (pwdRes?.status === 'success') {
+
+                if (uploadInfo.image) {
+                    const data = new FormData();
+                    data.append('file', uploadInfo.image);
+                    data.append('upload_preset', 'i5bn3icr');
+                    data.append('cloud_name', 'alphacx-co');
+                    axios
+                        .post(`https://api.cloudinary.com/v1_1/alphacx-co/image/upload`, data)
+                        .then(async res => {
+
+                            const userRes = await updateUser({...updatedInfo, avatar: res.data?.url});
+                            if (userRes?.status === 'success') {
+                                NotificationManager.success('Info has been updated', 'Success');
+                            } else {
+                                NotificationManager.error('Something went wrong');
+                            }
+                            setAccountLoading(false);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            NotificationManager.error("Photo could not be uploaded", "Error");
+                            setAccountLoading(false);
+                        });
+                } else {
+                    const userRes = await updateUser(updatedInfo);
+                    if (userRes?.status === 'success') {
+                        NotificationManager.success('Info has been updated', 'Success');
+                    } else {
+                        NotificationManager.error('Something went wrong');
+                    }
+                    setAccountLoading(false);
+                    
+                }
+
+
+            } else if (pwdRes?.status === 'fail') {
+                NotificationManager.error(pwdRes?.message || 'Password is incorrect.', 'Failed');
+                setAccountLoading(false);
+            } else {
+                NotificationManager.error('Something went wrong');            
+                setAccountLoading(false);
+            }
+        } else {
+            if (uploadInfo.image) {
+                const data = new FormData();
+                data.append('file', uploadInfo.image);
+                data.append('upload_preset', 'i5bn3icr');
+                data.append('cloud_name', 'alphacx-co');
+                axios
+                    .post(`https://api.cloudinary.com/v1_1/alphacx-co/image/upload`, data)
+                    .then(async res => {
+
+                        const userRes = await updateUser({...updatedInfo, avatar: res.data?.url});
+                        if (userRes?.status === 'success') {
+                            NotificationManager.success('Info has been updated', 'Success');
+                        } else {
+                            NotificationManager.error('Something went wrong');
+                        }
+                        setAccountLoading(false);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        NotificationManager.error("Photo could not be uploaded", "Error");
+                        setAccountLoading(false);
+                    });
+            } else {
                 const userRes = await updateUser(updatedInfo);
                 if (userRes?.status === 'success') {
                     NotificationManager.success('Info has been updated', 'Success');
                 } else {
                     NotificationManager.error('Something went wrong');
                 }
-            } else if (pwdRes?.status === 'fail') {
-                NotificationManager.error(pwdRes?.message || 'Password is incorrect.', 'Failed');
-            } else {
-                NotificationManager.error('Something went wrong');            
-            }
-            setAccountLoading(false);
-        } else {
-            const userRes = await updateUser(updatedInfo);
-
-            if (userRes?.status === 'success') {
-                NotificationManager.success('Info has been updated', 'Success');
                 setAccountLoading(false);
-            } else {
-                NotificationManager.error('Something went wrong');
-                setAccountLoading(false);
+                
             }
         }
     }
@@ -85,10 +142,6 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
             ...prev,
             [name]: value
         }))
-    }
-
-    const handleAvatarChange = () => {
-        console.log('avatar change');
     }
 
     useEffect(() => {
@@ -102,25 +155,86 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
         if (currentAgent) {
             const {firstname, lastname, email, role, avatar, group_id} = currentAgent;
 
-            console.log("lolo", currentAgent);
-
             setPersonalInfoInputs(prev => ({
                 ...prev,
                 firstname,
                 lastname,
                 email,
                 role,
-                avatar: {
-                    ...prev.avatar,
-                    currentAvatar: avatar
-                },
                 team: group_id
             }));
+
+            setUploadInfo(prev => ({
+                ...prev,
+                ownAvatar: avatar
+            }))
         }
 
     }, [currentAgent]);
 
-    console.log(personalInfoInputs);
+
+    const handleImgSelect = function (e) {
+        // store current input
+        const fileInput = e.target
+    
+        // create a store for the current dimension and default info
+        let maxReqDimensions = {
+                width: 1500,
+                height: 1500
+            };
+    
+        if (!fileInput.files.length) {
+            // No file is selected
+            setUploadInfo(prev => ({...prev, msg: 'No file is slected', error: true, blob: null, image: null, ownAvatar: ''}));
+            
+        } else {
+            // file selected
+            
+            // check if selected file is an image
+            if (fileInput.files[0].type.indexOf("image/") === -1) {
+                // Selected file is not an image
+                setUploadInfo(prev => ({...prev, msg: 'Selected file is not an image', error: true, blob: null, image: null, ownAvatar: ''}));
+            } else {
+                // Selected file is an image
+                /* 
+                 * read the selected image to get the file width and height
+                 */
+                // create a new file reader object
+                const reader = new FileReader();
+                reader.readAsDataURL(fileInput.files[0]);
+                reader.onload = function (e) {
+                    // when reader has loaded
+    
+                    //create a new image object
+                    const currentImage = new Image();
+                    // set the source of the image to the base64 string from the file reader
+                    currentImage.src = this.result;
+    
+                    currentImage.onload = function () {
+                        const [currentImageHeight, currentImageWidth] = [this.height, this
+                            .width
+                        ];
+    
+                        if (currentImageWidth > maxReqDimensions.width ||
+                            currentImageHeight > maxReqDimensions.height) {
+                            // current selected image dimesions are not acceptable
+                            setUploadInfo(prev => ({...prev, msg: `Selected image should have max dimension of ${maxReqDimensions.width}x${maxReqDimensions.height}`, error: true, blog: null, image: null}));
+                        } else {
+                            // current selected image dimensions are acceptable
+                            const fileName = fileInput.files[0].name;
+                            const fileBlob = URL.createObjectURL(fileInput.files[0]);
+    
+                            setUploadInfo(prev => ({...prev, blob: fileBlob, msg: fileName, error: false, image: fileInput.files[0], ownAvatar: ''}));
+                            /* 
+                            when the image with the blob loads call the below method
+                            URL.revokeObjectURL(this.src);  where this.src is the blob created
+                            */
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     return (
         <div className="account-settings">
@@ -274,7 +388,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                                     </div>
                                 </div>}
 
-                                <div className="d-flex mb-3">
+                                {/* <div className="d-flex mb-3">
                                     <div
                                         id="uploadPersonalPhotoInputImgPreview"
                                         style={{
@@ -319,7 +433,69 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                                             </small>
                                         </p>
                                     </div>
+                                </div> */}
+
+                                <div>
+                                <div className="d-flex mb-4 mt-3">
+                                    <div
+                                        id="uploadPersonalPhotoInputImgPreview"
+                                        style={{
+                                        width: "6rem",
+                                        height: "6rem"
+                                    }}
+                                        className="
+                                            border border-1
+                                            rounded-3
+                                            me-5
+                                            d-flex
+                                            justify-content-center
+                                            align-items-center
+                                            ">
+                                        <div
+                                            style={{
+                                            justifyContent: "center",
+                                            height: "100%",
+                                            width: "100%"
+                                        }}
+                                            className="ms-0 d-flex justify-content-between align-items-center">
+                                            {(uploadInfo.blob || uploadInfo.ownAvatar) ? (<img
+                                                        className="avatarImage"
+                                                        src={uploadInfo.ownAvatar ? uploadInfo.ownAvatar : uploadInfo.blob}
+                                                        alt=""
+                                                        onLoad={() => uploadInfo.blob && URL.revokeObjectURL(uploadInfo.blob)}
+                                                        style={{
+                                                        maxWidth: '100%',
+                                                        maxHeight: '100%'
+                                                    }}/>)
+                                                    : <img
+                                                        src={ImageDefault}
+                                                        alt=""
+                                                        style={{
+                                                        paddingLeft: '2.1rem'
+                                                    }}
+                                                        className="pe-none"/>}
+                                                
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label
+                                            htmlFor="uploadPersonalPhotoInput"
+                                            className="btn btn-sm bg-at-blue-light px-4 py-1 mb-2 mt-1"
+                                            onClick={() => document.getElementById("accountLogo").click()}>
+                                            Upload Photo
+                                        </label>
+                                        <input type="file" name="accountLogo" id="accountLogo" onChange={handleImgSelect}/>
+                                        <p className="mb-0 text-at-red">
+                                            <small id="uploadPersonalPhotoInputError"></small>
+                                        </p>
+                                        <p className="uploadInfoWrapper">
+                                            <small id="uploadPersonalPhotoInputInfo" className={`${uploadInfo.error && 'text-danger'}`}>
+                                                {uploadInfo.msg}
+                                            </small>
+                                        </p>
+                                    </div>
                                 </div>
+                            </div>
 
                                 
                                 <div className="mb-5 text-end">
