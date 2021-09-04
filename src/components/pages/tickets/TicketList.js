@@ -368,7 +368,7 @@ const TicketList = ({
                     category: category?.name,
                     created: moment(created_at).format("DD MMM, YYYY"),
                     status: status?.status,
-                    assignedTo: `${assignee?.firstname || ""}`,
+                    assignedTo: `${assignee?.firstname || ""} ${assignee?.lastname || ""}`,
                     rating: rating,
                     assigneeId: assignee?.id
                   })
