@@ -144,7 +144,7 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories 
         <h5 className="fw-bold">Teams</h5>
 
         <div
-          className={`d-flex justify-content-between flex-wrap rounded-top-04 flex-md-nowrap align-items-center p-4 px-3`}
+          className={`d-flex justify-content-between flex-wrap rounded-top-04 flex-md-nowrap align-items-center p-4 px-3 pe-0`}
         >
           <div></div>
 

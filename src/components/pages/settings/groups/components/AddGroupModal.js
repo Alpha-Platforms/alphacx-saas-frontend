@@ -10,6 +10,7 @@ const AddGroupModal = ({
   newTeam,
   setNewTeam,
   category,
+  isEditing
 }) => {
   //create user modal
   const [policyLoading, setPolicyLoading] = useState(false);

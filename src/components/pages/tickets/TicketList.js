@@ -191,7 +191,7 @@ const TicketList = ({
     {
       title: "Assigned to",
       field: "assignedTo",
-      render: (rowData) => rowData.assignedTo ?  <Link to={`/settings/profile/${rowData.assigneeId}`} style={{ textTransform: "capitalize" }}>
+      render: (rowData) => rowData.assignedTo.trim() ?  <Link to={`/settings/profile/${rowData.assigneeId}`} style={{ textTransform: "capitalize" }}>
           {rowData.assignedTo}
         </Link> : <span className="text-muted acx-fs-8">Unassigned</span>,
 
