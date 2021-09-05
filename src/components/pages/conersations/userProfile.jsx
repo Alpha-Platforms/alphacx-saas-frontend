@@ -134,7 +134,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                       ticket[0]?.assignee?
                       (<Link to={`/settings/profile/${ticket[0]?.assignee?.id}`}>
                         {`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(ticket[0]?.assignee?.lastname)}`}
-                      </Link>)
+                      </Link>) 
                       :
                       (<span>Unassigned</span>)
                     }
