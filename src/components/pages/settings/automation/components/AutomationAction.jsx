@@ -16,9 +16,9 @@ const AutomationAction = ({
   agreement,
   index,
 
-  fnFromParent,
+  getActionData,
 
-  agentt,
+  agents,
   teams
 
 }) => {
@@ -27,7 +27,7 @@ const AutomationAction = ({
   const [recipients, setRecipients] = useState([])
 
   const [openDeleteActionModal, SetOpenDeleteActionModal] = useState(false);
-  const [actionBody, setActionBody] = useState(agreement.body || "");
+  const [actionBody, setActionBody] = useState("editor body during edit" || "");
   const [placeholder, setPlaceholder] = useState("");
   const [availableDays, setAvailableDays] = useState();
 
@@ -115,15 +115,21 @@ const AutomationAction = ({
       setRSTeams(teams)
     })
 
-    mapRSelectPersonOptions(agentt, (agents) => {
+    mapRSelectPersonOptions(agents, (agents) => {
       setRSAgents(agents)
     })
 
   },[]);
 
   useEffect(() => {
-    fnFromParent(action);
+    getActionData(action);
   }, [action])
+
+  useEffect(() => {
+    setAction( prev => {
+      return {...prev, body: actionBody}
+    })
+  }, [actionBody])
 
   return (
     <>
@@ -133,7 +139,6 @@ const AutomationAction = ({
           <div className="d-flex  flex-column assign">
             <label for="channel">Send</label>
             
-              {/* className="form-select form-select-sm mt-2" */}
             <RSelect 
               className=""
               id="channel"
@@ -226,8 +231,7 @@ const AutomationAction = ({
             <label className="mb-1">Message</label>
 
             <EditorBox
-              // text={actionBody || ""}
-              text={'Canada is next'}
+              text={actionBody || ""}
               // textParent={newPolicy}
               textFormat={"plain"}
               updateText={setActionBody}
@@ -286,7 +290,7 @@ const AutomationAction = ({
 const mapStateToProps = state => {
   return {
     categories: state.category.categories,
-    agentt: state.agent.agents,
+    agents: state.agent.agents,
     teams: state.group.groups
   }
 }

@@ -32,7 +32,6 @@ const EditorBox = ({
     const plainText = editorState.getCurrentContent().getPlainText();
     const richText = draftToHtml(convertToRaw(editorState.getCurrentContent()));
     setEditorState(editorState);
-    console.log(editorState.getCurrentContent().getPlainText());
     if (textParent) {
       updateText({
         ...textParent,
