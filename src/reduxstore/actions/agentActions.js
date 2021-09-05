@@ -15,7 +15,7 @@ export const getAgents = () => (dispatch, getState) => {
 			type: types.GET_AGENTS,
 			payload: (res.data && res.data.status === "success") ? res.data.data : {}
 		}))
-		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 
@@ -29,7 +29,7 @@ export const getPaginatedAgents = (itemsPerPage, currentPage) => (dispatch, getS
 			type: types.GET_AGENTS,
 			payload: (res.data && res.data.status === "success") ? res.data.data : {}
 		}))
-		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 
@@ -42,7 +42,7 @@ export const addAgent = (newAgent) => (dispatch, getState) => {
 			type: types.ADD_AGENT,
 			payload: res.data
 		}))
-		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 // valid redux action

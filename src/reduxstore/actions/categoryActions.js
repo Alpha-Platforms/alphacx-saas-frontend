@@ -19,7 +19,7 @@ export const getCategories = () => (dispatch, getState) => {
 			type: types.GET_CATEGORIES,
 			payload: res.data && res.data.status === "success" ? res.data.data : {}
 		}))
-		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 export const addCategory = (newCategory) => (dispatch, getState) => {
@@ -32,7 +32,7 @@ export const addCategory = (newCategory) => (dispatch, getState) => {
 			type: types.ADD_CATEGORY,
 			payload: res.data
 		}))
-		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 
 }
 
@@ -63,7 +63,7 @@ export const updateCategory = (catInfo, success, failed) => (dispatch, getState)
 			}
 		})
 		.catch(err => {
-			dispatch(returnErrors(err.response.data, err.response.status));
+			dispatch(returnErrors(err.response?.data, err.response?.status));
 			failed && failed();
 		});
 

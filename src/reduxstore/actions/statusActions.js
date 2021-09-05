@@ -14,7 +14,7 @@ export const getStatuses = () => (dispatch, getState) => {
 			type: types.GET_STATUSES,
 			payload: res.data && res.data.status === "success" ? res.data.data : {}
 		}))
-		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 export const addStatus = (newStatus) => (dispatch, getState) => {
@@ -27,7 +27,7 @@ export const addStatus = (newStatus) => (dispatch, getState) => {
 			type: types.ADD_STATUS,
 			payload: res.data
 		}))
-		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 
 }
 
@@ -45,7 +45,7 @@ export const updateStatus = (statusId, newStatus, successCallback, failureCallba
 			successCallback && successCallback();
 		})
 		.catch(err => {
-			dispatch(returnErrors(err.response.data, err.response.status))
+			dispatch(returnErrors(err.response?.data, err.response?.status))
 			failureCallback && failureCallback();
 		});
 

@@ -27,7 +27,7 @@ const TicketStatusPie = () => {
                     Ticket status
                 </div>
                 <div>
-                    <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+                    {/* <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
                         <Dropdown.Toggle variant="transparent" size="sm">
                             <span className="">Days</span> <i className="bi bi-chevron-expand"></i>
                         </Dropdown.Toggle>
@@ -39,7 +39,7 @@ const TicketStatusPie = () => {
                                 <span className="black-text">--</span>
                             </Dropdown.Item>
                         </Dropdown.Menu>
-                    </Dropdown>
+                    </Dropdown> */}
                 </div>
             </div>
 
