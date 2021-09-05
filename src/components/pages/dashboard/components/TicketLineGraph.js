@@ -168,7 +168,7 @@ const TicketLineGraph = () => {
             "Mon",
             "Tues",
             "Wed",
-            "Thurs",
+            "Thu",
             "Fri",
             "Sat",
             "Sun"
