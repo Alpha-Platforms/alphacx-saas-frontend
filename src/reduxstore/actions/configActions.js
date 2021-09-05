@@ -17,7 +17,7 @@ export const getConfigs = (success) => (dispatch, getState) => {
 			})
 			success && success();
 		})
-		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 
@@ -31,7 +31,7 @@ export const updateEmailConfig = (emailConfig, successCallback, failureCallback)
 			successCallback && successCallback();
 		})
 		.catch(err => {
-			dispatch(returnErrors(err.response.data, err.response?.status))
+			dispatch(returnErrors(err.response?.data, err.response?.status))
 			failureCallback && failureCallback();
 		});
 }

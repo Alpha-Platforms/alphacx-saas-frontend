@@ -14,7 +14,7 @@ export const getSubCategories = () => (dispatch, getState) => {
 			type: types.GET_SUB_CATEGORIES,
 			payload: res.data && res.data.status === "success" ? res.data.data : {}
 		}))
-		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 export const addSubCategory = (newSubCategory) => (dispatch, getState) => {
@@ -27,7 +27,7 @@ export const addSubCategory = (newSubCategory) => (dispatch, getState) => {
 			type: types.ADD_SUB_CATEGORY,
 			payload: res.data
 		}))
-		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 

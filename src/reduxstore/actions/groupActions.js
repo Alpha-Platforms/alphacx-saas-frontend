@@ -14,7 +14,7 @@ export const getGroups = () => (dispatch, getState) => {
 			type: types.GET_GROUPS,
 			payload: (res.data && res.data.status === "Success") ? res.data.data : []
 		}))
-		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 
