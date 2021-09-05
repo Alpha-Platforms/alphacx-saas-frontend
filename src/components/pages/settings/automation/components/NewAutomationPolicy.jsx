@@ -19,10 +19,11 @@ import AutomationAction from "./AutomationAction";
 import RSelect from "react-select";
 import { connect } from "react-redux";
 
-const NewAutomationPolicy = ({categories}) => {
+const NewAutomationPolicy = ({categoriz}) => {
 
   let router = useHistory();
-  let { policyID } = useParams();
+  let {automationId} = useParams();
+
   const availablePlaceholders = [
     "name",
     "ticket",
@@ -149,7 +150,7 @@ const NewAutomationPolicy = ({categories}) => {
     if (res?.status === "success") {
       setPolicyLoading(false);
       NotificationManager.success("New Automation created", "Success");
-      router.push("/settings/automation");
+      router.push("/settings/automations");
     } else {
       console.error(res.er);
       setPolicyLoading(false);
@@ -160,41 +161,32 @@ const NewAutomationPolicy = ({categories}) => {
 
   // FUNCTION TO GET AUTOMATION INFORMATION IF IN EDIT MODE
   const getAutomationInfo = async () => {
-    const res = await httpGetMain(`sla/${policyID}`);
-    return res;
+    // const res = await httpGetMain(`sla/${automationId}`);
+    // setPolicyLoading(false);
+    // if (res?.status === "success") {
+    //   // convertToDays(res?.data.due_date);
+    //   setNewPolicy(res?.data);
+    //   // setAssignType(res?.data?.reminder?.recipient?.type || "agent");
+    // } else {
+    //   return NotificationManager.error(res?.er?.message, "Error", 4000);
+    // }
 
-    setPolicyLoading(false);
-    if (res?.status === "success") {
-      // convertToDays(res?.data.due_date);
-      setNewPolicy(res?.data);
-      // setAssignType(res?.data?.reminder?.recipient?.type || "agent");
-    } else {
-      return NotificationManager.error(res?.er?.message, "Error", 4000);
-    }
   };
 
   // FUNCTION TO UPDATE AN AUTOMATION IF IN EDIT MODE
   const updateAutomationPolicy = async () => {
     setPolicyLoading(true);
-    let convertedAgreements = newPolicy.reminder.agreements;
-    for (let index = 0; index < convertedAgreements.length; index++) {
-      convertedAgreements[index] = {
-        ...convertedAgreements[index],
-        days: convertedAgreements[index].day + convertedAgreements[index].hours
-      };
-    }
 
     const body = {
       name: newPolicy.name,
       description: newPolicy.description || "",
       reminder: {
-        categories: newPolicy.reminder.categories,
-        agreements: convertedAgreements,
+        // categories: newPolicy.reminder.categories,
         recipient: newPolicy.reminder.recipient,
       },
     };
 
-    const res = await httpPatchMain(`sla/${policyID}`, body);
+    const res = await httpPatchMain(`sla/${automationId}`, body);
     setPolicyLoading(false);
     if (res?.status === "success") {
       router.push("/settings/automation");
@@ -205,13 +197,13 @@ const NewAutomationPolicy = ({categories}) => {
   };
 
   useEffect(() => {
-    mapRSelectNonPersonOptions(categories, (category) => {
+    mapRSelectNonPersonOptions(categoriz, (category) => {
       setRSCategoriesOptions(category)
     })
 
-    if(policyID){
+    // check for edit mode and get automation with id
+    if(automationId){
       getAutomationInfo()
-      .then(data => console.log(data))
     };
 
   },[])
@@ -220,10 +212,6 @@ const NewAutomationPolicy = ({categories}) => {
     // Run submit when the flag is true
     if(sumbitting) submitAutomation()
   }, [sumbitting])
-
-  useEffect(() => {
-    console.log(policyID? true : false)
-  }, [policyID])
 
 
   return (
@@ -246,16 +234,16 @@ const NewAutomationPolicy = ({categories}) => {
               </Link>{" "}
               <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
 
-              <Link to="/settings/automation">
+              <Link to="/settings/automations">
                 <span className="text-custom">Automations</span>
               </Link>
               <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
-              <span>{policyID ? "Edit" : "New"} Automation</span>
+              <span>{automationId ? "Edit" : "New"} Automation</span>
             </h6>
           </div>
           <div id="setting-form">
             <h5 className="mt-3 mb-4 f-16 fw-bold">
-              {policyID ? "Edit" : "New"} Automation
+              {automationId ? "Edit" : "New"} Automation
             </h5>
             <form action="">
               <div className="form-group mt-3">
@@ -353,7 +341,7 @@ const NewAutomationPolicy = ({categories}) => {
               <a
                 className="btn btn-sm ms-2 f-12 bg-custom px-4"
                 onClick={
-                  policyID ? updateAutomationPolicy : startSubmitAutomation
+                  automationId ? updateAutomationPolicy : startSubmitAutomation
                 }
               >
                 Save Changes
@@ -367,7 +355,7 @@ const NewAutomationPolicy = ({categories}) => {
 };
 
 const mapStateToProps = state => {
-  return {categories: state.category.categories}
+  return {categoriz: state.category.categories}
 }
 
 export default connect(mapStateToProps)(NewAutomationPolicy)

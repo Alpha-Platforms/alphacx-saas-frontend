@@ -238,19 +238,19 @@ const SiteRouter = connect(mapStateToProps, {
                 />
                 <SettingsLayoutRoute
                   exact
-                  path="/settings/automation"
+                  path="/settings/automations"
                   pageName="Automation Settings"
                   component={AutomationSettings}
                 />
                 <SettingsLayoutRoute
                   exact
-                  path="/settings/automation/new"
+                  path="/settings/automation"
                   pageName="Automation Settings"
                   component={NewAutomationPolicy}
                 />
                 <SettingsLayoutRoute
                   exact
-                  path="/settings/automation/:policyID"
+                  path="/settings/automation/:automationId"
                   pageName="Automation Settings"
                   component={NewAutomationPolicy}
                 />

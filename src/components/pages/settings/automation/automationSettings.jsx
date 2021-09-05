@@ -3,7 +3,7 @@ import "../help_center/helpCenter.scss";
 import "./automationSettings.scss";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
 import TripleDot from "../../../../assets/imgF/triple_dot.png";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import MaterialTable from "material-table";
 import { TablePagination } from "@material-ui/core";
 import tableIcons from "../../../../assets/materialicons/tableIcons";
@@ -20,11 +20,14 @@ import { Modal } from "react-responsive-modal";
 import ScaleLoader from "react-spinners/ScaleLoader";
 
 const AutomationSettings = () => {
+  const history = useHistory();
+
   const [automationPolicies, setAutomationPolicies] = useState([]);
   const [tableMeta, setTableMeta] = useState({});
   const [deleteUrl, setDeleteUrl] = useState("");
   const [openDeleteActionModal, SetOpenDeleteActionModal] = useState(false);
   const [policyLoading, setPolicyLoading] = useState(false);
+
 
   // const handleStatusToogle = (index) => {
   //   let policies = SLApolicies;
@@ -77,14 +80,7 @@ const AutomationSettings = () => {
           </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item eventKey="1">
-              <span
-                className="black-text"
-                onClick={() => {
-                  window.location.href = `/settings/automation/edit/${
-                    automationPolicies[rowData.tableData.id].id
-                  }`;
-                }}
-              >
+              <span onClick={() => history.push(`/settings/automation/${automationPolicies[rowData.tableData.id].id}`)}>
                 Edit
               </span>
             </Dropdown.Item>
@@ -219,8 +215,6 @@ const AutomationSettings = () => {
               <span className="text-custom">Settings</span>
             </Link>{" "}
             <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
-            {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
-                            className="img-fluid mx-2 me-3"></object> */}
             <span>Automations</span>
           </h6>
         </div>
@@ -239,7 +233,7 @@ const AutomationSettings = () => {
             </div>
             <Link
               className="btn btn-sm bg-custom"
-              to="automation/new-policy"
+              to="automation"
             >
               Add Automation
             </Link>
@@ -266,7 +260,6 @@ const AutomationSettings = () => {
                     paging: true,
                     pageSize: 10,
                     headerStyle: {
-                      // backgroundColor: '#f8f9fa'
                       backgroundColor: "#fefdfd",
                     },
                   }}

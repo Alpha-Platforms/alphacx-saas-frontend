@@ -15,9 +15,7 @@ const AutomationAction = ({
   availablePlaceholders,
   agreement,
   index,
-
   getActionData,
-
   agents,
   teams
 
@@ -29,9 +27,8 @@ const AutomationAction = ({
   const [openDeleteActionModal, SetOpenDeleteActionModal] = useState(false);
   const [actionBody, setActionBody] = useState("editor body during edit" || "");
   const [placeholder, setPlaceholder] = useState("");
-  const [availableDays, setAvailableDays] = useState();
 
-  const [assignType, setAssignType] = useState("agent");
+  const [recipientType, setRecipientType] = useState("agent");
 
   const [RSAgents, setRSAgents] = useState([]);
   const [RSTeams, setRSTeams] = useState([]);
@@ -83,13 +80,12 @@ const AutomationAction = ({
     })
   }
 
-  const loadRecipients = (type) => {
-      if(type === 'agent'){
+  const loadRecipients = () => {
+      if(recipientType === 'agent'){
         setRecipients(RSAgents);
       } else {
         setRecipients(RSTeams);
       }
-      setAssignType(type);
   }
 
   const mapRSelectPersonOptions = (persons, cb) => {
@@ -109,7 +105,8 @@ const AutomationAction = ({
   }
 
   useEffect(() => {
-    loadRecipients(assignType);
+
+    // loadRecipients(recipientType);
 
     mapRSelectNonPersonOptions(teams, (teams) => {
       setRSTeams(teams)
@@ -118,7 +115,6 @@ const AutomationAction = ({
     mapRSelectPersonOptions(agents, (agents) => {
       setRSAgents(agents)
     })
-
   },[]);
 
   useEffect(() => {
@@ -184,8 +180,11 @@ const AutomationAction = ({
                   name="recipientType"
                   type="radio"
                   value="agent"
-                  checked={assignType === "agent"}
-                  onChange={(e) => loadRecipients(e.target.value)}
+                  checked={recipientType === "agent"}
+                  onChange={(e) => {
+                    setRecipientType(e.target.value)
+                    loadRecipients()
+                  }}
                 />
                 <label className="form-check-label f-14" for="radio-2">Agents</label>
               </div>
@@ -195,8 +194,11 @@ const AutomationAction = ({
                   name="recipientType"
                   type="radio"
                   value="group"
-                  checked={assignType === "group"}
-                  onChange={(e) => loadRecipients(e.target.value)}
+                  checked={recipientType === "group"}
+                  onChange={(e) => {
+                    setRecipientType(e.target.value)
+                    loadRecipients()
+                  }}
                 />
                 <label className="form-check-label f-14" for="radio-2">Teams</label>
               </div>
@@ -289,7 +291,6 @@ const AutomationAction = ({
 
 const mapStateToProps = state => {
   return {
-    categories: state.category.categories,
     agents: state.agent.agents,
     teams: state.group.groups
   }
