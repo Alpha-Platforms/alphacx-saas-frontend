@@ -53,7 +53,7 @@ export default function MessageList({
             <div
               key={index}
               className={`message-listmain ${
-                index + 1 == activeChat ? "message-listmain-active" : ""
+                index + 1 === activeChat ? "message-listmain-active" : ""
               }`}
               onClick={() => {
                 scollPosSendMsgList();
@@ -83,9 +83,9 @@ export default function MessageList({
                   data?.customer?.firstname
                 )} ${capitalizeFirstLetter(data?.customer?.lastname)}`}</p>
                 <p className="senderMSG">
-                  {data.subject == null
+                  {data.description == null
                     ? ""
-                    : truncateWithEllipses(data.subject, 30)}
+                    : truncateWithEllipses(data.description, 20)}
                 </p>
                 <div className="msg-badges">
                   <div
