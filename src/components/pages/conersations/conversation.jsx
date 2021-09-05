@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { UserDataContext } from "../../../context/userContext";
 import "./conversation.css";
 import { Modal } from "react-responsive-modal";
+import Spinner from 'react-bootstrap/Spinner';
 import PinIcon from '../../../assets/icons/pin.svg';
 import MessageList from "./messageList";
 import searchIcon from "../../../assets/imgF/Search.png";
@@ -99,7 +100,7 @@ export default function Conversation() {
     description: [],
     category: "",
   });
-  const [sendingReply, setsendingReply] = useState(false);
+  const [sendingReply, setSendingReply] = useState(false);
   const [msgHistory, setMsgHistory] = useState([]);
   const [wsTickets, setwsTickets] = useState([]);
   const [categoryUpdate, setCategoryUpdate] = useState("");
@@ -108,12 +109,13 @@ export default function Conversation() {
   const [YesterdayMsges, setYesterdayMsges] = useState([]);
   const [AchiveMsges, setAchiveMsges] = useState([]);
   const [ShowAchive, setShowAchive] = useState(false);
-  const [channel, setchannel] = useState("All");
+  const [channel, setChannel] = useState("All");
   const [status, setstatus] = useState("All");
   const [activeChat, setActiveChat] = useState(1);
   const [updateTickStatusS, setupdateTickStatusS] = useState("");
   
   /* UPDATE MODAL FORM VALUES */
+  const [processing, setProcessing] = useState(false);
   const [RSCustomerName, setRSCustomerName] = useState("");
   const [RSTicketTags, setRSTicketTags] = useState([]);
   const [RSTicketAssignee, setRSTicketAssignee] = useState([]);
@@ -228,7 +230,7 @@ export default function Conversation() {
 
   const filterTicket = (value, type) => {
     if (type === "channel") {
-      setchannel(value);
+      setChannel(value);
       AppSocket.createConnection();
       let data = { channel: value === "All" ? "" : value, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, data);
@@ -237,7 +239,7 @@ export default function Conversation() {
     if (type === "status") {
       setstatus(value);
       AppSocket.createConnection();
-      let data = { status: value == "All" ? "" : value, per_page: 100 };
+      let data = { status: value === "All" ? "" : value, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, data);
     }
     setFilterTicketsState(value);
@@ -269,7 +271,7 @@ export default function Conversation() {
     };
     // console.log(singleTicketFullInfo.customer.phone_number);
     // console.log(data);
-    // setsendingReply(true);
+    // setSendingReply(true);
     const replyData = {
       attachment: null,
       created_at: new Date(),
@@ -288,13 +290,13 @@ export default function Conversation() {
     if (res?.status === "success") {
       scollPosSendMsgList();
       console.log(res);
-      // setsendingReply(false);
+      // setSendingReply(false);
       // ReloadloadSingleMessage();
       setEditorState(initialState);
       setReplyTicket({ plainText: "", richText: "" });
     } else {
       // setLoadingTicks(false);
-      setsendingReply(false);
+      setSendingReply(false);
       console.log(res.er);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
@@ -418,6 +420,7 @@ export default function Conversation() {
   };
 
   const updateTicket = async (status) => {
+    setProcessing(true);
     if (status === "") {
       return;
     }
@@ -433,6 +436,7 @@ export default function Conversation() {
     };
     const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
     if (res.status === "success") {
+      setProcessing(false);
       closeSaveTicketModal();
       NotificationManager.success(
         "Ticket status successfully updated",
@@ -450,6 +454,7 @@ export default function Conversation() {
         NotificationManager.info("please refresh your page to see changes");
       }
     } else {
+      setProcessing(false);
       return NotificationManager.error(res.er.message, "Error", 4000);
     }
   };
@@ -469,7 +474,7 @@ export default function Conversation() {
       setRSTicketSubject(ticket[0].subject);
       setRSTicketRemarks(ticket[0].description);
       setRSTicketTags(ticket[0].tags);
-      setRSTicketAssignee(ticket[0].assignee.id);
+      setRSTicketAssignee(ticket[0]?.assignee?.id);
     }
   };
 
@@ -1317,8 +1322,10 @@ export default function Conversation() {
               </div>
             )}
             <div className="closeTicketModdalj">
-              <button type="submit" onClick={updateTicket}>
-                Update
+              <button className="btn acx-btn-primary px-3 py-2" disabled={processing} type="submit" onClick={updateTicket}>
+                { processing ? 
+                (<React.Fragment><Spinner as="span" size="sm" animation="border" variant="light" /> Processing...</React.Fragment>  ) 
+                  : `Update`}
               </button>
             </div>
           </div>

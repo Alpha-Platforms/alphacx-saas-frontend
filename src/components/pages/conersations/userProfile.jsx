@@ -53,10 +53,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
               <div className="userProfilePicConNoImgj">
                 <p
                   style={{ fontSize: "30px!important" }}
-                >{`${UserInfo?.firstname?.slice(
-                  0,
-                  1
-                )}${UserInfo?.lastname?.slice(0, 1)}`}</p>
+                >{`${capitalize(UserInfo?.firstname?.slice(0,1))}${capitalize(UserInfo?.lastname?.slice(0, 1))}`}</p>
               </div>
             )}
             {/* 
@@ -118,19 +115,15 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                     {ticket[0]?.assignee?.avatar ? (
                       <img
                         // src={ticket[0]?.assignee?.avatar || 'love'}
-                        src="https://res.cloudinary.com/mchardex/image/upload/v1574292303/Test/adsixqftzm2wwwemzul2.jpg"
-                        alt=""
+                        src={ticket[0]?.assignee?.avatar}
+                        alt={`${ticket[0]?.assignee?.firstname} ${ticket[0]?.assignee?.lastname}`}
                         style={{
                           width: "30px", height: "30px",borderRadius: "50%", marginRight: "2px",
                         }}
                       />
                     ) : (
                       <div
-                        style={{
-                          width: "30px", height: "30px",borderRadius: "50%", marginRight: "2px",
-                          backgroundColor: "currentColor"
-                        }}
-                      ></div>
+                        className="avatar avatar-sm rounded-circle overflow-hidden bg-secondary"></div>
                     )}
                   </div>
 
@@ -139,7 +132,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                       
                     {
                       ticket[0]?.assignee?
-                      (<Link to={`/settings/profile/${JSON.parse(localStorage.getItem("user")).user.id}`}>
+                      (<Link to={`/settings/profile/${ticket[0]?.assignee?.id}`}>
                         {`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(ticket[0]?.assignee?.lastname)}`}
                       </Link>)
                       :
@@ -441,7 +434,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
             </div>
           </div>
 
-          {ticket[0].history.length == 0 ? (
+          {ticket[0].history.length === 0 ? (
             ""
           ) : (
             <div className="box">
