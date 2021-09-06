@@ -28,7 +28,7 @@ const AutomationAction = ({
   const [actionBody, setActionBody] = useState("editor body during edit" || "");
   const [placeholder, setPlaceholder] = useState("");
 
-  const [recipientType, setRecipientType] = useState("agent");
+  const [recipientType] = useState("agent");
 
   const [RSAgents, setRSAgents] = useState([]);
   const [RSTeams, setRSTeams] = useState([]);
@@ -38,6 +38,8 @@ const AutomationAction = ({
     {label: "WhatsApp", value: "WhatsApp"},
     {label: "SMS", value: "SMS"}
   ])
+
+  const [optionsList, setOptionsList] = useState("")
 
 
 // F U N C T I O N S
@@ -80,12 +82,15 @@ const AutomationAction = ({
     })
   }
 
-  const loadRecipients = () => {
-      if(recipientType === 'agent'){
+  const loadRecipients = (type) => {
+      if(type === recipientType){
         setRecipients(RSAgents);
       } else {
         setRecipients(RSTeams);
       }
+      console.log(RSTeams);
+
+      setOptionsList("Lagos")
   }
 
   const mapRSelectPersonOptions = (persons, cb) => {
@@ -105,8 +110,7 @@ const AutomationAction = ({
   }
 
   useEffect(() => {
-
-    // loadRecipients(recipientType);
+    loadRecipients(recipientType)
 
     mapRSelectNonPersonOptions(teams, (teams) => {
       setRSTeams(teams)
@@ -180,10 +184,9 @@ const AutomationAction = ({
                   name="recipientType"
                   type="radio"
                   value="agent"
-                  checked={recipientType === "agent"}
-                  onChange={(e) => {
-                    setRecipientType(e.target.value)
-                    loadRecipients()
+                  checked
+                  onClick={(e) => {
+                    loadRecipients(e.target.value);
                   }}
                 />
                 <label className="form-check-label f-14" for="radio-2">Agents</label>
@@ -194,10 +197,8 @@ const AutomationAction = ({
                   name="recipientType"
                   type="radio"
                   value="group"
-                  checked={recipientType === "group"}
-                  onChange={(e) => {
-                    setRecipientType(e.target.value)
-                    loadRecipients()
+                  onClick={(e) => {
+                    loadRecipients(e.target.value);
                   }}
                 />
                 <label className="form-check-label f-14" for="radio-2">Teams</label>
@@ -212,6 +213,17 @@ const AutomationAction = ({
                 isMulti
                 options={recipients}
                 onChange={handleRSChange}
+              />
+            </div>
+
+            <div>
+              <RSelect
+                options={[
+                  {label: optionsList, value: optionsList},
+                  {label: "canada", value: "canada"}
+                ]}
+                onChange={() => console.log(recipients)}
+                
               />
             </div>
 

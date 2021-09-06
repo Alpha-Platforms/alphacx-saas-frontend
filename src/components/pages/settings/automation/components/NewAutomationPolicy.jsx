@@ -51,6 +51,7 @@ const NewAutomationPolicy = ({categoriz}) => {
   const [RSCategoriesOptions, setRSCategoriesOptions] = useState([]);
   const [action, setAction] = useState([])
   const [sumbitting, setSumbitting] = useState(false)
+  
   //
 
   const [newPolicy, setNewPolicy] = useState({
@@ -195,6 +196,7 @@ const NewAutomationPolicy = ({categoriz}) => {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
+
 
   useEffect(() => {
     mapRSelectNonPersonOptions(categoriz, (category) => {
