@@ -161,7 +161,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                 lastname,
                 email,
                 role,
-                team: group_id
+                team: group_id || ""
             }));
 
             setUploadInfo(prev => ({

@@ -23,11 +23,13 @@ import { ReactComponent as DotSvg } from "../../../../assets/icons/dots.svg";
 import { httpGetMain } from "../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 
-const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories }) => {
+const GroupList = ({ groups, categories, isGroupsLoaded }) => {
   const [addGroupModalShow, setAddGroupModalShow] = useState(false);
   const [addMemberModalShow, setAddMemberModalShow] = useState(false);
   const [ticketCategories, setTicketCategories] = useState([]);
-  const [newTeam, setNewTeam] = useState({});
+  const [groupId, setGroupId] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [groupsLoading, setGroupsLoading] = useState(false);
 
   /* useEffect(() => {
             setUserLoading(!isUsersLoaded);
@@ -35,20 +37,20 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories 
                 setChangingRow(false);
             }
     }, [isUsersLoaded]); */
-  // function to get the list of all ticket categories
-  const getTicketCategories = async () => {
-    const res = await httpGetMain("categories");
-    if (res?.status === "success") {
-      setTicketCategories(res?.data?.categories);
-      // getAgents();
-    } else {
-      return NotificationManager.error(res?.er?.message, "Error", 4000);
-    }
-  };
+  // // function to get the list of all ticket categories
+  // const getTicketCategories = async () => {
+  //   const res = await httpGetMain("categories");
+  //   if (res?.status === "success") {
+  //     setTicketCategories(res?.data?.categories);
+  //     // getAgents();
+  //   } else {
+  //     return NotificationManager.error(res?.er?.message, "Error", 4000);
+  //   }
+  // };
 
-  useEffect(() => {
-    getTicketCategories();
-  }, []);
+  // useEffect(() => {
+  //   getTicketCategories();
+  // }, []);
 
   function AlphacxMTPagination2(props) {
     const {
@@ -119,6 +121,10 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories 
     );
   }; */
 
+  useEffect(() => {
+    setGroupsLoading(!isGroupsLoaded);
+}, [isGroupsLoaded]);
+
   const tableTheme = createTheme({
     palette: {
       primary: {
@@ -130,8 +136,21 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories 
     },
   });
 
+  const handleGroupEdit = function() {
+    setIsEditing(true);
+    const {id} = this;
+    setGroupId(id);
+    setAddGroupModalShow(true);
+  }
+
+  const handleGroupAdd = () => {
+    setIsEditing(false);
+    setAddGroupModalShow(true)
+  }
+
   return (
     <div>
+    {groupsLoading && <div className="cust-table-loader"><ScaleLoader loading={groupsLoading} color={"#006298"}/></div>}
       <div className="card card-body bg-white p-0 border-0">
         <div id="mainContentHeader" className="breadcrumb">
           <span className="text-muted f-14">
@@ -144,7 +163,7 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories 
         <h5 className="fw-bold">Teams</h5>
 
         <div
-          className={`d-flex justify-content-between flex-wrap rounded-top-04 flex-md-nowrap align-items-center p-4 px-3`}
+          className={`d-flex justify-content-between flex-wrap rounded-top-04 flex-md-nowrap align-items-center p-4 px-3 pe-0`}
         >
           <div></div>
 
@@ -159,7 +178,7 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories 
             </button> */}
 
             <button
-              onClick={() => setAddGroupModalShow(true)}
+              onClick={handleGroupAdd}
               type="button"
               className="btn btn-sm bg-at-blue-light px-md-3 mx-1"
             >
@@ -208,7 +227,7 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories 
                           </span>
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
-                          <Dropdown.Item eventKey="1">
+                          <Dropdown.Item eventKey="1" onClick={handleGroupEdit.bind({id: rowData.id})}>
                             <Link to="#">
                               <span className="black-text">Edit</span>
                             </Link>
@@ -221,19 +240,21 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories 
                     ),
                   },
                 ]}
-                data={groups.map(({ name, description, category_id }) => ({
+                data={groups.map(({ id, name, description, category_id }) => ({
                   name,
                   description,
                   members: 5,
                   category: categories.find(cat => cat?.id === category_id)?.name,
                   updated: "21 Jul 2021",
+                  id
                 }))}
                 options={{
                   search: true,
                   selection: false,
                   // exportButton: true,
                   tableLayout: "auto",
-                  paging: false,
+                  paging: true,
+                  pageSize: 10,
                   rowStyle: {
                     backgroundColor: "#fff",
                   },
@@ -269,9 +290,9 @@ const GroupList = ({ groups, meta, getPaginatedUsers, isUsersLoaded, categories 
       <AddGroupModal
         addGroupModalShow={addGroupModalShow}
         setAddGroupModalShow={setAddGroupModalShow}
-        newTeam={newTeam}
-        setNewTeam={setNewTeam}
         category={ticketCategories}
+        groupId={groupId}
+        isEditing={isEditing}
       />
       <AddMemberModal
         addMemberModalShow={addMemberModalShow}
@@ -286,7 +307,8 @@ const mapStateToProps = (state, ownProps) => ({
   groups: state.group.groups,
   meta: state.user.meta,
   isUsersLoaded: state.user.isUsersLoaded,
-  categories: state.category.categories
+  categories: state.category.categories,
+  isGroupsLoaded: state.group.isGroupsLoaded
 });
 
 export default connect(mapStateToProps, null)(GroupList);
