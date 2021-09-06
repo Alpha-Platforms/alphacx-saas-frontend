@@ -45,8 +45,9 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
             lastname,
             email,
             role,
-            team
+            groupId: team
         };
+
         console.clear();
 
         setAccountLoading(true);
