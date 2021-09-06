@@ -103,10 +103,12 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                 title: 'Customer',
                 field: 'contact',
                 render: ({contact}) => (<div className="d-flex user-initials-sm">
+                    <div>
                     <div
                         className={`user-initials ${contact.theme
                         ? contact.theme
                         : themes[Math.floor(Math.random() * 4)]}`}>{contact.avatar ? <img src={contact.avatar} className="cust-avatar" alt="" /> : getUserInitials(`${contact.firstname} ${contact.lastname}`)}</div>
+                    </div>
                     <div className="ms-2 mt-1">
                         <Link to={`/customers/${contact.id}`} style={{ textTransform: 'capitalize' }}>{`${contact.firstname} ${contact.lastname}`}</Link>
                     </div>
