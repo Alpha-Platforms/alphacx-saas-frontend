@@ -81,22 +81,20 @@ const AutomationAction = ({
   }
 
   const loadRecipients = (type) => {
-      // if(type === recipientType){
-      //   setRecipients(RSAgents);
-      // } else {
-      //   setRecipients(RSTeams);
-      // }
 
-      // console.log("zeelz", agents)
-      
+    const mappedItems = []; 
 
-      let mappedItems = [];    
+    if(type === recipientType){   
       agents.map(item => {
         mappedItems.push({value: item.id, label: item.firstname +" "+ item.lastname})
       })
-      // setRSAgents(mappedItems)
-      setRecipients(mappedItems);
-    
+    } else {  
+      teams.map(item => {
+        mappedItems.push({value: item.id, label: item.name})
+      })
+    }
+
+    setRecipients(mappedItems);
 
   }
 
@@ -115,20 +113,6 @@ const AutomationAction = ({
     })
     return cb(mappedItems)
   }
-
-  useEffect(() => {
-
-    // mapRSelectNonPersonOptions(teams, (teams) => {
-    //   setRSTeams(teams)
-    // })
-
-    // mapRSelectPersonOptions(agents, (agents) => {
-    //   setRSAgents(agents)
-    // })
-
-    loadRecipients(recipientType)
-
-  },[]);
 
   useEffect(() => {
     getActionData(action);
@@ -193,7 +177,6 @@ const AutomationAction = ({
                   name="recipientType"
                   type="radio"
                   value="agent"
-                  checked
                   onClick={(e) => {
                     loadRecipients(e.target.value);
                   }}
@@ -210,7 +193,7 @@ const AutomationAction = ({
                     loadRecipients(e.target.value);
                   }}
                 />
-                <label className="form-check-label f-14" for="radio-2">{recipients[0]?.value}</label>
+                <label className="form-check-label f-14" for="radio-2">Teams</label>
               </div>
             </div>
 
@@ -222,17 +205,6 @@ const AutomationAction = ({
                 isMulti
                 options={recipients}
                 onChange={handleRSChange}
-              />
-            </div>
-
-            <div>
-              <RSelect
-                options={[
-                  {label: "lagos", value: "lagos"},
-                  {label: "canada", value: "canada"}
-                ]}
-                onChange={() => console.log("zeelz", RSAgents, RSTeams)}
-                
               />
             </div>
 
