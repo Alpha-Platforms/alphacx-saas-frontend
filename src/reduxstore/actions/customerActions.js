@@ -94,7 +94,7 @@ export const updateCustomer = (customerId, newCustomer, successCallback, failure
 }
 
 // valid redux action
-export const getCurrentCustomer = (id) => (dispatch, getState) => {
+export const getCurrentCustomer = (id, refetchCust) => (dispatch, getState) => {
     if (!navigator.onLine) {
         return NotificationManager.error('Please check your internet', 'Opps!', 3000);
     }
@@ -106,7 +106,23 @@ export const getCurrentCustomer = (id) => (dispatch, getState) => {
 
     // console.log("Current Customer", currentCustomer);
 
-    if (getState().customer.currentCustomer
+    if (refetchCust) {
+        axios
+            .get(`${config.stagingBaseUrl}/users/${id}`, userTokenConfig(getState))
+            .then(res => dispatch({
+                type: types.GET_CURRENT_CUSTOMER,
+                payload: res.data && res.data?.status === "success"
+                    ? res.data.data
+                    : null
+            }))
+            .catch(err => {
+                dispatch(returnErrors(err?.response?.data, err?.response?.status))
+                dispatch({
+                    type: types.GET_CURRENT_CUSTOMER,
+                    payload: null
+                })
+            });
+    } else if (getState().customer.currentCustomer
         ?.id === id) {
         dispatch({
             type: types.GET_CURRENT_CUSTOMER,
