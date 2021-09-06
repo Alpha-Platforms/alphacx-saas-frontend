@@ -39,8 +39,6 @@ const AutomationAction = ({
     {label: "SMS", value: "SMS"}
   ])
 
-  const [optionsList, setOptionsList] = useState("")
-
 
 // F U N C T I O N S
   const addAction = () => {
@@ -83,14 +81,23 @@ const AutomationAction = ({
   }
 
   const loadRecipients = (type) => {
-      if(type === recipientType){
-        setRecipients(RSAgents);
-      } else {
-        setRecipients(RSTeams);
-      }
-      console.log(RSTeams);
+      // if(type === recipientType){
+      //   setRecipients(RSAgents);
+      // } else {
+      //   setRecipients(RSTeams);
+      // }
 
-      setOptionsList("Lagos")
+      // console.log("zeelz", agents)
+      
+
+      let mappedItems = [];    
+      agents.map(item => {
+        mappedItems.push({value: item.id, label: item.firstname +" "+ item.lastname})
+      })
+      // setRSAgents(mappedItems)
+      setRecipients(mappedItems);
+    
+
   }
 
   const mapRSelectPersonOptions = (persons, cb) => {
@@ -110,15 +117,17 @@ const AutomationAction = ({
   }
 
   useEffect(() => {
+
+    // mapRSelectNonPersonOptions(teams, (teams) => {
+    //   setRSTeams(teams)
+    // })
+
+    // mapRSelectPersonOptions(agents, (agents) => {
+    //   setRSAgents(agents)
+    // })
+
     loadRecipients(recipientType)
 
-    mapRSelectNonPersonOptions(teams, (teams) => {
-      setRSTeams(teams)
-    })
-
-    mapRSelectPersonOptions(agents, (agents) => {
-      setRSAgents(agents)
-    })
   },[]);
 
   useEffect(() => {
@@ -201,7 +210,7 @@ const AutomationAction = ({
                     loadRecipients(e.target.value);
                   }}
                 />
-                <label className="form-check-label f-14" for="radio-2">Teams</label>
+                <label className="form-check-label f-14" for="radio-2">{recipients[0]?.value}</label>
               </div>
             </div>
 
@@ -219,10 +228,10 @@ const AutomationAction = ({
             <div>
               <RSelect
                 options={[
-                  {label: optionsList, value: optionsList},
+                  {label: "lagos", value: "lagos"},
                   {label: "canada", value: "canada"}
                 ]}
-                onChange={() => console.log(recipients)}
+                onChange={() => console.log("zeelz", RSAgents, RSTeams)}
                 
               />
             </div>
