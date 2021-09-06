@@ -45,8 +45,9 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
             lastname,
             email,
             role,
-            team
+            groupId: team
         };
+
         console.clear();
 
         setAccountLoading(true);
@@ -71,6 +72,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                             const userRes = await updateUser({...updatedInfo, avatar: res.data?.url});
                             if (userRes?.status === 'success') {
                                 NotificationManager.success('Info has been updated', 'Success');
+                                window.history.back();
                             } else {
                                 NotificationManager.error('Something went wrong');
                             }
@@ -85,6 +87,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                     const userRes = await updateUser(updatedInfo);
                     if (userRes?.status === 'success') {
                         NotificationManager.success('Info has been updated', 'Success');
+                        window.history.back();
                     } else {
                         NotificationManager.error('Something went wrong');
                     }
@@ -113,6 +116,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                         const userRes = await updateUser({...updatedInfo, avatar: res.data?.url});
                         if (userRes?.status === 'success') {
                             NotificationManager.success('Info has been updated', 'Success');
+                            window.history.back();
                         } else {
                             NotificationManager.error('Something went wrong');
                         }
@@ -127,6 +131,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                 const userRes = await updateUser(updatedInfo);
                 if (userRes?.status === 'success') {
                     NotificationManager.success('Info has been updated', 'Success');
+                    window.history.back();
                 } else {
                     NotificationManager.error('Something went wrong');
                 }
