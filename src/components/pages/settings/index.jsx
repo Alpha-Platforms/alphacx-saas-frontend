@@ -37,14 +37,6 @@ import {connect} from 'react-redux';
 function SettingsHome({signedUser}) {
   return (
     <>
-      <div className="form-group mb-4 rounded-pill">
-        <input
-          type="search"
-          className="form-control magnifying-glass py-2"
-          placeholder="Search Settings"
-        />
-      </div>
-
       <div
         className="flex-wrap d-flex align-items-start"
         style={{ flexBasis: "32%" }}

@@ -9,6 +9,7 @@ import {getPaginatedCurrentCustomerTickets} from '../../../../reduxstore/actions
 import {connect} from 'react-redux';
 import moment from 'moment';
 import ScaleLoader from 'react-spinners/ScaleLoader';
+import { Fragment } from 'react';
 
 const getStatusColor = status => {
     switch (status) {
@@ -69,7 +70,7 @@ const TicketHistory = ({ currentCustomerTicketsMeta, currentCustomerId, getPagin
         {
             title: 'Assigned To',
             field: 'agentAssignedId',
-            render: rowData => <Link to={`/settings/profile/${rowData.agentAssignedId}`}>{rowData.agentAssigned}</Link>
+            render: rowData => <Fragment>{rowData.agentAssigned.trim() ? <Link to={`/settings/profile/${rowData.agentAssignedId}`}>{rowData.agentAssigned}</Link> : <span>Unassigned</span>}</Fragment>
         }, 
         { 
             title: 'Stage',

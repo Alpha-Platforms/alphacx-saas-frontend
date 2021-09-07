@@ -370,7 +370,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
             </div>
             {/* <!-- end of profile update canvas --> */}
 
-            <CreateCustomerModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} isEditing={true} customerId={id} />
+            <CreateCustomerModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} isEditing={true} customerId={id} fromCustDetails={true} custId={id} />
 
         </Fragment>
     )
