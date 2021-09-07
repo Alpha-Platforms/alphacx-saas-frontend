@@ -14,21 +14,22 @@ const AutomationAction = ({
   setNewPolicy,
   availablePlaceholders,
   agreement,
-  index,
+  itemIndex,
   getActionData,
   agents,
-  teams
+  teams,
+  setActionList
 
 }) => {
   
   const [action, setAction] = useState({});
   const [recipients, setRecipients] = useState([])
 
-  const [openDeleteActionModal, SetOpenDeleteActionModal] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [actionBody, setActionBody] = useState("editor body during edit" || "");
   const [placeholder, setPlaceholder] = useState("");
 
-  const [recipientType] = useState("agent");
+  const [recipientType, setRecipientType] = useState("agent");
 
   const [RSAgents, setRSAgents] = useState([]);
   const [RSTeams, setRSTeams] = useState([]);
@@ -41,11 +42,18 @@ const AutomationAction = ({
 
 
 // F U N C T I O N S
-  const addAction = () => {
-    
+  const addAction = (e) => {
+    e.preventDefault();
+    // setActionList(prev => [...prev, prev[prev.length-1]+1]);
+    setActionList(prev => [...prev, prev[prev.length-1]+1]);
   };
 
-  const deleteAction = () => {
+  const deleteAction = (e, itemIndex) => {
+    e.preventDefault();
+    setActionList(prev => {
+      const arr = prev.filter((item) => item !== itemIndex)
+      return arr
+    });
   };
 
   const insertPlaceholder = (i) => {
@@ -80,11 +88,11 @@ const AutomationAction = ({
     })
   }
 
-  const loadRecipients = (type) => {
+  const loadRecipients = () => {
 
     const mappedItems = []; 
 
-    if(type === recipientType){   
+    if(recipientType === "agent"){   
       agents.map(item => {
         mappedItems.push({value: item.id, label: item.firstname +" "+ item.lastname})
       })
@@ -127,7 +135,7 @@ const AutomationAction = ({
   return (
     <>
 
-      <div className="card mt-2 mb-4">
+      <div className="card mt-2 mb-4" style={{backgroundColor: "#a6d6f0"}}>
         <div className="card-body border-0 p-3 automation-action">
           <div className="d-flex  flex-column assign">
             <label for="channel">Send</label>
@@ -136,6 +144,7 @@ const AutomationAction = ({
               className=""
               id="channel"
               name="channel"
+              openMenuOnFocus={true}
               onChange={handleRSChange}
               options={actionChannels}
             />
@@ -177,8 +186,10 @@ const AutomationAction = ({
                   name="recipientType"
                   type="radio"
                   value="agent"
+                  checked={recipientType === "agent"}
                   onClick={(e) => {
-                    loadRecipients(e.target.value);
+                    // loadRecipients(e.target.value)
+                    setRecipientType(e.target.value)
                   }}
                 />
                 <label className="form-check-label f-14" for="radio-2">Agents</label>
@@ -189,8 +200,10 @@ const AutomationAction = ({
                   name="recipientType"
                   type="radio"
                   value="group"
+                  checked={recipientType === "group"}
                   onClick={(e) => {
-                    loadRecipients(e.target.value);
+                    // loadRecipients(e.target.value)
+                    setRecipientType(e.target.value)
                   }}
                 />
                 <label className="form-check-label f-14" for="radio-2">Teams</label>
@@ -203,6 +216,7 @@ const AutomationAction = ({
                 isClearable={false}
                 name="recipients"
                 isMulti
+                onMenuOpen={() => loadRecipients()}
                 options={recipients}
                 onChange={handleRSChange}
               />
@@ -222,7 +236,7 @@ const AutomationAction = ({
             </div>
           </div>
 
-          <div className="form-group mt-3">
+          {/* <div className="form-group mt-3">
             <label className="mb-1">Message</label>
 
             <EditorBox
@@ -234,46 +248,52 @@ const AutomationAction = ({
               setPlaceholder={setPlaceholder}
             />
 
-          </div>
+          </div> */}
         </div>
         <div className="card-footer bg-light" id="customer-choice">
-          <a className="addNewResolution" onClick={addAction}>
+          <button className="addNewResolution" onClick={addAction}>
             <img src={AddIcon} alt="" className="img-fluid me-1 mt-n5 " />
             Add New Action
-          </a>
+          </button>
           
           {true && (
-            <a
+            <button
               className="delete-resolution mx-4"
-              onClick={() => SetOpenDeleteActionModal(true)}
+              onClick={(e) => {
+                e.preventDefault()
+                setDeleteConfirm(true)
+              }}
             >
               <img src={DeleteIcon} alt="" className="img-fluid me-1 mt-n5 " />{" "}
-              Delete Action
-            </a>
+              Delete Action [{itemIndex}]
+            </button>
           )}
         </div>
       </div>
 
       <Modal
-        open={openDeleteActionModal}
-        onClose={() => SetOpenDeleteActionModal(false)}
+        open={deleteConfirm}
+        onClose={() => setDeleteConfirm(false)}
         center
       >
         <div className="p-5 w-100">
           <h6 className="mb-5">Are you sure you want to delete this Action?</h6>
           <div className="float-end mb-5">
-            <a
+            <button
               className="btn btn-sm f-12 bg-outline-custom cancel px-4"
-              onClick={() => SetOpenDeleteActionModal(false)}
+              onClick={() => setDeleteConfirm(false)}
             >
               Cancel
-            </a>
-            <a
+            </button>
+            <button
               className="btn btn-sm ms-2 f-12 bg-custom px-4"
-              onClick={deleteAction}
+              onClick={(e) => {
+                deleteAction(e, itemIndex)
+                setDeleteConfirm(false)
+              }}
             >
               Confirm
-            </a>
+            </button>
           </div>
         </div>
       </Modal>

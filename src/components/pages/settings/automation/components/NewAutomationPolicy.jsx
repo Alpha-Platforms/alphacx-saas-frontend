@@ -51,7 +51,7 @@ const NewAutomationPolicy = ({categoriz}) => {
   const [RSCategoriesOptions, setRSCategoriesOptions] = useState([]);
   const [action, setAction] = useState([])
   const [sumbitting, setSumbitting] = useState(false)
-  
+  const [actionList, setActionList] = useState([1])
   //
 
   const [newPolicy, setNewPolicy] = useState({
@@ -79,8 +79,16 @@ const NewAutomationPolicy = ({categoriz}) => {
     return cb(mappedItems)
   }
 
-  const getActionData = action => {
-    setAction(action)
+  const getActionData = actionn => {
+    // setAction(actionn)
+    setAction(prev => {
+      // return {...prev, actionn}
+      // return [{...prev[0], ...actionn}]
+      let temp = prev
+      temp[1] = {...temp[1], ...actionn}
+      return temp
+    })
+    // console.log(actionn);
   }
 
   const handlechange = (e) => {
@@ -114,12 +122,13 @@ const NewAutomationPolicy = ({categoriz}) => {
 
     setPolicyLoading(true);
 
-    // setTimeout(() => {
-    //   console.log(requestBody.reminder.categories[0]);
-    //   setPolicyLoading(false);
-    //   return NotificationManager.success("Fake submit successful", "Success");
-    //   router.push("/settings/automation");
-    // }, 1000);
+    setTimeout(() => {
+      console.clear();
+      console.log(requestBody);
+      setPolicyLoading(false);
+      return NotificationManager.success("Fake submit successful", "Success");
+      router.push("/settings/automation");
+    }, 1000);
 
     const dueDate = Number(automationBody.durationDays) * 24 + Number(automationBody.durationHours);
     const agreementHours = Number(automationBody.action.days) * 24 + Number(automationBody.action.hours);
@@ -146,17 +155,17 @@ const NewAutomationPolicy = ({categoriz}) => {
     
 
     // dispatch an ACTION for redux to post it
-    const res = await httpPostMain("sla", requestBody);
+    // const res = await httpPostMain("sla", requestBody);
 
-    if (res?.status === "success") {
-      setPolicyLoading(false);
-      NotificationManager.success("New Automation created", "Success");
-      router.push("/settings/automations");
-    } else {
-      console.error(res.er);
-      setPolicyLoading(false);
-      return NotificationManager.error(res?.er?.message, "Error", 4000);
-    }
+    // if (res?.status === "success") {
+    //   setPolicyLoading(false);
+    //   NotificationManager.success("New Automation created", "Success");
+    //   router.push("/settings/automations");
+    // } else {
+    //   console.error(res.er);
+    //   setPolicyLoading(false);
+    //   return NotificationManager.error(res?.er?.message, "Error", 4000);
+    // }
 
   };
 
@@ -196,6 +205,11 @@ const NewAutomationPolicy = ({categoriz}) => {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
+
+
+  useEffect(() => {
+    console.log(action);
+  }, [action])
 
 
   useEffect(() => {
@@ -317,15 +331,16 @@ const NewAutomationPolicy = ({categoriz}) => {
                 </label>
                 
                 {
-                  newPolicy?.agreements?.map((agreement, i) => (
+                  actionList.map((action, i) => (
                     <AutomationAction
                       key={i}
-                      newPolicy={newPolicy}
-                      setNewPolicy={setNewPolicy}
+                      // newPolicy={newPolicy}
+                      // setNewPolicy={setNewPolicy}
                       availablePlaceholders={availablePlaceholders}
-                      agreement={agreement}
-                      index={i}
+                      // agreement={agreement}
+                      itemIndex={action}
                       getActionData={getActionData}
+                      setActionList={setActionList}
                     />
                   ))
                 }
