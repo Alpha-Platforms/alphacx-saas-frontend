@@ -10,7 +10,7 @@ export const getAgents = () => (dispatch, getState) => {
 		return;
 	}
 	dispatch(setAgentsLoading());
-	axios.get(`${config.stagingBaseUrl}/users?role=Agent&per_page=50`, userTokenConfig(getState))
+	axios.get(`${config.stagingBaseUrl}/users?role=Agent&per_page=100`, userTokenConfig(getState))
 		.then(res => dispatch({
 			type: types.GET_AGENTS,
 			payload: (res.data && res.data.status === "success") ? res.data.data : {}
@@ -58,13 +58,15 @@ export const getCurrentAgent = (id) => (dispatch, getState) => {
 
     // console.log("Current Agent", currentAgent);
 
-    if (getState().agent.currentAgent
-        ?.id === id) {
-        dispatch({
-            type: types.GET_CURRENT_AGENT,
-            payload: getState().agent.currentAgent
-        })
-    } else if (currentAgent) {
+    // if (getState().agent.currentAgent
+    //     ?.id === id) {
+    //     dispatch({
+    //         type: types.GET_CURRENT_AGENT,
+    //         payload: getState().agent.currentAgent
+    //     })
+    // } else 
+    
+    if (currentAgent) {
         dispatch({type: types.GET_CURRENT_AGENT, payload: currentAgent})
     } else {
         axios
