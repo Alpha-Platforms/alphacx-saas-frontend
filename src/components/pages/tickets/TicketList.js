@@ -113,19 +113,21 @@ const TicketList = ({
         return "";
     } */
 
-    switch (id.slice(0, 13)) {
-      case "23838da6-0566":
-        return "orange";
-      case "dafcab89-2b7f":
-        return "green";
-      case "23838ae4-1223":
-        return "yellow";
-      case "23838da6-1223":
-        return "awaiting";
-      case "23838ec5-0566":
-        return "red";
-      default:
-        return "";
+    if (id) {
+      switch (id.slice(0, 13)) {
+        case "23838da6-0566":
+          return "orange";
+        case "dafcab89-2b7f":
+          return "green";
+        case "23838ae4-1223":
+          return "yellow";
+        case "23838da6-1223":
+          return "awaiting";
+        case "23838ec5-0566":
+          return "red";
+        default:
+          return "";
+      }
     }
   };
 
