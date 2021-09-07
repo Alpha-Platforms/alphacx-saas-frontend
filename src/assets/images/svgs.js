@@ -350,7 +350,7 @@ export function ClockIcon({ activeRoute }) {
         width="24"
         height="24"
         viewBox="0 0 24 24"
-        fill="none"
+        fill={activeRoute === true ? "#e3b451" : "none"}
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
@@ -395,7 +395,7 @@ export function CardIcon({ activeRoute }) {
         width="20"
         height="19"
         viewBox="0 0 20 19"
-        fill="none"
+        fill={activeRoute === true ? "#e3b451" : "none"}
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
@@ -426,7 +426,7 @@ export const MoreIcon = ({ activeRoute }) => (
     width="16"
     height="20"
     viewBox="0 0 16 20"
-    fill="none"
+    fill={activeRoute === true ? "#e3b451" : "none"}
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
@@ -455,7 +455,7 @@ export const Graph = ({ activeRoute }) => (
     width="22"
     height="22"
     viewBox="0 0 22 22"
-    fill="none"
+    fill={activeRoute === true ? "#e3b451" : "none"}
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
@@ -484,7 +484,7 @@ export const SettingsIcon = ({ activeRoute }) => (
     width="20"
     height="22"
     viewBox="0 0 20 22"
-    fill="none"
+    fill={activeRoute === true ? "#e3b451" : "none"}
     xmlns="http://www.w3.org/2000/svg"
   >
     <path

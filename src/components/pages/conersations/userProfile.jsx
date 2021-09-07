@@ -51,9 +51,9 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
             ) : (
               // <img src={userImg} alt="" />
               <div className="userProfilePicConNoImgj">
-                <p
+                <p className="text-capitalize"
                   style={{ fontSize: "30px!important" }}
-                >{`${capitalize(UserInfo?.firstname?.slice(0,1))}${capitalize(UserInfo?.lastname?.slice(0, 1))}`}</p>
+                >{`${UserInfo?.firstname?.slice(0,1)} ${UserInfo?.lastname?.slice(0, 1)}`}</p>
               </div>
             )}
             {/* 

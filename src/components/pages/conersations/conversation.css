@@ -660,7 +660,6 @@ select {
   box-sizing: border-box;
   border-radius: 2px;
   height: 40px;
-  color: rgba(101, 101, 101, 0.7);
   font-size: 12px;
 }
 
@@ -672,7 +671,6 @@ select {
   border-radius: 2px;
   height: 40px;
   margin-top: 4px;
-  color: rgba(101, 101, 101, 0.7);
 }
 
 .ticketmodalInputWrapMain label {
@@ -703,9 +701,7 @@ select {
   border: 1px solid rgba(45, 50, 80, 0.22);
   box-sizing: border-box;
   border-radius: 2px;
-  height: 40px;
   margin-top: 4px;
-  color: rgba(101, 101, 101, 0.7);
   height: 140px;
 }
 

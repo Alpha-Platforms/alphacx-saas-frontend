@@ -124,7 +124,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
 
           <li
             style={
-              currentRoute === "/user_transations"
+              currentRoute === "/conversation"
                 ? { color: "#e3b451" }
                 : { color: "white" }
             }
@@ -137,7 +137,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
             <span style={{ marginRight: "20px", marginTop: "-4px" }}>
               <ClockIcon
                 activeRoute={
-                  currentRoute === "/user_transations" ? true : false
+                  currentRoute === "/conversation" ? true : false
                 }
               />
             </span>
@@ -146,7 +146,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
 
           <li
             style={
-              currentRoute === "/user_cards"
+              currentRoute === "/tickets"
                 ? { color: "#e3b451" }
                 : { color: "white" }
             }
@@ -159,7 +159,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
             {" "}
             <span style={{ marginRight: "20px", marginTop: "-4px" }}>
               <CardIcon
-                activeRoute={currentRoute === "/user_cards" ? true : false}
+                activeRoute={currentRoute === "/tickets" ? true : false}
               />
             </span>
             Tickets
@@ -167,7 +167,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
 
           <li
             style={
-              currentRoute === "/more"
+              currentRoute === "/customers"
                 ? { color: "#e3b451" }
                 : { color: "white" }
             }
@@ -179,7 +179,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
             {" "}
             <span style={{ marginRight: "20px", marginTop: "-4px" }}>
               <MoreIcon
-                activeRoute={currentRoute === "/more" ? "#e3b451" : null}
+                activeRoute={currentRoute === "/customers" ? true : false}
               />
             </span>
             Customer
@@ -187,7 +187,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
 
           <li
             style={
-              currentRoute === "/more"
+              currentRoute === "/home"
                 ? { color: "#e3b451" }
                 : { color: "white" }
             }
@@ -199,7 +199,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
             {" "}
             <span style={{ marginRight: "20px", marginTop: "-4px" }}>
               <Graph
-                activeRoute={currentRoute === "/more" ? "#e3b451" : null}
+                activeRoute={currentRoute === "/home" ? true : false}
               />
             </span>
             Reports
@@ -207,7 +207,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
 
           <li
             style={
-              currentRoute === "/more"
+              currentRoute === "/settings"
                 ? { color: "#e3b451" }
                 : { color: "white" }
             }
@@ -219,7 +219,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
             {" "}
             <span style={{ marginRight: "20px", marginTop: "-4px" }}>
               <SettingsIcon
-                activeRoute={currentRoute === "/more" ? "#e3b451" : null}
+                activeRoute={currentRoute === "/settings" ? true : false}
               />
             </span>
             Settings

@@ -21,6 +21,11 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import { NotificationManager } from "react-notifications";
 import ClipLoader from "react-spinners/ClipLoader";
+// bootstrap components
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col'
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -1128,23 +1133,23 @@ export default function Conversation() {
       </div>
       {/* Modal area starts here */}
       <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal} center>
-        <div className="saveTicketWrapModal">
+        <Form className="saveTicketWrapModal">
           <p className="fs-5">
             Kindly update ticket before closing the chat
           </p>
 
-          <div className="saveTicketModalForm">
-            <div className="ticketmodalInput-twoCol">
-              <div className="ticketmodalInputWrapMain">
-                <label htmlFor="">Customer</label>
-                <input
+          <div className="">
+            <Row  md={6} className="mb-3">
+              <Form.Group as={Col} md={6} className="form-group acx-form-group mb-3">
+                <Form.Label className="mb-0">Customer</Form.Label>
+                <Form.Control
                   value={`${capitalizeFirstLetter(
                     ticket[0]?.customer?.firstname
                   )} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
                   type="text"
                   disabled
                 />
-              </div>
+              </Form.Group>
 
               {/* 
               Andy's setters
@@ -1152,8 +1157,8 @@ export default function Conversation() {
               updateTicket              
               */}
 
-              <div className="ticketmodalInputWrapMain">
-                <label htmlFor="">Category</label>
+              <Col md={6} className="">
+                <label className="mb-0">Category</label>
                 <RSelect
                   className="rselectfield"
                   style={{ fontSize: "12px" }}
@@ -1172,11 +1177,8 @@ export default function Conversation() {
                     })
                   }
                 />
-              </div>
-            </div>
-
-            <div className="ticketmodalInput-twoCol">
-              <div className="ticketmodalInputWrapMain">
+              </Col>
+              <Col md={6}>
                 <label htmlFor="">Stage</label>
                 <RSelect
                   className="rselectfield"
@@ -1196,9 +1198,9 @@ export default function Conversation() {
                     })
                   }
                 />
-              </div>
+              </Col>
 
-              <div className="ticketmodalInputWrapMain">
+              <Col md={6}>
                 <label htmlFor="">Priority</label>
                 <RSelect
                   className="rselectfield"
@@ -1218,38 +1220,27 @@ export default function Conversation() {
                     })
                   }
                 />
-              </div>
-            </div>
+              </Col>
+            </Row>
 
-            <div className="ticketmodalInput-OneCol">
-              <div className="ticketmodalInputWrapMainOne">
-                <label htmlFor="">Subject</label>
-                <input
-                  type="text"
-                  defaultValue={`${ticket[0]?.subject}`}
-                  onChange={(e) => setRSTicketSubject(e.target.value)}
-                  style={{ fontSize: "12px" }}
-                />
-              </div>
-            </div>
+            <Form.Group  className="form-group acx-form-group mb-3">
+              <Form.Label className="mb-0">Subject</Form.Label>
+              <Form.Control type="text"
+                defaultValue={`${ticket[0]?.subject}`}
+                onChange={(e) => setRSTicketSubject(e.target.value)}
+              />
+            </Form.Group>
 
-            <div className="descriptionWrap">
-              <label htmlFor="">Remarks</label>
-              <textarea
+            <Form.Group  className="form-group acx-form-group mb-3">
+              <Form.Label className="mb-0">Remarks</Form.Label>
+              <Form.Control as="textarea" rows={5} 
                 onChange={(e) => setRSTicketRemarks(e.target.value)}
-                style={{ fontSize: "12px", padding: "10px" }}
-              >{ticket[0]?.description}</textarea>
-            </div>
+              >{ticket[0]?.description}</Form.Control>
+            </Form.Group>
 
             <p
-              className="btn mt-3 p-0 text-start"
+              className="btn mt-2 mb-0 p-0 text-start"
               role="button"
-              style={{
-                fontSize: "0.8rem",
-                fontWeight: "bold",
-                marginBottom: 0,
-                color: "#006298!important",
-              }}
               onClick={() => setIsAdditionalOptionVisible((v) => !v)}
             >
               Additional Options
@@ -1321,15 +1312,15 @@ export default function Conversation() {
                 </div>
               </div>
             )}
-            <div className="closeTicketModdalj">
-              <button className="btn acx-btn-primary px-3 py-2" disabled={processing} type="submit" onClick={updateTicket}>
+            <div className="text-end mt-3">
+              <Button className="btn acx-btn-primary px-3 py-2" disabled={processing} type="submit" onClick={updateTicket}>
                 { processing ? 
                 (<React.Fragment><Spinner as="span" size="sm" animation="border" variant="light" /> Processing...</React.Fragment>  ) 
                   : `Update`}
-              </button>
+              </Button>
             </div>
           </div>
-        </div>
+        </Form>
       </Modal>
     </React.Fragment>
   );
