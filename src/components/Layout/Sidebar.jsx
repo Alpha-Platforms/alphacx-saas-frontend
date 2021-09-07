@@ -187,19 +187,19 @@ export default function Sidebar({ browserRouter, currentRoute }) {
 
           <li
             style={
-              currentRoute === "/home"
+              currentRoute === "/reports"
                 ? { color: "#e3b451" }
                 : { color: "white" }
             }
             className={`${
               appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
             }`}
-            onClick={() => browserRouter(`/home`)}
+            onClick={() => browserRouter(`/reports`)}
           >
             {" "}
             <span style={{ marginRight: "20px", marginTop: "-4px" }}>
               <Graph
-                activeRoute={currentRoute === "/home" ? true : false}
+                activeRoute={currentRoute === "/reports" ? true : false}
               />
             </span>
             Reports
