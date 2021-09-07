@@ -97,8 +97,8 @@ const TicketList = ({
     );
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
+  const getStatusColor = (status, id) => {
+    /* switch (status) {
       case "Pending":
         return "orange";
       case "Resolved":
@@ -111,6 +111,23 @@ const TicketList = ({
         return "red";
       default:
         return "";
+    } */
+
+    if (id) {
+      switch (id.slice(0, 13)) {
+        case "23838da6-0566":
+          return "orange";
+        case "dafcab89-2b7f":
+          return "green";
+        case "23838ae4-1223":
+          return "yellow";
+        case "23838da6-1223":
+          return "awaiting";
+        case "23838ec5-0566":
+          return "red";
+        default:
+          return "";
+      }
     }
   };
 
@@ -181,7 +198,7 @@ const TicketList = ({
       title: "Stage",
       field: "status",
       render: (rowData) => (
-        <div className={`ticket-state ${getStatusColor(rowData.status)}`}>
+        <div className={`ticket-state ${getStatusColor(rowData.status, rowData.statusId)}`}>
           <Link to="#" className="btn btn-sm">
             {rowData.status}
           </Link>
@@ -191,13 +208,9 @@ const TicketList = ({
     {
       title: "Assigned to",
       field: "assignedTo",
-      render: (rowData) => rowData.assignedTo? 
-        
-        <Link to={`/settings/profile/${rowData.assigneeId}`} style={{ textTransform: "capitalize" }}>
+      render: (rowData) => rowData.assignedTo.trim() ?  <Link to={`/settings/profile/${rowData.assigneeId}`} style={{ textTransform: "capitalize" }}>
           {rowData.assignedTo}
-        </Link>
-         :
-         <span className="text-muted acx-fs-8">Unassigned</span>,
+        </Link> : <span className="text-muted acx-fs-8">Unassigned</span>,
 
     },
     // {
@@ -368,9 +381,11 @@ const TicketList = ({
                     category: category?.name,
                     created: moment(created_at).format("DD MMM, YYYY"),
                     status: status?.status,
-                    assignedTo: `${assignee?.firstname || ""}`,
+                    assignedTo: `${assignee?.firstname || ""} ${assignee?.lastname || ""}`,
                     rating: rating,
-                    assigneeId: assignee?.id
+                    assigneeId: assignee?.id,
+                    statusId: status?.id
+
                   })
                 )}
                 options={{

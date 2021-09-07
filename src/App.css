@@ -549,32 +549,49 @@ label.file-picker object.lg-icon {
   border-radius: 50%;
   overflow: hidden;
   margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  background-color: var(--at-blue-light);
 }
 
 .customer-avatar img {
   width: 100%;
-  border: solid 1px #fff;
-  border-radius: 50%;
+  height: 100%;
 }
 
 /*  -------- USER NAME INITIALS -----------   */
 
 .user-initials {
-  border-radius: 50%;
+  border-radius: 10rem;
   color: #fff;
   text-align: center;
+  -webkit-border-radius: 10rem;
+  -moz-border-radius: 10rem;
+  -ms-border-radius: 10rem;
+  -o-border-radius: 10rem;
+}
+
+.user-initials img {
+  height: 100%;
+  width: 100%;
 }
 
 .user-initials-sm .user-initials {
   width: 30px;
   height: 30px;
-  line-height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .user-initials-lg .user-initials {
   width: 80px;
   height: 80px;
-  line-height: 80px;
   font-size: 2rem;
 }
 

@@ -10,12 +10,12 @@ export const getAgents = () => (dispatch, getState) => {
 		return;
 	}
 	dispatch(setAgentsLoading());
-	axios.get(`${config.stagingBaseUrl}/users?role=Agent&per_page=50`, userTokenConfig(getState))
+	axios.get(`${config.stagingBaseUrl}/users?role=Agent&per_page=100`, userTokenConfig(getState))
 		.then(res => dispatch({
 			type: types.GET_AGENTS,
 			payload: (res.data && res.data.status === "success") ? res.data.data : {}
 		}))
-		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 
@@ -29,7 +29,7 @@ export const getPaginatedAgents = (itemsPerPage, currentPage) => (dispatch, getS
 			type: types.GET_AGENTS,
 			payload: (res.data && res.data.status === "success") ? res.data.data : {}
 		}))
-		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 
@@ -42,7 +42,7 @@ export const addAgent = (newAgent) => (dispatch, getState) => {
 			type: types.ADD_AGENT,
 			payload: res.data
 		}))
-		.catch(err => dispatch(returnErrors(err.response.data, err.response.status)));
+		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 // valid redux action
@@ -58,13 +58,15 @@ export const getCurrentAgent = (id) => (dispatch, getState) => {
 
     // console.log("Current Agent", currentAgent);
 
-    if (getState().agent.currentAgent
-        ?.id === id) {
-        dispatch({
-            type: types.GET_CURRENT_AGENT,
-            payload: getState().agent.currentAgent
-        })
-    } else if (currentAgent) {
+    // if (getState().agent.currentAgent
+    //     ?.id === id) {
+    //     dispatch({
+    //         type: types.GET_CURRENT_AGENT,
+    //         payload: getState().agent.currentAgent
+    //     })
+    // } else 
+    
+    if (currentAgent) {
         dispatch({type: types.GET_CURRENT_AGENT, payload: currentAgent})
     } else {
         axios

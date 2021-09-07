@@ -16,6 +16,8 @@ const groupReducer = (state = initialState, action) => {
 				isGroupsLoading: false,
 				isGroupsLoaded: true
 				}
+		case types.ADD_GROUP:
+			return state;
 		case types.GROUPS_LOADING:
 			return {
 				...state,
