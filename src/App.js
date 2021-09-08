@@ -334,7 +334,7 @@ const SiteRouter = connect(mapStateToProps, {
           .
           settings pages end */}
 
-                            <Route>
+                            {/* <Route>
                                 <div
                                     style={{
                                     display: "flex",
@@ -344,7 +344,7 @@ const SiteRouter = connect(mapStateToProps, {
                                 }}>
                                     <h1>404 - Not Found</h1>
                                 </div>
-                            </Route>
+                            </Route> */}
                         </SocketDataProvider>
                     </LayoutProvider>
                 </UserDataProvider>

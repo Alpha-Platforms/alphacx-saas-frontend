@@ -1,15 +1,49 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HelpNavBar from "../../../Layout/helpNavBar";
 import TotalCard from "../../dashboard/dashcards/totalCard";
 import StarRating from "../components/starRating/starRating";
 import TicketItem from "../components/ticket_item/TicketItem";
 import TopBar from "../components/topBar/topBar";
 import "./CustomerPortal.scss";
+import {connect} from 'react-redux';
+import ScaleLoader from 'react-spinners/ScaleLoader';
+import {getCustTickets} from '../../../../reduxstore/actions/customerActions';
 
 const CustomerPortal = () => {
-  var emptyArea = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  const [ticketList, setTicketList] = useState([{}]);
+  var emptyArea = [1, 2];
+
+  const custId = '15c8c94e-0bc1-4619-9f7b-d685b41e84f9';
+
+
+  const [custState, setCustState] = useState({
+    custTickets: [],
+    meta: null,
+    isCustTicketsLoaded: false,
+    isCustTicketsLoading: false,
+    currentStatus: 'all'
+  });
+
+  useEffect(() => {
+    (async () => {
+      setCustState(prev => ({
+        ...prev,
+        isCustTicketsLoading: true
+      }));
+      const custRes = await getCustTickets(10, 1, custId);
+      if (custRes) {
+        console.log("Success Customer Response: ", custRes);
+        setCustState(prev => ({
+          ...prev,
+          custTickets: custRes?.tickets,
+          meta: custRes?.meta,
+          isCustTicketsLoaded: true,
+          isCustTicketsLoading: false
+        }));
+      }
+    })()
+  }, [])
+
   return (
     <>
       <HelpNavBar activeBG={true} />
@@ -37,9 +71,12 @@ const CustomerPortal = () => {
                 <p className="closed">Closed</p>
               </div>
             </div>
-            {emptyArea.map((item, i) => (
-              <TicketItem key={i} />
-            ))}
+
+            {
+              !custState.isCustTicketsLoaded ? <div className="text-center pt-3"><ScaleLoader loading={true} color={"#006298"}/></div> : custState.custTickets.length === 0 ? <div>No Tickets yet.</div> : custState.custTickets.map((ticket, i) => (
+              <TicketItem key={i} ticket={ticket} />
+            ))
+            }
           </div>
           <div className="submit-ticket">
             <p className="title">Submit a Ticket</p>
@@ -99,4 +136,12 @@ const CustomerPortal = () => {
   );
 };
 
-export default CustomerPortal;
+const mapStateToProps = (state, ownProps) => ({
+  isCurrentCustomerLoaded: state.customer.isCurrentCustomerLoaded,
+  currentCustomerTickets: state.customer.currentCustomerTickets,
+  currentCustomerTicketsMeta: state.customer.currentCustomerTicketsMeta,
+  isCurrentCustomerTicketsLoaded: state.customer.isCurrentCustomerTicketsLoaded,
+  currentCustomer: state.customer.currentCustomer
+});
+
+export default connect(mapStateToProps, null)(CustomerPortal);
