@@ -4,183 +4,253 @@ import DeleteIcon from "../../../../../assets/icons/Delete.svg";
 import AddIcon from "../../../../../assets/icons/add.svg";
 import { Modal } from "react-responsive-modal";
 
+import { connect } from "react-redux";
+
+import RSelect from "react-select";
+import {httpGetMain } from "../../../../../helpers/httpMethods";
+
 const AutomationAction = ({
   newPolicy,
   setNewPolicy,
   availablePlaceholders,
   agreement,
-  index,
-}) => {
-  const [openDeleteActionModal, SetOpenDeleteActionModal] = useState(false);
-  const [message, setMessage] = useState(agreement.body || "");
-  const [placeholder, setPlaceholder] = useState("");
-  const [availableDays, setAvailableDays] = useState();
+  itemIndex,
+  getActionData,
+  agents,
+  teams,
+  setActionList,
+  removeActionItem
 
-  const addAction = () => {
-    setNewPolicy({
-      ...newPolicy,
-      reminder: {
-        ...newPolicy.reminder,
-        agreements: [
-          ...newPolicy.reminder.agreements,
-          { day: 0, hours: 0, action: "email" },
-        ],
-      },
-    });
+}) => {
+  
+  const [action, setAction] = useState({id: itemIndex});
+  const [recipients, setRecipients] = useState([])
+  const [daysHours, setDaysHours] = useState({days: 0, hours: 0})
+
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [actionBody, setActionBody] = useState("");
+  const [placeholder, setPlaceholder] = useState("");
+
+  const [recipientType, setRecipientType] = useState("agent");
+
+  const [RSAgents, setRSAgents] = useState([]);
+  const [RSTeams, setRSTeams] = useState([]);
+
+  const [actionChannels] = useState([
+    {label: "Email", value: "Email"},
+    {label: "SMS", value: "SMS"}
+  ])
+
+
+// F U N C T I O N S
+  const addAction = (e) => {
+    e.preventDefault();
+    // setActionList(prev => [...prev, prev[prev.length-1]+1]);
+    setActionList(prev => [...prev, prev[prev.length-1]+1]);
   };
 
-  const deleteAction = () => {
-    SetOpenDeleteActionModal(false);
-    let agreements = newPolicy.reminder.agreements;
-
-    if (agreements.length === 1) {
-      return;
-    }
-    let newAgreements = agreements.splice(index - 1, 1);
-
-    setNewPolicy({
-      ...newPolicy,
-      reminder: {
-        ...newPolicy.reminder,
-        agreements: newAgreements,
-      },
+  const deleteAction = (e, itemIndex) => {
+    e.preventDefault();
+    setActionList(prev => {
+      const arr = prev.filter((item) => item !== itemIndex)
+      return arr
     });
+
+    removeActionItem(itemIndex)
+
   };
 
   const insertPlaceholder = (i) => {
-    const shortCode = `{{${availablePlaceholders[i]}}}`;
+    const shortCode = `{${availablePlaceholders[i]}}`;
 
-    setMessage(message + " " + shortCode.toUpperCase() + " ");
-    setPlaceholder(" " + shortCode.toUpperCase() + " ");
+    setActionBody(actionBody + " " + shortCode + " ");
+    setPlaceholder(" " + shortCode + " ");
   };
+
   const handleChange = (e) => {
     let { name, value } = e.target;
-    if (name === "day" && value > 30) {
-      value = 30;
-    }
-    if (name === "day" && value < 0) {
-      value = 0;
-    }
-    if (name === "hours" && value > 23) {
-      value = 23;
-    }
-    if (name === "hours" && value < 0) {
-      value = 0;
-    }
-    let agreements = newPolicy.reminder.agreements;
-    agreements[index] = { ...agreements[index], [name]: value };
-    setNewPolicy({
-      ...newPolicy,
-      reminder: { ...newPolicy.reminder, agreements },
-    });
+
+    setAction( prev => {
+      return {...prev, [name]: value}
+    })
+
   };
 
+  const handleDaysHoursChange = (e) => {
+    let { name, value } = e.target;
+
+    setDaysHours( prev => {
+      return {...prev, [name]: value}
+    })
+
+    if(name === "days"){
+      setAction(prev => {
+        return {...prev, hours: value*24 + Number(daysHours.hours)}
+      })
+    } else {
+      setAction(prev => {
+        return {...prev, hours: Number(value) + daysHours.days*24}
+      })
+    }
+  };
+
+  const handleRSChange = (iValues, {name}) => {
+    let data = iValues.value;
+
+    if (Array.isArray(iValues)) {
+      const ids = [];
+      iValues.map(item => {
+        ids.push(item.value)
+      })
+
+      setAction( prev => {
+        return {...prev, [name]: {ids, type: recipientType}}
+      })
+
+    } else {
+      setAction( prev => {
+        return {...prev, [name]: data}
+      })
+    }
+
+    
+  }
+
+  const loadRecipients = () => {
+
+    const mappedItems = []; 
+
+    if(recipientType === "agent"){   
+      agents.map(item => {
+        mappedItems.push({value: item.id, label: item.firstname +" "+ item.lastname})
+      })
+    } else {  
+      teams.map(item => {
+        mappedItems.push({value: item.id, label: item.name})
+      })
+    }
+
+    setRecipients(mappedItems);
+
+  }
+
+  const mapRSelectPersonOptions = (persons, cb) => {
+    const mappedItems = [];    
+    persons.map(item => {
+      mappedItems.push({value: item.id, label: item.firstname +" "+ item.lastname})
+    })
+    return cb(mappedItems)
+  }
+
+  const mapRSelectNonPersonOptions = (entity, cb) => {
+    const mappedItems = [];    
+    entity.map(item => {
+      mappedItems.push({value: item.id, label: item.name})
+    })
+    return cb(mappedItems)
+  }
+
   useEffect(() => {
-    let agreements = newPolicy.reminder.agreements;
-    agreements[index] = { ...agreements[index], body: message };
-    setNewPolicy({
-      ...newPolicy,
-      reminder: { ...newPolicy.reminder, agreements },
-    });
-  }, [message]);
+    getActionData(action);
+  }, [action])
+
+  useEffect(() => {
+    setAction( prev => {
+      return {...prev, body: actionBody}
+    })
+  }, [actionBody])
+
   return (
     <>
-      <Modal
-        open={openDeleteActionModal}
-        onClose={() => SetOpenDeleteActionModal(false)}
-        center
-      >
-        <div className="p-5 w-100">
-          <h6 className="mb-5">Are you sure you want to delete this Action?</h6>
-          <div className="float-end mb-5">
-            <a
-              className="btn btn-sm f-12 bg-outline-custom cancel px-4"
-              onClick={() => SetOpenDeleteActionModal(false)}
-            >
-              Cancel
-            </a>
-            <a
-              className="btn btn-sm ms-2 f-12 bg-custom px-4"
-              onClick={deleteAction}
-            >
-              Confirm
-            </a>
-          </div>
-        </div>
-      </Modal>
+
       <div className="card mt-2 mb-4">
         <div className="card-body border-0 p-3 automation-action">
           <div className="d-flex  flex-column assign">
-            <label for="assign" className="mb-n1 me-4">
-              Send
-            </label>
-            <br />
-            <select
-              className="form-select form-select-sm"
-              id="assign"
+            <label for="channel">Send</label>
+            
+            <RSelect 
+              className=""
+              id="channel"
               name="action"
-              value={agreement?.action || ""}
-              onChange={handleChange}
-            >
-              <option value="email">Email</option>
-              <option value="whatsapp">WhatsApp</option>
-              <option value="sms">SMS</option>
-            </select>
-          </div>
-          <div className="customer-form-first mt-3 py-4 pr-5 d-flex align-items-center">
-            <input
-              type="number"
-              max={30}
-              min={0}
-              className="number-input form-control form-control-sm"
-              id="slaName"
-              name="day"
-              value={agreement?.day || 0}
-              onChange={handleChange}
+              openMenuOnFocus={true}
+              onChange={handleRSChange}
+              options={actionChannels}
             />
 
-            <label for="day" className="ps-2 me-2">
-              Days
-            </label>
-
-            <input
-              type="number"
-              max={23}
-              min={0}
-              className="number-input form-control form-control-sm"
-              id="slaName"
-              name="hours"
-              value={agreement?.hours || 0}
-              onChange={handleChange}
-            />
-            <label for="hour" className="ps-2 me-2">
-              Hours
-            </label>
-
-            <label
-              className="mb-n1"
-              style={{
-                minWidth: 120,
-
-                fontSize: 16,
-              }}
-            >
-              before due date
-            </label>
           </div>
+
+          <div className="mt-4 d-flex align-items-center">
+            
+            <div className="input-group w-50 me-2">
+              <input type="number" name="days" ariaLabel="Last name" className="form-control" onChange={handleDaysHoursChange} />
+              <span className="input-group-text acx-fs-8">Days</span>
+              <input type="number" name="hours" ariaLabel="First name" className="form-control" onChange={handleDaysHoursChange} />
+              <span className="input-group-text acx-fs-8">Hours</span>
+            </div>
+
+            <label>before due date </label>
+
+          </div>
+
           <div className="form-group mt-3">
-            <label for="slaName" className="mb-1">
-              Subject
-            </label>
+            <label for="subject">Subject</label>
             <input
               type="text"
-              className="form-control form-control-sm"
-              id="slaName"
+              className="form-control mt-2"
+              id="subject"
               name="subject"
-              value={agreement?.subject || ""}
               onChange={handleChange}
             />
           </div>
+          
+          <div className="form-group mt-3">
+            <label for="ticket" className="f-14 mb-1">
+              Action Recipient(s)
+            </label>
+            <div className="d-flex">
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  name="recipientType"
+                  type="radio"
+                  value="agent"
+                  checked={recipientType === "agent"}
+                  onClick={(e) => {
+                    setRecipientType(e.target.value)
+                  }}
+                />
+                <label className="form-check-label f-14" for="radio-2">Agents</label>
+              </div>
+              <div className="form-check" style={{ marginLeft: 10 }}>
+                <input
+                  className="form-check-input"
+                  name="recipientType"
+                  type="radio"
+                  value="group"
+                  checked={recipientType === "group"}
+                  onClick={(e) => {
+                    setRecipientType(e.target.value)
+                  }}
+                />
+                <label className="form-check-label f-14" for="radio-2">Teams</label>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <RSelect 
+                className=""
+                isClearable={false}
+                name="recipient"
+                isMulti
+                onMenuOpen={() => loadRecipients()}
+                options={recipients}
+                onChange={handleRSChange}
+              />
+            </div>
+
+          </div>
+
+
           <div className="form-group mt-3">
             <label className="mb-1">Available Placeholders</label>
             <div className="available-placeholders">
@@ -191,38 +261,78 @@ const AutomationAction = ({
               ))}
             </div>
           </div>
+
           <div className="form-group mt-3">
             <label className="mb-1">Message</label>
 
             <EditorBox
-              text={message || ""}
+              text={actionBody || ""}
               // textParent={newPolicy}
               textFormat={"plain"}
-              updateText={setMessage}
+              updateText={setActionBody}
               placeholder={placeholder}
               setPlaceholder={setPlaceholder}
             />
+
           </div>
         </div>
         <div className="card-footer bg-light" id="customer-choice">
-          <a className="addNewResolution" onClick={addAction}>
-            <img src={AddIcon} alt="" className="img-fluid me-1 mt-n5 " /> Add
-            New Action
-          </a>
-          {/* <a className="delete-resolution mx-4" onClick={deleteAction}> */}
-          {newPolicy.reminder.agreements.length > 1 && (
-            <a
+          <button className="addNewResolution" onClick={addAction}>
+            <img src={AddIcon} alt="" className="img-fluid me-1 mt-n5 " />
+            Add New Action
+          </button>
+          
+          {true && (
+            <button
               className="delete-resolution mx-4"
-              onClick={() => SetOpenDeleteActionModal(true)}
+              onClick={(e) => {
+                e.preventDefault()
+                setDeleteConfirm(true)
+              }}
             >
               <img src={DeleteIcon} alt="" className="img-fluid me-1 mt-n5 " />{" "}
               Delete Action
-            </a>
+            </button>
           )}
         </div>
       </div>
+
+      <Modal
+        open={deleteConfirm}
+        onClose={() => setDeleteConfirm(false)}
+        center
+      >
+        <div className="p-5 w-100">
+          <h6 className="mb-5">Are you sure you want to delete this Action?</h6>
+          <div className="float-end mb-5">
+            <button
+              className="btn btn-sm f-12 bg-outline-custom cancel px-4"
+              onClick={() => setDeleteConfirm(false)}
+            >
+              Cancel
+            </button>
+            <button
+              className="btn btn-sm ms-2 f-12 bg-custom px-4"
+              onClick={(e) => {
+                deleteAction(e, itemIndex)
+                setDeleteConfirm(false)
+              }}
+            >
+              Confirm
+            </button>
+          </div>
+        </div>
+      </Modal>
+
     </>
   );
 };
 
-export default AutomationAction;
+const mapStateToProps = state => {
+  return {
+    agents: state.agent.agents,
+    teams: state.group.groups
+  }
+}
+
+export default connect(mapStateToProps)(AutomationAction);
