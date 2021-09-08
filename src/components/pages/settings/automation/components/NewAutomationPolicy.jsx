@@ -51,7 +51,7 @@ const NewAutomationPolicy = ({categoriz}) => {
   const [RSCategoriesOptions, setRSCategoriesOptions] = useState([]);
   const [action, setAction] = useState([])
   const [sumbitting, setSumbitting] = useState(false)
-  const [actionList, setActionList] = useState([1])
+  const [actionList, setActionList] = useState([0])
   //
 
   const [newPolicy, setNewPolicy] = useState({
@@ -79,16 +79,20 @@ const NewAutomationPolicy = ({categoriz}) => {
     return cb(mappedItems)
   }
 
-  const getActionData = actionn => {
-    // setAction(actionn)
+  const getActionData = action => {
     setAction(prev => {
-      // return {...prev, actionn}
-      // return [{...prev[0], ...actionn}]
       let temp = prev
-      temp[1] = {...temp[1], ...actionn}
-      return temp
+      temp[action.id] = {...temp[action.id], ...action}
+      console.log(temp, prev);
+      return prev
     })
-    // console.log(actionn);
+  }
+
+  const removeActionItem = (item) => {
+    setAction(prev => {
+      const arr = prev.filter((_i) => _i.id !== item)
+      return arr
+    });
   }
 
   const handlechange = (e) => {
@@ -120,52 +124,41 @@ const NewAutomationPolicy = ({categoriz}) => {
 
   const submitAutomation = async () => {
 
-    setPolicyLoading(true);
-
-    setTimeout(() => {
-      console.clear();
-      console.log(requestBody);
-      setPolicyLoading(false);
-      return NotificationManager.success("Fake submit successful", "Success");
-      router.push("/settings/automation");
-    }, 1000);
-
     const dueDate = Number(automationBody.durationDays) * 24 + Number(automationBody.durationHours);
-    const agreementHours = Number(automationBody.action.days) * 24 + Number(automationBody.action.hours);
 
     const requestBody = {
       "name": automationBody.title,
       "dueDate": dueDate,
       "reminder": {
         "categories": automationBody.categories,
-        "agreements": [
-          {
-            "hours": agreementHours,
-            "action": automationBody.action.channel,
-            "subject": automationBody.action.subject,
-            "body": automationBody.action.body,
-            "recipient": {
-              "type": "agent",
-              "ids": automationBody.action.recipients
-            }
-          }
-        ]
+        "agreements": automationBody.action
       }
     };
     
+    setPolicyLoading(true);
 
-    // dispatch an ACTION for redux to post it
-    // const res = await httpPostMain("sla", requestBody);
+    // USE REDUX 
+    const res = await httpPostMain("sla", requestBody);
 
-    // if (res?.status === "success") {
+    if (res?.status === "success") {
+      setPolicyLoading(false);
+      NotificationManager.success("New Automation created", "Success");
+      router.push("/settings/automations");
+    } else {
+      console.error(res.er);
+      setPolicyLoading(false);
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
+
+    // TEST CODE
+    // setTimeout(() => {
+    //   console.clear();
+    //   console.log(requestBody);
     //   setPolicyLoading(false);
-    //   NotificationManager.success("New Automation created", "Success");
+    //   NotificationManager.success("Fake submit successful", "Success");
     //   router.push("/settings/automations");
-    // } else {
-    //   console.error(res.er);
-    //   setPolicyLoading(false);
-    //   return NotificationManager.error(res?.er?.message, "Error", 4000);
-    // }
+    // }, 1000);
+
 
   };
 
@@ -205,12 +198,6 @@ const NewAutomationPolicy = ({categoriz}) => {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
-
-
-  useEffect(() => {
-    console.log(action);
-  }, [action])
-
 
   useEffect(() => {
     mapRSelectNonPersonOptions(categoriz, (category) => {
@@ -341,6 +328,7 @@ const NewAutomationPolicy = ({categoriz}) => {
                       itemIndex={action}
                       getActionData={getActionData}
                       setActionList={setActionList}
+                      removeActionItem={removeActionItem}
                     />
                   ))
                 }
@@ -350,7 +338,7 @@ const NewAutomationPolicy = ({categoriz}) => {
 
             <div className="float-end mb-5">
               <Link
-                to="/settings/automation"
+                to="/settings/automations"
                 className="btn btn-sm f-12 bg-outline-custom cancel px-4"
               >
                 Cancel
@@ -361,7 +349,7 @@ const NewAutomationPolicy = ({categoriz}) => {
                   automationId ? updateAutomationPolicy : startSubmitAutomation
                 }
               >
-                Save Changes
+                {automationId ? "Save Changes" : "Create"}
               </a>
             </div>
           </div>

@@ -18,15 +18,17 @@ const AutomationAction = ({
   getActionData,
   agents,
   teams,
-  setActionList
+  setActionList,
+  removeActionItem
 
 }) => {
   
-  const [action, setAction] = useState({});
+  const [action, setAction] = useState({id: itemIndex});
   const [recipients, setRecipients] = useState([])
+  const [daysHours, setDaysHours] = useState({days: 0, hours: 0})
 
   const [deleteConfirm, setDeleteConfirm] = useState(false);
-  const [actionBody, setActionBody] = useState("editor body during edit" || "");
+  const [actionBody, setActionBody] = useState("");
   const [placeholder, setPlaceholder] = useState("");
 
   const [recipientType, setRecipientType] = useState("agent");
@@ -36,7 +38,6 @@ const AutomationAction = ({
 
   const [actionChannels] = useState([
     {label: "Email", value: "Email"},
-    {label: "WhatsApp", value: "WhatsApp"},
     {label: "SMS", value: "SMS"}
   ])
 
@@ -54,6 +55,9 @@ const AutomationAction = ({
       const arr = prev.filter((item) => item !== itemIndex)
       return arr
     });
+
+    removeActionItem(itemIndex)
+
   };
 
   const insertPlaceholder = (i) => {
@@ -69,23 +73,47 @@ const AutomationAction = ({
     setAction( prev => {
       return {...prev, [name]: value}
     })
+
+  };
+
+  const handleDaysHoursChange = (e) => {
+    let { name, value } = e.target;
+
+    setDaysHours( prev => {
+      return {...prev, [name]: value}
+    })
+
+    if(name === "days"){
+      setAction(prev => {
+        return {...prev, hours: value*24 + Number(daysHours.hours)}
+      })
+    } else {
+      setAction(prev => {
+        return {...prev, hours: Number(value) + daysHours.days*24}
+      })
+    }
   };
 
   const handleRSChange = (iValues, {name}) => {
     let data = iValues.value;
 
     if (Array.isArray(iValues)) {
-      const recipientIds = [];
+      const ids = [];
       iValues.map(item => {
-        recipientIds.push(item.value)
+        ids.push(item.value)
       })
-      data = recipientIds;
 
+      setAction( prev => {
+        return {...prev, [name]: {ids, type: recipientType}}
+      })
+
+    } else {
+      setAction( prev => {
+        return {...prev, [name]: data}
+      })
     }
 
-    setAction( prev => {
-      return {...prev, [name]: data}
-    })
+    
   }
 
   const loadRecipients = () => {
@@ -135,7 +163,7 @@ const AutomationAction = ({
   return (
     <>
 
-      <div className="card mt-2 mb-4" style={{backgroundColor: "#a6d6f0"}}>
+      <div className="card mt-2 mb-4">
         <div className="card-body border-0 p-3 automation-action">
           <div className="d-flex  flex-column assign">
             <label for="channel">Send</label>
@@ -143,7 +171,7 @@ const AutomationAction = ({
             <RSelect 
               className=""
               id="channel"
-              name="channel"
+              name="action"
               openMenuOnFocus={true}
               onChange={handleRSChange}
               options={actionChannels}
@@ -154,9 +182,9 @@ const AutomationAction = ({
           <div className="mt-4 d-flex align-items-center">
             
             <div className="input-group w-50 me-2">
-              <input type="number" name="days" ariaLabel="Last name" className="form-control" onChange={handleChange} />
+              <input type="number" name="days" ariaLabel="Last name" className="form-control" onChange={handleDaysHoursChange} />
               <span className="input-group-text acx-fs-8">Days</span>
-              <input type="number" name="hours" ariaLabel="First name" className="form-control" onChange={handleChange} />
+              <input type="number" name="hours" ariaLabel="First name" className="form-control" onChange={handleDaysHoursChange} />
               <span className="input-group-text acx-fs-8">Hours</span>
             </div>
 
@@ -188,7 +216,6 @@ const AutomationAction = ({
                   value="agent"
                   checked={recipientType === "agent"}
                   onClick={(e) => {
-                    // loadRecipients(e.target.value)
                     setRecipientType(e.target.value)
                   }}
                 />
@@ -202,7 +229,6 @@ const AutomationAction = ({
                   value="group"
                   checked={recipientType === "group"}
                   onClick={(e) => {
-                    // loadRecipients(e.target.value)
                     setRecipientType(e.target.value)
                   }}
                 />
@@ -214,7 +240,7 @@ const AutomationAction = ({
               <RSelect 
                 className=""
                 isClearable={false}
-                name="recipients"
+                name="recipient"
                 isMulti
                 onMenuOpen={() => loadRecipients()}
                 options={recipients}
@@ -236,7 +262,7 @@ const AutomationAction = ({
             </div>
           </div>
 
-          {/* <div className="form-group mt-3">
+          <div className="form-group mt-3">
             <label className="mb-1">Message</label>
 
             <EditorBox
@@ -248,7 +274,7 @@ const AutomationAction = ({
               setPlaceholder={setPlaceholder}
             />
 
-          </div> */}
+          </div>
         </div>
         <div className="card-footer bg-light" id="customer-choice">
           <button className="addNewResolution" onClick={addAction}>
@@ -265,7 +291,7 @@ const AutomationAction = ({
               }}
             >
               <img src={DeleteIcon} alt="" className="img-fluid me-1 mt-n5 " />{" "}
-              Delete Action [{itemIndex}]
+              Delete Action
             </button>
           )}
         </div>

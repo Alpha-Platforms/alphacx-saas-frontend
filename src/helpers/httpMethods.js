@@ -262,7 +262,7 @@ export const httpPatchMain = async (url, postBody) => {
   }
 };
 
-export const httpDelete = async (url, postBody) => {
+export const httpDelete = async (url) => {
   if (!navigator.onLine) {
     return NotificationManager.error(
       "Please check your internet",
@@ -271,7 +271,7 @@ export const httpDelete = async (url, postBody) => {
     );
   }
   try {
-    const res = await axios.delete(`${baseUrl}/api/${url}`, postBody, {
+    const res = await axios.delete(`${baseUrlMain}/${url}`, {
       headers: { 
         Authorization: `Bearer ${token}`,
         'Access-Control-Allow-Origin': '*',
@@ -280,8 +280,6 @@ export const httpDelete = async (url, postBody) => {
     });
     return res;
   } catch (error) {
-    // hideLoader();
-    // hideLoader();
-    return { er: error.response.data };
+    return error.response.data;
   }
 };

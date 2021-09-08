@@ -25,7 +25,7 @@ const AutomationSettings = () => {
   const [automationPolicies, setAutomationPolicies] = useState([]);
   const [tableMeta, setTableMeta] = useState({});
   const [deleteUrl, setDeleteUrl] = useState("");
-  const [openDeleteActionModal, SetOpenDeleteActionModal] = useState(false);
+  const [openDeleteActionModal, setOpenDeleteActionModal] = useState(false);
   const [policyLoading, setPolicyLoading] = useState(false);
 
 
@@ -88,7 +88,7 @@ const AutomationSettings = () => {
               <span
                 className="black-text"
                 onClick={() => {
-                  SetOpenDeleteActionModal(true);
+                  setOpenDeleteActionModal(true);
                   setDeleteUrl(automationPolicies[rowData.tableData.id].id);
                 }}
               >
@@ -141,20 +141,27 @@ const AutomationSettings = () => {
     );
   };
   // --------------------------
-  // FUnction to delete an automation Policy by ID
+  // Function to delete an automation Policy by ID
   // --------------------------
   const deleteAutomation = async () => {
-    SetOpenDeleteActionModal(false);
+
+    setOpenDeleteActionModal(false);
     setPolicyLoading(true);
-    const res = await httpDelete("sla", { agreementId: deleteUrl });
+    const res = await httpDelete(`sla/${deleteUrl}`);
+
     setPolicyLoading(false);
-    if (res?.status === "success") {
-      NotificationManager.success(res.data.message, "Success", 4000);
+    
+    if (res?.status === 200 && res?.data?.status === "success") {
+      return NotificationManager.success(res?.data?.message, "Success");
     } else {
-      return NotificationManager.error(res?.er?.message, "Error", 4000);
+      return NotificationManager.error(res?.message, "Error", 4000);
     }
+
   };
 
+  // --------------------------
+  // Function to fetch automations
+  // --------------------------
   const getAllAutomation = async () => {
     const res = await httpGetMain("sla");
     if (res?.status === "success") {
@@ -186,15 +193,15 @@ const AutomationSettings = () => {
       )}
       <Modal
         open={openDeleteActionModal}
-        onClose={() => SetOpenDeleteActionModal(false)}
+        onClose={() => setOpenDeleteActionModal(false)}
         center
       >
         <div className="p-5 w-100">
-          <h6 className="mb-5">Are you sure you want to delete this Policy?</h6>
+          <h6 className="mb-4">Are you sure you want to delete this automation?</h6>
           <div className="d-flex justify-content-center">
             <a
               className="btn f-12 bg-outline-custom cancel px-4"
-              onClick={() => SetOpenDeleteActionModal(false)}
+              onClick={() => setOpenDeleteActionModal(false)}
             >
               Cancel
             </a>
