@@ -145,9 +145,12 @@ const SiteRouter = connect(mapStateToProps, {
                             <Route exact path="/login/:domain" component={Login}/>
                             <Route exact path="/register" component={Register}/> {/* help pages */}
                             <Route exact path="/help" component={HelpCenter}/>
-                            <Route exact path="/help/tickets" component={CustomerPortal}/>
                             <Route exact path="/help/:topic" component={ArticleList}/>
                             <Route exact path="/help/:topic/:article" component={Article}/> {/* help pages end */}
+
+                            {/* Customer Portal */}
+                            <Route exact path="/customer-portal/tickets" component={CustomerPortal}/>
+
                             <DefaultLayoutRoute
                                 exact
                                 path="/home"
