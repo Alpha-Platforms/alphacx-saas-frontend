@@ -149,7 +149,7 @@ export default function Conversation() {
   useEffect(() => {
     AppSocket.createConnection();
     AppSocket.io.on(`ws_tickets`, (data) => {
-      console.log("this are Tickets", data?.data?.tickets);
+      // console.log("this are Tickets", data?.data?.tickets);
       setWsTickets(data?.data?.tickets);
     });
     AppSocket.io.on(`message`, (data) => {
