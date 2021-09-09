@@ -163,7 +163,7 @@ const CustomerPortal = ({statuses}) => {
 
   return (
     <>
-      <HelpNavBar activeBG={true} />
+      <HelpNavBar activeBG={true} custId={custId} />
       <TopBar />
       <div className="customer-portal">
         <div className="total-cards">
