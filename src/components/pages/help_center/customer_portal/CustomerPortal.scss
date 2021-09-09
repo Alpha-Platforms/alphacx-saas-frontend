@@ -34,10 +34,10 @@
                 grid-template-columns: auto 1fr;
 
                 .tag {
-                    border-right: 1px solid #2b304d28;
-                    padding: 0 15px;
+                    // border-right: 1px solid #2b304d28;
+                    padding: 0 6px;
                     display: inline-block;
-                    margin: 0 0 0.4rem;
+                    margin: 0 0 0.6rem;
                     &:last-child {
                         border: none;
                     }
