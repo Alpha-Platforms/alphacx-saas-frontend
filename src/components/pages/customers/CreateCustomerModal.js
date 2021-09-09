@@ -201,7 +201,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     const handleTagCreation = newTag => {
         newTag = newTag.toLowerCase();
         setTagSelectLoading(true);
-        const newTags = [...tags.map(tag => tag.value), newTag];
+        const newTags = [...tags, newTag];
 
         createTags(newTags, tagCreated, tagNotCreated, newTag);
     }
