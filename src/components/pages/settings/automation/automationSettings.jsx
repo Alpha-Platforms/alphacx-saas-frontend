@@ -152,7 +152,12 @@ const AutomationSettings = () => {
     setPolicyLoading(false);
     
     if (res?.status === 200 && res?.data?.status === "success") {
-      return NotificationManager.success(res?.data?.message, "Success");
+      NotificationManager.success(res?.data?.message, "Success");
+      
+      setAutomationPolicies( prev => {
+        return automationPolicies.filter(i => i.id !== deleteUrl)
+      })
+
     } else {
       return NotificationManager.error(res?.message, "Error", 4000);
     }
