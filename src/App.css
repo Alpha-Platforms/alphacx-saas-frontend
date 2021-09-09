@@ -310,6 +310,7 @@ object.icon-lg {
 /* --------------- redefine bootstrap ------------- */
 .page-item .page-link {
   color: var(--at-blue-light) !important;
+  cursor: pointer;
 }
 
 .page-item.active .page-link {

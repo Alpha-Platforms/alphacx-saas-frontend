@@ -12,12 +12,12 @@ import {getCustTickets} from '../../../../reduxstore/actions/customerActions';
 import {Pagination} from 'react-bootstrap';
 
 
-const TicketPagination = ({currentPage, numberOfPages}) => {
+const TicketPagination = ({currentPage, numberOfPages, handleTicketPagination}) => {
   const pageArr = [];
 
   for (let page = 1; page <= numberOfPages; page++) {
       if(page === currentPage) {
-        pageArr.push(<li className="page-item active"><span className="page-link" href="#">{page}</span></li>)
+        pageArr.push(<li className="page-item active"><span className="page-link">{page}</span></li>)
       } else {
 
         switch (page) {
@@ -30,7 +30,7 @@ const TicketPagination = ({currentPage, numberOfPages}) => {
           case 30:
           case numberOfPages:
 
-          pageArr.push(<li className="page-item"><span className="page-link" href="#">{page}</span></li>)
+          pageArr.push(<li className="page-item"><span className="page-link" onClick={() => handleTicketPagination(page)}>{page}</span></li>)
 
             break;
             
@@ -49,14 +49,14 @@ const TicketPagination = ({currentPage, numberOfPages}) => {
 
   return <nav aria-label="ticket pagination">
       <ul className="pagination">
-        <li className="page-item disabled">
-          <span className="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</span>
+        <li className={`page-item ${currentPage <= 1 ? 'disabled' : ''}`}>
+          <span className="page-link" onClick={() => currentPage > 1 && handleTicketPagination(currentPage - 1)}>Previous</span>
         </li>
        {pageArr.map(x => <Fragment>
          {x === 'empty' ? <li className="page-item disabled"><span className="page-link" href="#">...</span></li> : x}
        </Fragment>)}
-       <li className="page-item">
-          <span className="page-link" href="#">Next</span>
+       <li className={`page-item ${currentPage >= numberOfPages ? 'disabled' : ''}`}>
+          <span className="page-link" onClick={() => currentPage < numberOfPages && handleTicketPagination(currentPage + 1)}>Next</span>
         </li>
       </ul>
   </nav>
@@ -73,6 +73,7 @@ const CustomerPortal = ({statuses}) => {
     meta: null,
     isCustTicketsLoaded: false,
     isCustTicketsLoading: false,
+    noPerPage: 10,
     currentStatus: 'all'
   });
 
@@ -82,7 +83,7 @@ const CustomerPortal = ({statuses}) => {
         ...prev,
         isCustTicketsLoading: true
       }));
-      const custRes = await getCustTickets(10, 1, custId);
+      const custRes = await getCustTickets(custState.noPerPage, 1, custId);
       if (custRes) {
         console.log("Success Customer Response: ", custRes);
         setCustState(prev => ({
@@ -94,7 +95,27 @@ const CustomerPortal = ({statuses}) => {
         }));
       }
     })();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const handleTicketPagination = async (page) => {
+    setCustState(prev => ({
+      ...prev,
+      isCustTicketsLoading: true,
+      isCustTicketsLoaded: false
+    }));
+    const custRes = await getCustTickets(custState.noPerPage, page, custId);
+    if (custRes) {
+      console.log("Success Customer Response: ", custRes);
+      setCustState(prev => ({
+        ...prev,
+        custTickets: custRes?.tickets,
+        meta: custRes?.meta,
+        isCustTicketsLoaded: true,
+        isCustTicketsLoading: false
+      }));
+    }
+  }
 
 
   const getStatusColor = (id) => {
@@ -150,7 +171,7 @@ const CustomerPortal = ({statuses}) => {
             <div className="mt-4">
             <div></div>
             <div>
-                <TicketPagination numberOfPages={10} currentPage={1} />
+                {custState.isCustTicketsLoaded && <TicketPagination numberOfPages={custState.meta?.totalPages || 1} currentPage={custState.meta?.currentPage || 1} handleTicketPagination={handleTicketPagination} />}
             </div>
             </div>
           </div>
