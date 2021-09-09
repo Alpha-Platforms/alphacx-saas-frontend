@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { UserDataContext } from "../../../context/userContext";
 import "./conversation.css";
 import { Modal } from "react-responsive-modal";
+import Spinner from 'react-bootstrap/Spinner';
 import PinIcon from '../../../assets/icons/pin.svg';
 import MessageList from "./messageList";
 import searchIcon from "../../../assets/imgF/Search.png";
@@ -20,6 +21,11 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import { NotificationManager } from "react-notifications";
 import ClipLoader from "react-spinners/ClipLoader";
+// bootstrap components
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col'
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -99,21 +105,22 @@ export default function Conversation() {
     description: [],
     category: "",
   });
-  const [sendingReply, setsendingReply] = useState(false);
+  const [sendingReply, setSendingReply] = useState(false);
   const [msgHistory, setMsgHistory] = useState([]);
-  const [wsTickets, setwsTickets] = useState([]);
+  const [wsTickets, setWsTickets] = useState([]);
   const [categoryUpdate, setCategoryUpdate] = useState("");
   const [noResponseFound, setNoResponseFound] = useState(true);
   const [TodayMsges, setTodayMsges] = useState([]);
   const [YesterdayMsges, setYesterdayMsges] = useState([]);
   const [AchiveMsges, setAchiveMsges] = useState([]);
   const [ShowAchive, setShowAchive] = useState(false);
-  const [channel, setchannel] = useState("All");
+  const [channel, setChannel] = useState("All");
   const [status, setstatus] = useState("All");
   const [activeChat, setActiveChat] = useState(1);
   const [updateTickStatusS, setupdateTickStatusS] = useState("");
   
   /* UPDATE MODAL FORM VALUES */
+  const [processing, setProcessing] = useState(false);
   const [RSCustomerName, setRSCustomerName] = useState("");
   const [RSTicketTags, setRSTicketTags] = useState([]);
   const [RSTicketAssignee, setRSTicketAssignee] = useState([]);
@@ -142,11 +149,11 @@ export default function Conversation() {
   useEffect(() => {
     AppSocket.createConnection();
     AppSocket.io.on(`ws_tickets`, (data) => {
-      // console.log("this are Ticketsss", data?.data?.tickets);
-      setwsTickets(data?.data?.tickets);
+      // console.log("this are Tickets", data?.data?.tickets);
+      setWsTickets(data?.data?.tickets);
     });
     AppSocket.io.on(`message`, (data) => {
-      // console.log("this are history msbsg", data);
+      // console.log("this are history msg", data);
       // console.log(UserInfo);
       let msg = {
         created_at: data.created_at,
@@ -228,7 +235,7 @@ export default function Conversation() {
 
   const filterTicket = (value, type) => {
     if (type === "channel") {
-      setchannel(value);
+      setChannel(value);
       AppSocket.createConnection();
       let data = { channel: value === "All" ? "" : value, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, data);
@@ -237,7 +244,7 @@ export default function Conversation() {
     if (type === "status") {
       setstatus(value);
       AppSocket.createConnection();
-      let data = { status: value == "All" ? "" : value, per_page: 100 };
+      let data = { status: value === "All" ? "" : value, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, data);
     }
     setFilterTicketsState(value);
@@ -269,7 +276,7 @@ export default function Conversation() {
     };
     // console.log(singleTicketFullInfo.customer.phone_number);
     // console.log(data);
-    // setsendingReply(true);
+    // setSendingReply(true);
     const replyData = {
       attachment: null,
       created_at: new Date(),
@@ -288,13 +295,13 @@ export default function Conversation() {
     if (res?.status === "success") {
       scollPosSendMsgList();
       console.log(res);
-      // setsendingReply(false);
+      // setSendingReply(false);
       // ReloadloadSingleMessage();
       setEditorState(initialState);
       setReplyTicket({ plainText: "", richText: "" });
     } else {
       // setLoadingTicks(false);
-      setsendingReply(false);
+      setSendingReply(false);
       console.log(res.er);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
@@ -418,6 +425,7 @@ export default function Conversation() {
   };
 
   const updateTicket = async (status) => {
+    setProcessing(true);
     if (status === "") {
       return;
     }
@@ -433,6 +441,7 @@ export default function Conversation() {
     };
     const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
     if (res.status === "success") {
+      setProcessing(false);
       closeSaveTicketModal();
       NotificationManager.success(
         "Ticket status successfully updated",
@@ -450,6 +459,7 @@ export default function Conversation() {
         NotificationManager.info("please refresh your page to see changes");
       }
     } else {
+      setProcessing(false);
       return NotificationManager.error(res.er.message, "Error", 4000);
     }
   };
@@ -469,7 +479,7 @@ export default function Conversation() {
       setRSTicketSubject(ticket[0].subject);
       setRSTicketRemarks(ticket[0].description);
       setRSTicketTags(ticket[0].tags);
-      setRSTicketAssignee(ticket[0].assignee.id);
+      setRSTicketAssignee(ticket[0]?.assignee?.id);
     }
   };
 
@@ -1123,23 +1133,23 @@ export default function Conversation() {
       </div>
       {/* Modal area starts here */}
       <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal} center>
-        <div className="saveTicketWrapModal">
+        <Form className="saveTicketWrapModal">
           <p className="fs-5">
             Kindly update ticket before closing the chat
           </p>
 
-          <div className="saveTicketModalForm">
-            <div className="ticketmodalInput-twoCol">
-              <div className="ticketmodalInputWrapMain">
-                <label htmlFor="">Customer</label>
-                <input
+          <div className="">
+            <Row  md={6} className="mb-3">
+              <Form.Group as={Col} md={6} className="form-group acx-form-group mb-3">
+                <Form.Label className="mb-0">Customer</Form.Label>
+                <Form.Control
                   value={`${capitalizeFirstLetter(
                     ticket[0]?.customer?.firstname
                   )} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
                   type="text"
                   disabled
                 />
-              </div>
+              </Form.Group>
 
               {/* 
               Andy's setters
@@ -1147,8 +1157,8 @@ export default function Conversation() {
               updateTicket              
               */}
 
-              <div className="ticketmodalInputWrapMain">
-                <label htmlFor="">Category</label>
+              <Col md={6} className="">
+                <label className="mb-0">Category</label>
                 <RSelect
                   className="rselectfield"
                   style={{ fontSize: "12px" }}
@@ -1167,11 +1177,8 @@ export default function Conversation() {
                     })
                   }
                 />
-              </div>
-            </div>
-
-            <div className="ticketmodalInput-twoCol">
-              <div className="ticketmodalInputWrapMain">
+              </Col>
+              <Col md={6}>
                 <label htmlFor="">Stage</label>
                 <RSelect
                   className="rselectfield"
@@ -1191,9 +1198,9 @@ export default function Conversation() {
                     })
                   }
                 />
-              </div>
+              </Col>
 
-              <div className="ticketmodalInputWrapMain">
+              <Col md={6}>
                 <label htmlFor="">Priority</label>
                 <RSelect
                   className="rselectfield"
@@ -1213,38 +1220,27 @@ export default function Conversation() {
                     })
                   }
                 />
-              </div>
-            </div>
+              </Col>
+            </Row>
 
-            <div className="ticketmodalInput-OneCol">
-              <div className="ticketmodalInputWrapMainOne">
-                <label htmlFor="">Subject</label>
-                <input
-                  type="text"
-                  defaultValue={`${ticket[0]?.subject}`}
-                  onChange={(e) => setRSTicketSubject(e.target.value)}
-                  style={{ fontSize: "12px" }}
-                />
-              </div>
-            </div>
+            <Form.Group  className="form-group acx-form-group mb-3">
+              <Form.Label className="mb-0">Subject</Form.Label>
+              <Form.Control type="text"
+                defaultValue={`${ticket[0]?.subject}`}
+                onChange={(e) => setRSTicketSubject(e.target.value)}
+              />
+            </Form.Group>
 
-            <div className="descriptionWrap">
-              <label htmlFor="">Remarks</label>
-              <textarea
+            <Form.Group  className="form-group acx-form-group mb-3">
+              <Form.Label className="mb-0">Remarks</Form.Label>
+              <Form.Control as="textarea" rows={5} 
                 onChange={(e) => setRSTicketRemarks(e.target.value)}
-                style={{ fontSize: "12px", padding: "10px" }}
-              >{ticket[0]?.description}</textarea>
-            </div>
+              >{ticket[0]?.description}</Form.Control>
+            </Form.Group>
 
             <p
-              className="btn mt-3 p-0 text-start"
+              className="btn mt-2 mb-0 p-0 text-start"
               role="button"
-              style={{
-                fontSize: "0.8rem",
-                fontWeight: "bold",
-                marginBottom: 0,
-                color: "#006298!important",
-              }}
               onClick={() => setIsAdditionalOptionVisible((v) => !v)}
             >
               Additional Options
@@ -1316,13 +1312,15 @@ export default function Conversation() {
                 </div>
               </div>
             )}
-            <div className="closeTicketModdalj">
-              <button type="submit" onClick={updateTicket}>
-                Update
-              </button>
+            <div className="text-end mt-3">
+              <Button className="btn acx-btn-primary px-3 py-2" disabled={processing} type="submit" onClick={updateTicket}>
+                { processing ? 
+                (<React.Fragment><Spinner as="span" size="sm" animation="border" variant="light" /> Processing...</React.Fragment>  ) 
+                  : `Update`}
+              </Button>
             </div>
           </div>
-        </div>
+        </Form>
       </Modal>
     </React.Fragment>
   );

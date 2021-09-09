@@ -4,42 +4,43 @@ import { LayoutContext } from "../../context/layoutContext";
 import { AuthContext } from "../../context/authContext";
 import { NotificationManager } from "react-notifications";
 import {
-  appLogo,
+  // appLogo,
+  // dashboardIcon,
   toggleIcon,
-  dashboardIcon,
   HomeIcon,
   ClockIcon,
   CardIcon,
   MoreIcon,
-  LogoutIconIcon,
+  LogoutIcon,
   Graph,
   SettingsIcon,
   AppLogo,
+  AppFullLogo
 } from "../../assets/images/svgs";
 export default function Sidebar({ browserRouter, currentRoute }) {
   const {
-    setreduceSidebarWidth,
+    // setreduceSidebarWidth,
     appReduceSidebarWidth,
     reduceSidebarWidth,
   } = useContext(LayoutContext);
 
-  const [PublicationShow, SetPublicationShow] = useState(true);
-  const [CategoriesShow, SetCategoriesShow] = useState(false);
-  const [SortShow, SetSortShow] = useState(false);
-  const [DateShow, SetDateShow] = useState(false);
-  const [startDate, setStartDate] = useState(new Date());
+  // const [PublicationShow, SetPublicationShow] = useState(true);
+  // const [CategoriesShow, SetCategoriesShow] = useState(false);
+  // const [SortShow, SetSortShow] = useState(false);
+  // const [DateShow, SetDateShow] = useState(false);
+  // const [startDate, setStartDate] = useState(new Date());
 
-  const [PublicationsFilter, SetPublicationsFilter] = useState({
-    all: true,
-    newsPaper: false,
-    magazine: false,
-    books: false,
-  });
+  // const [PublicationsFilter, SetPublicationsFilter] = useState({
+  //   all: true,
+  //   newsPaper: false,
+  //   magazine: false,
+  //   books: false,
+  // });
 
-  const [SortFilter, SetSortFilter] = useState({
-    popular: true,
-    recent: false,
-  });
+  // const [SortFilter, SetSortFilter] = useState({
+  //   popular: true,
+  //   recent: false,
+  // });
 
   const Logout = () => {
     Swal.fire({
@@ -60,193 +61,98 @@ export default function Sidebar({ browserRouter, currentRoute }) {
   };
 
   return (
-    <div>
-      <div
-        className={`${
-          appReduceSidebarWidth === true
-            ? "sidebar-wrap"
-            : "sidebar-wrap reduceSidebarWidth"
-        }`}
-      >
-        <ul style={{ paddingBottom: "60px" }} className="sidebar-list">
-          <span
-            className={`${
-              appReduceSidebarWidth === true
-                ? "sidebar-header"
-                : "sidebar-header moveAppLinksToCenter"
-            }`}
-            style={{ marginLeft: "-5px" }}
-          >
-            <span style={{ marginRight: "20px", marginTop: "-4px" }}>
-              <AppLogo />
-            </span>
+    <menu className={`sidebar-wrap ${ appReduceSidebarWidth === true ? "" : "collapsed" }`} >
+      <header className="sidebar-header">
+          <span className="sidebar-header--full-logo">
+            <AppFullLogo />
           </span>
+          <span className="sidebar-header--logo">
+            <AppLogo />
+          </span>
+      </header>
+      <ul className="sidebar-list mb-auto">
 
-          <li
-            onClick={() => reduceSidebarWidth()}
-            className={`${
-              appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
-            }`}
-          >
-            {" "}
-            <span style={{ marginRight: "20px", marginTop: "-4px" }}>
-              {toggleIcon}
-            </span>
-            Menu
-          </li>
+        <li onClick={() => reduceSidebarWidth()}
+            className="sidebar-list--item">
+          <span className="sidebar-list--icon">
+            {toggleIcon}
+          </span>
+          <span className="sidebar-list--text small fst-italic">
+            Collapse Menu
+          </span>
+        </li>
 
-          <li
-            style={
-              currentRoute === "/home" || currentRoute === "/home/tabs"
-                ? { color: "#e3b451" }
-                : { color: "white" }
-            }
-            // onClick={() => browserRouter("/home")}
-            className={`${
-              appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
-            }`}
-            onClick={() => browserRouter(`/home`)}
-          >
-            {" "}
-            <span style={{ marginRight: "20px", marginTop: "-4px" }}>
-              {
-                <HomeIcon
-                  activeRoute={
-                    currentRoute === "/home" || currentRoute === "/home/tabs"
-                      ? true
-                      : false
-                  }
-                />
-              }
-            </span>
+        <li className={`sidebar-list--item ${(currentRoute === "/home" || currentRoute === "/home/tabs")? "active" : ""}`}
+            onClick={() => browserRouter(`/home`)} >
+          <span className="sidebar-list--icon">
+            { <HomeIcon activeRoute={false}/> }
+          </span>
+          <span className="sidebar-list--text">
             Dashboard
-          </li>
+          </span>
+        </li>
 
-          <li
-            style={
-              currentRoute === "/user_transations"
-                ? { color: "#e3b451" }
-                : { color: "white" }
-            }
-            onClick={() => browserRouter(`/conversation`)}
-            className={`${
-              appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
-            }`}
-          >
-            {" "}
-            <span style={{ marginRight: "20px", marginTop: "-4px" }}>
-              <ClockIcon
-                activeRoute={
-                  currentRoute === "/user_transations" ? true : false
-                }
-              />
-            </span>
+        <li onClick={() => browserRouter(`/conversation`)}
+          className={`sidebar-list--item ${currentRoute === "/conversation" ? "active" : ""}`}>
+          <span className="sidebar-list--icon">
+            { <ClockIcon activeRoute={false}/> }
+          </span>
+          <span className="sidebar-list--text">
             Conversations
-          </li>
+          </span>
+        </li>
 
-          <li
-            style={
-              currentRoute === "/user_cards"
-                ? { color: "#e3b451" }
-                : { color: "white" }
-            }
-            // onClick={() => browserRouter("/user_cards")}
-            className={`${
-              appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
-            }`}
-            onClick={() => browserRouter(`/tickets`)}
-          >
-            {" "}
-            <span style={{ marginRight: "20px", marginTop: "-4px" }}>
-              <CardIcon
-                activeRoute={currentRoute === "/user_cards" ? true : false}
-              />
-            </span>
+        <li onClick={() => browserRouter(`/tickets`)}
+            className={`sidebar-list--item ${currentRoute === "/tickets" ? "active" : ""}`}>
+          <span className="sidebar-list--icon">
+            { <CardIcon activeRoute={false}/> }
+          </span>
+          <span className="sidebar-list--text">
             Tickets
-          </li>
+          </span>
+        </li>
 
-          <li
-            style={
-              currentRoute === "/more"
-                ? { color: "#e3b451" }
-                : { color: "white" }
-            }
-            className={`${
-              appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
-            }`}
-            onClick={() => browserRouter(`/customers`)}
-          >
-            {" "}
-            <span style={{ marginRight: "20px", marginTop: "-4px" }}>
-              <MoreIcon
-                activeRoute={currentRoute === "/more" ? "#e3b451" : null}
-              />
-            </span>
-            Customer
-          </li>
+        <li onClick={() => browserRouter(`/customers`)}
+            className={`sidebar-list--item ${currentRoute === "/customers" ? "active" : ""}`}>
+          <span className="sidebar-list--icon">
+            { <MoreIcon activeRoute={false}/> }
+          </span>
+          <span className="sidebar-list--text">
+            Customers
+          </span>
+        </li>
 
-          <li
-            style={
-              currentRoute === "/more"
-                ? { color: "#e3b451" }
-                : { color: "white" }
-            }
-            className={`${
-              appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
-            }`}
-            onClick={() => browserRouter(`/home`)}
-          >
-            {" "}
-            <span style={{ marginRight: "20px", marginTop: "-4px" }}>
-              <Graph
-                activeRoute={currentRoute === "/more" ? "#e3b451" : null}
-              />
-            </span>
+        <li onClick={() => browserRouter(`/reports`)}
+            className={`sidebar-list--item ${currentRoute === "/reports" ? "active" : ""}`}>
+          <span className="sidebar-list--icon">
+            { <Graph activeRoute={false}/> }
+          </span>
+          <span className="sidebar-list--text">
             Reports
-          </li>
+          </span>
+        </li>
 
-          <li
-            style={
-              currentRoute === "/more"
-                ? { color: "#e3b451" }
-                : { color: "white" }
-            }
-            className={`${
-              appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
-            }`}
-            onClick={() => browserRouter(`/settings`)}
-          >
-            {" "}
-            <span style={{ marginRight: "20px", marginTop: "-4px" }}>
-              <SettingsIcon
-                activeRoute={currentRoute === "/more" ? "#e3b451" : null}
-              />
-            </span>
+        <li onClick={() => browserRouter(`/settings`)}
+            className={`sidebar-list--item ${currentRoute === "/settings" ? "active" : ""}`}>
+          <span className="sidebar-list--icon">
+            { <SettingsIcon activeRoute={false}/> }
+          </span>
+          <span className="sidebar-list--text">
             Settings
-          </li>
-        </ul>
-        <ul className="sidebar-list">
-          <li
-            style={
-              currentRoute === "/more"
-                ? { color: "#e3b451" }
-                : { color: "white" }
-            }
-            className={`${
-              appReduceSidebarWidth === true ? "" : "moveAppLinksToCenter"
-            }`}
-            onClick={() => Logout()}
-          >
-            {" "}
-            <span style={{ marginRight: "20px", marginTop: "-4px" }}>
-              <LogoutIconIcon
-                activeRoute={currentRoute === "/more" ? "#e3b451" : null}
-              />
+          </span>
+        </li>
+      </ul>
+      <ul className="sidebar-list mt-auto">
+        <li onClick={() => Logout()}
+            className="sidebar-list--item">
+            <span className="sidebar-list--icon">
+              { <LogoutIcon activeRoute={false}/> }
             </span>
-            Logout
-          </li>
-        </ul>
-      </div>
-    </div>
+            <span className="sidebar-list--text">
+              Logout
+            </span>
+        </li>
+      </ul>
+    </menu>
   );
 }

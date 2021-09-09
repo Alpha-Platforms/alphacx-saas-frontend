@@ -607,7 +607,9 @@ input:-webkit-autofill::first-line {
     font-size: 0.875rem;
 }
 .form-group.acx-form-group .form-control {
-    background: var(--color-gray-50);
+    font-size: 0.9375rem !important;
+    padding: 0.5rem 0.75rem;
+    background: var(--color-white);
     border: 1px solid var(--color-gray-200);
     box-sizing: border-box;
     transition: cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s;
@@ -628,13 +630,17 @@ input:-webkit-autofill::first-line {
 .form-group.acx-form-group .form-control.form-control-primary:hover {
     box-shadow: 0 0 0 0.25rem var(--color-primary-25);
     border: 1px solid var(--color-primary);
-    background: var(--color-gray-50);
+    background: var(--color-white);
 }
 .form-group.acx-form-group .form-control.form-control-secondary:focus,
 .form-group.acx-form-group .form-control.form-control-secondary:hover {
     border: 1px solid var(--color-secondary);
 }
-
+.form-group.acx-form-group .form-control.disabled,
+.form-group.acx-form-group .form-control:disabled{
+    background: var(--color-gray-50) !important;
+    box-shadow: none;
+}
 /* search input */
 input.search-input {
     background-image: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24'><path fill='gray' d='M15.2 16.34a7.5 7.5 0 1 1 1.38-1.45l4.2 4.2a1 1 0 1 1-1.42 1.41l-4.16-4.16zm-4.7.16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z'/></svg>") !important;
