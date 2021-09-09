@@ -41,7 +41,7 @@ import SettingsHome from "./components/pages/settings";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import "./styles/Custom.css";
-import {SocketDataProvider} from "./context/socket";
+import { SocketDataProvider } from "./context/socket";
 import ArticleList from "./components/pages/help_center/help_pages/articleList";
 import Article from "./components/pages/help_center/help_pages/article";
 import EmailSettings from "./components/pages/settings/email/emailSettings";
@@ -49,7 +49,7 @@ import SettingsEmail from "./components/pages/settings/email/emailSettings";
 import UserList from "./components/pages/settings/users/UserList";
 import UserPersonal from "./components/pages/settings/users/UserPersonal";
 import Fields from "./components/pages/settings/fields/Fields";
-//
+// 
 import SocialIntegrations from "./components/pages/settings/social_integrations/index";
 import FacebookIntegration from "./components/pages/settings/social_integrations/FacebookIntegration";
 import WhatsappIntegration from "./components/pages/settings/social_integrations/WhatsappIntegration";
@@ -77,22 +77,24 @@ import Dashboard from "./components/pages/dashboard/Dashboard";
 const mapStateToProps = (state, ownProps) => ({isUserAuthenticated: state.userAuth.isUserAuthenticated});
 
 const SiteRouter = connect(mapStateToProps, {
+  loadUser,
+  getCustomers,
+  getTickets,
+  getPaginatedTickets,
+  getPriorities,
+  getCategories,
+  getStatuses,
+  getGroups,
+  getAgents,
+  getPaginatedCustomers,
+  getPaginatedUsers,
+  getTags,
+  getSubCategories,
+  getConfigs
+})(
+  ({
     loadUser,
-    getCustomers,
-    getTickets,
-    getPaginatedTickets,
-    getPriorities,
-    getCategories,
-    getStatuses,
-    getGroups,
-    getAgents,
-    getPaginatedCustomers,
-    getPaginatedUsers,
-    getTags,
-    getSubCategories,
-    getConfigs
-})(({
-    loadUser, isUserAuthenticated,
+    isUserAuthenticated,
     // getCustomers,
     getPaginatedTickets,
     getPriorities,
@@ -105,13 +107,13 @@ const SiteRouter = connect(mapStateToProps, {
     getTags,
     getSubCategories,
     getConfigs
-}) => {
+  }) => {
 
     const siteUser = JSON.parse(localStorage.getItem('user'));
 
     useEffect(() => {
-        siteUser && loadUser(siteUser);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+      siteUser && loadUser(siteUser);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [siteUser]);
 
     useEffect(() => {
@@ -334,36 +336,35 @@ const SiteRouter = connect(mapStateToProps, {
           .
           settings pages end */}
 
-                            {/* <Route>
-                                <div
-                                    style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    height: "100vh"
-                                }}>
-                                    <h1>404 - Not Found</h1>
-                                </div>
-                            </Route> */}
-                        </SocketDataProvider>
-                    </LayoutProvider>
-                </UserDataProvider>
-            </Switch>
-        </BrowserRouter>
+          <Route>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+              }}
+            >
+              <h1>404 - Not Found</h1>
+            </div>
+          </Route>
+        </Switch>
+      </BrowserRouter>
     );
-});
+  }
+);
 
 function App(props) {
-    //DisableInspect()
-    return (
-        <Provider store={store}>
-            <PersistGate persistor={persistor}>
-                <NotificationContainer/>
+  //DisableInspect()
+  return (
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <NotificationContainer />
 
-                <SiteRouter/>
-            </PersistGate>
-        </Provider>
-    );
+        <SiteRouter />
+      </PersistGate>
+    </Provider>
+  );
 }
 
 export default App;
