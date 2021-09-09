@@ -9,9 +9,10 @@ import {getPaginatedCurrentCustomerTickets} from '../../../../reduxstore/actions
 import {connect} from 'react-redux';
 import moment from 'moment';
 import ScaleLoader from 'react-spinners/ScaleLoader';
+import { Fragment } from 'react';
 
-const getStatusColor = status => {
-    switch (status) {
+const getStatusColor = (status, id) => {
+/*     switch (status) {
         case "Pending":
             return 'orange';
         case "Resolved":
@@ -24,7 +25,26 @@ const getStatusColor = status => {
             return 'red';
         default:
             return ''
-    }
+        }
+ */
+
+        if (id) {
+            switch (id.slice(0, 13)) {
+                case "23838da6-0566":
+                    return "orange";
+                case "dafcab89-2b7f":
+                    return "green";
+                case "23838ae4-1223":
+                    return "yellow";
+                case "23838da6-1223":
+                    return "awaiting";
+                case "23838ec5-0566":
+                    return "red";
+                default:
+                    return "";
+            }
+        }
+
 }
 
 const TicketHistory = ({ currentCustomerTicketsMeta, currentCustomerId, getPaginatedCurrentCustomerTickets, isCurrentCustomerLoaded, currentCustomerTickets, isCurrentCustomerTicketsLoaded, currentCustomer }) => {
@@ -69,12 +89,12 @@ const TicketHistory = ({ currentCustomerTicketsMeta, currentCustomerId, getPagin
         {
             title: 'Assigned To',
             field: 'agentAssignedId',
-            render: rowData => <Link to={`/settings/profile/${rowData.agentAssignedId}`}>{rowData.agentAssigned}</Link>
+            render: rowData => <Fragment>{rowData.agentAssigned.trim() ? <Link to={`/settings/profile/${rowData.agentAssignedId}`}>{rowData.agentAssigned}</Link> : <span>Unassigned</span>}</Fragment>
         }, 
         { 
             title: 'Stage',
             field: 'stage',
-            render: rowData => <div className={`ticket-state ${getStatusColor(rowData.stage)}`}>
+            render: rowData => <div className={`ticket-state ${getStatusColor(rowData.stage, rowData.stageId)}`}>
                     <Link to="#" className="btn btn-sm">{rowData.stage}</Link>
                 </div>
         }, {
@@ -145,8 +165,8 @@ const TicketHistory = ({ currentCustomerTicketsMeta, currentCustomerId, getPagin
                                 tableIcons
                             }
                             columns = {tableColumns}
-                            data = {currentCustomerTickets.map(({subject, id, category, created_at, status, assignee}) => ({
-                                date: moment(created_at).format('DD MMM, YYYY'),
+                            data = {currentCustomerTickets.map(({subject, id, category, created_at, status, assignee, updated_at}) => ({
+                                date: moment(updated_at).format('DD MMM, YYYY'),
                                 ticketId: id,
                                 subject: `${subject.substr(0, 25)}...`,
                                 category: `Enquiry`,
@@ -154,7 +174,8 @@ const TicketHistory = ({ currentCustomerTicketsMeta, currentCustomerId, getPagin
                                 // agentAssigned: `${assignee.firstname} ${assignee.lastname}`,
                                 agentAssigned: `${assignee?.firstname || ''} ${assignee?.lastname || ''}`,
                                 stage: status?.status,
-                                agentAssignedId: `${assignee?.id}`
+                                agentAssignedId: `${assignee?.id}`,
+                                stageId: status?.id
                             }))
                             }
                             options = {{

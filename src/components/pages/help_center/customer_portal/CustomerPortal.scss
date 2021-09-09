@@ -1,111 +1,213 @@
 .customer-portal {
-  padding: 50px 8%;
-  padding-top: 190px;
-  background-color: white;
-  min-height: 100vh;
-  position: relative;
-  textarea {
-    resize: none;
-  }
-  .total-cards {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
-    .total-card {
-      width: 30%;
-      height: 70px;
-      padding: 0 30px;
-      border: 0.5px solid #2b304d1a;
+    padding: 190px 8% 50px;
+    background-color: white;
+    min-height: 100vh;
+    position: relative;
+    textarea {
+        resize: none;
     }
-  }
-
-  .tickets-container {
-    display: flex;
-    justify-content: space-between;
-    p {
-      margin: 0;
-    }
-    .tickets-list {
-      width: 65%;
-      .top {
+    .total-cards {
         display: flex;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #0000001a;
-        .tag {
-          border-right: 2px solid #2b304d28;
-          padding: 0 15px;
-
-          &:last-child {
-            border: none;
-          }
-          p {
-            padding: 2px 15px;
-            border-radius: 20px;
-          }
-          .all {
-            color: #006298;
-            background-color: #dce4f3;
-          }
-          .open {
-            color: #eeb64a;
-            background-color: #eeb64a14;
-          }
-          .approved {
-            color: #51b74f;
-            background-color: #51b74f14;
-          }
-          .closed {
-            color: #ff4d35;
-            background-color: #ff4d3514;
-          }
+        justify-content: space-between;
+        margin-bottom: 30px;
+        .total-card {
+            width: 30%;
+            height: 70px;
+            padding: 0 30px;
+            border: 0.5px solid #2b304d1a;
         }
-      }
     }
-    .submit-ticket {
-      width: 30%;
-      max-height: calc(100vh - 80px);
-      background: #ffffff;
-      border: 0.5px solid #dadada;
-      box-sizing: border-box;
-      box-shadow: 0px 0px 24px rgba(0, 98, 152, 0.1);
-      border-radius: 10px;
-      padding: 30px;
 
-      //   position: -webkit-sticky;
-      position: sticky;
-      top: 0px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      p {
-        text-align: center;
-        margin-bottom: 5px;
-        font-size: 14px;
-      }
-      .title {
-        font-size: 18px;
-        color: #343434;
-      }
-      form {
-        margin-top: 10px;
-        padding: 20px 0;
-        border-top: 1px solid #dadada;
-        .form-group {
-          .add-file {
-            width: 100%;
-            padding: 15px 0;
-            border: 1px dashed #9e9e9eb0 !important;
+    .tickets-container {
+        display: flex;
+        justify-content: space-between;
+        p {
+            margin: 0;
+        }
+        .tickets-list {
+            width: 65%;
+            .top {
+                // display: flex;
+                padding-bottom: 20px;
+                border-bottom: 1px solid #0000001a;
+                display: grid;
+                grid-template-columns: auto 1fr;
+
+                .tag {
+                    border-right: 1px solid #2b304d28;
+                    padding: 0 15px;
+                    display: inline-block;
+                    margin: 0 0 0.4rem;
+                    &:last-child {
+                        border: none;
+                    }
+
+                    p {
+                        padding: 2px 15px;
+                        border-radius: 20px;
+                        -webkit-border-radius: 20px;
+                        -moz-border-radius: 20px;
+                        -ms-border-radius: 20px;
+                        -o-border-radius: 20px;
+                        display: inline-block;
+                        cursor: pointer;
+}
+
+                    .all {
+                        color: #006298;
+                        background-color: #00629816;
+                        display: inline-block;
+
+                        &.active {
+                          border: 1px solid #006298;
+                        }
+                    }
+                    .red {
+                        color: rgb(255 77 53 / 100%);
+                        background-color: rgb(255 77 53 / 6%);
+
+                        &.active {
+                            border: 1px solid rgb(255 77 53 / 100%);
+                        }
+                    }
+
+                    .green {
+                        color: rgb(81 183 79 / 100%);
+                        background-color: rgb(81 183 79 / 6%);
+                        &.active {
+                            border: 1px solid rgb(81 183 79 / 100%);
+                        }
+                    }
+
+                    .orange {
+                        color: rgb(238 182 74 / 100%);
+                        background-color: rgb(238 182 74 / 6%);
+                        &.active {
+                            border: 1px solid rgb(238 182 74 / 100%);
+                        }
+                    }
+
+                    .awaiting {
+                        color: rgb(108 65 129 / 100%);
+                        background-color: rgb(108 65 129 / 6%);
+                        &.active {
+                            border: 1px solid rgb(108 65 129 / 100%);
+                        }
+                    }
+
+                    .yellow {
+                        color: rgb(56 150 136 / 100%);
+                        background-color: rgb(56 150 136 / 6%);
+                        &.active {
+                            border: 1px solid rgb(56 150 136 / 100%);
+                        }
+                    }
+                }
+            }
+        }
+        .submit-ticket {
+            width: 30%;
+            max-height: calc(100vh - 80px);
+            background: #ffffff;
+            border: 0.5px solid #dadada;
             box-sizing: border-box;
-            border-radius: 5px;
-            font-size: 12px;
-          }
+            box-shadow: 0 0 24px rgba(0, 98, 152, 0.1);
+            border-radius: 10px;
+            padding: 30px;
+
+            //   position: -webkit-sticky;
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            p {
+                text-align: center;
+                margin-bottom: 5px;
+                font-size: 14px;
+            }
+            .title {
+                font-size: 18px;
+                color: #343434;
+            }
+            form {
+                margin-top: 10px;
+                padding: 20px 0;
+                border-top: 1px solid #dadada;
+                .form-group {
+                    .add-file {
+                        width: 100%;
+                        padding: 15px 0;
+                        border: 1px dashed #9e9e9eb0 !important;
+                        box-sizing: border-box;
+                        border-radius: 5px;
+                        font-size: 12px;
+                    }
+                }
+                .btn {
+                    box-sizing: border-box;
+                    width: calc(100% - 16px);
+                    height: 40px;
+                }
+            }
         }
-        .btn {
-          box-sizing: border-box;
-          width: calc(100% - 16px);
-          height: 40px;
-        }
-      }
     }
-  }
+}
+
+.cursor-point {
+    cursor: pointer;
+}
+
+.status-tag {
+
+    &.all {
+        color: #006298;
+        background-color: #00629816;
+        display: inline-block;
+
+        &.active {
+          border: 1px solid #006298;
+        }
+    }
+    &.red {
+        color: rgb(255 77 53 / 100%);
+        background-color: rgb(255 77 53 / 6%);
+
+        &.active {
+            border: 1px solid rgb(255 77 53 / 100%);
+        }
+    }
+
+    &.green {
+        color: rgb(81 183 79 / 100%);
+        background-color: rgb(81 183 79 / 6%);
+        &.active {
+            border: 1px solid rgb(81 183 79 / 100%);
+        }
+    }
+
+    &.orange {
+        color: rgb(238 182 74 / 100%);
+        background-color: rgb(238 182 74 / 6%);
+        &.active {
+            border: 1px solid rgb(238 182 74 / 100%);
+        }
+    }
+
+    &.awaiting {
+        color: rgb(108 65 129 / 100%);
+        background-color: rgb(108 65 129 / 6%);
+        &.active {
+            border: 1px solid rgb(108 65 129 / 100%);
+        }
+    }
+
+    &.yellow {
+        color: rgb(56 150 136 / 100%);
+        background-color: rgb(56 150 136 / 6%);
+        &.active {
+            border: 1px solid rgb(56 150 136 / 100%);
+        }
+    }
 }

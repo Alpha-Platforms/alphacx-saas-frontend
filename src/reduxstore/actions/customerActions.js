@@ -18,26 +18,38 @@ export const getCustomers = () => (dispatch, getState) => {
         .get(`${config.stagingBaseUrl}/users?role=Customer`, userTokenConfig(getState))
         .then(res => dispatch({
             type: types.GET_CUSTOMERS,
-            payload: res.data && res.data?.status === "success"
-                ? res.data.data
-                : {}
+            payload: res.data && res.data
+                ?.status === "success"
+                    ? res.data.data
+                    : {}
         }))
-        .catch(err => dispatch(returnErrors(err?.response?.data, err?.response?.status)));
+        .catch(err => dispatch(returnErrors(err
+            ?.response
+                ?.data, err
+            ?.response
+                ?.status)));
 }
 
 // invalid redux action
-export const getInstantSearchedCustomers = async (term) => {
+export const getInstantSearchedCustomers = async(term) => {
     if (!navigator.onLine) {
         return;
     }
-    const searchStr = term.replace(/\W+/gi, ' ').replace(/\s+/gi, '%20');
+    const searchStr = term
+        .replace(/\W+/gi, ' ')
+        .replace(/\s+/gi, '%20');
     try {
         const res = await axios.get(`${config.stagingBaseUrl}/users?role=Customer&per_page=50&search=${searchStr}`, userTokenConfig(getState));
-        return res?.data;
+        return res
+            ?.data;
     } catch (err) {
         // NotificationManager.error(err?.response?.data.error, 'Error');
-        console.log('Error', err?.response?.data.error);
-        return err?.response?.data;
+        console.log('Error', err
+            ?.response
+                ?.data.error);
+        return err
+            ?.response
+                ?.data;
     }
 }
 
@@ -51,11 +63,15 @@ export const getPaginatedCustomers = (itemsPerPage, currentPage) => (dispatch, g
         .get(`${config.stagingBaseUrl}/users?role=Customer&per_page=${itemsPerPage}&page=${currentPage}`, userTokenConfig(getState))
         .then(res => dispatch({
             type: types.GET_CUSTOMERS,
-            payload: (res.data && res.data?.status === "success")
+            payload: (res.data && res.data
+                ?.status === "success")
                 ? res.data.data
                 : {}
         }))
-        .catch(err => dispatch(returnErrors(err?.response?.data, err.response?.status)));
+        .catch(err => dispatch(returnErrors(err
+            ?.response
+                ?.data, err.response
+            ?.status)));
 }
 
 // invalid redux action
@@ -71,30 +87,37 @@ export const addCustomer = async(newCustomer) => {
         const res = await axios.post(`${config.stagingBaseUrl}/customer`, body, userTokenConfig(getState));
         return res.data;
     } catch (err) {
-        NotificationManager.error(err?.response?.data.message, 'Error');
-        return err?.response?.data;
+        NotificationManager.error(err
+            ?.response
+                ?.data.message, 'Error');
+        return err
+            ?.response
+                ?.data;
     }
 }
 
 // valid redux action
 export const updateCustomer = (customerId, newCustomer, successCallback, failureCallback) => (dispatch, getState) => {
 
-	//Request body
-	const body = JSON.stringify(newCustomer);
+    //Request body
+    const body = JSON.stringify(newCustomer);
 
-	axios.patch(`${config.stagingBaseUrl}/customer/${customerId}`, body, userTokenConfig(getState))
-		.then(res => {
-			successCallback && successCallback();
-		})
-		.catch(err => {
-			dispatch(returnErrors(err.response?.data, err.response?.status))
-			failureCallback && failureCallback();
-		});
+    axios
+        .patch(`${config.stagingBaseUrl}/customer/${customerId}`, body, userTokenConfig(getState))
+        .then(res => {
+            successCallback && successCallback();
+        })
+        .catch(err => {
+            dispatch(returnErrors(err.response
+                ?.data, err.response
+                ?.status))
+            failureCallback && failureCallback();
+        });
 
 }
 
 // valid redux action
-export const getCurrentCustomer = (id) => (dispatch, getState) => {
+export const getCurrentCustomer = (id, refetchCust) => (dispatch, getState) => {
     if (!navigator.onLine) {
         return NotificationManager.error('Please check your internet', 'Opps!', 3000);
     }
@@ -106,7 +129,25 @@ export const getCurrentCustomer = (id) => (dispatch, getState) => {
 
     // console.log("Current Customer", currentCustomer);
 
-    if (getState().customer.currentCustomer
+    if (refetchCust) {
+        axios
+            .get(`${config.stagingBaseUrl}/users/${id}`, userTokenConfig(getState))
+            .then(res => dispatch({
+                type: types.GET_CURRENT_CUSTOMER,
+                payload: res.data && res.data
+                    ?.status === "success"
+                        ? res.data.data
+                        : null
+            }))
+            .catch(err => {
+                dispatch(returnErrors(err
+                    ?.response
+                        ?.data, err
+                    ?.response
+                        ?.status))
+                dispatch({type: types.GET_CURRENT_CUSTOMER, payload: null})
+            });
+    } else if (getState().customer.currentCustomer
         ?.id === id) {
         dispatch({
             type: types.GET_CURRENT_CUSTOMER,
@@ -119,16 +160,18 @@ export const getCurrentCustomer = (id) => (dispatch, getState) => {
             .get(`${config.stagingBaseUrl}/users/${id}`, userTokenConfig(getState))
             .then(res => dispatch({
                 type: types.GET_CURRENT_CUSTOMER,
-                payload: res.data && res.data?.status === "success"
-                    ? res.data.data
-                    : null
+                payload: res.data && res.data
+                    ?.status === "success"
+                        ? res.data.data
+                        : null
             }))
             .catch(err => {
-                dispatch(returnErrors(err?.response?.data, err?.response?.status))
-                dispatch({
-                    type: types.GET_CURRENT_CUSTOMER,
-                    payload: null
-                })
+                dispatch(returnErrors(err
+                    ?.response
+                        ?.data, err
+                    ?.response
+                        ?.status))
+                dispatch({type: types.GET_CURRENT_CUSTOMER, payload: null})
             });
     }
 }
@@ -143,12 +186,43 @@ export const getPaginatedCurrentCustomerTickets = (itemsPerPage, currentPage, cu
         .get(`${config.stagingBaseUrl}/customer/${customerId}/tickets?per_page=${itemsPerPage}&page=${currentPage}`, userTokenConfig(getState))
         .then(res => dispatch({
             type: types.GET_CURRENT_CUSTOMER_TICKETS,
-            payload: (res.data && res.data?.status === "success")
+            payload: (res.data && res.data
+                ?.status === "success")
                 ? res.data.data
                 : {}
         }))
-        .catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
+        .catch(err => dispatch(returnErrors(err.response
+            ?.data, err.response
+            ?.status)));
 }
+
+// invalid redux action
+export const getCustTickets = async(itemsPerPage, currentPage, customerId, statusId) => {
+    if (!navigator.onLine) {
+        return console.error("Network error!");
+    }
+    const endpoint = `${config.stagingBaseUrl}/customer/${customerId}/tickets?per_page=${itemsPerPage}&page=${currentPage}${statusId ? `&status=${statusId}` : ''}`;
+    try {
+        const res = await axios.get(endpoint, userTokenConfig(getState));
+        if (res.data && res.data
+            ?.status === "success") {
+            return res.data
+                ?.data
+        }
+        return false
+    } catch (err) {
+        NotificationManager.error(err
+            ?.response
+                ?.data.message, 'Error');
+        console.error('Customer Ticket Error', err);
+        return false;
+    }
+}
+
+/* 
+https://kustormar-staging.herokuapp.com/v1/sla/dabb9095-1a5a-4102-8fb9-4ecb0af1d87d
+*/
+
 
 export const setCustomersLoading = () => {
     return {type: types.CUSTOMERS_LOADING}

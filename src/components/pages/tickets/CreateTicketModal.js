@@ -656,7 +656,7 @@ const CreateTicketModal = ({
                                             options={
                                                 // populate 'options' prop from $agents, with names remapped
                                                 tags?.map(item => {
-                                                item = item.toLowerCase();
+                                                item = item?.toLowerCase();
                                                 return {value: item,label: item}
                                                 })
                                             }

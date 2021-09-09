@@ -108,6 +108,7 @@ const NewArticle = () => {
     setNewPost({ ...newPost, richText });
     // setReplyTicket({ plainText, richText });
     // console.log(">>>>", richText, plainText);
+    console.log(richText);
   };
   const _uploadImageCallBack = (file) => {
     // long story short, every time we upload an image, we

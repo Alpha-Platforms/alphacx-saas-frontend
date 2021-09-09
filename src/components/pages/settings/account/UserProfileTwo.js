@@ -6,12 +6,12 @@ import {Link, useParams} from "react-router-dom";
 import {NotificationManager} from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import {connect} from 'react-redux';
-import {getCurrentAgent} from '../../../../reduxstore/actions/agentActions';
+import {getCurrentAgent, getAgents} from '../../../../reduxstore/actions/agentActions';
 import { updateUser, updateUserPassword } from './../../../../reduxstore/actions/userActions';
 import ImageDefault from '../../../../assets/svgicons/image-default.svg';
 import axios from 'axios';
 
-const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, currentAgent, groups, authenticatedUser}) => {
+const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, currentAgent, groups, authenticatedUser, agents, getAgents}) => {
 
     const {id} = useParams();
 
@@ -45,8 +45,9 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
             lastname,
             email,
             role,
-            team
+            groupId: team
         };
+
         console.clear();
 
         setAccountLoading(true);
@@ -71,6 +72,8 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                             const userRes = await updateUser({...updatedInfo, avatar: res.data?.url});
                             if (userRes?.status === 'success') {
                                 NotificationManager.success('Info has been updated', 'Success');
+                                getAgents()
+                                window.history.back();
                             } else {
                                 NotificationManager.error('Something went wrong');
                             }
@@ -85,6 +88,8 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                     const userRes = await updateUser(updatedInfo);
                     if (userRes?.status === 'success') {
                         NotificationManager.success('Info has been updated', 'Success');
+                        getAgents();
+                        window.history.back();
                     } else {
                         NotificationManager.error('Something went wrong');
                     }
@@ -113,6 +118,8 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                         const userRes = await updateUser({...updatedInfo, avatar: res.data?.url});
                         if (userRes?.status === 'success') {
                             NotificationManager.success('Info has been updated', 'Success');
+                            getAgents();
+                            window.history.back();
                         } else {
                             NotificationManager.error('Something went wrong');
                         }
@@ -127,6 +134,8 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                 const userRes = await updateUser(updatedInfo);
                 if (userRes?.status === 'success') {
                     NotificationManager.success('Info has been updated', 'Success');
+                    getAgents();
+                    window.history.back();
                 } else {
                     NotificationManager.error('Something went wrong');
                 }
@@ -148,20 +157,32 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
 
         getCurrentAgent(id);
 
+        
+        if (agents.length !== 0) {
+            const gottenUser =  agents.filter(agent => agent
+                ?.id === id)[0];
+
+            if (gottenUser) {
+                setPersonalInfoInputs(prev => ({
+                    ...prev,
+                    team: gottenUser?.group_id || ""
+                }));
+                
+            }
+        }
+        
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isAgentLoaded])
+    }, [isAgentLoaded, agents.length])
 
     useEffect(() => {
         if (currentAgent) {
             const {firstname, lastname, email, role, avatar, group_id} = currentAgent;
 
+            const agentInfo = group_id ? {firstname, lastname, email, role, team: group_id} : {firstname, lastname, email, role};
+
             setPersonalInfoInputs(prev => ({
                 ...prev,
-                firstname,
-                lastname,
-                email,
-                role,
-                team: group_id || ""
+                ...agentInfo
             }));
 
             setUploadInfo(prev => ({
@@ -519,4 +540,4 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
 
 const mapStateToProps = (state, ownProps) => ({agents: state.agent.agents, isAgentLoaded: state.agent.isAgentLoaded, isCurrentAgentLoaded: state.agent.isCurrentAgentLoaded, currentAgent: state.agent.currentAgent, groups: state.group.groups, authenticatedUser: state.userAuth.user});
 
-export default connect(mapStateToProps, {getCurrentAgent})(UserProfileTwo);
+export default connect(mapStateToProps, {getCurrentAgent, getAgents})(UserProfileTwo);

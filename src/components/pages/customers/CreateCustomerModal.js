@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import {Modal} from 'react-responsive-modal';
 import {NotificationManager} from 'react-notifications';
-import {addCustomer, getPaginatedCustomers, updateCustomer} from '../../../reduxstore/actions/customerActions';
+import {addCustomer, getPaginatedCustomers, updateCustomer, getCurrentCustomer} from '../../../reduxstore/actions/customerActions';
 import {connect} from 'react-redux';
 import RSelect from 'react-select/creatable';
 import PinIcon from '../../../assets/icons/pin.svg';
@@ -10,7 +10,7 @@ import ImageDefault from '../../../assets/svgicons/image-default.svg';
 import axios from 'axios';
 import {createTags} from '../../../reduxstore/actions/tagActions';
 
-const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers, tags, isEditing, customerId, customers, updateCustomer, createTags}) => {
+const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers, tags, isEditing, customerId, customers, updateCustomer, createTags, fromCustDetails, custId, getCurrentCustomer}) => {
 
     const [selectedTags,
         setSelectedTags] = useState([]);
@@ -122,6 +122,11 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
         setEditingCust(false);
         setModalInputs(prev => ({...prev, firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: '', ccode: "+234"}));
         setCreateModalShow(false);
+        // (fromCustDetails && custId) && getCurrentCustomer(custId);
+        if (fromCustDetails) {
+            custId && getCurrentCustomer(custId, true);
+        }
+
     }
     
     const custEditFail = () => {
@@ -403,7 +408,7 @@ const workphoneChange = e => {
                                     options={
                                         // populate 'options' prop from $agents, with names remapped
                                         tags?.map(item => {
-                                        item = item.toLowerCase();
+                                        item = item?.toLowerCase();
                                         return {value: item,label: item}
                                         })
                                     }
@@ -499,4 +504,4 @@ const workphoneChange = e => {
 
 const mapStateToProps = (state, ownProps) => ({tags: state.tag.tags?.tags_names?.tags, customers: state.customer.customers});
 
-export default connect(mapStateToProps, {getPaginatedCustomers, updateCustomer, createTags})(CreateCustomerModal);
+export default connect(mapStateToProps, {getPaginatedCustomers, updateCustomer, createTags, getCurrentCustomer})(CreateCustomerModal);
