@@ -40,8 +40,8 @@ export const validatePassword = (pw) => {
   }
 
   //maximum length of password validation  
-  if (pw.length > 15) {
-    return (error = "Password must not be greater than 15 character.");
+  if (pw.length > 20) {
+    return (error = "Password must not be greater than 20 character.");
   }
 
 
