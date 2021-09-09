@@ -74,8 +74,13 @@ const CustomerPortal = ({statuses}) => {
     isCustTicketsLoaded: false,
     isCustTicketsLoading: false,
     noPerPage: 10,
-    currentStatus: 'all'
+    currentStatus: ''
   });
+
+  useEffect(() => {
+    console.log('current status just changed');
+
+  }, [custState.currentStatus])
 
   useEffect(() => {
     (async () => {
@@ -104,7 +109,7 @@ const CustomerPortal = ({statuses}) => {
       isCustTicketsLoading: true,
       isCustTicketsLoaded: false
     }));
-    const custRes = await getCustTickets(custState.noPerPage, page, custId);
+    const custRes = await getCustTickets(custState.noPerPage, page, custId, custState.currentStatus);
     if (custRes) {
       console.log("Success Customer Response: ", custRes);
       setCustState(prev => ({
@@ -116,7 +121,6 @@ const CustomerPortal = ({statuses}) => {
       }));
     }
   }
-
 
   const getStatusColor = (id) => {
     if (id) {
@@ -137,6 +141,26 @@ const CustomerPortal = ({statuses}) => {
     }
   };
 
+  const handleStatusClick = async (status) => {
+      setCustState(prev => ({
+        ...prev,
+        currentStatus: status?.id || '',
+        isCustTicketsLoaded: false,
+        isCustTicketsLoading: true
+      }));
+      const custRes = await getCustTickets(custState.noPerPage, 1, custId, status?.id);
+      if (custRes) {
+        console.log("Success Customer Response: ", custRes);
+        setCustState(prev => ({
+          ...prev,
+          custTickets: custRes?.tickets,
+          meta: custRes?.meta,
+          isCustTicketsLoaded: true,
+          isCustTicketsLoading: false
+        }));
+      }
+  }
+
   return (
     <>
       <HelpNavBar activeBG={true} />
@@ -155,10 +179,10 @@ const CustomerPortal = ({statuses}) => {
 
               <div className="statuses">
                 <div className="tag">
-                  <p className="all active">All</p>
+                  <p className={`all ${custState.currentStatus === '' ? 'active' : ''}`} onClick={() => handleStatusClick('')}>All</p>
                 </div>
                 {statuses && statuses.map(status => <div className="tag">
-                  <p className={`${getStatusColor(status?.id)}`}>{status?.status}</p>
+                  <p className={`${getStatusColor(status?.id)} ${custState.currentStatus === status?.id ? 'active' : ''}`} onClick={() => handleStatusClick(status)}>{status?.status}</p>
                 </div>)}
               </div>
             </div>
@@ -169,8 +193,8 @@ const CustomerPortal = ({statuses}) => {
             ))
             }
             <div className="mt-4">
-            <div></div>
-            <div>
+            {custState.isCustTicketsLoaded && <div>Showing 1-10 of {custState.meta?.totalPages} entries</div>}
+            <div className="float-end mt-2">
                 {custState.isCustTicketsLoaded && <TicketPagination numberOfPages={custState.meta?.totalPages || 1} currentPage={custState.meta?.currentPage || 1} handleTicketPagination={handleTicketPagination} />}
             </div>
             </div>

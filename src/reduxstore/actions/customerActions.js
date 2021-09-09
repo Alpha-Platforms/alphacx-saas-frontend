@@ -201,10 +201,10 @@ export const getCustTickets = async(itemsPerPage, currentPage, customerId, statu
     if (!navigator.onLine) {
         return console.error("Network error!");
     }
+    const endpoint = `${config.stagingBaseUrl}/customer/${customerId}/tickets?per_page=${itemsPerPage}&page=${currentPage}${statusId ? `&status=${statusId}` : ''}`;
+    console.log('endpoint: ', endpoint);
     try {
-        const res = await axios.get(`${config.stagingBaseUrl}/customer/${customerId}/tickets?per_page=${itemsPerPage}&page=${currentPage}${statusId
-            ? `&statusId=${statusId}`
-            : ''}`, userTokenConfig(getState));
+        const res = await axios.get(endpoint, userTokenConfig(getState));
         if (res.data && res.data
             ?.status === "success") {
             return res.data
