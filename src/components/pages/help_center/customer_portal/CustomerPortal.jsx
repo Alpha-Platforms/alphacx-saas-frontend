@@ -189,7 +189,7 @@ const CustomerPortal = ({statuses}) => {
 
             {
               !custState.isCustTicketsLoaded ? <div className="text-center pt-3"><ScaleLoader loading={true} color={"#006298"}/></div> : custState.custTickets.length === 0 ? <div>No Tickets yet.</div> : custState.custTickets.map((ticket, i) => (
-              <TicketItem key={i} ticket={ticket} />
+              <TicketItem key={i} ticket={ticket} getStatusColor={getStatusColor} />
             ))
             }
             <div className="mt-4">

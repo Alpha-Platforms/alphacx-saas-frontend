@@ -51,7 +51,7 @@
                         -o-border-radius: 20px;
                         display: inline-block;
                         cursor: pointer;
-                    }
+}
 
                     .all {
                         color: #006298;
@@ -157,4 +157,57 @@
 
 .cursor-point {
     cursor: pointer;
+}
+
+.status-tag {
+
+    &.all {
+        color: #006298;
+        background-color: #00629816;
+        display: inline-block;
+
+        &.active {
+          border: 1px solid #006298;
+        }
+    }
+    &.red {
+        color: rgb(255 77 53 / 100%);
+        background-color: rgb(255 77 53 / 6%);
+
+        &.active {
+            border: 1px solid rgb(255 77 53 / 100%);
+        }
+    }
+
+    &.green {
+        color: rgb(81 183 79 / 100%);
+        background-color: rgb(81 183 79 / 6%);
+        &.active {
+            border: 1px solid rgb(81 183 79 / 100%);
+        }
+    }
+
+    &.orange {
+        color: rgb(238 182 74 / 100%);
+        background-color: rgb(238 182 74 / 6%);
+        &.active {
+            border: 1px solid rgb(238 182 74 / 100%);
+        }
+    }
+
+    &.awaiting {
+        color: rgb(108 65 129 / 100%);
+        background-color: rgb(108 65 129 / 6%);
+        &.active {
+            border: 1px solid rgb(108 65 129 / 100%);
+        }
+    }
+
+    &.yellow {
+        color: rgb(56 150 136 / 100%);
+        background-color: rgb(56 150 136 / 6%);
+        &.active {
+            border: 1px solid rgb(56 150 136 / 100%);
+        }
+    }
 }
