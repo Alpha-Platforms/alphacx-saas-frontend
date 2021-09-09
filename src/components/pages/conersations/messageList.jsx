@@ -28,6 +28,25 @@ export default function MessageList({
       setRenderTicket(filterTicketsState);
     }
   };
+
+    const getChannelColor = (channel, placement = "foreground") => {
+      let obj = {
+          "facebook": "#1877F2", 
+          "email": "#2B304D", 
+          "whatsapp": "#075e54",
+          "sms": "#F22F46",
+          "helpdesk": "#4A154B",
+          "livechat": "#1A1D33",
+          "system": "#F00073"
+      };
+      if(Object.keys(obj).some(function(k){ return ~k.indexOf(channel) })){
+          if((placement === "foreground")) { 
+              return Object.entries(obj).find(([k, v]) => k.startsWith(channel))[1];
+          }
+          return `${Object.entries(obj).find(([k, v]) => k.startsWith(channel))[1]}16`
+      }
+      return "#2e2e2e";
+  }
   return (
     <div className="message-list-container">
       {LoadingTick ? (
@@ -67,11 +86,8 @@ export default function MessageList({
               <div className="message-user-img">
                 {data.customer.avatar == null ? (
                   <div className="message-user-noimg">
-                    <span>{`${capitalizeFirstLetter(
-                      data?.customer?.firstname?.slice(0, 1)
-                    )}${capitalizeFirstLetter(
-                      data?.customer?.lastname?.slice(0, 1)
-                    )}`}</span>
+                    <span>{`${capitalizeFirstLetter(data?.customer?.firstname?.slice(0, 1))}${data?.customer?.lastname == "default"? "" : capitalizeFirstLetter(data?.customer?.lastname?.slice(0, 1))}`}
+                    </span>
                   </div>
                 ) : (
                   <img src={data?.customer?.avatar} alt="" />
@@ -81,7 +97,7 @@ export default function MessageList({
               <div className="message-user-body">
                 <p className="senderName">{`${capitalizeFirstLetter(
                   data?.customer?.firstname
-                )} ${capitalizeFirstLetter(data?.customer?.lastname)}`}</p>
+                )} ${data?.customer?.lastname == "default"? "" : capitalizeFirstLetter(data?.customer?.lastname)}`}</p>
                 <p className="senderMSG">
                   {truncateWithEllipses(data?.plain_description, 20)}
                   {/* {(Array.isArray(data.history)) ? data.history.length :  ""} */}
@@ -93,8 +109,8 @@ export default function MessageList({
                 <div className="msg-badges">
                   <div
                     style={{
-                      background: data.status.background_color,
-                      color: data.status.forecolor,
+                      background: getChannelColor(data.channel, "background"),
+                      color: getChannelColor(data.channel),
                     }}
                   >
                     {data.channel}

@@ -20,7 +20,7 @@ import TicketDueDateIcon from "../../../assets/icons/ticketduedate.svg";
 import TicketSourceIcon from "../../../assets/icons/ticketsource.svg";
 import { dateFormater } from "../../helpers/dateFormater";
 
-export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
+export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLine = true }) {
   const [tags, setTags] = useState([
     <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
     <div style={{ color: "#F40D0D", background: "#FFEAEA " }}>Billing</div>,
@@ -53,7 +53,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
               <div className="userProfilePicConNoImgj">
                 <p className="text-capitalize"
                   style={{ fontSize: "30px!important" }}
-                >{`${UserInfo?.firstname?.slice(0,1)}${UserInfo?.lastname?.slice(0, 1)}`}</p>
+                >{`${capitalize(ticket[0]?.customer?.firstname?.slice(0,1))}${ticket[0]?.customer?.lastname == "default"? "" : capitalize(ticket[0]?.customer?.lastname?.slice(0, 1))}`}</p>
               </div>
             )}
             {/* 
@@ -63,10 +63,9 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
             <h6            
               className="mb-0 text-capitalize mt-2 pb-0"
             >
-              <Link to={`/customers/${JSON.parse(localStorage.getItem("user")).user.id}`}>
-                {`${capitalize(ticket[0]?.customer?.firstname  || '')} ${capitalize(
-                  ticket[0]?.customer?.lastname  || ''
-                )}`}
+              <Link to={`/customers/${ticket[0]?.customer.id}`}>
+                {`${capitalize(ticket[0]?.customer?.firstname  || '')} 
+                  ${UserInfo?.lastname == "default"? "" : capitalize(ticket[0]?.customer?.lastname  || '')}`}
               </Link>
             </h6>
             {isTicketDetails && (
@@ -282,8 +281,8 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                         icon={TicketDueDateIcon}
                       />
                       <div>
-                      <p className="pb-0 mb-0 f-12 text-muted op-9">Due Date</p>
-                      <p className="text-muted f-13">N/A</p>
+                        <p className="pb-0 mb-0 f-12 text-muted op-9">Due Date</p>
+                        <p className="text-muted f-13">N/A</p>
                       </div>
                   </li>
 
@@ -297,7 +296,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
                       <p className="pb-0 mb-0 f-12 text-muted op-9">
                         Ticket Source
                       </p>
-                      <p className="text-muted f-13">Email</p>
+                      <p className="text-muted f-13">{ticket[0]?.channel}</p>
                       </div>
                   </li>
                 </ul>
@@ -412,31 +411,8 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
             );
           })}
         </div> */}
-        <div className="container-timeline">
-          <div className="box">
-            <div className="borderContaner">
-              <div className="circle"></div>
-              <div className="img"></div>
-            </div>
-            <div className="textTimeLineSec">
-              <span>
-                This message is assigned to{" "}
-                {`${capitalize(ticket[0]?.assignee?.firstname  || '')} ${capitalize(
-                  ticket[0]?.assignee?.lastname  || ''
-                )}`}
-              </span>
-              <div className="timeLinehashtags">
-                <div style={{ textTransform: "uppercase" }}>
-                  #{ticket[0]?.id.slice(ticket[0]?.id?.length - 8)}
-                </div>
-                <div>{dateFormater(ticket[0].created_at)}</div>
-              </div>
-            </div>
-          </div>
-
-          {ticket[0].history.length === 0 ? (
-            ""
-          ) : (
+        {timeLine ? (
+          <div className="container-timeline">
             <div className="box">
               <div className="borderContaner">
                 <div className="circle"></div>
@@ -444,22 +420,48 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
               </div>
               <div className="textTimeLineSec">
                 <span>
+                  This message is assigned to{" "}
                   {`${capitalize(ticket[0]?.assignee?.firstname  || '')} ${capitalize(
                     ticket[0]?.assignee?.lastname  || ''
-                  )}`}{" "}
-                  picked up this chat
+                  )}`}
                 </span>
                 <div className="timeLinehashtags">
                   <div style={{ textTransform: "uppercase" }}>
                     #{ticket[0]?.id.slice(ticket[0]?.id?.length - 8)}
                   </div>
                   <div>{dateFormater(ticket[0].created_at)}</div>
-                  {/* {console.log(ticket[0])} */}
                 </div>
               </div>
             </div>
-          )}
-        </div>
+
+            {ticket[0].history.length === 0 ? (
+              ""
+            ) : (
+              <div className="box">
+                <div className="borderContaner">
+                  <div className="circle"></div>
+                  <div className="img"></div>
+                </div>
+                <div className="textTimeLineSec">
+                  <span>
+                    {`${capitalize(ticket[0]?.assignee?.firstname  || '')} ${capitalize(
+                      ticket[0]?.assignee?.lastname  || ''
+                    )}`}{" "}
+                    picked up this chat
+                  </span>
+                  <div className="timeLinehashtags">
+                    <div style={{ textTransform: "uppercase" }}>
+                      #{ticket[0]?.id.slice(ticket[0]?.id?.length - 8)}
+                    </div>
+                    <div>{dateFormater(ticket[0].created_at)}</div>
+                    {/* {console.log(ticket[0])} */}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          ) : ""
+        }
       </div>
     </div>
   );
