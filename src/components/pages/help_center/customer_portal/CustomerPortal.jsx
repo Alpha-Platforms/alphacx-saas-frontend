@@ -77,10 +77,6 @@ const CustomerPortal = ({statuses}) => {
     currentStatus: ''
   });
 
-  useEffect(() => {
-    console.log('current status just changed');
-
-  }, [custState.currentStatus])
 
   useEffect(() => {
     (async () => {
@@ -90,7 +86,6 @@ const CustomerPortal = ({statuses}) => {
       }));
       const custRes = await getCustTickets(custState.noPerPage, 1, custId);
       if (custRes) {
-        console.log("Success Customer Response: ", custRes);
         setCustState(prev => ({
           ...prev,
           custTickets: custRes?.tickets,
@@ -111,7 +106,6 @@ const CustomerPortal = ({statuses}) => {
     }));
     const custRes = await getCustTickets(custState.noPerPage, page, custId, custState.currentStatus);
     if (custRes) {
-      console.log("Success Customer Response: ", custRes);
       setCustState(prev => ({
         ...prev,
         custTickets: custRes?.tickets,
@@ -150,7 +144,6 @@ const CustomerPortal = ({statuses}) => {
       }));
       const custRes = await getCustTickets(custState.noPerPage, 1, custId, status?.id);
       if (custRes) {
-        console.log("Success Customer Response: ", custRes);
         setCustState(prev => ({
           ...prev,
           custTickets: custRes?.tickets,

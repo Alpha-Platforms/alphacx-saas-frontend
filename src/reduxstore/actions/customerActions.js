@@ -202,7 +202,6 @@ export const getCustTickets = async(itemsPerPage, currentPage, customerId, statu
         return console.error("Network error!");
     }
     const endpoint = `${config.stagingBaseUrl}/customer/${customerId}/tickets?per_page=${itemsPerPage}&page=${currentPage}${statusId ? `&status=${statusId}` : ''}`;
-    console.log('endpoint: ', endpoint);
     try {
         const res = await axios.get(endpoint, userTokenConfig(getState));
         if (res.data && res.data
@@ -210,7 +209,6 @@ export const getCustTickets = async(itemsPerPage, currentPage, customerId, statu
             return res.data
                 ?.data
         }
-        console.log('CustTickets Resp.: ', res);
         return false
     } catch (err) {
         NotificationManager.error(err
