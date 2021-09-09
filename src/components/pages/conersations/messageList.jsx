@@ -41,7 +41,7 @@ export default function MessageList({
           {" "}
           <ClipLoader color="#0d4166" loading={LoadingTick} size={35} />
         </div>
-      ) : renderTicket.length == 0 ? (
+      ) : renderTicket.length === 0 ? (
         <p
           style={{ textAlign: "center", paddingTop: "20px", fontSize: "15px" }}
         >
@@ -53,7 +53,7 @@ export default function MessageList({
             <div
               key={index}
               className={`message-listmain ${
-                index + 1 == activeChat ? "message-listmain-active" : ""
+                index + 1 === activeChat ? "message-listmain-active" : ""
               }`}
               onClick={() => {
                 scollPosSendMsgList();
@@ -83,9 +83,12 @@ export default function MessageList({
                   data?.customer?.firstname
                 )} ${capitalizeFirstLetter(data?.customer?.lastname)}`}</p>
                 <p className="senderMSG">
-                  {data.subject == null
-                    ? ""
-                    : truncateWithEllipses(data.subject, 30)}
+                  {truncateWithEllipses(data?.plain_description, 20)}
+                  {/* {(Array.isArray(data.history)) ? data.history.length :  ""} */}
+                  {/* {(!Array.isArray(data.history)) ? ""
+                    : (data.history.at(-1).response === null || data.history.at(-1).response === undefined ) ? "no text" 
+                    : truncateWithEllipses(data.history.at(-1).response, 20)
+                  } */}
                 </p>
                 <div className="msg-badges">
                   <div

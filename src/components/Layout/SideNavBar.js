@@ -1,4 +1,4 @@
-import {Fragment, useContext} from 'react';
+import React, {Fragment, useContext} from 'react';
 import Navbar from '../../components/helpers/Navbar'
 // import Sidebar from '../../components/helpers/Sidebar';
 import Sidebar from './Sidebar';
@@ -29,12 +29,7 @@ const SideNavBar = ({children, navbarTitle, parentCap}) => {
                     <Navbar navbarTitle={navbarTitle}/>
                 </div>
 
-                <div
-                    id="mainContent"
-                    className={parentCap
-                    ? parentCap
-                    : "container"}>{children}</div>
-
+                <div id="mainContent" className={parentCap ? parentCap : "container"}>{children}</div>
             </main>
 
         </Fragment>
