@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import HelpNavBar from "../../../Layout/helpNavBar";
 import TotalCard from "../../dashboard/dashcards/totalCard";
 import StarRating from "../components/starRating/starRating";
@@ -9,8 +9,60 @@ import "./CustomerPortal.scss";
 import {connect} from 'react-redux';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import {getCustTickets} from '../../../../reduxstore/actions/customerActions';
+import {Pagination} from 'react-bootstrap';
 
-const CustomerPortal = () => {
+
+const TicketPagination = ({currentPage, numberOfPages}) => {
+  const pageArr = [];
+
+  for (let page = 1; page <= numberOfPages; page++) {
+      if(page === currentPage) {
+        pageArr.push(<li className="page-item active"><span className="page-link" href="#">{page}</span></li>)
+      } else {
+
+        switch (page) {
+          case 1:
+          case 2:
+          case (currentPage+1):
+          case (currentPage-1):
+          case 10:
+          case 20:
+          case 30:
+          case numberOfPages:
+
+          pageArr.push(<li className="page-item"><span className="page-link" href="#">{page}</span></li>)
+
+            break;
+            
+          default:
+
+          if (pageArr[pageArr.length - 1] !== 'empty') {
+
+            pageArr.push('empty')
+
+          }
+            break;
+        }
+      }
+  }
+
+
+  return <nav aria-label="ticket pagination">
+      <ul className="pagination">
+        <li className="page-item disabled">
+          <span className="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</span>
+        </li>
+       {pageArr.map(x => <Fragment>
+         {x === 'empty' ? <li className="page-item disabled"><span className="page-link" href="#">...</span></li> : x}
+       </Fragment>)}
+       <li className="page-item">
+          <span className="page-link" href="#">Next</span>
+        </li>
+      </ul>
+  </nav>
+}
+
+const CustomerPortal = ({statuses}) => {
   var emptyArea = [1, 2];
 
   const custId = '15c8c94e-0bc1-4619-9f7b-d685b41e84f9';
@@ -41,8 +93,28 @@ const CustomerPortal = () => {
           isCustTicketsLoading: false
         }));
       }
-    })()
+    })();
   }, [])
+
+
+  const getStatusColor = (id) => {
+    if (id) {
+      switch (id.slice(0, 13)) {
+        case "23838da6-0566":
+          return "orange";
+        case "dafcab89-2b7f":
+          return "green";
+        case "23838ae4-1223":
+          return "yellow";
+        case "23838da6-1223":
+          return "awaiting";
+        case "23838ec5-0566":
+          return "red";
+        default:
+          return "";
+      }
+    }
+  };
 
   return (
     <>
@@ -50,25 +122,23 @@ const CustomerPortal = () => {
       <TopBar />
       <div className="customer-portal">
         <div className="total-cards">
-          <TotalCard title="Total Tickets" value={57} color={"#662D91"} />
+          <TotalCard title="Total Tickets" value={custState.meta?.totalItems || 0} color={"#662D91"} />
           <TotalCard title="Overdue Tickets" value={57} color={"#FD7289"} />
           <TotalCard title="Resolved Tickets" value={57} color={"#6C4181"} />
         </div>
         <div className="tickets-container">
           <div className="tickets-list">
             <div className="top">
+
               <p style={{ marginRight: 30 }}>Support Tickets</p>
-              <div className="tag">
-                <p className="all">All</p>
-              </div>
-              <div className="tag">
-                <p className="open">Open</p>
-              </div>
-              <div className="tag">
-                <p className="approved">Approved</p>
-              </div>
-              <div className="tag">
-                <p className="closed">Closed</p>
+
+              <div className="statuses">
+                <div className="tag">
+                  <p className="all active">All</p>
+                </div>
+                {statuses && statuses.map(status => <div className="tag">
+                  <p className={`${getStatusColor(status?.id)}`}>{status?.status}</p>
+                </div>)}
               </div>
             </div>
 
@@ -77,6 +147,12 @@ const CustomerPortal = () => {
               <TicketItem key={i} ticket={ticket} />
             ))
             }
+            <div className="mt-4">
+            <div></div>
+            <div>
+                <TicketPagination numberOfPages={10} currentPage={1} />
+            </div>
+            </div>
           </div>
           <div className="submit-ticket">
             <p className="title">Submit a Ticket</p>
@@ -137,11 +213,7 @@ const CustomerPortal = () => {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  isCurrentCustomerLoaded: state.customer.isCurrentCustomerLoaded,
-  currentCustomerTickets: state.customer.currentCustomerTickets,
-  currentCustomerTicketsMeta: state.customer.currentCustomerTicketsMeta,
-  isCurrentCustomerTicketsLoaded: state.customer.isCurrentCustomerTicketsLoaded,
-  currentCustomer: state.customer.currentCustomer
+  statuses: state.status.statuses
 });
 
 export default connect(mapStateToProps, null)(CustomerPortal);

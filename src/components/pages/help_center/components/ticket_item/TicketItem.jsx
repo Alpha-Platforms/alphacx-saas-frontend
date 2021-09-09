@@ -11,7 +11,7 @@ const TicketItem = ({ticket}) => {
       <p className="ticket-det">Via email ({moment(ticket?.updated_at).format('ddd, DD MMM, YYYY [at] hh:mm A')})</p>
       <div className="ticket-id">
         <p>Ticket ID: <span className="text-uppercase">#{ticket?.id?.slice(-8) || ''}</span></p>
-        <p className="tag open">Open</p>
+        {ticket?.status && <p className="tag open">{ticket?.status?.status}</p>}
       </div>
       <div className="rating">
         <p>Rating</p>

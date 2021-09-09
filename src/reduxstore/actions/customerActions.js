@@ -221,6 +221,11 @@ export const getCustTickets = async(itemsPerPage, currentPage, customerId, statu
     }
 }
 
+/* 
+https://kustormar-staging.herokuapp.com/v1/sla/dabb9095-1a5a-4102-8fb9-4ecb0af1d87d
+*/
+
+
 export const setCustomersLoading = () => {
     return {type: types.CUSTOMERS_LOADING}
 }
