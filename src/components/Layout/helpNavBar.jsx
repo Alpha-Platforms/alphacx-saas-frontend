@@ -4,6 +4,7 @@ import Logo from "../../assets/imgF/logo.png";
 import AlphaLogo from "../../assets/imgF/alpha.png";
 import "./helpnav.scss";
 import { Link } from "react-router-dom";
+import ManImg from '../../assets/images/man.jpg';
 
 const HelpNavBar = ({ activeBG }) => {
   const { shadow: scroll } = useScrollDetect();
@@ -21,6 +22,18 @@ const HelpNavBar = ({ activeBG }) => {
         <Link to="/register">
           <p className="link">Sign in</p>
         </Link>
+          <Link to={`#`}>
+            <img
+              src={ManImg}
+              alt=""
+              style={{
+                width: 30,
+                borderRadius: "50%",
+                marginLeft: '2rem',
+                transform: 'translateY(-0.3rem)'
+              }}
+            />
+          </Link>
       </div>
     </div>
   );

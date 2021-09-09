@@ -1,18 +1,20 @@
 import React from "react";
 import StarRating from "../starRating/starRating";
 import "./TicketItem.scss";
+import moment from 'moment';
 
-const TicketItem = () => {
+const TicketItem = ({ticket, getStatusColor}) => {
   return (
     <div className="ticket-item">
-      <p className="subject">How can I get a refund for my order?</p>
-      <p className="ticket-det">Via email (Sat, 13 Mar 2021 at 10:54 AM)</p>
+      <p className="subject">{ticket?.subject || ''}</p>
+      {/* <p className="ticket-det">Via email (Sat, 13 Mar 2021 at 10:54 AM)</p> */}
+      <p className="ticket-det">Via email ({moment(ticket?.updated_at).format('ddd, DD MMM, YYYY [at] hh:mm A')})</p>
       <div className="ticket-id">
-        <p>Ticket ID: #53467</p>
-        <p className="tag open">Open</p>
+        <p>Ticket ID: <span className="text-uppercase">#{ticket?.id?.slice(-8) || ''}</span></p>
+        {ticket?.status && <p className={`tag status-tag ${getStatusColor(ticket?.status?.id)}`}>{ticket?.status?.status}</p>}
       </div>
       <div className="rating">
-        <p>Rate our support</p>
+        <p>Rating</p>
         <StarRating numOfStars={5} checked={4} />
       </div>
     </div>
