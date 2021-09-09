@@ -16,7 +16,7 @@ const StarRating = ({ numOfStars, checked }) => {
           key={index}
           className="star"
           style={{ cursor: "pointer" }}
-          onClick={() => handleRating(index)}
+          // onClick={() => handleRating(index)}
         >
           <HelpIcons
             name="star"
