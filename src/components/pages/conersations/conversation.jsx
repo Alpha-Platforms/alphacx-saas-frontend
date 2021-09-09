@@ -107,7 +107,7 @@ export default function Conversation() {
   });
   const [sendingReply, setSendingReply] = useState(false);
   const [msgHistory, setMsgHistory] = useState([]);
-  const [wsTickets, setwsTickets] = useState([]);
+  const [wsTickets, setWsTickets] = useState([]);
   const [categoryUpdate, setCategoryUpdate] = useState("");
   const [noResponseFound, setNoResponseFound] = useState(true);
   const [TodayMsges, setTodayMsges] = useState([]);
@@ -149,11 +149,11 @@ export default function Conversation() {
   useEffect(() => {
     AppSocket.createConnection();
     AppSocket.io.on(`ws_tickets`, (data) => {
-      // console.log("this are Ticketsss", data?.data?.tickets);
-      setwsTickets(data?.data?.tickets);
+      console.log("this are Tickets", data?.data?.tickets);
+      setWsTickets(data?.data?.tickets);
     });
     AppSocket.io.on(`message`, (data) => {
-      // console.log("this are history msbsg", data);
+      // console.log("this are history msg", data);
       // console.log(UserInfo);
       let msg = {
         created_at: data.created_at,

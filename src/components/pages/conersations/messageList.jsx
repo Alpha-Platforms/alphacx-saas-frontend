@@ -83,9 +83,12 @@ export default function MessageList({
                   data?.customer?.firstname
                 )} ${capitalizeFirstLetter(data?.customer?.lastname)}`}</p>
                 <p className="senderMSG">
-                  {data.description == null
-                    ? ""
-                    : truncateWithEllipses(data.description, 20)}
+                  {truncateWithEllipses(data?.plain_description, 20)}
+                  {/* {(Array.isArray(data.history)) ? data.history.length :  ""} */}
+                  {/* {(!Array.isArray(data.history)) ? ""
+                    : (data.history.at(-1).response === null || data.history.at(-1).response === undefined ) ? "no text" 
+                    : truncateWithEllipses(data.history.at(-1).response, 20)
+                  } */}
                 </p>
                 <div className="msg-badges">
                   <div

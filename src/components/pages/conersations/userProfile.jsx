@@ -53,7 +53,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
               <div className="userProfilePicConNoImgj">
                 <p className="text-capitalize"
                   style={{ fontSize: "30px!important" }}
-                >{`${UserInfo?.firstname?.slice(0,1)} ${UserInfo?.lastname?.slice(0, 1)}`}</p>
+                >{`${UserInfo?.firstname?.slice(0,1)}${UserInfo?.lastname?.slice(0, 1)}`}</p>
               </div>
             )}
             {/* 
@@ -215,7 +215,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails }) {
               {UserInfo?.phoneNumber ? UserInfo?.phoneNumber : "unavailable"}
             </p> */}
                   <p>
-                    <Link to="/settings/users">{`${capitalize(
+                    <Link to={`/settings/profile/${ticket[0]?.assignee?.id}`}>{`${capitalize(
                       ticket[0]?.assignee?.firstname  || ''
                     )} ${capitalize(ticket[0]?.assignee?.lastname  || '')}`}</Link>
                   </p>

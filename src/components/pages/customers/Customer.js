@@ -96,7 +96,12 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                     }}
                         className="pt-4 px-3">
                         <div className="user-initials-lg">
-                            {currentCustomer?.avatar ? <div className="customer-avatar"><img src={currentCustomer.avatar} alt='' /></div> : <div className="user-initials blue me-auto ms-auto">{getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname}`)}</div>}
+                            {currentCustomer?.avatar ? <div className="customer-avatar">
+                                                        <img src={currentCustomer.avatar} alt='' />
+                                                    </div> : <div className="user-initials blue me-auto ms-auto d-flex justify-content-center align-items-center">
+                                                                {getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname}`)}
+                                                            </div>
+                                                        }
                             <div className="text-center mt-3">
                                 {/* <h4 style={{ textTransform: 'capitalize' }}>{`${currentCustomer.firstname} ${currentCustomer.lastname}`}</h4> */}
                                 <h6 className="mb-0 text-capitalize"><b>{`${currentCustomer.firstname} ${currentCustomer.lastname}`}</b></h6>
@@ -106,13 +111,6 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                         <hr className="op-1"/> {/* <!-- Customer date info --> */}
                         <div className="py-3 pt-2">
                             <ul className="cust-profile-info">
-                                {/* <li>
-                                    <div><CircleIcon icon={WorkIcon}/></div>
-                                    <div>
-                                        <p className="pb-0 mb-0 f-12 text-muted op-9">Account ID</p>
-                                        <p className="text-muted f-13">{id?.slice(0, 8).toUpperCase()}</p>
-                                    </div>
-                                </li> */}
                                 <li>
                                     <div><CircleIcon color="rgba(186, 104, 200, 0.25)" icon={CallIcon}/></div>
                                     <div>
