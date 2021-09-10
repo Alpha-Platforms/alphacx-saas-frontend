@@ -165,7 +165,7 @@ const AutomationSettings = () => {
   };
 
   // --------------------------
-  // Function to fetch automations
+  // Function to fetch automation
   // --------------------------
   const getAllAutomation = async () => {
     const res = await httpGetMain("sla");
