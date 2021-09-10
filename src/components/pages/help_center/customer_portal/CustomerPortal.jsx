@@ -8,8 +8,9 @@ import TopBar from "../components/topBar/topBar";
 import "./CustomerPortal.scss";
 import {connect} from 'react-redux';
 import ScaleLoader from 'react-spinners/ScaleLoader';
-import {getCustTickets} from '../../../../reduxstore/actions/customerActions';
+import {getCustTickets, createCustTicket} from '../../../../reduxstore/actions/customerActions';
 import {Pagination} from 'react-bootstrap';
+import { NotificationManager } from 'react-notifications';
 
 
 const TicketPagination = ({currentPage, numberOfPages, handleTicketPagination}) => {
@@ -62,10 +63,12 @@ const TicketPagination = ({currentPage, numberOfPages, handleTicketPagination}) 
   </nav>
 }
 
-const CustomerPortal = ({statuses}) => {
+const CustomerPortal = ({statuses, categories}) => {
   var emptyArea = [1, 2];
 
   const custId = '15c8c94e-0bc1-4619-9f7b-d685b41e84f9';
+  const custEmail = 'doetela@gmail.com';
+  const custName = 'DO Etela';
 
 
   const [custState, setCustState] = useState({
@@ -156,6 +159,42 @@ const CustomerPortal = ({statuses}) => {
       }
   }
 
+  const [formInput, setFormInput] = useState({
+    email: custEmail,
+    subject: '',
+    groupId: '0924ce6d-a033-454e-a281-472e23b1be8d',
+    description: '',
+    plainDescription: '',
+    tags: [],
+    priorityId: '5a6635d0-0561-11ea-8d71-362b9e155667',
+    statusId: '23838da6-0566-11ea-9a9f-362b9e225667',
+    categoryId: ''
+  });
+
+  const handleInputChange = (e) => {
+    const {name, value} = e.target;
+
+    setFormInput(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  }
+
+  const handleTicketCreation = async (e) => {
+    e.preventDefault();
+    const {subject, categoryId, description} = formInput;
+
+    if (!subject || !categoryId || !description) {
+      NotificationManager.error('All fields are required', 'Opps!');
+    } else {
+      const newTicket = {...formInput, plainDescription: formInput.description};
+
+      const ticketRes = await createCustTicket(newTicket);
+
+      console.log('FROM CUST PORTAL: ', ticketRes);
+    }
+  }
+
   return (
     <>
       <HelpNavBar activeBG={true} custId={custId} />
@@ -199,47 +238,49 @@ const CustomerPortal = ({statuses}) => {
             <p>
               Providing these details will help us resolve your question faster.
             </p>
-            <form>
+            <form onSubmit={handleTicketCreation}>
               <div className="form-group mt-3">
-                <label for="slaName" className="f-14 mb-1">
+                <label htmlFor="slaName" className="f-14 mb-1">
                   Subject
                 </label>
                 <input
                   type="text"
                   className="form-control form-control-sm"
+                  name="subject"
+                  value={formInput.subject}
+                  onChange={handleInputChange}
                   id="slaName"
                 />
               </div>
               <div className="form-group mt-3">
-                <label for="ticket" className="f-14 mb-1">
+                <label htmlFor="ticket" className="f-14 mb-1">
                   Issue Type
                 </label>
-                <select className="form-select form-select-sm f-14" id="ticket">
-                  <option>Complaints</option>
-                  <option>Enquiry</option>
-                  <option>Request</option>
-                  <option>Delete Deduction</option>
-                  <option>Service Pricing</option>
-                  <option>Account Statement</option>
+                <select className="form-select form-select-sm f-14" id="ticket" name="categoryId" value={formInput.categoryId} onChange={handleInputChange}>
+                  <option value=""></option>
+                  {categories && categories.map(cat => <option value={cat?.id}>{cat?.name}</option>)}
                 </select>
               </div>
               <div className="form-group mt-3">
-                <label for="Desc" className="f-14 mb-1">
+                <label htmlFor="Desc" className="f-14 mb-1">
                   Description
                 </label>
                 <textarea
                   className="form-control"
                   rows="4"
                   id="Desc"
+                  name="description"
+                  value={formInput.description}
+                  onChange={handleInputChange}
                 ></textarea>
               </div>
               <div className="form-group mt-3">
-                <label for="Desc" className="f-14 mb-1">
+                <label htmlFor="Desc" className="f-14 mb-1">
                   Attachment (If Any)
                 </label>
                 <button className="add-file">Add file or drag file here</button>
               </div>
-              <button className="btn btn-sm ms-2 f-12 bg-custom px-4 mt-3 mb-2">
+              <button className="btn btn-sm ms-2 f-12 bg-custom px-4 mt-3 mb-2" type="submit" >
                 Submit
               </button>
             </form>
@@ -253,7 +294,14 @@ const CustomerPortal = ({statuses}) => {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  statuses: state.status.statuses
+  statuses: state.status.statuses,
+  priorities: state.priority.priorities,
+  categories: state.category.categories,
+  subCategories: state.subCategory.subCategories,
+  agents: state.agent.agents,
+  groups: state.group.groups,
+  customers: state.customer.customers,
+  tags: state.tag.tags?.tags_names?.tags
 });
 
 export default connect(mapStateToProps, null)(CustomerPortal);
