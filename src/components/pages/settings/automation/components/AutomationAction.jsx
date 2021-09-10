@@ -37,8 +37,8 @@ const AutomationAction = ({
   const [RSTeams, setRSTeams] = useState([]);
 
   const [actionChannels] = useState([
-    {label: "Email", value: "Email"},
-    {label: "SMS", value: "SMS"}
+    {label: "Email", value: "email"},
+    {label: "SMS", value: "sms"}
   ])
 
 
@@ -175,6 +175,10 @@ const AutomationAction = ({
               openMenuOnFocus={true}
               onChange={handleRSChange}
               options={actionChannels}
+              defaultValue={
+                actionChannels.filter(option => option.label === "Email")
+                
+              }
             />
 
           </div>
