@@ -88,6 +88,7 @@ export const GET_AGENTS = "GET_AGENTS";
 export const ADD_AGENT = "ADD_AGENT";
 export const AGENTS_LOADING = "AGENTS_LOADING";
 export const RESET_AGENT_CREATED = "RESET_AGENT_CREATED";
+export const NEGATE_STATE = "NEGATE_STATE";
 
 
 // CURRENT AGENT
