@@ -74,7 +74,8 @@ const CustomerPortal = ({statuses}) => {
     isCustTicketsLoaded: false,
     isCustTicketsLoading: false,
     noPerPage: 10,
-    currentStatus: ''
+    currentStatus: '',
+    totalTickets: 0
   });
 
 
@@ -91,7 +92,8 @@ const CustomerPortal = ({statuses}) => {
           custTickets: custRes?.tickets,
           meta: custRes?.meta,
           isCustTicketsLoaded: true,
-          isCustTicketsLoading: false
+          isCustTicketsLoading: false,
+          totalTickets: custRes?.meta?.totalItems || 0
         }));
       }
     })();
@@ -160,7 +162,7 @@ const CustomerPortal = ({statuses}) => {
       <TopBar />
       <div className="customer-portal">
         <div className="total-cards">
-          <TotalCard title="Total Tickets" value={custState.meta?.totalItems || 0} color={"#662D91"} />
+          <TotalCard title="Total Tickets" value={custState.totalTickets} color={"#662D91"} />
           <TotalCard title="Overdue Tickets" value={57} color={"#FD7289"} />
           <TotalCard title="Resolved Tickets" value={57} color={"#6C4181"} />
         </div>
