@@ -78,9 +78,10 @@ const Login = ({history}) => {
             return NotificationManager.warning("Domain  is required", "Validation Warning", 4000);
         }
 
-        if (userInput.region == "") {
-            return NotificationManager.warning("Region  is required", "Validation Warning", 4000);
-        }
+        // if (userInput.region == "") {
+        //     return NotificationManager.warning("Region  is required", "Validation Warning", 4000);
+        // }
+
         const validatepassword = validatePassword(userInput.password);
         if (validatepassword != "Looks Good!") {
             return NotificationManager.warning(validatepassword, "Validation Warning", 4000);
@@ -92,7 +93,7 @@ const Login = ({history}) => {
             companyName: userInput.companyName,
             email: userInput.email,
             password: userInput.password,
-            region: userInput.region,
+            region: userInput.region || "",
             currency: "Naira"
         };
         setLoading(true);
