@@ -219,6 +219,31 @@ export const getCustTickets = async(itemsPerPage, currentPage, customerId, statu
     }
 }
 
+// invalid redux action
+export const createCustTicket = async(newTicket) => {
+    if (!navigator.onLine) {
+        return console.error("Network error!");
+    }
+    const endpoint = `${config.stagingBaseUrl}/customer/ticket`;
+    console.log('newTicket body: ', newTicket);
+    try {
+        const res = await axios.post(endpoint, newTicket, userTokenConfig(getState));
+        console.log('Cust ticket creation pass Res: ', res);
+        if (res.data && res.data
+            ?.status === "success") {
+            return res.data
+                ?.data
+        }
+        return false
+    } catch (err) {
+        NotificationManager.error(err
+            ?.response
+                ?.data.message, 'Error');
+        console.log('Customer Ticket Error', err);
+        return false;
+    }
+}
+
 /* 
 https://kustormar-staging.herokuapp.com/v1/sla/dabb9095-1a5a-4102-8fb9-4ecb0af1d87d
 */

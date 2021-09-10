@@ -22,8 +22,11 @@ import moment from 'moment';
 // import {ReactComponent as CardDesignSvg} from '../../../../assets/icons/Card-Design.svg';
 import Swal from "sweetalert2";
 import { wordCapitalize, getUserInitials } from "../../../../helper";
-
+import {updateUser} from '../../../../reduxstore/actions/userActions';
+import {getAgents} from '../../../../reduxstore/actions/agentActions';
 import "../../../../styles/Setting.css";
+import {NotificationManager} from 'react-notifications';
+
 const UserList = ({
   users,
   meta,
@@ -32,6 +35,7 @@ const UserList = ({
   agents,
   isAgentsLoaded,
   groups,
+  getAgents
 }) => {
   const [createModalShow, setCreateModalShow] = useState(false);
   const [inviteModalShow, setInviteModalShow] = useState(false);
@@ -50,6 +54,7 @@ const UserList = ({
     setUserLoading(!isAgentsLoaded);
     if (isAgentsLoaded) {
       setChangingRow(false);
+      setUserLoading(false);
     }
   }, [isAgentsLoaded]);
   
@@ -135,8 +140,26 @@ const UserList = ({
     },
   });
 
+  const changeActiveState = async (id, isActivated) => {
+    setUserLoading(true);
+    const userRes = await updateUser({
+      id,
+      role: "Agent",
+      isActivated: !isActivated ? true : "false"
+    });
+    console.log('userRes: ', userRes);
+    setUserLoading(false);  
+    if (userRes?.status === 'success') {
+      NotificationManager.success('Info has been updated', 'Success');
+      getAgents()
+  } else {
+      NotificationManager.error('Something went wrong', 'Error');
+  }
+
+  }
+
   function handleActiveChange() {
-    const { name, isActivated } = this;
+    const { name, isActivated, id } = this;
     
     Swal.fire({
       title: isActivated ? "Deactivate?" : "Activate?",
@@ -150,7 +173,8 @@ const UserList = ({
       cancelButtonText: "No",
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log("Deactivate or  user");
+        console.log("Deactivate or Activated user");
+        changeActiveState(id, isActivated);
       } else {
         console.log("Do nothing");
       }
@@ -272,6 +296,7 @@ const UserList = ({
                           onChange={handleActiveChange.bind({
                             name: rowData.name,
                             isActivated: rowData.isActivated,
+                            id: rowData.userId
                           })}
                           readOnly={true}
                           type="checkbox"
@@ -324,6 +349,7 @@ const UserList = ({
                     // created: "13 Apr 2021",
                     contact: { firstname, lastname, id, avatar },
                     isActivated,
+                    userId: id
                   })
                 )}
                 options={{
@@ -391,4 +417,4 @@ const mapStateToProps = (state, ownProps) => ({
   groups: state.group.groups,
 });
 
-export default connect(mapStateToProps, { getPaginatedUsers })(UserList);
+export default connect(mapStateToProps, { getPaginatedUsers, getAgents })(UserList);

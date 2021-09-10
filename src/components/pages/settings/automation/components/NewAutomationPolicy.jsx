@@ -192,7 +192,7 @@ const NewAutomationPolicy = ({categoriz}) => {
     const res = await httpPatchMain(`sla/${automationId}`, body);
     setPolicyLoading(false);
     if (res?.status === "success") {
-      router.push("/settings/automation");
+      router.push("/settings/automations");
     } else {
       console.error(res.er);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
