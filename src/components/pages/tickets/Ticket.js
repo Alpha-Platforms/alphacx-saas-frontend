@@ -178,7 +178,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         };
   
         setMsgHistory((item) => [...item, msg]);
-        scrollPosSendMsgList();
+        // scrollPosSendMsgList();
         // sortMsges((item) => [...item, msg]);
       });
       return () => {
@@ -218,7 +218,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       setLoadingTicks(true);
       setTickets(wsTickets);
       setLoadingTicks(false);
-      scrollPosSendMsgList();
+      // scrollPosSendMsgList();
     }, [wsTickets]);
   
     const onEditorStateChange = (editorState) => {
@@ -294,7 +294,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         // ReloadloadSingleMessage();
         setEditorState(initialState);
         setReplyTicket({ plainText: "", richText: "" });
-        scrollPosSendMsgList()
+        // scrollPosSendMsgList()
       } else {
         // setLoadingTicks(false);
         setsendingReply(false);
