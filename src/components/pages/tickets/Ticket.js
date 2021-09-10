@@ -178,6 +178,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         };
   
         setMsgHistory((item) => [...item, msg]);
+        // scrollPosSendMsgList();
         // sortMsges((item) => [...item, msg]);
       });
       return () => {
@@ -217,6 +218,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       setLoadingTicks(true);
       setTickets(wsTickets);
       setLoadingTicks(false);
+      // scrollPosSendMsgList();
     }, [wsTickets]);
   
     const onEditorStateChange = (editorState) => {
@@ -255,6 +257,14 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       }
     };
   
+   function scrollPosSendMsgList() {
+      window.location.href = "#lastMsg";
+      // window.scrollTo("#lastMsg", {
+      //   duration: 800,
+      //   delay: 0,
+      //   smooth: "easeInOutQuart",
+      // });
+    }
     const replyTicket = async (reply, attachment) => {
       const data = {
         // type: "note",
@@ -263,8 +273,8 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         phoneNumber: currentTicket.customer.phone_number,
         // attachment: "",
       };
-      console.log(currentTicket.customer.phone_number);
-      console.log(data);
+      // console.log(currentTicket.customer.phone_number);
+      // console.log(data);
       // setsendingReply(true);
       const replyData = {
         attachment: null,
@@ -279,11 +289,12 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         `tickets/${currentTicket.id}/replies`,
         data
       );
-      if (res?.status == "success") {
+      if (res?.status === "success") {
         // setsendingReply(false);
         // ReloadloadSingleMessage();
         setEditorState(initialState);
         setReplyTicket({ plainText: "", richText: "" });
+        // scrollPosSendMsgList()
       } else {
         // setLoadingTicks(false);
         setsendingReply(false);
@@ -541,778 +552,704 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
 
     return (
         <Fragment>
-            {!isCurrentTicketLoaded
-                ? <div className="single-cust-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
-                : !currentTicket ? <div>No Ticket Found.</div> : <div
-                    id="ticketDetailsWrapper"
-                    style={{
-                    gridTemplateColumns: "280px 1fr",
-                    border: '1px solid #f1f1f1'
-                }}
-                    className="d-grid mb-4">
-                    <div className="pt-2" style={{ backgroundColor: "#fafafa", borderRight: '1px solid #f1f1f1' }}>
-                      <UserProfile UserInfo={UserInfo} ticket={[currentTicket]} isTicketDetails={true}  />
-                    </div>
-
-                    {/* <div
-                        style={{
-                        borderRight: '1px solid #f1f1f1'
-                    }}
-                        className="bg-primary py-5 px-3 bg-white">
-                        <div className="user-initials-lg">
-                            <div className="user-initials blue me-auto ms-auto">{getUserInitials(`${currentTicket.customer?.firstname} ${currentTicket.customer?.lastname}`)}</div>
-                            <div className="text-center mt-3">
-                                <h4 className="text-capitalize">{`${currentTicket.customer?.firstname} ${currentTicket.customer?.lastname}`}</h4>
-                                <p className="text-muted">Gillette Group International</p>
-                            </div>
-                        </div>
-                        <hr className="op-1"/>
-                        <div className="py-3">
-                            <ul className="cust-profile-info">
-                                <li>
-                                    <div><CircleIcon icon={ProfileLightIcon}/></div>
-                                    <div>
-                                        <h6>Assignee</h6>
-                                        <p className="text-muted text-capitalize">{`${currentTicket.assignee.firstname} ${currentTicket.assignee.lastname}`}</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div><CircleIcon icon={TicketIcon}/></div>
-                                    <div>
-                                        <h6>ID</h6>
-                                        <p className="text-muted">{id?.slice(-8).toUpperCase()}</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div><CircleIcon icon={WorkIcon}/></div>
-                                    <div>
-                                        <h6>Priority</h6>
-                                        <p className="text-muted">{currentTicket.priority?.name}</p>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div><CircleIcon icon={FolderIcon}/></div>
-                                    <div>
-                                        <h6>Stage</h6>
-                                        <p className="text-muted">{currentTicket.status?.status}</p>
-                                    </div>
-                                </li>
-                            </ul>
-
-                        </div>
-
-                        <hr className="op-1"/>
-
-                        <div className="text-center mt-4">
-
-                        </div>
-                    </div> */}
-
-                    <div
-                        id="ticketDetailsRightPane"
-                        style={{
-                        overflowX: "hidden"
-                    }}
-                        className="bg-secondary py-3 pt-0 bg-white">
-
-                        {/* Conversation Part */}
-
-
-
-
-
-          {/* CHAT COL TWO */}
-
-          <div
-            className={`conversation-layout-col-two`}
-            // style={showUserProfile ? { width: "calc(100% - 636px)" } : {}}
-          >
-            {firstTimeLoad ? (
-              <div className="single-cust-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
-            ) : loadSingleTicket ? (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "50px",
-                  width: "100%",
-                }}
-              >
-                {" "}
-                <ScaleLoader
-                  color="#0d4166"
-                  loading={loadSingleTicket}
-                  // size={35}
-                />
+        {!isCurrentTicketLoaded ? 
+          <div className="single-cust-loader">
+            <ScaleLoader loading={true} color={"#006298"}/>
+          </div>
+          : !currentTicket ? <div>No Ticket Found.</div> 
+          : <div id="ticketDetailsWrapper" style={{ gridTemplateColumns: "280px 1fr", border: '1px solid #f1f1f1'}} 
+              className="d-grid mb-0">
+              <div className="pt-2" style={{ backgroundColor: "#fafafa", borderRight: '1px solid #f1f1f1' }}>
+                <UserProfile UserInfo={UserInfo} ticket={[currentTicket]} isTicketDetails={true} timeLine={false}  />
               </div>
-            ) : (
-              <div className="conversation-layout-col-two-chatCol">
-                {" "}
-                {/* CHAT HEADER BOX SECTION */}
-                {/* {noResponseFound ? (
-                <p
-                  style={{
-                    textAlign: "center",
-                    paddingTop: "30px",
-                    paddingBottom: "30px",
-                    marginBottom: "auto",
-                    marginTop: "auto",
-                  }}
-                >
-                  {" "}
-                  <NoChatFound value="No response found" />
-                </p>
-              ) : ( */}
-                <Fragment>
-                  <div className="conversationHeaderV2">
-                    <div className="conversationHeaderMainV2">
-                      <div className="custormChatHeaderInfo">
-                        <div className="custormChatHeaderInfoData pt-3">
-                          <h1>{ticket[0]?.subject}</h1>
-                          <p>
-                            {`${capitalize(
-                              SenderInfo?.customer?.firstname
-                            )} ${capitalize(
-                              SenderInfo?.customer?.lastname
-                            )} ${capitalize(SenderInfo?.customer?.email)}`}
-                            <div className="custormChatHeaderDot"></div>{" "}
-                            <span>{dateFormater(ticket[0]?.updated_at)}</span>
-                          </p>
-                        </div>
-                        <div
-                          className="custormChatHeaderInfoAction"
-                          onClick={closeSaveTicketModal}
-                        >
-                          <StarIconTicket /> Update
+              <div id="ticketDetailsRightPane"
+                  style={{overflowX: "hidden"}}
+                  className="bg-secondary py-3 pt-0 bg-white">
+                  {/* Conversation Part */}
+
+              {/* CHAT COL TWO */}
+
+              <div
+                className={`conversation-layout-col-two`}>
+                {firstTimeLoad ? (
+                  <div className="single-cust-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
+                ) : loadSingleTicket ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginTop: "50px",
+                      width: "100%",
+                    }}
+                  >
+                    {" "}
+                    <ScaleLoader
+                      color="#0d4166"
+                      loading={loadSingleTicket}
+                      // size={35}
+                    />
+                  </div>
+                ) : (
+                  <div className="conversation-layout-col-two-chatCol">
+                    {" "}
+                    {/* CHAT HEADER BOX SECTION */}
+                    {/* {noResponseFound ? (
+                    <p
+                      style={{
+                        textAlign: "center",
+                        paddingTop: "30px",
+                        paddingBottom: "30px",
+                        marginBottom: "auto",
+                        marginTop: "auto",
+                      }}
+                    >
+                      {" "}
+                      <NoChatFound value="No response found" />
+                    </p>
+                  ) : ( */}
+                    <Fragment>
+                      <div className="conversationHeaderV2">
+                        <div className="conversationHeaderMainV2">
+                          <div className="custormChatHeaderInfo">
+                            <div className="custormChatHeaderInfoData pt-3">
+                              <h1>{ticket[0]?.subject}</h1>
+                              <p>
+                                {`${capitalize(
+                                  SenderInfo?.customer?.firstname
+                                )} ${capitalize(
+                                  SenderInfo?.customer?.lastname
+                                )} ${capitalize(SenderInfo?.customer?.email)}`}
+                                <div className="custormChatHeaderDot"></div>{" "}
+                                <span>{dateFormater(ticket[0]?.updated_at)}</span>
+                              </p>
+                            </div>
+                            <div
+                              className="custormChatHeaderInfoAction"
+                              onClick={closeSaveTicketModal}
+                            >
+                              <StarIconTicket /> Update
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                  <div>
-                    <div
-                        className="achivemsagesSection pt-3"
-                        onClick={() => setShowAchive(!ShowAchive)}
-                      >
-                        <ExpandChat />
-                        {AchiveMsges.length == 0 &&
-                        TodayMsges.length == 0 &&
-                        YesterdayMsges.length == 0 ? (
-                          <span> No response found ({AchiveMsges.length})</span>
-                        ) : (
+                      <div>
+                        <div
+                            className="achivemsagesSection pt-3"
+                            onClick={() => setShowAchive(!ShowAchive)}
+                          >
+                            <ExpandChat />
+                            {AchiveMsges.length == 0 &&
+                            TodayMsges.length == 0 &&
+                            YesterdayMsges.length == 0 ? (
+                              <span> No response found ({AchiveMsges.length})</span>
+                            ) : (
+                              <span>
+                                {" "}
+                                {ShowAchive ? "Condense" : "Expand"} all conversation
+                                ({AchiveMsges.length})
+                              </span>
+                            )}
+                          </div>
+                      </div>
+                      {/* CHAT SECTION */}
+                      <div id="ticketConvoBox" className="conversationsMain">
+                        <div className="chatDateHeader">
+                          <div className="chatDateHeaderhr1"></div>
+                          <div className="chatDateHeaderTitle">
+                            <span>
+                              {moment(ticket[0].created_at).format("DD/MM/YYYY") ==
+                              moment(new Date()).format("DD/MM/YYYY")
+                                ? "Today"
+                                : moment(ticket[0].created_at).format(
+                                    "DD/MM/YYYY"
+                                  ) == moment().add(-1, "days").format("DD/MM/YYYY")
+                                ? "Yesterday"
+                                : moment(ticket[0].created_at).fromNow()}
+                            </span>{" "}
+                          </div>
+                          <div className="chatDateHeaderhr2"></div>
+                        </div>
+
+                        <div className="customerTiketChat">
+                          <div className="customerTImageHeader">
+                            <div className="imgContainercth">
+                              {SenderInfo?.customer?.avatar ? (
+                                <img src={SenderInfo?.customer?.avatar} alt="" />
+                              ) : (
+                                <div className="singleChatSenderImg">
+                                  <p>{`${SenderInfo?.customer?.firstname?.slice(
+                                    0,
+                                    1
+                                  )}${SenderInfo?.customer?.lastname?.slice(
+                                    0,
+                                    1
+                                  )}`}</p>
+                                </div>
+                              )}
+                              <div className="custorActiveStateimgd"></div>
+                            </div>
+                          </div>
+                          <div className="custormernameticket">
+                            <p style={{ color: "#006298" }}>
+                              {`${capitalize(
+                                ticket[0]?.customer?.firstname
+                              )} ${capitalize(ticket[0]?.customer?.lastname)}`}
+                            </p>
+                            <p>{`Via ${ticket[0].channel} . ${dateFormater(
+                              ticket[0].created_at
+                            )}`}</p>
+                          </div>
+                        </div>
+                        <div className="msgbodyticketHeader">
+                          {capitalize(ticket[0]?.description  || '')}
+                        </div>
+                        <div className="msgAssingedToee3">
+                          This message is assigned to{" "}
                           <span>
                             {" "}
-                            {ShowAchive ? "Condense" : "Expand"} all conversation
-                            ({AchiveMsges.length})
+                            {`${capitalize(
+                              ticket[0]?.assignee?.firstname || ""
+                            )} ${capitalize(ticket[0]?.assignee?.lastname  || '')}`}
                           </span>
-                        )}
-                      </div>
-                  </div>
-                  {/* CHAT SECTION */}
-                  <div id="ticketConvoBox" className="conversationsMain">
-                    <div className="chatDateHeader">
-                      <div className="chatDateHeaderhr1"></div>
-                      <div className="chatDateHeaderTitle">
-                        <span>
-                          {moment(ticket[0].created_at).format("DD/MM/YYYY") ==
-                          moment(new Date()).format("DD/MM/YYYY")
-                            ? "Today"
-                            : moment(ticket[0].created_at).format(
-                                "DD/MM/YYYY"
-                              ) == moment().add(-1, "days").format("DD/MM/YYYY")
-                            ? "Yesterday"
-                            : moment(ticket[0].created_at).fromNow()}
-                        </span>{" "}
-                      </div>
-                      <div className="chatDateHeaderhr2"></div>
-                    </div>
-
-                    <div className="customerTiketChat">
-                      <div className="customerTImageHeader">
-                        <div className="imgContainercth">
-                          {SenderInfo?.customer?.avatar ? (
-                            <img src={SenderInfo?.customer?.avatar} alt="" />
-                          ) : (
-                            <div className="singleChatSenderImg">
-                              <p>{`${SenderInfo?.customer?.firstname?.slice(
-                                0,
-                                1
-                              )}${SenderInfo?.customer?.lastname?.slice(
-                                0,
-                                1
-                              )}`}</p>
-                            </div>
-                          )}
-                          <div className="custorActiveStateimgd"></div>
                         </div>
-                      </div>
-                      <div className="custormernameticket">
-                        <p style={{ color: "#006298" }}>
-                          {`${capitalize(
-                            ticket[0]?.customer?.firstname
-                          )} ${capitalize(ticket[0]?.customer?.lastname)}`}
-                        </p>
-                        <p>{`Via ${ticket[0].channel} . ${dateFormater(
-                          ticket[0].created_at
-                        )}`}</p>
-                      </div>
-                    </div>
-                    <div className="msgbodyticketHeader">
-                      {capitalize(ticket[0]?.description  || '')}
-                    </div>
-                    <div className="msgAssingedToee3">
-                      This message is assigned to{" "}
-                      <span>
-                        {" "}
-                        {`${capitalize(
-                          ticket[0]?.assignee?.firstname || ""
-                        )} ${capitalize(ticket[0]?.assignee?.lastname  || '')}`}
-                      </span>
-                    </div>
 
-                    <div
-                      className="msgAssingedToee3"
-                      style={{ paddingTop: "8px", marginBottom: "-6px" }}
-                    >
-                      <span>
-                        {" "}
-                        {`${capitalize(
-                          ticket[0]?.assignee?.firstname || ""
-                        )} ${capitalize(ticket[0]?.assignee?.lastname || '')}`}
-                      </span>{" "}
-                      picked up this chat
-                    </div>
+                        <div className="msgAssingedToee3" style={{ paddingTop: "8px", marginBottom: "-6px" }}>
+                          <span>
+                            {" "}
+                            {`${capitalize(
+                              ticket[0]?.assignee?.firstname || ""
+                            )} ${capitalize(ticket[0]?.assignee?.lastname || '')}`}
+                          </span>{" "}
+                          picked up this chat
+                        </div>
 
-                    <div className="msgAssingedToee3">
-                      Ticket Status has been marked as{" "}
-                      <span> {ticket[0].status.status}</span>
-                    </div>
+                        <div className="msgAssingedToee3">
+                          Ticket Status has been marked as{" "}
+                          <span> {ticket[0].status.status}</span>
+                        </div>
 
-                    {/* <div
-                      className="achivemsagesSection"
-                      onClick={() => setShowAchive(!ShowAchive)}
-                    >
-                      <ExpandChat />
-                      {AchiveMsges.length == 0 &&
-                      TodayMsges.length == 0 &&
-                      YesterdayMsges.length == 0 ? (
-                        <span> No response found ({AchiveMsges.length})</span>
-                      ) : (
-                        <span>
-                          {" "}
-                          {ShowAchive ? "Condense" : "Expand"} all conversation
-                          ({AchiveMsges.length})
-                        </span>
-                      )}
-                    </div> */}
+                        {/* <div
+                          className="achivemsagesSection"
+                          onClick={() => setShowAchive(!ShowAchive)}
+                        >
+                          <ExpandChat />
+                          {AchiveMsges.length == 0 &&
+                          TodayMsges.length == 0 &&
+                          YesterdayMsges.length == 0 ? (
+                            <span> No response found ({AchiveMsges.length})</span>
+                          ) : (
+                            <span>
+                              {" "}
+                              {ShowAchive ? "Condense" : "Expand"} all conversation
+                              ({AchiveMsges.length})
+                            </span>
+                          )}
+                        </div> */}
 
-                    <div
-                      className={` ${
-                        ShowAchive && AchiveMsges.length > 0
-                          ? "showAchivesWrap"
-                          : "hideAchivesWrap"
-                      }`}
-                    >
-                      {AchiveMsges.map((data) => {
-                        return (
-                          <div className="msgRepliesSectionChattsdw">
-                            <div className="customerTiketChat">
-                              <div className="customerTImageHeader">
-                                <div className="imgContainercth">
-                                  {data?.user.avatar ? (
-                                    <img src={data?.user.avatar} alt="" />
-                                  ) : (
-                                    <div className="singleChatSenderImg">
-                                      <p>{`${data?.user?.firstname?.slice(
-                                        0,
-                                        1
-                                      )}${data?.user?.lastname?.slice(
-                                        0,
-                                        1
-                                      )}`}</p>
+                        <div
+                          className={` ${
+                            ShowAchive && AchiveMsges.length > 0
+                              ? "showAchivesWrap"
+                              : "hideAchivesWrap"
+                          }`}
+                        >
+                          {AchiveMsges.map((data) => {
+                            return (
+                              <div className="msgRepliesSectionChattsdw">
+                                <div className="customerTiketChat">
+                                  <div className="customerTImageHeader">
+                                    <div className="imgContainercth">
+                                      {data?.user.avatar ? (
+                                        <img src={data?.user.avatar} alt="" />
+                                      ) : (
+                                        <div className="singleChatSenderImg">
+                                          <p>{`${data?.user?.firstname?.slice(
+                                            0,
+                                            1
+                                          )}${data?.user?.lastname?.slice(
+                                            0,
+                                            1
+                                          )}`}</p>
+                                        </div>
+                                      )}
+                                      <div className="custorActiveStateimgd"></div>
                                     </div>
+                                  </div>
+                                  <div className="custormernameticket">
+                                    <p style={{ color: "#006298" }}>
+                                      {`${capitalize(
+                                        data?.user?.firstname
+                                      )} ${capitalize(data?.user?.lastname)}`}
+                                      <span style={{ color: "#656565" }}>
+                                        {" "}
+                                        replied
+                                      </span>
+                                    </p>
+                                    <p>{dateFormater(data.created_at)}</p>
+                                  </div>
+                                </div>
+
+                                <div
+                                  className="msgbodyticketHeader"
+                                  dangerouslySetInnerHTML={createMarkup(
+                                    data?.response
                                   )}
-                                  <div className="custorActiveStateimgd"></div>
+                                ></div>
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        {YesterdayMsges.length == 0 ? (
+                          ""
+                        ) : (
+                          <div className="chatDateHeader">
+                            <div className="chatDateHeaderhr1"></div>
+                            <div className="chatDateHeaderTitle">
+                              <span>Yesterday</span>{" "}
+                            </div>
+                            <div className="chatDateHeaderhr2"></div>
+                          </div>
+                        )}
+
+                        {YesterdayMsges.map((data) => {
+                          return (
+                            <div className="msgRepliesSectionChattsdw">
+                              <div className="customerTiketChat">
+                                <div className="customerTImageHeader">
+                                  <div className="imgContainercth">
+                                    {data?.user.avatar ? (
+                                      <img src={data?.user.avatar} alt="" />
+                                    ) : (
+                                      <div className="singleChatSenderImg">
+                                        <p>{`${data?.user?.firstname?.slice(
+                                          0,
+                                          1
+                                        )}${data?.user?.lastname?.slice(0, 1)}`}</p>
+                                      </div>
+                                    )}
+                                    <div className="custorActiveStateimgd"></div>
+                                  </div>
+                                </div>
+                                <div className="custormernameticket">
+                                  <p style={{ color: "#006298" }}>
+                                    {`${capitalize(
+                                      data?.user?.firstname
+                                    )} ${capitalize(data?.user?.lastname)}`}
+                                    <span style={{ color: "#656565" }}>
+                                      {" "}
+                                      replied
+                                    </span>
+                                  </p>
+                                  <p>{dateFormater(data.created_at)}</p>
                                 </div>
                               </div>
-                              <div className="custormernameticket">
-                                <p style={{ color: "#006298" }}>
-                                  {`${capitalize(
-                                    data?.user?.firstname
-                                  )} ${capitalize(data?.user?.lastname)}`}
-                                  <span style={{ color: "#656565" }}>
-                                    {" "}
-                                    replied
-                                  </span>
-                                </p>
-                                <p>{dateFormater(data.created_at)}</p>
-                              </div>
-                            </div>
 
-                            <div
-                              className="msgbodyticketHeader"
-                              dangerouslySetInnerHTML={createMarkup(
-                                data?.response
-                              )}
-                            ></div>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    {YesterdayMsges.length == 0 ? (
-                      ""
-                    ) : (
-                      <div className="chatDateHeader">
-                        <div className="chatDateHeaderhr1"></div>
-                        <div className="chatDateHeaderTitle">
-                          <span>Yesterday</span>{" "}
-                        </div>
-                        <div className="chatDateHeaderhr2"></div>
-                      </div>
-                    )}
-
-                    {YesterdayMsges.map((data) => {
-                      return (
-                        <div className="msgRepliesSectionChattsdw">
-                          <div className="customerTiketChat">
-                            <div className="customerTImageHeader">
-                              <div className="imgContainercth">
-                                {data?.user.avatar ? (
-                                  <img src={data?.user.avatar} alt="" />
-                                ) : (
-                                  <div className="singleChatSenderImg">
-                                    <p>{`${data?.user?.firstname?.slice(
-                                      0,
-                                      1
-                                    )}${data?.user?.lastname?.slice(0, 1)}`}</p>
-                                  </div>
+                              <div
+                                className="msgbodyticketHeader"
+                                dangerouslySetInnerHTML={createMarkup(
+                                  data?.response
                                 )}
-                                <div className="custorActiveStateimgd"></div>
-                              </div>
+                              ></div>
                             </div>
-                            <div className="custormernameticket">
-                              <p style={{ color: "#006298" }}>
-                                {`${capitalize(
-                                  data?.user?.firstname
-                                )} ${capitalize(data?.user?.lastname)}`}
-                                <span style={{ color: "#656565" }}>
-                                  {" "}
-                                  replied
-                                </span>
-                              </p>
-                              <p>{dateFormater(data.created_at)}</p>
+                          );
+                        })}
+
+                        {TodayMsges.length == 0 ? (
+                          ""
+                        ) : (
+                          <div className="chatDateHeader">
+                            <div className="chatDateHeaderhr1"></div>
+                            <div className="chatDateHeaderTitle">
+                              <span>Today</span>{" "}
                             </div>
+                            <div className="chatDateHeaderhr2"></div>
                           </div>
+                        )}
 
-                          <div
-                            className="msgbodyticketHeader"
-                            dangerouslySetInnerHTML={createMarkup(
-                              data?.response
-                            )}
-                          ></div>
-                        </div>
-                      );
-                    })}
-
-                    {TodayMsges.length == 0 ? (
-                      ""
-                    ) : (
-                      <div className="chatDateHeader">
-                        <div className="chatDateHeaderhr1"></div>
-                        <div className="chatDateHeaderTitle">
-                          <span>Today</span>{" "}
-                        </div>
-                        <div className="chatDateHeaderhr2"></div>
-                      </div>
-                    )}
-
-                    {TodayMsges.map((data) => {
-                      return (
-                        <div className="msgRepliesSectionChattsdw">
-                          <div className="customerTiketChat">
-                            <div className="customerTImageHeader">
-                              <div className="imgContainercth">
-                                {data?.user.avatar ? (
-                                  <img src={data?.user.avatar} alt="" />
-                                ) : (
-                                  <div className="singleChatSenderImg">
-                                    <p>{`${data?.user?.firstname?.slice(
-                                      0,
-                                      1
-                                    )}${data?.user?.lastname?.slice(0, 1)}`}</p>
+                        {TodayMsges.map((data) => {
+                          return (
+                            <div className="msgRepliesSectionChattsdw">
+                              <div className="customerTiketChat">
+                                <div className="customerTImageHeader">
+                                  <div className="imgContainercth">
+                                    {data?.user.avatar ? (
+                                      <img src={data?.user.avatar} alt="" />
+                                    ) : (
+                                      <div className="singleChatSenderImg">
+                                        <p>{`${data?.user?.firstname?.slice(
+                                          0,
+                                          1
+                                        )}${data?.user?.lastname?.slice(0, 1)}`}</p>
+                                      </div>
+                                    )}
+                                    <div className="custorActiveStateimgd"></div>
                                   </div>
-                                )}
-                                <div className="custorActiveStateimgd"></div>
+                                </div>
+                                <div className="custormernameticket">
+                                  <p style={{ color: "#006298" }}>
+                                    {`${capitalize(
+                                      data?.user?.firstname
+                                    )} ${capitalize(data?.user?.lastname)}`}
+                                    <span style={{ color: "#656565" }}>
+                                      {" "}
+                                      replied
+                                    </span>
+                                  </p>
+                                  <p>{dateFormater(data.created_at)}</p>
+                                </div>
                               </div>
+
+                              <div
+                                className="msgbodyticketHeader"
+                                dangerouslySetInnerHTML={createMarkup(
+                                  data?.response
+                                )}
+                              ></div>
                             </div>
-                            <div className="custormernameticket">
-                              <p style={{ color: "#006298" }}>
-                                {`${capitalize(
-                                  data?.user?.firstname
-                                )} ${capitalize(data?.user?.lastname)}`}
-                                <span style={{ color: "#656565" }}>
-                                  {" "}
-                                  replied
-                                </span>
-                              </p>
-                              <p>{dateFormater(data.created_at)}</p>
-                            </div>
-                          </div>
-
-                          <div
-                            className="msgbodyticketHeader"
-                            dangerouslySetInnerHTML={createMarkup(
-                              data?.response
-                            )}
-                          ></div>
-                        </div>
-                      );
-                    })}
-
-                    {/* <div
-                    className="msgRepliesSectionChattsdw"
-                    style={{ marginTop: "10px" }}
-                  >
-                    <div className="customerTiketChat">
-                      <div className="customerTImageHeader">
-                        <div className="imgContainercth">
-                          <img src={pic} alt="" />
-                          <div className="custorActiveStateimgd"></div>
-                        </div>
-                      </div>
-                      <div className="custormernameticket">
-                        <p style={{ color: "#006298" }}>
-                          Hammed Daudu{" "}
-                          <span style={{ color: "#656565" }}>replied</span>
-                        </p>
-                        <p>Just now</p>
-                      </div>
-                    </div>
-
-                    <div
-                      className="msgbodyticketHeader"
-                      style={{ color: "rgba(101, 101, 101, 0.7)" }}
-                    >
-                      is typing...
-                    </div>
-                  </div> */}
-                  </div>
-                </Fragment>
-                {/* CHAT COMMENT BOX SECTION */}
-                <div id="ticketConvoEditorBox" className="conversationCommentBox">
-                  <div className="single-chat-ckeditor">
-                    <div
-                      className="showBackArrowOnMobile"
-                      onClick={() =>
-                        setChatCol({ col1: "showColOne", col2: "hideColTwo" })
-                      }
-                    >
-                      <img src={BackArrow} alt="" />
-                    </div>
-
-                    <div className="ticket-convo-editor">
-                      <Editor
-                        editorState={editorState}
-                        toolbar={{
-                          options: ["emoji", "inline", "image"],
-
-                          inline: {
-                            inDropdown: false,
-                            className: undefined,
-                            component: undefined,
-                            dropdownClassName: undefined,
-                            options: ["bold", "italic", "underline"],
-                            bold: { icon: boldB, className: undefined },
-                            italic: { icon: TextItalic, className: undefined },
-                            underline: {
-                              icon: TextUnderline,
-                              className: undefined,
-                            },
-                          },
-
-                          image: {
-                            icon: editorImg,
-                            className: undefined,
-                            component: undefined,
-                            popupClassName: undefined,
-                            urlEnabled: true,
-                            uploadEnabled: true,
-                            alignmentEnabled: true,
-                            uploadCallback: _uploadImageCallBack,
-                            previewImage: true,
-                            inputAccept:
-                              "image/gif,image/jpeg,image/jpg,image/png,image/svg",
-                            alt: { present: false, mandatory: false },
-                            defaultSize: {
-                              height: "auto",
-                              width: "auto",
-                            },
-                          },
-                          emoji: {
-                            icon: Smiley,
-                          },
-                          blockType: {
-                            inDropdown: true,
-                          },
-
-                          list: {
-                            inDropdown: true,
-                          },
-                          // textAlign: {
-                          //   inDropdown: false,
-                          //   className: undefined,
-                          //   component: undefined,
-                          //   dropdownClassName: undefined,
-                          //   options: ["left", "center", "right"],
-                          //   left: { icon: TextAlignLeft, className: undefined },
-                          //   center: {
-                          //     icon: TextAlignCenter,
-                          //     className: undefined,
-                          //   },
-                          //   right: { icon: TextAlignRight, className: undefined },
-                          //   // justify: { icon: TextAlignCenter, className: undefined },
-                          // },
-
-                          link: {
-                            inDropdown: true,
-                          },
-
-                          history: {
-                            inDropdown: true,
-                          },
-                        }}
-                        toolbarClassName="toolbarClassName"
-                        wrapperClassName="wrapperClassName"
-                        editorClassName="editorClassName"
-                        onEditorStateChange={(editor) =>
-                          onEditorStateChange(editor)
-                        }
-                      />
-                    </div>
-
-                    <div className="sendMsg">
-                      <button
-                        disabled={sendingReply}
-                        onClick={() => replyTicket(ReplyTicket, "attachment")}
+                          );
+                        })}
+                        <span id="lastMsg"></span>
+                        {/* <div
+                        className="msgRepliesSectionChattsdw"
+                        style={{ marginTop: "10px" }}
                       >
-                        <SendMsgIcon /> Send
-                      </button>
+                        <div className="customerTiketChat">
+                          <div className="customerTImageHeader">
+                            <div className="imgContainercth">
+                              <img src={pic} alt="" />
+                              <div className="custorActiveStateimgd"></div>
+                            </div>
+                          </div>
+                          <div className="custormernameticket">
+                            <p style={{ color: "#006298" }}>
+                              Hammed Daudu{" "}
+                              <span style={{ color: "#656565" }}>replied</span>
+                            </p>
+                            <p>Just now</p>
+                          </div>
+                        </div>
+
+                        <div
+                          className="msgbodyticketHeader"
+                          style={{ color: "rgba(101, 101, 101, 0.7)" }}
+                        >
+                          is typing...
+                        </div>
+                      </div> */}
+                      </div>
+                    </Fragment>
+                    {/* CHAT COMMENT BOX SECTION */}
+                    <div id="ticketConvoEditorBox" className="conversationCommentBox">
+                      <div className="single-chat-ckeditor">
+                        <div
+                          className="showBackArrowOnMobile"
+                          onClick={() =>
+                            setChatCol({ col1: "showColOne", col2: "hideColTwo" })
+                          }
+                        >
+                          <img src={BackArrow} alt="" />
+                        </div>
+
+                        <div className="ticket-convo-editor">
+                          <Editor
+                            editorState={editorState}
+                            toolbar={{
+                              options: ["emoji", "inline", "image"],
+
+                              inline: {
+                                inDropdown: false,
+                                className: undefined,
+                                component: undefined,
+                                dropdownClassName: undefined,
+                                options: ["bold", "italic", "underline"],
+                                bold: { icon: boldB, className: undefined },
+                                italic: { icon: TextItalic, className: undefined },
+                                underline: {
+                                  icon: TextUnderline,
+                                  className: undefined,
+                                },
+                              },
+
+                              image: {
+                                icon: editorImg,
+                                className: undefined,
+                                component: undefined,
+                                popupClassName: undefined,
+                                urlEnabled: true,
+                                uploadEnabled: true,
+                                alignmentEnabled: true,
+                                uploadCallback: _uploadImageCallBack,
+                                previewImage: true,
+                                inputAccept:
+                                  "image/gif,image/jpeg,image/jpg,image/png,image/svg",
+                                alt: { present: false, mandatory: false },
+                                defaultSize: {
+                                  height: "auto",
+                                  width: "auto",
+                                },
+                              },
+                              emoji: {
+                                icon: Smiley,
+                              },
+                              blockType: {
+                                inDropdown: true,
+                              },
+
+                              list: {
+                                inDropdown: true,
+                              },
+                              // textAlign: {
+                              //   inDropdown: false,
+                              //   className: undefined,
+                              //   component: undefined,
+                              //   dropdownClassName: undefined,
+                              //   options: ["left", "center", "right"],
+                              //   left: { icon: TextAlignLeft, className: undefined },
+                              //   center: {
+                              //     icon: TextAlignCenter,
+                              //     className: undefined,
+                              //   },
+                              //   right: { icon: TextAlignRight, className: undefined },
+                              //   // justify: { icon: TextAlignCenter, className: undefined },
+                              // },
+
+                              link: {
+                                inDropdown: true,
+                              },
+
+                              history: {
+                                inDropdown: true,
+                              },
+                            }}
+                            toolbarClassName="toolbarClassName"
+                            wrapperClassName="wrapperClassName"
+                            editorClassName="editorClassName"
+                            onEditorStateChange={(editor) =>
+                              onEditorStateChange(editor)
+                            }
+                          />
+                        </div>
+
+                        <div className="sendMsg">
+                          <button
+                            disabled={sendingReply}
+                            onClick={() => replyTicket(ReplyTicket, "attachment")}
+                          >
+                            <SendMsgIcon /> Send
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* CHAT COL TWO END */}
-                    </div>
-
-                </div>}
-
-
-                <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal} center>
-        <div className="saveTicketWrapModal">
-          <div className="modalHeaderSaveT">
-            Kindly update ticket before closing the chat
-          </div>
-
-          <div className="saveTicketModalForm">
-            <div className="ticketmodalInput-twoCol">
-              <div className="ticketmodalInputWrapMain">
-                <label htmlFor="">Customer</label>
-                <input
-                  value={`${capitalizeFirstLetter(
-                    ticket[0]?.customer?.firstname
-                  )} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
-                  type="text"
-                  disabled
-                />
+                )}
               </div>
 
-              {/* 
-              Andy's setters
-              setCategoryUpdate,
-              updateTicket              
-              */}
-
-              <div className="ticketmodalInputWrapMain">
-                <label htmlFor="">Category</label>
-                <RSelect
-                  className="rselectfield"
-                  style={{ fontSize: "12px" }}
-                  isClearable={false}
-                  onChange={(newValue, actionMeta) => {
-                    setRSTicketCategory(newValue.value);
-                  }}
-                  defaultValue={{
-                    value: ticket[0]?.category?.id , 
-                    label: ticket[0]?.category?.name
-                  }}
-                  options={
-                    // populate 'options' prop from $Category, with names remapped
-                    Category.map((data) => {
-                      return { value: data.id, label: data.name };
-                    })
-                  }
-                />
-              </div>
+              {/* CHAT COL TWO END */}
             </div>
-
-            <div className="ticketmodalInput-twoCol">
-              <div className="ticketmodalInputWrapMain">
-                <label htmlFor="">Stage</label>
-                <RSelect
-                  className="rselectfield"
-                  style={{ fontSize: "12px" }}
-                  onChange={(newValue, actionMeta) => {
-                    setRSTicketStage(newValue.value);
-                  }}
-                  isClearable={false}
-                  defaultValue={{
-                    value: ticket[0]?.status?.id , 
-                    label: ticket[0]?.status?.status
-                  }}
-                  options={
-                    // populate 'options' prop from $Category, with names remapped
-                    Statuses.map((data) => {
-                      return { value: data.id, label: data.status };
-                    })
-                  }
-                />
+          </div>}
+          <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal} center>
+            <div className="saveTicketWrapModal">
+              <div className="modalHeaderSaveT">
+                Kindly update ticket before closing the chat
               </div>
 
-              <div className="ticketmodalInputWrapMain">
-                <label htmlFor="">Priority</label>
-                <RSelect
-                  className="rselectfield"
-                  style={{ fontSize: "12px" }}
-                  onChange={(newValue, actionMeta) => {
-                    setRSTicketPriority(newValue.value);
-                  }}
-                  isClearable={false}
-                  defaultValue={{
-                    value: ticket[0]?.priority?.id, 
-                    label: ticket[0]?.priority?.name
-                  }}
-                  options={
-                    // populate 'options' prop from $Statuses, with names remapped
-                    Priority.map((data) => {
-                      return { value: data.id, label: data.name };
-                    })
-                  }
-                />
-              </div>
-            </div>
+              <div className="saveTicketModalForm">
+                <div className="ticketmodalInput-twoCol">
+                  <div className="ticketmodalInputWrapMain">
+                    <label htmlFor="">Customer</label>
+                    <input
+                      value={`${capitalizeFirstLetter(
+                        ticket[0]?.customer?.firstname
+                      )} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
+                      type="text"
+                      disabled
+                    />
+                  </div>
 
-            <div className="ticketmodalInput-OneCol">
-              <div className="ticketmodalInputWrapMainOne">
-                <label htmlFor="">Subject</label>
-                <input
-                  type="text"
-                  defaultValue={`${ticket[0]?.subject}`}
-                  onChange={(e) => setRSTicketSubject(e.target.value)}
-                  style={{ fontSize: "12px" }}
-                />
-              </div>
-            </div>
+                  {/* 
+                  Andy's setters
+                  setCategoryUpdate,
+                  updateTicket              
+                  */}
 
-            <div className="descriptionWrap">
-              <label htmlFor="">Remarks</label>
-              <textarea
-                onChange={(e) => setRSTicketRemarks(e.target.value)}
-                style={{ fontSize: "12px", padding: "10px" }}
-              >{ticket[0]?.description}</textarea>
-            </div>
-
-            <p
-              className="btn mt-3 p-0 text-start"
-              role="button"
-              style={{
-                fontSize: "0.8rem",
-                fontWeight: "bold",
-                marginBottom: 0,
-                color: "#006298!important",
-              }}
-              onClick={() => setIsAdditionalOptionVisible((v) => !v)}
-            >
-              Additional Options
-            </p>
-
-            {isAdditionalOptionVisible && (
-              <div className="additional-options">
-                <div className="ticketmodalInput-OneCol">
-                  <div className="ticketmodalInputWrapMainOne">
-                    <label htmlFor="">Assigned To</label>
+                  <div className="ticketmodalInputWrapMain">
+                    <label htmlFor="">Category</label>
                     <RSelect
                       className="rselectfield"
-                      closeMenuOnSelect={true}
-                      menuPlacement={"top"}
+                      style={{ fontSize: "12px" }}
+                      isClearable={false}
                       onChange={(newValue, actionMeta) => {
-                        setRSTicketAssignee(newValue.value);
+                        setRSTicketCategory(newValue.value);
                       }}
                       defaultValue={{
-                        value: ticket[0]?.assignee?.id , 
-                        label: `${ticket[0]?.assignee?.firstname}  ${ticket[0]?.assignee?.lastname}`
+                        value: ticket[0]?.category?.id , 
+                        label: ticket[0]?.category?.name
                       }}
                       options={
                         // populate 'options' prop from $Category, with names remapped
-                        Agents.map((data) => {
-                          return { value: data.id, label: `${data.firstname}  ${data.lastname}` };
+                        Category.map((data) => {
+                          return { value: data.id, label: data.name };
                         })
                       }
                     />
                   </div>
                 </div>
-                <div className="mt-4">
-                  <label htmlFor="">Tags</label>
-                  <RSelect
-                    className="rselectfield"
-                    closeMenuOnSelect={false}
-                    menuPlacement={"top"}
-                    onChange={selectedOptions => {
-                      setRSTicketTags(selectedOptions.map((item) => { return item.value} ))
-                    }}
-                    defaultValue={
-                      ticket[0]?.tags ? ticket[0]?.tags.map((data) => {
-                        return { value: data, label: data};
-                      }) :  null
-                    }
-                    options={
-                      // populate 'options' prop from $Tags remapped
-                      Tags.map((data) => {
-                        return { value: data, label: data};
-                      })
-                    }
-                    isMulti
-                  />
-                </div>
-                <div className="col-12 mt-3">
-                  <label htmlFor="title" className="form-label">Attachment (If Any)</label>
-                  <div
-                      id="ticket-ath-box"
-                      className="border border-1 d-block text-center f-14 p-3 position-relative">
-                      <img src={PinIcon} alt=""/>
-                      <span className="text-at-blue-light">Add file</span>&nbsp;
-                      <span>or drag file here</span>
-                      <input type="file" 
-                        className="position-absolute top-0 bottom-0 end-0 start-0 w-100 h-100" 
-                        style={{ "zIndex": 1200 }}
-                        // onChange={} 
-                        />
+
+                <div className="ticketmodalInput-twoCol">
+                  <div className="ticketmodalInputWrapMain">
+                    <label htmlFor="">Stage</label>
+                    <RSelect
+                      className="rselectfield"
+                      style={{ fontSize: "12px" }}
+                      onChange={(newValue, actionMeta) => {
+                        setRSTicketStage(newValue.value);
+                      }}
+                      isClearable={false}
+                      defaultValue={{
+                        value: ticket[0]?.status?.id , 
+                        label: ticket[0]?.status?.status
+                      }}
+                      options={
+                        // populate 'options' prop from $Category, with names remapped
+                        Statuses.map((data) => {
+                          return { value: data.id, label: data.status };
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="ticketmodalInputWrapMain">
+                    <label htmlFor="">Priority</label>
+                    <RSelect
+                      className="rselectfield"
+                      style={{ fontSize: "12px" }}
+                      onChange={(newValue, actionMeta) => {
+                        setRSTicketPriority(newValue.value);
+                      }}
+                      isClearable={false}
+                      defaultValue={{
+                        value: ticket[0]?.priority?.id, 
+                        label: ticket[0]?.priority?.name
+                      }}
+                      options={
+                        // populate 'options' prop from $Statuses, with names remapped
+                        Priority.map((data) => {
+                          return { value: data.id, label: data.name };
+                        })
+                      }
+                    />
                   </div>
                 </div>
-              </div>
-            )}
-            <div className="closeTicketModdalj">
-              <button type="submit" onClick={updateTicket}>
-                Update
-              </button>
-            </div>
-          </div>
-        </div>
-      </Modal>
 
+                <div className="ticketmodalInput-OneCol">
+                  <div className="ticketmodalInputWrapMainOne">
+                    <label htmlFor="">Subject</label>
+                    <input
+                      type="text"
+                      defaultValue={`${ticket[0]?.subject}`}
+                      onChange={(e) => setRSTicketSubject(e.target.value)}
+                      style={{ fontSize: "12px" }}
+                    />
+                  </div>
+                </div>
+
+                <div className="descriptionWrap">
+                  <label htmlFor="">Remarks</label>
+                  <textarea
+                    onChange={(e) => setRSTicketRemarks(e.target.value)}
+                    style={{ fontSize: "12px", padding: "10px" }}
+                  >{ticket[0]?.description}</textarea>
+                </div>
+
+                <p
+                  className="btn mt-3 p-0 text-start"
+                  role="button"
+                  style={{
+                    fontSize: "0.8rem",
+                    fontWeight: "bold",
+                    marginBottom: 0,
+                    color: "#006298!important",
+                  }}
+                  onClick={() => setIsAdditionalOptionVisible((v) => !v)}
+                >
+                  Additional Options
+                </p>
+
+                {isAdditionalOptionVisible && (
+                  <div className="additional-options">
+                    <div className="ticketmodalInput-OneCol">
+                      <div className="ticketmodalInputWrapMainOne">
+                        <label htmlFor="">Assigned To</label>
+                        <RSelect
+                          className="rselectfield"
+                          closeMenuOnSelect={true}
+                          menuPlacement={"top"}
+                          onChange={(newValue, actionMeta) => {
+                            setRSTicketAssignee(newValue.value);
+                          }}
+                          defaultValue={{
+                            value: ticket[0]?.assignee?.id , 
+                            label: `${ticket[0]?.assignee?.firstname}  ${ticket[0]?.assignee?.lastname}`
+                          }}
+                          options={
+                            // populate 'options' prop from $Category, with names remapped
+                            Agents.map((data) => {
+                              return { value: data.id, label: `${data.firstname}  ${data.lastname}` };
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      <label htmlFor="">Tags</label>
+                      <RSelect
+                        className="rselectfield"
+                        closeMenuOnSelect={false}
+                        menuPlacement={"top"}
+                        onChange={selectedOptions => {
+                          setRSTicketTags(selectedOptions.map((item) => { return item.value} ))
+                        }}
+                        defaultValue={
+                          ticket[0]?.tags ? ticket[0]?.tags.map((data) => {
+                            return { value: data, label: data};
+                          }) :  null
+                        }
+                        options={
+                          // populate 'options' prop from $Tags remapped
+                          Tags.map((data) => {
+                            return { value: data, label: data};
+                          })
+                        }
+                        isMulti
+                      />
+                    </div>
+                    <div className="col-12 mt-3">
+                      <label htmlFor="title" className="form-label">Attachment (If Any)</label>
+                      <div
+                          id="ticket-ath-box"
+                          className="border border-1 d-block text-center f-14 p-3 position-relative">
+                          <img src={PinIcon} alt=""/>
+                          <span className="text-at-blue-light">Add file</span>&nbsp;
+                          <span>or drag file here</span>
+                          <input type="file" 
+                            className="position-absolute top-0 bottom-0 end-0 start-0 w-100 h-100" 
+                            style={{ "zIndex": 1200 }}
+                            // onChange={} 
+                            />
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <div className="closeTicketModdalj">
+                  <button type="submit" onClick={updateTicket}>
+                    Update
+                  </button>
+                </div>
+              </div>
+            </div>
+          </Modal>
         </Fragment>
     )
 }
