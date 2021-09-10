@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from "react";
 import "./newAutomationPolicy.scss";
 import "../automationSettings.scss";
@@ -19,7 +18,6 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import AutomationAction from "./AutomationAction";
 import RSelect from "react-select";
 import { connect } from "react-redux";
-import {uuid} from '../../../../../helper';
 
 const NewAutomationPolicy = ({categoriz}) => {
 
@@ -35,6 +33,11 @@ const NewAutomationPolicy = ({categoriz}) => {
   ];
 
   const [policyLoading, setPolicyLoading] = useState(false);
+  const [showAssign, setShowAssign] = useState(false);
+  const [showCategories, setShowCategories] = useState(false);
+  const [ticketCategories, setTicketCategories] = useState([]);
+  const [automationAgents, setAutomationAgents] = useState([]);
+  const [automationTeams, setAutomationTeams] = useState([]);
 
   // NEW STATE
   const [automationBody, setAutomationBody] = useState({
@@ -43,28 +46,30 @@ const NewAutomationPolicy = ({categoriz}) => {
     durationDays: "0",
     durationHours: "0",
     action: []
-  });
-
-  const [RSCategoriesOptions, setRSCategoriesOptions] = useState([]);
-  const [sumbitting, setSumbitting] = useState(false);
-
-  const generateActionTemplate = id => ({
-    id,
-    channel: '',
-    days: '0',
-    hours: '0',
-    subject: '',
-    body: '',
-    recipientType: 'agent',
-    recipientValue: [],
-    recipientOptions: [],
-    placeholder: ''
   })
 
-  const [actions, setActions] = useState([generateActionTemplate(uuid())]);
+  const [RSCategoriesOptions, setRSCategoriesOptions] = useState([]);
+  const [action, setAction] = useState([])
+  const [sumbitting, setSumbitting] = useState(false)
+  const [actionList, setActionList] = useState([0])
+  //
 
-  console.log('actions => ', actions);
-
+  const [newPolicy, setNewPolicy] = useState({
+    name: "",
+    dueDays: 0,
+    dueHours: 0,
+    categories: null,
+    agreements: [
+      {
+        days: 0,
+        hours: 0,
+        action: "",
+        subject: "",
+        body: "",
+        recipients: null
+      }
+    ]
+  });
 
   const mapRSelectNonPersonOptions = (entity, cb) => {
     const mappedItems = [];    
@@ -74,6 +79,21 @@ const NewAutomationPolicy = ({categoriz}) => {
     return cb(mappedItems)
   }
 
+  const getActionData = action => {
+    setAction(prev => {
+      let temp = prev
+      temp[action.id] = {...temp[action.id], ...action}
+      console.log(temp, prev);
+      return prev
+    })
+  }
+
+  const removeActionItem = (item) => {
+    setAction(prev => {
+      const arr = prev.filter((_i) => _i.id !== item)
+      return arr
+    });
+  }
 
   const handlechange = (e) => {
     let { name, value } = e.target;
@@ -98,14 +118,14 @@ const NewAutomationPolicy = ({categoriz}) => {
   const startSubmitAutomation = () => {
     setSumbitting(true)
     setAutomationBody(prev => {
-      return {...prev }
+      return {...prev, action}
     })
   }
 
-
-
   const submitAutomation = async () => {
+
     const dueDate = Number(automationBody.durationDays) * 24 + Number(automationBody.durationHours);
+
     const requestBody = {
       "name": automationBody.title,
       "dueDate": dueDate,
@@ -114,7 +134,9 @@ const NewAutomationPolicy = ({categoriz}) => {
         "agreements": automationBody.action
       }
     };
+    
     setPolicyLoading(true);
+
     // USE REDUX 
     const res = await httpPostMain("sla", requestBody);
 
@@ -128,9 +150,17 @@ const NewAutomationPolicy = ({categoriz}) => {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
 
+    // TEST CODE
+    // setTimeout(() => {
+    //   console.clear();
+    //   console.log(requestBody);
+    //   setPolicyLoading(false);
+    //   NotificationManager.success("Fake submit successful", "Success");
+    //   router.push("/settings/automations");
+    // }, 1000);
+
+
   };
-
-
 
   // FUNCTION TO GET AUTOMATION INFORMATION IF IN EDIT MODE
   const getAutomationInfo = async () => {
@@ -146,12 +176,9 @@ const NewAutomationPolicy = ({categoriz}) => {
 
   };
 
-
-
   // FUNCTION TO UPDATE AN AUTOMATION IF IN EDIT MODE
   const updateAutomationPolicy = async () => {
-    console.log('update automation policy');
-    /* setPolicyLoading(true);
+    setPolicyLoading(true);
 
     const body = {
       name: newPolicy.name,
@@ -169,10 +196,8 @@ const NewAutomationPolicy = ({categoriz}) => {
     } else {
       console.error(res.er);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
-    } */
+    }
   };
-
-  
 
   useEffect(() => {
     mapRSelectNonPersonOptions(categoriz, (category) => {
@@ -185,8 +210,6 @@ const NewAutomationPolicy = ({categoriz}) => {
     };
 
   },[])
-
-
 
   useEffect(() => {
     // Run submit when the flag is true
@@ -295,12 +318,17 @@ const NewAutomationPolicy = ({categoriz}) => {
                 </label>
                 
                 {
-                  actions.map((action, i) => (
+                  actionList.map((action, i) => (
                     <AutomationAction
                       key={i}
+                      // newPolicy={newPolicy}
+                      // setNewPolicy={setNewPolicy}
                       availablePlaceholders={availablePlaceholders}
-                      action={action}
-                      setActions={setActions}
+                      // agreement={agreement}
+                      itemIndex={i}
+                      getActionData={getActionData}
+                      setActionList={setActionList}
+                      removeActionItem={removeActionItem}
                     />
                   ))
                 }

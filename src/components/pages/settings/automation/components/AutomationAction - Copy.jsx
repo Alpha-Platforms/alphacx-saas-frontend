@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect } from "react";
 import EditorBox from "../../../../reusables/EditorBox";
 import DeleteIcon from "../../../../../assets/icons/Delete.svg";
@@ -9,103 +8,157 @@ import { connect } from "react-redux";
 
 import RSelect from "react-select";
 import {httpGetMain } from "../../../../../helpers/httpMethods";
-import {uuid} from '../../../../../helper';
 
 const AutomationAction = ({
+  newPolicy,
+  setNewPolicy,
   availablePlaceholders,
+  agreement,
+  itemIndex,
+  getActionData,
   agents,
   teams,
-  setActions,
-  action
+  setActionList,
+  removeActionItem
 
 }) => {
+  
+  const [action, setAction] = useState({id: itemIndex});
+  const [recipients, setRecipients] = useState([])
+  const [daysHours, setDaysHours] = useState({days: 0, hours: 0})
+
   const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [actionBody, setActionBody] = useState("");
+  const [placeholder, setPlaceholder] = useState("");
 
-  const setActionState = (valObj) => {
-    setActions(prev => prev.map(x => {
-      if (x.id === action.id) {
-        return {
-          ...x,
-          ...valObj
-        }
-      } else {
-        return x;
-      }
-    }))
-  }
+  const [recipientType, setRecipientType] = useState("agent");
 
-  console.log('current Action: ', action);
+  const [RSAgents, setRSAgents] = useState([]);
+  const [RSTeams, setRSTeams] = useState([]);
 
   const [actionChannels] = useState([
     {label: "Email", value: "Email"},
     {label: "SMS", value: "SMS"}
   ])
 
+
 // F U N C T I O N S
   const addAction = (e) => {
     e.preventDefault();
     // setActionList(prev => [...prev, prev[prev.length-1]+1]);
-    // setActionList(prev => [...prev, uuid()]);
+    setActionList(prev => [...prev, prev[prev.length-1]+1]);
   };
 
   const deleteAction = (e, itemIndex) => {
     e.preventDefault();
-    // setActionList(prev => {
-    //   const arr = prev.filter((item) => item !== itemIndex)
-    //   return arr
-    // });
+    setActionList(prev => {
+      const arr = prev.filter((item) => item !== itemIndex)
+      return arr
+    });
+
+    removeActionItem(itemIndex)
+
   };
 
   const insertPlaceholder = (i) => {
     const shortCode = `{${availablePlaceholders[i]}}`;
 
-    setActionState({
-      body: action.body + " " + shortCode + " ",
-      placeholder: " " + shortCode + " "
-    });
+    setActionBody(actionBody + " " + shortCode + " ");
+    setPlaceholder(" " + shortCode + " ");
   };
 
-  
+  const handleChange = (e) => {
+    let { name, value } = e.target;
+
+    setAction( prev => {
+      return {...prev, [name]: value}
+    })
+
+  };
+
+  const handleDaysHoursChange = (e) => {
+    let { name, value } = e.target;
+
+    setDaysHours( prev => {
+      return {...prev, [name]: value}
+    })
+
+    if(name === "days"){
+      setAction(prev => {
+        return {...prev, hours: value*24 + Number(daysHours.hours)}
+      })
+    } else {
+      setAction(prev => {
+        return {...prev, hours: Number(value) + daysHours.days*24}
+      })
+    }
+  };
+
+  const handleRSChange = (iValues, {name}) => {
+    let data = iValues.value;
+
+    if (Array.isArray(iValues)) {
+      const ids = [];
+      iValues.map(item => {
+        ids.push(item.value)
+      })
+
+      setAction( prev => {
+        return {...prev, [name]: {ids, type: recipientType}}
+      })
+
+    } else {
+      setAction( prev => {
+        return {...prev, [name]: data}
+      })
+    }
+
+    
+  }
+
   const loadRecipients = () => {
 
     const mappedItems = []; 
 
-    if(action.recipientType === "agent"){   
-      agents.forEach(item => {
+    if(recipientType === "agent"){   
+      agents.map(item => {
         mappedItems.push({value: item.id, label: item.firstname +" "+ item.lastname})
       })
     } else {  
-      teams.forEach(item => {
+      teams.map(item => {
         mappedItems.push({value: item.id, label: item.name})
       })
     }
 
-    setActionState({
-      recipientOptions: mappedItems
-    });
-    
+    setRecipients(mappedItems);
+
   }
-  
-  const handleChannelSelect = (value) => {
-    setActionState({
-      channel: value
+
+  const mapRSelectPersonOptions = (persons, cb) => {
+    const mappedItems = [];    
+    persons.map(item => {
+      mappedItems.push({value: item.id, label: item.firstname +" "+ item.lastname})
     })
-
+    return cb(mappedItems)
   }
 
-  const handleRecipientSelect = (value) => {
-    setActionState({
-      recipientValue: value
+  const mapRSelectNonPersonOptions = (entity, cb) => {
+    const mappedItems = [];    
+    entity.map(item => {
+      mappedItems.push({value: item.id, label: item.name})
     })
+    return cb(mappedItems)
   }
 
-  const handleMinorInput = e => {
-    const {name, value} = e.target;
+  useEffect(() => {
+    getActionData(action);
+  }, [action])
 
-    setActionState({
-      [name]: value
-    });
-  }
+  useEffect(() => {
+    setAction( prev => {
+      return {...prev, body: actionBody}
+    })
+  }, [actionBody])
 
   return (
     <>
@@ -120,8 +173,7 @@ const AutomationAction = ({
               id="channel"
               name="action"
               openMenuOnFocus={true}
-              value={action.channel}
-              onChange={handleChannelSelect}
+              onChange={handleRSChange}
               options={actionChannels}
             />
 
@@ -130,9 +182,9 @@ const AutomationAction = ({
           <div className="mt-4 d-flex align-items-center">
             
             <div className="input-group w-50 me-2">
-              <input type="number" name="days"  className="form-control" value={action.days} onChange={handleMinorInput} />
+              <input type="number" name="days" ariaLabel="Last name" className="form-control" onChange={handleDaysHoursChange} />
               <span className="input-group-text acx-fs-8">Days</span>
-              <input type="number" name="hours" className="form-control" value={action.hours} onChange={handleMinorInput} />
+              <input type="number" name="hours" ariaLabel="First name" className="form-control" onChange={handleDaysHoursChange} />
               <span className="input-group-text acx-fs-8">Hours</span>
             </div>
 
@@ -147,8 +199,7 @@ const AutomationAction = ({
               className="form-control mt-2"
               id="subject"
               name="subject"
-              value={action.subject}
-              onChange={handleMinorInput}
+              onChange={handleChange}
             />
           </div>
           
@@ -163,11 +214,9 @@ const AutomationAction = ({
                   name="recipientType"
                   type="radio"
                   value="agent"
-                  checked={action.recipientType === "agent"}
+                  checked={recipientType === "agent"}
                   onClick={(e) => {
-                    setActionState({
-                      recipientType: e.target.value
-                    })
+                    setRecipientType(e.target.value)
                   }}
                 />
                 <label className="form-check-label f-14" htmlFor="radio-2">Agents</label>
@@ -178,11 +227,9 @@ const AutomationAction = ({
                   name="recipientType"
                   type="radio"
                   value="group"
-                  checked={action.recipientType === "group"}
+                  checked={recipientType === "group"}
                   onClick={(e) => {
-                    setActionState({
-                      recipientType: e.target.value
-                    })
+                    setRecipientType(e.target.value)
                   }}
                 />
                 <label className="form-check-label f-14" htmlFor="radio-2">Teams</label>
@@ -195,11 +242,9 @@ const AutomationAction = ({
                 isClearable={false}
                 name="recipient"
                 isMulti
-                value={action.recipientValue}
                 onMenuOpen={() => loadRecipients()}
-                options={action.recipientOptions}
-
-                onChange={handleRecipientSelect}
+                options={recipients}
+                onChange={handleRSChange}
               />
             </div>
 
@@ -221,16 +266,12 @@ const AutomationAction = ({
             <label className="mb-1">Message</label>
 
             <EditorBox
-              text={action.body || ""}
+              text={actionBody || ""}
               // textParent={newPolicy}
               textFormat={"plain"}
-              updateText={val => setActionState({
-                body: val
-              })}
-              placeholder={action.placeholder}
-              setPlaceholder={val => setActionState({
-                placeholder: val
-              })}
+              updateText={setActionBody}
+              placeholder={placeholder}
+              setPlaceholder={setPlaceholder}
             />
 
           </div>
@@ -266,16 +307,16 @@ const AutomationAction = ({
           <div className="float-end mb-5">
             <button
               className="btn btn-sm f-12 bg-outline-custom cancel px-4"
-              // onClick={() => setDeleteConfirm(false)}
+              onClick={() => setDeleteConfirm(false)}
             >
               Cancel
             </button>
             <button
               className="btn btn-sm ms-2 f-12 bg-custom px-4"
-              // onClick={(e) => {
-              //   deleteAction(e, itemIndex)
-              //   setDeleteConfirm(false)
-              // }}
+              onClick={(e) => {
+                deleteAction(e, itemIndex)
+                setDeleteConfirm(false)
+              }}
             >
               Confirm
             </button>
