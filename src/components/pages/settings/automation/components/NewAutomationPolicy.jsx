@@ -21,7 +21,7 @@ import RSelect from "react-select";
 import { connect } from "react-redux";
 import {uuid} from '../../../../../helper';
 
-const NewAutomationPolicy = ({categoriz}) => {
+const NewAutomationPolicy = ({categoriz, agents, groups}) => {
 
   let router = useHistory();
   let {automationId} = useParams();
@@ -136,10 +136,23 @@ const NewAutomationPolicy = ({categoriz}) => {
         setAutomationBody(prev => ({
           ...prev,
           title: data?.name,
-          durationDays: Math.floor(Number(data?.due_date) / 24),
-          durationHours: Math.floor(Number(data?.due_date) % 24),
+          durationDays: Math.floor(Number(data?.due_date) / 24) || '',
+          durationHours: Math.floor(Number(data?.due_date) % 24) || '',
           categories: data?.reminder?.categories?.map(catId => ({value: catId, label: categoriz.find(x => x.id === catId)?.name}))
         }));
+
+        setActions(data?.reminder?.agreements?.map(act => ({
+          id: uuid(),
+          channel: act?.action || '',
+          days: act?.days || '',
+          hours: act?.hours || '',
+          subject: act?.subject || '',
+          body: act.body,
+          recipientType: act?.recipient?.type || 'agent',
+          recipientOptions: act?.recipient?.type === 'agent' ? agents.map(agent => ({value: agent.id, label: `${agent?.firstname || ''} ${agent?.lastname || ''}`.trim()})) : groups.map(group => ({value: group?.id, label: group?.name})),
+          recipientValue: act?.recipient?.ids?.map(x => ({value: x, label: act?.recipient?.type === 'agent' ? `${agents.find(agent => agent.id === x).firstname} ${agents.find(agent => agent.id === x).lastname}` : act?.recipient?.type === 'agent' ? `${groups.find(group => group.id === x).name}` : []})),
+          // placeholder: ''
+        })));
       }
 
     } else {
@@ -334,7 +347,11 @@ const NewAutomationPolicy = ({categoriz}) => {
 };
 
 const mapStateToProps = state => {
-  return {categoriz: state.category.categories}
+  return {
+    categoriz: state.category.categories,
+    agents: state.agent.agents,
+    groups: state.group.groups
+  }
 }
 
 export default connect(mapStateToProps)(NewAutomationPolicy)
