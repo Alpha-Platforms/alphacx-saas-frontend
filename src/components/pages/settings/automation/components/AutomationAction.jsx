@@ -36,8 +36,8 @@ const AutomationAction = ({
   }
 
   const [actionChannels] = useState([
-    {label: "Email", value: "Email"},
-    {label: "SMS", value: "SMS"}
+    {label: "Email", value: "email"},
+    {label: "SMS", value: "sms"}
   ])
 
 // F U N C T I O N S
@@ -131,6 +131,10 @@ const AutomationAction = ({
               value={action.channel}
               onChange={handleChannelSelect}
               options={actionChannels}
+              defaultValue={
+                actionChannels.filter(option => option.label === "Email")
+                
+              }
             />
 
           </div>
