@@ -19,9 +19,9 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import AutomationAction from "./AutomationAction";
 import RSelect from "react-select";
 import { connect } from "react-redux";
-import {uuid} from '../../../../../helper';
+import {uuid, wordCapitalize} from '../../../../../helper';
 
-const NewAutomationPolicy = ({categoriz, agents, groups}) => {
+const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroupsLoaded}) => {
 
   let router = useHistory();
   let {automationId} = useParams();
@@ -149,8 +149,8 @@ const NewAutomationPolicy = ({categoriz, agents, groups}) => {
           subject: act?.subject || '',
           body: act.body,
           recipientType: act?.recipient?.type || 'agent',
-          recipientOptions: act?.recipient?.type === 'agent' ? agents.map(agent => ({value: agent.id, label: `${agent?.firstname || ''} ${agent?.lastname || ''}`.trim()})) : groups.map(group => ({value: group?.id, label: group?.name})),
-          recipientValue: act?.recipient?.ids?.map(x => ({value: x, label: act?.recipient?.type === 'agent' ? `${agents.find(agent => agent.id === x).firstname} ${agents.find(agent => agent.id === x).lastname}` : act?.recipient?.type === 'agent' ? `${groups.find(group => group.id === x).name}` : []})),
+          recipientOptions: act?.recipient?.type === 'agent' ? agents.map(agent => ({value: agent.id, label: wordCapitalize(`${agent?.firstname || ''} ${agent?.lastname || ''}`.trim())})) : groups.map(group => ({value: group?.id, label: wordCapitalize(group?.name || '')})),
+          recipientValue: act?.recipient?.ids?.map(x => ({value: x, label: act?.recipient?.type === 'agent' ? wordCapitalize(`${agents.find(agent => agent.id === x)?.firstname || ''} ${agents.find(agent => agent.id === x)?.lastname || ''}`.trim()) : act?.recipient?.type === 'group' ? wordCapitalize(`${groups.find(group => group.id === x)?.name || ''}`.trim()) : []})),
           // placeholder: ''
         })));
       }
@@ -160,6 +160,19 @@ const NewAutomationPolicy = ({categoriz, agents, groups}) => {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
+
+  useEffect(() => {
+
+    if (isAgentsLoaded && isGroupsLoaded) {
+      // check for edit mode and get automation with id
+      if(automationId){
+        getAutomationInfo()
+      };
+    }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAgentsLoaded, isGroupsLoaded])
+
 
   console.log("automationBody", automationBody);
 
@@ -194,11 +207,6 @@ const NewAutomationPolicy = ({categoriz, agents, groups}) => {
     mapRSelectNonPersonOptions(categoriz, (category) => {
       setRSCategoriesOptions(category)
     })
-
-    // check for edit mode and get automation with id
-    if(automationId){
-      getAutomationInfo()
-    };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
@@ -350,7 +358,9 @@ const mapStateToProps = state => {
   return {
     categoriz: state.category.categories,
     agents: state.agent.agents,
-    groups: state.group.groups
+    isAgentsLoaded: state.agent.isAgentsLoaded,
+    groups: state.group.groups,
+    isGroupsLoaded: state.group.isGroupsLoaded
   }
 }
 
