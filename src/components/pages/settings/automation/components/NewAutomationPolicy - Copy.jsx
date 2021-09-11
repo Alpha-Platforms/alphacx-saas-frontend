@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from "react";
 import "./newAutomationPolicy.scss";
 import "../automationSettings.scss";
@@ -19,7 +18,6 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import AutomationAction from "./AutomationAction";
 import RSelect from "react-select";
 import { connect } from "react-redux";
-import {uuid} from '../../../../../helper';
 
 const NewAutomationPolicy = ({categoriz}) => {
 
@@ -35,6 +33,11 @@ const NewAutomationPolicy = ({categoriz}) => {
   ];
 
   const [policyLoading, setPolicyLoading] = useState(false);
+  const [showAssign, setShowAssign] = useState(false);
+  const [showCategories, setShowCategories] = useState(false);
+  const [ticketCategories, setTicketCategories] = useState([]);
+  const [automationAgents, setAutomationAgents] = useState([]);
+  const [automationTeams, setAutomationTeams] = useState([]);
 
   // NEW STATE
   const [automationBody, setAutomationBody] = useState({
@@ -43,24 +46,30 @@ const NewAutomationPolicy = ({categoriz}) => {
     durationDays: "0",
     durationHours: "0",
     action: []
-  });
-
-  const [RSCategoriesOptions, setRSCategoriesOptions] = useState([]);
-
-  const generateActionTemplate = id => ({
-    id,
-    channel: '',
-    days: '0',
-    hours: '0',
-    subject: '',
-    body: '',
-    recipientType: 'agent',
-    recipientValue: [],
-    recipientOptions: [],
-    placeholder: ''
   })
 
-  const [actions, setActions] = useState([generateActionTemplate(uuid())]);
+  const [RSCategoriesOptions, setRSCategoriesOptions] = useState([]);
+  const [action, setAction] = useState([])
+  const [sumbitting, setSumbitting] = useState(false)
+  const [actionList, setActionList] = useState([0])
+  //
+
+  const [newPolicy, setNewPolicy] = useState({
+    name: "",
+    dueDays: 0,
+    dueHours: 0,
+    categories: null,
+    agreements: [
+      {
+        days: 0,
+        hours: 0,
+        action: "",
+        subject: "",
+        body: "",
+        recipients: null
+      }
+    ]
+  });
 
   const mapRSelectNonPersonOptions = (entity, cb) => {
     const mappedItems = [];    
@@ -70,42 +79,64 @@ const NewAutomationPolicy = ({categoriz}) => {
     return cb(mappedItems)
   }
 
-  const handleInputChange = (e) => {
+  const getActionData = action => {
+    setAction(prev => {
+      let temp = prev
+      temp[action.id] = {...temp[action.id], ...action}
+      console.log(temp, prev);
+      return prev
+    })
+  }
+
+  const removeActionItem = (item) => {
+    setAction(prev => {
+      const arr = prev.filter((_i) => _i.id !== item)
+      return arr
+    });
+  }
+
+  const handlechange = (e) => {
     let { name, value } = e.target;
     setAutomationBody(prev => {
       return {...prev, [name]: value}
     })
   };
 
-  const handleCategorySelect = (value) => {
-    setAutomationBody(prev => ({...prev, categories: value}));
+  const handleRSChange = (iValues, {name}) => {
+    const categoryIds = [];
+    iValues.map(item => {
+      categoryIds.push(item.value)
+    })
+
+    setAutomationBody( prev => {
+      return {...prev, [name]: categoryIds}
+    })
   }
 
+
   // FUNCTION TO CREATE AN AUTOMATION
-  const createAutomation = async () => {
+  const startSubmitAutomation = () => {
+    setSumbitting(true)
+    setAutomationBody(prev => {
+      return {...prev, action}
+    })
+  }
+
+  const submitAutomation = async () => {
+
     const dueDate = Number(automationBody.durationDays) * 24 + Number(automationBody.durationHours);
+
     const requestBody = {
-      name: automationBody.title,
-      dueDate,
-      reminder: {
-        categories: automationBody.categories.map(cat => cat.value),
-        agreements: actions.map(act => ({
-          days: act.days,
-          hours: act.hours,
-          action: act.channel.value,
-          subject: act.subject,
-          body: act.body,
-          recipient: {
-            type: act.recipientType,
-            ids: act.recipientValue.map(val => val.value)
-          }
-        }
-        )
-      )
+      "name": automationBody.title,
+      "dueDate": dueDate,
+      "reminder": {
+        "categories": automationBody.categories,
+        "agreements": automationBody.action
       }
     };
-
+    
     setPolicyLoading(true);
+
     // USE REDUX 
     const res = await httpPostMain("sla", requestBody);
 
@@ -118,28 +149,36 @@ const NewAutomationPolicy = ({categoriz}) => {
       setPolicyLoading(false);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
+
+    // TEST CODE
+    // setTimeout(() => {
+    //   console.clear();
+    //   console.log(requestBody);
+    //   setPolicyLoading(false);
+    //   NotificationManager.success("Fake submit successful", "Success");
+    //   router.push("/settings/automations");
+    // }, 1000);
+
+
   };
-
-  console.log("AutomationID => ", automationId);
-
 
   // FUNCTION TO GET AUTOMATION INFORMATION IF IN EDIT MODE
   const getAutomationInfo = async () => {
-    const res = await httpGetMain(`sla/${automationId}`);
-    setPolicyLoading(false);
-    if (res?.status === "success") {
-      console.log('Data => ', res?.data);
-    } else {
-      console.log('Error => ', res)
-      return NotificationManager.error(res?.er?.message, "Error", 4000);
-    }
+    // const res = await httpGetMain(`sla/${automationId}`);
+    // setPolicyLoading(false);
+    // if (res?.status === "success") {
+    //   // convertToDays(res?.data.due_date);
+    //   setNewPolicy(res?.data);
+    //   // setAssignType(res?.data?.reminder?.recipient?.type || "agent");
+    // } else {
+    //   return NotificationManager.error(res?.er?.message, "Error", 4000);
+    // }
+
   };
-
-
 
   // FUNCTION TO UPDATE AN AUTOMATION IF IN EDIT MODE
   const updateAutomationPolicy = async () => {
-    /* setPolicyLoading(true);
+    setPolicyLoading(true);
 
     const body = {
       name: newPolicy.name,
@@ -157,10 +196,8 @@ const NewAutomationPolicy = ({categoriz}) => {
     } else {
       console.error(res.er);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
-    } */
+    }
   };
-
-  
 
   useEffect(() => {
     mapRSelectNonPersonOptions(categoriz, (category) => {
@@ -172,10 +209,12 @@ const NewAutomationPolicy = ({categoriz}) => {
       getAutomationInfo()
     };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
-
+  useEffect(() => {
+    // Run submit when the flag is true
+    if(sumbitting) submitAutomation()
+  }, [sumbitting])
 
 
   return (
@@ -220,7 +259,7 @@ const NewAutomationPolicy = ({categoriz}) => {
                   id="slaName"
                   name="title"
                   value={automationBody.title}
-                  onChange={handleInputChange}
+                  onChange={handlechange}
                 />
               </div>
 
@@ -234,9 +273,8 @@ const NewAutomationPolicy = ({categoriz}) => {
                   name="categories"
                   isMulti
                   isClearable={false}
-                  value={automationBody.categories}
                   options={RSCategoriesOptions}
-                  onChange={handleCategorySelect}
+                  onChange={handleRSChange}
                 />
               </div>
 
@@ -256,7 +294,7 @@ const NewAutomationPolicy = ({categoriz}) => {
                     id="slaName"
                     name="durationDays"
                     value={automationBody?.dueDays}
-                    onChange={handleInputChange}
+                    onChange={handlechange}
                   />
                   <span className="ps-2 me-2">Days</span>
                   <input
@@ -268,7 +306,7 @@ const NewAutomationPolicy = ({categoriz}) => {
                     name="durationHours"
                     onkeydown="return false"
                     value={automationBody?.dueHours}
-                    onChange={handleInputChange}
+                    onChange={handlechange}
                   />
                   <span className="ps-2 me-2">Hours</span>
                 </div>
@@ -280,14 +318,17 @@ const NewAutomationPolicy = ({categoriz}) => {
                 </label>
                 
                 {
-                  actions.map((action, i) => (
+                  actionList.map((action, i) => (
                     <AutomationAction
                       key={i}
+                      // newPolicy={newPolicy}
+                      // setNewPolicy={setNewPolicy}
                       availablePlaceholders={availablePlaceholders}
-                      action={action}
-                      setActions={setActions}
-                      generateActionTemplate={generateActionTemplate}
-                      actions={actions}
+                      // agreement={agreement}
+                      itemIndex={i}
+                      getActionData={getActionData}
+                      setActionList={setActionList}
+                      removeActionItem={removeActionItem}
                     />
                   ))
                 }
@@ -305,7 +346,7 @@ const NewAutomationPolicy = ({categoriz}) => {
               <button
                 className="btn btn-sm ms-2 f-12 bg-custom px-4"
                 onClick={
-                  automationId ? updateAutomationPolicy : createAutomation
+                  automationId ? updateAutomationPolicy : startSubmitAutomation
                 }
               >
                 {automationId ? "Save Changes" : "Create"}
