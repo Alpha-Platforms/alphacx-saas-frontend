@@ -120,16 +120,12 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
     }
   };
 
-  console.log("AutomationID => ", automationId);
-
 
   // FUNCTION TO GET AUTOMATION INFORMATION IF IN EDIT MODE
   const getAutomationInfo = async () => {
     const res = await httpGetMain(`sla/${automationId}`);
     setPolicyLoading(false);
     if (res?.status === "success") {
-      console.log('Data => ', res?.data);
-
       const data = res?.data;
 
       if (data) {
@@ -143,7 +139,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
 
         setActions(data?.reminder?.agreements?.map(act => ({
           id: uuid(),
-          channel: act?.action || '',
+          channel: act?.action?.toLowerCase() === 'email' ? {value: wordCapitalize(act?.action || '').trim(), label: wordCapitalize(act?.action || '').trim()} : {value: act?.action?.toUpperCase(), label: act?.action?.toUpperCase()},
           days: act?.days || '',
           hours: act?.hours || '',
           subject: act?.subject || '',
@@ -156,7 +152,6 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
       }
 
     } else {
-      console.log('Error => ', res)
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
@@ -174,31 +169,41 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
   }, [isAgentsLoaded, isGroupsLoaded])
 
 
-  console.log("automationBody", automationBody);
-
-
-
   // FUNCTION TO UPDATE AN AUTOMATION IF IN EDIT MODE
   const updateAutomationPolicy = async () => {
-    /* setPolicyLoading(true);
+    setPolicyLoading(true);
+    const dueDate = Number(automationBody.durationDays) * 24 + Number(automationBody.durationHours);
 
-    const body = {
-      name: newPolicy.name,
-      description: newPolicy.description || "",
+    const requestBody = {
+      name: automationBody.title,
+      dueDate,
       reminder: {
-        // categories: newPolicy.reminder.categories,
-        recipient: newPolicy.reminder.recipient,
-      },
+        categories: automationBody.categories.map(cat => cat.value),
+        agreements: actions.map(act => ({
+          days: act.days,
+          hours: act.hours,
+          action: act.channel.value,
+          subject: act.subject,
+          body: act.body,
+          recipient: {
+            type: act.recipientType,
+            ids: act.recipientValue.map(val => val.value)
+          }
+        }
+        )
+      )
+      }
     };
 
-    const res = await httpPatchMain(`sla/${automationId}`, body);
+    const res = await httpPatchMain(`sla/${automationId}`, requestBody);
     setPolicyLoading(false);
     if (res?.status === "success") {
+      NotificationManager.success('Automation updated successfully', 'Success');
       router.push("/settings/automations");
     } else {
       console.error(res.er);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
-    } */
+    }
   };
 
   
