@@ -301,6 +301,8 @@ const NewAutomationPolicy = ({categoriz}) => {
                       availablePlaceholders={availablePlaceholders}
                       action={action}
                       setActions={setActions}
+                      generateActionTemplate={generateActionTemplate}
+                      actions={actions}
                     />
                   ))
                 }

@@ -16,8 +16,9 @@ const AutomationAction = ({
   agents,
   teams,
   setActions,
-  action
-
+  action,
+  actions,
+  generateActionTemplate
 }) => {
   const [deleteConfirm, setDeleteConfirm] = useState(false);
 
@@ -44,16 +45,16 @@ const AutomationAction = ({
 // F U N C T I O N S
   const addAction = (e) => {
     e.preventDefault();
-    // setActionList(prev => [...prev, prev[prev.length-1]+1]);
-    // setActionList(prev => [...prev, uuid()]);
+    setActions(prev => [...prev, generateActionTemplate(uuid())]);
   };
 
-  const deleteAction = (e, itemIndex) => {
+  const deleteAction = (e) => {
     e.preventDefault();
-    // setActionList(prev => {
-    //   const arr = prev.filter((item) => item !== itemIndex)
-    //   return arr
-    // });
+    setActionState({
+      body: '',
+      placeholder: ''
+    });
+    setActions(prev => prev.filter(x => x.id !== action.id));
   };
 
   const insertPlaceholder = (i) => {
@@ -231,6 +232,7 @@ const AutomationAction = ({
               setPlaceholder={val => setActionState({
                 placeholder: val
               })}
+              updateVal={actions.length}
             />
 
           </div>
@@ -241,7 +243,7 @@ const AutomationAction = ({
             Add New Action
           </button>
           
-          {true && (
+          {actions.length > 1 && (
             <button
               className="delete-resolution mx-4"
               onClick={(e) => {
@@ -266,16 +268,16 @@ const AutomationAction = ({
           <div className="float-end mb-5">
             <button
               className="btn btn-sm f-12 bg-outline-custom cancel px-4"
-              // onClick={() => setDeleteConfirm(false)}
+              onClick={() => setDeleteConfirm(false)}
             >
               Cancel
             </button>
             <button
               className="btn btn-sm ms-2 f-12 bg-custom px-4"
-              // onClick={(e) => {
-              //   deleteAction(e, itemIndex)
-              //   setDeleteConfirm(false)
-              // }}
+              onClick={(e) => {
+                deleteAction(e)
+                setDeleteConfirm(false)
+              }}
             >
               Confirm
             </button>

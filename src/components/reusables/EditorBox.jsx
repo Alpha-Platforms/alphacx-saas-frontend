@@ -20,6 +20,7 @@ const EditorBox = ({
   updateText,
   textFormat,
   setPlaceholder,
+  updateVal
 }) => {
   const initialState = EditorState.createWithContent(
     ContentState.createFromText(text)
@@ -79,7 +80,7 @@ const EditorBox = ({
     if (placeholder) {
       setPlaceholder("");
     }
-  }, [placeholder]);
+  }, [placeholder, updateVal]);
   return (
     <div className="editor-Container">
       <Editor
