@@ -58,7 +58,7 @@ const NewAutomationPolicy = ({categoriz}) => {
     recipientValue: [],
     recipientOptions: [],
     placeholder: ''
-  })
+  });
 
   const [actions, setActions] = useState([generateActionTemplate(uuid())]);
 
@@ -67,7 +67,7 @@ const NewAutomationPolicy = ({categoriz}) => {
     entity.map(item => {
       mappedItems.push({value: item.id, label: item.name})
     })
-    return cb(mappedItems)
+    return cb(mappedItems);
   }
 
   const handleInputChange = (e) => {
@@ -129,11 +129,26 @@ const NewAutomationPolicy = ({categoriz}) => {
     setPolicyLoading(false);
     if (res?.status === "success") {
       console.log('Data => ', res?.data);
+
+      const data = res?.data;
+
+      if (data) {
+        setAutomationBody(prev => ({
+          ...prev,
+          title: data?.name,
+          durationDays: Math.floor(Number(data?.due_date) / 24),
+          durationHours: Math.floor(Number(data?.due_date) % 24),
+          categories: data?.reminder?.categories?.map(catId => ({value: catId, label: categoriz.find(x => x.id === catId)?.name}))
+        }));
+      }
+
     } else {
       console.log('Error => ', res)
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
+
+  console.log("automationBody", automationBody);
 
 
 
@@ -255,7 +270,7 @@ const NewAutomationPolicy = ({categoriz}) => {
                     className="number-input form-control form-control-sm"
                     id="slaName"
                     name="durationDays"
-                    value={automationBody?.dueDays}
+                    value={automationBody?.durationDays}
                     onChange={handleInputChange}
                   />
                   <span className="ps-2 me-2">Days</span>
@@ -267,7 +282,7 @@ const NewAutomationPolicy = ({categoriz}) => {
                     id="slaName"
                     name="durationHours"
                     onkeydown="return false"
-                    value={automationBody?.dueHours}
+                    value={automationBody?.durationHours}
                     onChange={handleInputChange}
                   />
                   <span className="ps-2 me-2">Hours</span>
