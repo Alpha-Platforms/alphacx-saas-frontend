@@ -35,8 +35,6 @@ const AutomationAction = ({
     }))
   }
 
-  console.log('current Action: ', action);
-
   const [actionChannels] = useState([
     {label: "Email", value: "Email"},
     {label: "SMS", value: "SMS"}

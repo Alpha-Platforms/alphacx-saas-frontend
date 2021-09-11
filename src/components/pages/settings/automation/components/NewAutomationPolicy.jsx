@@ -46,7 +46,6 @@ const NewAutomationPolicy = ({categoriz}) => {
   });
 
   const [RSCategoriesOptions, setRSCategoriesOptions] = useState([]);
-  const [sumbitting, setSumbitting] = useState(false);
 
   const generateActionTemplate = id => ({
     id,
@@ -63,9 +62,6 @@ const NewAutomationPolicy = ({categoriz}) => {
 
   const [actions, setActions] = useState([generateActionTemplate(uuid())]);
 
-  console.log('actions => ', actions);
-
-
   const mapRSelectNonPersonOptions = (entity, cb) => {
     const mappedItems = [];    
     entity.map(item => {
@@ -74,15 +70,12 @@ const NewAutomationPolicy = ({categoriz}) => {
     return cb(mappedItems)
   }
 
-
   const handleInputChange = (e) => {
     let { name, value } = e.target;
     setAutomationBody(prev => {
       return {...prev, [name]: value}
     })
   };
-
-  console.log('automationBody: ', automationBody);
 
   const handleCategorySelect = (value) => {
     setAutomationBody(prev => ({...prev, categories: value}));
@@ -112,7 +105,6 @@ const NewAutomationPolicy = ({categoriz}) => {
       }
     };
 
-    console.log('requestBody => ', requestBody);
     setPolicyLoading(true);
     // USE REDUX 
     const res = await httpPostMain("sla", requestBody);
@@ -128,26 +120,25 @@ const NewAutomationPolicy = ({categoriz}) => {
     }
   };
 
+  console.log("AutomationID => ", automationId);
 
 
   // FUNCTION TO GET AUTOMATION INFORMATION IF IN EDIT MODE
   const getAutomationInfo = async () => {
-    // const res = await httpGetMain(`sla/${automationId}`);
-    // setPolicyLoading(false);
-    // if (res?.status === "success") {
-    //   // convertToDays(res?.data.due_date);
-    //   setNewPolicy(res?.data);
-    //   // setAssignType(res?.data?.reminder?.recipient?.type || "agent");
-    // } else {
-    //   return NotificationManager.error(res?.er?.message, "Error", 4000);
-    // }
+    const res = await httpGetMain(`sla/${automationId}`);
+    setPolicyLoading(false);
+    if (res?.status === "success") {
+      console.log('Data => ', res?.data);
+    } else {
+      console.log('Error => ', res)
+      return NotificationManager.error(res?.er?.message, "Error", 4000);
+    }
   };
 
 
 
   // FUNCTION TO UPDATE AN AUTOMATION IF IN EDIT MODE
   const updateAutomationPolicy = async () => {
-    console.log('update automation policy');
     /* setPolicyLoading(true);
 
     const body = {
@@ -181,6 +172,7 @@ const NewAutomationPolicy = ({categoriz}) => {
       getAutomationInfo()
     };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
 
 
