@@ -108,6 +108,15 @@ const AutomationAction = ({
     });
   }
 
+  const handleRecipientTypeChange = e => {
+    const {value} = e.target;
+    setActionState({
+      recipientType: value,
+      recipientValue: []
+    })
+
+  }
+
   return (
     <>
 
@@ -165,11 +174,7 @@ const AutomationAction = ({
                   type="radio"
                   value="agent"
                   checked={action.recipientType === "agent"}
-                  onClick={(e) => {
-                    setActionState({
-                      recipientType: e.target.value
-                    })
-                  }}
+                  onClick={handleRecipientTypeChange}
                 />
                 <label className="form-check-label f-14" htmlFor="radio-2">Agents</label>
               </div>
@@ -180,11 +185,7 @@ const AutomationAction = ({
                   type="radio"
                   value="group"
                   checked={action.recipientType === "group"}
-                  onClick={(e) => {
-                    setActionState({
-                      recipientType: e.target.value
-                    })
-                  }}
+                  onClick={handleRecipientTypeChange}
                 />
                 <label className="form-check-label f-14" htmlFor="radio-2">Teams</label>
               </div>
