@@ -75,45 +75,44 @@ const NewAutomationPolicy = ({categoriz}) => {
   }
 
 
-  const handlechange = (e) => {
+  const handleInputChange = (e) => {
     let { name, value } = e.target;
     setAutomationBody(prev => {
       return {...prev, [name]: value}
     })
   };
 
-  const handleRSChange = (iValues, {name}) => {
-    const categoryIds = [];
-    iValues.map(item => {
-      categoryIds.push(item.value)
-    })
+  console.log('automationBody: ', automationBody);
 
-    setAutomationBody( prev => {
-      return {...prev, [name]: categoryIds}
-    })
+  const handleCategorySelect = (value) => {
+    setAutomationBody(prev => ({...prev, categories: value}));
   }
-
 
   // FUNCTION TO CREATE AN AUTOMATION
-  const startSubmitAutomation = () => {
-    setSumbitting(true)
-    setAutomationBody(prev => {
-      return {...prev }
-    })
-  }
-
-
-
-  const submitAutomation = async () => {
+  const createAutomation = async () => {
     const dueDate = Number(automationBody.durationDays) * 24 + Number(automationBody.durationHours);
     const requestBody = {
-      "name": automationBody.title,
-      "dueDate": dueDate,
-      "reminder": {
-        "categories": automationBody.categories,
-        "agreements": automationBody.action
+      name: automationBody.title,
+      dueDate,
+      reminder: {
+        categories: automationBody.categories.map(cat => cat.value),
+        agreements: actions.map(act => ({
+          days: act.days,
+          hours: act.hours,
+          action: act.channel.value,
+          subject: act.subject,
+          body: act.body,
+          recipient: {
+            type: act.recipientType,
+            ids: act.recipientValue.map(val => val.value)
+          }
+        }
+        )
+      )
       }
     };
+
+    console.log('requestBody => ', requestBody);
     setPolicyLoading(true);
     // USE REDUX 
     const res = await httpPostMain("sla", requestBody);
@@ -127,7 +126,6 @@ const NewAutomationPolicy = ({categoriz}) => {
       setPolicyLoading(false);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
-
   };
 
 
@@ -143,7 +141,6 @@ const NewAutomationPolicy = ({categoriz}) => {
     // } else {
     //   return NotificationManager.error(res?.er?.message, "Error", 4000);
     // }
-
   };
 
 
@@ -188,11 +185,6 @@ const NewAutomationPolicy = ({categoriz}) => {
 
 
 
-  useEffect(() => {
-    // Run submit when the flag is true
-    if(sumbitting) submitAutomation()
-  }, [sumbitting])
-
 
   return (
     <div className="new-automation-policy">
@@ -236,7 +228,7 @@ const NewAutomationPolicy = ({categoriz}) => {
                   id="slaName"
                   name="title"
                   value={automationBody.title}
-                  onChange={handlechange}
+                  onChange={handleInputChange}
                 />
               </div>
 
@@ -250,8 +242,9 @@ const NewAutomationPolicy = ({categoriz}) => {
                   name="categories"
                   isMulti
                   isClearable={false}
+                  value={automationBody.categories}
                   options={RSCategoriesOptions}
-                  onChange={handleRSChange}
+                  onChange={handleCategorySelect}
                 />
               </div>
 
@@ -271,7 +264,7 @@ const NewAutomationPolicy = ({categoriz}) => {
                     id="slaName"
                     name="durationDays"
                     value={automationBody?.dueDays}
-                    onChange={handlechange}
+                    onChange={handleInputChange}
                   />
                   <span className="ps-2 me-2">Days</span>
                   <input
@@ -283,7 +276,7 @@ const NewAutomationPolicy = ({categoriz}) => {
                     name="durationHours"
                     onkeydown="return false"
                     value={automationBody?.dueHours}
-                    onChange={handlechange}
+                    onChange={handleInputChange}
                   />
                   <span className="ps-2 me-2">Hours</span>
                 </div>
@@ -320,7 +313,7 @@ const NewAutomationPolicy = ({categoriz}) => {
               <button
                 className="btn btn-sm ms-2 f-12 bg-custom px-4"
                 onClick={
-                  automationId ? updateAutomationPolicy : startSubmitAutomation
+                  automationId ? updateAutomationPolicy : createAutomation
                 }
               >
                 {automationId ? "Save Changes" : "Create"}
