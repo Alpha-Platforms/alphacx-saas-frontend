@@ -89,7 +89,7 @@ const UserPersonal = () => {
                         </div>
                         <div>
 
-                            {/* <label className="d-block mb-3" for="">
+                            {/* <label className="d-block mb-3" htmlFor="">
           Upload Account Logo
         </label> */}
                             <div className="d-flex mb-4 mt-3">
@@ -138,7 +138,7 @@ const UserPersonal = () => {
                                 </div>
                                 <div>
                                     <label
-                                        for="uploadPersonalPhotoInput"
+                                        htmlFor="uploadPersonalPhotoInput"
                                         className="btn btn-sm bg-at-blue-light px-4 py-1 mb-2 mt-1"
                                         onClick={() => document.getElementById("accountLogo").click()}>
                                         Upload Photo

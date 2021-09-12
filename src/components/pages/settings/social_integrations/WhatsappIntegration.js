@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import { NotificationManager } from "react-notifications";
 
-import { httpPatchMain, httpPostMain } from "../../../../helpers/httpMethods";
+import { httpPatchMain, httpPostMain, httpGetMain } from "../../../../helpers/httpMethods";
 // js assets
 import { hideLoader, showLoader } from "../../../helpers/loader";
 // css assets
@@ -19,6 +19,32 @@ export default function WhatsappIntegration() {
         twillo_auth_token: "",
         twillo_no: "",
     });
+    const [configData, setConfigData] = useState([]);
+    const [loadingConfig, setLoadingConfig] = useState(true);
+    // 
+    useEffect(() => {
+        setLoadingConfig(true);
+        getConfig();
+        setLoadingConfig(true);
+    }, []);
+    // 
+    const getConfig = async () => {
+        const res = await httpGetMain(`settings/config?type=whatsapp`);
+        if (res.status === "success") {
+            setLoadingConfig(true);
+            setConfigData(res?.data);
+            setWhatsappConfig({
+                ...whatsappConfig,
+                twillo_account_sid: res?.data?.twillo_no,
+                twillo_auth_token: res?.data?.twillo_auth_token,
+                twillo_no: res?.data?.twillo_account_sid,
+            });
+            setLoadingConfig(false);
+        } else {
+            setLoadingConfig(false);
+            return NotificationManager.error(res.er.message, "Error", 4000);
+        }
+    };
     const handleWhatsappChange = (e) => {
         setWhatsappConfig({ ...whatsappConfig, [e.target.name]: e.target.value });
     };
@@ -103,7 +129,7 @@ export default function WhatsappIntegration() {
 
                             <div className="mb-3">
                             <div className="mb-3">
-                                <label for="organisation-name" className="form-label">
+                                <label htmlFor="organisation-name" className="form-label">
                                 Account SID:
                                 </label>
                                 <input
@@ -116,7 +142,7 @@ export default function WhatsappIntegration() {
                                 />
                             </div>
                             <div className="mb-3">
-                                <label for="organisation-name" className="form-label">
+                                <label htmlFor="organisation-name" className="form-label">
                                     Auth Token:
                                 </label>
                                 <input
@@ -130,7 +156,7 @@ export default function WhatsappIntegration() {
                             </div>
 
                             <div className="mb-3">
-                                <label for="organisation-name" className="form-label">
+                                <label htmlFor="organisation-name" className="form-label">
                                 Account phone number:
                                 </label>
                                 <input
