@@ -127,10 +127,10 @@ export default function MessageList({
                 </div>
               </div>
               <div className="message-user-time">
-                {data?.__meta__?.history_count == 0 ? (
+                {data?.__meta__?.unRead == 0 ? (
                   ""
                 ) : (
-                  <p className="msgCountCon">{data?.__meta__?.history_count}</p>
+                  <p className="msgCountCon">{data?.__meta__?.unRead}</p>
                 )}
 
                 <p className="msGtime">{timeFormater(data.updated_at)}</p>
