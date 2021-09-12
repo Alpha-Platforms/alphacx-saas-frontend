@@ -62,6 +62,7 @@ export default function FacebookIntegration() {
             facebook_config: {
                 page_token: `${response?.accessToken}`,
                 access_token: `${response?.accessToken}`,
+                id: `${response?.userID}`,
                 connected: true,
             },
         };
