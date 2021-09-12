@@ -87,6 +87,13 @@ export const getCurrentAgent = (id) => (dispatch, getState) => {
     }
 }
 
+export const negateActiveState = (id) => {
+    return {
+        type: types.NEGATE_STATE,
+        payload: id
+    };
+}
+
 export const setCurrentAgentLoading = () => {
     return {type: types.CURRENT_AGENT_LOADING}
 }

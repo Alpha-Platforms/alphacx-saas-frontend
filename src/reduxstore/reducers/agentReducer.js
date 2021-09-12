@@ -51,6 +51,17 @@ const agentReducer = (state = initialState, action) => {
 				isCurrentAgentLoading: false,
 				isCurrentAgentLoaded: true
 			}
+		case types.NEGATE_STATE:
+			return {
+				...state,
+				agents: state.agents.map(agent => {
+					if (agent.id === action.payload) {
+						return {...agent, isActivated: !agent.isActivated};
+					} else {
+						return agent;
+					}
+				})
+			}
 		default:
 			return state;
 	}

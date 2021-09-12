@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from "react";
 import EditorBox from "../../../../reusables/EditorBox";
 import DeleteIcon from "../../../../../assets/icons/Delete.svg";
@@ -8,157 +9,111 @@ import { connect } from "react-redux";
 
 import RSelect from "react-select";
 import {httpGetMain } from "../../../../../helpers/httpMethods";
+import {uuid} from '../../../../../helper';
 
 const AutomationAction = ({
-  newPolicy,
-  setNewPolicy,
   availablePlaceholders,
-  agreement,
-  itemIndex,
-  getActionData,
   agents,
   teams,
-  setActionList,
-  removeActionItem
-
+  setActions,
+  action,
+  actions,
+  generateActionTemplate
 }) => {
-  
-  const [action, setAction] = useState({id: itemIndex});
-  const [recipients, setRecipients] = useState([])
-  const [daysHours, setDaysHours] = useState({days: 0, hours: 0})
-
   const [deleteConfirm, setDeleteConfirm] = useState(false);
-  const [actionBody, setActionBody] = useState("");
-  const [placeholder, setPlaceholder] = useState("");
 
-  const [recipientType, setRecipientType] = useState("agent");
-
-  const [RSAgents, setRSAgents] = useState([]);
-  const [RSTeams, setRSTeams] = useState([]);
+  const setActionState = (valObj) => {
+    setActions(prev => prev.map(x => {
+      if (x.id === action.id) {
+        return {
+          ...x,
+          ...valObj
+        }
+      } else {
+        return x;
+      }
+    }))
+  }
 
   const [actionChannels] = useState([
-    {label: "Email", value: "Email"},
-    {label: "SMS", value: "SMS"}
+    {label: "Email", value: "email"},
+    {label: "SMS", value: "sms"}
   ])
-
 
 // F U N C T I O N S
   const addAction = (e) => {
     e.preventDefault();
-    // setActionList(prev => [...prev, prev[prev.length-1]+1]);
-    setActionList(prev => [...prev, prev[prev.length-1]+1]);
+    setActions(prev => [...prev, generateActionTemplate(uuid())]);
   };
 
-  const deleteAction = (e, itemIndex) => {
+  const deleteAction = (e) => {
     e.preventDefault();
-    setActionList(prev => {
-      const arr = prev.filter((item) => item !== itemIndex)
-      return arr
+    setActionState({
+      body: '',
+      placeholder: ''
     });
-
-    removeActionItem(itemIndex)
-
+    setActions(prev => prev.filter(x => x.id !== action.id));
   };
 
   const insertPlaceholder = (i) => {
     const shortCode = `{${availablePlaceholders[i]}}`;
 
-    setActionBody(actionBody + " " + shortCode + " ");
-    setPlaceholder(" " + shortCode + " ");
+    setActionState({
+      body: action.body + " " + shortCode + " ",
+      placeholder: " " + shortCode + " "
+    });
   };
 
-  const handleChange = (e) => {
-    let { name, value } = e.target;
-
-    setAction( prev => {
-      return {...prev, [name]: value}
-    })
-
-  };
-
-  const handleDaysHoursChange = (e) => {
-    let { name, value } = e.target;
-
-    setDaysHours( prev => {
-      return {...prev, [name]: value}
-    })
-
-    if(name === "days"){
-      setAction(prev => {
-        return {...prev, hours: value*24 + Number(daysHours.hours)}
-      })
-    } else {
-      setAction(prev => {
-        return {...prev, hours: Number(value) + daysHours.days*24}
-      })
-    }
-  };
-
-  const handleRSChange = (iValues, {name}) => {
-    let data = iValues.value;
-
-    if (Array.isArray(iValues)) {
-      const ids = [];
-      iValues.map(item => {
-        ids.push(item.value)
-      })
-
-      setAction( prev => {
-        return {...prev, [name]: {ids, type: recipientType}}
-      })
-
-    } else {
-      setAction( prev => {
-        return {...prev, [name]: data}
-      })
-    }
-
-    
-  }
-
+  
   const loadRecipients = () => {
 
     const mappedItems = []; 
 
-    if(recipientType === "agent"){   
-      agents.map(item => {
+    if(action.recipientType === "agent"){   
+      agents.forEach(item => {
         mappedItems.push({value: item.id, label: item.firstname +" "+ item.lastname})
       })
     } else {  
-      teams.map(item => {
+      teams.forEach(item => {
         mappedItems.push({value: item.id, label: item.name})
       })
     }
 
-    setRecipients(mappedItems);
+    setActionState({
+      recipientOptions: mappedItems
+    });
+    
+  }
+  
+  const handleChannelSelect = (value) => {
+    setActionState({
+      channel: value
+    })
 
   }
 
-  const mapRSelectPersonOptions = (persons, cb) => {
-    const mappedItems = [];    
-    persons.map(item => {
-      mappedItems.push({value: item.id, label: item.firstname +" "+ item.lastname})
+  const handleRecipientSelect = (value) => {
+    setActionState({
+      recipientValue: value
     })
-    return cb(mappedItems)
   }
 
-  const mapRSelectNonPersonOptions = (entity, cb) => {
-    const mappedItems = [];    
-    entity.map(item => {
-      mappedItems.push({value: item.id, label: item.name})
-    })
-    return cb(mappedItems)
+  const handleMinorInput = e => {
+    const {name, value} = e.target;
+
+    setActionState({
+      [name]: value
+    });
   }
 
-  useEffect(() => {
-    getActionData(action);
-  }, [action])
-
-  useEffect(() => {
-    setAction( prev => {
-      return {...prev, body: actionBody}
+  const handleRecipientTypeChange = e => {
+    const {value} = e.target;
+    setActionState({
+      recipientType: value,
+      recipientValue: []
     })
-  }, [actionBody])
+
+  }
 
   return (
     <>
@@ -166,15 +121,20 @@ const AutomationAction = ({
       <div className="card mt-2 mb-4">
         <div className="card-body border-0 p-3 automation-action">
           <div className="d-flex  flex-column assign">
-            <label for="channel">Send</label>
+            <label htmlFor="channel">Send</label>
             
             <RSelect 
               className=""
               id="channel"
               name="action"
               openMenuOnFocus={true}
-              onChange={handleRSChange}
+              value={action.channel}
+              onChange={handleChannelSelect}
               options={actionChannels}
+              defaultValue={
+                actionChannels.filter(option => option.label === "Email")
+                
+              }
             />
 
           </div>
@@ -182,9 +142,9 @@ const AutomationAction = ({
           <div className="mt-4 d-flex align-items-center">
             
             <div className="input-group w-50 me-2">
-              <input type="number" name="days" ariaLabel="Last name" className="form-control" onChange={handleDaysHoursChange} />
+              <input type="number" name="days"  className="form-control" value={action.days} onChange={handleMinorInput} />
               <span className="input-group-text acx-fs-8">Days</span>
-              <input type="number" name="hours" ariaLabel="First name" className="form-control" onChange={handleDaysHoursChange} />
+              <input type="number" name="hours" className="form-control" value={action.hours} onChange={handleMinorInput} />
               <span className="input-group-text acx-fs-8">Hours</span>
             </div>
 
@@ -193,18 +153,19 @@ const AutomationAction = ({
           </div>
 
           <div className="form-group mt-3">
-            <label for="subject">Subject</label>
+            <label htmlFor="subject">Subject</label>
             <input
               type="text"
               className="form-control mt-2"
               id="subject"
               name="subject"
-              onChange={handleChange}
+              value={action.subject}
+              onChange={handleMinorInput}
             />
           </div>
           
           <div className="form-group mt-3">
-            <label for="ticket" className="f-14 mb-1">
+            <label htmlFor="ticket" className="f-14 mb-1">
               Action Recipient(s)
             </label>
             <div className="d-flex">
@@ -214,12 +175,10 @@ const AutomationAction = ({
                   name="recipientType"
                   type="radio"
                   value="agent"
-                  checked={recipientType === "agent"}
-                  onClick={(e) => {
-                    setRecipientType(e.target.value)
-                  }}
+                  checked={action.recipientType === "agent"}
+                  onClick={handleRecipientTypeChange}
                 />
-                <label className="form-check-label f-14" for="radio-2">Agents</label>
+                <label className="form-check-label f-14" htmlFor="radio-2">Agents</label>
               </div>
               <div className="form-check" style={{ marginLeft: 10 }}>
                 <input
@@ -227,12 +186,10 @@ const AutomationAction = ({
                   name="recipientType"
                   type="radio"
                   value="group"
-                  checked={recipientType === "group"}
-                  onClick={(e) => {
-                    setRecipientType(e.target.value)
-                  }}
+                  checked={action.recipientType === "group"}
+                  onClick={handleRecipientTypeChange}
                 />
-                <label className="form-check-label f-14" for="radio-2">Teams</label>
+                <label className="form-check-label f-14" htmlFor="radio-2">Teams</label>
               </div>
             </div>
 
@@ -242,9 +199,11 @@ const AutomationAction = ({
                 isClearable={false}
                 name="recipient"
                 isMulti
+                value={action.recipientValue}
                 onMenuOpen={() => loadRecipients()}
-                options={recipients}
-                onChange={handleRSChange}
+                options={action.recipientOptions}
+
+                onChange={handleRecipientSelect}
               />
             </div>
 
@@ -266,12 +225,17 @@ const AutomationAction = ({
             <label className="mb-1">Message</label>
 
             <EditorBox
-              text={actionBody || ""}
+              text={action.body || ""}
               // textParent={newPolicy}
               textFormat={"plain"}
-              updateText={setActionBody}
-              placeholder={placeholder}
-              setPlaceholder={setPlaceholder}
+              updateText={val => setActionState({
+                body: val
+              })}
+              placeholder={action.placeholder}
+              setPlaceholder={val => setActionState({
+                placeholder: val
+              })}
+              updateVal={actions.length}
             />
 
           </div>
@@ -282,7 +246,7 @@ const AutomationAction = ({
             Add New Action
           </button>
           
-          {true && (
+          {actions.length > 1 && (
             <button
               className="delete-resolution mx-4"
               onClick={(e) => {
@@ -314,7 +278,7 @@ const AutomationAction = ({
             <button
               className="btn btn-sm ms-2 f-12 bg-custom px-4"
               onClick={(e) => {
-                deleteAction(e, itemIndex)
+                deleteAction(e)
                 setDeleteConfirm(false)
               }}
             >

@@ -23,7 +23,7 @@ import moment from 'moment';
 import Swal from "sweetalert2";
 import { wordCapitalize, getUserInitials } from "../../../../helper";
 import {updateUser} from '../../../../reduxstore/actions/userActions';
-import {getAgents} from '../../../../reduxstore/actions/agentActions';
+import {getAgents, negateActiveState} from '../../../../reduxstore/actions/agentActions';
 import "../../../../styles/Setting.css";
 import {NotificationManager} from 'react-notifications';
 
@@ -35,7 +35,8 @@ const UserList = ({
   agents,
   isAgentsLoaded,
   groups,
-  getAgents
+  getAgents,
+  negateActiveState
 }) => {
   const [createModalShow, setCreateModalShow] = useState(false);
   const [inviteModalShow, setInviteModalShow] = useState(false);
@@ -151,7 +152,8 @@ const UserList = ({
     setUserLoading(false);  
     if (userRes?.status === 'success') {
       NotificationManager.success('Info has been updated', 'Success');
-      getAgents()
+      // getAgents()
+      negateActiveState(id);
   } else {
       NotificationManager.error('Something went wrong', 'Error');
   }
@@ -417,4 +419,4 @@ const mapStateToProps = (state, ownProps) => ({
   groups: state.group.groups,
 });
 
-export default connect(mapStateToProps, { getPaginatedUsers, getAgents })(UserList);
+export default connect(mapStateToProps, { getPaginatedUsers, getAgents, negateActiveState })(UserList);

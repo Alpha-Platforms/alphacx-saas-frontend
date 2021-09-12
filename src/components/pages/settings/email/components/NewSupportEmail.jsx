@@ -43,29 +43,27 @@ const NewSupportEmail = ({configs, getConfigs}) => {
         email,
         password,
         host,
-        port,
+        port: Number(port),
         tls,
       } : {
         email,
         host,
-        port,
+        port: Number(port),
         tls,
       }
     };
 
     const res = await httpPatchMain("settings/email-config", JSON.stringify(data));
+
     if (res?.status === "success") {
       console.clear();
       handleShow();
       getConfigs();
-      // setDashInfo({
-      //   ...dashInfo,
-      //   totalTickets: parseInt(res?.data?.meta?.totalItems),
-      // });
     } else {
       console.log('Error from notification: ', res);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
+
   };
 
   useEffect(() => {
@@ -77,7 +75,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
           tls: configs?.email_config?.tls || false,
           host: configs?.email_config?.host || '',
           email: configs?.email_config?.email || '',
-          port: configs?.email_config?.port || '',
+          port: configs?.email_config?.port || null,
           // password: configs?.email_config?.password || '',
           password: ''
         }
