@@ -223,7 +223,7 @@ export default function Conversation() {
   };
   const getTickets = async () => {
     const res = await httpGetMain("tickets?channel=whatsapp");
-    if (res?.status == "success") {
+    if (res?.status === "success") {
       setLoadingTicks(true);
       setTickets(res?.data?.tickets);
       setLoadingTicks(false);

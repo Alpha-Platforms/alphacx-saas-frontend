@@ -117,7 +117,7 @@ const NewEmailTemplate = ({isConfigsLoaded, configs, getConfigs, updateEmailConf
                             
 
                             {/* <div className="form-group mt-3">
-                <label for="ticket" className="f-14 mb-1">
+                <label htmlFor="ticket" className="f-14 mb-1">
                   Notification Category
                 </label>
                 <select
@@ -134,7 +134,7 @@ const NewEmailTemplate = ({isConfigsLoaded, configs, getConfigs, updateEmailConf
                 </select>
               </div> */}
                             <div className="form-group mt-3">
-                                <label for="slaName" className="f-14 mb-1">
+                                <label htmlFor="slaName" className="f-14 mb-1">
                                     Subject
                                 </label>
                                 <input
@@ -147,7 +147,7 @@ const NewEmailTemplate = ({isConfigsLoaded, configs, getConfigs, updateEmailConf
                             </div>
 
                             <div className="form-group mt-3">
-                                <label for="slaName" className="f-14 mb-1">
+                                <label htmlFor="slaName" className="f-14 mb-1">
                                     Title
                                 </label>
                                 <input

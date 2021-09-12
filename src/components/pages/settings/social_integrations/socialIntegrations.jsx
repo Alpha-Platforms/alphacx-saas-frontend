@@ -200,7 +200,7 @@ export default function SocialIntegrations() {
 
             <div className="mb-3">
               <div className="mb-3">
-                <label for="organisation-name" className="form-label">
+                <label htmlFor="organisation-name" className="form-label">
                   Account SID:
                 </label>
                 <input
@@ -213,7 +213,7 @@ export default function SocialIntegrations() {
                 />
               </div>
               <div className="mb-3">
-                <label for="organisation-name" className="form-label">
+                <label htmlFor="organisation-name" className="form-label">
                   Auth Token:
                 </label>
                 <input
@@ -227,7 +227,7 @@ export default function SocialIntegrations() {
               </div>
 
               <div className="mb-3">
-                <label for="organisation-name" className="form-label">
+                <label htmlFor="organisation-name" className="form-label">
                   Account phone number:
                 </label>
                 <input
