@@ -307,7 +307,7 @@ const UserList = ({
                     // group: 'Head Office',
                     group: groups.filter((x) => x.id === group_id)[0]?.name
                       ? groups.filter((x) => x.id === group_id)[0]?.name
-                      : "Head Office",
+                      : "",
                     created: moment(created_at).format('DD MMM, YYYY'),
                     // created: "13 Apr 2021",
                     contact: { firstname, lastname, id, avatar },
