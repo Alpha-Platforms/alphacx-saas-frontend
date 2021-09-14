@@ -287,8 +287,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
                   Duration
                 </label>
 
-                {/* resolution-form mt-3 mb-4 d-flex align-items-center f-12  */}
-                <div className="mb-3 d-flex align-items-center">
+                {/* <div className="mb-3 d-flex align-items-center">
                   <input
                     type="number"
                     max={59}
@@ -312,7 +311,35 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
                     onChange={handleInputChange}
                   />
                   <span className="ps-2 me-2">Hours</span>
+                </div> */}
+
+
+                <div className="input-group w-50 me-2 mb-3">
+                  <input 
+                    type="number" 
+                    className="form-control" 
+                    name="durationDays"
+                    value={automationBody?.durationDays}
+                    onChange={handleInputChange}
+                  />
+                  <span className="input-group-text acx-fs-8">Days</span>
+                  <input 
+                    type="number" 
+                    className="form-control" 
+                    name="durationHours"
+                    onkeydown="return false"
+                    value={automationBody?.durationHours}
+                    onChange={handleInputChange}
+                  />
+                  <span className="input-group-text acx-fs-8">Hours</span>
                 </div>
+
+
+
+
+
+
+
               </div>
 
               <div id="resolution-wrapper mt-4">
