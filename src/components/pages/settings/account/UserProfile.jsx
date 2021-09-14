@@ -139,7 +139,7 @@ const AccountSettings = () => {
             <div className="mb-5 mt-4">
               <div className="d-flex mb-3">
                 <div className="me-2 w-100">
-                  <label for="first-name" className="form-label">
+                  <label htmlFor="first-name" className="form-label">
                     First Name
                   </label>
                   <input
@@ -152,7 +152,7 @@ const AccountSettings = () => {
                   />
                 </div>
                 <div className="w-100">
-                  <label className="form-label" for="last-name">
+                  <label className="form-label" htmlFor="last-name">
                     Last Name
                   </label>
                   <input
@@ -167,7 +167,7 @@ const AccountSettings = () => {
 
                 <div className="d-flex mb-3">
                   <div className="me-2 w-100">
-                    <label for="first-name" className="form-label">
+                    <label htmlFor="first-name" className="form-label">
                       Role
                     </label>
                     <input
@@ -180,7 +180,7 @@ const AccountSettings = () => {
                     />
                   </div>
                   <div className="w-100">
-                    <label className="form-label" for="last-name">
+                    <label className="form-label" htmlFor="last-name">
                       Team
                     </label>
                     <input
@@ -198,7 +198,7 @@ const AccountSettings = () => {
                 
               </div>
               <div className="mb-3">
-                <label className="form-label" for="first-name">
+                <label className="form-label" htmlFor="first-name">
                   Email
                 </label>
                 <input
@@ -250,7 +250,7 @@ const AccountSettings = () => {
               </div>
               <div>
                 <label
-                  for="uploadPersonalPhotoInput"
+                  htmlFor="uploadPersonalPhotoInput"
                   className="btn btn-sm bg-at-blue-light px-4 py-1 mb-2 mt-1"
                 >
                   Upload Photo
@@ -316,7 +316,7 @@ const AccountSettings = () => {
                         />
                         <label
                           className="form-check-label ms-3"
-                          for="flexSwitchCheckDefault"
+                          htmlFor="flexSwitchCheckDefault"
                           style={{ width: 20 }}
                         >
                           {personalInformation.notifications ? "Yes" : "No"}

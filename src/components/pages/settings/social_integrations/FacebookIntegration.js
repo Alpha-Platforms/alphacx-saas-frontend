@@ -22,16 +22,9 @@ export default function FacebookIntegration() {
   
     const authFb = () => {
         FB.login(function (response) {
-            if (
-                response.authResponse &&
-                response.authResponse !== "undefined." &&
-                response.authResponse !== undefined
-            ) {
-    
+            if (response.authResponse && response.authResponse !== "undefined." && response.authResponse !== undefined) {
                 setFBData(response?.authResponse);
-    
                 handleConnectFBPage(response?.authResponse);
-    
                 setPageConnected(true);
                 FB.api("/me", function (response) {
                 });
@@ -62,6 +55,7 @@ export default function FacebookIntegration() {
             facebook_config: {
                 page_token: `${response?.accessToken}`,
                 access_token: `${response?.accessToken}`,
+                id: `${response?.userID}`,
                 connected: true,
             },
         };

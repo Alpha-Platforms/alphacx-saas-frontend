@@ -215,7 +215,7 @@ const Branding = () => {
         </div>
       </div>
       <div>
-        <label className="d-block mb-3" for="">
+        <label className="d-block mb-3" htmlFor="">
           Upload Login Background Image
         </label>
         <div className="d-flex mb-5">

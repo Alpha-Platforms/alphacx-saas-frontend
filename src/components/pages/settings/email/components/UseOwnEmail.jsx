@@ -144,7 +144,7 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                         <div className="row mt-2">
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label for="incoming-mail" className="form-label">
+                                    <label htmlFor="incoming-mail" className="form-label">
                                         Incoming Mail Server
                                         <span className="text-danger">
                                             *</span>
@@ -164,7 +164,7 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                             </div>
                             <div className="col-md-4">
                                 <div className="form-group">
-                                    <label for="port" className="form-label">
+                                    <label htmlFor="port" className="form-label">
                                         IMAP Port<span className="text-danger">
                                             *</span>
                                     </label>
@@ -188,7 +188,7 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                                     name="tls"
                                     checked={emailState.emailConfig.tls || false}
                                     onChange={handleConfigChange}/>
-                                <label className="form-check-label" for="ssl">
+                                <label className="form-check-label" htmlFor="ssl">
                                     Use SSL
                                 </label>
                             </div>
@@ -234,7 +234,7 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                         <div className="row mt-2">
                             <div className="col-md-6">
                                 <div className="form-group">
-                                    <label for="outgoing-mail" className="form-label">
+                                    <label htmlFor="outgoing-mail" className="form-label">
                                         Outgoing Mail Server
                                         <span className="text-danger">*</span>
                                     </label>
@@ -250,7 +250,7 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                             </div>
                             <div className="col-md-4">
                                 <div className="form-group">
-                                    <label for="port" className="form-label">
+                                    <label htmlFor="port" className="form-label">
                                         SMTP Port<span className="text-danger">*</span>
                                     </label>
                                     <input type="text" className="form-control form-control-sm" placeholder="997"/>
@@ -259,7 +259,7 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                             <div className="col-md-2 mt-5">
                                 <div className="form-check">
                                     <input className="form-check-input" type="checkbox" id="ssl"/>
-                                    <label className="form-check-label" for="ssl">
+                                    <label className="form-check-label" htmlFor="ssl">
                                         Use SSL
                                     </label>
                                 </div>

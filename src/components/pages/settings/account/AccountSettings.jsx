@@ -127,7 +127,7 @@ const AccountSettings = () => {
           
           <div className="mt-3 mb-3 col-md-8">
             <div className="mb-3">
-              <label for="organisation-name" className="form-label">
+              <label htmlFor="organisation-name" className="form-label">
                 Organisation Name
               </label>
               <input
@@ -140,7 +140,7 @@ const AccountSettings = () => {
               />
             </div>
             <div className="mb-3">
-              <label for="domain-field" className="form-label">
+              <label htmlFor="domain-field" className="form-label">
                 Domain
               </label>
               <input
@@ -154,7 +154,7 @@ const AccountSettings = () => {
             </div>
 
             <div className="mb-3">
-              <label for="organisation-profile" className="form-label">
+              <label htmlFor="organisation-profile" className="form-label">
                 Organisation Profile
               </label>
               <textarea
@@ -168,7 +168,7 @@ const AccountSettings = () => {
 
             <div className="row">
               <div className="mb-3 col-6">
-                <label for="account-email" className="form-label">
+                <label htmlFor="account-email" className="form-label">
                   Email
                 </label>
                 <input
@@ -182,7 +182,7 @@ const AccountSettings = () => {
               </div>
 
               <div className="mb-3 col-6">
-                <label for="account-website" className="form-label">
+                <label htmlFor="account-website" className="form-label">
                   Website
                 </label>
                 <input
@@ -196,7 +196,7 @@ const AccountSettings = () => {
               </div>
 
               <div className="mb-3 col-6">
-                <label for="account-address" className="form-label">
+                <label htmlFor="account-address" className="form-label">
                   Address
                 </label>
                 <input
@@ -210,7 +210,7 @@ const AccountSettings = () => {
               </div>
 
               <div className="mb-3 col-6">
-                <label for="account-phone" className="form-label">
+                <label htmlFor="account-phone" className="form-label">
                   Phone
                 </label>
                 <input
@@ -224,7 +224,7 @@ const AccountSettings = () => {
               </div>
 
               <div className="mb-3 col-6">
-                <label for="account-timezone" className="form-label">
+                <label htmlFor="account-timezone" className="form-label">
                   Timezone
                 </label>
                 <select
@@ -244,7 +244,7 @@ const AccountSettings = () => {
               </div>
 
               <div className="mb-3 col-6">
-                <label for="account-language" className="form-label">
+                <label htmlFor="account-language" className="form-label">
                   Language
                 </label>
                 <select
@@ -265,7 +265,7 @@ const AccountSettings = () => {
             </div>
 
             <div className="mb-3">
-              <label for="account-country" className="form-label">
+              <label htmlFor="account-country" className="form-label">
                 Country
               </label>
               <select
@@ -285,7 +285,7 @@ const AccountSettings = () => {
 
             {/* <div className="row">
               <div className="mb-3 col-6">
-                <label for="work-days" className="form-label">
+                <label htmlFor="work-days" className="form-label">
                   Work Days
                 </label>
                 <select
@@ -300,7 +300,7 @@ const AccountSettings = () => {
               </div>
 
               <div className="mb-3 col-6">
-                <label for="working-hours-from" className="form-label">
+                <label htmlFor="working-hours-from" className="form-label">
                   Working Hours
                 </label>
                 <div className="d-flex align-items-center">
@@ -330,7 +330,7 @@ const AccountSettings = () => {
             </div>
 
             <div className="mb-3">
-              <label className="d-block" for="">
+              <label className="d-block" htmlFor="">
                 Security and Privacy (2FA Settings)
               </label>
               <div>
@@ -362,7 +362,7 @@ const AccountSettings = () => {
                     />
                     <label
                       className="form-check-label ms-3"
-                      for="security-switch"
+                      htmlFor="security-switch"
                     >
                       {accountSettings.two_factor ? "Yes" : "No"}
                     </label>
