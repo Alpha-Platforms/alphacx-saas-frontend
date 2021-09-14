@@ -57,10 +57,7 @@ export default function SigleChat({
             <img src={SenderInfo?.customer?.avatar} alt="" />
           ) : (
             <div className="singleChatSenderImg">
-              <p>{`${SenderInfo?.customer?.firstname?.slice(
-                0,
-                1
-              )} ${SenderInfo?.customer?.lastname?.slice(0, 1)}`}</p>
+              <p>{`${SenderInfo?.customer?.firstname?.slice(0,1)}${SenderInfo?.lastname == "default"? "" : SenderInfo?.customer?.lastname?.slice(0, 1)}`}</p>
             </div>
           )}
           <div className="single-chat-user-name">

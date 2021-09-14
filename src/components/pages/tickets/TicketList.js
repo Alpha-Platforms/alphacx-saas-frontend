@@ -257,7 +257,7 @@ const TicketList = ({
           ? selectedRows
           : tickets.map(
               ({ customer, subject, id, category, created_at, status }) => ({
-                name: `${customer.firstname} ${customer.lastname}`,
+                name: `${customer.firstname} ${customer.lastname == "default" ? "" : customer.lastname || "" }`,
                 email: customer.email,
                 subject: `${subject.substr(0, 25)}...`,
                 ticketId: id.slice(-8),
@@ -277,7 +277,7 @@ const TicketList = ({
           ? selectedRows
           : tickets.map(
               ({ customer, subject, id, category, created_at, status }) => ({
-                name: `${customer.firstname} ${customer.lastname}`,
+                name: `${customer.firstname} ${customer.lastname == "default"? "" : customer.lastname || ""}`,
                 email: customer.email,
                 subject: `${subject.substr(0, 25)}...`,
                 ticketId: id.slice(-8),
@@ -373,7 +373,7 @@ const TicketList = ({
                     assignee,
                     rating
                   }) => ({
-                    name: `${customer?.firstname} ${customer?.lastname}`,
+                    name: `${customer?.firstname} ${customer?.lastname == "default"? "" : customer?.lastname || ""}`,
                     customerId: customer?.id,
                     ticketId: id,
                     email: customer?.email,
