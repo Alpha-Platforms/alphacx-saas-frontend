@@ -616,10 +616,8 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                               <h1>{ticket[0]?.subject}</h1>
                               <p>
                                 {`${capitalize(
-                                  SenderInfo?.customer?.firstname
-                                )} ${capitalize(
-                                  SenderInfo?.customer?.lastname
-                                )} ${capitalize(SenderInfo?.customer?.email)}`}
+                                  SenderInfo?.customer?.firstname)} ${capitalize(SenderInfo?.customer?.lastname == "default"? "" : SenderInfo?.customer?.lastname)} 
+                                  ${capitalize(SenderInfo?.customer?.email)}`}
                                 <div className="custormChatHeaderDot"></div>{" "}
                                 <span>{dateFormater(ticket[0]?.updated_at)}</span>
                               </p>
@@ -678,23 +676,15 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                 <img src={SenderInfo?.customer?.avatar} alt="" />
                               ) : (
                                 <div className="singleChatSenderImg">
-                                  <p>{`${SenderInfo?.customer?.firstname?.slice(
-                                    0,
-                                    1
-                                  )}${SenderInfo?.customer?.lastname?.slice(
-                                    0,
-                                    1
-                                  )}`}</p>
+                                  <p>{`${SenderInfo?.customer?.firstname?.slice(0,1)}${SenderInfo?.customer?.lastname == "default" ? "" : SenderInfo?.customer?.lastname?.slice(0,1)}`}</p>
                                 </div>
                               )}
                               <div className="custorActiveStateimgd"></div>
                             </div>
                           </div>
                           <div className="custormernameticket">
-                            <p style={{ color: "#006298" }}>
-                              {`${capitalize(
-                                ticket[0]?.customer?.firstname
-                              )} ${capitalize(ticket[0]?.customer?.lastname)}`}
+                            <p className="mb-1" style={{ color: "#006298" }}>
+                              {`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(ticket[0]?.customer?.lastname == "default" ? "" : ticket[0]?.customer?.lastname)}`}
                             </p>
                             <p>{`Via ${ticket[0].channel} . ${dateFormater(
                               ticket[0].created_at
@@ -764,23 +754,15 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                         <img src={data?.user.avatar} alt="" />
                                       ) : (
                                         <div className="singleChatSenderImg">
-                                          <p>{`${data?.user?.firstname?.slice(
-                                            0,
-                                            1
-                                          )}${data?.user?.lastname?.slice(
-                                            0,
-                                            1
-                                          )}`}</p>
+                                          <p>{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0,1)}`}</p>
                                         </div>
                                       )}
                                       <div className="custorActiveStateimgd"></div>
                                     </div>
                                   </div>
                                   <div className="custormernameticket">
-                                    <p style={{ color: "#006298" }}>
-                                      {`${capitalize(
-                                        data?.user?.firstname
-                                      )} ${capitalize(data?.user?.lastname)}`}
+                                    <p className="mb-1" style={{ color: "#006298" }}>
+                                      {`${capitalize(data?.user?.firstname)} ${capitalize(data?.user?.lastname == "default" ? "" : data?.user?.lastname)}`}
                                       <span style={{ color: "#656565" }}>
                                         {" "}
                                         replied
@@ -823,10 +805,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                       <img src={data?.user.avatar} alt="" />
                                     ) : (
                                       <div className="singleChatSenderImg">
-                                        <p>{`${data?.user?.firstname?.slice(
-                                          0,
-                                          1
-                                        )}${data?.user?.lastname?.slice(0, 1)}`}</p>
+                                        <p>{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
                                       </div>
                                     )}
                                     <div className="custorActiveStateimgd"></div>
@@ -834,9 +813,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                 </div>
                                 <div className="custormernameticket">
                                   <p style={{ color: "#006298" }}>
-                                    {`${capitalize(
-                                      data?.user?.firstname
-                                    )} ${capitalize(data?.user?.lastname)}`}
+                                    {`${capitalize(data?.user?.firstname)} ${data?.user?.lastname == "default" ? "" : capitalize(data?.user?.lastname)}`}
                                     <span style={{ color: "#656565" }}>
                                       {" "}
                                       replied
@@ -878,10 +855,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                       <img src={data?.user.avatar} alt="" />
                                     ) : (
                                       <div className="singleChatSenderImg">
-                                        <p>{`${data?.user?.firstname?.slice(
-                                          0,
-                                          1
-                                        )}${data?.user?.lastname?.slice(0, 1)}`}</p>
+                                        <p>{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
                                       </div>
                                     )}
                                     <div className="custorActiveStateimgd"></div>

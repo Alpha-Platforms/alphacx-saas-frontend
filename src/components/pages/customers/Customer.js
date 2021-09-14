@@ -99,12 +99,12 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                             {currentCustomer?.avatar ? <div className="customer-avatar">
                                                         <img src={currentCustomer.avatar} alt='' />
                                                     </div> : <div className="user-initials blue me-auto ms-auto d-flex justify-content-center align-items-center">
-                                                                {getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname}`)}
+                                                                {getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname == "default" ? "" : currentCustomer.lastname}`)}
                                                             </div>
                                                         }
                             <div className="text-center mt-3">
                                 {/* <h4 style={{ textTransform: 'capitalize' }}>{`${currentCustomer.firstname} ${currentCustomer.lastname}`}</h4> */}
-                                <h6 className="mb-0 text-capitalize"><b>{`${currentCustomer.firstname} ${currentCustomer.lastname}`}</b></h6>
+                                <h6 className="mb-0 text-capitalize"><b>{`${currentCustomer.firstname} ${currentCustomer.lastname == "default" ? "" : currentCustomer.lastname}`}</b></h6>
                                 <p className="text-muted f-13">{currentCustomer.email}</p>
                             </div>
                         </div>
@@ -115,7 +115,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                     <div><CircleIcon color="rgba(186, 104, 200, 0.25)" icon={CallIcon}/></div>
                                     <div>
                                         <p className="pb-0 mb-0 f-12 text-muted op-9">Work Phone</p>
-                                        <p className="text-muted f-13">{currentCustomer.phoneNumber ? currentCustomer.phoneNumber : currentCustomer.phone_number ? currentCustomer.phone_number : 'N/A'}</p>
+                                        <p className="text-muted f-13">{currentCustomer.phoneNumber ? currentCustomer.phoneNumber : currentCustomer.phone_number ? currentCustomer.phone_number : ''}</p>
                                     </div>
                                 </li>
                                 {/* <li>
