@@ -1,7 +1,7 @@
 import * as types from '../types';
 
 const initialState = {
-	supervisors: [],
+	supervisors: null,
     meta: null,
 	isSupervisorsLoading: false, //will be true when fetching data and back to false when the fetch is done
 	isSupervisorsLoaded: false,

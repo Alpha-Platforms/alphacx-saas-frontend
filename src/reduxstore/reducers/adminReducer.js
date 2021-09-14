@@ -1,7 +1,7 @@
 import * as types from '../types';
 
 const initialState = {
-	admins: [],
+	admins: null,
     meta: null,
 	isAdminsLoading: false, //will be true when fetching data and back to false when the fetch is done
 	isAdminsLoaded: false,

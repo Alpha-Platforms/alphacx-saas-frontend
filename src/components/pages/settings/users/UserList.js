@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useState, useEffect } from "react";
 import {
   ThemeProvider as MuiThemeProvider,
@@ -33,6 +34,8 @@ const UserList = ({
   getPaginatedUsers,
   isUsersLoaded,
   agents,
+  admins,
+  supervisors,
   isAgentsLoaded,
   groups,
   getAgents,
@@ -41,20 +44,18 @@ const UserList = ({
   const [createModalShow, setCreateModalShow] = useState(false);
   const [inviteModalShow, setInviteModalShow] = useState(false);
   const [importModalShow, setImportModalShow] = useState(false);
-  const [changingRow, setChangingRow] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
 
   /* useEffect(() => {
-            setUserLoading(!isUsersLoaded);
-            if (isUsersLoaded) {
-                setChangingRow(false);
-            }
-          }, [isUsersLoaded]); */
-
-  useEffect(() => {
     setUserLoading(!isAgentsLoaded);
     if (isAgentsLoaded) {
-      setChangingRow(false);
+      setUserLoading(false);
+    }
+  }, [isAgentsLoaded]); */
+
+  useEffect(() => {
+    setUserLoading(!agents);
+    if (isAgentsLoaded) {
       setUserLoading(false);
     }
   }, [isAgentsLoaded]);
@@ -86,47 +87,7 @@ const UserList = ({
       />
     );
   }
-  
-  const AlphacxMTPagination = (props) => {
-    const {
-      ActionsComponent,
-      onChangePage,
-      onChangeRowsPerPage,
-      ...tablePaginationProps
-    } = props;
 
-    return (
-      <TablePagination
-        {...tablePaginationProps}
-        rowsPerPageOptions={[10, 20, 30]}
-        rowsPerPage={meta?.itemsPerPage || 5}
-        count={Number(meta?.totalItems || 20)}
-        page={(meta?.currentPage || 1) - 1}
-        onPageChange={onChangePage}
-        // when the number of rows per page changes
-        onRowsPerPageChange={(event) => {
-          setChangingRow(true);
-          getPaginatedUsers(event.target.value, 1);
-        }}
-        ActionsComponent={(subprops) => {
-          const { onPageChange, ...actionsComponentProps } = subprops;
-          return (
-            <ActionsComponent
-              {...actionsComponentProps}
-              onChangePage={(event, newPage) => {
-                // fetch tickets with new current page
-                getPaginatedUsers(meta.itemsPerPage, newPage + 1);
-              }}
-              onRowsPerPageChange={(event) => {
-                // fetch tickets with new rows per page
-                getPaginatedUsers(event.target.value, meta.currentPage);
-              }}
-            />
-          );
-        }}
-      />
-    );
-  };
 
   const themes = ['red', 'blue', 'yellow', 'purple'];
   
@@ -243,7 +204,7 @@ const UserList = ({
         </div>
 
         <div id="alphacxMTable" className="mb-3 acx-user-table acx-user-table-2">
-          {agents && !changingRow && (
+          {(agents && admins) && (
             <MuiThemeProvider theme={tableTheme}>
               <MaterialTable
                 title=""
@@ -326,7 +287,7 @@ const UserList = ({
                   //   // render: rowData => (<div><span className="cust-table-dots"><DotSvg/></span></div>)
                   // },
                 ]}
-                data={agents.map(
+                data={[...admins, ...agents].map(
                   ({
                     firstname,
                     lastname,
@@ -415,7 +376,10 @@ const mapStateToProps = (state, ownProps) => ({
   meta: state.user.meta,
   isUsersLoaded: state.user.isUsersLoaded,
   agents: state.agent.agents,
+  admins: state.admin.admins,
+  supervisors: state.supervisor.supervisors,
   isAgentsLoaded: state.agent.isAgentsLoaded,
+  isAdminsLoaded: state.admin.isAdminsLoaded,
   groups: state.group.groups,
 });
 
