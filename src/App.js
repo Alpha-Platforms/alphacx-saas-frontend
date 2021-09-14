@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, {useEffect} from "react";
 import {Route, Switch, BrowserRouter} from "react-router-dom";
 import DefaultLayoutRoute from "./components/DefaultLayout/DefaultLayoutRoute";
@@ -31,6 +32,8 @@ import {getGroups} from "./reduxstore/actions/groupActions";
 import {getTags} from "./reduxstore/actions/tagActions";
 import {getConfigs} from "./reduxstore/actions/configActions";
 import {getAgents} from "./reduxstore/actions/agentActions";
+import {getAdmins} from './reduxstore/actions/adminActions';
+import {getSupervisors} from './reduxstore/actions/supervisorActions';
 import CustomerList from "./components/pages/customers/CustomerList";
 import CustomersNull from "./components/pages/customers/CustomersNull";
 import Customer from "./components/pages/customers/Customer";
@@ -87,6 +90,8 @@ const SiteRouter = connect(mapStateToProps, {
     getStatuses,
     getGroups,
     getAgents,
+    getAdmins,
+    getSupervisors,
     getPaginatedCustomers,
     getPaginatedUsers,
     getTags,
@@ -101,6 +106,8 @@ const SiteRouter = connect(mapStateToProps, {
     getStatuses,
     getGroups,
     getAgents,
+    getAdmins,
+    getSupervisors,
     getPaginatedCustomers,
     getPaginatedUsers,
     getTags,
@@ -127,6 +134,7 @@ const SiteRouter = connect(mapStateToProps, {
             getStatuses();
             getGroups();
             getAgents();
+            getAdmins();
             getTags();
             getSubCategories();
             getConfigs();

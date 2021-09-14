@@ -10,7 +10,7 @@ export const getSupervisors = () => (dispatch, getState) => {
 		return;
 	}
 	dispatch(setSupervisorsLoading());
-	axios.get(`${config.stagingBaseUrl}/users?role=Supervisor&per_page=100`, userTokenConfig(getState))
+	axios.get(`${config.stagingBaseUrl}/users?role=Supervisor&per_page=500`, userTokenConfig(getState))
 		.then(res => dispatch({
 			type: types.GET_SUPERVISORS,
 			payload: (res.data && res.data.status === "success") ? res.data.data : {}

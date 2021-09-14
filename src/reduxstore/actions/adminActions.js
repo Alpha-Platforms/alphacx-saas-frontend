@@ -10,7 +10,7 @@ export const getAdmins = () => (dispatch, getState) => {
 		return;
 	}
 	dispatch(setAdminsLoading());
-	axios.get(`${config.stagingBaseUrl}/users?role=Admin&per_page=100`, userTokenConfig(getState))
+	axios.get(`${config.stagingBaseUrl}/users?role=Administrator&per_page=500`, userTokenConfig(getState))
 		.then(res => dispatch({
 			type: types.GET_ADMINS,
 			payload: (res.data && res.data.status === "success") ? res.data.data : {}
@@ -24,7 +24,7 @@ export const getPaginatedAdmins = (itemsPerPage, currentPage) => (dispatch, getS
 		return console.error("Network error!");
 	}
 	dispatch(setAdminsLoading());
-	axios.get(`${config.stagingBaseUrl}/users?role=Admin&per_page=${itemsPerPage}&page=${currentPage}`, userTokenConfig(getState))
+	axios.get(`${config.stagingBaseUrl}/users?role=Administrator&per_page=${itemsPerPage}&page=${currentPage}`, userTokenConfig(getState))
 		.then(res => dispatch({
 			type: types.GET_ADMINS,
 			payload: (res.data && res.data.status === "success") ? res.data.data : {}
