@@ -204,7 +204,7 @@ const UserList = ({
         </div>
 
         <div id="alphacxMTable" className="mb-3 acx-user-table acx-user-table-2">
-          {(agents && admins) && (
+          {(agents && admins && supervisors) && (
             <MuiThemeProvider theme={tableTheme}>
               <MaterialTable
                 title=""
@@ -287,7 +287,7 @@ const UserList = ({
                   //   // render: rowData => (<div><span className="cust-table-dots"><DotSvg/></span></div>)
                   // },
                 ]}
-                data={[...admins, ...agents].map(
+                data={[...admins,...supervisors, ...agents].map(
                   ({
                     firstname,
                     lastname,
@@ -307,7 +307,7 @@ const UserList = ({
                     // group: 'Head Office',
                     group: groups.filter((x) => x.id === group_id)[0]?.name
                       ? groups.filter((x) => x.id === group_id)[0]?.name
-                      : "Head Office",
+                      : "",
                     created: moment(created_at).format('DD MMM, YYYY'),
                     // created: "13 Apr 2021",
                     contact: { firstname, lastname, id, avatar },
