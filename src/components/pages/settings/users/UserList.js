@@ -204,7 +204,7 @@ const UserList = ({
         </div>
 
         <div id="alphacxMTable" className="mb-3 acx-user-table acx-user-table-2">
-          {(agents && admins) && (
+          {(agents && admins && supervisors) && (
             <MuiThemeProvider theme={tableTheme}>
               <MaterialTable
                 title=""
@@ -287,7 +287,7 @@ const UserList = ({
                   //   // render: rowData => (<div><span className="cust-table-dots"><DotSvg/></span></div>)
                   // },
                 ]}
-                data={[...admins, ...agents].map(
+                data={[...admins, ...supervisors, ...agents].map(
                   ({
                     firstname,
                     lastname,
