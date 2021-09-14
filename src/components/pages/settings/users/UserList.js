@@ -287,7 +287,7 @@ const UserList = ({
                   //   // render: rowData => (<div><span className="cust-table-dots"><DotSvg/></span></div>)
                   // },
                 ]}
-                data={[...admins, ...supervisors, ...agents].map(
+                data={[...admins,...supervisors, ...agents].map(
                   ({
                     firstname,
                     lastname,
