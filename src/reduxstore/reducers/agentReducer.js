@@ -17,8 +17,8 @@ const agentReducer = (state = initialState, action) => {
 		case types.GET_AGENTS:
 			return {
 				...state,
-				agents: action.payload.users,
-                meta: action.payload.meta,
+				agents: action.payload.users || [],
+                meta: action.payload.meta || null,
 				isAgentsLoading: false,
 				isAgentsLoaded: true
 				}
