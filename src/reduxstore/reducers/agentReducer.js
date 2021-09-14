@@ -1,7 +1,7 @@
 import * as types from '../types';
 
 const initialState = {
-	agents: [],
+	agents: null,
     meta: null,
 	isAgentsLoading: false, //will be true when fetching data and back to false when the fetch is done
 	isAgentsLoaded: false,
@@ -17,8 +17,8 @@ const agentReducer = (state = initialState, action) => {
 		case types.GET_AGENTS:
 			return {
 				...state,
-				agents: action.payload.users,
-                meta: action.payload.meta,
+				agents: action.payload.users || [],
+                meta: action.payload.meta || null,
 				isAgentsLoading: false,
 				isAgentsLoaded: true
 				}

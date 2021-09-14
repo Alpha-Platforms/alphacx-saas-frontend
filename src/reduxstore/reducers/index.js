@@ -10,6 +10,8 @@ import categoryReducer from './categoryReducer';
 import statusReducer from './statusReducer';
 import groupReducer from './groupReducer';
 import agentReducer from './agentReducer';
+import adminReducer from './adminReducer';
+import supervisorReducer from './supervisorReducer';
 import userReducer from './userReducer';
 import tagReducer from './tagReducer';
 import subCategoryReducer from './subCategoryReducer';
@@ -31,6 +33,8 @@ const rootReducer = combineReducers({
     status: statusReducer,
     group: groupReducer,
     agent: agentReducer,
+    admin: adminReducer,
+    supervisor: supervisorReducer,
     user: userReducer,
     tag: tagReducer,
     subCategory: subCategoryReducer,

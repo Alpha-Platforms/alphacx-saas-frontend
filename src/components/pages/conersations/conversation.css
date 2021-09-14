@@ -653,8 +653,7 @@ select {
   margin-top: 15px;
 }
 
-.ticketmodalInputWrapMain input,
-select {
+.ticketmodalInputWrapMain input {
   width: 100%;
   border: 1px solid rgba(45, 50, 80, 0.22);
   box-sizing: border-box;
@@ -663,8 +662,7 @@ select {
   font-size: 12px;
 }
 
-.ticketmodalInputWrapMainOne input,
-select {
+.ticketmodalInputWrapMainOne input {
   width: 100%;
   border: 1px solid rgba(45, 50, 80, 0.22);
   box-sizing: border-box;
