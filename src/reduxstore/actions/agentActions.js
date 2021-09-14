@@ -10,7 +10,7 @@ export const getAgents = () => (dispatch, getState) => {
 		return;
 	}
 	dispatch(setAgentsLoading());
-	axios.get(`${config.stagingBaseUrl}/users?role=Agent&per_page=100`, userTokenConfig(getState))
+	axios.get(`${config.stagingBaseUrl}/users?role=Agent&per_page=500`, userTokenConfig(getState))
 		.then(res => dispatch({
 			type: types.GET_AGENTS,
 			payload: (res.data && res.data.status === "success") ? res.data.data : {}
