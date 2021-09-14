@@ -7,7 +7,7 @@ import PinIcon from '../../../assets/icons/pin.svg';
 import MessageList from "./messageList";
 import searchIcon from "../../../assets/imgF/Search.png";
 import NoChatFound from "./noChatFound";
-import SingleChatOpen from "./sigleChat";
+// import SingleChatOpen from "./sigleChat";
 import {
   httpGetMain,
   httpPostMain,
@@ -149,30 +149,39 @@ export default function Conversation() {
   useEffect(() => {
     AppSocket.createConnection();
     AppSocket.io.on(`ws_tickets`, (data) => {
+      setTickets(data?.data?.tickets);
       // console.log("this are Tickets", data?.data?.tickets);
-      setWsTickets(data?.data?.tickets);
+      // setWsTickets(data?.data?.tickets);
     });
     AppSocket.io.on(`message`, (data) => {
       // console.log("this are history msg", data);
       // console.log(UserInfo);
-      let msg = {
-        created_at: data.created_at,
-        id: data.history.id,
-        plain_response: data.history.plain_response,
-        response: data.history.response,
-        type: "reply",
-        user: data.user,
-      };
-      // console.log("msg>>>", msg);
+      
+      
+      // if(data.user.id == ticket[0]?.customer?.id){
+        let msg = {
+          created_at: data.created_at,
+          id: data.history.id,
+          plain_response: data.history.plain_response,
+          response: data.history.response,
+          type: "reply",
+          user: data.user,
+        };
+        
+        setMsgHistory((item) => [...item, msg]);
+        
+        let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
+        AppSocket.io.emit(`ws_tickets`, ticketsData);
 
-      setMsgHistory((item) => [...item, msg]);
-      scollPosSendMsgList();
+        scollPosSendMsgList();
+      // }
+      
       // sortMsges((item) => [...item, msg]);
     });
     return () => {
       AppSocket.io.disconnect();
     };
-  }, []);
+  },[]);
 
   const sortMsges = (msgs) => {
     // console.log("msgHis", msgs);
@@ -681,11 +690,9 @@ export default function Conversation() {
                         <div className="custormChatHeaderInfoData">
                           <h1>{ticket[0]?.subject}</h1>
                           <p>
-                            {`${capitalize(
-                              SenderInfo?.customer?.firstname
-                            )} ${capitalize(
-                              SenderInfo?.customer?.lastname
-                            )} ${capitalize(SenderInfo?.customer?.email)}`}
+                            {`${capitalize(SenderInfo?.customer?.firstname)} 
+                              ${capitalize(SenderInfo?.customer?.lastname == "default"? "":SenderInfo?.customer?.lastname)} 
+                              ${capitalize(SenderInfo?.customer?.email)}`}
                             <div className="custormChatHeaderDot"></div>{" "}
                             <span>{dateFormater(ticket[0]?.updated_at)}</span>
                           </p>
@@ -748,13 +755,7 @@ export default function Conversation() {
                             <img src={SenderInfo?.customer?.avatar} alt="" />
                           ) : (
                             <div className="singleChatSenderImg">
-                              <p>{`${SenderInfo?.customer?.firstname?.slice(
-                                0,
-                                1
-                              )}${SenderInfo?.customer?.lastname?.slice(
-                                0,
-                                1
-                              )}`}</p>
+                              <p>{`${SenderInfo?.customer?.firstname?.slice(0,1)}${SenderInfo?.customer?.lastname == "default"? "" : SenderInfo?.customer?.lastname?.slice(0,1)}`}</p>
                             </div>
                           )}
                           <div className="custorActiveStateimgd"></div>
@@ -762,9 +763,7 @@ export default function Conversation() {
                       </div>
                       <div className="custormernameticket">
                         <p style={{ color: "#006298" }}>
-                          {`${capitalize(
-                            ticket[0]?.customer?.firstname
-                          )} ${capitalize(ticket[0]?.customer?.lastname)}`}
+                          {`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(ticket[0]?.customer?.lastname == "default" ? "" : ticket[0]?.customer?.lastname)}`}
                         </p>
                         <p>{`Via ${ticket[0].channel} . ${dateFormater(
                           ticket[0].created_at
@@ -819,13 +818,7 @@ export default function Conversation() {
                                     <img src={data?.user.avatar} alt="" />
                                   ) : (
                                     <div className="singleChatSenderImg">
-                                      <p>{`${data?.user?.firstname?.slice(
-                                        0,
-                                        1
-                                      )}${data?.user?.lastname?.slice(
-                                        0,
-                                        1
-                                      )}`}</p>
+                                      <p>{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0,1)}`}</p>
                                     </div>
                                   )}
                                   <div className="custorActiveStateimgd"></div>
@@ -835,7 +828,7 @@ export default function Conversation() {
                                 <p style={{ color: "#006298" }}>
                                   {`${capitalize(
                                     data?.user?.firstname
-                                  )} ${capitalize(data?.user?.lastname)}`}
+                                  )} ${capitalize(data?.user?.lastname == "default" ? "" : data?.user?.lastname)}`}
                                   <span style={{ color: "#656565" }}>
                                     {" "}
                                     replied
@@ -878,10 +871,7 @@ export default function Conversation() {
                                   <img src={data?.user.avatar} alt="" />
                                 ) : (
                                   <div className="singleChatSenderImg">
-                                    <p>{`${data?.user?.firstname?.slice(
-                                      0,
-                                      1
-                                    )}${data?.user?.lastname?.slice(0, 1)}`}</p>
+                                    <p>{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
                                   </div>
                                 )}
                                 <div className="custorActiveStateimgd"></div>
@@ -891,7 +881,7 @@ export default function Conversation() {
                               <p style={{ color: "#006298" }}>
                                 {`${capitalize(
                                   data?.user?.firstname
-                                )} ${capitalize(data?.user?.lastname)}`}
+                                )} ${capitalize(data?.user?.lastname == "default" ? "" : data?.user?.lastname)}`}
                                 <span style={{ color: "#656565" }}>
                                   {" "}
                                   replied
@@ -936,7 +926,7 @@ export default function Conversation() {
                                     <p>{`${data?.user?.firstname?.slice(
                                       0,
                                       1
-                                    )}${data?.user?.lastname?.slice(0, 1)}`}</p>
+                                    )}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
                                   </div>
                                 )}
                                 <div className="custorActiveStateimgd"></div>
@@ -946,7 +936,7 @@ export default function Conversation() {
                               <p style={{ color: "#006298" }}>
                                 {`${capitalize(
                                   data?.user?.firstname
-                                )} ${capitalize(data?.user?.lastname)}`}
+                                )} ${capitalize(data?.user?.lastname == "default" ? "" : data?.user?.lastname)}`}
                                 <span style={{ color: "#656565" }}>
                                   {" "}
                                   replied
@@ -1142,9 +1132,7 @@ export default function Conversation() {
               <Form.Group as={Col} md={6} className="form-group acx-form-group mb-3">
                 <Form.Label className="mb-0">Customer</Form.Label>
                 <Form.Control
-                  value={`${capitalizeFirstLetter(
-                    ticket[0]?.customer?.firstname
-                  )} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
+                  value={`${capitalizeFirstLetter(ticket[0]?.customer?.firstname)} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
                   type="text"
                   disabled
                 />

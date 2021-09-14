@@ -148,7 +148,7 @@ const AutomationAction = ({
               <span className="input-group-text acx-fs-8">Hours</span>
             </div>
 
-            <label>before due date </label>
+            <label>after ticket creation </label>
 
           </div>
 

@@ -185,6 +185,11 @@ const NewArticle = () => {
     if (res?.status == "success") {
       let { title, body, folders } = res?.data;
       console.clear();
+
+      console.log(folders);
+
+      return;
+
       // get category id
       let folder = folders[0];
       let categoryId;
@@ -508,18 +513,7 @@ const NewArticle = () => {
                   ))}
               </select>
             </div> */}
-            <div className="category mb-4">
-              <p>Tag</p>
-              <div className="category-holder">
-                {/* {newPost.category.map((cat, i) => (
-                      <div key={i} className="cat">
-                        <p>{cat}</p>
-                        <span>x</span>
-                      </div>
-                    ))} */}
-                <img src={AddCategory} className="add-icon" alt="" />
-              </div>
-            </div>
+            
 
             <div className="toogles">
               {!articleId && (
