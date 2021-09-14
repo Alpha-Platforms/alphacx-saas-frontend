@@ -5,61 +5,61 @@ import { returnErrors } from './errorActions';
 import {userTokenConfig} from '../../helper';
 import { NotificationManager } from 'react-notifications';
 
-export const getAdmins = () => (dispatch, getState) => {
+export const getSupervisors = () => (dispatch, getState) => {
 	if (!navigator.onLine) {
 		return;
 	}
-	dispatch(setAdminsLoading());
-	axios.get(`${config.stagingBaseUrl}/users?role=Admin&per_page=100`, userTokenConfig(getState))
+	dispatch(setSupervisorsLoading());
+	axios.get(`${config.stagingBaseUrl}/users?role=Supervisor&per_page=100`, userTokenConfig(getState))
 		.then(res => dispatch({
-			type: types.GET_ADMINS,
+			type: types.GET_SUPERVISORS,
 			payload: (res.data && res.data.status === "success") ? res.data.data : {}
 		}))
 		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 
-export const getPaginatedAdmins = (itemsPerPage, currentPage) => (dispatch, getState) => {
+export const getPaginatedSupervisors = (itemsPerPage, currentPage) => (dispatch, getState) => {
 	if (!navigator.onLine) {
 		return console.error("Network error!");
 	}
-	dispatch(setAdminsLoading());
-	axios.get(`${config.stagingBaseUrl}/users?role=Admin&per_page=${itemsPerPage}&page=${currentPage}`, userTokenConfig(getState))
+	dispatch(setSupervisorsLoading());
+	axios.get(`${config.stagingBaseUrl}/users?role=Supervisor&per_page=${itemsPerPage}&page=${currentPage}`, userTokenConfig(getState))
 		.then(res => dispatch({
-			type: types.GET_ADMINS,
+			type: types.GET_SUPERVISORS,
 			payload: (res.data && res.data.status === "success") ? res.data.data : {}
 		}))
 		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
 // valid redux action
-export const getCurrentAdmin = (id) => (dispatch, getState) => {
+export const getCurrentSupervisor = (id) => (dispatch, getState) => {
     if (!navigator.onLine) {
         return NotificationManager.error('Please check your internet', 'Opps!', 3000);
     }
-    setCurrentAdminLoading();
-    const {admins} = getState().admin;
+    setCurrentSupervisorLoading();
+    const {supervisors} = getState().supervisor;
 
-    let currentAdmin = admins.filter(admin => admin
+    let currentSupervisor = supervisors.filter(supervisor => supervisor
         ?.id === id)[0];
 
-    // console.log("Current Admin", currentAdmin);
+    // console.log("Current Supervisor", currentSupervisor);
 
-    // if (getState().admin.currentAdmin
+    // if (getState().supervisor.currentSupervisor
     //     ?.id === id) {
     //     dispatch({
-    //         type: types.GET_CURRENT_ADMIN,
-    //         payload: getState().admin.currentAdmin
+    //         type: types.GET_CURRENT_SUPERVISOR,
+    //         payload: getState().supervisor.currentSupervisor
     //     })
     // } else 
     
-    if (currentAdmin) {
-        dispatch({type: types.GET_CURRENT_ADMIN, payload: currentAdmin})
+    if (currentSupervisor) {
+        dispatch({type: types.GET_CURRENT_SUPERVISOR, payload: currentSupervisor})
     } else {
         axios
             .get(`${config.stagingBaseUrl}/users/${id}`, userTokenConfig(getState))
             .then(res => dispatch({
-                type: types.GET_CURRENT_ADMIN,
+                type: types.GET_CURRENT_SUPERVISOR,
                 payload: res.data && res.data?.status === "success"
                     ? res.data.data
                     : null
@@ -67,21 +67,21 @@ export const getCurrentAdmin = (id) => (dispatch, getState) => {
             .catch(err => {
                 dispatch(returnErrors(err?.response?.data, err?.response?.status))
                 dispatch({
-                    type: types.GET_CURRENT_ADMIN,
+                    type: types.GET_CURRENT_SUPERVISOR,
                     payload: null
                 })
             });
     }
 }
 
-export const setCurrentAdminLoading = () => {
-    return {type: types.CURRENT_ADMIN_LOADING}
+export const setCurrentSupervisorLoading = () => {
+    return {type: types.CURRENT_SUPERVISOR_LOADING}
 }
 
-export const resetAdminCreated = () => ({type: types.RESET_ADMIN_CREATED});
+export const resetSupervisorCreated = () => ({type: types.RESET_SUPERVISOR_CREATED});
 
-export const setAdminsLoading = () => {
+export const setSupervisorsLoading = () => {
 	return {
-		type: types.ADMINS_LOADING
+		type: types.SUPERVISORS_LOADING
 	}
 }
