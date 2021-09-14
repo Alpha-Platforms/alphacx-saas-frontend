@@ -132,6 +132,12 @@ const HelpCenterSettings = () => {
       title: "Title",
       field: "title",
       width: "40%",
+      render: (rowData) => {
+        return (
+        <Link to={`/settings/help-center/edit/${articles[rowData.tableData.id].id}`}>
+          {articles[rowData.tableData.id].title}
+        </Link>
+      )}
     },
     {
       title: "Publish",

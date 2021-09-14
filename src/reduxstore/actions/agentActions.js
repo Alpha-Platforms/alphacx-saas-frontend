@@ -53,7 +53,7 @@ export const getCurrentAgent = (id) => (dispatch, getState) => {
     setCurrentAgentLoading();
     const {agents} = getState().agent;
 
-    let currentAgent = agents.filter(agent => agent
+    let currentAgent = agents && agents.filter(agent => agent
         ?.id === id)[0];
 
     // console.log("Current Agent", currentAgent);

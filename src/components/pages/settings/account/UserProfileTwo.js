@@ -1,3 +1,4 @@
+//@ts-nocheck
 import {useEffect} from "react";
 import "./AccountSettings.scss";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
@@ -11,7 +12,7 @@ import { updateUser, updateUserPassword } from './../../../../reduxstore/actions
 import ImageDefault from '../../../../assets/svgicons/image-default.svg';
 import axios from 'axios';
 
-const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, currentAgent, groups, authenticatedUser, agents, getAgents}) => {
+const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, currentAgent, groups, authenticatedUser, agents, admins, supervisors, getAgents}) => {
 
     const {id} = useParams();
 
@@ -158,7 +159,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
         getCurrentAgent(id);
 
         
-        if (agents.length !== 0) {
+        if (agents) {
             const gottenUser =  agents.filter(agent => agent
                 ?.id === id)[0];
 
@@ -172,13 +173,30 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
         }
         
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isAgentLoaded, agents.length])
+    }, [isAgentLoaded, agents])
 
     useEffect(() => {
         if (currentAgent) {
+
+            // other roles aside agents and customers (Admin and Supervisors);
+            let otherRolesTeamId = '';
+
+            if (currentAgent?.role === "Administrator") {
+                if (admins) {
+                    otherRolesTeamId =  admins.filter(admin => admin
+                        ?.id === id)[0]?.group_id;
+                }
+            } else if (currentAgent?.role === 'Supervisor') {
+                if (supervisors) {
+                    otherRolesTeamId =  supervisors.filter(supervisor => supervisor
+                        ?.id === id)[0]?.group_id;
+                }
+            }
+
+
             const {firstname, lastname, email, role, avatar, group_id} = currentAgent;
 
-            const agentInfo = group_id ? {firstname, lastname, email, role, team: group_id} : {firstname, lastname, email, role};
+            const agentInfo = group_id ? {firstname, lastname, email, role, team: group_id} : otherRolesTeamId ? {firstname, lastname, email, role, team: otherRolesTeamId} : {firstname, lastname, email, role};
 
             setPersonalInfoInputs(prev => ({
                 ...prev,
@@ -538,6 +556,6 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
     );
 };
 
-const mapStateToProps = (state, ownProps) => ({agents: state.agent.agents, isAgentLoaded: state.agent.isAgentLoaded, isCurrentAgentLoaded: state.agent.isCurrentAgentLoaded, currentAgent: state.agent.currentAgent, groups: state.group.groups, authenticatedUser: state.userAuth.user});
+const mapStateToProps = (state, ownProps) => ({agents: state.agent.agents, supervisors: state.supervisor.supervisors, admins: state.admin.admins, isAgentLoaded: state.agent.isAgentLoaded, isCurrentAgentLoaded: state.agent.isCurrentAgentLoaded, currentAgent: state.agent.currentAgent, groups: state.group.groups, authenticatedUser: state.userAuth.user});
 
 export default connect(mapStateToProps, {getCurrentAgent, getAgents})(UserProfileTwo);
