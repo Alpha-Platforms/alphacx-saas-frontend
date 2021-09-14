@@ -919,14 +919,11 @@ export default function Conversation() {
                           <div className="customerTiketChat">
                             <div className="customerTImageHeader">
                               <div className="imgContainercth">
-                                {data?.user.avatar ? (
+                                {data?.user?.avatar ? (
                                   <img src={data?.user.avatar} alt="" />
                                 ) : (
                                   <div className="singleChatSenderImg">
-                                    <p>{`${data?.user?.firstname?.slice(
-                                      0,
-                                      1
-                                    )}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
+                                    <p>{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
                                   </div>
                                 )}
                                 <div className="custorActiveStateimgd"></div>
@@ -934,9 +931,7 @@ export default function Conversation() {
                             </div>
                             <div className="custormernameticket">
                               <p style={{ color: "#006298" }}>
-                                {`${capitalize(
-                                  data?.user?.firstname
-                                )} ${capitalize(data?.user?.lastname == "default" ? "" : data?.user?.lastname)}`}
+                                {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : "empty"} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
                                 <span style={{ color: "#656565" }}>
                                   {" "}
                                   replied
