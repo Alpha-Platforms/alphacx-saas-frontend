@@ -151,11 +151,11 @@ export default function Conversation() {
     AppSocket.io.on(`ws_tickets`, (data) => {
       setTickets(data?.data?.tickets);
       // console.log("this are Tickets", data?.data?.tickets);
-      // setWsTickets(data?.data?.tickets);
+      setWsTickets(data?.data?.tickets);
     });
     AppSocket.io.on(`message`, (data) => {
       // console.log("this are history msg", data);
-      // console.log(UserInfo);
+      // console.log(`${UserInfo}`);
       
       
       // if(data.user.id == ticket[0]?.customer?.id){
@@ -178,9 +178,7 @@ export default function Conversation() {
       
       // sortMsges((item) => [...item, msg]);
     });
-    return () => {
-      AppSocket.io.disconnect();
-    };
+    return () => { AppSocket.io.disconnect()};
   },[]);
 
   const sortMsges = (msgs) => {
@@ -307,10 +305,15 @@ export default function Conversation() {
       // ReloadloadSingleMessage();
       setEditorState(initialState);
       setReplyTicket({ plainText: "", richText: "" });
+
+      // emit ws_tickets event on reply
+      AppSocket.createConnection();
+      let channelData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
+      AppSocket.io.emit(`ws_tickets`, channelData);
+
     } else {
       // setLoadingTicks(false);
       setSendingReply(false);
-      console.log(res.er);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };

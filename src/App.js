@@ -57,6 +57,8 @@ import Fields from "./components/pages/settings/fields/Fields";
 import SocialIntegrations from "./components/pages/settings/social_integrations/index";
 import FacebookIntegration from "./components/pages/settings/social_integrations/FacebookIntegration";
 import WhatsappIntegration from "./components/pages/settings/social_integrations/WhatsappIntegration";
+// 
+import RatingsForm from "./components/pages/settings/ratings/RatingsForm.jsx";
 
 import ScrollToTop from "./components/helpers/ScrollToTop";
 import GroupList from "./components/pages/settings/groups/GroupList";
@@ -343,11 +345,14 @@ const SiteRouter = connect(mapStateToProps, {
                                 exact
                                 path="/settings/integrations/whatsapp"
                                 pageName="Integration Settings"
-                                component={WhatsappIntegration}/> {/*
-          ...
-          ..
-          .
-          settings pages end */}
+                                component={WhatsappIntegration}/> 
+                            <SettingsLayoutRoute
+                                exact
+                                path="/settings/ratings"
+                                pageName="Ratings and Review"
+                                component={RatingsForm}/> 
+
+                                {/*......settings pages end */}
 
                             {/* <Route>
                                 <div

@@ -151,24 +151,17 @@ export default function SocialIntegrations() {
         <p>Integrate Social Accounts</p>
       </div>
       <div className="interSocialAccountsTab">
-        <p
-          className={activeSocail == "Whatsapp" ? "activeSocial" : ""}
-          onClick={() => setActiveSocial("Whatsapp")}
-        >
+        <p className={activeSocail == "Whatsapp" ? "activeSocial" : ""} 
+            onClick={() => setActiveSocial("Whatsapp")}>
           {" "}
           Whatsapp
         </p>
-        <p
-          className={activeSocail == "Facebook" ? "activeSocial" : ""}
-          onClick={() => setActiveSocial("Facebook")}
-        >
+        <p onClick={() => setActiveSocial("Facebook")}
+          className={activeSocail == "Facebook" ? "activeSocial" : ""}>
           Facebook
         </p>
-
-        <p
-          className={activeSocail == "sms" ? "activeSocial" : ""}
-          onClick={() => setActiveSocial("sms")}
-        >
+        <p onClick={() => setActiveSocial("sms")}
+            className={activeSocail == "sms" ? "activeSocial" : ""}>
           SMS
         </p>
       </div>
