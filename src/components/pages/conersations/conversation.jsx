@@ -148,16 +148,16 @@ export default function Conversation() {
   }, []);
   useEffect(() => {
     AppSocket.createConnection();
+    // let swData = { assigneeId: "15b7c94e-0fc1-4619-9f7b-d985b41e84f9", userId:  "490af948-cd93-45c6-9a9e-a06be5bbea2b" };
+    // AppSocket.io.emit("join_private", swData);
     AppSocket.io.on(`ws_tickets`, (data) => {
       setTickets(data?.data?.tickets);
       // console.log("this are Tickets", data?.data?.tickets);
-      // setWsTickets(data?.data?.tickets);
+      setWsTickets(data?.data?.tickets);
     });
     AppSocket.io.on(`message`, (data) => {
       // console.log("this are history msg", data);
-      // console.log(UserInfo);
-      
-      
+      // console.log(`${UserInfo}`);
       // if(data.user.id == ticket[0]?.customer?.id){
         let msg = {
           created_at: data.created_at,
@@ -175,12 +175,12 @@ export default function Conversation() {
 
         scollPosSendMsgList();
       // }
-      
       // sortMsges((item) => [...item, msg]);
     });
-    return () => {
-      AppSocket.io.disconnect();
-    };
+    AppSocket.io.on(`join_private`, () => {
+      console.log("something came up");
+    });
+    return () => { AppSocket.io.disconnect()};
   },[]);
 
   const sortMsges = (msgs) => {
@@ -307,10 +307,15 @@ export default function Conversation() {
       // ReloadloadSingleMessage();
       setEditorState(initialState);
       setReplyTicket({ plainText: "", richText: "" });
+
+      // emit ws_tickets event on reply
+      AppSocket.createConnection();
+      let channelData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
+      AppSocket.io.emit(`ws_tickets`, channelData);
+
     } else {
       // setLoadingTicks(false);
       setSendingReply(false);
-      console.log(res.er);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
@@ -461,10 +466,10 @@ export default function Conversation() {
       const res = await httpGetMain(`tickets/${ticket[0].id}`);
       if (res.status === "success") {
           setTicket(res?.data);
-          NotificationManager.success("Data updated", "Success");
+          return NotificationManager.success("Data updated", "Success");
       } else {
         setLoadSingleTicket(false);
-        NotificationManager.info("please refresh your page to see changes");
+        return NotificationManager.info("please refresh your page to see changes");
       }
     } else {
       setProcessing(false);

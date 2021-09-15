@@ -178,6 +178,9 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         };
   
         setMsgHistory((item) => [...item, msg]);
+        // emit ws_tickets event on reply
+        let channelData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
+        AppSocket.io.emit(`ws_tickets`, channelData);
         // scrollPosSendMsgList();
         // sortMsges((item) => [...item, msg]);
       });
@@ -294,6 +297,10 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         // ReloadloadSingleMessage();
         setEditorState(initialState);
         setReplyTicket({ plainText: "", richText: "" });
+        // emit ws_tickets event on reply
+        AppSocket.createConnection();
+        let channelData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
+        AppSocket.io.emit(`ws_tickets`, channelData);
         // scrollPosSendMsgList()
       } else {
         // setLoadingTicks(false);

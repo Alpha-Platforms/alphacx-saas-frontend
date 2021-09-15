@@ -5,6 +5,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { timeFormater } from "../../helpers/dateFormater";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 
+
 export default function MessageList({
   tickets,
   LoadingTick,
@@ -18,9 +19,10 @@ export default function MessageList({
   scollPosSendMsgList,
 }) {
   const [renderTicket, setRenderTicket] = useState([]);
+
   useEffect(() => {
-    checkRender();
-  }, [filterChat, tickets, filterTicketsState]);
+    checkRender();//, [filterChat, tickets, filterTicketsState]
+  });
   const checkRender = () => {
     if (filterChat == "system") {
       setRenderTicket(tickets);
