@@ -86,12 +86,12 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
     const dueDate = Number(automationBody.durationDays) * 24 + Number(automationBody.durationHours);
     const requestBody = {
       name: automationBody.title,
-      dueDate,
+      dueDate: Math.ceil(dueDate * 60),
       reminder: {
         categories: automationBody.categories.map(cat => cat.value),
         agreements: actions.map(act => ({
-          days: act.days,
-          hours: act.hours,
+          days: Number(act.days),
+          hours: Math.ceil(act.hours * 60),
           action: act.channel.value,
           subject: act.subject,
           body: act.body,
@@ -105,8 +105,9 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
       }
     };
 
+    // console.log(requestBody);
+
     setPolicyLoading(true);
-    // USE REDUX 
     const res = await httpPostMain("sla", requestBody);
 
     if (res?.status === "success") {
@@ -118,6 +119,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
       setPolicyLoading(false);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
+
   };
 
 
@@ -141,7 +143,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
           id: uuid(),
           channel: act?.action?.toLowerCase() === 'email' ? {value: wordCapitalize(act?.action || '').trim(), label: wordCapitalize(act?.action || '').trim()} : {value: act?.action?.toUpperCase(), label: act?.action?.toUpperCase()},
           days: act?.days || '',
-          hours: act?.hours || '',
+          hours: Math.floor(Number(act?.hours) / 60) || '',
           subject: act?.subject || '',
           body: act.body,
           recipientType: act?.recipient?.type || 'agent',
