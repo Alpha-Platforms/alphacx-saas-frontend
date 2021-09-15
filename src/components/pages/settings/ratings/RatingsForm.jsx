@@ -12,6 +12,8 @@ import Button  from 'react-bootstrap/Button';
 import StarRatings from 'react-star-ratings';
 // 
 import "../settings.css";
+// 
+import Feedback from "./Feedback";
 
 
 export default function RatingsForm() {
@@ -104,9 +106,7 @@ export default function RatingsForm() {
                     </div>
                 ) : ("")}
                 {activePage === "feedback" ? (
-                    <div className="mt-3">
-                        
-                    </div>
+                    <Feedback/>
                 ) : ("")}
             </div>
         </section>
