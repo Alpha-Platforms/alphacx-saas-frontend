@@ -6,9 +6,13 @@ import MaterialTable from "material-table";
 import { TablePagination } from "@material-ui/core";
 import { ThemeProvider as MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 import SaveAlt from "@material-ui/icons/SaveAlt";
+
+import Image  from 'react-bootstrap/Image';
 // 
 import { ReactComponent as StarUnactiveSvg } from "../../../../assets/icons/Star-unactive.svg";
 import { ReactComponent as StarYellowSvg } from "../../../../assets/icons/Star-yellow.svg";
+import EmptyStateImg from "../../../../assets/images/empty_article.png";
+
 // 
 export default function Feedback() {
     const tableTheme = createTheme({
@@ -50,7 +54,10 @@ export default function Feedback() {
     ];
     return (
         <div className="mt-3 mb-5">
-            <h1 className="">sorry ass</h1>
+            <div className="py-5 text-center d-flex flex-column justify-content-center align-items-center">
+                <Image src={EmptyStateImg} height="100" width="auto"/>
+                <h5 className="mt-3">Sorry! still cooking... 👩‍🍳 </h5>
+            </div>
         </div>
     );
 }

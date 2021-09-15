@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
+import Logo from "../../../assets/svgicons/Logo.svg";
+
 // 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -8,6 +10,8 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button  from 'react-bootstrap/Button';
 import Spinner  from 'react-bootstrap/Spinner';
+import Image  from 'react-bootstrap/Image';
+
 // 
 import StarRatings from 'react-star-ratings';
 import { useLocation } from "react-router-dom";
@@ -59,16 +63,18 @@ export default function RatingsForm() {
                     <Col sm={12} md={8} lg={6}>
                         <Form className="mt-3" onSubmit={e => e.preventDefault()}>
                             <div className="text-center mb-4">
-                                <h1 className>Rate Your Experience</h1>
+                                <h1 className="mb-3">Rate Your Experience</h1>
+                                <p className="">Are you satisfied with our customer support service? Click on the stars below to rate us.</p>
                             </div>
                             <div className="p-3 mb-4">
                                 <div className="d-flex justify-content-center align-items-center">
                                     <StarRatings
                                         rating={rating}
-                                        starRatedColor="#006298"
+                                        starRatedColor="#DFB300"
                                         starEmptyColor="#e2e2e2"
-                                        starHoverColor="#c40c34"
-                                        starSpacing="5px"
+                                        starHoverColor="#DFB300"
+                                        starSpacing="4px"
+                                        starDimension="40px"
                                         changeRating={(newRating) => { setRating(newRating) }}
                                         numberOfStars={5}
                                         name='rating'
@@ -84,14 +90,14 @@ export default function RatingsForm() {
                                 <div className="">
                                     <p className="mb-2">How likely are you to recommend AlphaCX to a friend or colleague?</p>
                                 </div>
-                                <div className="p-3 bg-light border rounded ">
+                                <div className="p-3 bg-light border acx-hover-border-primary rounded ">
                                     <div className="d-flex justify-content-between align-items-center">
                                         {(() => {
                                             let rows = [];
                                             for (let i = 0; i <= 10; i++) {
                                                 rows.push(
                                                     <button type="button" key={i} onClick={() => setNpsScore(i)}
-                                                            className={`mb-0 btn acx-btn-icon rounded-circle ${(npsScore == i ? "acx-bg-primary": "")}`}>
+                                                            className={`mb-0 btn acx-btn-icon acx-hover-border-primary rounded-1 ${(npsScore == i ? "acx-bg-primary": "")}`}>
                                                         <span className={`${(npsScore == i ? "text-white": "")}`}>{i}</span>
                                                     </button>
                                                 );
@@ -114,6 +120,11 @@ export default function RatingsForm() {
                         </Form>
                     </Col>
                 </Row>
+                <footer className="">
+                    <p className="text-center">
+                        <Image src={Logo} className="me-2" height="16" width="auto" /> We care with AlphaCX
+                    </p>
+                </footer>
             </Container>
         </section>
     );

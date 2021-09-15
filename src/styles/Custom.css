@@ -819,11 +819,11 @@ input.search-input-right {
     font-size: 0.875rem;
     background: transparent;
     border: none;
-    transition: 0.2s;
     border-radius: 6px;
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: 250ms ease-in;
     /* app icon button primary */
     /* app icon button secondary */
 }
@@ -850,7 +850,8 @@ input.search-input-right {
     background-color: var(--color-primary-25);
     color: var(--color-primary);
 }
-.acx-btn-icon.acx-btn-icon-primary:focus, .acx-btn-icon.acx-btn-icon-primary.focus {
+.acx-btn-icon.acx-btn-icon-primary:focus, 
+.acx-btn-icon.acx-btn-icon-primary.focus {
     background-color: var(--color-primary-50);
     color: var(--color-primary);
     box-shadow: none;
@@ -875,7 +876,8 @@ input.search-input-right {
     background-color: var(--color-white-50);
     color: var(--color-white);
 }
-.acx-btn-icon.acx-btn-icon-light:focus, .acx-btn-icon.acx-btn-icon-light.focus {
+.acx-btn-icon.acx-btn-icon-light:focus, 
+.acx-btn-icon.acx-btn-icon-light.focus {
     background-color: var(--color-white-50);
     color: var(--color-white);
     box-shadow: none;
@@ -951,7 +953,13 @@ input.search-input-right {
     height: 200px;
     width: 200px;
 }
-
+/*  */
+.acx-hover-border-primary{
+    transition: 250ms ease-in;
+}
+.acx-hover-border-primary:hover{
+    border: 1px solid var(--color-primary) !important;
+}
 /*
 *
 *   Opacity

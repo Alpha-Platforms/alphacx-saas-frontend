@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
 import { hideLoader, showLoader } from "../../../helpers/loader";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
+import Logo from "../../../../assets/svgicons/Logo.svg";
 // 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button  from 'react-bootstrap/Button';
+import Image  from 'react-bootstrap/Image';
 // 
 import StarRatings from 'react-star-ratings';
 // 
@@ -16,12 +18,14 @@ import "../settings.css";
 import Feedback from "./Feedback";
 
 
-export default function RatingsForm() {
+export default function RatingsSettings() {
     const [activePage, setActivePage] = useState("ratingsForm");
     const [rating, setRating] = useState(0);
+    const [npsScore, setNpsScore] = useState(null);
+    const [processing, setProcessing] = useState(false);
 
     return(
-        <section className="ratings-page">
+        <section className="ratings-page min-vh-100">
             <header id="mainContentHeader" className="breadcrumb">
                 <h6 className="text-muted f-14">
                     <Link to="/settings">
@@ -63,8 +67,12 @@ export default function RatingsForm() {
                                         <div className="d-flex justify-content-center align-items-center">
                                             <StarRatings
                                                 rating={rating}
-                                                starRatedColor="#006298"
-                                                changeRating={setRating}
+                                                starEmptyColor="#e2e2e2"
+                                                starRatedColor="#DFB300"
+                                                starHoverColor="#DFB300"
+                                                starSpacing="4px"
+                                                starDimension="40px"
+                                                changeRating={(newRating) => { setRating(newRating) }}
                                                 numberOfStars={5}
                                                 name='rating'
                                             />
@@ -85,15 +93,25 @@ export default function RatingsForm() {
                                             placeholder="Enter header message" />
                                         <Form.Text className="text-muted"></Form.Text>
                                     </Form.Group>
-                                    <div className="p-3 bg-light border rounded mb-3">
-                                        <div className="d-flex justify-content-between align-items-center">
-                                            {(() => {
-                                                let rows = [];
-                                                for (let i = 0; i <= 10; i++) {
-                                                    rows.push(<p key={i} className="mb-0">{i}</p>);
-                                                }
-                                                return rows;
-                                            })()}
+                                    <div className="mb-5">
+                                        <div className="">
+                                            <p className="mb-2">How likely are you to recommend AlphaCX to a friend or colleague?</p>
+                                        </div>
+                                        <div className="p-3 bg-light border acx-hover-border-primary rounded ">
+                                            <div className="d-flex justify-content-between align-items-center">
+                                                {(() => {
+                                                    let rows = [];
+                                                    for (let i = 0; i <= 10; i++) {
+                                                        rows.push(
+                                                            <button type="button" key={i} onClick={() => setNpsScore(i)}
+                                                                    className={`mb-0 btn acx-btn-icon acx-hover-border-primary rounded-1 ${(npsScore == i ? "acx-bg-primary": "")}`}>
+                                                                <span className={`${(npsScore == i ? "text-white": "")}`}>{i}</span>
+                                                            </button>
+                                                        );
+                                                    }
+                                                    return rows;
+                                                })()}
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="mb-3 text-center">
@@ -109,6 +127,11 @@ export default function RatingsForm() {
                     <Feedback/>
                 ) : ("")}
             </div>
+            <footer className="">
+                <p className="text-center">
+                    <Image src={Logo} className="me-2" height="16" width="auto" /> We care with AlphaCX
+                </p>
+            </footer>
         </section>
     );
 }
