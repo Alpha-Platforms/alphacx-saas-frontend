@@ -185,11 +185,6 @@ const NewArticle = () => {
     if (res?.status == "success") {
       let { title, body, folders } = res?.data;
       console.clear();
-
-      console.log(folders);
-
-      return;
-
       // get category id
       let folder = folders[0];
       let categoryId;
