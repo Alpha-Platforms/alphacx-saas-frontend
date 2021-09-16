@@ -31,16 +31,14 @@ import HeartBWIcon from "../../../assets/icons/Heart-BW.svg";
 import RoleLightIcon from "../../../assets/icons/role_light.svg";
 import LivechatIcon from "../../../assets/icons/chat-blue.svg";
 import DocumentIcon from "../../../assets/icons/doc-blue.svg";
+import RatingStar from "../../../assets/icons/Rating-Star.svg";
 import { Link } from "react-router-dom";
 import {connect} from 'react-redux';
 
 function SettingsHome({signedUser}) {
   return (
     <>
-      <div
-        className="flex-wrap d-flex align-items-start"
-        style={{ flexBasis: "32%" }}
-      >
+      <div className="flex-wrap d-flex align-items-start" style={{ flexBasis: "32%" }}>
         <div className="setting-link-item border rounded bg-light">
           <Link
             to="/settings/users"
@@ -52,7 +50,7 @@ function SettingsHome({signedUser}) {
               </div>
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Users</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                   Create users, assign permissions
                 </p>
               </div>
@@ -68,7 +66,7 @@ function SettingsHome({signedUser}) {
               </div>
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Profile Settings</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                   Update your user profile
                 </p>
               </div>
@@ -87,7 +85,7 @@ function SettingsHome({signedUser}) {
               </div>
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Teams</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                   Organize users in your organization
                 </p>
               </div>
@@ -106,7 +104,7 @@ function SettingsHome({signedUser}) {
               </div>
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Account</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                   Access your profile and account subscriptions
                 </p>
               </div>
@@ -125,7 +123,7 @@ function SettingsHome({signedUser}) {
               </div>
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Automation</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                   Automate notifications, responses and durations
                 </p>
               </div>
@@ -144,7 +142,7 @@ function SettingsHome({signedUser}) {
               </div>
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Email</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                   Configure inbound and outbound email settings for your
                   organization
                 </p>
@@ -165,7 +163,7 @@ function SettingsHome({signedUser}) {
               </div>
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Roles</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                   Define access levels and permission for user types
                 </p>
               </div>
@@ -184,7 +182,7 @@ function SettingsHome({signedUser}) {
               </div>
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Ticket Settings</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                   Create ticket types, organize and prioritize tickets
                 </p>
               </div>
@@ -200,7 +198,7 @@ function SettingsHome({signedUser}) {
               </div>
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Integrations</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                   Connect social channels to your app.
                 </p>
               </div>
@@ -219,7 +217,7 @@ function SettingsHome({signedUser}) {
               </div>
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Notifications</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                   Assign notifications roles to users
                 </p>
               </div>
@@ -238,7 +236,7 @@ function SettingsHome({signedUser}) {
               </div>
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Help Centre</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                   Learn how to use AlphaCX, fix a problem and get answers to
                   your questions
                 </p>
@@ -248,14 +246,14 @@ function SettingsHome({signedUser}) {
         </div>
 
         <div className="setting-link-item border rounded bg-light">
-          <Link to="#" className="d-block cursor text-decoration-none">
+          <Link to="settings/ratings" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
-                <img src={RoleLightIcon} alt="" />
+                <img src={ChartBlueIcon} alt="" />
               </div>
               <div className="ms-3">
-                <h6 className="text-dark mb-0">Customer Satisfaction</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                <h6 className="text-dark mb-0">Ratings and Review</h6>
+                <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                   Setup ratings for customer feedback
                 </p>
               </div>
@@ -274,7 +272,7 @@ function SettingsHome({signedUser}) {
               </div>
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Canned Responses</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                   Create responses templates
                 </p>
               </div>
@@ -290,7 +288,7 @@ function SettingsHome({signedUser}) {
               </div>
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Live Chat</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                   Setup and update Live Chat settings
                 </p>
               </div>
@@ -306,7 +304,7 @@ function SettingsHome({signedUser}) {
               </div>
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Submit a Ticket</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                   Description here
                 </p>
               </div>

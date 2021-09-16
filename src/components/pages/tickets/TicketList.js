@@ -154,9 +154,7 @@ const TicketList = ({
 
     return (<div className={"table-ratings"}>
               {ratingArr.map(x => <span className="table-ratings-span">{x ? <StarYellowSvg /> : <StarUnactiveSvg />}</span>)}
-              
           </div>);
-
   }
 
   const tableColumns = [
