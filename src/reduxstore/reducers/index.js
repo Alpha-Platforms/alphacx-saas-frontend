@@ -16,6 +16,7 @@ import userReducer from './userReducer';
 import tagReducer from './tagReducer';
 import subCategoryReducer from './subCategoryReducer';
 import configReducer from './configReducer';
+import analyticsReducer from './analyticsReducer';
 
 const persistConfig = {
     key: 'alphacx_platform',
@@ -38,7 +39,8 @@ const rootReducer = combineReducers({
     user: userReducer,
     tag: tagReducer,
     subCategory: subCategoryReducer,
-    config: configReducer
+    config: configReducer,
+    analytics: analyticsReducer
 });
 
 export default persistReducer(persistConfig, rootReducer);

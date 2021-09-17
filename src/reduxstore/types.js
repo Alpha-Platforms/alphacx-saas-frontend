@@ -83,6 +83,7 @@ export const GET_GROUPS = "GET_GROUPS";
 export const ADD_GROUP = "ADD_GROUP";
 export const GROUPS_LOADING = "GROUPS_LOADING";
 
+
 // AGENTS
 export const GET_AGENTS = "GET_AGENTS";
 export const ADD_AGENT = "ADD_AGENT";
@@ -131,3 +132,8 @@ export const TAGS_LOADING = "TAGS_LOADING";
 export const GET_CONFIGS = "GET_CONFIGS";
 export const ADD_CONFIG = "ADD_CONFIG";
 export const CONFIGS_LOADING = "CONFIGS_LOADING";
+
+// ANALYTICSS
+export const GET_ANALYTICS = "GET_ANALYTICS";
+export const ADD_ANALYTICS = "ADD_ANALYTICS";
+export const ANALYTICS_LOADING = "ANALYTICS_LOADING";
