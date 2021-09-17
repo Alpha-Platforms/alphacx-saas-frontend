@@ -50,7 +50,7 @@ const DashboardTwo = ({isAnalyticsLoaded, analytics}) => {
 
                     </div>
                     <div className="box-2">
-                        <TicketStatusPie/>
+                        <TicketStatusPie analytics={analytics} />
                     </div>
                     <div className="box-3">
                         <div>

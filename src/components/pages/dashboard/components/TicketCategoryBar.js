@@ -54,7 +54,7 @@ const TicketCategoryBar = ({categories, analytics}) => {
                 </div>
             </div>
             <div>
-                {categories.length > 0 && categories.map((cat, idx) => <TCProgressBar key={idx} title={cat?.name} value={analytics?.allTickets?.filter(x => x.category_id === cat?.id)?.length} color={(idx + 1) > catColors.length ? catColors[Math.floor(Math.random() * catColors.length)] : catColors[idx] }/>)}
+                {categories.length > 0 && categories.map((cat, idx) => <TCProgressBar key={idx} title={cat?.name} value={analytics?.allTickets?.filter(x => x.category_id === cat?.id)?.length || 0} color={(idx + 1) > catColors.length ? catColors[Math.floor(Math.random() * catColors.length)] : catColors[idx] }/>)}
 
                 {/* <TCProgressBar title="Enquiry" value={15} color={"#51B74F"}/>
                 <TCProgressBar title="Request" value={28} color={"#F40D0D"}/>

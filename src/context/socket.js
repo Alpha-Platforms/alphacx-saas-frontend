@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { createContext, useState, useEffect } from "react";
 import socketIO from "socket.io-client";
 // import { baseUrlMain as baseUrl } from '../helpers/httpMethods';
