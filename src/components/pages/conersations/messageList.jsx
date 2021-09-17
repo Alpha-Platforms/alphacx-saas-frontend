@@ -5,6 +5,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { timeFormater } from "../../helpers/dateFormater";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 
+
 export default function MessageList({
   tickets,
   LoadingTick,
@@ -18,9 +19,10 @@ export default function MessageList({
   scollPosSendMsgList,
 }) {
   const [renderTicket, setRenderTicket] = useState([]);
+
   useEffect(() => {
-    checkRender();
-  }, [filterChat, tickets, filterTicketsState]);
+    checkRender();//, [filterChat, tickets, filterTicketsState]
+  });
   const checkRender = () => {
     if (filterChat == "system") {
       setRenderTicket(tickets);
@@ -99,12 +101,14 @@ export default function MessageList({
                   data?.customer?.firstname
                 )} ${data?.customer?.lastname == "default"? "" : capitalizeFirstLetter(data?.customer?.lastname)}`}</p>
                 <p className="senderMSG">
-                  {truncateWithEllipses(data?.plain_description, 20)}
+                  {/* {truncateWithEllipses(data?.plain_description, 20)} */}
                   {/* {(Array.isArray(data.history)) ? data.history.length :  ""} */}
-                  {/* {(!Array.isArray(data.history)) ? ""
-                    : (data.history.at(-1).response === null || data.history.at(-1).response === undefined ) ? "no text" 
-                    : truncateWithEllipses(data.history.at(-1).response, 20)
-                  } */}
+                  {(!Array.isArray(data.history)) ? ""
+                    : (data.history.length == 0)? "" 
+                    : (data.history[0].plain_response === null || data.history[0].plain_response === undefined ) ? "" 
+                    : data.history[0].plain_response
+                  }
+                    {/* truncateWithEllipses(data.history.at(-1), 20) */}
                 </p>
                 <div className="msg-badges">
                   <div

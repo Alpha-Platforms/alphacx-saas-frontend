@@ -31,130 +31,138 @@ import HeartBWIcon from "../../../assets/icons/Heart-BW.svg";
 import RoleLightIcon from "../../../assets/icons/role_light.svg";
 import LivechatIcon from "../../../assets/icons/chat-blue.svg";
 import DocumentIcon from "../../../assets/icons/doc-blue.svg";
+import RatingStar from "../../../assets/icons/Rating-Star.svg";
 import { Link } from "react-router-dom";
 import {connect} from 'react-redux';
 
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+
 function SettingsHome({signedUser}) {
   return (
-    <>
-      <div
-        className="flex-wrap d-flex align-items-start"
-        style={{ flexBasis: "32%" }}
-      >
-        <div className="setting-link-item border rounded bg-light">
-          <Link
-            to="/settings/users"
-            className="d-block cursor text-decoration-none"
-          >
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={AgentLightIcon} alt="" />
+    <Container fluid>
+      <Row className="g-3">
+        <Col sm={6} md={4} className="">
+          <div className="h-100 border rounded bg-light">
+            <Link
+              to="/settings/users"
+              className="d-block cursor text-decoration-none"
+            >
+              <div className="d-flex align-items-center p-md-4">
+                <div className="">
+                  <img src={AgentLightIcon} alt="" />
+                </div>
+                <div className="ms-3">
+                  <h6 className="text-dark mb-0">Users</h6>
+                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Create users, assign permissions
+                  </p>
+                </div>
               </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Users</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Create users, assign permissions
-                </p>
+            </Link>
+          </div>
+        </Col>
+        <Col sm={6} md={4} className="">
+          <div className="h-100 border rounded bg-light">
+            <Link to={`/settings/profile/${signedUser.id}`} className="d-block cursor text-decoration-none">
+              <div className="d-flex align-items-center p-md-4">
+                <div className="">
+                  <img src={UserBWIcon} alt="" />
+                </div>
+                <div className="ms-3">
+                  <h6 className="text-dark mb-0">Profile Settings</h6>
+                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Update your user profile
+                  </p>
+                </div>
               </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="setting-link-item border rounded bg-light">
-          <Link to={`/settings/profile/${signedUser.id}`} className="d-block cursor text-decoration-none">
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={UserBWIcon} alt="" />
+            </Link>
+          </div>
+        </Col>
+        <Col sm={6} md={4} className="">   
+          <div className="h-100 border rounded bg-light">
+            <Link
+              to="/settings/teams"
+              className="d-block cursor text-decoration-none"
+            >
+              <div className="d-flex align-items-center p-md-4">
+                <div className="">
+                  <img src={FolderBlueIcon} alt="" />
+                </div>
+                <div className="ms-3">
+                  <h6 className="text-dark mb-0">Teams</h6>
+                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Organize users in your organization
+                  </p>
+                </div>
               </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Profile Settings</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Update your user profile
-                </p>
+            </Link>
+          </div>
+        </Col>
+        <Col sm={6} md={4} className="">   
+          <div className="h-100 border rounded bg-light">
+            <Link
+              to="/settings/account"
+              className="d-block cursor text-decoration-none"
+            >
+              <div className="d-flex align-items-center p-md-4">
+                <div className="">
+                  <img src={ShieldIcon} alt="" />
+                </div>
+                <div className="ms-3">
+                  <h6 className="text-dark mb-0">Account</h6>
+                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Access your profile and account subscriptions
+                  </p>
+                </div>
               </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="setting-link-item border rounded bg-light">
-          <Link
-            to="/settings/teams"
-            className="d-block cursor text-decoration-none"
-          >
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={FolderBlueIcon} alt="" />
+            </Link>
+          </div>
+        </Col>
+        <Col sm={6} md={4} className="">   
+          <div className="h-100 border rounded bg-light">
+            <Link
+              to="settings/automations"
+              className="d-block cursor text-decoration-none"
+            >
+              <div className="d-flex align-items-center p-md-4">
+                <div className="">
+                  <img src={AutomationIcon} alt="" />
+                </div>
+                <div className="ms-3">
+                  <h6 className="text-dark mb-0">Automation</h6>
+                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Automate notifications, responses and durations
+                  </p>
+                </div>
               </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Teams</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Organize users in your organization
-                </p>
+            </Link>
+          </div>
+        </Col>
+        <Col sm={6} md={4} className="">   
+          <div className="h-100 border rounded bg-light">
+            <Link
+              to="/settings/email"
+              className="d-block cursor text-decoration-none"
+            >
+              <div className="d-flex align-items-center p-md-4">
+                <div className="">
+                  <img src={MailLightIcon} alt="" />
+                </div>
+                <div className="ms-3">
+                  <h6 className="text-dark mb-0">Email</h6>
+                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Configure inbound and outbound email settings for your
+                    organization
+                  </p>
+                </div>
               </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="setting-link-item border rounded bg-light">
-          <Link
-            to="/settings/account"
-            className="d-block cursor text-decoration-none"
-          >
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={ShieldIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Account</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Access your profile and account subscriptions
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="setting-link-item border rounded bg-light">
-          <Link
-            to="settings/automations"
-            className="d-block cursor text-decoration-none"
-          >
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={AutomationIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Automation</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Automate notifications, responses and durations
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="setting-link-item border rounded bg-light">
-          <Link
-            to="/settings/email"
-            className="d-block cursor text-decoration-none"
-          >
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={MailLightIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Email</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Configure inbound and outbound email settings for your
-                  organization
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-{/*   ROLES */}
-        {/* <div className="setting-link-item border rounded bg-light">
+            </Link>
+          </div>
+        </Col>
+        {/*   ROLES */}
+        {/*<Col sm={6} md={4} className="">    <div className="h-100 border rounded bg-light">
           <Link
             to="/settings/roles"
             className="d-block cursor text-decoration-none"
@@ -165,140 +173,147 @@ function SettingsHome({signedUser}) {
               </div>
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Roles</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                   Define access levels and permission for user types
                 </p>
               </div>
             </div>
           </Link>
-        </div> */}
-
-        <div className="setting-link-item border rounded bg-light">
-          <Link
-            to="/settings/tickets"
-            className="d-block cursor text-decoration-none"
-          >
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={AccountLightIcon} alt="" />
+          </div></Col> */}
+        <Col sm={6} md={4} className="">   
+          <div className="h-100 border rounded bg-light">
+            <Link
+              to="/settings/tickets"
+              className="d-block cursor text-decoration-none">
+              <div className="d-flex align-items-center p-md-4">
+                <div className="">
+                  <img src={AccountLightIcon} alt="" />
+                </div>
+                <div className="ms-3">
+                  <h6 className="text-dark mb-0">Ticket Settings</h6>
+                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Create ticket types, organize and prioritize tickets
+                  </p>
+                </div>
               </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Ticket Settings</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Create ticket types, organize and prioritize tickets
-                </p>
+            </Link>
+          </div>
+        </Col>
+        <Col sm={6} md={4} className="">   
+          <div className="h-100 border rounded bg-light">
+            <Link to="/settings/integrations" className="d-block cursor text-decoration-none">
+              <div className="d-flex align-items-center p-md-4">
+                <div className="">
+                  <img src={SocialBlurbIcon} alt="" />
+                </div>
+                <div className="ms-3">
+                  <h6 className="text-dark mb-0">Integrations</h6>
+                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Connect social channels to your app.
+                  </p>
+                </div>
               </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="setting-link-item border rounded bg-light">
-          <Link to="/settings/integrations" className="d-block cursor text-decoration-none">
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={SocialBlurbIcon} alt="" />
+            </Link>
+          </div>
+        </Col>
+        <Col sm={6} md={4} className="">   
+          <div className="h-100 border rounded bg-light">
+            <Link
+              to="/settings/notifications"
+              className="d-block cursor text-decoration-none"
+            >
+              <div className="d-flex align-items-center p-md-4">
+                <div className="">
+                  <img src={SendBlueIcon} alt="" />
+                </div>
+                <div className="ms-3">
+                  <h6 className="text-dark mb-0">Notifications</h6>
+                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Assign notifications roles to users
+                  </p>
+                </div>
               </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Integrations</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Connect social channels to your app.
-                </p>
+            </Link>
+          </div>
+        </Col>
+        <Col sm={6} md={4} className="">   
+          <div className="h-100 border rounded bg-light">
+            <Link
+              to="/settings/help-center"
+              className="d-block cursor text-decoration-none"
+            >
+              <div className="d-flex align-items-center p-md-4">
+                <div className="">
+                  <img src={SearchBlueIcon} alt="" />
+                </div>
+                <div className="ms-3">
+                  <h6 className="text-dark mb-0">Help Centre</h6>
+                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Learn how to use AlphaCX, fix a problem and get answers to
+                    your questions
+                  </p>
+                </div>
               </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="setting-link-item border rounded bg-light">
-          <Link
-            to="/settings/notifications"
-            className="d-block cursor text-decoration-none"
-          >
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={SendBlueIcon} alt="" />
+            </Link>
+          </div>
+        </Col>
+        <Col sm={6} md={4} className="">   
+          <div className="h-100 border rounded bg-light">
+            <Link to="settings/ratings" className="d-block cursor text-decoration-none">
+              <div className="d-flex align-items-center p-md-4">
+                <div className="">
+                  <img src={ChartBlueIcon} alt="" />
+                </div>
+                <div className="ms-3">
+                  <h6 className="text-dark mb-0">Ratings and Review</h6>
+                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Setup ratings for customer feedback
+                  </p>
+                </div>
               </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Notifications</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Assign notifications roles to users
-                </p>
+            </Link>
+          </div>
+        </Col>
+        {/*  <Col sm={6} md={4} className=""> 
+          <div className="h-100 border rounded bg-light">
+            <Link
+              to="/settings/canned-responses"
+              className="d-block cursor text-decoration-none"
+            >
+              <div className="d-flex align-items-center p-md-4">
+                <div className="">
+                  <img src={DocumentIcon} alt="" />
+                </div>
+                <div className="ms-3">
+                  <h6 className="text-dark mb-0">Canned Responses</h6>
+                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Create responses templates
+                  </p>
+                </div>
               </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="setting-link-item border rounded bg-light">
-          <Link
-            to="/settings/help-center"
-            className="d-block cursor text-decoration-none"
-          >
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={SearchBlueIcon} alt="" />
+            </Link>
+          </div>
+            </Col>
+          <Col className="">   
+          
+          <div className="h-100 border rounded bg-light">
+            <Link to="#" className="d-block cursor text-decoration-none">
+              <div className="d-flex align-items-center p-md-4">
+                <div className="">
+                  <img src={LivechatIcon} alt="" />
+                </div>
+                <div className="ms-3">
+                  <h6 className="text-dark mb-0">Live Chat</h6>
+                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Setup and update Live Chat settings
+                  </p>
+                </div>
               </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Help Centre</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Learn how to use AlphaCX, fix a problem and get answers to
-                  your questions
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="setting-link-item border rounded bg-light">
-          <Link to="#" className="d-block cursor text-decoration-none">
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={RoleLightIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Customer Satisfaction</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Setup ratings for customer feedback
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        {/* <div className="setting-link-item border rounded bg-light">
-          <Link
-            to="/settings/canned-responses"
-            className="d-block cursor text-decoration-none"
-          >
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={DocumentIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Canned Responses</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Create responses templates
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="setting-link-item border rounded bg-light">
-          <Link to="#" className="d-block cursor text-decoration-none">
-            <div className="d-flex align-items-center p-md-4">
-              <div className="">
-                <img src={LivechatIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Live Chat</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
-                  Setup and update Live Chat settings
-                </p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        <div className="setting-link-item border rounded bg-light">
+            </Link>
+          </div> </Col>
+            
+          <Col className="">   
+          <div className="h-100 border rounded bg-light">
           <Link to="#" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-center p-md-4">
               <div className="">
@@ -306,15 +321,15 @@ function SettingsHome({signedUser}) {
               </div>
               <div className="ms-3">
                 <h6 className="text-dark mb-0">Submit a Ticket</h6>
-                <p className="acx-fs-8 lh-1 mt-1 text-muted">
+                <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                   Description here
                 </p>
               </div>
             </div>
           </Link>
-        </div> */}
-      </div>
-    </>
+        </div> </Col>*/}
+      </Row>
+    </Container>
   );
 }
 
