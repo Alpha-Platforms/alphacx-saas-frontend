@@ -14,7 +14,7 @@ const DashboardTwo = ({isAnalyticsLoaded, analytics}) => {
     return (
         <Fragment>
             {!isAnalyticsLoaded ?
-                <div>Loading...</div>
+                <div style={{ textAlign: 'center' }}>Loading...</div>
              : <div className="dashboard-main">
                 <div>
                     <h3 className="wlc-text">Hi, Dabo</h3>
@@ -54,8 +54,8 @@ const DashboardTwo = ({isAnalyticsLoaded, analytics}) => {
                     </div>
                     <div className="box-3">
                         <div>
-                            <TicketCount/>
-                            <TicketCategoryBar/>
+                            <TicketCount analytics={analytics} />
+                            <TicketCategoryBar analytics={analytics} />
                         </div>
                     </div>
                     <div className="box-4">

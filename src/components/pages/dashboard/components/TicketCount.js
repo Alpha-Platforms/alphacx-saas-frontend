@@ -25,13 +25,13 @@ const TotalCountCard = ({title, value, icon, color}) => {
     )
 }
 
-const TicketCount = ({ticketMeta}) => {
+const TicketCount = ({ticketMeta, analytics}) => {
 
     return (
         <div className="py-3 pt-4 tcountcard-wrapper">
             <TotalCountCard title="Total Tickets" value={ticketMeta?.totalItems || 0} color={"#662D91"}/>
             <TotalCountCard title="Assigned Tickets" value={57} color={"#51B74F"}/>
-            <TotalCountCard title="Overdue Tickets" value={50} color={"#F40D0D"}/>
+            <TotalCountCard title="Overdue Tickets" value={analytics?.overDueTickets || 0} color={"#F40D0D"}/>
         </div>
     )
 }
