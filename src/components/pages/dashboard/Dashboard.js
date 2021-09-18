@@ -59,7 +59,7 @@ const DashboardTwo = ({isAnalyticsLoaded, analytics}) => {
                         </div>
                     </div>
                     <div className="box-4">
-                        <TicketLineGraph/>
+                        <TicketLineGraph analytics={analytics} />
                     </div>
                 </div>
             </div>}

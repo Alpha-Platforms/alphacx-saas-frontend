@@ -1,8 +1,36 @@
+// @ts-nocheck
 import {Line} from 'react-chartjs-2';
 import {Dropdown} from 'react-bootstrap';
 import {useState, useEffect} from 'react';
+import moment from 'moment';
 
-const TicketLineGraph = () => {
+const TicketLineGraph = ({analytics}) => {
+
+    window.acxTickets = analytics?.allTickets;
+
+    const emailTickets = analytics?.allTickets?.filter(x => x.channel === 'email') || [];
+    const facebookTickets = analytics?.allTickets?.filter(x => x.channel === 'facebook') || [];
+    const whatsappTickets = analytics?.allTickets?.filter(x => x.channel === 'whatsapp') || [];
+    const helpdeskTickets = analytics?.allTickets?.filter(x => x.channel === 'helpdesk') || [];
+    const systemTickets = analytics?.allTickets?.filter(x => x.channel === 'system') || [];
+    const callTickets = analytics?.allTickets?.filter(x => x.channel === 'call') || [];
+    const liveChatTickets = analytics?.allTickets?.filter(x => x.channel === 'livechat') || [];
+    const servicePortalTickets = analytics?.allTickets?.filter(x => x.channel === 'service_portal') || [];
+
+
+    const getDayDate = (daysBack) => {
+        const date = new Date();
+        return new Date(date.getTime() - (daysBack * 24 * 60 * 60 * 1000));
+    }
+    
+
+    const todaysDate = new Date();
+
+    console.log('todays date: ', todaysDate);
+    console.log('yesterday', getDayDate(1));
+    console.log('2 days back', getDayDate(2));
+
+    // console.log('emailTicket Dates', emailTickets.map(x => moment(x.created_at).format('DD/MM/YYYY')));
 
 
     const datasetsArr = [
@@ -10,14 +38,23 @@ const TicketLineGraph = () => {
             id: 'emailLegend',
             type: 'line',
             label: 'Email',
+            // data: [
+            //     80,
+            //     75,
+            //     120,
+            //     110,
+            //     170,
+            //     140,
+            //     160
+            // ],
             data: [
-                80,
-                75,
-                120,
-                110,
-                170,
-                140,
-                160
+                emailTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(7)).format('DD/MM/YYYY')).length || 0,
+                emailTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(6)).format('DD/MM/YYYY')).length || 0,
+                emailTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(5)).format('DD/MM/YYYY')).length || 0,
+                emailTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(4)).format('DD/MM/YYYY')).length || 0,
+                emailTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(3)).format('DD/MM/YYYY')).length || 0,
+                emailTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(2)).format('DD/MM/YYYY')).length || 0,
+                emailTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(1)).format('DD/MM/YYYY')).length || 0
             ],
             borderColor: '#016298',
             backgroundColor: '#016298',
@@ -36,13 +73,13 @@ const TicketLineGraph = () => {
             type: 'line',
             label: 'LiveChat',
             data: [
-                102,
-                124,
-                126,
-                142,
-                153,
-                149,
-                105
+                liveChatTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(7)).format('DD/MM/YYYY')).length || 0,
+                liveChatTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(6)).format('DD/MM/YYYY')).length || 0,
+                liveChatTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(5)).format('DD/MM/YYYY')).length || 0,
+                liveChatTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(4)).format('DD/MM/YYYY')).length || 0,
+                liveChatTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(3)).format('DD/MM/YYYY')).length || 0,
+                liveChatTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(2)).format('DD/MM/YYYY')).length || 0,
+                liveChatTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(1)).format('DD/MM/YYYY')).length || 0
             ],
             borderColor: '#6C4181',
             backgroundColor: '#6C4181',
@@ -60,13 +97,13 @@ const TicketLineGraph = () => {
             type: 'line',
             label: 'Calls',
             data: [
-                70,
-                40,
-                30,
-                40,
-                50,
-                50,
-                80
+                callTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(7)).format('DD/MM/YYYY')).length || 0,
+                callTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(6)).format('DD/MM/YYYY')).length || 0,
+                callTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(5)).format('DD/MM/YYYY')).length || 0,
+                callTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(4)).format('DD/MM/YYYY')).length || 0,
+                callTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(3)).format('DD/MM/YYYY')).length || 0,
+                callTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(2)).format('DD/MM/YYYY')).length || 0,
+                callTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(1)).format('DD/MM/YYYY')).length || 0
             ],
             borderColor: '#ECBA41',
             backgroundColor: '#ECBA41',
@@ -84,13 +121,13 @@ const TicketLineGraph = () => {
             type: 'line',
             label: 'WhatsApp',
             data: [
-                50,
-                70,
-                50,
-                100,
-                80,
-                90,
-                50
+                whatsappTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(7)).format('DD/MM/YYYY')).length || 0,
+                whatsappTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(6)).format('DD/MM/YYYY')).length || 0,
+                whatsappTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(5)).format('DD/MM/YYYY')).length || 0,
+                whatsappTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(4)).format('DD/MM/YYYY')).length || 0,
+                whatsappTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(3)).format('DD/MM/YYYY')).length || 0,
+                whatsappTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(2)).format('DD/MM/YYYY')).length || 0,
+                whatsappTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(1)).format('DD/MM/YYYY')).length || 0
             ],
             borderColor: '#51B74F',
             backgroundColor: '#51B74F',
@@ -108,13 +145,13 @@ const TicketLineGraph = () => {
             type: 'line',
             label: 'Facebook',
             data: [
-                101,
-                99,
-                119,
-                144,
-                127,
-                123,
-                105
+                facebookTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(7)).format('DD/MM/YYYY')).length || 0,
+                facebookTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(6)).format('DD/MM/YYYY')).length || 0,
+                facebookTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(5)).format('DD/MM/YYYY')).length || 0,
+                facebookTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(4)).format('DD/MM/YYYY')).length || 0,
+                facebookTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(3)).format('DD/MM/YYYY')).length || 0,
+                facebookTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(2)).format('DD/MM/YYYY')).length || 0,
+                facebookTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(1)).format('DD/MM/YYYY')).length || 0
             ],
             borderColor: '#4DCACA',
             backgroundColor: '#4DCACA',
@@ -132,13 +169,13 @@ const TicketLineGraph = () => {
             type: 'line',
             label: 'Service Portal',
             data: [
-                0,
-                40,
-                38,
-                54,
-                100,
-                81,
-                90
+                systemTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(7)).format('DD/MM/YYYY')).length || 0,
+                systemTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(6)).format('DD/MM/YYYY')).length || 0,
+                systemTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(5)).format('DD/MM/YYYY')).length || 0,
+                systemTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(4)).format('DD/MM/YYYY')).length || 0,
+                systemTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(3)).format('DD/MM/YYYY')).length || 0,
+                systemTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(2)).format('DD/MM/YYYY')).length || 0,
+                systemTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(1)).format('DD/MM/YYYY')).length || 0
             ],
             borderColor: '#C16473',
             backgroundColor: '#C16473',
@@ -164,14 +201,23 @@ const TicketLineGraph = () => {
 
 
     const data = {
+        // labels: [
+        //     "Mon",
+        //     "Tues",
+        //     "Wed",
+        //     "Thu",
+        //     "Fri",
+        //     "Sat",
+        //     "Sun"
+        // ],
         labels: [
-            "Mon",
-            "Tues",
-            "Wed",
-            "Thu",
-            "Fri",
-            "Sat",
-            "Sun"
+            moment(getDayDate(7)).format('ddd'),
+            moment(getDayDate(6)).format('ddd'),
+            moment(getDayDate(5)).format('ddd'),
+            moment(getDayDate(4)).format('ddd'),
+            moment(getDayDate(3)).format('ddd'),
+            moment(getDayDate(2)).format('ddd'),
+            moment(getDayDate(1)).format('ddd')
         ],
         datasets: allDataSet
     };
