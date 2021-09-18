@@ -30,7 +30,7 @@ const TicketCount = ({ticketMeta, analytics}) => {
     return (
         <div className="py-3 pt-4 tcountcard-wrapper">
             <TotalCountCard title="Total Tickets" value={ticketMeta?.totalItems || 0} color={"#662D91"}/>
-            <TotalCountCard title="Assigned Tickets" value={57} color={"#51B74F"}/>
+            <TotalCountCard title="Assigned Tickets" value={analytics?.allTickets?.filter(x => (x.status_id !== "dafcab89-2b7f-4c4f-af76-4a363670d78e" && x.assignee_id)).length} color={"#51B74F"}/>
             <TotalCountCard title="Overdue Tickets" value={analytics?.overDueTickets || 0} color={"#F40D0D"}/>
         </div>
     )
