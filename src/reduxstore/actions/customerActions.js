@@ -124,8 +124,7 @@ export const getCurrentCustomer = (id, refetchCust) => (dispatch, getState) => {
     setCurrentCustomerLoading();
     const {customers} = getState().customer;
 
-    let currentCustomer = customers.filter(customer => customer
-        ?.id === id)[0];
+    let currentCustomer = customers.filter(customer => customer?.id === id)[0];
 
     // console.log("Current Customer", currentCustomer);
 
