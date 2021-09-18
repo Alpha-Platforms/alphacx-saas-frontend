@@ -8,10 +8,8 @@ import {Modal} from 'react-bootstrap';
 // import {Link} from 'react-router-dom';
 
 const Fields = () => {
-    const [tabKey,
-        setTabKey] = useState('contact-field');
-    const [addModalShow,
-        setAddModalShow] = useState(false);
+    const [tabKey, setTabKey] = useState('contact-field');
+    const [addModalShow, setAddModalShow] = useState(false);
 
     return (
         <div>

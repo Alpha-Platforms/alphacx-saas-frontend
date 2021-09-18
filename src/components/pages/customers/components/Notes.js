@@ -3,8 +3,7 @@ import {ReactComponent as TicketEmptySvg} from '../../../../assets/svgicons/tick
 import EditorBox from '../../../reusables/EditorBox';
 
 const Notes = () => {
-    const [newNote,
-        setNewNote] = useState({message: ""});
+    const [newNote, setNewNote] = useState({message: ""});
 
     return (
         <div>

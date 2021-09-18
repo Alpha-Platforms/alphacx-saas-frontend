@@ -19,6 +19,7 @@ import {useParams} from 'react-router-dom';
 import {getCurrentCustomer} from '../../../reduxstore/actions/customerActions';
 import {getUserInitials} from '../../../helper';
 import TicketHistory from './components/TicketHistory';
+import Profile from './components/Profile';
 import Notes from './components/Notes';
 import Timeline from './components/Timeline';
 import CreateCustomerModal from './CreateCustomerModal';
@@ -27,21 +28,13 @@ const CircleIcon = (props) => <span style={{ backgroundColor: props.color }} cla
 
 const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded, currentCustomer}) => {
 
-    const [createModalShow,
-        setCreateModalShow] = useState(false);
-
+    const [createModalShow, setCreateModalShow] = useState(false);
     const {id} = useParams();
-
-    const [tabKey,
-        setTabKey] = useState('ticket-history');
-    const [showUpdate,
-        setShowUpdate] = useState(false);
-
+    const [tabKey, setTabKey] = useState('ticket-history');
+    const [showUpdate, setShowUpdate] = useState(false);
 
     useEffect(() => {
-
         getCurrentCustomer(id);
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isCustomerLoaded])
 
@@ -91,17 +84,18 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
 
                     <div
                         style={{
-                        borderRight: '1px solid #f1f1f1',
-                        background: '#fafafa'
-                    }}
+                            borderRight: '1px solid #f1f1f1',
+                            background: '#fafafa'
+                        }}
                         className="pt-4 px-3">
                         <div className="user-initials-lg">
-                            {currentCustomer?.avatar ? <div className="customer-avatar">
-                                                        <img src={currentCustomer.avatar} alt='' />
-                                                    </div> : <div className="user-initials blue me-auto ms-auto d-flex justify-content-center align-items-center">
-                                                                {getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname == "default" ? "" : currentCustomer.lastname}`)}
-                                                            </div>
-                                                        }
+                            {currentCustomer?.avatar ?  <div className="customer-avatar">
+                                                            <img src={currentCustomer.avatar} alt='' />
+                                                        </div> 
+                                                        : <div className="user-initials blue me-auto ms-auto d-flex justify-content-center align-items-center">
+                                                            {getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname == "default" ? "" : currentCustomer.lastname}`)}
+                                                        </div>
+                            }
                             <div className="text-center mt-3">
                                 {/* <h4 style={{ textTransform: 'capitalize' }}>{`${currentCustomer.firstname} ${currentCustomer.lastname}`}</h4> */}
                                 <h6 className="mb-0 text-capitalize"><b>{`${currentCustomer.firstname} ${currentCustomer.lastname == "default" ? "" : currentCustomer.lastname}`}</b></h6>
@@ -229,6 +223,13 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                 <ul className="nav nav-pills" id="pills-tab" role="tablist">
                                     <li className="nav-item " role="presentation">
                                         <button
+                                            className={`nav-link ${tabKey === 'profile' && 'nav-active'} text-muted ps-0`}
+                                            id="pills-profile-tab"
+                                            type="button"
+                                            onClick={() => setTabKey('profile')}>Profile</button>
+                                    </li>
+                                    <li className="nav-item " role="presentation">
+                                        <button
                                             className={`nav-link ${tabKey === 'ticket-history' && 'nav-active'} text-muted ps-0`}
                                             id="pills-profile-tab"
                                             type="button"
@@ -265,6 +266,10 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                 activeKey={tabKey}
                                 onSelect={(k) => setTabKey(k)}
                                 className="mb-3">
+                                <Tab eventKey="profile" className="px-2">
+                                    <Profile {...currentCustomer} />
+                                </Tab>
+
                                 <Tab eventKey="ticket-history" className="px-2">
                                     <TicketHistory currentCustomerId={id} />
                                 </Tab>
@@ -283,7 +288,8 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
 
                     </div>
 
-                </div></div>}
+                </div>
+            </div>}
 
             {/* Profile Update OffCanvas */}
             <div
