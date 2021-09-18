@@ -8,13 +8,14 @@ import TicketLineGraph from './components/TicketLineGraph';
 import {Dropdown} from 'react-bootstrap';
 import { Fragment } from 'react';
 import {connect} from 'react-redux';
+import ScaleLoader from 'react-spinners/ScaleLoader';
 
 const DashboardTwo = ({isAnalyticsLoaded, analytics}) => {
 
     return (
         <Fragment>
             {!isAnalyticsLoaded ?
-                <div style={{ textAlign: 'center' }}>Loading...</div>
+                <div className="text-center mt-4"><ScaleLoader loading={true} color={"#006298"}/></div>
              : <div className="dashboard-main">
                 <div>
                     <h3 className="wlc-text">Hi, Dabo</h3>
