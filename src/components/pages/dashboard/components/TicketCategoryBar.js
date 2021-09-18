@@ -2,7 +2,8 @@
 import {Dropdown} from 'react-bootstrap';
 import {connect} from 'react-redux';
 
-const TCProgressBar = ({title, value, color}) => {
+const TCProgressBar = ({title, value, color, totalTickets}) => {
+
     return (
         <div className="tc-progressbar">
             <div className="top-details">
@@ -12,7 +13,7 @@ const TCProgressBar = ({title, value, color}) => {
                     style={{
                     color: color
                 }}>
-                    {value}
+                    {value} ({Math.round((value/totalTickets) * 100)}%)
                 </p>
             </div>
             <div
@@ -23,7 +24,8 @@ const TCProgressBar = ({title, value, color}) => {
                 <div
                     className="bar"
                     style={{
-                    backgroundColor: color
+                    backgroundColor: color,
+                    width: `${(value/totalTickets) * 100}%`
                 }}/>
             </div>
         </div>
@@ -54,7 +56,7 @@ const TicketCategoryBar = ({categories, analytics}) => {
                 </div>
             </div>
             <div>
-                {categories.length > 0 && categories.map((cat, idx) => <TCProgressBar key={idx} title={cat?.name} value={analytics?.allTickets?.filter(x => x.category_id === cat?.id)?.length || 0} color={(idx + 1) > catColors.length ? catColors[Math.floor(Math.random() * catColors.length)] : catColors[idx] }/>)}
+                {categories.length > 0 && categories.map((cat, idx) => <TCProgressBar key={idx} title={cat?.name} cat={cat} allTickets={analytics?.allTickets} totalTickets={analytics?.allTickets?.length} value={analytics?.allTickets?.filter(x => x.category_id === cat?.id)?.length || 0} color={(idx + 1) > catColors.length ? catColors[Math.floor(Math.random() * catColors.length)] : catColors[idx] }/>)}
 
                 {/* <TCProgressBar title="Enquiry" value={15} color={"#51B74F"}/>
                 <TCProgressBar title="Request" value={28} color={"#F40D0D"}/>
