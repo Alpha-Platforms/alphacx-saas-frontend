@@ -1,11 +1,30 @@
+// @ts-nocheck
 import {Pie} from 'react-chartjs-2';
 import {Dropdown} from 'react-bootstrap';
+import {connect } from 'react-redux';
 
-const TicketStatusPie = () => {
+const TicketStatusPie = ({statuses, analytics}) => {
 
-    const values = [25, 5, 20, 18];
-    const colors = ["#D1E8FF", "#1E90FF", "#0707ED", "#000080"];
-    const labels = ["Open", "In Progress", "Pending", "Closed"];
+    const getColors = (statuses) => {
+        const colors = [];
+        let start = 23;
+        const interval = Math.floor((100 - start) / statuses.length);
+
+        for (let i = 0; i < statuses.length; i++) {
+            colors.push(`hsl(240, 100%, ${start}%)`);
+            start = start + interval;
+        }
+
+        return colors;
+    }
+
+    // const values = [25, 5, 20, 18];
+    const values = statuses.map(sta => analytics?.allTickets?.filter(x => x.status_id === sta.id).length || 0);
+    // const colors = ["#D1E8FF", "#1E90FF", "#0707ED", "#000080"];
+    const colors = getColors(statuses);
+    // const labels = ["Open", "In Progress", "Pending", "Closed"];
+    const labels = statuses?.map(sta => sta?.status);
+
 
     const data = {
         // labels: ["Open", "Pending", "Closed", "In Progress"],
@@ -83,4 +102,8 @@ const TicketStatusPie = () => {
     )
 }
 
-export default TicketStatusPie
+const mapStateToProps = (state, ownProps) => ({
+    statuses: state.status.statuses
+})
+
+export default connect(mapStateToProps, null)(TicketStatusPie);
