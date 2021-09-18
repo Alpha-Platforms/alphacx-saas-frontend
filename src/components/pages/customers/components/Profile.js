@@ -6,11 +6,12 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 // 
 import {getUserInitials} from '../../../../helper';
+import {ExpandChat} from "../../../../assets/images/svgs";
 
 
 const Profile = (currentCustomer) => {
     // const [customerDetails, setCustomerDetails] = useState();
-    // const [isCustomerLoaded, setIsCustomerLoaded] = useState(false);
+    const [showDetails, setShowDetails] = useState(false);
 
     //  useEffect(() => {
     // }, [])
@@ -74,10 +75,10 @@ const Profile = (currentCustomer) => {
                         <Col md={4}>
                             <div className="text-center">
                                 {currentCustomer?.avatar ? <div className="customer-avatar rounded-3">
-                                                            <img src={currentCustomer.avatar} alt='' />
+                                                            <img src={currentCustomer.avatar} alt={`${currentCustomer.firstname} ${currentCustomer.lastname == "default" ? "" : currentCustomer.lastname}`} width="200" height="auto"/>
                                                         </div> 
-                                                        : <div className="user-initials blue me-auto ms-auto d-flex justify-content-center align-items-center">
-                                                            {getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname == "default" ? "" : currentCustomer.lastname}`)}
+                                                        : <div className="user-initials blue me-auto ms-auto d-flex justify-content-center align-items-center avatar avatar-xl rounded-3">
+                                                            <h1 className="">{getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname == "default" ? "" : currentCustomer.lastname}`)}</h1>
                                                         </div>
                             }
                             </div>
@@ -120,6 +121,15 @@ const Profile = (currentCustomer) => {
                             </Row>
                         </Col>
                     </Row>
+                    <div className="">
+                        <a href="#expand-profile" className="d-inline-block app-link-primary" onClick={() => setShowDetails(!showDetails)}>
+                            <span className=""><ExpandChat /></span>
+                            <span className="ps-3">{showDetails ? "View less information" : "View more information"}</span>
+                        </a>
+                    </div>
+                    {showDetails? (
+                        <h1 className="null">here</h1>
+                    ):""}
                 </Container>
             </section>
         </Fragment>
