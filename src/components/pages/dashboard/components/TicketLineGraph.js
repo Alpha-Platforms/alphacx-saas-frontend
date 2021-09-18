@@ -15,23 +15,13 @@ const TicketLineGraph = ({analytics}) => {
     const systemTickets = analytics?.allTickets?.filter(x => x.channel === 'system') || [];
     const callTickets = analytics?.allTickets?.filter(x => x.channel === 'call') || [];
     const liveChatTickets = analytics?.allTickets?.filter(x => x.channel === 'livechat') || [];
-    const servicePortalTickets = analytics?.allTickets?.filter(x => x.channel === 'service_portal') || [];
+    const servicePortalTickets = analytics?.allTickets?.filter(x => (x.channel === 'system' || x.channel === 'helpdesk')) || [];
 
-
+    // function to get the date of a given number of days back
     const getDayDate = (daysBack) => {
         const date = new Date();
         return new Date(date.getTime() - (daysBack * 24 * 60 * 60 * 1000));
     }
-    
-
-    const todaysDate = new Date();
-
-    console.log('todays date: ', todaysDate);
-    console.log('yesterday', getDayDate(1));
-    console.log('2 days back', getDayDate(2));
-
-    // console.log('emailTicket Dates', emailTickets.map(x => moment(x.created_at).format('DD/MM/YYYY')));
-
 
     const datasetsArr = [
         {
@@ -169,13 +159,13 @@ const TicketLineGraph = ({analytics}) => {
             type: 'line',
             label: 'Service Portal',
             data: [
-                systemTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(7)).format('DD/MM/YYYY')).length || 0,
-                systemTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(6)).format('DD/MM/YYYY')).length || 0,
-                systemTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(5)).format('DD/MM/YYYY')).length || 0,
-                systemTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(4)).format('DD/MM/YYYY')).length || 0,
-                systemTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(3)).format('DD/MM/YYYY')).length || 0,
-                systemTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(2)).format('DD/MM/YYYY')).length || 0,
-                systemTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(1)).format('DD/MM/YYYY')).length || 0
+                servicePortalTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(7)).format('DD/MM/YYYY')).length || 0,
+                servicePortalTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(6)).format('DD/MM/YYYY')).length || 0,
+                servicePortalTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(5)).format('DD/MM/YYYY')).length || 0,
+                servicePortalTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(4)).format('DD/MM/YYYY')).length || 0,
+                servicePortalTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(3)).format('DD/MM/YYYY')).length || 0,
+                servicePortalTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(2)).format('DD/MM/YYYY')).length || 0,
+                servicePortalTickets.filter(x => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(1)).format('DD/MM/YYYY')).length || 0
             ],
             borderColor: '#C16473',
             backgroundColor: '#C16473',
