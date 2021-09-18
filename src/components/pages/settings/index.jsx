@@ -273,6 +273,25 @@ function SettingsHome({signedUser}) {
             </Link>
           </div>
         </Col>
+        <Col sm={6} md={4} className="">   
+          <div className="h-100 border rounded bg-light">
+            <Link to="settings/fields" className="d-block cursor text-decoration-none">
+              <div className="d-flex align-items-center p-md-4">
+                <div className="">
+                  <img src={FieldsLightIcon} alt="" />
+                </div>
+                <div className="ms-3">
+                  <h6 className="text-dark mb-0">Fields</h6>
+                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Setup fields for users, tickets and customers forms.
+                  </p>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </Col>
+        {/*  <Col sm={6} md={4} className=""> 
+          <div className="h-100 border rounded bg-light">
         {/*  <Col sm={6} md={4} className="settings-menu-item"> 
           <div className="border rounded bg-light">
             <Link

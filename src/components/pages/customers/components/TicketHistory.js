@@ -49,8 +49,7 @@ const getStatusColor = (status, id) => {
 
 const TicketHistory = ({ currentCustomerTicketsMeta, currentCustomerId, getPaginatedCurrentCustomerTickets, isCurrentCustomerLoaded, currentCustomerTickets, isCurrentCustomerTicketsLoaded, currentCustomer }) => {
     const [changingRow, setChangingRow] = useState(false);
-    const [ticketLoading,
-        setTicketLoading] = useState(false);
+    const [ticketLoading, setTicketLoading] = useState(false);
 
     useEffect(() => {
         if (isCurrentCustomerLoaded) {

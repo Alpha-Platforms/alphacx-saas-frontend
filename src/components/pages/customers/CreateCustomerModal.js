@@ -13,10 +13,15 @@ import {createTags} from '../../../reduxstore/actions/tagActions';
 
 const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers, tags, isEditing, customerId, customers, updateCustomer, createTags, fromCustDetails, custId, getCurrentCustomer}) => {
 
-    const [selectedTags,
-        setSelectedTags] = useState([]);
-    const [modalInputs,
-        setModalInputs] = useState({firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: '', ccode: '+234'});
+    const [selectedTags, setSelectedTags] = useState([]);
+    const [modalInputs, setModalInputs] = useState({
+        firstname: '', 
+        lastname: '', 
+        workphone: '', 
+        emailaddress: '', 
+        organisation: '', 
+        ccode: '+234'
+    });
     const [creatingCust, setCreatingCust] = useState(false);
     const [editingCust, setEditingCust] = useState(false);
     const [showAddOption, setShowAddOption] = useState(false);
@@ -226,75 +231,73 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
         </svg>
         );
     }
-
-    
-const handleImgSelect = function (e) {
-	// store current input
-	const fileInput = e.target
-
-	// create a store for the current dimension and default info
-	let maxReqDimensions = {
-			width: 1500,
-			height: 1500
-		};
-
-	if (!fileInput.files.length) {
-		// No file is selected
-        setUploadInfo(prev => ({...prev, msg: 'No file is slected', error: true, blob: null, image: null, ownAvatar: ''}));
         
-	} else {
-        // file selected
-        
-		// check if selected file is an image
-		if (fileInput.files[0].type.indexOf("image/") === -1) {
-			// Selected file is not an image
-            setUploadInfo(prev => ({...prev, msg: 'Selected file is not an image', error: true, blob: null, image: null, ownAvatar: ''}));
-		} else {
-			// Selected file is an image
-			/* 
-			 * read the selected image to get the file width and height
-			 */
-			// create a new file reader object
-			const reader = new FileReader();
-			reader.readAsDataURL(fileInput.files[0]);
-			reader.onload = function (e) {
-                // when reader has loaded
+    const handleImgSelect = function (e) {
+        // store current input
+        const fileInput = e.target
 
-				//create a new image object
-				const currentImage = new Image();
-				// set the source of the image to the base64 string from the file reader
-				currentImage.src = this.result;
+        // create a store for the current dimension and default info
+        let maxReqDimensions = {
+                width: 1500,
+                height: 1500
+            };
 
-				currentImage.onload = function () {
-					const [currentImageHeight, currentImageWidth] = [this.height, this
-						.width
-					];
+        if (!fileInput.files.length) {
+            // No file is selected
+            setUploadInfo(prev => ({...prev, msg: 'No file is slected', error: true, blob: null, image: null, ownAvatar: ''}));
+            
+        } else {
+            // file selected
+            
+            // check if selected file is an image
+            if (fileInput.files[0].type.indexOf("image/") === -1) {
+                // Selected file is not an image
+                setUploadInfo(prev => ({...prev, msg: 'Selected file is not an image', error: true, blob: null, image: null, ownAvatar: ''}));
+            } else {
+                // Selected file is an image
+                /* 
+                * read the selected image to get the file width and height
+                */
+                // create a new file reader object
+                const reader = new FileReader();
+                reader.readAsDataURL(fileInput.files[0]);
+                reader.onload = function (e) {
+                    // when reader has loaded
 
-					if (currentImageWidth > maxReqDimensions.width ||
-						currentImageHeight > maxReqDimensions.height) {
-						// current selected image dimesions are not acceptable
-                        setUploadInfo(prev => ({...prev, msg: `Selected image should have max dimension of ${maxReqDimensions.width}x${maxReqDimensions.height}`, error: true, blog: null, image: null}));
-					} else {
-						// current selected image dimensions are acceptable
-						const fileName = fileInput.files[0].name;
-                        const fileBlob = URL.createObjectURL(fileInput.files[0]);
+                    //create a new image object
+                    const currentImage = new Image();
+                    // set the source of the image to the base64 string from the file reader
+                    currentImage.src = this.result;
 
-                        setUploadInfo(prev => ({...prev, blob: fileBlob, msg: fileName, error: false, image: fileInput.files[0], ownAvatar: ''}));
-                        /* 
-                        when the image with the blob loads call the below method
-                        URL.revokeObjectURL(this.src);  where this.src is the blob created
-                        */
-					}
-				}
-			}
-		}
-	}
-}
+                    currentImage.onload = function () {
+                        const [currentImageHeight, currentImageWidth] = [this.height, this
+                            .width
+                        ];
 
-const workphoneChange = e => {
-    handleModalInput(e);
+                        if (currentImageWidth > maxReqDimensions.width ||
+                            currentImageHeight > maxReqDimensions.height) {
+                            // current selected image dimesions are not acceptable
+                            setUploadInfo(prev => ({...prev, msg: `Selected image should have max dimension of ${maxReqDimensions.width}x${maxReqDimensions.height}`, error: true, blog: null, image: null}));
+                        } else {
+                            // current selected image dimensions are acceptable
+                            const fileName = fileInput.files[0].name;
+                            const fileBlob = URL.createObjectURL(fileInput.files[0]);
 
-}
+                            setUploadInfo(prev => ({...prev, blob: fileBlob, msg: fileName, error: false, image: fileInput.files[0], ownAvatar: ''}));
+                            /* 
+                            when the image with the blob loads call the below method
+                            URL.revokeObjectURL(this.src);  where this.src is the blob created
+                            */
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    const workphoneChange = e => {
+        handleModalInput(e);
+    }
 
     return (
         <Modal
@@ -338,7 +341,11 @@ const workphoneChange = e => {
                                 <label htmlFor="workphone" className="form-label">Work Phone</label>
                                 <div className="input-group mb-3 workphone-group">
                                     <div className="input-group-prepend workphone-dd-wrapper">
-                                    <span><img src={`https://www.countryflags.io/${countrycodes.find(x => x.dial_code === modalInputs.ccode)?.code || ''}/flat/64.png`} alt="" /></span><select className="d-inline mt-0" name="ccode" id="ccode" value={modalInputs.ccode} onChange={handleModalInput}>
+                                    <span><img src={`https://www.countryflags.io/${countrycodes.find(x => x.dial_code === modalInputs.ccode)?.code || ''}/flat/64.png`} alt="" /></span>
+                                        <select className="d-inline mt-0 form-select pe-3" 
+                                                name="ccode" id="ccode" 
+                                                value={modalInputs.ccode} 
+                                                onChange={handleModalInput}>
                                             {countrycodes.sort((a, b) => Number(a.dial_code.slice(1)) - Number(b.dial_code.slice(1))).map(cc => <option value={cc.dial_code}>{cc.dial_code}</option>)}
                                         </select>
                                         {/* <span className="workphone-dropdown">lite</span>
@@ -350,7 +357,6 @@ const workphoneChange = e => {
                                     <input type="tel" className="form-control" name="workphone" id="workphone" value={modalInputs.workphone} aria-label="work phone" aria-describedby="workphone" onChange={handleModalInput}/>
                                 </div>
                             </div>
-
                             <div className="col-6 mt-3">
                                 <label htmlFor="emailaddress" className="form-label">Email Address</label>
                                 <input
@@ -361,11 +367,8 @@ const workphoneChange = e => {
                                     value={modalInputs.emailaddress}
                                     onChange={handleModalInput}/>
                             </div>
-
                         </div>
-
-                        <p
-                            className="btn mt-3 mb-2 p-0 text-start"
+                        <p className="btn mt-3 mb-2 p-0 text-start"
                             role="button"
                             style={{
                                 fontSize: "0.8rem",
@@ -373,15 +376,10 @@ const workphoneChange = e => {
                                 marginBottom: 0,
                                 color: "#006298!important",
                             }}
-
-                            onClick={() => setShowAddOption(x => !x)}
-                            >
+                            onClick={() => setShowAddOption(x => !x)}>
                             Additional Options <span><DowncaretIcon /></span>
                         </p>
-                        
-
                         {showAddOption && <div className="row g-3 pt-3">
-
                             <div className="col-12 mt-1">
                                 <label htmlFor="organisation" className="form-label">Organisation (optional)</label>
                                 <input
@@ -392,7 +390,6 @@ const workphoneChange = e => {
                                     value={modalInputs.organisation}
                                     onChange={handleModalInput}/>
                             </div>
-
                             <div className="col-12 mt-3 tags-select-wrapper">
                                 <label htmlFor="title" className="form-label">Tags</label>
                                 <RSelect className="rselectfield"
