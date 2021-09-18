@@ -20,7 +20,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import { NotificationManager } from "react-notifications";
-import ClipLoader from "react-spinners/ClipLoader";
+import ScaleLoader from "react-spinners/ScaleLoader";
 // bootstrap components
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -664,7 +664,7 @@ export default function Conversation() {
                 }}
               >
                 {" "}
-                <ClipLoader
+                <ScaleLoader
                   color="#0d4166"
                   loading={loadSingleTicket}
                   size={35}
@@ -1107,7 +1107,7 @@ export default function Conversation() {
                 }}
               >
                 {" "}
-                <ClipLoader
+                <ScaleLoader
                   color="#0d4166"
                   loading={loadSingleTicket}
                   size={35}
