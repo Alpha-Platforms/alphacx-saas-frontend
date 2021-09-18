@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {useState, useEffect} from 'react';
 import {Modal} from 'react-responsive-modal';
 import {NotificationManager} from 'react-notifications';

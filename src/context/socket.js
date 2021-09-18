@@ -11,13 +11,13 @@ export const SocketDataProvider = (props) => {
   const [msgHistory, setMsgHistory] = useState([]);
 // let baseUrl ="https://d3437b953f42.ngrok.io";
  let baseUrl ="https://kustormar-staging.herokuapp.com";
-  useEffect(() => {getUserFromStorage()}, [wsTickets]);
+  // useEffect(() => {getUserFromStorage()}, [wsTickets]);
 
   const getUserFromStorage = () => {
     let lUser = getLocalItem("user");
     //alert(lUser);
     if (lUser == undefined || lUser == null) {
-      // window.location.href = "/";
+      window.location.href = "/";
     } else {
       setuser(lUser)
       // console.log(lUser);
