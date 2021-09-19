@@ -31,7 +31,7 @@ export const userTokenConfig = getState => {
     const axiosConfig = {
         headers: {
             'Content-Type': 'application/json',
-            'Domain': 'techpoint'
+            'Domain': localStorage.getItem('domain')
         }
     }
 
