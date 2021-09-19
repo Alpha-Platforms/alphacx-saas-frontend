@@ -46,7 +46,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
             lastname,
             email,
             role,
-            groupId: team
+            groupIds: [team]
         };
 
         console.clear();

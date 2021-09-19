@@ -3,10 +3,10 @@ import axios from "axios";
 import { NotificationManager } from "react-notifications";
 
 export let baseUrl = "https://kustormar-auth.herokuapp.com/v1";
-// export let baseUrlMain = "https://d3437b953f42.ngrok.io/v1";
 export let baseUrlMain = "https://kustormar-staging.herokuapp.com/v1";
+
 let token = localStorage.getItem("token");
-// const token = localStorage.getItem("DomainToken")
+let tenantDomain = localStorage.getItem("domain");
 
 export const httpPostMain = async (url, postBody) => {
   if (!navigator.onLine) {
@@ -20,6 +20,7 @@ export const httpPostMain = async (url, postBody) => {
     const res = await axios.post(`${baseUrlMain}/${url}`, postBody, {
       headers: { 
         Authorization: `Bearer ${token}`,
+        'domain': tenantDomain,
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json' 
       },
@@ -60,6 +61,7 @@ export const httpPost = async (url, postBody) => {
     const res = await axios.post(`${baseUrl}/${url}`, postBody, {
       headers: { 
         Authorization: `Bearer ${token}`,
+        'domain': tenantDomain,
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json' 
       },
@@ -101,6 +103,7 @@ export const httpPostData = async (url, postBody) => {
     const res = await axios.post(`${baseUrl}/api${url}`, postBody, {
       headers: {
         Authorization: `Bearer ${token}`,
+        'domain': tenantDomain,
         "Content-Type": "multipart/form-data",
         'Access-Control-Allow-Origin': '*',
       },
@@ -134,6 +137,7 @@ export const httpGetMain = async (url) => {
     const res = await axios.get(`${baseUrlMain}/${url}`, {
       headers: { 
         Authorization: `Bearer ${token}`,
+        'domain': tenantDomain,
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json' 
       },
@@ -171,6 +175,7 @@ export const httpGet = async (url) => {
     const res = await axios.get(`${baseUrl}/api/${url}`, {
       headers: { 
         Authorization: `Bearer ${token}`,
+        'domain': tenantDomain,
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json' 
       },
@@ -240,6 +245,7 @@ export const httpPatchMain = async (url, postBody) => {
     const res = await axios.patch(`${baseUrlMain}/${url}`, postBody, {
       headers: { 
         Authorization: `Bearer ${token}`,
+        'domain': tenantDomain,
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json' 
       },
@@ -274,6 +280,7 @@ export const httpDelete = async (url) => {
     const res = await axios.delete(`${baseUrlMain}/${url}`, {
       headers: { 
         Authorization: `Bearer ${token}`,
+        'domain': tenantDomain,
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json' 
       },
