@@ -22,7 +22,7 @@ const CreateUserModal = ({
         avater: '',
         phoneNumber: '',
         description: '',
-        group: '',
+        groups: '',
         role: 'Agent',
         ccode: '+234'
     });
@@ -38,15 +38,15 @@ const CreateUserModal = ({
 
 
     const handleUserCreation = () => {
-        const {firstName, lastName, email, group, role, phoneNumber} = modalInputs;
+        const {firstName, lastName, email, groups, role, phoneNumber} = modalInputs;
 
-        if (!firstName || !lastName || !email || !group  || !phoneNumber) {
+        if (!firstName || !lastName || !email || !groups  || !phoneNumber) {
             // all field not available
             NotificationManager.error('All fields are required', 'Error');
         } else {
             setCreatingUser(true);
             // all fields are passed
-            addAgent({firstName, lastName, email, groupId: group, role, phoneNumber});
+            addAgent({firstName, lastName, email, groupIds: [groups], role, phoneNumber});
         }
     }
 
@@ -62,7 +62,7 @@ const CreateUserModal = ({
                 avater: '',
                 phoneNumber: '',
                 description: '',
-                group: '',
+                groups: '',
                 role: 'Agent'
             });
             setCreateModalShow(false);
@@ -168,10 +168,10 @@ const CreateUserModal = ({
                                 <label className="f-12" htmlFor="level">Team</label>
                                 {/* <input type="text" className="form-control form-control" id="level"/> */}
                                 <select
-                                    name="group"
+                                    name="groups"
                                     className="form-select"
                                     onChange={handleModalInput}
-                                    value={modalInputs.group}>
+                                    value={modalInputs.groups}>
                                     <option value=""></option>
                                     {groups.map(({name, id}) => <option value={id}>{name}</option>)}
                                 </select>
