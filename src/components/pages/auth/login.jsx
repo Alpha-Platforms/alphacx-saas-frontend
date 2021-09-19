@@ -53,7 +53,8 @@ const Login = ({ match, history }) => {
     const data = {
       email: userInput.email,
       password: userInput.password,
-      domain: match.params.domain,
+      // domain: match.params.domain,
+      domain: localStorage.getItem("domain")
     };
 
     setLoading(true);
