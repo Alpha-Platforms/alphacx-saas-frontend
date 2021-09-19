@@ -137,7 +137,7 @@ export const httpGetMain = async (url) => {
     const res = await axios.get(`${baseUrlMain}/${url}`, {
       headers: { 
         Authorization: `Bearer ${token}`,
-        'domain': 'techpoint',
+        'domain': tenantDomain,
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json' 
       },
@@ -175,7 +175,7 @@ export const httpGet = async (url) => {
     const res = await axios.get(`${baseUrl}/api/${url}`, {
       headers: { 
         Authorization: `Bearer ${token}`,
-        'domain': 'techpoint',
+        'domain': tenantDomain,
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json' 
       },
