@@ -30,7 +30,8 @@ export const userTokenConfig = getState => {
     // Headers
     const axiosConfig = {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Domain': 'techpoint'
         }
     }
 
