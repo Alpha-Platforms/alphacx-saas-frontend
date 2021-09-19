@@ -105,8 +105,6 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
       }
     };
 
-    // console.log(requestBody);
-
     setPolicyLoading(true);
     const res = await httpPostMain("sla", requestBody);
 

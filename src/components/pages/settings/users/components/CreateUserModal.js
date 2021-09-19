@@ -23,16 +23,15 @@ const CreateUserModal = ({
         avater: '',
         phoneNumber: '',
         description: '',
-        groups: [],
+        teams: [],
         role: 'Agent',
         ccode: '+234'
     });
 
     const [creatingUser, setCreatingUser] = useState(false);
     const [RSTeams, setRSTeams] = useState([])
-    const [RSTeamsInput, setRSTeamsInput] = useState([])
 
-
+    // F U N C T I O N S
     const loadRSTeams = () => {
         const mappedTeams = groups.map(item => {
             return {label: item.name, value: item.id}            
@@ -48,24 +47,27 @@ const CreateUserModal = ({
         }));
     }
 
-    const handleModalRSInput = (values) => {
+    const handleModalRSInput = (values, {name}) => {
         const selectedTeams = values.map(item => item.value)
-        setRSTeamsInput([...selectedTeams])
+
+        setModalInputs(prev => ({
+            ...prev,
+            [name]: selectedTeams
+        }));
     }
 
     const handleUserCreation = () => {
-        const {firstName, lastName, email, groups, role, phoneNumber} = modalInputs;
+        const {firstName, lastName, email, teams, role, phoneNumber} = modalInputs;
 
-        if (!firstName || !lastName || !email || !groups  || !phoneNumber) {
+        if (!firstName || !lastName || !email || !teams  || !phoneNumber) {
             // all field not available
             NotificationManager.error('All fields are required', 'Error');
         } else {
             setCreatingUser(true);
             // all fields are passed
 
-            // check groups
-            console.log(groups)
-            // addAgent({firstName, lastName, email, groupIds: groups, role, phoneNumber});
+            // The request function
+            addAgent({firstName, lastName, email, groupIds: teams, role, phoneNumber});
         }
     }
 
@@ -81,7 +83,7 @@ const CreateUserModal = ({
                 avater: '',
                 phoneNumber: '',
                 description: '',
-                groups: RSTeamsInput,
+                teams: [],
                 role: 'Agent'
             });
             setCreateModalShow(false);
@@ -91,11 +93,6 @@ const CreateUserModal = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAgentCreated]);
-
-    useEffect(() => {
-        console.clear()
-        console.log(RSTeamsInput)
-    }, [RSTeamsInput])
 
     //create user modal
     return (
