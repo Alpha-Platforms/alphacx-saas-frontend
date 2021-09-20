@@ -80,7 +80,7 @@ const UserPersonal = () => {
                                 placeholder="Orofin"/>
                         </div>
                         <div className="form-group mt-3">
-                            <label htmlFor="userTeam" className="mb-1">Team</label>
+                            <label htmlFor="userTeam" className="mb-1">Team(s)</label>
                             <input
                                 type="password"
                                 className="form-control"
