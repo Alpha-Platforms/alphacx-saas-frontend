@@ -38,32 +38,29 @@ const DefaultLayoutRoute = ({
   pageName,
   ...rest
 }) => {
-  const [valid, setValid] = useState("loading");
-  useEffect(() => {
-    ValidateToken();
-  }, [valid]);
+  const [valid, setValid] = useState(false);
+
   const ValidateToken = () => {
     let token = localStorage.getItem("token");
-    if (token == undefined || token == null || token == "") {
-      localStorage.clear();
-      return setValid(false);
-    }
-    if (jwtDecode(token).exp < Date.now() / 1000) {
+
+    if (token === undefined || token === null || token === "" || jwtDecode(token).exp < Date.now() / 1000){
       localStorage.clear();
       return setValid(false);
     }
     setValid(true);
   };
 
+  useEffect(() => {
+    // ValidateToken();
+  }, [valid]);
+
   return (
     <Route
       {...rest}
       render={(matchProps) => {
-        return valid == "loading" ? (
-          ""
-        ) : valid == false ? (
-          (window.location.href = "/")
-        ) : (
+
+        if(valid){
+
           <DefaultLayout
             routeType={routeType}
             page={rest.page}
@@ -72,7 +69,30 @@ const DefaultLayoutRoute = ({
           >
             <Component {...matchProps} />
           </DefaultLayout>
-        );
+        
+        } else {
+          window.location.href = "/login"
+          console.clear()
+          console.log("zeelz");
+        }
+
+
+        // return valid ? (
+        //   ""
+        // ) : valid == false ? (
+        //   (window.location.href = "/login")
+        // ) : (
+        //   <DefaultLayout
+        //     routeType={routeType}
+        //     page={rest.page}
+        //     fullProps={fullProps}
+        //     pageName={pageName}
+        //   >
+        //     <Component {...matchProps} />
+        //   </DefaultLayout>
+        // );
+        
+
       }}
     />
   );

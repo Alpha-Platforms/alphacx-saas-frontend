@@ -211,7 +211,7 @@ const Login = ({history}) => {
                                 </div>
                                 <div className="haveAnAccou">
                                     <span></span>
-                                    <a href="/">Already have an account? Login</a>
+                                    <a href="/login">Already have an account? Login</a>
                                 </div>
 
                                 <div className="submit-auth-btn">
@@ -292,7 +292,7 @@ const Login = ({history}) => {
                                 </div>
                                 <div className="haveAnAccou">
                                     <button type="button" onClick={() => setActiveForm('form-one')}>Back</button>
-                                    <a href="/">Already have an account? Login</a>
+                                    <a href="/login">Already have an account? Login</a>
                                 </div>
 
                                 <div className="submit-auth-btn">
