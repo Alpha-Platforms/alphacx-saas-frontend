@@ -55,7 +55,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
       if (result.isConfirmed) {
         localStorage.clear();
         NotificationManager.success("Logout Successfully.");
-        window.location.href = "/";
+        window.location.href = "/login";
       }
     });
   };
