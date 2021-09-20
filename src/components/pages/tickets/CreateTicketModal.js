@@ -277,30 +277,21 @@ const CreateTicketModal = ({
         return searchType;
     }
 
+
     const getSearchedCustomers = async (userInput) => {
-        // USE HTTPGETMAIN LATER
 
         const searchType = searchTypeChecker(userInput)
 
-        const res = await fetch(`https://kustormar-staging.herokuapp.com/v1/users?role=Customer&searchType=${searchType}&search=${userInput}`, {
-            headers: {
-                Authorization: `Bearer ${JSON.parse(localStorage.getItem("user")).token}`
-            }
-        })
-        const data = await res.json()
-        if(data.status === "success"){
-            let remappedData = []
-            data.data.users.forEach(item => {
-                
-                // if((item.firstname+item.lastname).toLowerCase().includes(userInput.toLowerCase())){
-                // } no filtering needed anymore
+        const res = await httpGetMain(`users?role=Customer&searchType=${searchType}&search=${userInput}`);
 
+        if(res.status === "success"){
+            let remappedData = []
+            res.data.users.forEach(item => {
                 remappedData.push({label: item.firstname+" "+item.lastname, value: item.id})
             })
             return remappedData;
         }
     }
-
 
 
     const [Category, setCategory] = useState([]);
