@@ -161,7 +161,7 @@
 
 .tc-progressbar .bar {
     height: 100%;
-    width: 50%;
+    /* width: 50%; */
     background-color: red;
     border-radius: 10px;
 }

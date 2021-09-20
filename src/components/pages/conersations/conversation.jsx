@@ -151,6 +151,7 @@ export default function Conversation() {
     // let swData = { assigneeId: "15b7c94e-0fc1-4619-9f7b-d985b41e84f9", userId:  "490af948-cd93-45c6-9a9e-a06be5bbea2b" };
     // AppSocket.io.emit("join_private", swData);
     AppSocket.io.on(`ws_tickets`, (data) => {
+      console.log('data from socket => ', data);
       setTickets(data?.data?.tickets);
       // console.log("this are Tickets", data?.data?.tickets);
       setWsTickets(data?.data?.tickets);
@@ -159,11 +160,12 @@ export default function Conversation() {
       // console.log("this are history msg", data);
       // console.log(`${UserInfo}`);
       // if(data.user.id == ticket[0]?.customer?.id){
+        console.log('Message Data => ', data);
         let msg = {
           created_at: data.created_at,
-          id: data.history.id,
-          plain_response: data.history.plain_response,
-          response: data.history.response,
+          id: data?.history?.id || data?.id,
+          plain_response: data?.history?.plain_response || data?.plain_response,
+          response: data?.history?.response || data?.response,
           type: "reply",
           user: data.user,
         };

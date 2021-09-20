@@ -170,9 +170,9 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       AppSocket.io.on(`message`, (data) => {
         let msg = {
           created_at: data.created_at,
-          id: data.history.id,
-          plain_response: data.history.plain_response,
-          response: data.history.response,
+          id: data?.history?.id || data?.id,
+          plain_response: data?.history?.plain_response || data?.plain_response,
+          response: data?.history?.response || data?.response,
           type: "reply",
           user: data.user,
         };

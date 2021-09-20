@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {NotificationManager} from 'react-notifications';
 import {addAgent, getAgents, resetAgentCreated} from '../../../../../reduxstore/actions/agentActions';
 import {countrycodes} from '../../../../shared/countrycodes';
+import RSelect from "react-select";
 
 const CreateUserModal = ({
     createModalShow,
@@ -22,11 +23,21 @@ const CreateUserModal = ({
         avater: '',
         phoneNumber: '',
         description: '',
-        group: '',
+        teams: [],
         role: 'Agent',
         ccode: '+234'
     });
+
     const [creatingUser, setCreatingUser] = useState(false);
+    const [RSTeams, setRSTeams] = useState([])
+
+    // F U N C T I O N S
+    const loadRSTeams = () => {
+        const mappedTeams = groups.map(item => {
+            return {label: item.name, value: item.id}            
+        })
+        setRSTeams(mappedTeams)
+    }
 
     const handleModalInput = e => {
         const {name, value} = e.target;
@@ -36,17 +47,27 @@ const CreateUserModal = ({
         }));
     }
 
+    const handleModalRSInput = (values, {name}) => {
+        const selectedTeams = values.map(item => item.value)
+
+        setModalInputs(prev => ({
+            ...prev,
+            [name]: selectedTeams
+        }));
+    }
 
     const handleUserCreation = () => {
-        const {firstName, lastName, email, group, role, phoneNumber} = modalInputs;
+        const {firstName, lastName, email, teams, role, phoneNumber} = modalInputs;
 
-        if (!firstName || !lastName || !email || !group  || !phoneNumber) {
+        if (!firstName || !lastName || !email || !teams  || !phoneNumber) {
             // all field not available
             NotificationManager.error('All fields are required', 'Error');
         } else {
             setCreatingUser(true);
             // all fields are passed
-            addAgent({firstName, lastName, email, groupId: group, role, phoneNumber});
+
+            // The request function
+            addAgent({firstName, lastName, email, groupIds: teams, role, phoneNumber});
         }
     }
 
@@ -62,7 +83,7 @@ const CreateUserModal = ({
                 avater: '',
                 phoneNumber: '',
                 description: '',
-                group: '',
+                teams: [],
                 role: 'Agent'
             });
             setCreateModalShow(false);
@@ -132,46 +153,33 @@ const CreateUserModal = ({
                                     <span><img src={`https://www.countryflags.io/${countrycodes.find(x => x.dial_code === modalInputs.ccode)?.code || ''}/flat/64.png`} alt="" /></span><select defaultValue="+234" className="d-inline mt-0" name="ccode" id="ccode" value={modalInputs.ccode} onChange={handleModalInput}>
                                             {countrycodes.sort((a, b) => Number(a.dial_code.slice(1)) - Number(b.dial_code.slice(1))).map(cc => <option value={cc.dial_code}>{cc.dial_code}</option>)}
                                         </select>
-                                        {/* <span className="workphone-dropdown">lite</span>
-                                        <ul>
-                                            {countrycodes.sort((a, b) => Number(a.dial_code.slice(1)) - Number(b.dial_code.slice(1))).map(cc => <li>
-                                                <span><img src={`https://www.countryflags.io/be/flat/64.png`} alt="" /></span> {cc.dial_code}</li>)}
-                                        </ul> */}
                                     </div>
                                     <input type="tel" className="form-control" name="phoneNumber" id="workphone" value={modalInputs.phoneNumber} aria-label="work phone" aria-describedby="workphone" onChange={handleModalInput}/>
                                 </div>
                             </div>
-                            {/* <div className="form-group mt-3">
-                                <label className="f-12" htmlFor="email">Phone Number</label>
-                                <input
-                                    type="tel"
-                                    className="form-control form-control"
-                                    id="phoneNumber"
-                                    name="phoneNumber"
-                                    value={modalInputs.phonenumber}
-                                    onChange={handleModalInput}/>
-                            </div> */}
-                            {/* <div className="form-group mt-3">
-                                <label className="f-12" htmlFor="email">Description</label>
-                                <textarea
-                                    className="form-control form-control"
-                                    id="description"
-                                    name="description"
-                                    onChange={handleModalInput}
-                                    value={modalInputs.description}></textarea>
-                            </div> */}
-                            {/* <div className="form-group mt-3">
-                                <label className="f-12" htmlFor="#role">Role</label>
-                                <input type="text" className="form-control form-control" id="role"/>
-                            </div> */}
+
+                            <div className="form-group mt-3">
+                                <label className="f-12" htmlFor="email">Team(s)</label>
+                                <RSelect
+                                    className=""
+                                    isClearable={false}
+                                    name="teams"
+                                    isMulti
+                                    placeholder="select one or more teams"
+                                    // value={modalInputs.teams}
+                                    onMenuOpen={() => loadRSTeams()}
+                                    options={RSTeams}
+                                    onChange={handleModalRSInput}
+                                />
+                            </div>
+
                             <div className="form-group mt-3">
                                 <label className="f-12" htmlFor="level">Team</label>
-                                {/* <input type="text" className="form-control form-control" id="level"/> */}
                                 <select
-                                    name="group"
+                                    name="groups"
                                     className="form-select"
                                     onChange={handleModalInput}
-                                    value={modalInputs.group}>
+                                    value={modalInputs.groups}>
                                     <option value=""></option>
                                     {groups.map(({name, id}) => <option value={id}>{name}</option>)}
                                 </select>

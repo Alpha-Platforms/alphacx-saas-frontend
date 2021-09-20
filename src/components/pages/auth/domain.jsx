@@ -38,9 +38,12 @@ const Login = ({ history }) => {
         4000
       );
     }
+
+    localStorage.setItem("domain", userInput.domain)
+    
     const data = {
       //   domain: "techpoint",
-      domain: userInput.domain,
+      domain: localStorage.getItem("domain"),
     };
     setLoading(true);
     const res = await httpPost(`auth/login`, data);
@@ -50,8 +53,7 @@ const Login = ({ history }) => {
       localStorage.setItem("user", JSON.stringify(res.data));
       localStorage.setItem("token", res.data.token);
       NotificationManager.success("Login", "Success", 4000);
-      // window.location.href = `http://${res.data.domain}`;
-      window.location.href = `/login/${userInput.domain}`;
+      window.location.href = `/login/${localStorage.getItem("domain")}`;
     } else {
       console.log(res);
       setLoading(false);

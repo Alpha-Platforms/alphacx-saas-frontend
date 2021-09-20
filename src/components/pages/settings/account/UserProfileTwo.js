@@ -11,20 +11,31 @@ import {getCurrentAgent, getAgents} from '../../../../reduxstore/actions/agentAc
 import { updateUser, updateUserPassword } from './../../../../reduxstore/actions/userActions';
 import ImageDefault from '../../../../assets/svgicons/image-default.svg';
 import axios from 'axios';
+import RSelect from "react-select";
 
-const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, currentAgent, groups, authenticatedUser, agents, admins, supervisors, getAgents}) => {
+const UserProfileTwo = ({
+    getCurrentAgent, 
+    isAgentLoaded, 
+    isCurrentAgentLoaded, 
+    currentAgent, 
+    teamsData, 
+    authenticatedUser, 
+    agents, 
+    admins, 
+    supervisors, 
+    getAgents
+}) => {
 
     const {id} = useParams();
 
-    const [accountLoading,
-        setAccountLoading] = useState(false);
+    const [accountLoading, setAccountLoading] = useState(false);
     const [personalInfoInputs,
         setPersonalInfoInputs] = useState({
         firstname: '',
         lastname: '',
         email: '',
         role: '',
-        team: '',
+        teams: '',
         oldPassword: '',
         newPassword: ''
     });
@@ -37,19 +48,27 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
         ownAvatar: ''
     });
 
+    const [RSTeams, setRSTeams] = useState([])
+
+    const loadRSTeams = () => {
+
+        const mappedItems = teamsData.map(item => {
+            return {value: item.id, label: item.name}
+        })
+        setRSTeams(mappedItems);
+    }
+
 
     const updateUserInfo = async () => {
-        const {firstname, lastname, email, role, team, oldPassword, newPassword} = personalInfoInputs;
+        const {firstname, lastname, email, role, teams, oldPassword, newPassword} = personalInfoInputs;
         const updatedInfo = {
             id,
             firstname,
             lastname,
             email,
             role,
-            groupId: team
+            groupIds: teams
         };
-
-        console.clear();
 
         setAccountLoading(true);
 
@@ -160,8 +179,7 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
 
         
         if (agents) {
-            const gottenUser =  agents.filter(agent => agent
-                ?.id === id)[0];
+            const gottenUser =  agents.filter(agent => agent ?.id === id)[0];
 
             if (gottenUser) {
                 setPersonalInfoInputs(prev => ({
@@ -209,8 +227,10 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
             }))
         }
 
-    }, [currentAgent]);
+        // load team options
+        loadRSTeams()
 
+    }, [currentAgent]);
 
     const handleImgSelect = function (e) {
         // store current input
@@ -370,109 +390,63 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
                                                 onChange={handleInputChange}/>
                                         </div>
                                         <div className="w-100">
-                                            <label className="form-label" for="last-name">
-                                                Team
-                                            </label>
-                                            <select
-                                                id="team"
-                                                className="form-select"
-                                                aria-label="parent category"
-                                                name="team"
-                                                value={personalInfoInputs.team}
-                                                onChange={handleInputChange}>
-                                                <option value="">Select Team</option>
-                                                {groups.map(group => (
-                                                    <option value={group.id}>{group.name}</option>
-                                                ))}
-                                            </select>
+                                            <label className="form-label" for="last-name">Team(s)</label>
+                                            <RSelect
+                                                className=""
+                                                isClearable={false}
+                                                isMulti
+                                                name="teams"
+                                                defaultValue={RSTeams.filter(option => option.value === currentAgent.group_id) }
+                                                options={RSTeams}
+                                                onChange={() => {
+                                                    console.log(currentAgent.group_id)
+                                                }}
+                                            />
+
                                         </div>
+
                                     </div>
 
                                 </div>
 
-                                {authenticatedUser?.email === currentAgent?.email && <div className="d-flex">
-                                    <div className="mb-4 me-2 w-100">
-                                        <label className="form-label" for="change-password">
-                                            Change Password
-                                        </label>
-                                        <input
-                                            className="form-control"
-                                            type="password"
-                                            name="oldPassword"
-                                            id="oldPassword"
-                                            value={personalInfoInputs.oldPassword || ""}
-                                            onChange={handleInputChange}
-                                            placeholder="Current Password"
-                                            />
-                                        {/* <button className="btn btn-sm bg-at-blue-light px-3 py-1 mt-3">
-                                            Change Password
-                                        </button> */}
-                                    </div>
-                                    <div className="mb-4 w-100">
-                                        <label className="form-label" for="change-password" style={{ visibility: "hidden" }}>
-                                            Change Password
-                                        </label>
-                                        <input
-                                            className="form-control"
-                                            type="password"
-                                            name="newPassword"
-                                            id="newPassword"
-                                            value={personalInfoInputs.newPassword || ""}
-                                            onChange={handleInputChange}
-                                            placeholder="New Password"
-                                            />
-                                        {/* <button className="btn btn-sm bg-at-blue-light px-3 py-1 mt-3">
-                                            Change Password
-                                        </button> */}
-                                    </div>
-                                </div>}
-
-                                {/* <div className="d-flex mb-3">
-                                    <div
-                                        id="uploadPersonalPhotoInputImgPreview"
-                                        style={{
-                                        width: "6rem",
-                                        height: "6rem"
-                                    }}
-                                        className="border border-1 rounded-3 me-5 d-flex justify-content-center align-items-center">
-                                        <div
-                                            style={{
-                                            justifyContent: "center",
-                                            height: "100%",
-                                            width: "100%"
-                                        }}
-                                            className="ms-0 d-flex justify-content-between align-items-center">
-                                            {(personalInfoInputs.avatar.currentAvatar || personalInfoInputs.avatar.blob) && (<img
-                                                        className="avatarImage"
-                                                        src={personalInfoInputs
-                                                        ?.avatar
-                                                            ?.blob || personalInfoInputs
-                                                                ?.avatar.currentAvatar}
-                                                        alt=""/>)}
+                                {authenticatedUser?.email === currentAgent?.email && 
+                                    <div className="d-flex">
+                                        <div className="mb-4 me-2 w-100">
+                                            <label className="form-label" for="change-password">
+                                                Change Password
+                                            </label>
+                                            <input
+                                                className="form-control"
+                                                type="password"
+                                                name="oldPassword"
+                                                id="oldPassword"
+                                                value={personalInfoInputs.oldPassword || ""}
+                                                onChange={handleInputChange}
+                                                placeholder="Current Password"
+                                                />
+                                            {/* <button className="btn btn-sm bg-at-blue-light px-3 py-1 mt-3">
+                                                Change Password
+                                            </button> */}
+                                        </div>
+                                        <div className="mb-4 w-100">
+                                            <label className="form-label" for="change-password" style={{ visibility: "hidden" }}>
+                                                Change Password
+                                            </label>
+                                            <input
+                                                className="form-control"
+                                                type="password"
+                                                name="newPassword"
+                                                id="newPassword"
+                                                value={personalInfoInputs.newPassword || ""}
+                                                onChange={handleInputChange}
+                                                placeholder="New Password"
+                                                />
+                                            {/* <button className="btn btn-sm bg-at-blue-light px-3 py-1 mt-3">
+                                                Change Password
+                                            </button> */}
                                         </div>
                                     </div>
-                                    
-                                    <div>
-                                        <label
-                                            for="uploadPersonalPhotoInput"
-                                            className="btn btn-sm bg-at-blue-light px-4 py-1 mb-2 mt-1">
-                                            Upload Photo
-                                        </label>
-                                        <input
-                                            type="file"
-                                            name="uploadPersonalPhotoInput"
-                                            id="uploadPersonalPhotoInput"
-                                            onChange={handleAvatarChange}/>
-                                        <p className="mb-0 text-at-red">
-                                            <small id="uploadPersonalPhotoInputError"></small>
-                                        </p>
-                                        <p className="uploadInfoWrapper">
-                                            <small id="uploadPersonalPhotoInputInfo">
-                                                Upload personal photo, uploaded file must be an image.
-                                            </small>
-                                        </p>
-                                    </div>
-                                </div> */}
+                                }
 
                                 <div>
                                 <div className="d-flex mb-4 mt-3">
@@ -556,6 +530,15 @@ const UserProfileTwo = ({getCurrentAgent, isAgentLoaded, isCurrentAgentLoaded, c
     );
 };
 
-const mapStateToProps = (state, ownProps) => ({agents: state.agent.agents, supervisors: state.supervisor.supervisors, admins: state.admin.admins, isAgentLoaded: state.agent.isAgentLoaded, isCurrentAgentLoaded: state.agent.isCurrentAgentLoaded, currentAgent: state.agent.currentAgent, groups: state.group.groups, authenticatedUser: state.userAuth.user});
+const mapStateToProps = (state, ownProps) => ({
+    agents: state.agent.agents,
+    supervisors: state.supervisor.supervisors,
+    admins: state.admin.admins,
+    isAgentLoaded: state.agent.isAgentLoaded,
+    isCurrentAgentLoaded: state.agent.isCurrentAgentLoaded,
+    currentAgent: state.agent.currentAgent,
+    teamsData: state.group.groups,
+    authenticatedUser: state.userAuth.user
+});
 
 export default connect(mapStateToProps, {getCurrentAgent, getAgents})(UserProfileTwo);
