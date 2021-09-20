@@ -9,8 +9,9 @@ import {Dropdown} from 'react-bootstrap';
 import { Fragment } from 'react';
 import {connect} from 'react-redux';
 import ScaleLoader from 'react-spinners/ScaleLoader';
+import {textCapitalize} from '../../../helper';
 
-const DashboardTwo = ({isAnalyticsLoaded, analytics}) => {
+const DashboardTwo = ({isAnalyticsLoaded, analytics, user}) => {
 
     return (
         <Fragment>
@@ -18,7 +19,7 @@ const DashboardTwo = ({isAnalyticsLoaded, analytics}) => {
                 <div className="text-center mt-4"><ScaleLoader loading={true} color={"#006298"}/></div>
              : <div className="dashboard-main">
                 <div>
-                    <h3 className="wlc-text">Hi, Dabo</h3>
+                    <h3 className="wlc-text">Hi, {textCapitalize(`${user?.firstname || ""} ${user?.lastname || ""}`)}</h3>
                 </div>
                 <div className="dashboard-wrapper">
                     <div className="box-1">
@@ -70,7 +71,8 @@ const DashboardTwo = ({isAnalyticsLoaded, analytics}) => {
 
 const mapStateToProps = (state, ownProps) => ({
     isAnalyticsLoaded: state.analytics.isAnalyticsLoaded,
-    analytics: state.analytics.analytics
+    analytics: state.analytics.analytics,
+    user: state.userAuth.user
 });
 
 export default connect(mapStateToProps, null)(DashboardTwo);
