@@ -15,6 +15,7 @@ import { httpPost, httpPostMain } from "../../../helpers/httpMethods";
 import { css } from "@emotion/react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { wordCapitalize } from "helper";
+import axios from "axios";
 const override = css``;
 
 const Login = ({history}) => {
@@ -40,7 +41,6 @@ const Login = ({history}) => {
     if(!domainAuthenticated){
         if (userInput.domain){ // DOMAIN LOGIN
 
-
           const data = {domain: userInput.domain}
           setLoading(true);
           const res = await httpPost(`auth/login`, data);
@@ -49,7 +49,7 @@ const Login = ({history}) => {
             setLoading(false)
             localStorage.clear()
             localStorage.setItem("domain", userInput.domain)
-            localStorage.setItem("user", JSON.stringify(res.data));
+            // localStorage.setItem("user", JSON.stringify(res.data)); NO USER YET
             localStorage.setItem("token", res.data.token);
 
             setDomainAuthenticated(true)
@@ -89,12 +89,14 @@ const Login = ({history}) => {
           const data = {
             email: userInput.email,
             password: userInput.password,
-            domain: userInput.domain
+            // domain: userInput.domain
           };
       
           setLoading(true);
+
           const res = await httpPostMain("auth/login", data);
-          if (res.status == "success") {
+
+          if (res.status === "success") {
             setLoading(false);
             console.log(res?.status);
             localStorage.setItem("user", JSON.stringify(res.data));
@@ -111,7 +113,7 @@ const Login = ({history}) => {
             NotificationManager.error(res?.er?.message, "Error", 4000);
 
             console.clear()
-            console.log("login failed");
+            console.log(res);
           }
 
         } 
