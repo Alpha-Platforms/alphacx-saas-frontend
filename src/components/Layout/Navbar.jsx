@@ -12,6 +12,8 @@ import {HelpIcon} from '../../assets/SvgIconsSet.jsx';
 import CreateTicketModal from '../pages/tickets/CreateTicketModal';
 import CreateCustomerModal from '../pages/customers/CreateCustomerModal';
 import dummyavatar from '../../assets/images/dummyavatar.jpeg';
+import '../../styles/Navbar.css';
+import {connect} from 'react-redux';
 
 // --- dropdown component
 function PlusIcon() {
@@ -147,11 +149,12 @@ function Dropdown() {
 // --- //dropdown component
 
 
-export default function Navbar({
+function Navbar({
   browserRouter,
   routeType,
   fullProps,
   pageName,
+  user
 }) {
   // let [initsidebarState, setinitsidebarState] = useContext(LayoutContext);
   const getLocalItem = "h";
@@ -265,14 +268,15 @@ export default function Navbar({
 
                 <div>
                   <Link to={`/settings/profile/${localUser?.id}`}>
-                    <img
+                    {localUser?.avatar ? <img
                       src={localUser?.avatar || dummyavatar}
                       alt=""
                       style={{
                         width: 30,
                         borderRadius: "50%",
                       }}
-                    />
+                    /> : <span className="nav-initials">{`${user?.firstname[0] || ''}${user?.lastname[0] || ''}`.trim().toUpperCase()}</span>
+                    }
                   </Link>
                 </div>
               </div>
@@ -283,3 +287,9 @@ export default function Navbar({
     </React.Fragment>
   );
 }
+
+const mapStateToProps = (state, ownProps) => ({
+  user: state.userAuth.user
+})
+
+export default connect(mapStateToProps)(Navbar);
