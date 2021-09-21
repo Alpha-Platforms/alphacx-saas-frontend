@@ -37,9 +37,7 @@ const TicketSettingsTab = ({statuses}) => {
                                 value={tabInputs.distributon}
                                 onChange={handleInputChange}
                                 aria-label="Default select example">
-                                <option selected></option>
-                                <option value="load-balancer">Load Balancer</option>
-                                <option value="round-robin">Round Robin</option>
+                                <option value="load-balancer" disabled>Efficiency</option>
                             </select>
                         </div>
                     </div>
