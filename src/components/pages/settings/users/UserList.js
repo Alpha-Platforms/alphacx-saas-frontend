@@ -39,7 +39,9 @@ const UserList = ({
   isAgentsLoaded,
   groups,
   getAgents,
-  negateActiveState
+  negateActiveState,
+  isAdminsLoaded,
+  isSupervisorLoaded
 }) => {
   const [createModalShow, setCreateModalShow] = useState(false);
   const [inviteModalShow, setInviteModalShow] = useState(false);
@@ -204,7 +206,7 @@ const UserList = ({
         </div>
 
         <div id="alphacxMTable" className="mb-3 acx-user-table acx-user-table-2">
-          {(agents && admins && supervisors) && (
+          {(isAgentsLoaded && isAdminsLoaded && isSupervisorLoaded) && (
             <MuiThemeProvider theme={tableTheme}>
               <MaterialTable
                 title=""
@@ -380,6 +382,7 @@ const mapStateToProps = (state, ownProps) => ({
   supervisors: state.supervisor.supervisors,
   isAgentsLoaded: state.agent.isAgentsLoaded,
   isAdminsLoaded: state.admin.isAdminsLoaded,
+  isSupervisorLoaded: state.supervisor.isSupervisorsLoaded,
   groups: state.group.groups,
 });
 

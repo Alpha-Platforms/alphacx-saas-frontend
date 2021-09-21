@@ -1,7 +1,7 @@
 import * as types from '../types';
 
 const initialState = {
-	agents: null,
+	agents: [],
     meta: null,
 	isAgentsLoading: false, //will be true when fetching data and back to false when the fetch is done
 	isAgentsLoaded: false,
@@ -27,6 +27,12 @@ const agentReducer = (state = initialState, action) => {
 				...state,
 				isAgentsLoading: true,
 				isAgentsLoaded: false
+			}
+		case types.AGENTS_LOADING_FAILED:
+			return {
+				...state,
+				isAgentsLoading: false,
+				isAgentsLoaded: true
 			}
 		case types.ADD_AGENT:
 			return {

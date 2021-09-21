@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, useEffect } from "react";
 import {
   ThemeProvider as MuiThemeProvider,
@@ -204,14 +205,11 @@ const GroupList = ({ groups, categories, isGroupsLoaded }) => {
                     width: "40%",
                   },
                   {
-                    title: "Members",
-                    field: "members",
-                  },
-                  {
                     title: "Category",
                     field: "category",
                     width: '40%',
-                    render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">{rowData.category}</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">+2</span></div>),
+                    // render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">{rowData.category}</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">+2</span></div>),
+                    render: rowData => (<div className={"table-tags"}>{rowData.category && <span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">{rowData.category}</span>}</div>),
                   },
                   {
                     title: "Action",

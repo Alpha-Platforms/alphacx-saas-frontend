@@ -423,6 +423,8 @@ const UserProfileTwo = ({
                                                 value={personalInfoInputs.oldPassword || ""}
                                                 onChange={handleInputChange}
                                                 placeholder="Current Password"
+                                                autocomplete="new-password"
+                                                autoComplete="new-password"
                                                 />
                                             {/* <button className="btn btn-sm bg-at-blue-light px-3 py-1 mt-3">
                                                 Change Password
@@ -440,6 +442,8 @@ const UserProfileTwo = ({
                                                 value={personalInfoInputs.newPassword || ""}
                                                 onChange={handleInputChange}
                                                 placeholder="New Password"
+                                                autocomplete="new-password"
+                                                autoComplete="new-password"
                                                 />
                                             {/* <button className="btn btn-sm bg-at-blue-light px-3 py-1 mt-3">
                                                 Change Password
