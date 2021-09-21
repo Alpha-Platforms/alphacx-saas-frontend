@@ -273,7 +273,7 @@ function SettingsHome({signedUser}) {
             </Link>
           </div>
         </Col>
-        <Col sm={6} md={4} className="">   
+        <Col sm={6} md={4} className="settings-menu-item">   
           <div className="h-100 border rounded bg-light">
             <Link to="settings/fields" className="d-block cursor text-decoration-none">
               <div className="d-flex align-items-center p-md-4">

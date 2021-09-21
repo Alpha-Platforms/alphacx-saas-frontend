@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {useState, useEffect} from 'react';
 import {Modal} from 'react-bootstrap';
 import {connect} from 'react-redux';
@@ -174,14 +175,18 @@ const CreateUserModal = ({
                             </div>
 
                             <div className="form-group mt-3">
-                                <label className="f-12" htmlFor="level">Team</label>
+                                <label className="f-12" htmlFor="level">Role</label>
                                 <select
                                     name="groups"
                                     className="form-select"
                                     onChange={handleModalInput}
                                     value={modalInputs.groups}>
                                     <option value=""></option>
-                                    {groups.map(({name, id}) => <option value={id}>{name}</option>)}
+                                    <option value="Administrator">Administrator</option>
+                                    <option value="Supervisor">Supervisor</option>
+                                    <option value="Agent">Agent</option>
+                                    {/* {groups.map(({name, id}) => <option value={id}>{name}</option>)} */}
+                                    
                                 </select>
                             </div>
                             <div className="text-end">

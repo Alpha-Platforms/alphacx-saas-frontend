@@ -1,7 +1,7 @@
 import * as types from '../types';
 
 const initialState = {
-	agents: null,
+	agents: [],
     meta: null,
 	isAgentsLoading: false, //will be true when fetching data and back to false when the fetch is done
 	isAgentsLoaded: false,
