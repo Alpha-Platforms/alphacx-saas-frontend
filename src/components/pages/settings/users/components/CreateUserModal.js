@@ -177,10 +177,10 @@ const CreateUserModal = ({
                             <div className="form-group mt-3">
                                 <label className="f-12" htmlFor="level">Role</label>
                                 <select
-                                    name="groups"
+                                    name="role"
                                     className="form-select"
                                     onChange={handleModalInput}
-                                    value={modalInputs.groups}>
+                                    value={modalInputs.role}>
                                     <option value=""></option>
                                     <option value="Administrator">Administrator</option>
                                     <option value="Supervisor">Supervisor</option>
