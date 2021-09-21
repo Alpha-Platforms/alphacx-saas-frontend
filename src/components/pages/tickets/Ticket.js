@@ -670,7 +670,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                             <div className="chatDateHeaderhr2"></div>
                           </div>
 
-                          <div className="customerTiketChat">
+                          {/* <div className="customerTiketChat">
                             <div className="customerTImageHeader">
                               <div className="imgContainercth">
                                 {SenderInfo?.customer?.avatar ? (
@@ -691,10 +691,10 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                 ticket[0].created_at
                               )}`}</p>
                             </div>
-                          </div>
-                          <div className="msgbodyticketHeader">
+                          </div> */}
+                          {/* <div className="msgbodyticketHeader">
                             {capitalize(ticket[0]?.description  || '')}
-                          </div>
+                          </div> */}
                           <div className="msgAssingedToee3">
                             This message is assigned to{" "}
                             <span>
