@@ -754,8 +754,8 @@ export default function Conversation() {
                     </div>
 
                     <div className="customerTiketChat">
-                      <div className="customerTImageHeader">
-                        <div className="imgContainercth">
+                     {/* <div className="customerTImageHeader">
+                         <div className="imgContainercth">
                           {SenderInfo?.customer?.avatar ? (
                             <img src={SenderInfo?.customer?.avatar} alt="" />
                           ) : (
@@ -765,18 +765,18 @@ export default function Conversation() {
                           )}
                           <div className="custorActiveStateimgd"></div>
                         </div>
-                      </div>
+                      </div>  
                       <div className="custormernameticket">
                         <p style={{ color: "#006298" }}>
                           {`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(ticket[0]?.customer?.lastname == "default" ? "" : ticket[0]?.customer?.lastname)}`}
                         </p>
                         <p>{`Via ${ticket[0].channel} . ${dateFormater(ticket[0].created_at)}`}</p>
-                      </div>
+                      </div> */}
                     </div>
 
-                    <div className="msgbodyticketHeader">
+                    {/* <div className="msgbodyticketHeader">
                       {capitalize(ticket[0]?.description)}
-                    </div>
+                    </div> */}
                     <div className="msgAssingedToee3"> This message is assigned to{" "}
                       <span>{" "}
                         {`${capitalize(
