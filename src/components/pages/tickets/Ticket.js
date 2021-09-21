@@ -46,7 +46,7 @@ import { Modal } from "react-responsive-modal";
 const CircleIcon = (props) => <span className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
 
 
-const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, currentTicket}) => {
+function Ticket ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, currentTicket}) {
   
   const {id} = useParams();
   
@@ -221,7 +221,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       setLoadingTicks(true);
       setTickets(wsTickets);
       setLoadingTicks(false);
-      // scrollPosSendMsgList();
     }, [wsTickets]);
   
     const onEditorStateChange = (editorState) => {
@@ -260,13 +259,9 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       }
     };
   
-   function scrollPosSendMsgList() {
-      window.location.href = "#lastMsg";
-      // window.scrollTo("#lastMsg", {
-      //   duration: 800,
-      //   delay: 0,
-      //   smooth: "easeInOutQuart",
-      // });
+    const scrollPosSendMsgList = () => {
+      let element = document.getElementById("lastMsg");
+      element.scrollIntoView({behavior: 'smooth'});
     }
     const replyTicket = async (reply, attachment) => {
       const data = {
@@ -301,7 +296,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         AppSocket.createConnection();
         let channelData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
         AppSocket.io.emit(`ws_tickets`, channelData);
-        // scrollPosSendMsgList()
+        // scrollPosSendMsgList();
       } else {
         // setLoadingTicks(false);
         setsendingReply(false);
@@ -753,38 +748,30 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                         >
                           {AchiveMsges.map((data) => {
                             return (
-                              <div className="msgRepliesSectionChattsdw">
-                                <div className="customerTiketChat">
-                                  <div className="customerTImageHeader">
-                                    <div className="imgContainercth">
-                                      {data?.user.avatar ? (
-                                        <img src={data?.user.avatar} alt="" />
-                                      ) : (
-                                        <div className="singleChatSenderImg">
-                                          <p>{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0,1)}`}</p>
-                                        </div>
-                                      )}
-                                      <div className="custorActiveStateimgd"></div>
-                                    </div>
-                                  </div>
-                                  <div className="custormernameticket">
-                                    <p className="mb-1" style={{ color: "#006298" }}>
-                                      {`${capitalize(data?.user?.firstname)} ${capitalize(data?.user?.lastname == "default" ? "" : data?.user?.lastname)}`}
-                                      <span style={{ color: "#656565" }}>
-                                        {" "}
-                                        replied
-                                      </span>
-                                    </p>
-                                    <p>{dateFormater(data.created_at)}</p>
-                                  </div>
+                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
+                                <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                  {data?.user?.avatar ? ( 
+                                    <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                    : ( <div className="">
+                                        <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
+                                      </div>
+                                    )}
                                 </div>
-
-                                <div
-                                  className="msgbodyticketHeader"
-                                  dangerouslySetInnerHTML={createMarkup(
-                                    data?.response
-                                  )}
-                                ></div>
+                                <div className="message-inner">
+                                    <div className="message-body">
+                                        <div className="message-content">
+                                            <div className="message-text">
+                                                <p className="text-dark message-title mb-1">
+                                                  {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                                </p>
+                                                <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="message-footer">
+                                        <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                    </div>
+                                </div>
                               </div>
                             );
                           })}
@@ -804,38 +791,30 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
 
                         {YesterdayMsges.map((data) => {
                           return (
-                            <div className="msgRepliesSectionChattsdw">
-                              <div className="customerTiketChat">
-                                <div className="customerTImageHeader">
-                                  <div className="imgContainercth">
-                                    {data?.user.avatar ? (
-                                      <img src={data?.user.avatar} alt="" />
-                                    ) : (
-                                      <div className="singleChatSenderImg">
-                                        <p>{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                      </div>
-                                    )}
-                                    <div className="custorActiveStateimgd"></div>
-                                  </div>
-                                </div>
-                                <div className="custormernameticket">
-                                  <p style={{ color: "#006298" }}>
-                                    {`${capitalize(data?.user?.firstname)} ${data?.user?.lastname == "default" ? "" : capitalize(data?.user?.lastname)}`}
-                                    <span style={{ color: "#656565" }}>
-                                      {" "}
-                                      replied
-                                    </span>
-                                  </p>
-                                  <p>{dateFormater(data.created_at)}</p>
-                                </div>
+                            <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
+                              <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                {data?.user?.avatar ? ( 
+                                  <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                  : ( <div className="">
+                                      <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
+                                    </div>
+                                  )}
                               </div>
-
-                              <div
-                                className="msgbodyticketHeader"
-                                dangerouslySetInnerHTML={createMarkup(
-                                  data?.response
-                                )}
-                              ></div>
+                              <div className="message-inner">
+                                  <div className="message-body">
+                                      <div className="message-content">
+                                          <div className="message-text">
+                                              <p className="text-dark message-title mb-1">
+                                                {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                              </p>
+                                              <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div className="message-footer">
+                                      <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                  </div>
+                              </div>
                             </div>
                           );
                         })}
@@ -854,44 +833,34 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
 
                         {TodayMsges.map((data) => {
                           return (
-                            <div className="msgRepliesSectionChattsdw">
-                              <div className="customerTiketChat">
-                                <div className="customerTImageHeader">
-                                  <div className="imgContainercth">
-                                    {data?.user.avatar ? (
-                                      <img src={data?.user.avatar} alt="" />
-                                    ) : (
-                                      <div className="singleChatSenderImg">
-                                        <p>{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                      </div>
-                                    )}
-                                    <div className="custorActiveStateimgd"></div>
-                                  </div>
-                                </div>
-                                <div className="custormernameticket">
-                                  <p style={{ color: "#006298" }}>
-                                    {`${capitalize(
-                                      data?.user?.firstname
-                                    )} ${capitalize(data?.user?.lastname)}`}
-                                    <span style={{ color: "#656565" }}>
-                                      {" "}
-                                      replied
-                                    </span>
-                                  </p>
-                                  <p>{dateFormater(data.created_at)}</p>
-                                </div>
+                            <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
+                              <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                {data?.user?.avatar ? ( 
+                                  <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                  : ( <div className="">
+                                      <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
+                                    </div>
+                                  )}
                               </div>
-
-                              <div
-                                className="msgbodyticketHeader"
-                                dangerouslySetInnerHTML={createMarkup(
-                                  data?.response
-                                )}
-                              ></div>
+                              <div className="message-inner">
+                                  <div className="message-body">
+                                      <div className="message-content">
+                                          <div className="message-text">
+                                              <p className="text-dark message-title mb-1">
+                                                {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                              </p>
+                                              <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div className="message-footer">
+                                      <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                  </div>
+                              </div>
                             </div>
                           );
                         })}
-                        <span id="lastMsg"></span>
+                        <div id="lastMsg"></div>
                         {/* <div
                         className="msgRepliesSectionChattsdw"
                         style={{ marginTop: "10px" }}

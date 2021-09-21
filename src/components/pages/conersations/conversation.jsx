@@ -284,9 +284,6 @@ export default function Conversation() {
       phoneNumber: singleTicketFullInfo.customer.phone_number,
       // attachment: "",
     };
-    // console.log(singleTicketFullInfo.customer.phone_number);
-    // console.log(data);
-    // setSendingReply(true);
     const replyData = {
       attachment: null,
       created_at: new Date(),
@@ -816,30 +813,30 @@ export default function Conversation() {
                       {AchiveMsges.map((data) => {
                         return (
                           <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
-                          <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
-                            {data?.user?.avatar ? ( 
-                              <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
-                              : ( <div className="">
-                                  <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                </div>
-                              )}
-                          </div>
-                          <div className="message-inner">
-                              <div className="message-body">
-                                  <div className="message-content">
-                                      <div className="message-text">
-                                          <p className="text-dark message-title mb-1">
-                                            {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
-                                          </p>
-                                          <div className="" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
-                                      </div>
+                            <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                              {data?.user?.avatar ? ( 
+                                <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                : ( <div className="">
+                                    <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
                                   </div>
-                              </div>
-                              <div className="message-footer">
-                                  <span className="extra-small text-muted">{dateFormater(data.created_at)}</span>
-                              </div>
+                                )}
+                            </div>
+                            <div className="message-inner">
+                                <div className="message-body">
+                                    <div className="message-content">
+                                        <div className="message-text">
+                                            <p className="text-dark message-title mb-1">
+                                              {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                            </p>
+                                            <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="message-footer">
+                                    <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                </div>
+                            </div>
                           </div>
-                        </div>
                         );
                       })}
                     </div>
@@ -874,12 +871,12 @@ export default function Conversation() {
                                           <p className="text-dark message-title mb-1">
                                             {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
                                           </p>
-                                          <div className="" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                          <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
                                       </div>
                                   </div>
                               </div>
                               <div className="message-footer">
-                                  <span className="extra-small text-muted">{dateFormater(data.created_at)}</span>
+                                  <span className="text-muted">{dateFormater(data.created_at)}</span>
                               </div>
                           </div>
                         </div>
@@ -916,46 +913,44 @@ export default function Conversation() {
                                           <p className="text-dark message-title mb-1">
                                             {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
                                           </p>
-                                          <div className="" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                          <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
                                       </div>
                                   </div>
                               </div>
                               <div className="message-footer">
-                                  <span className="extra-small text-muted">{dateFormater(data.created_at)}</span>
+                                  <span className="text-muted">{dateFormater(data.created_at)}</span>
                               </div>
                           </div>
                         </div>
                       );
                     })}
                     <span id="lastMsg"></span>
-
                     {/* <div
-                    className="msgRepliesSectionChattsdw"
-                    style={{ marginTop: "10px" }}
-                  >
-                    <div className="customerTiketChat">
-                      <div className="customerTImageHeader">
-                        <div className="imgContainercth">
-                          <img src={pic} alt="" />
-                          <div className="custorActiveStateimgd"></div>
+                      className="msgRepliesSectionChattsdw"
+                      style={{ marginTop: "10px" }}>
+                      <div className="customerTiketChat">
+                        <div className="customerTImageHeader">
+                          <div className="imgContainercth">
+                            <img src={pic} alt="" />
+                            <div className="custorActiveStateimgd"></div>
+                          </div>
+                        </div>
+                        <div className="custormernameticket">
+                          <p style={{ color: "#006298" }}>
+                            Hammed Daudu{" "}
+                            <span style={{ color: "#656565" }}>replied</span>
+                          </p>
+                          <p>Just now</p>
                         </div>
                       </div>
-                      <div className="custormernameticket">
-                        <p style={{ color: "#006298" }}>
-                          Hammed Daudu{" "}
-                          <span style={{ color: "#656565" }}>replied</span>
-                        </p>
-                        <p>Just now</p>
-                      </div>
-                    </div>
 
-                    <div
-                      className="msgbodyticketHeader"
-                      style={{ color: "rgba(101, 101, 101, 0.7)" }}
-                    >
-                      is typing...
-                    </div>
-                  </div> */}
+                      <div
+                        className="msgbodyticketHeader"
+                        style={{ color: "rgba(101, 101, 101, 0.7)" }}
+                      >
+                        is typing...
+                      </div>
+                    </div> */}
                   </div>
                 </React.Fragment>
                 {/* CHAT COMMENT BOX SECTION */}

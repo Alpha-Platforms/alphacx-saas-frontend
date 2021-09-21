@@ -1224,11 +1224,18 @@ select {
   border-top-left-radius: 5px;
   border-top-right-radius: 2px
 }
+.message-text-content p{
+  margin-bottom: 4px !important;
+}
 .message-footer {
   line-height: 1.3;
   margin-top: .25rem;
   text-align: left;
 }
+.message-footer span{
+  font-size: 12px !important;
+}
+
 .message-out .message-footer {
   text-align: right;
 }

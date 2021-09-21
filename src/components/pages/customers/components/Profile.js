@@ -56,13 +56,13 @@ const Profile = (currentCustomer) => {
                                 <Col>
                                     <h6 className="d-inline-flex flex-column flex-grow-0 border-bottom pb-2">
                                         <span className="text-muted small mb-2">Title</span>
-                                        <span className="text-dark">Mr.</span>
+                                        <span className="text-dark">N/A</span>
                                     </h6>
                                 </Col>
                                 <Col>
                                     <h6 className="d-inline-flex flex-column flex-grow-0 border-bottom pb-2">
                                         <span className="text-muted small mb-2">Gender</span>
-                                        <span className="text-dark">Male</span>
+                                        <span className="text-dark">N/A</span>
                                     </h6>
                                 </Col>
                                 <Col>
@@ -98,25 +98,25 @@ const Profile = (currentCustomer) => {
                                 <Col md={8}>
                                     <h6 className="d-inline-flex flex-column flex-grow-0 border-bottom pb-2 mb-3">
                                         <span className="text-muted small mb-2">Address</span>
-                                        <span className="text-dark">14 Ozumba Mbadiwe Crescent, VI 14 Ozumba Mbadiwe Crescent, VI 14 Ozumba Mbadiwe Crescent, VI</span>
+                                        <span className="text-dark">...</span>
                                     </h6>
                                 </Col>
                                 <Col md={4}>
                                     <h6 className="d-inline-flex flex-column flex-grow-0 border-bottom pb-2 mb-3">
                                         <span className="text-muted small mb-2">Zip Code</span>
-                                        <span className="text-dark">60433</span>
+                                        <span className="text-dark">...</span>
                                     </h6>
                                 </Col>
                                 <Col md={8}>
                                     <h6 className="d-inline-flex flex-column flex-grow-0 border-bottom pb-2 mb-3">
                                         <span className="text-muted small mb-2">City</span>
-                                        <span className="text-dark">Lagos</span>
+                                        <span className="text-dark">...</span>
                                     </h6>
                                 </Col>
                                 <Col md={4}>
                                     <h6 className="d-inline-flex flex-column flex-grow-0 border-bottom pb-2 mb-3">
                                         <span className="text-muted small mb-2">Country</span>
-                                        <span className="text-dark">Nigeria</span>
+                                        <span className="text-dark">...</span>
                                     </h6>
                                 </Col>
                             </Row>
@@ -129,7 +129,7 @@ const Profile = (currentCustomer) => {
                         </a>
                     </div>
                     <Collapse in={showDetails}>
-                        <h1 className="null">here</h1>
+                        <h1 className="null">...</h1>
                     </Collapse>
                 </Container>
             </section>
