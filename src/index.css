@@ -41,6 +41,13 @@ body {
   background-color: #f6f9fb;
 }
 
+select {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  text-indent: 1px;
+  text-overflow: '';
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
