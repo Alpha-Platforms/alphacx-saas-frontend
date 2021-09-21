@@ -40,6 +40,12 @@ const adminReducer = (state = initialState, action) => {
 				isCurrentAdminLoading: false,
 				isCurrentAdminLoaded: true
 			}
+		case types.ADMINS_LOADING_FAILED:
+			return {
+				...state,
+				isAdminsLoading: false,
+				isAdminsLoaded: true
+			}
 		default:
 			return state;
 	}

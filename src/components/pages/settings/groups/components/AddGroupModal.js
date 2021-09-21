@@ -35,7 +35,7 @@ const AddGroupModal = ({
   const submitNewTeam = async () => {
     const {name, description, categoryId} = newTeam;
 
-    if (!name || !description || !categoryId) {
+    if (!name || !categoryId) {
       return NotificationManager.error('All fields are required', 'Opps!');
     }
 
@@ -55,7 +55,7 @@ const AddGroupModal = ({
   // update a team
   const updateTeam = () => {
     const {name, description, categoryId} = newTeam;
-    if (!name || !description || !categoryId) {
+    if (!name || !categoryId) {
       return NotificationManager.error('All fields are required', 'Opps!');
     }
 

@@ -1,7 +1,7 @@
 import * as types from '../types';
 
 const initialState = {
-	supervisors: null,
+	supervisors: [],
     meta: null,
 	isSupervisorsLoading: false, //will be true when fetching data and back to false when the fetch is done
 	isSupervisorsLoaded: false,
@@ -39,6 +39,12 @@ const supervisorReducer = (state = initialState, action) => {
 				currentSupervisor: action.payload,
 				isCurrentSupervisorLoading: false,
 				isCurrentSupervisorLoaded: true
+			}
+		case types.SUPERVISORS_LOADING_FAILED:
+			return {
+				...state,
+				isSupervisorsLoading: false,
+				isSupervisorsLoaded: true
 			}
 		default:
 			return state;

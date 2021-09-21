@@ -15,7 +15,12 @@ export const getAgents = () => (dispatch, getState) => {
 			type: types.GET_AGENTS,
 			payload: (res.data && res.data.status === "success") ? res.data.data : {}
 		}))
-		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
+		.catch(err => {
+            dispatch({
+                type: types.AGENTS_LOADING_FAILED
+            });
+            dispatch(returnErrors(err.response?.data, err.response?.status));
+        });
 }
 
 
