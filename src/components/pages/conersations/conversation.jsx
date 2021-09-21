@@ -150,6 +150,10 @@ export default function Conversation() {
     AppSocket.createConnection();
     // let swData = { assigneeId: "15b7c94e-0fc1-4619-9f7b-d985b41e84f9", userId:  "490af948-cd93-45c6-9a9e-a06be5bbea2b" };
     // AppSocket.io.emit("join_private", swData);
+    AppSocket.io.emit(`ws_ticket`, {data : {userId : JSON.parse(localStorage.getItem("user")).user.id}});
+    AppSocket.io.on(`ws_ticket`, (data) => {
+      // console.log("this is a Ticket", data);
+    });
     AppSocket.io.on(`ws_tickets`, (data) => {
       setTickets(data?.data?.tickets);
       // console.log("this are Tickets", data?.data?.tickets);
