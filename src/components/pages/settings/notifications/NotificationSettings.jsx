@@ -40,11 +40,22 @@ const NotificationSettings = ({isConfigsLoaded, configs}) => {
 
   const [notifications, setNotifications] = useState(null);
 
-  useEffect(() => {
+//   useEffect(() => {
+//     setCustLoading(!isConfigsLoaded);
+//     if (isConfigsLoaded) {
+//       setCustLoading(false);
+//     }
+// }, [isConfigsLoaded]);
+
+useEffect(() => {
+  if(isConfigsLoaded){
     setCustLoading(!isConfigsLoaded);
     if (isConfigsLoaded) {
-        setCustLoading(false);
+      setCustLoading(false);
     }
+  } else {    
+      setCustLoading(false);
+  }
 }, [isConfigsLoaded]);
 
 
