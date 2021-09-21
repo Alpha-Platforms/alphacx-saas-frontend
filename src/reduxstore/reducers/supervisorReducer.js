@@ -40,6 +40,12 @@ const supervisorReducer = (state = initialState, action) => {
 				isCurrentSupervisorLoading: false,
 				isCurrentSupervisorLoaded: true
 			}
+		case types.SUPERVISORS_LOADING_FAILED:
+			return {
+				...state,
+				isSupervisorsLoading: false,
+				isSupervisorsLoaded: true
+			}
 		default:
 			return state;
 	}

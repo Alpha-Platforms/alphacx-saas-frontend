@@ -28,6 +28,12 @@ const agentReducer = (state = initialState, action) => {
 				isAgentsLoading: true,
 				isAgentsLoaded: false
 			}
+		case types.AGENTS_LOADING_FAILED:
+			return {
+				...state,
+				isAgentsLoading: false,
+				isAgentsLoaded: true
+			}
 		case types.ADD_AGENT:
 			return {
 				...state,
