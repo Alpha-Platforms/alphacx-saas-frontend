@@ -156,7 +156,7 @@ const SiteRouter = connect(mapStateToProps, {
             {/* Scroll Restoration */}
             <ScrollToTop/>
             <Switch>
-                {/* <UserDataProvider> */}
+                <UserDataProvider>
                     <LayoutProvider>
                         <SocketDataProvider>
                             <Route exact path="/login" component={Login}/>
@@ -376,7 +376,7 @@ const SiteRouter = connect(mapStateToProps, {
 
                         </SocketDataProvider>
                     </LayoutProvider>
-                {/* </UserDataProvider> */}
+                </UserDataProvider>
             </Switch>
         </BrowserRouter>
     );
