@@ -4,6 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import Collapse from 'react-bootstrap/Collapse';
 // 
 import {getUserInitials} from '../../../../helper';
 import {ExpandChat} from "../../../../assets/images/svgs";
@@ -19,7 +20,7 @@ const Profile = (currentCustomer) => {
     return (
         <Fragment>
             <section className="">
-                <Container fluid className="">
+                <Container fluid className="px-5">
                     <div className="d-flex justify-content-between align-items-center mb-4">
                         <h6 className="text-muted">CONTACT INFORMATION</h6>
                         <div className="">
@@ -97,7 +98,7 @@ const Profile = (currentCustomer) => {
                                 <Col md={8}>
                                     <h6 className="d-inline-flex flex-column flex-grow-0 border-bottom pb-2 mb-3">
                                         <span className="text-muted small mb-2">Address</span>
-                                        <span className="text-dark">14 Ozumba Mbadiwe Crescent, VI</span>
+                                        <span className="text-dark">14 Ozumba Mbadiwe Crescent, VI 14 Ozumba Mbadiwe Crescent, VI 14 Ozumba Mbadiwe Crescent, VI</span>
                                     </h6>
                                 </Col>
                                 <Col md={4}>
@@ -127,9 +128,9 @@ const Profile = (currentCustomer) => {
                             <span className="ps-3">{showDetails ? "View less information" : "View more information"}</span>
                         </a>
                     </div>
-                    {showDetails? (
+                    <Collapse in={showDetails}>
                         <h1 className="null">here</h1>
-                    ):""}
+                    </Collapse>
                 </Container>
             </section>
         </Fragment>

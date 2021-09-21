@@ -19,7 +19,8 @@ import { httpPatchMain, httpGetMain } from "../../../../helpers/httpMethods";
 import "../settings.css";
 // 
 import Feedback from "./Feedback";
-
+// 
+let tenantDomain = localStorage.getItem("domain");
 
 export default function RatingsSettings() {
     const [activePage, setActivePage] = useState("ratingsForm");
@@ -33,7 +34,6 @@ export default function RatingsSettings() {
     useEffect(() => {
         getRatingsConfig();
     },[]);
-
 
     const getRatingsConfig = async () => {
         const res = await httpGetMain(`settings/config?type=rating`);
@@ -154,7 +154,7 @@ export default function RatingsSettings() {
                                         </div>
                                     </div>
                                     <div className="mb-3 text-center">
-                                        <a href="https://techpoint.alphacx.co/feedback" target="_blank" className="acx-link-primary">https://techpoint.alphacx.co/feedback</a>
+                                        <a href={`https://${tenantDomain}.alphacx.co/feedback`} target="_blank" className="acx-link-primary">https://{tenantDomain}.alphacx.co/feedback</a>
                                     </div>
                                     <div className="text-center">
                                         <Button type="submit" onClick={handleSubmit} size="lg" disabled={processing} size="lg" className="px-4 acx-btn-primary"> 
