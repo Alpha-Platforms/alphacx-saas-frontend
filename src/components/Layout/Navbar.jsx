@@ -11,6 +11,7 @@ import searchIcon from "../../assets/imgF/Search.png";
 import {HelpIcon} from '../../assets/SvgIconsSet.jsx';
 import CreateTicketModal from '../pages/tickets/CreateTicketModal';
 import CreateCustomerModal from '../pages/customers/CreateCustomerModal';
+import dummyavatar from '../../assets/images/dummyavatar.jpeg';
 
 // --- dropdown component
 function PlusIcon() {
@@ -265,7 +266,7 @@ export default function Navbar({
                 <div>
                   <Link to={`/settings/profile/${localUser?.id}`}>
                     <img
-                      src={localUser?.avatar}
+                      src={localUser?.avatar || dummyavatar}
                       alt=""
                       style={{
                         width: 30,
