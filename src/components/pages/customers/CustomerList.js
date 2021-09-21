@@ -113,10 +113,12 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                         <Link to={`/customers/${contact.id}`} style={{ textTransform: 'capitalize' }}>{`${contact.firstname} ${contact.lastname}`}</Link>
                     </div>
                 </div>)
-            }, {
-                title: 'Organisation',
-                field: 'organisation'
-            }, {
+            },
+            //  {
+            //     title: 'Organisation',
+            //     field: 'organisation'
+            // }, 
+            {
                 title: 'Email Address',
                 field: 'emailAddress'
             }, {
