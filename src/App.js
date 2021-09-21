@@ -11,7 +11,6 @@ import Login from "./components/pages/auth/login.jsx";
 import Domain from "./components/pages/auth/login";
 import Register from "./components/pages/auth/register.jsx";
 import Reset from "./components/pages/auth/forgotPassword";
-import Home from "./home";
 import "react-responsive-modal/styles.css";
 
 import HelpCenter from "./components/pages/help_center/helpCenter";
