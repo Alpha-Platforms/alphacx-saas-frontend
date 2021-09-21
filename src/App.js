@@ -8,10 +8,9 @@ import {LayoutProvider} from "./context/layoutContext";
 import {UserDataProvider} from "./context/userContext";
 import {AuthProvider} from "./context/authContext";
 import Login from "./components/pages/auth/login.jsx";
-import Domain from "./components/pages/auth/domain";
+import Domain from "./components/pages/auth/login";
 import Register from "./components/pages/auth/register.jsx";
 import Reset from "./components/pages/auth/forgotPassword";
-import Home from "./home";
 import "react-responsive-modal/styles.css";
 
 import HelpCenter from "./components/pages/help_center/helpCenter";
@@ -159,8 +158,9 @@ const SiteRouter = connect(mapStateToProps, {
                 <UserDataProvider>
                     <LayoutProvider>
                         <SocketDataProvider>
-                            <Route exact path="/" component={Domain}/>
-                            <Route exact path="/login/:domain" component={Login}/>
+                            <Route exact path="/login" component={Login}/>
+                            {/* <Route exact path="/login/:domain" component={Login}/> */}
+
                             <Route exact path="/register" component={Register}/> {/* help pages */}
                             <Route exact path="/help" component={HelpCenter}/>
                             <Route exact path="/help/:topic" component={ArticleList}/>
@@ -172,7 +172,7 @@ const SiteRouter = connect(mapStateToProps, {
 
                             <DefaultLayoutRoute
                                 exact
-                                path="/home"
+                                path="/"
                                 pageName="Dashboard"
                                 component={Dashboard}/>
                             <DefaultLayoutRoute

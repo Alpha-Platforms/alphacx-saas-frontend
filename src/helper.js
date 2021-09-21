@@ -103,3 +103,8 @@ export const uuid =() => {
     });
     return uuid;
 }
+
+
+export const textCapitalize = (str) => {
+    return str.toLowerCase().replace(/(^|\s)\S/g, L => L.toUpperCase());
+}

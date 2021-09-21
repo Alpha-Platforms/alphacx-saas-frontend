@@ -17,6 +17,7 @@ import {
   AppLogo,
   AppFullLogo
 } from "../../assets/images/svgs";
+import Modal from "react-responsive-modal";
 export default function Sidebar({ browserRouter, currentRoute }) {
   const {
     // setreduceSidebarWidth,
@@ -24,43 +25,10 @@ export default function Sidebar({ browserRouter, currentRoute }) {
     reduceSidebarWidth,
   } = useContext(LayoutContext);
 
-  // const [PublicationShow, SetPublicationShow] = useState(true);
-  // const [CategoriesShow, SetCategoriesShow] = useState(false);
-  // const [SortShow, SetSortShow] = useState(false);
-  // const [DateShow, SetDateShow] = useState(false);
-  // const [startDate, setStartDate] = useState(new Date());
-
-  // const [PublicationsFilter, SetPublicationsFilter] = useState({
-  //   all: true,
-  //   newsPaper: false,
-  //   magazine: false,
-  //   books: false,
-  // });
-
-  // const [SortFilter, SetSortFilter] = useState({
-  //   popular: true,
-  //   recent: false,
-  // });
-
-  const Logout = () => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You are about to logout from the Alpha Kustormar service!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#006298",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Log me out!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        localStorage.clear();
-        NotificationManager.success("Logout Successfully.");
-        window.location.href = "/";
-      }
-    });
-  };
+  const [isDeleteConfirmed, setIsDeleteConfirmed] = useState(false)
 
   return (
+    <>
     <menu className={`sidebar-wrap ${ appReduceSidebarWidth === true ? "" : "collapsed" }`} >
       <header className="sidebar-header">
           <span className="sidebar-header--full-logo">
@@ -82,8 +50,8 @@ export default function Sidebar({ browserRouter, currentRoute }) {
           </span>
         </li>
 
-        <li className={`sidebar-list--item ${(currentRoute === "/home" || currentRoute === "/home/tabs")? "active" : ""}`}
-            onClick={() => browserRouter(`/home`)} >
+        <li className={`sidebar-list--item ${(currentRoute === "/" || currentRoute === "/tabs")? "active" : ""}`}
+            onClick={() => browserRouter(`/`)} >
           <span className="sidebar-list--icon">
             { <HomeIcon activeRoute={false}/> }
           </span>
@@ -143,7 +111,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
         </li>
       </ul>
       <ul className="sidebar-list mt-auto">
-        <li onClick={() => Logout()}
+        <li onClick={() => setIsDeleteConfirmed(true)}
             className="sidebar-list--item">
             <span className="sidebar-list--icon">
               { <LogoutIcon activeRoute={false}/> }
@@ -154,5 +122,34 @@ export default function Sidebar({ browserRouter, currentRoute }) {
         </li>
       </ul>
     </menu>
+    <Modal
+      open={isDeleteConfirmed}
+      onClose={() => setIsDeleteConfirmed(false)}
+      center
+    >
+      <div className="p-5 w-100">
+        <h6 className="mb-5">Are you sure you want to logout?</h6>
+        <div className="float-end mb-5">
+          <button
+            className="btn btn-sm f-12 bg-outline-custom cancel px-4"
+            onClick={() => setIsDeleteConfirmed(false)}
+          >
+            Cancel
+          </button>
+          <button
+            className="btn btn-sm ms-2 f-12 bg-custom px-4"
+            onClick={(e) => {
+              e.preventDefault()
+              localStorage.clear();
+              NotificationManager.success("Logout Successfully.");
+              window.location.href = "/login";
+            }}
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    </Modal>
+    </>
   );
 }
