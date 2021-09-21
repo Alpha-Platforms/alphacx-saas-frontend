@@ -206,12 +206,12 @@ const SiteRouter = connect(mapStateToProps, {
                                 path="/tickets"
                                 pageName="Tickets"
                                 component={TicketList}/>
-                            <DefaultLayoutRoute
+                            <SettingsLayoutRoute
                                 exact
                                 path="/reports"
                                 pageName="Reports"
                                 component={Reports}/>
-                            <DefaultLayoutRoute
+                            <SettingsLayoutRoute
                                 exact
                                 path="/tickets/:id"
                                 pageName="Ticket"
