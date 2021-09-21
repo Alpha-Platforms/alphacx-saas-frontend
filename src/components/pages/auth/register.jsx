@@ -163,7 +163,7 @@ const Login = ({history}) => {
                                             type="text"
                                             onChange={handleChange}
                                             name="firstName"
-                                            autocomplete="off"
+                                            autoComplete="off"
                                             value={userInput.firstName}/>
                                     </div>
 
@@ -174,7 +174,7 @@ const Login = ({history}) => {
                                             type="text"
                                             onChange={handleChange}
                                             name="lastName"
-                                            autocomplete="off"
+                                            autoComplete="off"
                                             className="d-inline-block me-0 w-100"
                                             value={userInput.lastName}/>
                                     </div>
@@ -187,7 +187,7 @@ const Login = ({history}) => {
                                             type="text"
                                             onChange={handleChange}
                                             name="email"
-                                            autocomplete="off"
+                                            autoComplete="off"
                                             value={userInput.email}/>
                                     </div>
                                 </div>
@@ -200,7 +200,7 @@ const Login = ({history}) => {
                                         : "password"}`}
                                         onChange={handleChange}
                                         name="password"
-                                        autocomplete="new-password"
+                                        autoComplete="new-password"
                                         value={userInput.password}/>
                                     <div className="passworEye">
                                         <img
@@ -211,7 +211,7 @@ const Login = ({history}) => {
                                 </div>
                                 <div className="haveAnAccou">
                                     <span></span>
-                                    <a href="/">Already have an account? Login</a>
+                                    <a href="/login">Already have an account? Login</a>
                                 </div>
 
                                 <div className="submit-auth-btn">
@@ -238,7 +238,7 @@ const Login = ({history}) => {
                                             type="text"
                                             onChange={handleChange}
                                             name="companyName"
-                                            autocomplete="off"
+                                            autoComplete="off"
                                             value={userInput.companyName}/>
                                     </div>
                                 </div>
@@ -250,7 +250,7 @@ const Login = ({history}) => {
                                             type="text"
                                             onChange={handleChange}
                                             name="domain"
-                                            autocomplete="off"
+                                            autoComplete="off"
                                             value={userInput.domain}/>
                                             <span className="bg-secondary">.alphacx.co</span>
                                         </div>
@@ -260,13 +260,12 @@ const Login = ({history}) => {
                                     <label htmlFor="" className="form-label">Domain</label>
                                     <div className="input-group">
                                         <input type="text" className="form-control" 
-                                        name="domain"
-                                        autocomplete="off"
-                                        onChange={handleChange}
-                                        value={userInput.domain}
-                                        ariaLabel="Recipient's username" 
-                                        ariaDescribedby="basic-addon2" />
-                                        <span class="input-group-text" id="basic-addon2">.alphacx.co</span>
+                                            name="domain"
+                                            autoComplete="off"
+                                            onChange={handleChange}
+                                            value={userInput.domain}
+                                        />
+                                        <span className="input-group-text" id="basic-addon2">.alphacx.co</span>
                                     </div>
 
                                 </div>
@@ -293,7 +292,7 @@ const Login = ({history}) => {
                                 </div>
                                 <div className="haveAnAccou">
                                     <button type="button" onClick={() => setActiveForm('form-one')}>Back</button>
-                                    <a href="/">Already have an account? Login</a>
+                                    <a href="/login">Already have an account? Login</a>
                                 </div>
 
                                 <div className="submit-auth-btn">

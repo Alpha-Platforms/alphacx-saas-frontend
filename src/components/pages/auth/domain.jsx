@@ -11,13 +11,15 @@ import {
   ValidateEmail,
   validatePassword,
 } from "../../../helpers/validateInput";
-import { httpPost } from "../../../helpers/httpMethods";
+import { httpPostMain } from "../../../helpers/httpMethods";
 import { css } from "@emotion/react";
 import ClipLoader from "react-spinners/ClipLoader";
 const override = css``;
 
-const Login = ({ history }) => {
+const Login = ({ match, history }) => {
   const [userInput, setUserInput] = useState({
+    email: "",
+    password: "",
     domain: "",
   });
 
@@ -29,31 +31,47 @@ const Login = ({ history }) => {
   const handleChange = (e) => {
     setUserInput({ ...userInput, [e.target.name]: e.target.value });
   };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (userInput.domain === "") {
+    const validateEmail = ValidateEmail(userInput.email);
+    if (validateEmail == false) {
       return NotificationManager.warning(
-        "Domain is required",
+        "Invalid email address",
         "Validation Warning",
         4000
       );
     }
 
-    localStorage.setItem("domain", userInput.domain)
-    
+    const validatepassword = validatePassword(userInput.password);
+    if (validatepassword != "Looks Good!") {
+      return NotificationManager.warning(
+        validatepassword,
+        "Validation Warning",
+        4000
+      );
+    }
+
     const data = {
-      //   domain: "techpoint",
-      domain: localStorage.getItem("domain"),
+      email: userInput.email,
+      password: userInput.password,
+      // domain: match.params.domain,
+      domain: localStorage.getItem("domain")
     };
+
     setLoading(true);
-    const res = await httpPost(`auth/login`, data);
-    if (res.status === "success") {
+    const res = await httpPostMain("auth/login", data);
+    if (res.status == "success") {
       setLoading(false);
       console.log(res?.status);
       localStorage.setItem("user", JSON.stringify(res.data));
       localStorage.setItem("token", res.data.token);
-      NotificationManager.success("Login", "Success", 4000);
-      window.location.href = `/login/${localStorage.getItem("domain")}`;
+
+      NotificationManager.success(res.data.message, "Success", 4000);
+
+      // Redirect to home page - dashboard
+      window.location.href = `/`;
+
     } else {
       console.log(res);
       setLoading(false);
@@ -62,7 +80,7 @@ const Login = ({ history }) => {
   };
 
   return (
-    <div className="auth-container">
+    <div className="auth-container codei-ui-andy-setDefaults">
       <div className="symbol-wrap2">
         <img src={Symbol2} alt="" />
       </div>
@@ -72,19 +90,38 @@ const Login = ({ history }) => {
 
       <div className="login-container">
         <form>
-          <div className="Auth-header" style={{ marginBottom: "10px" }}>
+          <div className="Auth-header" style={{ marginBottom: "30px" }}>
             <h3>Welcome Back</h3>
             <p>Sign in to get started</p>
           </div>
 
+          <div className="input-main-wrap">
+            <div className="input-wrap">
+              <label htmlFor="">Email Address</label>
+              <input
+                type="text"
+                onChange={handleChange}
+                name="email"
+                value={userInput.email}
+              />
+            </div>
+          </div>
+
           <div className="input-wrap">
-            <label htmlFor="">Domain Name</label>
+            <label htmlFor="">Password</label>
             <input
-              type="text"
+              type={`${showPassword ? "text" : "password"}`}
               onChange={handleChange}
-              name="domain"
-              value={userInput.domain}
+              name="password"
+              value={userInput.password}
             />
+            <div className="passworEye">
+              <img
+                src={showPasswordImg}
+                alt=""
+                onClick={() => setShowPassword(!showPassword)}
+              />
+            </div>
           </div>
 
           <div className="haveAnAccou">
@@ -102,7 +139,7 @@ const Login = ({ history }) => {
                   size={30}
                 />
               ) : (
-                "Continue"
+                "Login"
               )}
             </button>
           </div>

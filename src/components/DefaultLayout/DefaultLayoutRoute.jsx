@@ -62,7 +62,7 @@ const DefaultLayoutRoute = ({
         return valid == "loading" ? (
           ""
         ) : valid == false ? (
-          (window.location.href = "/")
+          (window.location.href = "/login")
         ) : (
           <DefaultLayout
             routeType={routeType}
