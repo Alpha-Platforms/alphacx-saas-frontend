@@ -100,7 +100,7 @@ export default function MessageList({
                 <p className="senderName">{`${capitalizeFirstLetter(
                   data?.customer?.firstname
                 )} ${data?.customer?.lastname == "default"? "" : capitalizeFirstLetter(data?.customer?.lastname)}`}</p>
-                <p className="senderMSG">
+                <p className="senderMSG text-truncate" style={{ "maxWidth": "160px" }}>
                   {/* {truncateWithEllipses(data?.plain_description, 20)} */}
                   {/* {(Array.isArray(data.history)) ? data.history.length :  ""} */}
                   {(!Array.isArray(data.history)) ? ""
@@ -131,12 +131,8 @@ export default function MessageList({
                 </div>
               </div>
               <div className="message-user-time">
-                {data?.__meta__?.unRead == 0 ? (
-                  ""
-                ) : (
-                  <p className="msgCountCon">{data?.__meta__?.unRead}</p>
-                )}
-
+                {(data?.__meta__?.unRead == 0) ? ("") 
+                : ( <p className="msgCountCon">{data?.__meta__?.unRead}</p>)}
                 <p className="msGtime">{timeFormater(data.updated_at)}</p>
               </div>
             </div>

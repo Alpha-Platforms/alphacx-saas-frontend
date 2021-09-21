@@ -120,17 +120,16 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                           width: "30px", height: "30px",borderRadius: "50%", marginRight: "2px",
                         }}
                       />
-                    ) : (
-                      <div
-                        className="avatar avatar-sm rounded-circle overflow-hidden bg-secondary"></div>
+                    ) : (       
+                      <div className="avatar avatar-sm rounded-circle overflow-hidden acx-bg-secondary d-flex justify-content-center align-items-center">
+                          <p className="fs-6 mb-0 text-white">{`${capitalize(ticket[0]?.assignee?.firstname?.slice(0,1))}${ticket[0]?.assignee?.lastname == "default" ? "" : capitalize(ticket[0]?.assignee?.lastname?.slice(0, 1))}`}</p>
+                      </div>
                     )}
                   </div>
 
                   <div>
                     <p className="acx-fs-8">Assigned to</p>
-                      
-                    {
-                      ticket[0]?.assignee?
+                    { ticket[0]?.assignee?
                       (<Link to={`/settings/profile/${ticket[0]?.assignee?.id}`}>
                         {`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(ticket[0]?.assignee?.lastname)}`}
                       </Link>) 

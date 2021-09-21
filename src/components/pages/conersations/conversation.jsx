@@ -150,8 +150,11 @@ export default function Conversation() {
     AppSocket.createConnection();
     // let swData = { assigneeId: "15b7c94e-0fc1-4619-9f7b-d985b41e84f9", userId:  "490af948-cd93-45c6-9a9e-a06be5bbea2b" };
     // AppSocket.io.emit("join_private", swData);
+    AppSocket.io.emit(`ws_ticket`, {data : {userId : JSON.parse(localStorage.getItem("user")).user.id}});
+    AppSocket.io.on(`ws_ticket`, (data) => {
+      // console.log("this is a Ticket", data);
+    });
     AppSocket.io.on(`ws_tickets`, (data) => {
-      console.log('data from socket => ', data);
       setTickets(data?.data?.tickets);
       // console.log("this are Tickets", data?.data?.tickets);
       setWsTickets(data?.data?.tickets);
@@ -180,7 +183,7 @@ export default function Conversation() {
       // sortMsges((item) => [...item, msg]);
     });
     AppSocket.io.on(`join_private`, () => {
-      console.log("something came up");
+      // console.log("something came up");
     });
     return () => { AppSocket.io.disconnect()};
   },[]);
@@ -285,9 +288,6 @@ export default function Conversation() {
       phoneNumber: singleTicketFullInfo.customer.phone_number,
       // attachment: "",
     };
-    // console.log(singleTicketFullInfo.customer.phone_number);
-    // console.log(data);
-    // setSendingReply(true);
     const replyData = {
       attachment: null,
       created_at: new Date(),
@@ -309,12 +309,9 @@ export default function Conversation() {
       // ReloadloadSingleMessage();
       setEditorState(initialState);
       setReplyTicket({ plainText: "", richText: "" });
-
       // emit ws_tickets event on reply
-      AppSocket.createConnection();
       let channelData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, channelData);
-
     } else {
       // setLoadingTicks(false);
       setSendingReply(false);
@@ -406,6 +403,7 @@ export default function Conversation() {
     let swData = { assigneeId: assignee?.id || "", userId: customer?.id || "" };
     UserInfo.id && AppSocket.io.leave(`${UserInfo.id}${assignee.id}`);
     AppSocket.io.emit("join_private", swData);
+    // 
     const res = await httpGetMain(`tickets/${id}`);
     setfirstTimeLoad(false);
     if (res.status === "success") {
@@ -419,6 +417,10 @@ export default function Conversation() {
         subject: res?.data[0].subject,
         description: res?.data[0].history,
       });
+      // 
+      let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
+      AppSocket.io.emit(`ws_tickets`, ticketsData);
+
       setLoadSingleTicket(false);
       checkRes();
       scollPosSendMsgList();
@@ -756,8 +758,8 @@ export default function Conversation() {
                     </div>
 
                     <div className="customerTiketChat">
-                      <div className="customerTImageHeader">
-                        <div className="imgContainercth">
+                     {/* <div className="customerTImageHeader">
+                         <div className="imgContainercth">
                           {SenderInfo?.customer?.avatar ? (
                             <img src={SenderInfo?.customer?.avatar} alt="" />
                           ) : (
@@ -767,23 +769,20 @@ export default function Conversation() {
                           )}
                           <div className="custorActiveStateimgd"></div>
                         </div>
-                      </div>
+                      </div>  
                       <div className="custormernameticket">
                         <p style={{ color: "#006298" }}>
                           {`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(ticket[0]?.customer?.lastname == "default" ? "" : ticket[0]?.customer?.lastname)}`}
                         </p>
-                        <p>{`Via ${ticket[0].channel} . ${dateFormater(
-                          ticket[0].created_at
-                        )}`}</p>
-                      </div>
+                        <p>{`Via ${ticket[0].channel} . ${dateFormater(ticket[0].created_at)}`}</p>
+                      </div> */}
                     </div>
-                    <div className="msgbodyticketHeader">
+
+                    {/* <div className="msgbodyticketHeader">
                       {capitalize(ticket[0]?.description)}
-                    </div>
-                    <div className="msgAssingedToee3">
-                      This message is assigned to{" "}
-                      <span>
-                        {" "}
+                    </div> */}
+                    <div className="msgAssingedToee3"> This message is assigned to{" "}
+                      <span>{" "}
                         {`${capitalize(
                           ticket[0]?.assignee?.firstname || ""
                         )} ${capitalize(ticket[0]?.assignee?.lastname || "")}`}
@@ -817,40 +816,30 @@ export default function Conversation() {
                     >
                       {AchiveMsges.map((data) => {
                         return (
-                          <div className="msgRepliesSectionChattsdw">
-                            <div className="customerTiketChat">
-                              <div className="customerTImageHeader">
-                                <div className="imgContainercth">
-                                  {data?.user.avatar ? (
-                                    <img src={data?.user.avatar} alt="" />
-                                  ) : (
-                                    <div className="singleChatSenderImg">
-                                      <p>{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0,1)}`}</p>
-                                    </div>
-                                  )}
-                                  <div className="custorActiveStateimgd"></div>
-                                </div>
-                              </div>
-                              <div className="custormernameticket">
-                                <p style={{ color: "#006298" }}>
-                                  {`${capitalize(
-                                    data?.user?.firstname
-                                  )} ${capitalize(data?.user?.lastname == "default" ? "" : data?.user?.lastname)}`}
-                                  <span style={{ color: "#656565" }}>
-                                    {" "}
-                                    replied
-                                  </span>
-                                </p>
-                                <p>{dateFormater(data.created_at)}</p>
-                              </div>
+                          <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
+                            <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                              {data?.user?.avatar ? ( 
+                                <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                : ( <div className="">
+                                    <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
+                                  </div>
+                                )}
                             </div>
-
-                            <div
-                              className="msgbodyticketHeader"
-                              dangerouslySetInnerHTML={createMarkup(
-                                data?.response
-                              )}
-                            ></div>
+                            <div className="message-inner">
+                                <div className="message-body">
+                                    <div className="message-content">
+                                        <div className="message-text">
+                                            <p className="text-dark message-title mb-1">
+                                              {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                            </p>
+                                            <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="message-footer">
+                                    <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                </div>
+                            </div>
                           </div>
                         );
                       })}
@@ -870,40 +859,30 @@ export default function Conversation() {
 
                     {YesterdayMsges.map((data) => {
                       return (
-                        <div className="msgRepliesSectionChattsdw">
-                          <div className="customerTiketChat">
-                            <div className="customerTImageHeader">
-                              <div className="imgContainercth">
-                                {data?.user.avatar ? (
-                                  <img src={data?.user.avatar} alt="" />
-                                ) : (
-                                  <div className="singleChatSenderImg">
-                                    <p>{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                  </div>
-                                )}
-                                <div className="custorActiveStateimgd"></div>
-                              </div>
-                            </div>
-                            <div className="custormernameticket">
-                              <p style={{ color: "#006298" }}>
-                                {`${capitalize(
-                                  data?.user?.firstname
-                                )} ${capitalize(data?.user?.lastname == "default" ? "" : data?.user?.lastname)}`}
-                                <span style={{ color: "#656565" }}>
-                                  {" "}
-                                  replied
-                                </span>
-                              </p>
-                              <p>{dateFormater(data.created_at)}</p>
-                            </div>
+                        <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
+                          <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                            {data?.user?.avatar ? ( 
+                              <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                              : ( <div className="">
+                                  <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
+                                </div>
+                              )}
                           </div>
-
-                          <div
-                            className="msgbodyticketHeader"
-                            dangerouslySetInnerHTML={createMarkup(
-                              data?.response
-                            )}
-                          ></div>
+                          <div className="message-inner">
+                              <div className="message-body">
+                                  <div className="message-content">
+                                      <div className="message-text">
+                                          <p className="text-dark message-title mb-1">
+                                            {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                          </p>
+                                          <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div className="message-footer">
+                                  <span className="text-muted">{dateFormater(data.created_at)}</span>
+                              </div>
+                          </div>
                         </div>
                       );
                     })}
@@ -922,70 +901,60 @@ export default function Conversation() {
 
                     {TodayMsges.map((data) => {
                       return (
-                        <div className="msgRepliesSectionChattsdw">
-                          <div className="customerTiketChat">
-                            <div className="customerTImageHeader">
-                              <div className="imgContainercth">
-                                {data?.user?.avatar ? (
-                                  <img src={data?.user.avatar} alt="" />
-                                ) : (
-                                  <div className="singleChatSenderImg">
-                                    <p>{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                  </div>
-                                )}
-                                <div className="custorActiveStateimgd"></div>
-                              </div>
-                            </div>
-                            <div className="custormernameticket">
-                              <p style={{ color: "#006298" }}>
-                                {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : "empty"} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
-                                <span style={{ color: "#656565" }}>
-                                  {" "}
-                                  replied
-                                </span>
-                              </p>
-                              <p>{dateFormater(data.created_at)}</p>
-                            </div>
+                        <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
+                          <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                            {data?.user?.avatar ? ( 
+                              <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                              : ( <div className="">
+                                  <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
+                                </div>
+                              )}
                           </div>
-
-                          <div
-                            className="msgbodyticketHeader"
-                            dangerouslySetInnerHTML={createMarkup(
-                              data?.response
-                            )}
-                          ></div>
+                          <div className="message-inner">
+                              <div className="message-body">
+                                  <div className="message-content">
+                                      <div className="message-text">
+                                          <p className="text-dark message-title mb-1">
+                                            {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                          </p>
+                                          <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div className="message-footer">
+                                  <span className="text-muted">{dateFormater(data.created_at)}</span>
+                              </div>
+                          </div>
                         </div>
                       );
                     })}
                     <span id="lastMsg"></span>
-
                     {/* <div
-                    className="msgRepliesSectionChattsdw"
-                    style={{ marginTop: "10px" }}
-                  >
-                    <div className="customerTiketChat">
-                      <div className="customerTImageHeader">
-                        <div className="imgContainercth">
-                          <img src={pic} alt="" />
-                          <div className="custorActiveStateimgd"></div>
+                      className="msgRepliesSectionChattsdw"
+                      style={{ marginTop: "10px" }}>
+                      <div className="customerTiketChat">
+                        <div className="customerTImageHeader">
+                          <div className="imgContainercth">
+                            <img src={pic} alt="" />
+                            <div className="custorActiveStateimgd"></div>
+                          </div>
+                        </div>
+                        <div className="custormernameticket">
+                          <p style={{ color: "#006298" }}>
+                            Hammed Daudu{" "}
+                            <span style={{ color: "#656565" }}>replied</span>
+                          </p>
+                          <p>Just now</p>
                         </div>
                       </div>
-                      <div className="custormernameticket">
-                        <p style={{ color: "#006298" }}>
-                          Hammed Daudu{" "}
-                          <span style={{ color: "#656565" }}>replied</span>
-                        </p>
-                        <p>Just now</p>
-                      </div>
-                    </div>
 
-                    <div
-                      className="msgbodyticketHeader"
-                      style={{ color: "rgba(101, 101, 101, 0.7)" }}
-                    >
-                      is typing...
-                    </div>
-                  </div> */}
+                      <div
+                        className="msgbodyticketHeader"
+                        style={{ color: "rgba(101, 101, 101, 0.7)" }}
+                      >
+                        is typing...
+                      </div>
+                    </div> */}
                   </div>
                 </React.Fragment>
                 {/* CHAT COMMENT BOX SECTION */}
