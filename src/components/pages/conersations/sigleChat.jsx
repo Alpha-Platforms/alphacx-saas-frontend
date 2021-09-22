@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import pic from "../../../assets/imgF/codeuiandyimg.png";
 import {
   Swap,
   AddToChat,

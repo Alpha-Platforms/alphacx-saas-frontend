@@ -18,7 +18,7 @@ import { wordCapitalize } from "helper";
 import axios from "axios";
 const override = css``;
 
-const Login = ({history}) => {
+const Login = ({match: {params}}) => {
   const [userInput, setUserInput] = useState({
     domain: "",
     email: "",
@@ -35,31 +35,43 @@ const Login = ({history}) => {
     setUserInput({ ...userInput, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  useEffect(() => {
+    if(params.tenantDomain && localStorage.getItem("domain")){
+      console.log(`Your domain is ${params.tenantDomain}`)
+      submit()
+    }
+    
+  }, [params.tenantDomain])
+
+
+  const handleSubmit = (e) => {
     e.preventDefault();
+    submit()
+  }
 
-    if(!domainAuthenticated){
-        if (userInput.domain){ // DOMAIN LOGIN
+  const submit = async () => {
 
-          const data = {domain: userInput.domain}
-          setLoading(true);
-          const res = await httpPost(`auth/login`, data);
+    if(!domainAuthenticated){// DOMAIN LOGIN
 
-          if (res.status === "success") {
-            setLoading(false)
-            localStorage.clear()
-            localStorage.setItem("domain", userInput.domain)
-            // localStorage.setItem("user", JSON.stringify(res.data)); NO USER YET
-            localStorage.setItem("token", res.data.token);
+        const domain = userInput.domain ? userInput.domain : params.tenantDomain;
 
-            setDomainAuthenticated(true)
+        setLoading(true);
+        const res = await httpPost(`auth/login`, {domain});
 
-          } else {
-            console.log(res);
-            setLoading(false);
-            NotificationManager.error(wordCapitalize(res?.er?.message), "Invalid Domain Name", 4000);
-          }
+        if (res.status === "success") {
+          setLoading(false)
+          localStorage.clear()
+          localStorage.setItem("domain", domain)
+          localStorage.setItem("token", res.data.token);
+
+          setDomainAuthenticated(true)
+
+        } else {
+          console.log(res);
+          setLoading(false);
+          NotificationManager.error(wordCapitalize(res?.er?.message), "Invalid Domain Name", 4000);
         }
+        
 
       } else {  // PASSWORD LOGIN
 
@@ -133,7 +145,7 @@ const Login = ({history}) => {
   };
 
   return (
-    <div className="auth-container">
+    <div className="auth-container d-flex justify-content-center">
       <div className="symbol-wrap2">
         <img src={Symbol2} alt="" />
       </div>
@@ -180,10 +192,6 @@ const Login = ({history}) => {
           </div>
         </form>
         }
-{/* ********************************** */}
-{/* ********************************** */}
-{/* ********************************** */}
-{/* ********************************** */}
 
         {(domainAuthenticated && localStorage.getItem("domain")) &&
 

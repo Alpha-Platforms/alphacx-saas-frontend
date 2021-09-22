@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { CancelIconC } from "../../../assets/images/svgs";
-import pic from "../../../assets/imgF/codeuiandyimg.png";
 import {
   UserProfileIcon1,
   UserProfileIcon2,
