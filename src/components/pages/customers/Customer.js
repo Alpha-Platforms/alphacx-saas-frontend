@@ -214,21 +214,18 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                     }}
                         className="bg-secondary pt-0 bg-white">
 
-                        <div
-                            style={{
-                            margin: "0 -0.5rem"
-                        }}
-                            className="px-4 py-3 d-flex justify-content-between">
+                        <div style={{margin: "0 -0.5rem"}}
+                            className="px-5 py-3 d-flex justify-content-between">
                             <div>
                                 <ul className="nav nav-pills" id="pills-tab" role="tablist">
-                                    <li className="nav-item " role="presentation">
+                                    <li className="nav-item me-3" role="presentation">
                                         <button
                                             className={`nav-link ${tabKey === 'profile' && 'nav-active'} text-muted ps-0`}
                                             id="pills-profile-tab"
                                             type="button"
                                             onClick={() => setTabKey('profile')}>Profile</button>
                                     </li>
-                                    <li className="nav-item " role="presentation">
+                                    <li className="nav-item me-3" role="presentation">
                                         <button
                                             className={`nav-link ${tabKey === 'ticket-history' && 'nav-active'} text-muted ps-0`}
                                             id="pills-profile-tab"
@@ -266,16 +263,16 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                 activeKey={tabKey}
                                 onSelect={(k) => setTabKey(k)}
                                 className="mb-3">
-                                <Tab eventKey="profile" className="px-2">
+                                <Tab eventKey="profile" className="">
                                     <Profile {...currentCustomer} />
                                 </Tab>
 
-                                <Tab eventKey="ticket-history" className="px-2">
+                                <Tab eventKey="ticket-history" className="">
                                     <TicketHistory currentCustomerId={id} />
                                 </Tab>
 
                                 {/* Notes Tab */}
-                                <Tab eventKey="notes" className="px-2">
+                                <Tab eventKey="notes" className="">
                                     <Notes />
                                 </Tab>
 

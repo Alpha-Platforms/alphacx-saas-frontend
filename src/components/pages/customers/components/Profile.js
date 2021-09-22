@@ -4,13 +4,15 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
+import Collapse from 'react-bootstrap/Collapse';
 // 
 import {getUserInitials} from '../../../../helper';
+import {ExpandChat} from "../../../../assets/images/svgs";
 
 
 const Profile = (currentCustomer) => {
     // const [customerDetails, setCustomerDetails] = useState();
-    // const [isCustomerLoaded, setIsCustomerLoaded] = useState(false);
+    const [showDetails, setShowDetails] = useState(false);
 
     //  useEffect(() => {
     // }, [])
@@ -18,7 +20,7 @@ const Profile = (currentCustomer) => {
     return (
         <Fragment>
             <section className="">
-                <Container fluid className="">
+                <Container fluid className="px-5">
                     <div className="d-flex justify-content-between align-items-center mb-4">
                         <h6 className="text-muted">CONTACT INFORMATION</h6>
                         <div className="">
@@ -54,13 +56,13 @@ const Profile = (currentCustomer) => {
                                 <Col>
                                     <h6 className="d-inline-flex flex-column flex-grow-0 border-bottom pb-2">
                                         <span className="text-muted small mb-2">Title</span>
-                                        <span className="text-dark">Mr.</span>
+                                        <span className="text-dark">N/A</span>
                                     </h6>
                                 </Col>
                                 <Col>
                                     <h6 className="d-inline-flex flex-column flex-grow-0 border-bottom pb-2">
                                         <span className="text-muted small mb-2">Gender</span>
-                                        <span className="text-dark">Male</span>
+                                        <span className="text-dark">N/A</span>
                                     </h6>
                                 </Col>
                                 <Col>
@@ -74,10 +76,10 @@ const Profile = (currentCustomer) => {
                         <Col md={4}>
                             <div className="text-center">
                                 {currentCustomer?.avatar ? <div className="customer-avatar rounded-3">
-                                                            <img src={currentCustomer.avatar} alt='' />
+                                                            <img src={currentCustomer.avatar} alt={`${currentCustomer.firstname} ${currentCustomer.lastname == "default" ? "" : currentCustomer.lastname}`} width="200" height="auto"/>
                                                         </div> 
-                                                        : <div className="user-initials blue me-auto ms-auto d-flex justify-content-center align-items-center">
-                                                            {getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname == "default" ? "" : currentCustomer.lastname}`)}
+                                                        : <div className="user-initials blue me-auto ms-auto d-flex justify-content-center align-items-center avatar avatar-xl rounded-3">
+                                                            <h1 className="">{getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname == "default" ? "" : currentCustomer.lastname}`)}</h1>
                                                         </div>
                             }
                             </div>
@@ -96,30 +98,39 @@ const Profile = (currentCustomer) => {
                                 <Col md={8}>
                                     <h6 className="d-inline-flex flex-column flex-grow-0 border-bottom pb-2 mb-3">
                                         <span className="text-muted small mb-2">Address</span>
-                                        <span className="text-dark">14 Ozumba Mbadiwe Crescent, VI</span>
+                                        <span className="text-dark">...</span>
                                     </h6>
                                 </Col>
                                 <Col md={4}>
                                     <h6 className="d-inline-flex flex-column flex-grow-0 border-bottom pb-2 mb-3">
                                         <span className="text-muted small mb-2">Zip Code</span>
-                                        <span className="text-dark">60433</span>
+                                        <span className="text-dark">...</span>
                                     </h6>
                                 </Col>
                                 <Col md={8}>
                                     <h6 className="d-inline-flex flex-column flex-grow-0 border-bottom pb-2 mb-3">
                                         <span className="text-muted small mb-2">City</span>
-                                        <span className="text-dark">Lagos</span>
+                                        <span className="text-dark">...</span>
                                     </h6>
                                 </Col>
                                 <Col md={4}>
                                     <h6 className="d-inline-flex flex-column flex-grow-0 border-bottom pb-2 mb-3">
                                         <span className="text-muted small mb-2">Country</span>
-                                        <span className="text-dark">Nigeria</span>
+                                        <span className="text-dark">...</span>
                                     </h6>
                                 </Col>
                             </Row>
                         </Col>
                     </Row>
+                    <div className="">
+                        <a href="#expand-profile" className="d-inline-block app-link-primary" onClick={() => setShowDetails(!showDetails)}>
+                            <span className=""><ExpandChat /></span>
+                            <span className="ps-3">{showDetails ? "View less information" : "View more information"}</span>
+                        </a>
+                    </div>
+                    <Collapse in={showDetails}>
+                        <h1 className="null">...</h1>
+                    </Collapse>
                 </Container>
             </section>
         </Fragment>
