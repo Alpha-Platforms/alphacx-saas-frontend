@@ -4,7 +4,7 @@ import {useState} from "react";
 import {useParams} from "react-router-dom";
 import NewSupportEmail from "./components/NewSupportEmail";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import {ReactComponent as EmailEmptySvg} from '../../../../assets/icons/Email-Empty.svg';
 import {connect} from 'react-redux';
 import MaterialTable from "material-table";
@@ -18,7 +18,9 @@ import { ReactComponent as DotSvg } from "../../../../assets/icons/dots.svg";
 
 import "./settingsEmail.scss";
 
-const EmailSettings = ({configs}) => {
+
+const EmailSettings = ({configs, isConfigsLoaded}) => {
+  const history = useHistory();
     let {action} = useParams();
     const [pageAction,
         setPageAction] = useState(action);
@@ -77,6 +79,16 @@ const EmailSettings = ({configs}) => {
           ),
         },
       ];
+
+      useEffect(() => {
+        if(isConfigsLoaded){
+          if (!configs?.email_config?.email && !configs?.email_config?.host && !configs?.email_config?.port) {
+            history.push('/settings/email/email-form');
+          }
+
+          console.log('EMAIL CONFIGS => ', configs);
+        }
+      }, [isConfigsLoaded]);
 
 
     return pageAction === "email-form"
@@ -160,7 +172,8 @@ const EmailSettings = ({configs}) => {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-    configs: state.config.configs
+    configs: state.config.configs,
+    isConfigsLoaded: state.config.isConfigsLoaded
 })
 
 export default connect(mapStateToProps, null)(EmailSettings);
