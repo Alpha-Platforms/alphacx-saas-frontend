@@ -121,11 +121,11 @@ const Login = ({history}) => {
     }
 
     return (
-        <div className="auth-container codei-ui-andy-setDefaults">
+        <div className="auth-container  d-flex justify-content-center codei-ui-andy-setDefaults">
             <div className="symbol-wrap2">
                 <img src={Symbol2} alt=""/>
             </div>
-            <div className="login-logo">
+            <div className="login-logo mb-3">
                 <img src={AlphaLogo} alt=""/>
                 <img src={Logo} alt=""/>
             </div>
