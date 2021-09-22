@@ -50,7 +50,7 @@ const NotificationSettings = ({isConfigsLoaded, configs}) => {
 
 useEffect(() => {
   if(isConfigsLoaded){
-    if (Object.keys(configs).length === 0) {
+    if (Object.keys(configs).length === 0 || !configs?.email_config?.template) {
       history.push('/settings/notifications/email-template');
     }
     setCustLoading(!isConfigsLoaded);
