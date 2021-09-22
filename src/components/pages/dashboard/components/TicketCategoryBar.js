@@ -13,7 +13,7 @@ const TCProgressBar = ({title, value, color, totalTickets}) => {
                     style={{
                     color: color
                 }}>
-                    {value} ({Math.round((value/totalTickets) * 100)}%)
+                    {value} ({Math.round((value/totalTickets) * 100 || 0)}%)
                 </p>
             </div>
             <div
@@ -25,7 +25,7 @@ const TCProgressBar = ({title, value, color, totalTickets}) => {
                     className="bar"
                     style={{
                     backgroundColor: color,
-                    width: `${(value/totalTickets) * 100}%`
+                    width: `${(value/totalTickets) * 100 || 0}%`
                 }}/>
             </div>
         </div>
