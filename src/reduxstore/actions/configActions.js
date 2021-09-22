@@ -13,11 +13,17 @@ export const getConfigs = (success) => (dispatch, getState) => {
 		.then(res => {
 			dispatch({
 				type: types.GET_CONFIGS,
-				payload: (res.data && res.data.status === "success") ? res.data?.data : null
+				payload: (res.data && res.data.status === "success") ? res.data?.data : {}
 			})
 			success && success();
 		})
-		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
+		.catch(err => {
+			dispatch({
+				type: types.GET_CONFIGS,
+				payload: {}
+			});
+			dispatch(returnErrors(err.response?.data, err.response?.status))
+		});
 }
 
 
