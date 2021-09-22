@@ -48,7 +48,11 @@ const UserProfileTwo = ({
         ownAvatar: ''
     });
 
-    const [RSTeams, setRSTeams] = useState([])
+    const [RSTeams, setRSTeams] = useState([]);
+    const [selectedTeams, setSelectedTeams] = useState([]);
+
+    console.log('selected teams => ', selectedTeams);
+    console.log('mapped selected teams', selectedTeams.map(team => team.value));
 
     const loadRSTeams = () => {
 
@@ -67,7 +71,7 @@ const UserProfileTwo = ({
             lastname,
             email,
             role,
-            groupIds: teams
+            groupIds: selectedTeams.map(team => team.value)
         };
 
         setAccountLoading(true);
@@ -396,10 +400,13 @@ const UserProfileTwo = ({
                                                 isClearable={false}
                                                 isMulti
                                                 name="teams"
+                                                value={selectedTeams}
                                                 defaultValue={RSTeams.filter(option => option.value === currentAgent.group_id) }
                                                 options={RSTeams}
-                                                onChange={() => {
-                                                    console.log(currentAgent.group_id)
+                                                isSearchable={true}
+                                                placeholder=""
+                                                onChange={options => {
+                                                    setSelectedTeams(options)
                                                 }}
                                             />
 
