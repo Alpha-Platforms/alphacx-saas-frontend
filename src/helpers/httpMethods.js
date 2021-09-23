@@ -29,10 +29,7 @@ export const httpPostMain = async (url, postBody) => {
   } catch (error) {
     // hideLoader();
 
-    if (
-      error.response.data.message ===
-      "Unauthorized, Your token is invalid or expired"
-    ) {
+    if (error.response.data.message === "Unauthorized, Your token is invalid or expired") {
       NotificationManager.error(
         "Your token is invalid or expired, please login",
         "Opps!",

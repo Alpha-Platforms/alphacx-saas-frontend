@@ -159,7 +159,7 @@ const SiteRouter = connect(mapStateToProps, {
                 <UserDataProvider>
                     <LayoutProvider>
                         <SocketDataProvider>
-                            <Route exact path="/login/:tenantDomain?" component={Login}/>
+                            <Route exact path="/login" component={Login}/>
                             {/* <Route exact path="/login/:domain" component={Login}/> */}
 
                             <Route exact path="/register" component={Register}/> {/* help pages */}
@@ -167,7 +167,7 @@ const SiteRouter = connect(mapStateToProps, {
                             <Route exact path="/help/:topic" component={ArticleList}/>
                             <Route exact path="/help/:topic/:article" component={Article}/> {/* help pages end */}
                             <Route exact path="/feedback" component={RatingsForm}/> {/* help pages end */}
-                            <Route exact path="/account-verified/:tenantDomain" component={AccountVerified}/>
+                            <Route exact path="/account-verified" component={AccountVerified}/>
 
                             {/* Customer Portal */}
                             <Route exact path="/customer-portal/tickets" component={CustomerPortal}/>
@@ -213,7 +213,7 @@ const SiteRouter = connect(mapStateToProps, {
                                 path="/reports"
                                 pageName="Reports"
                                 component={Reports}/>
-                            <SettingsLayoutRoute
+                            <DefaultLayoutRoute
                                 exact
                                 path="/tickets/:id"
                                 pageName="Ticket"
