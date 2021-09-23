@@ -47,7 +47,6 @@ import {
   SendMsgIcon,
   ExpandChat,
 } from "../../../assets/images/svgs";
-import pic from "../../../assets/imgF/codeuiandyimg.png";
 import { dateFormater } from "../../helpers/dateFormater";
 import { capitalize } from "@material-ui/core";
 import moment from "moment";

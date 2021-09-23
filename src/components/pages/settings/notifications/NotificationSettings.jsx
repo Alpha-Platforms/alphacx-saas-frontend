@@ -22,6 +22,7 @@ import {connect} from 'react-redux';
 import {useHistory} from 'react-router-dom';
 
 const NotificationSettings = ({isConfigsLoaded, configs}) => {
+  const history = useHistory();
   const tableTheme = createTheme({
     palette: {
       primary: {
@@ -49,6 +50,9 @@ const NotificationSettings = ({isConfigsLoaded, configs}) => {
 
 useEffect(() => {
   if(isConfigsLoaded){
+    if (Object.keys(configs).length === 0 || !configs?.email_config?.template) {
+      history.push('/settings/notifications/email-template');
+    }
     setCustLoading(!isConfigsLoaded);
     if (isConfigsLoaded) {
       setCustLoading(false);

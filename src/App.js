@@ -81,6 +81,7 @@ import CannedResponsesSettings from "./components/pages/settings/canned_response
 import NewCannedResponse from "./components/pages/settings/canned_responses/components/NewCannedResponse";
 import CustomerPortal from "./components/pages/help_center/customer_portal/CustomerPortal";
 import Dashboard from "./components/pages/dashboard/Dashboard";
+import AccountVerified from "components/pages/auth/verified";
 
 const mapStateToProps = (state, ownProps) => ({isUserAuthenticated: state.userAuth.isUserAuthenticated});
 
@@ -158,7 +159,7 @@ const SiteRouter = connect(mapStateToProps, {
                 <UserDataProvider>
                     <LayoutProvider>
                         <SocketDataProvider>
-                            <Route exact path="/login" component={Login}/>
+                            <Route exact path="/login/:tenantDomain?" component={Login}/>
                             {/* <Route exact path="/login/:domain" component={Login}/> */}
 
                             <Route exact path="/register" component={Register}/> {/* help pages */}
@@ -166,6 +167,7 @@ const SiteRouter = connect(mapStateToProps, {
                             <Route exact path="/help/:topic" component={ArticleList}/>
                             <Route exact path="/help/:topic/:article" component={Article}/> {/* help pages end */}
                             <Route exact path="/feedback" component={RatingsForm}/> {/* help pages end */}
+                            <Route exact path="/account-verified/:tenantDomain" component={AccountVerified}/>
 
                             {/* Customer Portal */}
                             <Route exact path="/customer-portal/tickets" component={CustomerPortal}/>

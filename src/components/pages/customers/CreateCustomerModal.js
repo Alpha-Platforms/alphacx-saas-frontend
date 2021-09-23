@@ -207,7 +207,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     const handleTagCreation = newTag => {
         newTag = newTag.toLowerCase();
         setTagSelectLoading(true);
-        const newTags = [...tags, newTag];
+        const newTags = Array.isArray(tags) ? [...tags, newTag] : [newTag];
 
         createTags(newTags, tagCreated, tagNotCreated, newTag);
     }
@@ -342,7 +342,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                 <div className="input-group mb-3 workphone-group">
                                     <div className="input-group-prepend workphone-dd-wrapper">
                                     <span><img src={`https://www.countryflags.io/${countrycodes.find(x => x.dial_code === modalInputs.ccode)?.code || ''}/flat/64.png`} alt="" /></span>
-                                        <select className="d-inline mt-0 form-select pe-3" 
+                                        <select className="d-inline mt-0  pe-3" 
                                                 name="ccode" id="ccode" 
                                                 value={modalInputs.ccode} 
                                                 onChange={handleModalInput}>
@@ -380,7 +380,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                             Additional Options <span><DowncaretIcon /></span>
                         </p>
                         {showAddOption && <div className="row g-3 pt-3">
-                            <div className="col-12 mt-1">
+                            {/* <div className="col-12 mt-1">
                                 <label htmlFor="organisation" className="form-label">Organisation (optional)</label>
                                 <input
                                     type="text"
@@ -389,7 +389,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                     className="form-control"
                                     value={modalInputs.organisation}
                                     onChange={handleModalInput}/>
-                            </div>
+                            </div> */}
                             <div className="col-12 mt-3 tags-select-wrapper">
                                 <label htmlFor="title" className="form-label">Tags</label>
                                 <RSelect className="rselectfield"
