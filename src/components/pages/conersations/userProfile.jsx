@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CancelIconC } from "../../../assets/images/svgs";
 import {
   UserProfileIcon1,
@@ -20,6 +20,7 @@ import TicketSourceIcon from "../../../assets/icons/ticketsource.svg";
 import { dateFormater } from "../../helpers/dateFormater";
 
 export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLine = true }) {
+  const [timeStampsMsg, setTimeStampsMsg] = useState([]);
   const [tags, setTags] = useState([
     <div style={{ color: "#662D91", background: "#F8EEFF" }}>High Value</div>,
     <div style={{ color: "#F40D0D", background: "#FFEAEA " }}>Billing</div>,
@@ -32,11 +33,25 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
     <div style={{ color: "#1E90FF", background: "#E3F1FF" }}>Billing</div>,
   ]);
 
+  useEffect(() => {
+    // getTickets();
+    sortMsges(ticket[0].history);
+  }, []);
+
   const CircleIcon = (props) => (
     <span style={{ backgroundColor: props.color }} className="cust-grey-circle">
       <img src={props.icon} alt="" className="pe-none" />
     </span>
   );
+
+  const sortMsges = (msgs) => {
+    let resultTimestamps = msgs.filter((observation) => {
+      return (
+        observation.response.includes("Ticket Stage has been marked")
+      );
+    });
+    setTimeStampsMsg(resultTimestamps);
+  };
 
   const sortTags = () => {};
 
@@ -107,9 +122,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                     marginBottom: 6
                   }}
                 >
-                  <div className="psvgIcon__"
-                    style={{marginRight: 17}}
-                  >
+                  <div className="psvgIcon__" style={{marginRight: 17}}>
                     {ticket[0]?.assignee?.avatar ? (
                       <img
                         // src={ticket[0]?.assignee?.avatar || 'love'}
@@ -171,51 +184,34 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
               </Fragment>
             ) : (
               <Fragment>
-                <div className="aboutUserColConv">
-                  <p>
-                    {" "}
-                    <span className="psvgIcon">
-                      {ticket[0]?.assignee?.avatar ? (
-                        <img
-                          src={ticket[0]?.assignee?.avatar}
-                          alt=""
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            borderRadius: "50%",
-                            marginRight: "2px",
-                          }}
-                        />
-                      ) : (
-                        <div
-                          className="j"
-                          style={{
-                            width: "30px",
-                            height: "30px",
-                            borderRadius: "50%",
-                            marginRight: "19px",
-                          }}
-                        >
-                          <span>{`${ticket[0]?.assignee?.firstname?.slice(
-                            0,
-                            1
-                          ) || ''} ${ticket[0]?.assignee?.lastname?.slice(
-                            0,
-                            1
-                          ) || ''}`}</span>
-                        </div>
-                      )}
-                    </span>{" "}
-                    Assigned to
-                  </p>
-                  {/* <p>
-              {UserInfo?.phoneNumber ? UserInfo?.phoneNumber : "unavailable"}
-            </p> */}
-                  <p>
-                    <Link to={`/settings/profile/${ticket[0]?.assignee?.id}`}>{`${capitalize(
-                      ticket[0]?.assignee?.firstname  || ''
-                    )} ${capitalize(ticket[0]?.assignee?.lastname  || '')}`}</Link>
-                  </p>
+                <div className="aboutUserColConv__ d-flex align-items-center mb-3">
+                  <div className="psvgIcon__" style={{marginRight: 17}}>
+                    {ticket[0]?.assignee?.avatar ? (
+                      <img
+                        // src={ticket[0]?.assignee?.avatar || 'love'}
+                        src={ticket[0]?.assignee?.avatar}
+                        alt={`${ticket[0]?.assignee?.firstname} ${ticket[0]?.assignee?.lastname}`}
+                        style={{
+                          width: "30px", height: "30px",borderRadius: "50%", marginRight: "2px",
+                        }}
+                      />
+                    ) : (       
+                      <div className="avatar avatar-sm rounded-circle overflow-hidden acx-bg-secondary d-flex justify-content-center align-items-center">
+                          <p className="small mb-0 text-white">{`${capitalize(ticket[0]?.assignee?.firstname?.slice(0,1))}${ticket[0]?.assignee?.lastname == "default" ? "" : capitalize(ticket[0]?.assignee?.lastname?.slice(0, 1))}`}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <p className="acx-fs-8 mb-0">Assigned to</p>
+                    { ticket[0]?.assignee?
+                      (<Link to={`/settings/profile/${ticket[0]?.assignee?.id}`}>
+                        {`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(ticket[0]?.assignee?.lastname)}`}
+                      </Link>) 
+                      :
+                      (<span>Unassigned</span>)
+                    }
+                  </div>
                 </div>
 
                 <ul className="ps-0 ticket-dleft">
@@ -225,9 +221,9 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                         icon={TicketIdIcon}
                       />
                       <div>
-                        <p className="pb-0 mb-0 f-12 text-muted op-9">ID</p>
-                        <p className="text-muted f-13 text-uppercase">
-                          #{ticket[0]?.id.slice(0, 8)}
+                        <p className="pb-0 mb-0 f-12 text-muted op-9">Ticket ID</p>
+                        <p className="text-muted f-13 text-uppercase" title={`${ticket[0]?.id}`}>
+                          #{ticket[0]?.id.slice(0, 8)}...
                         </p>
                       </div>
                   </li>
@@ -457,6 +453,29 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                 </div>
               </div>
             )}
+            {timeStampsMsg.map((data) => {
+              return(
+                <div className="box">
+                  <div className="borderContaner">
+                    <div className="circle"></div>
+                    <div className="img"></div>
+                  </div>
+                  <div className="textTimeLineSec">
+                    <span>
+                      This {`${data.response}`} by <span className="fst-italic">{`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}</span>
+                    </span>
+                    <div className="timeLinehashtags flex-column align-items-start">
+                      <div>
+                        <a href={`#${data?.id}`} className="acx-link-primary d-block" style={{ textTransform: "uppercase" }}>
+                          #{data?.id.slice(data?.id?.length - 8)}
+                        </a>
+                      </div>
+                      <div>{dateFormater(data.created_at)}</div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
           ) : ""
         }

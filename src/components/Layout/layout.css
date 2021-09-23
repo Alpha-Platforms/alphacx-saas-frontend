@@ -90,9 +90,9 @@
 }
 
 .settings-container {
-  margin-left: calc(10% + 50px);
+  margin-left: calc(5% + 50px);
   margin-right: 10%;
-  margin-top: calc(3rem + 75px);
+  margin-top: calc(1rem + 75px);
 }
 
 .settings-container .settings-menu-item div {

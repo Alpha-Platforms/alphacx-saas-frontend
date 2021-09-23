@@ -208,7 +208,7 @@ export default function Conversation() {
 
     let resultTimestamps = msgs.filter((observation) => {
       return (
-        observation.response == "Ticket Stage has been marked as Closed"
+        observation.response.includes("Ticket Stage has been marked")
       );
     });
 
@@ -821,9 +821,9 @@ export default function Conversation() {
                       {AchiveMsges.map((data) => {
                         return (
                           <React.Fragment>
-                          {(data?.response == "Ticket Stage has been marked as Closed")? 
+                          {(data?.response.includes("Ticket Stage has been marked"))? 
                             (
-                              <div className="msgAssingedToee3">
+                              <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
                                 <span>{" "}
                                   {`${data?.response}`}
                                 </span>
@@ -876,9 +876,9 @@ export default function Conversation() {
                     {YesterdayMsges.map((data) => {
                       return (
                         <React.Fragment>
-                          {(data?.response == "Ticket Stage has been marked as Closed")? 
+                          {(data?.response.includes("Ticket Stage has been marked"))? 
                             (
-                              <div className="msgAssingedToee3">
+                              <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
                                 <span>{" "}
                                   {`${data?.response}`}
                                 </span>
@@ -930,9 +930,9 @@ export default function Conversation() {
                     {TodayMsges.map((data) => {
                       return (
                         <React.Fragment>
-                          {(data?.response == "Ticket Stage has been marked as Closed")? 
+                          {(data?.response.includes("Ticket Stage has been marked"))? 
                             (
-                              <div className="msgAssingedToee3">
+                              <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
                                 <span>{" "}
                                   {`${data?.response}`}
                                 </span>
