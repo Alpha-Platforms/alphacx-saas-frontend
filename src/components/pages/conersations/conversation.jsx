@@ -113,6 +113,7 @@ export default function Conversation() {
   const [TodayMsges, setTodayMsges] = useState([]);
   const [YesterdayMsges, setYesterdayMsges] = useState([]);
   const [AchiveMsges, setAchiveMsges] = useState([]);
+  const [timeStampsMsg, setTimeStampsMsg] = useState([]);
   const [ShowAchive, setShowAchive] = useState(false);
   const [channel, setChannel] = useState("All");
   const [status, setstatus] = useState("All");
@@ -150,47 +151,39 @@ export default function Conversation() {
     AppSocket.createConnection();
     // let swData = { assigneeId: "15b7c94e-0fc1-4619-9f7b-d985b41e84f9", userId:  "490af948-cd93-45c6-9a9e-a06be5bbea2b" };
     // AppSocket.io.emit("join_private", swData);
-    AppSocket.io.emit(`ws_ticket`, {data : {userId : JSON.parse(localStorage.getItem("user")).user.id}});
-    AppSocket.io.on(`ws_ticket`, (data) => {
-      // console.log("this is a Ticket", data);
-    });
     AppSocket.io.on(`ws_tickets`, (data) => {
       setTickets(data?.data?.tickets);
       // console.log("this are Tickets", data?.data?.tickets);
       setWsTickets(data?.data?.tickets);
     });
     AppSocket.io.on(`message`, (data) => {
-      // console.log("this are history msg", data);
-      // console.log(`${UserInfo}`);
-      // if(data.user.id == ticket[0]?.customer?.id){
-        console.log('Message Data => ', data);
-        let msg = {
-          created_at: data.created_at,
-          id: data?.history?.id || data?.id,
-          plain_response: data?.history?.plain_response || data?.plain_response,
-          response: data?.history?.response || data?.response,
-          type: "reply",
-          user: data.user,
-        };
-        
-        setMsgHistory((item) => [...item, msg]);
-        
-        let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
-        AppSocket.io.emit(`ws_tickets`, ticketsData);
 
-        scollPosSendMsgList();
+      let msg = {
+        created_at: data.created_at,
+        id: data?.history?.id || data?.id,
+        plain_response: data?.history?.plain_response || data?.plain_response,
+        response: data?.history?.response || data?.response,
+        type: "reply",
+        user: data.user,
+      };
+      
+      setMsgHistory((item) => [...item, msg]);
+      
+      let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
+      AppSocket.io.emit(`ws_tickets`, ticketsData);
+
+      scollPosSendMsgList();
       // }
       // sortMsges((item) => [...item, msg]);
     });
-    AppSocket.io.on(`join_private`, () => {
-      // console.log("something came up");
+    AppSocket.io.on(`ws_ticket`, (data) => {
+      let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
+      AppSocket.io.emit(`ws_tickets`, ticketsData);
     });
     return () => { AppSocket.io.disconnect()};
   },[]);
 
   const sortMsges = (msgs) => {
-    // console.log("msgHis", msgs);
-    let Today = [];
 
     let resultToday = msgs.filter((observation) => {
       return (
@@ -213,12 +206,17 @@ export default function Conversation() {
           moment(new Date()).format("DD/MM/YYYY")
       );
     });
+
+    let resultTimestamps = msgs.filter((observation) => {
+      return (
+        observation.response == "Ticket Stage has been marked as Closed"
+      );
+    });
+
     setTodayMsges(resultToday);
     setYesterdayMsges(resultYesterday);
     setAchiveMsges(resultAchive);
-    /* console.log("Today>>>", resultToday);
-    console.log("Yesterdat msg ", resultYesterday);
-    console.log("resultAchive msg ", resultAchive); */
+    setTimeStampsMsg(resultTimestamps);
   };
   useEffect(() => {
     setLoadingTicks(true);
@@ -816,31 +814,43 @@ export default function Conversation() {
                     >
                       {AchiveMsges.map((data) => {
                         return (
-                          <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
-                            <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
-                              {data?.user?.avatar ? ( 
-                                <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
-                                : ( <div className="">
-                                    <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                  </div>
-                                )}
-                            </div>
-                            <div className="message-inner">
-                                <div className="message-body">
-                                    <div className="message-content">
-                                        <div className="message-text">
-                                            <p className="text-dark message-title mb-1">
-                                              {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
-                                            </p>
-                                            <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                          <React.Fragment>
+                          {(data?.response == "Ticket Stage has been marked as Closed")? 
+                            (
+                              <div className="msgAssingedToee3">
+                                <span>{" "}
+                                  {`${data?.response}`}
+                                </span>
+                              </div>
+                            )
+                          : (
+                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
+                                <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                  {data?.user?.avatar ? ( 
+                                    <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                    : ( <div className="">
+                                        <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
+                                      </div>
+                                    )}
+                                </div>
+                                <div className="message-inner">
+                                    <div className="message-body">
+                                        <div className="message-content">
+                                            <div className="message-text">
+                                                <p className="text-dark message-title mb-1">
+                                                  {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                                </p>
+                                                <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div className="message-footer">
+                                        <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                    </div>
                                 </div>
-                                <div className="message-footer">
-                                    <span className="text-muted">{dateFormater(data.created_at)}</span>
-                                </div>
-                            </div>
-                          </div>
+                              </div>
+                            )}
+                          </React.Fragment>
                         );
                       })}
                     </div>
@@ -859,31 +869,43 @@ export default function Conversation() {
 
                     {YesterdayMsges.map((data) => {
                       return (
-                        <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
-                          <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
-                            {data?.user?.avatar ? ( 
-                              <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
-                              : ( <div className="">
-                                  <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                </div>
-                              )}
-                          </div>
-                          <div className="message-inner">
-                              <div className="message-body">
-                                  <div className="message-content">
-                                      <div className="message-text">
-                                          <p className="text-dark message-title mb-1">
-                                            {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
-                                          </p>
-                                          <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                        <React.Fragment>
+                          {(data?.response == "Ticket Stage has been marked as Closed")? 
+                            (
+                              <div className="msgAssingedToee3">
+                                <span>{" "}
+                                  {`${data?.response}`}
+                                </span>
+                              </div>
+                            )
+                          : (
+                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
+                                <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                  {data?.user?.avatar ? ( 
+                                    <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                    : ( <div className="">
+                                        <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
                                       </div>
-                                  </div>
+                                    )}
+                                </div>
+                                <div className="message-inner">
+                                    <div className="message-body">
+                                        <div className="message-content">
+                                            <div className="message-text">
+                                                <p className="text-dark message-title mb-1">
+                                                  {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                                </p>
+                                                <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="message-footer">
+                                        <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                    </div>
+                                </div>
                               </div>
-                              <div className="message-footer">
-                                  <span className="text-muted">{dateFormater(data.created_at)}</span>
-                              </div>
-                          </div>
-                        </div>
+                            )}
+                        </React.Fragment>
                       );
                     })}
 
@@ -901,31 +923,43 @@ export default function Conversation() {
 
                     {TodayMsges.map((data) => {
                       return (
-                        <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
-                          <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
-                            {data?.user?.avatar ? ( 
-                              <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
-                              : ( <div className="">
-                                  <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                </div>
-                              )}
-                          </div>
-                          <div className="message-inner">
-                              <div className="message-body">
-                                  <div className="message-content">
-                                      <div className="message-text">
-                                          <p className="text-dark message-title mb-1">
-                                            {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
-                                          </p>
-                                          <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                        <React.Fragment>
+                          {(data?.response == "Ticket Stage has been marked as Closed")? 
+                            (
+                              <div className="msgAssingedToee3">
+                                <span>{" "}
+                                  {`${data?.response}`}
+                                </span>
+                              </div>
+                            )
+                          : (
+                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
+                                <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                  {data?.user?.avatar ? ( 
+                                    <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                    : ( <div className="">
+                                        <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
                                       </div>
-                                  </div>
+                                    )}
+                                </div>
+                                <div className="message-inner">
+                                    <div className="message-body">
+                                        <div className="message-content">
+                                            <div className="message-text">
+                                                <p className="text-dark message-title mb-1">
+                                                  {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                                </p>
+                                                <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="message-footer">
+                                        <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                    </div>
+                                </div>
                               </div>
-                              <div className="message-footer">
-                                  <span className="text-muted">{dateFormater(data.created_at)}</span>
-                              </div>
-                          </div>
-                        </div>
+                            )}
+                        </React.Fragment>
                       );
                     })}
                     <span id="lastMsg"></span>

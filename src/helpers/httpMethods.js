@@ -5,8 +5,8 @@ import { NotificationManager } from "react-notifications";
 export let baseUrl = "https://kustormar-auth.herokuapp.com/v1";
 export let baseUrlMain = "https://kustormar-staging.herokuapp.com/v1";
 
-// let token = localStorage.getItem("token");
-// let tenantDomain = localStorage.getItem("domain");
+let token = localStorage.getItem("token");
+let tenantDomain = localStorage.getItem("domain");
 
 export const httpPostMain = async (url, postBody) => {
   if (!navigator.onLine) {
@@ -19,14 +19,13 @@ export const httpPostMain = async (url, postBody) => {
   try {
     const res = await axios.post(`${baseUrlMain}/${url}`, postBody, {
       headers: { 
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        'domain': localStorage.getItem("domain"),
+        Authorization: `Bearer ${token}`,
+        'domain': tenantDomain,
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json' 
       },
     });
     return res.data;
-
   } catch (error) {
     // hideLoader();
 
@@ -60,7 +59,9 @@ export const httpPost = async (url, postBody) => {
   }
   try {
     const res = await axios.post(`${baseUrl}/${url}`, postBody, {
-      headers: {
+      headers: { 
+        Authorization: `Bearer ${token}`,
+        'domain': tenantDomain,
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json' 
       },
@@ -101,8 +102,8 @@ export const httpPostData = async (url, postBody) => {
   try {
     const res = await axios.post(`${baseUrl}/api${url}`, postBody, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        'domain': localStorage.getItem("domain"),
+        Authorization: `Bearer ${token}`,
+        'domain': tenantDomain,
         "Content-Type": "multipart/form-data",
         'Access-Control-Allow-Origin': '*',
       },
@@ -135,8 +136,8 @@ export const httpGetMain = async (url) => {
   try {
     const res = await axios.get(`${baseUrlMain}/${url}`, {
       headers: { 
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        'domain': localStorage.getItem("domain"),
+        Authorization: `Bearer ${token}`,
+        'domain': tenantDomain,
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json' 
       },
@@ -145,6 +146,7 @@ export const httpGetMain = async (url) => {
     return res.data;
   } catch (error) {
     // hideLoader();
+    // console.log("eeeeeeee", error.response.data.message);
     if (
       error.response.data.message ===
       "Unauthorized, Your token is invalid or expired"
@@ -172,8 +174,8 @@ export const httpGet = async (url) => {
   try {
     const res = await axios.get(`${baseUrl}/api/${url}`, {
       headers: { 
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        'domain': localStorage.getItem("domain"),
+        Authorization: `Bearer ${token}`,
+        'domain': tenantDomain,
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json' 
       },
@@ -181,6 +183,7 @@ export const httpGet = async (url) => {
     return res.data;
   } catch (error) {
     // hideLoader();
+    console.log("eeeeeeee", error.response.data.message);
     if (
       error.response.data.message ===
       "Unauthorized, Your token is invalid or expired"
@@ -189,7 +192,7 @@ export const httpGet = async (url) => {
     }
     if (error.response.data.message === "Validation Error!") {
       NotificationManager.error(
-        Object.values(error.response.data.data).join(" ")
+        Object.values(error.response.data.data).join("  ")
       );
       return;
     }
@@ -208,8 +211,7 @@ export const httpPut = async (url, postBody) => {
   try {
     const res = await axios.put(`${baseUrl}/api/${url}`, postBody, {
       headers: { 
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        'domain': localStorage.getItem("domain"),
+        Authorization: `Bearer ${localStorage.token}`,
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json'  },
     });
@@ -242,8 +244,8 @@ export const httpPatchMain = async (url, postBody) => {
   try {
     const res = await axios.patch(`${baseUrlMain}/${url}`, postBody, {
       headers: { 
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        'domain': localStorage.getItem("domain"),
+        Authorization: `Bearer ${token}`,
+        'domain': tenantDomain,
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json' 
       },
@@ -261,6 +263,7 @@ export const httpPatchMain = async (url, postBody) => {
       "Unauthorized, Your token is invalid or expired"
     ) {
     }
+    // console.log("token", token);
     return { er: error.response.data };
   }
 };
@@ -276,8 +279,8 @@ export const httpDelete = async (url) => {
   try {
     const res = await axios.delete(`${baseUrlMain}/${url}`, {
       headers: { 
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        'domain': localStorage.getItem("domain"),
+        Authorization: `Bearer ${token}`,
+        'domain': tenantDomain,
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json' 
       },

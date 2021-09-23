@@ -22,7 +22,7 @@ const Profile = (currentCustomer) => {
             <section className="">
                 <Container fluid className="px-5">
                     <div className="d-flex justify-content-between align-items-center mb-4">
-                        <h6 className="text-muted">CONTACT INFORMATION</h6>
+                        <h6 className="text-muted acx-ls-30 acx-fs-12">CONTACT INFORMATION</h6>
                         <div className="">
                             <Button className="acx-btn-icon">
                                 <i className="bi-pencil-square"></i>
@@ -75,10 +75,10 @@ const Profile = (currentCustomer) => {
                         </Col>
                         <Col md={4}>
                             <div className="text-center">
-                                {currentCustomer?.avatar ? <div className="customer-avatar rounded-3">
+                                {currentCustomer?.avatar ? <div className="avatar avatar-xxl d-flex justify-content-center overflow-hidden mx-auto rounded-3">
                                                             <img src={currentCustomer.avatar} alt={`${currentCustomer.firstname} ${currentCustomer.lastname == "default" ? "" : currentCustomer.lastname}`} width="200" height="auto"/>
                                                         </div> 
-                                                        : <div className="user-initials blue me-auto ms-auto d-flex justify-content-center align-items-center avatar avatar-xl rounded-3">
+                                                        : <div className="user-initials blue mx-auto d-flex justify-content-center align-items-center avatar avatar-xl rounded-3">
                                                             <h1 className="">{getUserInitials(`${currentCustomer.firstname} ${currentCustomer.lastname == "default" ? "" : currentCustomer.lastname}`)}</h1>
                                                         </div>
                             }
@@ -91,7 +91,7 @@ const Profile = (currentCustomer) => {
                             <span className="text-dark">{currentCustomer.phoneNumber ? currentCustomer.phoneNumber : currentCustomer.phone_number ? currentCustomer.phone_number : ''}</span>
                         </h6>
                     </div>
-                    <h6 className="text-muted mb-4">ADDRESS</h6>
+                    <h6 className="text-muted mb-4 acx-ls-30 acx-fs-12">ADDRESS</h6>
                     <Row className="mb-3">
                         <Col md={8}>
                             <Row className="justify-content-between mb-3">
@@ -122,15 +122,41 @@ const Profile = (currentCustomer) => {
                             </Row>
                         </Col>
                     </Row>
-                    <div className="">
+                    <Collapse in={showDetails}>
+                        <div className="py-3 border-top ">
+                            <h6 className="text-muted mb-4 acx-ls-30 acx-fs-12">SUBSCRIPTION INFORMATION</h6>
+                            <Row className="mb-3">
+                                <Col md={8}>
+                                    <Row className="justify-content-between mb-3">
+                                        <Col md={8}>
+                                            <h6 className="d-inline-flex flex-column flex-grow-0 border-bottom pb-2 mb-3">
+                                                <span className="text-muted small mb-2">Registration Date</span>
+                                                <span className="text-dark">...</span>
+                                            </h6>
+                                        </Col>
+                                        <Col md={4}>
+                                            <h6 className="d-inline-flex flex-column flex-grow-0 border-bottom pb-2 mb-3">
+                                                <span className="text-muted small mb-2">Status</span>
+                                                <span className="text-dark">...</span>
+                                            </h6>
+                                        </Col>
+                                        <Col md={8}>
+                                            <h6 className="d-inline-flex flex-column flex-grow-0 border-bottom pb-2 mb-3">
+                                                <span className="text-muted small mb-2">Plan</span>
+                                                <span className="text-dark">...</span>
+                                            </h6>
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            </Row>
+                        </div>
+                    </Collapse>
+                    <div className="py-3">
                         <a href="#expand-profile" className="d-inline-block app-link-primary" onClick={() => setShowDetails(!showDetails)}>
                             <span className=""><ExpandChat /></span>
                             <span className="ps-3">{showDetails ? "View less information" : "View more information"}</span>
                         </a>
                     </div>
-                    <Collapse in={showDetails}>
-                        <h1 className="null">...</h1>
-                    </Collapse>
                 </Container>
             </section>
         </Fragment>
