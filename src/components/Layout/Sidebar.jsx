@@ -129,9 +129,9 @@ export default function Sidebar({ browserRouter, currentRoute }) {
     >
       <div className="p-5 w-100">
         <h6 className="mb-5">Are you sure you want to logout?</h6>
-        <div className="float-end mb-5">
+        <div className="d-flex justify-content-center">
           <button
-            className="btn btn-sm f-12 bg-outline-custom cancel px-4"
+            className="btn btn-sm f-12 border cancel px-4"
             onClick={() => setIsDeleteConfirmed(false)}
           >
             Cancel
