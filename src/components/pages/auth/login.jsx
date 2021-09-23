@@ -15,7 +15,6 @@ import { httpPost, httpPostMain } from "../../../helpers/httpMethods";
 import { css } from "@emotion/react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { wordCapitalize } from "helper";
-import axios from "axios";
 const override = css``;
 
 const Login = ({match: {params}}) => {
@@ -27,21 +26,37 @@ const Login = ({match: {params}}) => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [domainAuthenticated, setDomainAuthenticated] = useState(false)
+  const [domain, setDomain] = useState("")
 
   let [loading, setLoading] = useState(false);
   let [color, setColor] = useState("#ffffff");
 
+
+  useEffect(() => {
+    if(window.location.hostname.split(".").length === 3){ // CHANGE TO 3 ON LIVE SERVER
+      setDomain(() => window.location.hostname.split(".")[0])
+    }
+    
+  }, [])
+
+  useEffect(() => {
+    if(domain && !localStorage.getItem("domain")){
+      submit()
+    } else if(domain && localStorage.getItem("domain") === domain) {
+      setDomainAuthenticated(true)
+    }
+  }, [domain])
+
+  useEffect(() => {
+    if(domainAuthenticated && domain && localStorage.getItem("domain") === domain){
+      submit()
+    }
+  }, [domainAuthenticated])
+
+  
   const handleChange = (e) => {
     setUserInput({ ...userInput, [e.target.name]: e.target.value });
   };
-
-  useEffect(() => {
-    if(params.tenantDomain && localStorage.getItem("domain")){
-      console.log(`Your domain is ${params.tenantDomain}`)
-      submit()
-    }
-    
-  }, [params.tenantDomain])
 
 
   const handleSubmit = (e) => {
@@ -53,15 +68,15 @@ const Login = ({match: {params}}) => {
 
     if(!domainAuthenticated){// DOMAIN LOGIN
 
-        const domain = userInput.domain ? userInput.domain : params.tenantDomain;
+        const data = userInput.domain ? userInput.domain : domain;
 
         setLoading(true);
-        const res = await httpPost(`auth/login`, {domain});
+        const res = await httpPost(`auth/login`, {domain: data});
 
         if (res.status === "success") {
           setLoading(false)
           localStorage.clear()
-          localStorage.setItem("domain", domain)
+          localStorage.setItem("domain", data)
           localStorage.setItem("token", res.data.token);
 
           setDomainAuthenticated(true)

@@ -10,18 +10,39 @@ import { css } from "@emotion/react";
 import { httpPost } from "helpers/httpMethods";
 import { wordCapitalize } from "helper";
 
-const AccountVerified = ({match: {params}}) => {
+
+const AccountVerified = () => {
 
   const [message, setMessage] = useState("")
   const [loading, setLoading] = useState(false)
+  const [isDomainVerified, setIsDomainVerified] = useState(false)
+  const [domain, setDomain] = useState("")
 
+  useEffect(() => {
+    setMessage("Your account has been verified.")
+  }, [message])
+
+  useEffect(() => {
+    setDomain(() => window.location.hostname.split(".")[0])
+    localStorage.clear()
+    console.clear()
+  }, [])
+
+  useEffect(() => {
+    console.log(domain)
+    if(domain){
+      domainLogin(domain)
+    }
+  }, [domain])
+
+  
   const handleChange = (e) => {
     e.preventDefault()
-    // props.history.push("/login")
-    // console.clear()
-    // console.log(params)
 
-    domainLogin(params.tenantDomain)
+    if(isDomainVerified){
+        setLoading(false)
+        window.location.href = `/login`
+    }
 
   }
 
@@ -33,63 +54,68 @@ const AccountVerified = ({match: {params}}) => {
       const res = await httpPost(`auth/login`, data);
 
       if (res.status === "success") {
-        setLoading(false)
+        setIsDomainVerified(true)
         localStorage.clear()
         localStorage.setItem("domain", domain)
         localStorage.setItem("token", res.data.token);
-        window.location.href = `/login/${domain}`
+        NotificationManager.success("Verification successful", "Your account has been verified.", 4000);
       } else {
         console.log(res);
         setLoading(false);
-        NotificationManager.error(wordCapitalize(res?.er?.message), "Invalid Domain Name", 4000);
+        NotificationManager.error("Verification failed", "Domain not verified", 4000);
+        // wordCapitalize(res?.er?.message)
       }
     
   }
 
-  useEffect(() => {
-    setMessage("Your account has been verified.")
-  }, [message])
-
-  useEffect(() => {
-    localStorage.clear()
-  }, [])
-
   return (
-    <div className="auth-container d-flex justify-content-center">
-      <div className="symbol-wrap2">
-        <img src={Symbol2} alt="" />
-      </div>
-      <div className="login-logo">
-        <img src={AlphaLogo} alt="" /> <img src={Logo} alt="" />
-      </div>
 
-      <div className="login-container">
+    <>
+    {isDomainVerified ?
 
+      <div className="auth-container d-flex justify-content-center">
 
-        <form>
-          <div className="d-flex justify-content-center my-4">
-            <img src={ThankYou} alt="" />
+          <div className="symbol-wrap2">
+            <img src={Symbol2} alt="" />
           </div>
-          <div className="Auth-header mb-2">
-            <h3>Thank you!</h3>
-            <p>{message}<br />Click the button below to log in.</p>
+          <div className="login-logo">
+            <img src={AlphaLogo} alt="" /> <img src={Logo} alt="" />
           </div>
+          <div className="login-container">
 
-      
+            <form>
+              <div className="d-flex justify-content-center my-4">
+                <img src={ThankYou} alt="" />
+              </div>
+              <div className="Auth-header mb-2">
+                <h3>Thank you!</h3>
+                <p>{message}<br />Click the button below to log in.</p>
+              </div>
 
-          <div className="submit-auth-btn">
-            <button onClick={handleChange}>
-                Login
-            </button>
+              <div className="submit-auth-btn">
+                <button onClick={handleChange}>
+                    Continue to Login
+                </button>
+              </div>
+            </form>
+            
           </div>
-        </form>
         
+        <div className="symbol-wrap">
+          <img src={Symbol1} alt="" />
+        </div>
       </div>
-      
-      <div className="symbol-wrap">
-        <img src={Symbol1} alt="" />
+        
+      :
+        
+      <div className="auth-container d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+        <h3 style={{color: "#FFF"}}>Domain not verified</h3>
       </div>
-    </div>
+        
+      }
+
+    </>
+
   );
 };
 
