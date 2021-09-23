@@ -183,7 +183,7 @@ const UserProfileTwo = ({
 
         
         if (agents) {
-            const gottenUser =  agents.filter(agent => agent ?.id === id)[0];
+            const gottenUser =  agents.filter(agent => agent?.id === id)[0];
 
             if (gottenUser) {
                 setPersonalInfoInputs(prev => ({
@@ -195,7 +195,7 @@ const UserProfileTwo = ({
         }
         
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isAgentLoaded, agents])
+    }, [isAgentLoaded, agents]);
 
     useEffect(() => {
         if (currentAgent) {
@@ -216,7 +216,7 @@ const UserProfileTwo = ({
             }
 
 
-            const {firstname, lastname, email, role, avatar, group_id} = currentAgent;
+            const {firstname, lastname, email, role, avatar, group_id, groups} = currentAgent;
 
             const agentInfo = group_id ? {firstname, lastname, email, role, team: group_id} : otherRolesTeamId ? {firstname, lastname, email, role, team: otherRolesTeamId} : {firstname, lastname, email, role};
 
@@ -229,6 +229,11 @@ const UserProfileTwo = ({
                 ...prev,
                 ownAvatar: avatar
             }))
+
+            if (Array.isArray(groups)) {
+                // set the selected teams to that of the current user
+                setSelectedTeams(groups?.map(group => ({label: group?.group?.name || '', value: group?.group?.id || ''})));
+            }
         }
 
         // load team options
