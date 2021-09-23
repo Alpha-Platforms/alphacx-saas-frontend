@@ -443,9 +443,8 @@ export default function Conversation() {
     if (status === "") {
       return;
     }
-
+   
     let data = {
-      statusId: RSTicketStage ,
       priorityId: RSTicketPriority,
       categoryId: RSTicketCategory,
       subject: RSTicketSubject,
@@ -453,8 +452,16 @@ export default function Conversation() {
       assigneeId: RSTicketAssignee,
       tags: (!Array.isArray(RSTicketTags) || !RSTicketTags.length) ? null : RSTicketTags,
     };
-    const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
+    const res = await httpPatchMain(`tickets-status/${ticket[0].id}`, data);
     if (res.status === "success") {
+      if( RSTicketStage){
+        const statusRes = await httpPatchMain(`tickets/${ticket[0].id}`, {"statusId": RSTicketStage});
+        if (statusRes.status === "success") {
+          NotificationManager.success("Ticket status successfully updated", "Success");
+        } else{
+          NotificationManager.error(statusRes.er.message, "Error", 4000);
+        }
+      }
       setProcessing(false);
       closeSaveTicketModal();
       NotificationManager.success(
@@ -1126,7 +1133,7 @@ export default function Conversation() {
       </div>
       {/* Modal area starts here */}
       <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal} center>
-        <Form className="saveTicketWrapModal">
+        <Form className="saveTicketWrapModal" onSubmit={(e) => e.preventDefault()}>
           <p className="fs-5">
             Kindly update ticket before closing the chat
           </p>

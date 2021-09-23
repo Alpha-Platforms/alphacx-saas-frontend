@@ -588,6 +588,12 @@ input:-webkit-autofill::first-line {
 .form-group.acx-form-group label {
     font-size: 0.875rem;
 }
+:focus-visible {
+    outline: transparent auto 1px !important;
+} 
+.form-group.acx-form-group input:focus-visible.form-control:not([disabled="true"]) {
+    outline: -webkit-focus-ring-color auto 0px !important;
+} 
 .form-group.acx-form-group .form-control {
     font-size: 0.9375rem !important;
     padding: 0.5rem 0.75rem;

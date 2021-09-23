@@ -652,7 +652,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                             </div>
                         </div>
                         {/* CHAT SECTION */}
-                        <div id="ticketConvoBox" className="conversationsMain">
+                        <div id="ticketConvoBox" className="conversationsMain pb-5">
                           <div className="chatDateHeader">
                             <div className="chatDateHeaderhr1"></div>
                             <div className="chatDateHeaderTitle">
