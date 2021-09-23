@@ -213,7 +213,7 @@ const SiteRouter = connect(mapStateToProps, {
                                 path="/reports"
                                 pageName="Reports"
                                 component={Reports}/>
-                            <SettingsLayoutRoute
+                            <DefaultLayoutRoute
                                 exact
                                 path="/tickets/:id"
                                 pageName="Ticket"
