@@ -19,11 +19,11 @@ const TicketStatusPie = ({statuses, analytics}) => {
     }
 
     // const values = [25, 5, 20, 18];
-    const values = statuses?.slice(0, 4).map(sta => analytics?.allTickets?.filter(x => x.status_id === sta.id).length || 0);
+    const values = statuses?.slice(0, 5).map(sta => analytics?.allTickets?.filter(x => x.status_id === sta.id).length || 0);
     // const colors = ["#D1E8FF", "#1E90FF", "#0707ED", "#000080"];
-    const colors = getColors(statuses?.slice(0, 4));
+    const colors = getColors(statuses?.slice(0, 5));
     // const labels = ["Open", "In Progress", "Pending", "Closed"];
-    const labels = statuses?.slice(0, 4)?.map(sta => sta?.status);
+    const labels = statuses?.slice(0, 5)?.map(sta => ({ status: sta?.status, count: analytics?.allTickets?.filter(x => x.status_id === sta.id).length || 0}));
 
 
     const data = {
@@ -92,7 +92,7 @@ const TicketStatusPie = ({statuses, analytics}) => {
                                 style={{
                                 backgroundColor: colors[i]
                             }}></div>
-                            <p className="mb-0">{label}</p>
+                            <p className="mb-0">{`${label?.status} (${label?.count})`}</p>
                         </div>
                     ))}
                 </div>

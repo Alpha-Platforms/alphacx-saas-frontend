@@ -52,7 +52,7 @@
 }
 
 .csat-progress {
-    width: 9rem;
+    width: 10rem;
     margin: 0 auto;
 }
 
@@ -63,7 +63,13 @@
 }
 
 .ts-pie-wrapper {
-    /* border: 1px solid red; */
+    /*border: 1px solid red;
+    */padding-top: 0;
+    transform: translateY(-0.90rem);
+    -webkit-transform: translateY(-0.90rem);
+    -moz-transform: translateY(-0.90rem);
+    -ms-transform: translateY(-0.90rem);
+    -o-transform: translateY(-0.90rem);
 }
 
 .tsp-wrapper .details {
