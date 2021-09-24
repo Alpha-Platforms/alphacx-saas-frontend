@@ -36,26 +36,29 @@ const Login = ({match: {params}}) => {
 
 
   useEffect(() => {
-    if(window.location.hostname.split(".").length === 3){ // CHANGE TO 3 ON LIVE SERVER 
-      const domain = window.location.hostname.split(".")[0]    
-      setDomain(domain)
-      localStorage.setItem("domain", domain)
+    localStorage.clear()
+    const hostArray = window.location.hostname.split(".")      
+    if(hostArray.length === 2 && hostArray[0] !== "dev" && hostArray[0] !== "app"){ // CHANGE TO 3 ON LIVE SERVER 
+      setDomain(hostArray[0])
       setDomainAuthenticated(true) // if sub-domain is available it is correct else you'd get a 404
+      console.clear()
+      console.log("!dev or !app", "domain: "+domain, "domainAuthenticated: "+domainAuthenticated)
     }
-    
   }, [])
 
   useEffect(() => {
-    if(domain){
-      submit()
+    if(domain && domainAuthenticated){
+      // submit()
+      localStorage.setItem("domain", domain)
+      console.clear()
+      console.log("both are checked")
     }
-
-  }, [domain])
+  }, [domain, domainAuthenticated])
   
+
   const handleChange = (e) => {
     setUserInput({ ...userInput, [e.target.name]: e.target.value });
   };
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -73,7 +76,6 @@ const Login = ({match: {params}}) => {
 
       if (res.status === "success") {
         setLoading(false)
-        localStorage.clear()
         localStorage.setItem("domain", data)
         localStorage.setItem("token", res.data.token);
 
@@ -88,9 +90,7 @@ const Login = ({match: {params}}) => {
 
       } else {  // PASSWORD LOGIN
 
-        if(userInput.email && userInput.password ){
-          console.clear()
-          console.log(userInput);
+        if(userInput.email && userInput.password){
 
           // pass domain in headers
 
@@ -139,9 +139,6 @@ const Login = ({match: {params}}) => {
             // Login failed
             setLoading(false);
             NotificationManager.error(res?.er?.message, "Error", 4000);
-
-            console.clear()
-            console.log(res);
           }
 
         } 
@@ -209,7 +206,7 @@ const Login = ({match: {params}}) => {
         </form>
         }
 
-        {domainAuthenticated &&
+        {(domainAuthenticated) &&
 
         <form>
           <div className="Auth-header" style={{ marginBottom: "30px" }}>
