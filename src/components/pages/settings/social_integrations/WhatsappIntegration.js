@@ -174,7 +174,7 @@ export default function WhatsappIntegration() {
                                 <button className="btn acx-btn-primary px-3 py-2" onClick={handleConnectWhatsApp}>Connect</button>
                             </div>
                         </div>
-                        </div>
+                    </div>
                 </section>
             </div>
         </div>
