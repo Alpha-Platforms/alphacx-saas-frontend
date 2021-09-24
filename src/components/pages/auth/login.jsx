@@ -1,3 +1,6 @@
+
+/* eslint-disable */
+
 import React, { useEffect, useState } from "react";
 import "./login.css";
 import AlphaLogo from "../../../assets/imgF/alpha.png";
@@ -32,25 +35,31 @@ const Login = ({match: {params}}) => {
   let [color, setColor] = useState("#ffffff");
 
 
-  useEffect(() => {
-    if(window.location.hostname.split(".").length === 3){ // CHANGE TO 3 ON LIVE SERVER
-      setDomain(() => window.location.hostname.split(".")[0])
-    }
+  // useEffect(() => {
+  //   if(window.location.hostname.split(".").length === 2){ // CHANGE TO 3 ON LIVE SERVER
+  //     setDomain(() => window.location.hostname.split(".")[0])
+  //   }
+  //   console.log("initial")
     
-  }, [])
+  // }, [])
 
-  useEffect(() => {
-    if(domain && !localStorage.getItem("domain")){
-      submit()
-    } else if(domain && localStorage.getItem("domain") === domain) {
-      setDomainAuthenticated(true)
-    }
-  }, [domain])
+  // useEffect(() => {
+  //   if(domain && !localStorage.getItem("domain")){
+  //     submit()
+  //   } else if(domain && localStorage.getItem("domain") === domain){
+  //     setDomainAuthenticated(true)
+  //   }
+
+  //   console.log("Tenant is", domain)
+
+  // }, [domain])
 
   useEffect(() => {
     if(domainAuthenticated && domain && localStorage.getItem("domain") === domain){
-      submit()
+      // submit()
     }
+    
+    console.log("domainAuthenticated")
   }, [domainAuthenticated])
 
   
@@ -68,24 +77,26 @@ const Login = ({match: {params}}) => {
 
     if(!domainAuthenticated){// DOMAIN LOGIN
 
-        const data = userInput.domain ? userInput.domain : domain;
+      
 
-        setLoading(true);
-        const res = await httpPost(`auth/login`, {domain: data});
+      const data = userInput.domain ? userInput.domain : domain;
 
-        if (res.status === "success") {
-          setLoading(false)
-          localStorage.clear()
-          localStorage.setItem("domain", data)
-          localStorage.setItem("token", res.data.token);
+      setLoading(true);
+      const res = await httpPost(`auth/login`, {domain: data});
 
-          setDomainAuthenticated(true)
+      if (res.status === "success") {
+        setLoading(false)
+        localStorage.clear()
+        localStorage.setItem("domain", data)
+        localStorage.setItem("token", res.data.token);
 
-        } else {
-          console.log(res);
-          setLoading(false);
-          NotificationManager.error(wordCapitalize(res?.er?.message), "Invalid Domain Name", 4000);
-        }
+        setDomainAuthenticated(true)
+
+      } else {
+        console.log(res);
+        setLoading(false);
+        NotificationManager.error(wordCapitalize(res?.er?.message), "Invalid Domain Name", 4000);
+      }
         
 
       } else {  // PASSWORD LOGIN
@@ -128,6 +139,7 @@ const Login = ({match: {params}}) => {
             console.log(res?.status);
             localStorage.setItem("user", JSON.stringify(res.data));
             localStorage.setItem("token", res.data.token);
+            localStorage.setItem("refreshToken", res.data.refreshToken);
       
             NotificationManager.success(res.data.message, "Success", 4000);
       

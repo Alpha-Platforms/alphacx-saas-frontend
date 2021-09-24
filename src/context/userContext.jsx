@@ -4,6 +4,8 @@ import "react-responsive-modal/styles.css";
 import axios from "axios";
 import { getLocalItem } from "../components/helpers/authService";
 import jwtDecode from "jwt-decode";
+import { httpGetMain, httpPostMain } from "helpers/httpMethods";
+import NotificationManager from "react-notifications/lib/NotificationManager";
 export const UserDataContext = createContext();
 
 export const UserDataProvider = (props) => {
@@ -16,15 +18,16 @@ export const UserDataProvider = (props) => {
   }, []);
 
   // THIS CALLS JWT TOKEN EXP
-  // To custantly (9sec) check if the user token is expired
+  // To custantly (60sec) check if the user token is expired
   const RecallJwt = () => {
     setInterval(async () => {
       ValidateToken();
-    }, 9000);
+    }, 300000);
   };
 
-  const ValidateToken = () => {
+  const ValidateToken = async () => {
     let token = localStorage.getItem("token");
+    let refreshToken = localStorage.getItem("refreshToken");
 
     // zeelz: do proper check later
     // if (token == undefined || token == null || token == "") {
@@ -34,9 +37,21 @@ export const UserDataProvider = (props) => {
     // }
 
     if (token && jwtDecode(token).exp < Date.now() / 1000) {
-      setFirstTimeLoad(false);
-      localStorage.clear();
-      return (window.location.href = "/login");
+
+        const res = await httpPostMain ("auth/refreshToken", {"refreshToken": refreshToken});
+
+        if (res?.status == "success") {
+          const {token: {token, refreshToken}} = res;
+
+          localStorage.setItem("token", token);
+          localStorage.setItem("refreshToken", refreshToken);
+          
+        } else {
+          setFirstTimeLoad(false);
+          localStorage.clear();
+          return (window.location.href = "/login");
+        }
+
     }
   };
 
