@@ -35,33 +35,22 @@ const Login = ({match: {params}}) => {
   let [color, setColor] = useState("#ffffff");
 
 
-  // useEffect(() => {
-  //   if(window.location.hostname.split(".").length === 2){ // CHANGE TO 3 ON LIVE SERVER
-  //     setDomain(() => window.location.hostname.split(".")[0])
-  //   }
-  //   console.log("initial")
-    
-  // }, [])
-
-  // useEffect(() => {
-  //   if(domain && !localStorage.getItem("domain")){
-  //     submit()
-  //   } else if(domain && localStorage.getItem("domain") === domain){
-  //     setDomainAuthenticated(true)
-  //   }
-
-  //   console.log("Tenant is", domain)
-
-  // }, [domain])
-
   useEffect(() => {
-    if(domainAuthenticated && domain && localStorage.getItem("domain") === domain){
-      // submit()
+    if(window.location.hostname.split(".").length === 3){ // CHANGE TO 3 ON LIVE SERVER 
+      const domain = window.location.hostname.split(".")[0]    
+      setDomain(domain)
+      localStorage.setItem("domain", domain)
+      setDomainAuthenticated(true) // if sub-domain is available it is correct else you'd get a 404
     }
     
-    console.log("domainAuthenticated")
-  }, [domainAuthenticated])
+  }, [])
 
+  useEffect(() => {
+    if(domain){
+      submit()
+    }
+
+  }, [domain])
   
   const handleChange = (e) => {
     setUserInput({ ...userInput, [e.target.name]: e.target.value });
@@ -76,8 +65,6 @@ const Login = ({match: {params}}) => {
   const submit = async () => {
 
     if(!domainAuthenticated){// DOMAIN LOGIN
-
-      
 
       const data = userInput.domain ? userInput.domain : domain;
 
@@ -104,6 +91,8 @@ const Login = ({match: {params}}) => {
         if(userInput.email && userInput.password ){
           console.clear()
           console.log(userInput);
+
+          // pass domain in headers
 
 
           // const validateEmail = ValidateEmail(userInput.email);
@@ -220,7 +209,7 @@ const Login = ({match: {params}}) => {
         </form>
         }
 
-        {(domainAuthenticated && localStorage.getItem("domain")) &&
+        {domainAuthenticated &&
 
         <form>
           <div className="Auth-header" style={{ marginBottom: "30px" }}>
