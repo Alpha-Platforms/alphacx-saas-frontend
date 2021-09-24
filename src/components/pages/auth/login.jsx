@@ -33,7 +33,7 @@ const Login = ({match: {params}}) => {
 
 
   useEffect(() => {
-    if(window.location.hostname.split(".").length === 3){ // CHANGE TO 3 ON LIVE SERVER
+    if(window.location.hostname.split(".").length === 2){ // CHANGE TO 3 ON LIVE SERVER
       setDomain(() => window.location.hostname.split(".")[0])
     }
     

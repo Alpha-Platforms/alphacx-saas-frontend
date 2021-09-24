@@ -23,9 +23,10 @@ const AccountVerified = () => {
   }, [message])
 
   useEffect(() => {
-    setDomain(() => window.location.hostname.split(".")[0])
+    if(window.location.hostname.split(".").length === 2){ // CHANGE TO 3 ON LIVE SERVER
+      setDomain(() => window.location.hostname.split(".")[0])
+    }
     localStorage.clear()
-    console.clear()
   }, [])
 
   useEffect(() => {
