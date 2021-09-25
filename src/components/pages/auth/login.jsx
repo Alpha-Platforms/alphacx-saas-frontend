@@ -106,7 +106,7 @@ const Login = ({match: {params}}) => {
           NotificationManager.success(res.data.message, "Success", 4000);
     
           // Redirect to tenant's home page - dashboard
-          window.location.href = `${window.localStorage.getItem("domain")}.alphacx.co`;
+          window.location.href = `https://${window.localStorage.getItem("domain")}.alphacx.co`;
     
         } else {
           // Login failed
