@@ -218,23 +218,23 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                             className="px-5 py-3 d-flex justify-content-between">
                             <div>
                                 <ul className="nav nav-pills" id="pills-tab" role="tablist">
-                                    <li className="nav-item me-3" role="presentation">
+                                    <li className="nav-item me-2" role="presentation">
                                         <button
-                                            className={`nav-link ${tabKey === 'profile' && 'nav-active'} text-muted ps-0`}
+                                            className={`nav-link ${tabKey === 'profile' && 'nav-active'} text-muted ps-1 pe-3`}
                                             id="pills-profile-tab"
                                             type="button"
                                             onClick={() => setTabKey('profile')}>Profile</button>
                                     </li>
-                                    <li className="nav-item me-3" role="presentation">
+                                    <li className="nav-item mx-3" role="presentation">
                                         <button
-                                            className={`nav-link ${tabKey === 'ticket-history' && 'nav-active'} text-muted ps-0`}
+                                            className={`nav-link ${tabKey === 'ticket-history' && 'nav-active'} text-muted px-3`}
                                             id="pills-profile-tab"
                                             type="button"
                                             onClick={() => setTabKey('ticket-history')}>Ticket History</button>
                                     </li>
-                                    <li className="nav-item" role="presentation">
+                                    <li className="nav-item ms-2" role="presentation">
                                         <button
-                                            className={`nav-link ${tabKey === 'notes' && 'nav-active'} text-muted`}
+                                            className={`nav-link ${tabKey === 'notes' && 'nav-active'} text-muted px-3`}
                                             id="pills-notes-tab"
                                             type="button"
                                             onClick={() => setTabKey('notes')}>Notes</button>

@@ -568,73 +568,160 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                     className="bg-secondary py-3 pt-0 bg-white">
                     {/* Conversation Part */}
 
-                {/* CHAT COL TWO */}
+                  {/* CHAT COL TWO */}
 
-                <div
-                  className={`conversation-layout-col-two`}>
-                  {firstTimeLoad ? (
-                    <div className="single-cust-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
-                  ) : loadSingleTicket ? (
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        marginTop: "50px",
-                        width: "100%",
-                      }}
-                    >
-                      {" "}
-                      <ScaleLoader
-                        color="#0d4166"
-                        loading={loadSingleTicket}
-                        // size={35}
-                      />
-                    </div>
-                  ) : (
-                    <div className="conversation-layout-col-two-chatCol">
-                      {" "}
-                      {/* CHAT HEADER BOX SECTION */}
-                      {/* {noResponseFound ? (
-                      <p
+                  <div
+                    className={`conversation-layout-col-two`}>
+                    {firstTimeLoad ? (
+                      <div className="single-cust-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
+                    ) : loadSingleTicket ? (
+                      <div
                         style={{
-                          textAlign: "center",
-                          paddingTop: "30px",
-                          paddingBottom: "30px",
-                          marginBottom: "auto",
-                          marginTop: "auto",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          marginTop: "50px",
+                          width: "100%",
                         }}
                       >
                         {" "}
-                        <NoChatFound value="No response found" />
-                      </p>
-                    ) : ( */}
-                      <Fragment>
-                        <div className="conversationHeaderV2">
-                          <div className="conversationHeaderMainV2">
-                            <div className="custormChatHeaderInfo">
-                              <div className="custormChatHeaderInfoData pt-3">
-                                <h1>{ticket[0]?.subject}</h1>
-                                <p>
-                                  {`${capitalize(
-                                    SenderInfo?.customer?.firstname)} ${capitalize(SenderInfo?.customer?.lastname == "default"? "" : SenderInfo?.customer?.lastname)} 
-                                    ${capitalize(SenderInfo?.customer?.email)}`}
-                                  <div className="custormChatHeaderDot"></div>{" "}
-                                  <span>{dateFormater(ticket[0]?.updated_at)}</span>
-                                </p>
-                              </div>
-                              <div
-                                className="custormChatHeaderInfoAction"
-                                onClick={closeSaveTicketModal}
-                              >
-                                <StarIconTicket /> Update
+                        <ScaleLoader
+                          color="#0d4166"
+                          loading={loadSingleTicket}
+                          // size={35}
+                        />
+                      </div>
+                    ) : (
+                      <div className="conversation-layout-col-two-chatCol">
+                        {" "}
+                        {/* CHAT HEADER BOX SECTION */}
+                        {/* {noResponseFound ? (
+                        <p
+                          style={{
+                            textAlign: "center",
+                            paddingTop: "30px",
+                            paddingBottom: "30px",
+                            marginBottom: "auto",
+                            marginTop: "auto",
+                          }}
+                        >
+                          {" "}
+                          <NoChatFound value="No response found" />
+                        </p>
+                      ) : ( */}
+                        <Fragment>
+                          <div className="conversationHeaderV2">
+                            <div className="conversationHeaderMainV2">
+                              <div className="custormChatHeaderInfo">
+                                <div className="custormChatHeaderInfoData pt-3">
+                                  <h1>{ticket[0]?.subject}</h1>
+                                  <p>
+                                    {`${capitalize(
+                                      SenderInfo?.customer?.firstname)} ${capitalize(SenderInfo?.customer?.lastname == "default"? "" : SenderInfo?.customer?.lastname)} 
+                                      ${capitalize(SenderInfo?.customer?.email)}`}
+                                    <div className="custormChatHeaderDot"></div>{" "}
+                                    <span>{dateFormater(ticket[0]?.updated_at)}</span>
+                                  </p>
+                                </div>
+                                <div
+                                  className="custormChatHeaderInfoAction"
+                                  onClick={closeSaveTicketModal}
+                                >
+                                  <StarIconTicket /> Update
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div>
-                          <div
-                              className="achivemsagesSection pt-3"
+                          <div>
+                            <div
+                                className="achivemsagesSection pt-3"
+                                onClick={() => setShowAchive(!ShowAchive)}
+                              >
+                                <ExpandChat />
+                                {AchiveMsges.length == 0 &&
+                                TodayMsges.length == 0 &&
+                                YesterdayMsges.length == 0 ? (
+                                  <span> No response found ({AchiveMsges.length})</span>
+                                ) : (
+                                  <span>
+                                    {" "}
+                                    {ShowAchive ? "Condense" : "Expand"} all conversation
+                                    ({AchiveMsges.length})
+                                  </span>
+                                )}
+                              </div>
+                          </div>
+                          {/* CHAT SECTION */}
+                          <div id="ticketConvoBox" className="conversationsMain pb-5">
+                            <div className="chatDateHeader">
+                              <div className="chatDateHeaderhr1"></div>
+                              <div className="chatDateHeaderTitle">
+                                <span>
+                                  {moment(ticket[0].created_at).format("DD/MM/YYYY") ==
+                                  moment(new Date()).format("DD/MM/YYYY")
+                                    ? "Today"
+                                    : moment(ticket[0].created_at).format(
+                                        "DD/MM/YYYY"
+                                      ) == moment().add(-1, "days").format("DD/MM/YYYY")
+                                    ? "Yesterday"
+                                    : moment(ticket[0].created_at).fromNow()}
+                                </span>{" "}
+                              </div>
+                              <div className="chatDateHeaderhr2"></div>
+                            </div>
+
+                            {/* <div className="customerTiketChat">
+                              <div className="customerTImageHeader">
+                                <div className="imgContainercth">
+                                  {SenderInfo?.customer?.avatar ? (
+                                    <img src={SenderInfo?.customer?.avatar} alt="" />
+                                  ) : (
+                                    <div className="singleChatSenderImg">
+                                      <p>{`${SenderInfo?.customer?.firstname?.slice(0,1)}${SenderInfo?.customer?.lastname == "default" ? "" : SenderInfo?.customer?.lastname?.slice(0,1)}`}</p>
+                                    </div>
+                                  )}
+                                  <div className="custorActiveStateimgd"></div>
+                                </div>
+                              </div>
+                              <div className="custormernameticket">
+                                <p className="mb-1" style={{ color: "#006298" }}>
+                                  {`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(ticket[0]?.customer?.lastname == "default" ? "" : ticket[0]?.customer?.lastname)}`}
+                                </p>
+                                <p>{`Via ${ticket[0].channel} . ${dateFormater(
+                                  ticket[0].created_at
+                                )}`}</p>
+                              </div>
+                            </div> */}
+                            {/* <div className="msgbodyticketHeader">
+                              {capitalize(ticket[0]?.description  || '')}
+                            </div> */}
+                            <div className="msgAssingedToee3">
+                              This message is assigned to{" "}
+                              <span>
+                                {" "}
+                                {`${capitalize(
+                                  ticket[0]?.assignee?.firstname || ""
+                                )} ${capitalize(ticket[0]?.assignee?.lastname  || '')}`}
+                              </span>
+                            </div>
+
+                            <div className="msgAssingedToee3" style={{ paddingTop: "8px", marginBottom: "-6px" }}>
+                              <span>
+                                {" "}
+                                {`${capitalize(
+                                  ticket[0]?.assignee?.firstname || ""
+                                )} ${capitalize(ticket[0]?.assignee?.lastname || '')}`}
+                              </span>{" "}
+                              picked up this chat
+                            </div>
+
+                            <div className="msgAssingedToee3">
+                              Ticket Status has been marked as{" "}
+                              <span> {ticket[0].status.status}</span>
+                            </div>
+
+                            {/* <div
+                              className="achivemsagesSection"
                               onClick={() => setShowAchive(!ShowAchive)}
                             >
                               <ExpandChat />
@@ -649,355 +736,298 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                   ({AchiveMsges.length})
                                 </span>
                               )}
-                            </div>
-                        </div>
-                        {/* CHAT SECTION */}
-                        <div id="ticketConvoBox" className="conversationsMain">
-                          <div className="chatDateHeader">
-                            <div className="chatDateHeaderhr1"></div>
-                            <div className="chatDateHeaderTitle">
-                              <span>
-                                {moment(ticket[0].created_at).format("DD/MM/YYYY") ==
-                                moment(new Date()).format("DD/MM/YYYY")
-                                  ? "Today"
-                                  : moment(ticket[0].created_at).format(
-                                      "DD/MM/YYYY"
-                                    ) == moment().add(-1, "days").format("DD/MM/YYYY")
-                                  ? "Yesterday"
-                                  : moment(ticket[0].created_at).fromNow()}
-                              </span>{" "}
-                            </div>
-                            <div className="chatDateHeaderhr2"></div>
-                          </div>
+                            </div> */}
 
-                          {/* <div className="customerTiketChat">
-                            <div className="customerTImageHeader">
-                              <div className="imgContainercth">
-                                {SenderInfo?.customer?.avatar ? (
-                                  <img src={SenderInfo?.customer?.avatar} alt="" />
-                                ) : (
-                                  <div className="singleChatSenderImg">
-                                    <p>{`${SenderInfo?.customer?.firstname?.slice(0,1)}${SenderInfo?.customer?.lastname == "default" ? "" : SenderInfo?.customer?.lastname?.slice(0,1)}`}</p>
-                                  </div>
-                                )}
-                                <div className="custorActiveStateimgd"></div>
-                              </div>
-                            </div>
-                            <div className="custormernameticket">
-                              <p className="mb-1" style={{ color: "#006298" }}>
-                                {`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(ticket[0]?.customer?.lastname == "default" ? "" : ticket[0]?.customer?.lastname)}`}
-                              </p>
-                              <p>{`Via ${ticket[0].channel} . ${dateFormater(
-                                ticket[0].created_at
-                              )}`}</p>
-                            </div>
-                          </div> */}
-                          {/* <div className="msgbodyticketHeader">
-                            {capitalize(ticket[0]?.description  || '')}
-                          </div> */}
-                          <div className="msgAssingedToee3">
-                            This message is assigned to{" "}
-                            <span>
-                              {" "}
-                              {`${capitalize(
-                                ticket[0]?.assignee?.firstname || ""
-                              )} ${capitalize(ticket[0]?.assignee?.lastname  || '')}`}
-                            </span>
-                          </div>
-
-                          <div className="msgAssingedToee3" style={{ paddingTop: "8px", marginBottom: "-6px" }}>
-                            <span>
-                              {" "}
-                              {`${capitalize(
-                                ticket[0]?.assignee?.firstname || ""
-                              )} ${capitalize(ticket[0]?.assignee?.lastname || '')}`}
-                            </span>{" "}
-                            picked up this chat
-                          </div>
-
-                          <div className="msgAssingedToee3">
-                            Ticket Status has been marked as{" "}
-                            <span> {ticket[0].status.status}</span>
-                          </div>
-
-                          {/* <div
-                            className="achivemsagesSection"
-                            onClick={() => setShowAchive(!ShowAchive)}
-                          >
-                            <ExpandChat />
-                            {AchiveMsges.length == 0 &&
-                            TodayMsges.length == 0 &&
-                            YesterdayMsges.length == 0 ? (
-                              <span> No response found ({AchiveMsges.length})</span>
-                            ) : (
-                              <span>
-                                {" "}
-                                {ShowAchive ? "Condense" : "Expand"} all conversation
-                                ({AchiveMsges.length})
-                              </span>
-                            )}
-                          </div> */}
-
-                          <div
-                            className={` ${
-                              ShowAchive && AchiveMsges.length > 0
-                                ? "showAchivesWrap"
-                                : "hideAchivesWrap"
-                            }`}
-                          >
-                            {AchiveMsges.map((data) => {
-                              return (
-                                <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
-                                  <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
-                                    {data?.user?.avatar ? ( 
-                                      <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
-                                      : ( <div className="">
-                                          <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                        </div>
-                                      )}
-                                  </div>
-                                  <div className="message-inner">
-                                      <div className="message-body">
-                                          <div className="message-content">
-                                              <div className="message-text">
-                                                  <p className="text-dark message-title mb-1">
-                                                    {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
-                                                  </p>
-                                                  <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                            <div
+                              className={` ${
+                                ShowAchive && AchiveMsges.length > 0
+                                  ? "showAchivesWrap"
+                                  : "hideAchivesWrap"
+                              }`}
+                            >
+                              {AchiveMsges.map((data) => {
+                                return (
+                                  <Fragment>
+                                  {(data?.response.includes("Ticket Stage has been marked"))? (
+                                    <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
+                                      <span>{" "}
+                                        {`${data?.response}`}
+                                      </span>
+                                    </div>
+                                    ) : (
+                                    <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
+                                      <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                        {data?.user?.avatar ? ( 
+                                          <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                          : ( <div className="">
+                                              <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
+                                            </div>
+                                          )}
+                                      </div>
+                                      <div className="message-inner">
+                                          <div className="message-body">
+                                              <div className="message-content">
+                                                  <div className="message-text">
+                                                      <p className="text-dark message-title mb-1">
+                                                        {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                                      </p>
+                                                      <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                                  </div>
                                               </div>
                                           </div>
+                                          <div className="message-footer">
+                                              <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                          </div>
                                       </div>
-                                      <div className="message-footer">
-                                          <span className="text-muted">{dateFormater(data.created_at)}</span>
-                                      </div>
-                                  </div>
+                                    </div>
+                                  )}
+                                </Fragment>
+                                );
+                              })}
+                            </div>
+
+                            {YesterdayMsges.length == 0 ? (
+                              ""
+                            ) : (
+                              <div className="chatDateHeader">
+                                <div className="chatDateHeaderhr1"></div>
+                                <div className="chatDateHeaderTitle">
+                                  <span>Yesterday</span>{" "}
                                 </div>
+                                <div className="chatDateHeaderhr2"></div>
+                              </div>
+                            )}
+
+                            {YesterdayMsges.map((data) => {
+                              return (
+                                <Fragment>
+                                  {(data?.response.includes("Ticket Stage has been marked"))? (
+                                    <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
+                                      <span>{" "}
+                                        {`${data?.response}`}
+                                      </span>
+                                    </div>
+                                    ) : (
+                                    <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
+                                      <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                        {data?.user?.avatar ? ( 
+                                          <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                          : ( <div className="">
+                                              <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
+                                            </div>
+                                          )}
+                                      </div>
+                                      <div className="message-inner">
+                                          <div className="message-body">
+                                              <div className="message-content">
+                                                  <div className="message-text">
+                                                      <p className="text-dark message-title mb-1">
+                                                        {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                                      </p>
+                                                      <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <div className="message-footer">
+                                              <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                          </div>
+                                      </div>
+                                    </div>
+                                  )}
+                                </Fragment>
                               );
                             })}
-                          </div>
 
-                          {YesterdayMsges.length == 0 ? (
-                            ""
-                          ) : (
-                            <div className="chatDateHeader">
-                              <div className="chatDateHeaderhr1"></div>
-                              <div className="chatDateHeaderTitle">
-                                <span>Yesterday</span>{" "}
-                              </div>
-                              <div className="chatDateHeaderhr2"></div>
-                            </div>
-                          )}
-
-                          {YesterdayMsges.map((data) => {
-                            return (
-                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
-                                <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
-                                  {data?.user?.avatar ? ( 
-                                    <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
-                                    : ( <div className="">
-                                        <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                      </div>
-                                    )}
+                            {TodayMsges.length == 0 ? (
+                              ""
+                            ) : (
+                              <div className="chatDateHeader">
+                                <div className="chatDateHeaderhr1"></div>
+                                <div className="chatDateHeaderTitle">
+                                  <span>Today</span>{" "}
                                 </div>
-                                <div className="message-inner">
-                                    <div className="message-body">
-                                        <div className="message-content">
-                                            <div className="message-text">
-                                                <p className="text-dark message-title mb-1">
-                                                  {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
-                                                </p>
-                                                <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                <div className="chatDateHeaderhr2"></div>
+                              </div>
+                            )}
+
+                            {TodayMsges.map((data) => {
+                              return (
+                                <Fragment>
+                                  {(data?.response.includes("Ticket Stage has been marked"))? (
+                                    <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
+                                      <span>{" "}
+                                        {`${data?.response}`}
+                                      </span>
+                                    </div>
+                                    ) : (
+                                    <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
+                                      <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                        {data?.user?.avatar ? ( 
+                                          <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                          : ( <div className="">
+                                              <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div className="message-footer">
-                                        <span className="text-muted">{dateFormater(data.created_at)}</span>
-                                    </div>
-                                </div>
-                              </div>
-                            );
-                          })}
-
-                          {TodayMsges.length == 0 ? (
-                            ""
-                          ) : (
-                            <div className="chatDateHeader">
-                              <div className="chatDateHeaderhr1"></div>
-                              <div className="chatDateHeaderTitle">
-                                <span>Today</span>{" "}
-                              </div>
-                              <div className="chatDateHeaderhr2"></div>
-                            </div>
-                          )}
-
-                          {TodayMsges.map((data) => {
-                            return (
-                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
-                                <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
-                                  {data?.user?.avatar ? ( 
-                                    <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
-                                    : ( <div className="">
-                                        <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
+                                          )}
                                       </div>
-                                    )}
-                                </div>
-                                <div className="message-inner">
-                                    <div className="message-body">
-                                        <div className="message-content">
-                                            <div className="message-text">
-                                                <p className="text-dark message-title mb-1">
-                                                  {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
-                                                </p>
-                                                <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
-                                            </div>
-                                        </div>
+                                      <div className="message-inner">
+                                          <div className="message-body">
+                                              <div className="message-content">
+                                                  <div className="message-text">
+                                                      <p className="text-dark message-title mb-1">
+                                                        {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                                      </p>
+                                                      <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <div className="message-footer">
+                                              <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                          </div>
+                                      </div>
                                     </div>
-                                    <div className="message-footer">
-                                        <span className="text-muted">{dateFormater(data.created_at)}</span>
-                                    </div>
+                                  )}
+                                </Fragment>
+                              );
+                            })}
+                            <div id="lastMsg"></div>
+                            {/* <div
+                            className="msgRepliesSectionChattsdw"
+                            style={{ marginTop: "10px" }}
+                          >
+                            <div className="customerTiketChat">
+                              <div className="customerTImageHeader">
+                                <div className="imgContainercth">
+                                  <img src={pic} alt="" />
+                                  <div className="custorActiveStateimgd"></div>
                                 </div>
                               </div>
-                            );
-                          })}
-                          <div id="lastMsg"></div>
-                          {/* <div
-                          className="msgRepliesSectionChattsdw"
-                          style={{ marginTop: "10px" }}
-                        >
-                          <div className="customerTiketChat">
-                            <div className="customerTImageHeader">
-                              <div className="imgContainercth">
-                                <img src={pic} alt="" />
-                                <div className="custorActiveStateimgd"></div>
+                              <div className="custormernameticket">
+                                <p style={{ color: "#006298" }}>
+                                  Hammed Daudu{" "}
+                                  <span style={{ color: "#656565" }}>replied</span>
+                                </p>
+                                <p>Just now</p>
                               </div>
                             </div>
-                            <div className="custormernameticket">
-                              <p style={{ color: "#006298" }}>
-                                Hammed Daudu{" "}
-                                <span style={{ color: "#656565" }}>replied</span>
-                              </p>
-                              <p>Just now</p>
-                            </div>
-                          </div>
 
-                          <div
-                            className="msgbodyticketHeader"
-                            style={{ color: "rgba(101, 101, 101, 0.7)" }}
-                          >
-                            is typing...
-                          </div>
-                        </div> */}
-                        </div>
-                      </Fragment>
-                      {/* CHAT COMMENT BOX SECTION */}
-                      <div id="ticketConvoEditorBox" className="conversationCommentBox">
-                        <div className="single-chat-ckeditor">
-                          <div
-                            className="showBackArrowOnMobile"
-                            onClick={() =>
-                              setChatCol({ col1: "showColOne", col2: "hideColTwo" })
-                            }
-                          >
-                            <img src={BackArrow} alt="" />
-                          </div>
-
-                          <div className="ticket-convo-editor">
-                            <Editor
-                              editorState={editorState}
-                              toolbar={{
-                                options: ["emoji", "inline", "image"],
-
-                                inline: {
-                                  inDropdown: false,
-                                  className: undefined,
-                                  component: undefined,
-                                  dropdownClassName: undefined,
-                                  options: ["bold", "italic", "underline"],
-                                  bold: { icon: boldB, className: undefined },
-                                  italic: { icon: TextItalic, className: undefined },
-                                  underline: {
-                                    icon: TextUnderline,
-                                    className: undefined,
-                                  },
-                                },
-
-                                image: {
-                                  icon: editorImg,
-                                  className: undefined,
-                                  component: undefined,
-                                  popupClassName: undefined,
-                                  urlEnabled: true,
-                                  uploadEnabled: true,
-                                  alignmentEnabled: true,
-                                  uploadCallback: _uploadImageCallBack,
-                                  previewImage: true,
-                                  inputAccept:
-                                    "image/gif,image/jpeg,image/jpg,image/png,image/svg",
-                                  alt: { present: false, mandatory: false },
-                                  defaultSize: {
-                                    height: "auto",
-                                    width: "auto",
-                                  },
-                                },
-                                emoji: {
-                                  icon: Smiley,
-                                },
-                                blockType: {
-                                  inDropdown: true,
-                                },
-
-                                list: {
-                                  inDropdown: true,
-                                },
-                                // textAlign: {
-                                //   inDropdown: false,
-                                //   className: undefined,
-                                //   component: undefined,
-                                //   dropdownClassName: undefined,
-                                //   options: ["left", "center", "right"],
-                                //   left: { icon: TextAlignLeft, className: undefined },
-                                //   center: {
-                                //     icon: TextAlignCenter,
-                                //     className: undefined,
-                                //   },
-                                //   right: { icon: TextAlignRight, className: undefined },
-                                //   // justify: { icon: TextAlignCenter, className: undefined },
-                                // },
-
-                                link: {
-                                  inDropdown: true,
-                                },
-
-                                history: {
-                                  inDropdown: true,
-                                },
-                              }}
-                              toolbarClassName="toolbarClassName"
-                              wrapperClassName="wrapperClassName"
-                              editorClassName="editorClassName"
-                              onEditorStateChange={(editor) =>
-                                onEditorStateChange(editor)
-                              }
-                            />
-                          </div>
-
-                          <div className="sendMsg">
-                            <button
-                              disabled={sendingReply}
-                              onClick={() => replyTicket(ReplyTicket, "attachment")}
+                            <div
+                              className="msgbodyticketHeader"
+                              style={{ color: "rgba(101, 101, 101, 0.7)" }}
                             >
-                              <SendMsgIcon /> Send
-                            </button>
+                              is typing...
+                            </div>
+                          </div> */}
+                          </div>
+                        </Fragment>
+                        {/* CHAT COMMENT BOX SECTION */}
+                        <div id="ticketConvoEditorBox" className="conversationCommentBox">
+                          <div className="single-chat-ckeditor">
+                            <div
+                              className="showBackArrowOnMobile"
+                              onClick={() =>
+                                setChatCol({ col1: "showColOne", col2: "hideColTwo" })
+                              }
+                            >
+                              <img src={BackArrow} alt="" />
+                            </div>
+
+                            <div className="ticket-convo-editor">
+                              <Editor
+                                editorState={editorState}
+                                toolbar={{
+                                  options: ["emoji", "inline", "image"],
+
+                                  inline: {
+                                    inDropdown: false,
+                                    className: undefined,
+                                    component: undefined,
+                                    dropdownClassName: undefined,
+                                    options: ["bold", "italic", "underline"],
+                                    bold: { icon: boldB, className: undefined },
+                                    italic: { icon: TextItalic, className: undefined },
+                                    underline: {
+                                      icon: TextUnderline,
+                                      className: undefined,
+                                    },
+                                  },
+
+                                  image: {
+                                    icon: editorImg,
+                                    className: undefined,
+                                    component: undefined,
+                                    popupClassName: undefined,
+                                    urlEnabled: true,
+                                    uploadEnabled: true,
+                                    alignmentEnabled: true,
+                                    uploadCallback: _uploadImageCallBack,
+                                    previewImage: true,
+                                    inputAccept:
+                                      "image/gif,image/jpeg,image/jpg,image/png,image/svg",
+                                    alt: { present: false, mandatory: false },
+                                    defaultSize: {
+                                      height: "auto",
+                                      width: "auto",
+                                    },
+                                  },
+                                  emoji: {
+                                    icon: Smiley,
+                                  },
+                                  blockType: {
+                                    inDropdown: true,
+                                  },
+
+                                  list: {
+                                    inDropdown: true,
+                                  },
+                                  // textAlign: {
+                                  //   inDropdown: false,
+                                  //   className: undefined,
+                                  //   component: undefined,
+                                  //   dropdownClassName: undefined,
+                                  //   options: ["left", "center", "right"],
+                                  //   left: { icon: TextAlignLeft, className: undefined },
+                                  //   center: {
+                                  //     icon: TextAlignCenter,
+                                  //     className: undefined,
+                                  //   },
+                                  //   right: { icon: TextAlignRight, className: undefined },
+                                  //   // justify: { icon: TextAlignCenter, className: undefined },
+                                  // },
+
+                                  link: {
+                                    inDropdown: true,
+                                  },
+
+                                  history: {
+                                    inDropdown: true,
+                                  },
+                                }}
+                                toolbarClassName="toolbarClassName"
+                                wrapperClassName="wrapperClassName"
+                                editorClassName="editorClassName"
+                                onEditorStateChange={(editor) =>
+                                  onEditorStateChange(editor)
+                                }
+                              />
+                            </div>
+
+                            <div className="sendMsg">
+                              <button
+                                disabled={sendingReply}
+                                onClick={() => replyTicket(ReplyTicket, "attachment")}
+                              >
+                                <SendMsgIcon /> Send
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
 
-                {/* CHAT COL TWO END */}
-              </div>
-          </div>}
+                  {/* CHAT COL TWO END */}
+                </div>
+              </div>}
           <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal} center>
             <div className="saveTicketWrapModal">
               <div className="modalHeaderSaveT">
