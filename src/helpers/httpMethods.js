@@ -10,15 +10,6 @@ let tenantDomain = localStorage.getItem("domain");
 
 export const httpPostMain = async (url, postBody) => {
 
-
-  let token = localStorage.getItem("token");
-  let tenantDomain = localStorage.getItem("domain");
-
-  // console.clear()
-  // console.log(token, tenantDomain)
-  // return null;
-
-
   if (!navigator.onLine) {
     return NotificationManager.error(
       "Please check your internet",
