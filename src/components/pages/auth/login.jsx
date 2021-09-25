@@ -105,8 +105,17 @@ const Login = ({match: {params}}) => {
     
           NotificationManager.success(res.data.message, "Success", 4000);
     
-          // Redirect to tenant's home page - dashboard
-          window.location.href = `https://${window.localStorage.getItem("domain")}.alphacx.co`;
+
+          if(window.location.hostname.split(".").length > 1){
+            // Redirect to tenant's home page - dashboard
+            window.location.href = `https://${window.localStorage.getItem("domain")}.alphacx.co`;
+
+          } else {
+            // development localhost
+            window.location.href = `/`;
+          }
+
+          
     
         } else {
           // Login failed
