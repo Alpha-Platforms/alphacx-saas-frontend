@@ -36,24 +36,18 @@ const Login = ({match: {params}}) => {
 
 
   useEffect(() => {
-    localStorage.clear()
     const hostArray = window.location.hostname.split(".")      
-    if(hostArray.length === 2 && hostArray[0] !== "dev" && hostArray[0] !== "app"){ // CHANGE TO 3 ON LIVE SERVER 
+    if(hostArray.length === 3 && hostArray[0] !== "dev" && hostArray[0] !== "app"){ // CHANGE TO 3 ON LIVE SERVER 
+      window.localStorage.setItem("domain", domain)
       setDomain(hostArray[0])
       setDomainAuthenticated(true) // if sub-domain is available it is correct else you'd get a 404
-      console.clear()
-      console.log("!dev or !app", "domain: "+domain, "domainAuthenticated: "+domainAuthenticated)
     }
   }, [])
 
-  useEffect(() => {
-    if(domain && domainAuthenticated){
-      // submit()
-      localStorage.setItem("domain", domain)
-      console.clear()
-      console.log("both are checked")
-    }
-  }, [domain, domainAuthenticated])
+  // useEffect(() => {
+  //   if(domain && domainAuthenticated){
+  //   }
+  // }, [domain, domainAuthenticated])
   
 
   const handleChange = (e) => {
@@ -67,7 +61,71 @@ const Login = ({match: {params}}) => {
 
   const submit = async () => {
 
-    if(!domainAuthenticated){// DOMAIN LOGIN
+    if(domainAuthenticated){// PASSWORD LOGIN
+
+      if(userInput.email && userInput.password){
+
+        // pass domain in headers
+
+
+        // const validateEmail = ValidateEmail(userInput.email);
+        // if (validateEmail == false) {
+        //   return NotificationManager.warning(
+        //     "Invalid email address",
+        //     "Validation Warning",
+        //     4000
+        //   );
+        // }
+    
+        // const validatepassword = validatePassword(userInput.password);
+        // if (validatepassword != "Looks Good!") {
+        //   return NotificationManager.warning(
+        //     validatepassword,
+        //     "Validation Warning",
+        //     4000
+        //   );
+        // }
+    
+        const data = {
+          email: userInput.email,
+          password: userInput.password,
+          // domain: userInput.domain
+        };
+    
+        setLoading(true);
+
+        const res = await httpPostMain("auth/login", data);
+
+        if (res.status === "success") {
+          setLoading(false);
+          console.log(res?.status);
+          window.localStorage.setItem("user", JSON.stringify(res.data));
+          window.localStorage.setItem("token", res.data.token);
+          window.localStorage.setItem("refreshToken", res.data.refreshToken);
+    
+          NotificationManager.success(res.data.message, "Success", 4000);
+    
+          // Redirect to tenant's home page - dashboard
+          window.location.href = `${window.localStorage.getItem("domain")}.alphacx.co`;
+    
+        } else {
+          // Login failed
+          setLoading(false);
+          NotificationManager.error(res?.er?.message, "Error", 4000);
+        }
+
+      } 
+      else {
+        // empty fields already handled by button disable attr
+
+        // return NotificationManager.warning(
+        //   "Enter username and password",
+        //   "Login failed",
+        //   4000
+        // );
+      }
+
+    } else {// DOMAIN LOGIN
 
       const data = userInput.domain ? userInput.domain : domain;
 
@@ -76,83 +134,18 @@ const Login = ({match: {params}}) => {
 
       if (res.status === "success") {
         setLoading(false)
-        localStorage.setItem("domain", data)
-        localStorage.setItem("token", res.data.token);
+        window.localStorage.setItem("domain", data)
+        window.localStorage.setItem("token", res.data.token);
 
         setDomainAuthenticated(true)
 
       } else {
-        console.log(res);
         setLoading(false);
         NotificationManager.error(wordCapitalize(res?.er?.message), "Invalid Domain Name", 4000);
       }
-        
-
-      } else {  // PASSWORD LOGIN
-
-        if(userInput.email && userInput.password){
-
-          // pass domain in headers
 
 
-          // const validateEmail = ValidateEmail(userInput.email);
-          // if (validateEmail == false) {
-          //   return NotificationManager.warning(
-          //     "Invalid email address",
-          //     "Validation Warning",
-          //     4000
-          //   );
-          // }
-      
-          // const validatepassword = validatePassword(userInput.password);
-          // if (validatepassword != "Looks Good!") {
-          //   return NotificationManager.warning(
-          //     validatepassword,
-          //     "Validation Warning",
-          //     4000
-          //   );
-          // }
-      
-          const data = {
-            email: userInput.email,
-            password: userInput.password,
-            // domain: userInput.domain
-          };
-      
-          setLoading(true);
-
-          const res = await httpPostMain("auth/login", data);
-
-          if (res.status === "success") {
-            setLoading(false);
-            console.log(res?.status);
-            localStorage.setItem("user", JSON.stringify(res.data));
-            localStorage.setItem("token", res.data.token);
-            localStorage.setItem("refreshToken", res.data.refreshToken);
-      
-            NotificationManager.success(res.data.message, "Success", 4000);
-      
-            // Redirect to home page - dashboard
-            window.location.href = `/`;
-      
-          } else {
-            // Login failed
-            setLoading(false);
-            NotificationManager.error(res?.er?.message, "Error", 4000);
-          }
-
-        } 
-        else {
-          // empty fields already handled by button disable attr
-
-          // return NotificationManager.warning(
-          //   "Enter username and password",
-          //   "Login failed",
-          //   4000
-          // );
-        }
-
-      }
+    }
       
 
   };
