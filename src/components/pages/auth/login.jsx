@@ -44,10 +44,11 @@ const Login = ({match: {params}}) => {
     }
   }, [])
 
-  // useEffect(() => {
-  //   if(domain && domainAuthenticated){
-  //   }
-  // }, [domain, domainAuthenticated])
+  useEffect(() => {
+    if(domain && domainAuthenticated){
+      window.localStorage.setItem("domain", domain)
+    }
+  }, [domain, domainAuthenticated])
   
 
   const handleChange = (e) => {
@@ -105,17 +106,20 @@ const Login = ({match: {params}}) => {
     
           NotificationManager.success(res.data.message, "Success", 4000);
     
-          const hostArray = window.location.hostname.split(".") 
+          const hostArray = window.location.hostname.split(".")
     
-          if(hostArray.length === 3 && hostArray[0] !== "dev" && hostArray[0] !== "app" && hostArray[1] !== "netlify"){
+          // if(hostArray.length === 3 && hostArray[0] !== "dev" && hostArray[0] !== "app" && hostArray[1] !== "netlify"){
             // Redirect to tenant's home page - dashboard
-            window.location.href = `https://${window.localStorage.getItem("domain")}.alphacx.co`;
+            // window.location.href = `https://${window.localStorage.getItem("domain")}.alphacx.co`;
             // window.location.href = `/`;
 
-          } else {
-            // development localhost
-            window.location.href = `/`;
-          }
+          // } else {
+          //   development localhost
+          //   window.location.href = `/`;
+          // }
+
+
+          window.location.href = `/`;
 
           
     
