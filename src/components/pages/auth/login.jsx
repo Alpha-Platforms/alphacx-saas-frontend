@@ -37,7 +37,7 @@ const Login = ({match: {params}}) => {
 
   useEffect(() => {
     const hostArray = window.location.hostname.split(".")      
-    if(hostArray.length === 3 && hostArray[0] !== "dev" && hostArray[0] !== "app"){ // CHANGE TO 3 ON LIVE SERVER 
+    if(hostArray.length === 3 && hostArray[0] !== "dev" && hostArray[0] !== "app" && hostArray[1] !== "netlify"){ // CHANGE TO 3 ON LIVE SERVER 
       window.localStorage.setItem("domain", domain)
       setDomain(hostArray[0])
       setDomainAuthenticated(true) // if sub-domain is available it is correct else you'd get a 404
@@ -105,10 +105,12 @@ const Login = ({match: {params}}) => {
     
           NotificationManager.success(res.data.message, "Success", 4000);
     
-
-          if(window.location.hostname.split(".").length > 1){
+          const hostArray = window.location.hostname.split(".") 
+    
+          if(hostArray.length === 3 && hostArray[0] !== "dev" && hostArray[0] !== "app" && hostArray[1] !== "netlify"){
             // Redirect to tenant's home page - dashboard
             window.location.href = `https://${window.localStorage.getItem("domain")}.alphacx.co`;
+            // window.location.href = `/`;
 
           } else {
             // development localhost
