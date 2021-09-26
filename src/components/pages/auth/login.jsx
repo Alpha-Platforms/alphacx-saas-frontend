@@ -120,8 +120,15 @@ const Login = ({match: {params}}) => {
 
       if (res.status === "success") {
         setLoading(false)
-        window.location.href = `https://${res?.data?.domain}.alphacx.co`;
 
+        const hostList = window.location.hostname.split(".")
+        if(hostList.length === 3){
+          window.location.href = `https://${res?.data?.domain}.alphacx.co`;
+
+        } else { // FOR DEVELOPMENT - LOCALHOST
+          window.location.href = `http://${res?.data?.domain}.alpha.localhost:3000`;
+        }
+        
       } else {
         setLoading(false);
         NotificationManager.error(wordCapitalize(res?.er?.message), "Invalid Domain Name", 4000);
