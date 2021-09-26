@@ -144,7 +144,7 @@ const SiteRouter = connect(mapStateToProps, {
             getAdmins();
             getSupervisors();
             getTags();
-            getSubCategories();
+            // getSubCategories();
             getConfigs();
             getAnalytics()
         }
