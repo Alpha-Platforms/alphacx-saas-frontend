@@ -28,9 +28,7 @@ const Login = ({match: {params}}) => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [domainAuthenticated, setDomainAuthenticated] = useState(false)
   const [domain, setDomain] = useState("")
-
   let [loading, setLoading] = useState(false);
   let [color, setColor] = useState("#ffffff");
 
@@ -39,16 +37,15 @@ const Login = ({match: {params}}) => {
     const hostArray = window.location.hostname.split(".")      
     if(hostArray.length === 3 && hostArray[0] !== "dev" && hostArray[0] !== "app" && hostArray[1] !== "netlify"){ // CHANGE TO 3 ON LIVE SERVER 
       window.localStorage.setItem("domain", domain)
-      setDomain(hostArray[0])
-      setDomainAuthenticated(true) // if sub-domain is available it is correct else you'd get a 404
+      setDomain(hostArray[0]) // if sub-domain is available it is correct else you'd get a 404
     }
   }, [])
 
   useEffect(() => {
-    if(domain && domainAuthenticated){
+    if(domain){
       window.localStorage.setItem("domain", domain)
     }
-  }, [domain, domainAuthenticated])
+  }, [domain])
   
 
   const handleChange = (e) => {
@@ -62,12 +59,9 @@ const Login = ({match: {params}}) => {
 
   const submit = async () => {
 
-    if(domainAuthenticated){// PASSWORD LOGIN
+    if(domain){// PASSWORD LOGIN
 
       if(userInput.email && userInput.password){
-
-        // pass domain in headers
-
 
         // const validateEmail = ValidateEmail(userInput.email);
         // if (validateEmail == false) {
@@ -90,7 +84,6 @@ const Login = ({match: {params}}) => {
         const data = {
           email: userInput.email,
           password: userInput.password,
-          // domain: userInput.domain
         };
     
         setLoading(true);
@@ -99,29 +92,13 @@ const Login = ({match: {params}}) => {
 
         if (res.status === "success") {
           setLoading(false);
-          console.log(res?.status);
           window.localStorage.setItem("user", JSON.stringify(res.data));
           window.localStorage.setItem("token", res.data.token);
           window.localStorage.setItem("refreshToken", res.data.refreshToken);
     
           NotificationManager.success(res.data.message, "Success", 4000);
-    
-          const hostArray = window.location.hostname.split(".")
-    
-          // if(hostArray.length === 3 && hostArray[0] !== "dev" && hostArray[0] !== "app" && hostArray[1] !== "netlify"){
-            // Redirect to tenant's home page - dashboard
-            // window.location.href = `https://${window.localStorage.getItem("domain")}.alphacx.co`;
-            // window.location.href = `/`;
-
-          // } else {
-          //   development localhost
-          //   window.location.href = `/`;
-          // }
-
 
           window.location.href = `/`;
-
-          
     
         } else {
           // Login failed
@@ -132,28 +109,26 @@ const Login = ({match: {params}}) => {
       } 
       else {
         // empty fields already handled by button disable attr
-
-        // return NotificationManager.warning(
-        //   "Enter username and password",
-        //   "Login failed",
-        //   4000
-        // );
       }
 
     } else {// DOMAIN LOGIN
 
-      const data = userInput.domain ? userInput.domain : domain;
+      const data = userInput.domain;
 
       setLoading(true);
       const res = await httpPost(`auth/login`, {domain: data});
 
       if (res.status === "success") {
         setLoading(false)
-        window.localStorage.setItem("domain", data)
-        window.localStorage.setItem("token", res.data.token);
 
-        setDomainAuthenticated(true)
+        const hostList = window.location.hostname.split(".")
+        if(hostList.length === 3){
+          window.location.href = `https://${res?.data?.domain}.alphacx.co`;
 
+        } else { // FOR DEVELOPMENT - LOCALHOST
+          window.location.href = `http://${res?.data?.domain}.alpha.localhost:3000`;
+        }
+        
       } else {
         setLoading(false);
         NotificationManager.error(wordCapitalize(res?.er?.message), "Invalid Domain Name", 4000);
@@ -175,7 +150,7 @@ const Login = ({match: {params}}) => {
       </div>
 
       <div className="login-container">
-        {!domainAuthenticated &&
+        {(domain === "") &&
         <form>
           <div className="Auth-header" style={{ marginBottom: "10px" }}>
             <h3>Welcome Back</h3>
@@ -214,7 +189,7 @@ const Login = ({match: {params}}) => {
         </form>
         }
 
-        {(domainAuthenticated) &&
+        {domain &&
 
         <form>
           <div className="Auth-header" style={{ marginBottom: "30px" }}>
