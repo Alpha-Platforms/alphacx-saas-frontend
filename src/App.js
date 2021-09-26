@@ -57,9 +57,9 @@ import Fields from "./components/pages/settings/fields/Fields";
 import SocialIntegrations from "./components/pages/settings/social_integrations/index";
 import FacebookIntegration from "./components/pages/settings/social_integrations/FacebookIntegration";
 import WhatsappIntegration from "./components/pages/settings/social_integrations/WhatsappIntegration";
-// 
+//
 import RatingsForm from "./components/pages/ratings/RatingsForm.jsx";
-// 
+//
 import RatingsSettings from "./components/pages/settings/ratings/RatingsSettings.jsx";
 
 import ScrollToTop from "./components/helpers/ScrollToTop";
@@ -155,28 +155,22 @@ const SiteRouter = connect(mapStateToProps, {
         <BrowserRouter>
             {/* Scroll Restoration */}
             <ScrollToTop/>
-            <Switch>
-                <UserDataProvider>
-                    <LayoutProvider>
-                        <SocketDataProvider>
-                            <Route exact path="/login" component={Login}/>
-                            {/* <Route exact path="/login/:domain" component={Login}/> */}
+            <UserDataProvider>
+                <LayoutProvider>
+                    <SocketDataProvider>
+                        <Switch>
+                            <Route exact path="/login" component={Login}/> {/* <Route exact path="/login/:domain" component={Login}/> */}
 
                             <Route exact path="/register" component={Register}/> {/* help pages */}
                             <Route exact path="/help" component={HelpCenter}/>
                             <Route exact path="/help/:topic" component={ArticleList}/>
                             <Route exact path="/help/:topic/:article" component={Article}/> {/* help pages end */}
                             <Route exact path="/feedback" component={RatingsForm}/> {/* help pages end */}
-                            <Route exact path="/account-verified" component={AccountVerified}/>
-
-                            {/* Customer Portal */}
+                            <Route exact path="/account-verified" component={AccountVerified}/> {/* Customer Portal */}
                             <Route exact path="/customer-portal/tickets" component={CustomerPortal}/>
 
-                            <DefaultLayoutRoute
-                                exact
-                                path="/"
-                                pageName="Dashboard"
-                                component={Dashboard}/>
+                            <DefaultLayoutRoute exact path="/" pageName="Dashboard" component={Dashboard}/>
+
                             <DefaultLayoutRoute
                                 exact
                                 path="/dashboard"
@@ -354,16 +348,14 @@ const SiteRouter = connect(mapStateToProps, {
                                 exact
                                 path="/settings/integrations/whatsapp"
                                 pageName="Integration Settings"
-                                component={WhatsappIntegration}/> 
+                                component={WhatsappIntegration}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/ratings"
                                 pageName="Ratings and Customer Feedback"
-                                component={RatingsSettings}/> 
+                                component={RatingsSettings}/> {/*......settings pages end */}
 
-                                {/*......settings pages end */}
-
-                            {/* <Route>
+                            <Route>
                                 <div
                                     style={{
                                     display: "flex",
@@ -373,12 +365,12 @@ const SiteRouter = connect(mapStateToProps, {
                                 }}>
                                     <h1>404 - Not Found</h1>
                                 </div>
-                            </Route> */}
+                            </Route>
 
-                        </SocketDataProvider>
-                    </LayoutProvider>
-                </UserDataProvider>
-            </Switch>
+                        </Switch>
+                    </SocketDataProvider>
+                </LayoutProvider>
+            </UserDataProvider>
         </BrowserRouter>
     );
 });
