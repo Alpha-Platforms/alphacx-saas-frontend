@@ -17,7 +17,7 @@ import {
 import { getPaginatedTickets } from "../../../reduxstore/actions/ticketActions";
 import CreateTicketModal from "./CreateTicketModal";
 import { Dropdown } from "react-bootstrap";
-import { exportTable } from "../../../helper";
+import { exportTable, textCapitalize } from "../../../helper";
 import SaveAlt from "@material-ui/icons/SaveAlt";
 import { ReactComponent as StarUnactiveSvg } from "../../../assets/icons/Star-unactive.svg";
 import { ReactComponent as StarYellowSvg } from "../../../assets/icons/Star-yellow.svg";
@@ -254,7 +254,7 @@ const TicketList = ({
         selectedRows.length !== 0
           ? selectedRows
           : tickets.map(
-              ({ customer, subject, id, category, created_at, status }) => ({
+              ({ customer, subject, id, category, created_at, status, assignee, rating }) => ({
                 name: `${customer.firstname} ${customer.lastname == "default" ? "" : customer.lastname || "" }`,
                 email: customer.email,
                 subject: `${subject.substr(0, 25)}...`,
@@ -262,6 +262,8 @@ const TicketList = ({
                 category: category.name,
                 created: moment(created_at).format("DD MMM, YYYY"),
                 state: status,
+                assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
+                rating: rating || 0
               })
             );
       exportTable(tableColumns, data, "csv", "TicketExport");
@@ -274,14 +276,16 @@ const TicketList = ({
         selectedRows.length !== 0
           ? selectedRows
           : tickets.map(
-              ({ customer, subject, id, category, created_at, status }) => ({
-                name: `${customer.firstname} ${customer.lastname == "default"? "" : customer.lastname || ""}`,
+              ({ customer, subject, id, category, created_at, status, assignee, rating }) => ({
+                name: textCapitalize(`${customer.firstname} ${customer.lastname == "default"? "" : customer.lastname || ""}`),
                 email: customer.email,
                 subject: `${subject.substr(0, 25)}...`,
                 ticketId: id.slice(-8),
                 category: category.name,
                 created: moment(created_at).format("DD MMM, YYYY"),
                 state: status,
+                assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
+                rating: rating || 0
               })
             );
       exportTable(tableColumns, data, "pdf", "TicketExport");
