@@ -3,7 +3,7 @@ import "./login.css";
 import AlphaLogo from "../../../assets/imgF/alpha.png";
 import Logo from "../../../assets/imgF/logo.png";
 import ThankYou from "../../../assets/imgF/thank-you.png";
-import Error from "../../../assets/icons/error-circle.png";
+// import Error from "../../../assets/icons/error-circle.png";
 import Symbol1 from "../../../assets/imgF/symbolAuth.png";
 import Symbol2 from "../../../assets/imgF/symbolAuth2.png";
 import { NotificationManager } from "react-notifications";
