@@ -38,8 +38,6 @@ const Login = ({match: {params}}) => {
     if(hostArray.length === 3 && hostArray[0] !== "dev" && hostArray[0] !== "app" && hostArray[1] !== "netlify"){ // CHANGE TO 3 ON LIVE SERVER 
       window.localStorage.setItem("domain", domain)
       setDomain(hostArray[0]) // if sub-domain is available it is correct else you'd get a 404
-    } else if(window.localStorage.getItem("domain")){
-      setDomain(hostArray[0])
     }
   }, [])
 
@@ -128,7 +126,7 @@ const Login = ({match: {params}}) => {
           window.location.href = `https://${res?.data?.domain}.alphacx.co`;
 
         } else { // FOR DEVELOPMENT - LOCALHOST
-          window.location.href = `http://${res?.data?.domain}/localhost:3000`;
+          window.location.href = `http://${res?.data?.domain}.alpha.localhost:3000`;
         }
         
       } else {
