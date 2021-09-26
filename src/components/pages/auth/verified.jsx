@@ -7,72 +7,64 @@ import Symbol1 from "../../../assets/imgF/symbolAuth.png";
 import Symbol2 from "../../../assets/imgF/symbolAuth2.png";
 import { NotificationManager } from "react-notifications";
 import { css } from "@emotion/react";
-import { httpPost } from "helpers/httpMethods";
+import { httpGet } from "helpers/httpMethods";
 import { wordCapitalize } from "helper";
 
 
-const AccountVerified = () => {
+const AccountVerified = ({match, ...props}) => {
 
   const [message, setMessage] = useState("")
   const [loading, setLoading] = useState(false)
-  const [isDomainVerified, setIsDomainVerified] = useState(false)
-  const [domain, setDomain] = useState("")
+  const [isTenantVerified, setIsTenantVerified] = useState(false)
+  const [token, setToken] = useState("")
+  const [isChecked, setIsChecked] = useState(false)
 
   useEffect(() => {
-    setMessage("Your account has been verified.")
-  }, [message])
-
-  useEffect(() => {
-    if(window.location.hostname.split(".").length === 2){ // CHANGE TO 3 ON LIVE SERVER
-      setDomain(() => window.location.hostname.split(".")[0])
-    }
-    localStorage.clear()
+    setToken(new URLSearchParams(window.location.search).get("token"))
   }, [])
 
   useEffect(() => {
-    console.log(domain)
-    if(domain){
-      domainLogin(domain)
+    if(token){
+      verify(token)
     }
-  }, [domain])
+  }, [token])
 
   
   const handleChange = (e) => {
     e.preventDefault()
 
-    if(isDomainVerified){
+    if(isTenantVerified){
         setLoading(false)
-        window.location.href = `/login`
+        window.location.href = `/`
     }
-
   }
 
-  // DOMAIN LOGIN
-  const domainLogin = async (domain) => {
-  
-      const data = {domain}
-      
-      const res = await httpPost(`auth/login`, data);
+  // VERFICATION
+  const verify = async (token) => {
 
-      if (res.status === "success") {
-        setIsDomainVerified(true)
-        localStorage.clear()
-        localStorage.setItem("domain", domain)
-        localStorage.setItem("token", res.data.token);
-        NotificationManager.success("Verification successful", "Your account has been verified.", 4000);
-      } else {
-        console.log(res);
-        setLoading(false);
-        NotificationManager.error("Verification failed", "Domain not verified", 4000);
-        // wordCapitalize(res?.er?.message)
-      }
-    
+    setLoading(true);
+    setIsChecked(true)
+      
+    const res = await httpGet(`auth/verify?token=${token}`);
+
+    if (res.status === "success") {
+      setIsTenantVerified(true)
+      setLoading(false);
+      setMessage("Your account has been verified")
+      NotificationManager.success("Verification successful", message, 4000);
+    } else {
+      console.clear()
+      console.log(res);
+      setLoading(false);
+      NotificationManager.error(wordCapitalize(res?.er?.message), "Domain not verified", 4000);
+      
+    }
   }
 
   return (
 
     <>
-    {isDomainVerified ?
+    {isTenantVerified &&
 
       <div className="auth-container d-flex justify-content-center">
 
@@ -107,12 +99,16 @@ const AccountVerified = () => {
         </div>
       </div>
         
-      :
+      }
+      { ( !isTenantVerified && isChecked) &&
         
       <div className="auth-container d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
         <h3 style={{color: "#FFF"}}>Domain not verified</h3>
       </div>
         
+      }
+      {
+        // loading
       }
 
     </>
