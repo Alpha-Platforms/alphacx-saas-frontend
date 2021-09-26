@@ -180,7 +180,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                     organisation: company ? company : 'Gillete',
                     emailAddress: email,
                     workphone: phone_number,
-                    tags: tags.join(' ')
+                    tags: tags?.join(', ') || ''
                 }));
                 exportTable(tableColumns, data, 'csv', 'CustomerExport');
             }
@@ -203,7 +203,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                     organisation: company ? company : 'Gillete',
                     emailAddress: email,
                     workphone: phone_number,
-                    tags: tags.join(' ')
+                    tags: tags?.join(', ') || ''
                 }));
                 exportTable(tableColumns, data, 'pdf', 'CustomerExport');
             }
