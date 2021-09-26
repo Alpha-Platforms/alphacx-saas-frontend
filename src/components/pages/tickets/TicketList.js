@@ -244,7 +244,8 @@ const TicketList = ({
     },
     {
       title: "Created",
-      field: "created",
+      field: "createdTime",
+      render: (rowData) => rowData.created,
     },
   ];
 
@@ -386,8 +387,8 @@ const TicketList = ({
                     assignedTo: `${assignee?.firstname || ""} ${assignee?.lastname || ""}`,
                     rating: rating,
                     assigneeId: assignee?.id,
-                    statusId: status?.id
-
+                    statusId: status?.id,
+                    createdTime: new Date(created_at || Date.now()).getTime()
                   })
                 )}
                 options={{
