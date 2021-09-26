@@ -56,6 +56,9 @@ const Login = ({history}) => {
             ...userInput,
             [e.target.name]: e.target.value
         });
+        if(e.target.name === "email"){
+            localStorage.setItem("tenantEmail", e.target.value)
+        }
     };
 
     const handleSubmit = async(e) => {
@@ -167,8 +170,7 @@ const Login = ({history}) => {
                                     </div>
 
                                     <div className="inputWrapTwo">
-                                        <label htmlFor="" className="form-label">Last Name
-                                        </label>
+                                        <label htmlFor="" className="form-label">Last Name</label>
                                         <input
                                             type="text"
                                             onChange={handleChange}
@@ -302,7 +304,7 @@ const Login = ({history}) => {
                     </div>
                     <div className="Auth-header mb-2">
                     <h3 className="mb-3">Congratulations!</h3>
-                    <p className="text-center">Your account has been created successfully. <br />An activation mail has been sent to <strong>john@doe.com</strong></p>
+                    <p className="text-center">Your account has been created successfully. <br />An activation mail has been sent to <strong>{userInput?.email}</strong></p>
                     </div>
         
                     <div className="submit-auth-btn text-center mt-4">
