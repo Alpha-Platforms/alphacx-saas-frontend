@@ -31,13 +31,15 @@ const Login = ({match: {params}}) => {
   const [domain, setDomain] = useState("")
   let [loading, setLoading] = useState(false);
   let [color, setColor] = useState("#ffffff");
+  const [hostName] = useState(() => {
+    return window.location.hostname.split(".") 
+  })
 
 
-  useEffect(() => {
-    const hostArray = window.location.hostname.split(".")      
-    if(hostArray.length === 3 && hostArray[0] !== "dev" && hostArray[0] !== "app" && hostArray[1] !== "netlify"){ // CHANGE TO 3 ON LIVE SERVER 
+  useEffect(() => {         
+    if(hostName.length === 3 && hostName[0] !== "dev" && hostName[0] !== "app" && hostName[1] !== "netlify"){ // CHANGE TO 3 ON LIVE SERVER 
       window.localStorage.setItem("domain", domain)
-      setDomain(hostArray[0]) // if sub-domain is available it is correct else you'd get a 404
+      setDomain(hostName[0]) // if sub-domain is available it is correct else you'd get a 404
     }
   }, [])
 
@@ -121,12 +123,11 @@ const Login = ({match: {params}}) => {
       if (res.status === "success") {
         setLoading(false)
 
-        const hostList = window.location.hostname.split(".")
-        if(hostList.length === 3){
+        if(hostName.length === 3){
           window.location.href = `https://${res?.data?.domain}.alphacx.co`;
 
         } else { // FOR DEVELOPMENT - LOCALHOST
-          window.location.href = `http://${res?.data?.domain}.alpha.localhost:3000`;
+          window.location.href = `http://${res?.data?.domain}.alphacx.localhost:3000`;
         }
         
       } else {
@@ -168,7 +169,16 @@ const Login = ({match: {params}}) => {
           </div>
 
           <div className="haveAnAccou">
-            <a href="/register">First time user? Sign up</a>
+            {
+              (hostName[0] === "dev" || hostName[0] === "app" || hostName[1] === "netlify" || hostName.includes("localhost")) ?
+               <a href="/register">First time user? Sign up</a>
+               
+              :
+
+              <a href="https://app.alphacx.co/register">First time user? Sign up</a>
+              
+            }
+            
           </div>
 
           <div className="submit-auth-btn">
@@ -227,7 +237,16 @@ const Login = ({match: {params}}) => {
           </div>
 
           <div className="haveAnAccou">
-            <a href="/register">First time user? Sign up</a>
+            {
+              (hostName[0] === "dev" || hostName[0] === "app" || hostName[1] === "netlify" || hostName.includes("localhost")) ?
+               <a href="/register">First time user? Sign up</a>
+
+              :
+
+              <a href="https://app.alphacx.co/register">First time user? Sign up</a>
+              
+            }
+            
           </div>
 
           <div className="submit-auth-btn">
