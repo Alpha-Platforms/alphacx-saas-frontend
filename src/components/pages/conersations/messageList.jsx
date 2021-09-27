@@ -73,14 +73,15 @@ export default function MessageList({
             <div
               key={index}
               className={`message-listmain ${
-                index + 1 === activeChat ? "message-listmain-active" : ""
+                data.id === activeChat ? "message-listmain-active" : ""
               }`}
               onClick={() => {
                 scollPosSendMsgList();
                 loadSingleMessage(data);
                 setTingleTicketFullInfo(data);
                 setTicketId(data.id);
-                setActiveChat(index + 1);
+                setActiveChat(data.id);
+                // setActiveChat(index + 1);
               }}
               id="msgListTop"
             >

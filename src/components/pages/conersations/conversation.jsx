@@ -117,7 +117,7 @@ export default function Conversation() {
   const [ShowAchive, setShowAchive] = useState(false);
   const [channel, setChannel] = useState("All");
   const [status, setstatus] = useState("All");
-  const [activeChat, setActiveChat] = useState(1);
+  const [activeChat, setActiveChat] = useState("");
   const [updateTickStatusS, setupdateTickStatusS] = useState("");
   
   /* UPDATE MODAL FORM VALUES */
@@ -147,17 +147,16 @@ export default function Conversation() {
     getTags();
     getAgents();
   }, []);
+  
   useEffect(() => {
     AppSocket.createConnection();
-    // let swData = { assigneeId: "15b7c94e-0fc1-4619-9f7b-d985b41e84f9", userId:  "490af948-cd93-45c6-9a9e-a06be5bbea2b" };
-    // AppSocket.io.emit("ws_ticket");
-    // 
     AppSocket.io.on(`ws_tickets`, (data) => {
       setTickets(data?.data?.tickets);
-      // console.log("this are Tickets", data?.data?.tickets);
       setWsTickets(data?.data?.tickets);
     });
     AppSocket.io.on(`message`, (data) => {
+      console.log(data);
+      console.log(msgHistory);
       let msg = {
         created_at: data.created_at,
         id: data?.history?.id || data?.id,
@@ -183,6 +182,10 @@ export default function Conversation() {
     });
     return () => { AppSocket.io.disconnect()};
   },[]);
+
+  const getSocketItems = () =>{
+
+  }
 
   const sortMsges = (msgs) => {
 
@@ -272,7 +275,7 @@ export default function Conversation() {
     let filterSentTickAll = tickets.filter((tic) => {
       return tic.id != singleTicketFullInfo.id;
     });
-    setActiveChat(1);
+    setActiveChat(TicketId);
     filterSentTick[0]["__meta__"].history_count = ++filterSentTick[0][
       "__meta__"
     ].history_count;
