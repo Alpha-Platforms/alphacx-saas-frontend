@@ -158,15 +158,16 @@ const Login = ({match: {params}}) => {
             <p>Please, enter your domain name</p>
           </div>
 
-          <div className="input-wrap">
-            <label htmlFor="">Domain Name</label>
-            <input
-              type="text"
-              onChange={handleChange}
-              name="domain"
-              value={userInput.domain}
-            />
-          </div>
+          <label htmlFor="" className="form-label">Domain</label>
+          <div className="input-group">
+              <input type="text" className="form-control" 
+                  name="domain"
+                  autoComplete="off"
+                  onChange={handleChange}
+                  value={userInput.domain}
+              />
+              <span className="input-group-text" id="basic-addon2">.alphacx.co</span>
+          </div>          
 
           <div className="haveAnAccou">
             {
