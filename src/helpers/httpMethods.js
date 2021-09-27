@@ -2,8 +2,8 @@ import axios from "axios";
 // import { hideLoader } from '../helpers/loader';
 import { NotificationManager } from "react-notifications";
 
-export let baseUrl = "https://kustormar-auth.herokuapp.com/v1";
-export let baseUrlMain = "https://kustormar-staging.herokuapp.com/v1";
+export let baseUrl = process.env.REACT_APP_AUTH_BASE_URL;
+export let baseUrlMain = process.env.REACT_APP_API_BASE_URL;
 
 export const httpPostMain = async (url, postBody) => {
 

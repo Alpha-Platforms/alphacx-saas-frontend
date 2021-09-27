@@ -1,6 +1,6 @@
 export const config = {
-	authBaseUrl: 'https://kustormar-auth.herokuapp.com/v1',
-    stagingBaseUrl: 'https://kustormar-staging.herokuapp.com/v1',
+	authBaseUrl: process.env.REACT_APP_AUTH_BASE_URL,
+    stagingBaseUrl: process.env.REACT_APP_API_BASE_URL,
 	localStorageTenantTokenId: 'alphacxtenanttoken',
     localStorageUserTokenId: 'alphacxauthtoken',
 	customersPerPage: 4
