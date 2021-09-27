@@ -1,4 +1,11 @@
 import {useState, Fragment, useEffect, useContext} from 'react';
+// bootstrap components
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Spinner from 'react-bootstrap/Spinner';
+// 
 import TicketIcon from '../../../assets/svgicons/Ticket.svg';
 import WorkIcon from '../../../assets/svgicons/Work.svg';
 import ProfileLightIcon from '../../../assets/svgicons/Profile-Light.svg';
@@ -141,6 +148,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     const [Channel, setChannel] = useState("All");
     const [Status, setStatus] = useState("All");
     // UPDATE MODAL FORM VALUES
+    const [processing, setProcessing] = useState(false);
     const [RSCustomerTags, setRSCustomerTags] = useState([]);
     const [RSTicketTags, setRSTicketTags] = useState([]);
     const [RSTicketCategory, setRSTicketCategory] = useState("");
@@ -421,12 +429,12 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     };
   
     const updateTicket = async (status) => {
+      setProcessing(true);
       if (status === "") {
         return;
       }
   
       let data = {
-        statusId: RSTicketStage,
         priorityId: RSTicketPriority,
         categoryId: RSTicketCategory,
         subject: RSTicketSubject,
@@ -434,23 +442,29 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         assigneeId: RSTicketAssignee,
         tags: (!Array.isArray(RSTicketTags) || !RSTicketTags.length) ? null : RSTicketTags,
       };
+      if(RSTicketStage){
+        const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, {"statusId": RSTicketStage});
+        if (statusRes.status === "success") {
+          NotificationManager.success("Ticket status successfully updated", "Success");
+        } else{
+          NotificationManager.error(statusRes.er.message, "Error", 4000);
+        }
+      }
       const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
-      // updateTicketBo(true)
       if (res.status === "success") {
+        setProcessing(false);
         closeSaveTicketModal();
-        NotificationManager.success(
-          "Ticket status successfully updated",
-          "Success"
-        );
-        const res = await httpGetMain(`tickets/${ticket[0].id}`);
-        if (res.status === "success") {
-            setTicket(res?.data);
+        NotificationManager.success("Ticket status successfully updated","Success");
+        const ticketRes = await httpGetMain(`tickets/${ticket[0].id}`);
+        if (ticketRes.status === "success") {
+            setTicket(ticketRes?.data);
             NotificationManager.success("Data updated", "Successful");
         } else {
           setLoadSingleTicket(false);
           NotificationManager.info("please refresh your page to see changes");
         }
       } else {
+        setProcessing(false);
         return NotificationManager.error(res.er.message, "Error", 4000);
       }
     };
@@ -463,15 +477,13 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         description: [],
         category: "",
       });
-      if(openSaveTicketModal){  
-        setRSTicketStage(ticket[0].status.id);
-        setRSTicketPriority(ticket[0].priority.id);
-        setRSTicketCategory(ticket[0].category.id);
-        setRSTicketSubject(ticket[0].subject);
-        setRSTicketRemarks(ticket[0].description);
-        setRSTicketTags(ticket[0].tags);
-        setRSTicketAssignee(ticket[0].assignee.id);
-      }
+      setRSTicketStage(ticket[0].status.id);
+      setRSTicketPriority(ticket[0].priority.id);
+      setRSTicketCategory(ticket[0].category.id);
+      setRSTicketSubject(ticket[0].subject);
+      setRSTicketRemarks(ticket[0].description);
+      setRSTicketTags(ticket[0].tags);
+      setRSTicketAssignee(ticket[0].assignee.id);
     };
     function createMarkup(data) {
       return { __html: data };
@@ -748,7 +760,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                               {AchiveMsges.map((data) => {
                                 return (
                                   <Fragment>
-                                  {(data?.response.includes("Ticket Stage has been marked"))? (
+                                  {(data?.response.includes("Ticket Stage has been marked") || data?.statusAction)? (
                                     <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
                                       <span>{" "}
                                         {`${data?.response}`}
@@ -801,7 +813,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                             {YesterdayMsges.map((data) => {
                               return (
                                 <Fragment>
-                                  {(data?.response.includes("Ticket Stage has been marked"))? (
+                                  {(data?.response.includes("Ticket Stage has been marked") || data?.statusAction)? (
                                     <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
                                       <span>{" "}
                                         {`${data?.response}`}
@@ -853,7 +865,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                             {TodayMsges.map((data) => {
                               return (
                                 <Fragment>
-                                  {(data?.response.includes("Ticket Stage has been marked"))? (
+                                  {(data?.response.includes("Ticket Stage has been marked") || data?.statusAction)? (
                                     <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
                                       <span>{" "}
                                         {`${data?.response}`}
@@ -1029,205 +1041,190 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                 </div>
               </div>}
           <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal} center>
-            <div className="saveTicketWrapModal">
-              <div className="modalHeaderSaveT">
-                Kindly update ticket before closing the chat
-              </div>
+            <Form className="saveTicketWrapModal" onSubmit={(e) => e.preventDefault()}>
+          <p className="fs-5">
+            Kindly update ticket before closing the chat
+          </p>
 
-              <div className="saveTicketModalForm">
-                <div className="ticketmodalInput-twoCol">
-                  <div className="ticketmodalInputWrapMain">
-                    <label htmlFor="">Customer</label>
-                    <input
-                      value={`${capitalizeFirstLetter(
-                        ticket[0]?.customer?.firstname
-                      )} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
-                      type="text"
-                      disabled
-                    />
-                  </div>
+          <div className="">
+            <Row  md={6} className="mb-3">
+              <Form.Group as={Col} md={6} className="form-group acx-form-group mb-3">
+                <Form.Label className="mb-0">Customer</Form.Label>
+                <Form.Control
+                  value={`${capitalizeFirstLetter(ticket[0]?.customer?.firstname)} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
+                  type="text"
+                  disabled
+                />
+              </Form.Group>
 
-                  {/* 
-                  Andy's setters
-                  setCategoryUpdate,
-                  updateTicket              
-                  */}
+              {/* 
+              Andy's setters
+              setCategoryUpdate,
+              updateTicket              
+              */}
 
-                  <div className="ticketmodalInputWrapMain">
-                    <label htmlFor="">Category</label>
-                    <RSelect
-                      className="rselectfield"
-                      style={{ fontSize: "12px" }}
-                      isClearable={false}
-                      onChange={(newValue, actionMeta) => {
-                        setRSTicketCategory(newValue.value);
-                      }}
-                      defaultValue={{
-                        value: ticket[0]?.category?.id , 
-                        label: ticket[0]?.category?.name
-                      }}
-                      options={
-                        // populate 'options' prop from $Category, with names remapped
-                        Category.map((data) => {
-                          return { value: data.id, label: data.name };
-                        })
-                      }
-                    />
-                  </div>
-                </div>
+              <Col md={6} className="">
+                <label className="mb-0">Category</label>
+                <RSelect
+                  className="rselectfield"
+                  style={{ fontSize: "12px" }}
+                  isClearable={false}
+                  onChange={(newValue, actionMeta) => {
+                    setRSTicketCategory(newValue.value);
+                  }}
+                  defaultValue={{
+                    value: ticket[0]?.category?.id , 
+                    label: ticket[0]?.category?.name
+                  }}
+                  options={
+                    // populate 'options' prop from $Category, with names remapped
+                    Category.map((data) => {
+                      return { value: data.id, label: data.name };
+                    })
+                  }
+                />
+              </Col>
+              <Col md={6}>
+                <label htmlFor="">Stage</label>
+                <RSelect
+                  className="rselectfield"
+                  style={{ fontSize: "12px" }}
+                  onChange={(newValue, actionMeta) => {
+                    setRSTicketStage(newValue.value);
+                  }}
+                  isClearable={false}
+                  defaultValue={{
+                    value: ticket[0]?.status?.id , 
+                    label: ticket[0]?.status?.status
+                  }}
+                  options={
+                    // populate 'options' prop from $Category, with names remapped
+                    Statuses.map((data) => {
+                      return { value: data.id, label: data.status };
+                    })
+                  }
+                />
+              </Col>
 
-                <div className="ticketmodalInput-twoCol">
-                  <div className="ticketmodalInputWrapMain">
-                    <label htmlFor="">Stage</label>
-                    <RSelect
-                      className="rselectfield"
-                      style={{ fontSize: "12px" }}
-                      onChange={(newValue, actionMeta) => {
-                        setRSTicketStage(newValue.value);
-                      }}
-                      isClearable={false}
-                      defaultValue={{
-                        value: ticket[0]?.status?.id , 
-                        label: ticket[0]?.status?.status
-                      }}
-                      options={
-                        // populate 'options' prop from $Category, with names remapped
-                        Statuses.map((data) => {
-                          return { value: data.id, label: data.status };
-                        })
-                      }
-                    />
-                  </div>
+              <Col md={6}>
+                <label htmlFor="">Priority</label>
+                <RSelect
+                  className="rselectfield"
+                  style={{ fontSize: "12px" }}
+                  onChange={(newValue, actionMeta) => {
+                    setRSTicketPriority(newValue.value);
+                  }}
+                  isClearable={false}
+                  defaultValue={{
+                    value: ticket[0]?.priority?.id, 
+                    label: ticket[0]?.priority?.name
+                  }}
+                  options={
+                    // populate 'options' prop from $Statuses, with names remapped
+                    Priority.map((data) => {
+                      return { value: data.id, label: data.name };
+                    })
+                  }
+                />
+              </Col>
+            </Row>
 
-                  <div className="ticketmodalInputWrapMain">
-                    <label htmlFor="">Priority</label>
-                    <RSelect
-                      className="rselectfield"
-                      style={{ fontSize: "12px" }}
-                      onChange={(newValue, actionMeta) => {
-                        setRSTicketPriority(newValue.value);
-                      }}
-                      isClearable={false}
-                      defaultValue={{
-                        value: ticket[0]?.priority?.id, 
-                        label: ticket[0]?.priority?.name
-                      }}
-                      options={
-                        // populate 'options' prop from $Statuses, with names remapped
-                        Priority.map((data) => {
-                          return { value: data.id, label: data.name };
-                        })
-                      }
-                    />
-                  </div>
-                </div>
+            <Form.Group  className="form-group acx-form-group mb-3">
+              <Form.Label className="mb-0">Subject</Form.Label>
+              <Form.Control type="text"
+                defaultValue={`${ticket[0]?.subject}`}
+                onChange={(e) => setRSTicketSubject(e.target.value)}
+              />
+            </Form.Group>
 
+            <Form.Group  className="form-group acx-form-group mb-3">
+              <Form.Label className="mb-0">Remarks</Form.Label>
+              <Form.Control as="textarea" rows={5} defaultValue={ticket[0]?.description} onChange={(e) => setRSTicketRemarks(e.target.value)}/>
+            </Form.Group>
+
+            <p
+              className="btn mt-2 mb-0 p-0 text-start"
+              role="button"
+              onClick={() => setIsAdditionalOptionVisible((v) => !v)}
+            >
+              Additional Options
+            </p>
+
+            {isAdditionalOptionVisible && (
+              <div className="additional-options">
                 <div className="ticketmodalInput-OneCol">
                   <div className="ticketmodalInputWrapMainOne">
-                    <label htmlFor="">Subject</label>
-                    <input
-                      type="text"
-                      defaultValue={`${ticket[0]?.subject}`}
-                      onChange={(e) => setRSTicketSubject(e.target.value)}
-                      style={{ fontSize: "12px" }}
+                    <label htmlFor="">Assigned To</label>
+                    <RSelect
+                      className="rselectfield"
+                      closeMenuOnSelect={true}
+                      menuPlacement={"top"}
+                      onChange={(newValue, actionMeta) => {
+                        setRSTicketAssignee(newValue.value);
+                      }}
+                      defaultValue={{
+                        value: ticket[0]?.assignee?.id , 
+                        label: `${ticket[0]?.assignee?.firstname}  ${ticket[0]?.assignee?.lastname}`
+                      }}
+                      options={
+                        // populate 'options' prop from $Category, with names remapped
+                        Agents.map((data) => {
+                          return { value: data.id, label: `${data.firstname}  ${data.lastname}` };
+                        })
+                      }
                     />
                   </div>
                 </div>
-
-                <div className="descriptionWrap">
-                  <label htmlFor="">Remarks</label>
-                  <textarea
-                    onChange={(e) => setRSTicketRemarks(e.target.value)}
-                    style={{ fontSize: "12px", padding: "10px" }}
-                  >{ticket[0]?.description}</textarea>
+                <div className="mt-4">
+                  <label htmlFor="">Tags</label>
+                  <RSelect
+                    className="rselectfield"
+                    closeMenuOnSelect={false}
+                    menuPlacement={"top"}
+                    onChange={selectedOptions => {
+                      setRSTicketTags(selectedOptions.map((item) => { return item.value} ))
+                    }}
+                    defaultValue={
+                      ticket[0]?.tags ? ticket[0]?.tags.map((data) => {
+                        return { value: data, label: data};
+                      }) :  null
+                      
+                    }
+                    options={
+                      // populate 'options' prop from $Tags remapped
+                      Tags.map((data) => {
+                        return { value: data, label: data};
+                      })
+                    }
+                    isMulti
+                  />
                 </div>
-
-                <p
-                  className="btn mt-3 p-0 text-start"
-                  role="button"
-                  style={{
-                    fontSize: "0.8rem",
-                    fontWeight: "bold",
-                    marginBottom: 0,
-                    color: "#006298!important",
-                  }}
-                  onClick={() => setIsAdditionalOptionVisible((v) => !v)}
-                >
-                  Additional Options
-                </p>
-
-                {isAdditionalOptionVisible && (
-                  <div className="additional-options">
-                    <div className="ticketmodalInput-OneCol">
-                      <div className="ticketmodalInputWrapMainOne">
-                        <label htmlFor="">Assigned To</label>
-                        <RSelect
-                          className="rselectfield"
-                          closeMenuOnSelect={true}
-                          menuPlacement={"top"}
-                          onChange={(newValue, actionMeta) => {
-                            setRSTicketAssignee(newValue.value);
-                          }}
-                          defaultValue={{
-                            value: ticket[0]?.assignee?.id , 
-                            label: `${ticket[0]?.assignee?.firstname}  ${ticket[0]?.assignee?.lastname}`
-                          }}
-                          options={
-                            // populate 'options' prop from $Category, with names remapped
-                            Agents.map((data) => {
-                              return { value: data.id, label: `${data.firstname}  ${data.lastname}` };
-                            })
-                          }
+                <div className="col-12 mt-3">
+                  <label htmlFor="title" className="form-label">Attachment (If Any)</label>
+                  <div
+                      id="ticket-ath-box"
+                      className="border border-1 d-block text-center f-14 p-3 position-relative">
+                      <img src={PinIcon} alt=""/>
+                      <span className="text-at-blue-light">Add file</span>&nbsp;
+                      <span>or drag file here</span>
+                      <input type="file" 
+                        className="position-absolute top-0 bottom-0 end-0 start-0 w-100 h-100" 
+                        style={{ "zIndex": 1200 }}
+                        // onChange={} 
                         />
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <label htmlFor="">Tags</label>
-                      <RSelect
-                        className="rselectfield"
-                        closeMenuOnSelect={false}
-                        menuPlacement={"top"}
-                        onChange={selectedOptions => {
-                          setRSTicketTags(selectedOptions.map((item) => { return item.value} ))
-                        }}
-                        defaultValue={
-                          ticket[0]?.tags ? ticket[0]?.tags.map((data) => {
-                            return { value: data, label: data};
-                          }) :  null
-                        }
-                        options={
-                          // populate 'options' prop from $Tags remapped
-                          Tags.map((data) => {
-                            return { value: data, label: data};
-                          })
-                        }
-                        isMulti
-                      />
-                    </div>
-                    <div className="col-12 mt-3">
-                      <label htmlFor="title" className="form-label">Attachment (If Any)</label>
-                      <div
-                          id="ticket-ath-box"
-                          className="border border-1 d-block text-center f-14 p-3 position-relative">
-                          <img src={PinIcon} alt=""/>
-                          <span className="text-at-blue-light">Add file</span>&nbsp;
-                          <span>or drag file here</span>
-                          <input type="file" 
-                            className="position-absolute top-0 bottom-0 end-0 start-0 w-100 h-100" 
-                            style={{ "zIndex": 1200 }}
-                            // onChange={} 
-                            />
-                      </div>
-                    </div>
                   </div>
-                )}
-                <div className="closeTicketModdalj">
-                  <button type="submit" onClick={updateTicket}>
-                    Update
-                  </button>
                 </div>
               </div>
+            )}
+            <div className="text-end mt-3">
+              <Button className="btn acx-btn-primary px-3 py-2" disabled={processing} type="submit" onClick={updateTicket}>
+                { processing ? 
+                (<Fragment><Spinner as="span" size="sm" animation="border" variant="light" /> Processing...</Fragment>  ) 
+                  : `Update`}
+              </Button>
             </div>
+          </div>
+        </Form>
           </Modal>
         </Fragment>
     )

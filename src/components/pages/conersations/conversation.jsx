@@ -25,7 +25,8 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col'
+import Col from 'react-bootstrap/Col';
+// 
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -116,7 +117,7 @@ export default function Conversation() {
   const [ShowAchive, setShowAchive] = useState(false);
   const [channel, setChannel] = useState("All");
   const [status, setstatus] = useState("All");
-  const [activeChat, setActiveChat] = useState(1);
+  const [activeChat, setActiveChat] = useState("");
   const [updateTickStatusS, setupdateTickStatusS] = useState("");
   
   /* UPDATE MODAL FORM VALUES */
@@ -146,27 +147,35 @@ export default function Conversation() {
     getTags();
     getAgents();
   }, []);
+
   useEffect(() => {
     AppSocket.createConnection();
-    // let swData = { assigneeId: "15b7c94e-0fc1-4619-9f7b-d985b41e84f9", userId:  "490af948-cd93-45c6-9a9e-a06be5bbea2b" };
-    // AppSocket.io.emit("join_private", swData);
     AppSocket.io.on(`ws_tickets`, (data) => {
       setTickets(data?.data?.tickets);
-      // console.log("this are Tickets", data?.data?.tickets);
       setWsTickets(data?.data?.tickets);
     });
-    AppSocket.io.on(`message`, (data) => {
+    
+    AppSocket.io.on(`ws_ticket`, (data) => {
+      // console.log(data);
+      let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
+      AppSocket.io.emit(`ws_tickets`, ticketsData);
+    });
+    return () => { AppSocket.io.disconnect()};
+  },[]);
 
-      let msg = {
-        created_at: data.created_at,
-        id: data?.history?.id || data?.id,
-        plain_response: data?.history?.plain_response || data?.plain_response,
-        response: data?.history?.response || data?.response,
-        type: "reply",
-        user: data.user,
-      };
-      
-      setMsgHistory((item) => [...item, msg]);
+  useEffect(() => {
+    AppSocket.io.on(`message`, (data) => {
+      if(data.id === TicketId){
+        let msg = {
+          created_at: data.created_at,
+          id: data?.history?.id || data?.id,
+          plain_response: data?.history?.plain_response || data?.plain_response,
+          response: data?.history?.response || data?.response,
+          type: "reply",
+          user: data.user,
+        };
+        setMsgHistory((item) => [...item, msg]);
+      }
       
       let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, ticketsData);
@@ -175,12 +184,10 @@ export default function Conversation() {
       // }
       // sortMsges((item) => [...item, msg]);
     });
-    AppSocket.io.on(`ws_ticket`, (data) => {
-      let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
-      AppSocket.io.emit(`ws_tickets`, ticketsData);
-    });
-    return () => { AppSocket.io.disconnect()};
-  },[]);
+  },[TicketId]);
+  // const getSocketItems = () =>{
+
+  // }
 
   const sortMsges = (msgs) => {
 
@@ -208,7 +215,7 @@ export default function Conversation() {
 
     let resultTimestamps = msgs.filter((observation) => {
       return (
-        observation.response.includes("Ticket Stage has been marked")
+        observation?.response.includes("Ticket Stage has been marked") || observation?.statusAction
       );
     });
 
@@ -270,7 +277,7 @@ export default function Conversation() {
     let filterSentTickAll = tickets.filter((tic) => {
       return tic.id != singleTicketFullInfo.id;
     });
-    setActiveChat(1);
+    setActiveChat(TicketId);
     filterSentTick[0]["__meta__"].history_count = ++filterSentTick[0][
       "__meta__"
     ].history_count;
@@ -398,7 +405,7 @@ export default function Conversation() {
     setTingleTicketFullInfo();
     setTicket([]);
     let swData = { assigneeId: assignee?.id || "", userId: customer?.id || "" };
-    UserInfo.id && AppSocket.io.leave(`${UserInfo.id}${assignee.id}`);
+    // customer.id && AppSocket.io.leave(`${customer.id}${assignee.id}`);
     AppSocket.io.emit("join_private", swData);
     // 
     const res = await httpGetMain(`tickets/${id}`);
@@ -443,7 +450,6 @@ export default function Conversation() {
     if (status === "") {
       return;
     }
-   
     let data = {
       priorityId: RSTicketPriority,
       categoryId: RSTicketCategory,
@@ -452,28 +458,25 @@ export default function Conversation() {
       assigneeId: RSTicketAssignee,
       tags: (!Array.isArray(RSTicketTags) || !RSTicketTags.length) ? null : RSTicketTags,
     };
-    const res = await httpPatchMain(`tickets-status/${ticket[0].id}`, data);
-    if (res.status === "success") {
-      if( RSTicketStage){
-        const statusRes = await httpPatchMain(`tickets/${ticket[0].id}`, {"statusId": RSTicketStage});
-        if (statusRes.status === "success") {
-          NotificationManager.success("Ticket status successfully updated", "Success");
-        } else{
-          NotificationManager.error(statusRes.er.message, "Error", 4000);
-        }
+    if(RSTicketStage){
+      const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, {"statusId": RSTicketStage});
+      if (statusRes.status === "success") {
+        NotificationManager.success("Ticket status successfully updated", "Success");
+      } else{
+        NotificationManager.error(statusRes.er.message, "Error", 4000);
       }
+    }
+    const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
+    if (res.status === "success") {
       setProcessing(false);
       closeSaveTicketModal();
-      NotificationManager.success(
-        "Ticket status successfully updated",
-        "Success"
-      );
+      NotificationManager.success("Ticket status successfully updated","Success");
       AppSocket.createConnection();
       let data = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, data);
-      const res = await httpGetMain(`tickets/${ticket[0].id}`);
-      if (res.status === "success") {
-          setTicket(res?.data);
+      const ticketRes = await httpGetMain(`tickets/${ticket[0].id}`);
+      if (ticketRes.status === "success") {
+          setTicket(ticketRes?.data);
           return NotificationManager.success("Data updated", "Success");
       } else {
         setLoadSingleTicket(false);
@@ -493,15 +496,13 @@ export default function Conversation() {
       description: [],
       category: "",
     });
-    if(openSaveTicketModal){  
-      setRSTicketStage(ticket[0].status.id);
-      setRSTicketPriority(ticket[0].priority.id);
-      setRSTicketCategory(ticket[0].category.id);
-      setRSTicketSubject(ticket[0].subject);
-      setRSTicketRemarks(ticket[0].description);
-      setRSTicketTags(ticket[0].tags);
-      setRSTicketAssignee(ticket[0]?.assignee?.id);
-    }
+    setRSTicketStage(ticket[0].status.id);
+    setRSTicketPriority(ticket[0].priority.id);
+    setRSTicketCategory(ticket[0].category.id);
+    setRSTicketSubject(ticket[0].subject);
+    setRSTicketRemarks(ticket[0].description);
+    setRSTicketTags(ticket[0].tags);
+    setRSTicketAssignee(ticket[0]?.assignee?.id);
   };
 
   function createMarkup(data) {
@@ -821,7 +822,7 @@ export default function Conversation() {
                       {AchiveMsges.map((data) => {
                         return (
                           <React.Fragment>
-                          {(data?.response.includes("Ticket Stage has been marked"))? 
+                          {(data?.response.includes("Ticket Stage has been marked") || data?.statusAction)? 
                             (
                               <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
                                 <span>{" "}
@@ -876,7 +877,7 @@ export default function Conversation() {
                     {YesterdayMsges.map((data) => {
                       return (
                         <React.Fragment>
-                          {(data?.response.includes("Ticket Stage has been marked"))? 
+                          {(data?.response.includes("Ticket Stage has been marked") || data?.statusAction)? 
                             (
                               <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
                                 <span>{" "}
@@ -930,7 +931,7 @@ export default function Conversation() {
                     {TodayMsges.map((data) => {
                       return (
                         <React.Fragment>
-                          {(data?.response.includes("Ticket Stage has been marked"))? 
+                          {(data?.response.includes("Ticket Stage has been marked") || data?.statusAction)? 
                             (
                               <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
                                 <span>{" "}
@@ -1231,9 +1232,7 @@ export default function Conversation() {
 
             <Form.Group  className="form-group acx-form-group mb-3">
               <Form.Label className="mb-0">Remarks</Form.Label>
-              <Form.Control as="textarea" rows={5} 
-                onChange={(e) => setRSTicketRemarks(e.target.value)}
-              >{ticket[0]?.description}</Form.Control>
+              <Form.Control as="textarea" rows={5} defaultValue={ticket[0]?.description} onChange={(e) => setRSTicketRemarks(e.target.value)}/>
             </Form.Group>
 
             <p
