@@ -8,7 +8,7 @@ import Symbol1 from "../../../assets/imgF/symbolAuth.png";
 import Symbol2 from "../../../assets/imgF/symbolAuth2.png";
 import { NotificationManager } from "react-notifications";
 import { css } from "@emotion/react";
-import { httpGet } from "helpers/httpMethods";
+import { httpPost } from "helpers/httpMethods";
 import { wordCapitalize } from "helper";
 import { ClipLoader } from "react-spinners";
 const override = css``;
@@ -48,7 +48,7 @@ const AccountVerified = ({match, ...props}) => {
     setLoading(true);
     setIsChecked(true);
       
-    const res = await httpGet(`auth/verify?token=${token}`);
+    const res = await httpPost("auth/verify", {token});
 
     if (res.status === "success") {
       setIsTenantVerified(true)
