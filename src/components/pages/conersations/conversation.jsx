@@ -147,16 +147,27 @@ export default function Conversation() {
     getTags();
     getAgents();
   }, []);
-  
+
   useEffect(() => {
     AppSocket.createConnection();
     AppSocket.io.on(`ws_tickets`, (data) => {
       setTickets(data?.data?.tickets);
       setWsTickets(data?.data?.tickets);
     });
+    
+    AppSocket.io.on(`ws_ticket`, (data) => {
+      // console.log(data);
+      let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
+      AppSocket.io.emit(`ws_tickets`, ticketsData);
+    });
+    return () => { AppSocket.io.disconnect()};
+  },[]);
+
+  useEffect(() => {
     AppSocket.io.on(`message`, (data) => {
-      console.log(data);
-      console.log(msgHistory);
+      if(data.id !== TicketId){
+        return;
+      }
       let msg = {
         created_at: data.created_at,
         id: data?.history?.id || data?.id,
@@ -175,17 +186,10 @@ export default function Conversation() {
       // }
       // sortMsges((item) => [...item, msg]);
     });
-    AppSocket.io.on(`ws_ticket`, (data) => {
-      // console.log(data);
-      let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
-      AppSocket.io.emit(`ws_tickets`, ticketsData);
-    });
-    return () => { AppSocket.io.disconnect()};
-  },[]);
+  },[TicketId]);
+  // const getSocketItems = () =>{
 
-  const getSocketItems = () =>{
-
-  }
+  // }
 
   const sortMsges = (msgs) => {
 
