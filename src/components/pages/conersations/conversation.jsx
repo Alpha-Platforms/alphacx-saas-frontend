@@ -165,19 +165,17 @@ export default function Conversation() {
 
   useEffect(() => {
     AppSocket.io.on(`message`, (data) => {
-      if(data.id !== TicketId){
-        return;
+      if(data.id === TicketId){
+        let msg = {
+          created_at: data.created_at,
+          id: data?.history?.id || data?.id,
+          plain_response: data?.history?.plain_response || data?.plain_response,
+          response: data?.history?.response || data?.response,
+          type: "reply",
+          user: data.user,
+        };
+        setMsgHistory((item) => [...item, msg]);
       }
-      let msg = {
-        created_at: data.created_at,
-        id: data?.history?.id || data?.id,
-        plain_response: data?.history?.plain_response || data?.plain_response,
-        response: data?.history?.response || data?.response,
-        type: "reply",
-        user: data.user,
-      };
-      
-      setMsgHistory((item) => [...item, msg]);
       
       let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, ticketsData);
