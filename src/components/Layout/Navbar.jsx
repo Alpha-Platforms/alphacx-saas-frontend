@@ -212,7 +212,6 @@ function Navbar({
       >
         <div className="navbar-position">
           <div
-            className="navbar-wrap"
             className={`${
               appReduceSidebarWidth === true
                 ? "navbar-wrap"

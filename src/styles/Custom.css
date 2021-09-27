@@ -588,8 +588,8 @@ input:-webkit-autofill::first-line {
 .form-group.acx-form-group label {
     font-size: 0.875rem;
 }
-:focus-visible {
-    outline: transparent auto 1px !important;
+.form-group.acx-form-group textarea.form-control:focus-visible {
+    outline: var(--color-gray-200) auto 0px !important;
 } 
 .form-group.acx-form-group input:focus-visible.form-control:not([disabled="true"]) {
     outline: -webkit-focus-ring-color auto 0px !important;
@@ -620,6 +620,7 @@ input:-webkit-autofill::first-line {
 .form-group.acx-form-group .form-control:focus,
 .form-group.acx-form-group .form-control.form-control-primary:focus,
 .form-group.acx-form-group .form-control.form-control-primary:hover {
+    border: 1px solid var(--color-primary);
     box-shadow: 0 0 0 0.25rem var(--color-primary-25);
     background: var(--color-white);
 }
@@ -629,6 +630,7 @@ input:-webkit-autofill::first-line {
 .form-group.acx-form-group .form-control.form-control-secondary:focus{
     background: var(--color-white);
     box-shadow: 0 0 0 0.25rem var(--color-secondary-25);
+    border: 1px solid var(--color-secondary);
 }
 
 .form-group.acx-form-group .form-control.disabled,

@@ -73,14 +73,15 @@ export default function MessageList({
             <div
               key={index}
               className={`message-listmain ${
-                index + 1 === activeChat ? "message-listmain-active" : ""
+                data.id === activeChat ? "message-listmain-active" : ""
               }`}
               onClick={() => {
                 scollPosSendMsgList();
                 loadSingleMessage(data);
                 setTingleTicketFullInfo(data);
                 setTicketId(data.id);
-                setActiveChat(index + 1);
+                setActiveChat(data.id);
+                // setActiveChat(index + 1);
               }}
               id="msgListTop"
             >
@@ -130,7 +131,7 @@ export default function MessageList({
                 </div>
               </div>
               <div className="message-user-time">
-                {(data?.__meta__?.unRead == 0) ? ("") 
+                {(data?.__meta__?.unRead == 0 || data.id === activeChat) ? ("") 
                 : ( <p className="msgCountCon">{data?.__meta__?.unRead}</p>)}
                 <p className="msGtime">{timeFormater(data.updated_at)}</p>
               </div>

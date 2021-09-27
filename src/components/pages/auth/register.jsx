@@ -14,6 +14,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import {CSSTransition} from 'react-transition-group';
 import {countries} from '../../../components/shared/countries';
 import RSelect from 'react-select';
+import ThankYou from "../../../assets/imgF/thank-you.png";
 
 const override = css ``;
 
@@ -31,9 +32,9 @@ const Login = ({history}) => {
 
     const [showPassword,
         setShowPassword] = useState(false);
-    let [loading,
+    const [loading,
         setLoading] = useState(false);
-    let [color,
+    const [color,
         setColor] = useState("#ffffff");
 
     const [activeForm,
@@ -47,45 +48,48 @@ const Login = ({history}) => {
         setMenuHeight(height);
     }
 
-    useEffect(() => {}, []);
+    const [isVerified, setIsVerified] = useState(false)
+
 
     const handleChange = (e) => {
         setUserInput({
             ...userInput,
             [e.target.name]: e.target.value
         });
+        if(e.target.name === "email"){
+            localStorage.setItem("tenantEmail", e.target.value)
+        }
     };
+
     const handleSubmit = async(e) => {
         e.preventDefault();
         const validateEmail = ValidateEmail(userInput.email);
-        if (validateEmail == false) {
-            return NotificationManager.warning("Invalid email address", "Validation Warning", 4000);
-        }
 
-        if (userInput.firstName == "") {
-            return NotificationManager.warning("First name is required", "Validation Warning", 4000);
-        }
-
-        if (userInput.lastName == "") {
-            return NotificationManager.warning("Last name is required", "Validation Warning", 4000);
-        }
-
-        if (userInput.companyName == "") {
-            return NotificationManager.warning("Company name is required", "Validation Warning", 4000);
-        }
-
-        if (userInput.domain == "") {
-            return NotificationManager.warning("Domain  is required", "Validation Warning", 4000);
-        }
-
-        // if (userInput.region == "") {
-        //     return NotificationManager.warning("Region  is required", "Validation Warning", 4000);
+        // if (validateEmail == false) {
+        //     return NotificationManager.warning("Invalid email address", "Validation Warning", 4000);
         // }
 
-        const validatepassword = validatePassword(userInput.password);
-        if (validatepassword != "Looks Good!") {
-            return NotificationManager.warning(validatepassword, "Validation Warning", 4000);
-        }
+        // if (userInput.firstName == "") {
+        //     return NotificationManager.warning("First name is required", "Validation Warning", 4000);
+        // }
+
+        // if (userInput.lastName == "") {
+        //     return NotificationManager.warning("Last name is required", "Validation Warning", 4000);
+        // }
+
+        // if (userInput.companyName == "") {
+        //     return NotificationManager.warning("Company name is required", "Validation Warning", 4000);
+        // }
+
+        // if (userInput.domain == "") {
+        //     return NotificationManager.warning("Domain  is required", "Validation Warning", 4000);
+        // }
+
+        // const validatepassword = validatePassword(userInput.password);
+        // if (validatepassword != "Looks Good!") {
+        //     return NotificationManager.warning(validatepassword, "Validation Warning", 4000);
+        // }
+
         const data = {
             domain: userInput.domain,
             firstname: userInput.firstName,
@@ -96,21 +100,20 @@ const Login = ({history}) => {
             region: userInput.region || "",
             currency: "Naira"
         };
+
         setLoading(true);
+
         const res = await httpPost("auth/register", data);
-        if (res.status == "success") {
+
+        if (res.status === "success") {
             setLoading(false);
-            console.log(res
-                ?.status);
-            NotificationManager.success("Account created successfully", "Success", 4000);
-            history.push("/");
+            setIsVerified(true)
+            NotificationManager.success("Verification mail has been to you", "Acount Created!", 4000);
         } else {
-            console.log(res);
             setLoading(false);
-            NotificationManager.error(res
-                ?.er
-                    ?.message, "Error", 4000);
+            NotificationManager.error(res?.er?.message, "Error", 4000);
         }
+
     };
 
     const checkContinue = () => {
@@ -130,10 +133,9 @@ const Login = ({history}) => {
                 <img src={Logo} alt=""/>
             </div>
 
-            <div
-                className={`login-container ${activeForm === 'form-one'
-                ? 'lcon-height1'
-                : 'lcon-height2'}`}>
+            <div className="login-container pb-5">
+                
+                { !isVerified ?
                 <form>
                     <div
                         className="Auth-header"
@@ -168,8 +170,7 @@ const Login = ({history}) => {
                                     </div>
 
                                     <div className="inputWrapTwo">
-                                        <label htmlFor="" className="form-label">Last Name
-                                        </label>
+                                        <label htmlFor="" className="form-label">Last Name</label>
                                         <input
                                             type="text"
                                             onChange={handleChange}
@@ -244,18 +245,6 @@ const Login = ({history}) => {
                                 </div>
 
                                 <div className="input-wrap">
-                                    {/* <div className="">
-                                        <label htmlFor="" className="form-label">Domain</label>
-                                        <div className="domain-field"><input
-                                            type="text"
-                                            onChange={handleChange}
-                                            name="domain"
-                                            autoComplete="off"
-                                            value={userInput.domain}/>
-                                            <span className="bg-secondary">.alphacx.co</span>
-                                        </div>
-
-                                    </div> */}
 
                                     <label htmlFor="" className="form-label">Domain</label>
                                     <div className="input-group">
@@ -308,6 +297,23 @@ const Login = ({history}) => {
 
                     </div>
                 </form>
+                :
+                <form>
+                    <div className="d-flex justify-content-center my-4">
+                    <img src={ThankYou } alt="" />
+                    </div>
+                    <div className="Auth-header mb-2">
+                    <h3 className="mb-3">Congratulations!</h3>
+                    <p className="text-center">Your account has been created successfully. <br />An activation mail has been sent to <strong>{userInput?.email}</strong></p>
+                    </div>
+        
+                    <div className="submit-auth-btn text-center mt-4">
+                        <a className="fs-6" href="https://app.alphacx.co/help">
+                            See Quick Setup Steps
+                        </a>
+                    </div>
+                </form>
+                }
             </div>
             <div className="symbol-wrap">
                 <img src={Symbol1} alt=""/>
