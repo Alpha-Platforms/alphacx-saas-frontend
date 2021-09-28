@@ -351,7 +351,7 @@ const TicketLineGraph = ({analytics}) => {
                 </div>
 
                 {/* calls legend */}
-                <div className="mx-3 my-2">
+                {/* <div className="mx-3 my-2">
                     <div className="form-check form-switch d-flex justify-content-center">
                         <input
                             className="legendInput legend-input form-check-input form-check-input-lg mt-1"
@@ -365,7 +365,7 @@ const TicketLineGraph = ({analytics}) => {
                     <div className="text-center">
                         <span className="legend-circle legend-bg-yellow"></span>&nbsp;Call
                     </div>
-                </div>
+                </div> */}
 
                 {/* Whatsapp legend */}
                 <div className="mx-3 my-2">
