@@ -68,10 +68,23 @@ export const getPaginatedCustomers = (itemsPerPage, currentPage) => (dispatch, g
                 ? res.data.data
                 : {}
         }))
-        .catch(err => dispatch(returnErrors(err
-            ?.response
-                ?.data, err.response
-            ?.status)));
+        .catch(err => {
+            dispatch({
+                type: types.GET_CUSTOMERS,
+                payload: {
+                    meta: {
+                        totalItems:"0",
+                        itemsPerPage: 10,
+                        currentPage: 1,
+                        totalPages: 0
+                    }
+                }
+            });
+            dispatch(returnErrors(err
+                ?.response
+                    ?.data, err.response
+                ?.status))
+        });
 }
 
 // invalid redux action

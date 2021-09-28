@@ -197,7 +197,12 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                       />
                     ) : (       
                       <div className="avatar avatar-sm rounded-circle overflow-hidden acx-bg-secondary d-flex justify-content-center align-items-center">
-                          <p className="small mb-0 text-white">{`${capitalize(ticket[0]?.assignee?.firstname?.slice(0,1))}${ticket[0]?.assignee?.lastname == "default" ? "" : capitalize(ticket[0]?.assignee?.lastname?.slice(0, 1))}`}</p>
+                          <p className="small mb-0 text-white">
+                            { ticket[0]?.assignee?
+                            `${capitalize(ticket[0]?.assignee?.firstname?.slice(0,1))}${ticket[0]?.assignee?.lastname == "default" ? "" : capitalize(ticket[0]?.assignee?.lastname?.slice(0, 1))}`
+                            :  ""
+                            }
+                          </p>
                       </div>
                     )}
                   </div>

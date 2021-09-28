@@ -24,6 +24,10 @@ export const getGroups = () => (dispatch, getState) => {
 
 export const addGroup = (newGroup, success, failed) => (dispatch, getState) => {
 
+    console.clear()
+    console.log(newGroup)
+    return null;
+
     //Request body
     const body = JSON.stringify(newGroup);
 
