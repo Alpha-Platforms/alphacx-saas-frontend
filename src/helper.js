@@ -44,9 +44,9 @@ export const userTokenConfig = getState => {
 }
 
 export const wordCapitalize = word => {
-    return word
+    return `${word}`
         .charAt(0)
-        .toUpperCase() + word.slice(1);
+        .toUpperCase() + word?.slice(1);
 }
 
 export const exportTable = (exportColumns, exportData, exportType, fileName) => {
