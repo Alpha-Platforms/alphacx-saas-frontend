@@ -123,8 +123,13 @@ const Login = ({match: {params}}) => {
       if (res.status === "success") {
         setLoading(false)
 
-        if(hostName.length === 3){
+        if(hostName.length === 3 && hostName[0] === "app"){
           window.location.href = `https://${res?.data?.domain}.alphacx.co`;
+
+        } else if(hostName[0] === "dev"){
+          // window.location.href = "/";
+          setDomain(hostName[0])
+
 
         } else { // FOR DEVELOPMENT - LOCALHOST
           window.location.href = `http://${res?.data?.domain}.alphacx.localhost:3000`;
