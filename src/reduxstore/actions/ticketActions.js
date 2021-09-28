@@ -18,7 +18,20 @@ export const getTickets = () => (dispatch, getState) => {
                 ? res.data?.data
                 : {}
         }))
-        .catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
+        .catch(err => {
+            dispatch({
+                type: types.GET_CUSTOMERS,
+                payload: {
+                    meta: {
+                        totalItems:"0",
+                        itemsPerPage: 10,
+                        currentPage: 1,
+                        totalPages: 0
+                    }
+                }
+            });
+            dispatch(returnErrors(err.response?.data, err.response?.status))
+        });
 }
 
 export const getPaginatedTickets = (itemsPerPage, currentPage) => (dispatch, getState) => {
@@ -34,7 +47,19 @@ export const getPaginatedTickets = (itemsPerPage, currentPage) => (dispatch, get
                 ? res.data?.data
                 : {}
         }))
-        .catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
+        .catch(err => {
+            dispatch({
+                type: types.GET_CUSTOMERS,
+                payload: {
+                    meta: {
+                        totalItems:"0",
+                        itemsPerPage: 10,
+                        currentPage: 1,
+                        totalPages: 0
+                    }
+                }
+            });
+            dispatch(returnErrors(err.response?.data, err.response?.status))});
 }
 
 export const getSearchedTickets = (itemsPerPage, currentPage, searchVal) => (dispatch, getState) => {
