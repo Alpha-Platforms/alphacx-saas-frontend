@@ -106,7 +106,7 @@ export default function FacebookIntegration() {
                         <p className="mt-3">
                             You need to create your company Facebook page or use an existing
                             one.
-                            <br /> You need to be the Administration of that page.
+                            <br /> You need to be the Administrator of that page.
                         </p>
 
                         <div className="">

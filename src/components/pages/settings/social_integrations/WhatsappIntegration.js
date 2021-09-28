@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import { NotificationManager } from "react-notifications";
-
+// react bootstrap components
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+// 
 import { httpPatchMain, httpPostMain, httpGetMain } from "../../../../helpers/httpMethods";
 // js assets
 import { hideLoader, showLoader } from "../../../helpers/loader";
@@ -35,9 +41,9 @@ export default function WhatsappIntegration() {
             setConfigData(res?.data);
             setWhatsappConfig({
                 ...whatsappConfig,
-                twillo_account_sid: res?.data?.twillo_no,
+                twillo_account_sid: res?.data?.twillo_account_sid,
                 twillo_auth_token: res?.data?.twillo_auth_token,
-                twillo_no: res?.data?.twillo_account_sid,
+                twillo_no: res?.data?.twillo_no,
             });
             setLoadingConfig(false);
         } else {
@@ -128,50 +134,48 @@ export default function WhatsappIntegration() {
                             </div> */}
 
                             <div className="mb-3">
-                            <div className="mb-3">
-                                <label htmlFor="organisation-name" className="form-label">
-                                Account SID:
-                                </label>
-                                <input
-                                    type="text"
-                                    name="twillo_account_sid"
-                                    onChange={handleWhatsappChange}
-                                    value={whatsappConfig.twillo_account_sid}
-                                    className="form-control"
-                                    id="organisation-name"
-                                />
+                                <Form.Group className="form-group acx-form-group mb-3">
+                                    <Form.Label htmlFor="twillo_account_sid">
+                                        Account SID:
+                                    </Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        name="twillo_account_sid"
+                                        onChange={handleWhatsappChange}
+                                        defaultValue={whatsappConfig.twillo_account_sid}
+                                        className="form-control"
+                                        id="twillo_account_sid"
+                                    />
+                                </Form.Group>
+                                <Form.Group className="form-group acx-form-group mb-3">
+                                    <Form.Label htmlFor="twillo_auth_token" className="form-label">
+                                        Auth Token:
+                                    </Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        name="twillo_auth_token"
+                                        onChange={handleWhatsappChange}
+                                        defaultValue={whatsappConfig.twillo_auth_token}
+                                        className="form-control"
+                                        id="twillo_auth_token"
+                                    />
+                                </Form.Group>
+                                <Form.Group className="form-group acx-form-group mb-3">
+                                    <Form.Label htmlFor="twillo_no" className="form-label">
+                                        Account phone number:
+                                    </Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        name="twillo_no"
+                                        onChange={handleWhatsappChange}
+                                        defaultValue={whatsappConfig.twillo_no}
+                                        className="form-control"
+                                        id="twillo_no"
+                                    />
+                                </Form.Group>
                             </div>
-                            <div className="mb-3">
-                                <label htmlFor="organisation-name" className="form-label">
-                                    Auth Token:
-                                </label>
-                                <input
-                                    type="text"
-                                    name="twillo_auth_token"
-                                    onChange={handleWhatsappChange}
-                                    value={whatsappConfig.twillo_auth_token}
-                                    className="form-control"
-                                    id="organisation-name"
-                                />
-                            </div>
-
-                            <div className="mb-3">
-                                <label htmlFor="organisation-name" className="form-label">
-                                Account phone number:
-                                </label>
-                                <input
-                                type="text"
-                                name="twillo_no"
-                                onChange={handleWhatsappChange}
-                                value={whatsappConfig.twillo_no}
-                                className="form-control"
-                                id="organisation-name"
-                                />
-                            </div>
-                            </div>
-
                             <div className="mt-5">
-                                <button className="btn acx-btn-primary px-3 py-2" onClick={handleConnectWhatsApp}>Connect</button>
+                                <Button className="acx-btn-primary px-3 py-2" onClick={handleConnectWhatsApp}>Connect</Button>
                             </div>
                         </div>
                     </div>

@@ -34,7 +34,7 @@ export const SocketDataProvider = (props) => {
       transports: ["websocket"], 
     };
     AppSocket.io = socketIO(
-      `${baseUrl}?access_token=${localStorage.token}`,
+      `${baseUrl}?access_token=${localStorage.token}&domain=${localStorage.domain}`,
       connectionOptions
     );
     //listen for connection
