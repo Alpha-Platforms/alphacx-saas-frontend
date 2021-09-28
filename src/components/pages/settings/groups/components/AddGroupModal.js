@@ -1,10 +1,27 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal } from "react-responsive-modal";
 import { NotificationManager } from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import { httpPostMain } from "../../../../../helpers/httpMethods";
 import {connect} from 'react-redux';
 import {getGroups, updateGroup} from '../../../../../reduxstore/actions/groupActions';
+import RSelect from 'react-select';
+import "../../../../../styles/ModalCustomStyle.css";
+
+const RSelectStyles = {
+  // menu: (provided, state) => ({
+  //   ...provided,
+  //   width: state.selectProps.width,
+  //   borderBottom: '1px dotted green',
+  //   color: state.selectProps.menuColor,
+  //   padding: 20,
+  // }),
+
+  control: (_, { selectProps: { width }}) => ({
+    width: width
+  })
+}
+
 
 const AddGroupModal = ({
   addGroupModalShow,
@@ -26,6 +43,9 @@ const AddGroupModal = ({
     categoryIds: []
   });
 
+  const [RSCategories, setRSCategories] = useState([])
+  const [RSCategoriesSelected, setRSCategoriesSelected] = useState([])
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "categoryIds") {
@@ -35,6 +55,27 @@ const AddGroupModal = ({
     }
     
   };
+
+  const loadRSCategoryOptions = () => {
+    const mappedTeams = categories.map(item => {
+        return {label: item.name, value: item.id}            
+    })
+    setRSCategories(mappedTeams)
+  }
+
+  const handleModalRSInput = (values, {name}) => {
+
+    //WHEN FEMI'S UPDATE TO SELECT MULTI IS DONE
+    // const selectedTeams = values.map(item => item.value)
+    // setRSCategoriesSelected(prev => ({
+    //     ...prev,
+    //     [name]: selectedTeams
+    // }));
+
+    // FOR NOW
+    const {value} = values;
+    setNewTeam({ ...newTeam, [name]: [value] });
+  }
 
   // add new team
   const submitNewTeam = async () => {
@@ -116,7 +157,12 @@ const AddGroupModal = ({
     <Modal
       // show={addGroupModalShow}
       // onHide={() => setAddGroupModalShow(false)}
-      open={addGroupModalShow} onClose={handleModalHide}
+      classNames={{
+        overlay: 'acx-overlay',
+        modal: 'acx-modal'
+      }}
+      open={addGroupModalShow}
+      onClose={handleModalHide}
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
@@ -166,21 +212,20 @@ const AddGroupModal = ({
                 <label className="form-label mt-2" htmlFor="groupDesc">
                   Ticket Category
                 </label>
-                <select
-                  className="form-select form-select-sm"
-                  id="assign"
+                <RSelect className="rselectfield"
+                  style={{ fontSize: "12px" }}
+                  onMenuOpen={loadRSCategoryOptions}
+                  isClearable={false}
+                  isDisabled={false}
+                  isLoading={false}
+                  placeholder="Select categories"
                   name="categoryIds"
-                  value={newTeam.categoryIds || ""}
-                  onChange={handleChange}
-                >
-                  <option value="email">Select category</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-
+                  isMulti={false}
+                  onChange={handleModalRSInput}
+                  options={RSCategories}
+                  // styles={RSelectStyles}
+                  width="500"
+              />
               </div>
 
               <div className="d-flex justify-content-end mt-3">

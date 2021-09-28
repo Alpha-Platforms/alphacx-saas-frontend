@@ -1,0 +1,9 @@
+.react-responsive-modal-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.react-responsive-modal-modal {
+  overflow-y: visible;
+}

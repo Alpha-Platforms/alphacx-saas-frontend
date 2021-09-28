@@ -232,13 +232,13 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                             type="button"
                                             onClick={() => setTabKey('ticket-history')}>Ticket History</button>
                                     </li>
-                                    <li className="nav-item ms-2" role="presentation">
+                                    {/* <li className="nav-item ms-2" role="presentation">
                                         <button
                                             className={`nav-link ${tabKey === 'notes' && 'nav-active'} text-muted px-3`}
                                             id="pills-notes-tab"
                                             type="button"
                                             onClick={() => setTabKey('notes')}>Notes</button>
-                                    </li>
+                                    </li> */}
                                 </ul>
                             </div>
                             <div className="d-flex align-items-md-center">
@@ -272,9 +272,9 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                 </Tab>
 
                                 {/* Notes Tab */}
-                                <Tab eventKey="notes" className="">
+                                {/* <Tab eventKey="notes" className="">
                                     <Notes />
-                                </Tab>
+                                </Tab> */}
 
                                 {/* Timeline tab */}
                                 <Tab eventKey="timeline" className="px-2">
