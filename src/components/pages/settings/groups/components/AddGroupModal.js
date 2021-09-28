@@ -23,19 +23,29 @@ const AddGroupModal = ({
   const [newTeam, setNewTeam] = useState({
     name: '',
     description: '',
-    categoryId: ''
+    categoryIds: []
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setNewTeam({ ...newTeam, [name]: value });
+    if (name === "categoryIds") {
+      setNewTeam({ ...newTeam, [name]: [value] });
+    } else {
+      setNewTeam({ ...newTeam, [name]: value });
+    }
+    
   };
 
   // add new team
   const submitNewTeam = async () => {
-    const {name, description, categoryId} = newTeam;
 
-    if (!name || !categoryId) {
+    // console.clear()
+    // console.log(newTeam)
+    // return null
+
+    const {name, description, categoryIds} = newTeam;
+
+    if (!name || categoryIds.length === 0) {
       return NotificationManager.error('All fields are required', 'Opps!');
     }
 
@@ -54,8 +64,8 @@ const AddGroupModal = ({
 
   // update a team
   const updateTeam = () => {
-    const {name, description, categoryId} = newTeam;
-    if (!name || !categoryId) {
+    const {name, description, categoryIds} = newTeam;
+    if (!name || categoryIds.length === 0) {
       return NotificationManager.error('All fields are required', 'Opps!');
     }
 
@@ -86,7 +96,7 @@ const AddGroupModal = ({
             ...prev,
             name,
             description,
-            categoryId: category_id
+            categoryIds: category_id
           }));
         }
       }
@@ -96,7 +106,7 @@ const AddGroupModal = ({
         ...prev,
         name: '',
         description: '',
-        categoryId: ''
+        categoryIds: []
       }));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -159,8 +169,8 @@ const AddGroupModal = ({
                 <select
                   className="form-select form-select-sm"
                   id="assign"
-                  name="categoryId"
-                  value={newTeam.categoryId || ""}
+                  name="categoryIds"
+                  value={newTeam.categoryIds || ""}
                   onChange={handleChange}
                 >
                   <option value="email">Select category</option>
