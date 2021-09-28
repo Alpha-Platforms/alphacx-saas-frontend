@@ -15,6 +15,7 @@ import { Dropdown } from "react-bootstrap";
 import { TablePagination } from "@material-ui/core";
 import tableIcons from '../../../../../assets/materialicons/tableIcons';
 import { ReactComponent as DotSvg } from "../../../../../assets/icons/dots.svg";
+import { textCapitalize } from './../../../../../helper';
 
 
 const ArticleCategories = () => {
@@ -23,9 +24,14 @@ const ArticleCategories = () => {
         setPolicyLoading] = useState(false);
     const [categories,
         setCategories] = useState([]);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editId, setEditId] = useState('');
 
     const [newCategory,
-        setNewCategory] = useState({});
+        setNewCategory] = useState({
+            name: '',
+            description: ''
+        });
 
     const handleChange = (e) => {
         const {name, value} = e.target;
@@ -38,7 +44,9 @@ const ArticleCategories = () => {
     //   function that fetches all available categories    that can be added to an
     // article
     const fetchCategories = async() => {
+        setPolicyLoading(true);
         const res = await httpGetMain("articles/categories");
+        setPolicyLoading(false);
         if (res
             ?.status === "success") {
             let categories = res
@@ -51,7 +59,41 @@ const ArticleCategories = () => {
         }
     };
 
-    console.log('article categories => ', categories);
+    const addNewCategory = async () => {
+        setPolicyLoading(true);
+        const res = await httpPostMain("articles/categories", newCategory);
+        setPolicyLoading(false);
+        if (res
+            ?.status === "success") {
+            console.log(res);
+        } else {
+            return NotificationManager.error(res
+                ?.er
+                    ?.message, "Error", 4000);
+        }
+
+    }
+
+    const editCategory = async id => {
+        setPolicyLoading(true);
+        const res = await httpPatchMain(`articles/categories/${id}`, newCategory);
+        setPolicyLoading(false);
+        console.log(res);
+        if (res
+            ?.status === "success") {
+                setNewCategory(prev => ({
+                    ...prev,
+                    name: '',
+                    description: ''
+                }));
+                setIsEditing(false);
+                fetchCategories();
+        } else {
+            return NotificationManager.error(res
+                ?.er
+                    ?.message, "Error", 4000);
+        }
+    }
 
     useEffect(() => {
         fetchCategories();
@@ -59,8 +101,12 @@ const ArticleCategories = () => {
 
     const handleSubmit = e => {
         e.preventDefault();
-
         console.log('Creating category');
+        if (isEditing) {
+            editCategory(editId);
+        } else {
+            addNewCategory();
+        }
     }
 
 
@@ -102,8 +148,24 @@ const tableTheme = createTheme({
     });
 
 
-    const handleCatEdit = () => {
-        console.log('Attempt to edit category');
+    const handleCatEdit = cat => {
+        console.log('Attempt to edit category', cat);
+        setIsEditing(true);
+        setNewCategory(prev => ({
+            ...prev,
+            name: cat.name,
+            description: cat.description
+        }));
+        setEditId(cat.id);
+    }
+
+    const handleEditCancel = () => {
+        setIsEditing(false);
+        setNewCategory(prev => ({
+            ...prev,
+            name: '',
+            description: ''
+        }));
     }
 
     return (
@@ -145,7 +207,7 @@ const tableTheme = createTheme({
                                         className="form-control form-control"
                                         id="category"
                                         name="name"
-                                        value={newCategory.name || ""}
+                                        value={newCategory.name}
                                         onChange={handleChange}/>
                                 </div>
 
@@ -156,14 +218,20 @@ const tableTheme = createTheme({
                                     <textarea
                                         name="description"
                                         id="description"
+                                        value={newCategory.description}
+                                        onChange={handleChange}
                                         className="form-control ct-description"></textarea>
                                 </div>
                             </div>
                             <div className="my-3 mt-4 text-end">
+                                {isEditing && <button type="button" onClick={handleEditCancel}
+                                    className="btn btn-sm btn-outline px-3 border me-3">
+                                    Cancel
+                                </button>}
                                 <button
                                     className="btn btn-sm bg-at-blue-light px-3"
                                     disabled={newCategory.name === "" || !newCategory.name}>
-                                    Add New Category
+                                    {isEditing ? 'Save Changes' : 'Add New Category'}
                                 </button>
                             </div>
                         </form>
@@ -182,11 +250,12 @@ const tableTheme = createTheme({
                                     {
                                         title: "Category",
                                         field: "category",
+                                        render: rowData => (<span>{textCapitalize(rowData.category)}</span>)
                                     },
                                     {
                                         title: "Description",
                                         field: "description",
-                                        width: "40%",
+                                        width: "20%",
                                     },
                                     {
                                         title: "Action",
@@ -202,7 +271,7 @@ const tableTheme = createTheme({
                                             </span>
                                             </Dropdown.Toggle>
                                             <Dropdown.Menu>
-                                            <Dropdown.Item eventKey="1" onClick={handleCatEdit}>
+                                            <Dropdown.Item eventKey="1" onClick={() => handleCatEdit({name: rowData.category, description: rowData.description, id: rowData.id})}>
                                                 <Link to="#">
                                                 <span className="black-text">Edit</span>
                                                 </Link>
