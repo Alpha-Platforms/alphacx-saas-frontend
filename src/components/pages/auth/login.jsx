@@ -128,7 +128,7 @@ const Login = ({match: {params}}) => {
 
         } else if(hostName[0] === "dev"){
           // window.location.href = "/";
-          setDomain(hostName[0])
+          setDomain(userInput.domain)
 
 
         } else { // FOR DEVELOPMENT - LOCALHOST
