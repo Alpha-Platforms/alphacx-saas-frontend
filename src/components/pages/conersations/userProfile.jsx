@@ -123,7 +123,11 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                   }}
                 >
                   <div className="psvgIcon__" style={{marginRight: 17}}>
-                    {ticket[0]?.assignee?.avatar ? (
+                    {ticket[0]?.assignee == null ? 
+                      <div className="avatar avatar-sm rounded-circle overflow-hidden acx-bg-secondary d-flex justify-content-center align-items-center">
+                          <p className="fs-6 mb-0 text-white"><i className="bi-person-x"></i></p>
+                      </div>
+                    : (ticket[0]?.assignee?.avatar) ? (
                       <img
                         // src={ticket[0]?.assignee?.avatar || 'love'}
                         src={ticket[0]?.assignee?.avatar}
@@ -141,7 +145,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
 
                   <div>
                     <p className="acx-fs-8">Assigned to</p>
-                    { ticket[0]?.assignee?
+                    { ticket[0]?.assignee ?
                       (<Link to={`/settings/profile/${ticket[0]?.assignee?.id}`}>
                         {`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(ticket[0]?.assignee?.lastname)}`}
                       </Link>) 
