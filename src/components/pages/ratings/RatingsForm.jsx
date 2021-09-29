@@ -14,7 +14,7 @@ import Image  from 'react-bootstrap/Image';
 
 // 
 import StarRatings from 'react-star-ratings';
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 // 
 import { httpPostMain } from "../../../helpers/httpMethods";
 import "../settings/settings.css";
@@ -26,11 +26,11 @@ export default function RatingsForm() {
     const [processing, setProcessing] = useState(false);
 
     // 
-    const search = useLocation().search;
+    const { id } = useParams();
     // 
     const handleSubmit = async () =>{
         setProcessing(true);
-        const ticketId = new URLSearchParams(search).get("ticket_id");
+        const ticketId = id;
         if(ticketId == null ){
             setProcessing(false);
             return NotificationManager.error("ticket id is not defined", "Error", 4000);
