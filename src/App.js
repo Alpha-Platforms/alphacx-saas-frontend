@@ -69,6 +69,7 @@ import NewRole from "./components/pages/settings/roles/NewRole";
 import Form from "./components/pages/settings/forms/Form";
 import HelpCenterSettings from "./components/pages/settings/help_center/helpCenterSettings";
 import NewArticle from "./components/pages/settings/help_center/components/newArticle";
+import ArticleCategories from "./components/pages/settings/help_center/components/ArticleCategories";
 import TicketSettings from "./components/pages/settings/ticketsettings/TicketSettings";
 import AutomationSettings from "./components/pages/settings/automation/automationSettings.jsx";
 import NewAutomationPolicy from "./components/pages/settings/automation/components/NewAutomationPolicy";
@@ -288,6 +289,11 @@ const SiteRouter = connect(mapStateToProps, {
                                 path="/settings/help-center"
                                 pageName="Settings"
                                 component={HelpCenterSettings}/>
+                            <SettingsLayoutRoute
+                                exact
+                                path="/settings/help-center/categories"
+                                pageName="Settings"
+                                component={ArticleCategories}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/help-center/article"

@@ -281,6 +281,12 @@ const HelpCenterSettings = () => {
         <div class="d-flex justify-content-between flex-row">
           <h5 class="mt-3 mb-4 fs-6 fw-bold">Help Center Settings</h5>
           <div>
+          <Link
+              class="btn btn-primary btn-sm ms-2"
+              to="/settings/help-center/categories"
+            >
+              <span>Categories</span>
+            </Link>
             <Link
               class="btn btn-primary btn-sm ms-2"
               to="/settings/help-center/article"
