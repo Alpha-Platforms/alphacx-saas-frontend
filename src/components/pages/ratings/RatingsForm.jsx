@@ -111,7 +111,7 @@ export default function RatingsForm() {
                                 </div>
                             </div>
                             <div className="mb-3 text-center">
-                                <Button type="submit" onClick={handleSubmit} size="lg" disabled={processing} variant="secondary" className="px-4"> 
+                                <Button type="submit" onClick={handleSubmit} size="lg" disabled={processing} className="acx-btn-primary px-4"> 
                                     {(processing) ? <span className="text-light"><Spinner as="span" 
                                             animation="border" variant="light" size="sm" role="status" 
                                             aria-hidden="true"/> Loading...
