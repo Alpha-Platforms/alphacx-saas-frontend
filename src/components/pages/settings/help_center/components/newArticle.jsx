@@ -186,7 +186,7 @@ const NewArticle = () => {
       console.log("res", res);
       NotificationManager.success(res.message, "Success", 5000);
 
-      window.location.href = `/settings/help-center`;
+      window.location.href = `/settings/knowledge-base`;
     } else {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
@@ -260,7 +260,7 @@ const NewArticle = () => {
       setPolicyLoading(false);
       NotificationManager.success(res.message, "Success", 4000);
 
-      window.location.href = `/settings/help-center`;
+      window.location.href = `/settings/knowledge-base`;
     } else {
       setPolicyLoading(false);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
@@ -283,7 +283,7 @@ const NewArticle = () => {
       setPolicyLoading(false);
       NotificationManager.success(res.message, "Success", 4000);
 
-      window.location.href = `/settings/help-center`;
+      window.location.href = `/settings/knowledge-base`;
     } else {
       setPolicyLoading(false);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
@@ -322,7 +322,7 @@ const NewArticle = () => {
             <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
             {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
                             className="img-fluid mx-2 me-3"></object> */}
-            <Link to="/settings/help-center">
+            <Link to="/settings/knowledge-base">
               <span className="text-custom">Help Center</span>
             </Link>
             <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
@@ -440,7 +440,7 @@ const NewArticle = () => {
           <div className="side-content col-md-4">
             <div className="mb-5 top">
               <Link
-                to="/settings/help-center/article"
+                to="/settings/knowledge-base/article"
                 className="btn btn-sm f-12 bg-outline-custom cancel px-4 w-50"
               >
                 <p>Preview</p>

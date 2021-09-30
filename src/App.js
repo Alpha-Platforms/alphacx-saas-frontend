@@ -286,22 +286,22 @@ const SiteRouter = connect(mapStateToProps, {
                                 component={Fields}/>
                             <SettingsLayoutRoute
                                 exact
-                                path="/settings/help-center"
+                                path="/settings/knowledge-base"
                                 pageName="Settings"
                                 component={HelpCenterSettings}/>
                             <SettingsLayoutRoute
                                 exact
-                                path="/settings/help-center/categories"
+                                path="/settings/knowledge-base/categories"
                                 pageName="Settings"
                                 component={ArticleCategories}/>
                             <SettingsLayoutRoute
                                 exact
-                                path="/settings/help-center/article"
+                                path="/settings/knowledge-base/article"
                                 pageName="Settings"
                                 component={NewArticle}/>
                             <SettingsLayoutRoute
                                 exact
-                                path="/settings/help-center/edit/:articleId"
+                                path="/settings/knowledge-base/edit/:articleId"
                                 pageName="Settings"
                                 component={NewArticle}/>
                             <SettingsLayoutRoute

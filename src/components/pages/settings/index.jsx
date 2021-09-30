@@ -239,7 +239,7 @@ function SettingsHome({signedUser}) {
         <Col sm={6} md={4} className="settings-menu-item">   
           <div className="border rounded bg-light">
             <Link
-              to="/settings/help-center"
+              to="/settings/knowledge-base"
               className="d-block cursor text-decoration-none"
             >
               <div className="d-flex p-md-4">
@@ -247,7 +247,7 @@ function SettingsHome({signedUser}) {
                   <img src={SearchBlueIcon} alt="" />
                 </div>
                 <div className="ms-3">
-                  <h6 className="text-dark mb-0">Help Centre</h6>
+                  <h6 className="text-dark mb-0">Knowledge Base</h6>
                   <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                   Create and manage information on your knowledge base.
                   </p>
