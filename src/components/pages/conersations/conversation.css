@@ -8,8 +8,8 @@
   border: 0 !important;
 }
 .conversation-wrap {
-  width: 98%;
-  height: 85vh;
+  width: 100%;
+  height: calc(100vh - 75px);
   background-color: white;
   border-radius: 4px;
   position: relative;
@@ -971,7 +971,7 @@ select {
   overflow: hidden;
   padding-left: 30px;
   padding-right: 30px;
-  margin-top: 12px;
+  margin-top: 0px;
   background-color: #fafafa;
   padding-top: 20px;
   /* margin-bottom: 17px; */
