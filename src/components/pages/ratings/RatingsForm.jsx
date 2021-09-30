@@ -21,21 +21,23 @@ import "../settings/settings.css";
 
 export default function RatingsForm() {
     const [rating, setRating] = useState(0);
-    const [npsScore, setNpsScore] = useState(null);
+    const [npsScore, setNpsScore] = useState(0);
     const [comment, setComment] = useState("");
     const [processing, setProcessing] = useState(false);
-
     // 
-    const { id } = useParams();
+    const { ticketId, customerId } = useParams();
     // 
     const handleSubmit = async () =>{
         setProcessing(true);
-        const ticketId = id;
         if(ticketId == null ){
             setProcessing(false);
             return NotificationManager.error("ticket id is not defined", "Error", 4000);
         }
-        if(rating == 0 ){
+        if(customerId == null ){
+            setProcessing(false);
+            return NotificationManager.error("user id is not defined", "Error", 4000);
+        }
+        if(rating === 0 ){
             setProcessing(false);
             return NotificationManager.error("rating must be 1 or more ", "Error", 4000);
         }
@@ -43,6 +45,7 @@ export default function RatingsForm() {
             "value": rating,
             "npsScore": npsScore,
             "ticketId": ticketId,
+            "customerId": customerId,
             "comment": comment
         };
         const res = await httpPostMain(`ratings`, data);

@@ -154,7 +154,7 @@ export default function RatingsSettings() {
                                         </div>
                                     </div>
                                     <div className="mb-3 text-center">
-                                        <a href={`https://${tenantDomain}.alphacx.co/feedback`} target="_blank" className="acx-link-primary">https://{tenantDomain}.alphacx.co/feedback/</a>
+                                        {/* <a href={`https://${tenantDomain}.alphacx.co/feedback`} target="_blank" className="acx-link-primary">https://{tenantDomain}.alphacx.co/feedback/</a> */}
                                     </div>
                                     <div className="text-center">
                                         <Button type="submit" onClick={handleSubmit} size="lg" disabled={processing} size="lg" className="px-4 acx-btn-primary"> 
