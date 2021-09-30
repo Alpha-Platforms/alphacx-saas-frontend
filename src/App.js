@@ -83,6 +83,7 @@ import NewCannedResponse from "./components/pages/settings/canned_responses/comp
 import CustomerPortal from "./components/pages/help_center/customer_portal/CustomerPortal";
 import Dashboard from "./components/pages/dashboard/Dashboard";
 import AccountVerified from "components/pages/auth/verified";
+import LiveChatSettings from './components/pages/settings/livechatsettings/LiveChatSettings';
 
 const mapStateToProps = (state, ownProps) => ({isUserAuthenticated: state.userAuth.isUserAuthenticated});
 
@@ -286,22 +287,22 @@ const SiteRouter = connect(mapStateToProps, {
                                 component={Fields}/>
                             <SettingsLayoutRoute
                                 exact
-                                path="/settings/help-center"
+                                path="/settings/knowledge-base"
                                 pageName="Settings"
                                 component={HelpCenterSettings}/>
                             <SettingsLayoutRoute
                                 exact
-                                path="/settings/help-center/categories"
+                                path="/settings/knowledge-base/categories"
                                 pageName="Settings"
                                 component={ArticleCategories}/>
                             <SettingsLayoutRoute
                                 exact
-                                path="/settings/help-center/article"
+                                path="/settings/knowledge-base/article"
                                 pageName="Settings"
                                 component={NewArticle}/>
                             <SettingsLayoutRoute
                                 exact
-                                path="/settings/help-center/edit/:articleId"
+                                path="/settings/knowledge-base/edit/:articleId"
                                 pageName="Settings"
                                 component={NewArticle}/>
                             <SettingsLayoutRoute
@@ -309,6 +310,11 @@ const SiteRouter = connect(mapStateToProps, {
                                 path="/settings/tickets"
                                 pageName="Settings"
                                 component={TicketSettings}/>
+                            <SettingsLayoutRoute
+                                exact
+                                path="/settings/livechat"
+                                pageName="Settings"
+                                component={LiveChatSettings}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/email"

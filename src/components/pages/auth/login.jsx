@@ -9,11 +9,7 @@ import showPasswordImg from "../../../assets/imgF/Show.png";
 import Symbol1 from "../../../assets/imgF/symbolAuth.png";
 import Symbol2 from "../../../assets/imgF/symbolAuth2.png";
 import { NotificationManager } from "react-notifications";
-import swal from "sweetalert";
-import {
-  ValidateEmail,
-  validatePassword,
-} from "../../../helpers/validateInput";
+import {Validate} from "../../../helpers/validateInput";
 import { httpPost, httpPostMain } from "../../../helpers/httpMethods";
 import { css } from "@emotion/react";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -57,6 +53,20 @@ const Login = ({match: {params}}) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     submit()
+  }
+
+  // ONBLUR VALIDATION
+  const handleBlur = (e) => {   
+    if (e.target.name === "email") {
+        Validate.email(e, userInput, setUserInput)
+
+    } else if (e.target.name === "password") {
+        Validate.password(e, userInput, setUserInput)
+
+    } else if (e.target.name === "firstName" || e.target.name === "lastName") {
+        Validate.length(e, userInput, setUserInput)
+    }
+      
   }
 
   const submit = async () => {
@@ -115,10 +125,10 @@ const Login = ({match: {params}}) => {
 
     } else {// DOMAIN LOGIN
 
-      const data = userInput.domain;
+      const domain = userInput.domain;
 
       setLoading(true);
-      const res = await httpPost(`auth/login`, {domain: data});
+      const res = await httpPost(`auth/login`, {domain});
 
       if (res.status === "success") {
         setLoading(false)
@@ -126,13 +136,9 @@ const Login = ({match: {params}}) => {
         if(hostName.length === 3 && hostName[0] === "app"){
           window.location.href = `https://${res?.data?.domain}.alphacx.co`;
 
-        } else if(hostName[0] === "dev"){
+        } else {
           // window.location.href = "/";
-          setDomain(userInput.domain)
-
-
-        } else { // FOR DEVELOPMENT - LOCALHOST
-          window.location.href = `http://${res?.data?.domain}.alphacx.localhost:3000`;
+          setDomain(domain)
         }
         
       } else {
@@ -219,6 +225,7 @@ const Login = ({match: {params}}) => {
               <input
                 type="text"
                 onChange={handleChange}
+                onBlur={handleBlur}
                 name="email"
                 value={userInput.email}
               />
@@ -230,6 +237,7 @@ const Login = ({match: {params}}) => {
             <input
               type={`${showPassword ? "text" : "password"}`}
               onChange={handleChange}
+              onBlur={handleBlur}
               name="password"
               value={userInput.password}
             />

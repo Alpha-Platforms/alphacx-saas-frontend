@@ -1,3 +1,5 @@
+import NotificationManager from "react-notifications/lib/NotificationManager";
+
 let error = "";
 export const ValidateInput = (expression) => {
   switch (true) {
@@ -32,26 +34,58 @@ export const validatePassword = (pw) => {
   if (pw === "") {
     return (error = "Password must not be empty.");
   }
-
   //minimum password length validation  
-  if (pw.length < 8) {
-    return (error = "Password must be greater than 8 character.");
-
+  if (pw.length < 8 || pw.length > 20) {
+    return (error = "Password must be between 8 and 20 characters.");
   }
-
-  //maximum length of password validation  
-  if (pw.length > 20) {
-    return (error = "Password must not be greater than 20 character.");
-  }
-
-
   if (pw.search(/[a-z]/i) < 0) {
     return error = "Your password must contain at least one letter.";
   }
   // if (pw.search(/[0-9]/) < 0) {
   //  return  error="Your password must contain at least one digit."; 
   // }
-  else {
-    return (error = "Looks Good!");
+}
+
+
+export const Validate  = {
+
+  email: (e, state, setState) => {
+
+    if (!/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(e.target.value)){
+      NotificationManager.warning("Enter a valid email", "Validation Error", 4000);
+      return setState({
+      ...state,
+      [e.target.name]: ""
+    });
+    } 
+    
+
   }
+
+  ,
+
+  password: (e, state, setState) => {
+    const error = validatePassword(e.target.value)
+    if(error){
+      NotificationManager.warning(error, "Validation Error", 4000);
+      return setState({
+        ...state,
+        [e.target.name]: ""
+      })
+    }
+    
+  }
+
+  ,
+
+  length: (e, state, setState) => {
+    if (e.target.value.length < 2 || e.target.value.search(/[a-z]/i) < 0) {
+      NotificationManager.warning("Enter a proper name", "Validation Error", 4000);
+      return setState({
+        ...state,
+        [e.target.name]: ""
+      })
+    }
+  }
+  
 }
