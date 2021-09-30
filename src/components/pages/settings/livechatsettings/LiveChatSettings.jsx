@@ -5,6 +5,19 @@ import RightArrow from "../../../../assets/imgF/arrow_right.png";
 
 const LiveChatSettings = () => {
 
+    const [settings, setSettings] = useState({
+
+    });
+
+    const handleInputChange = e => {
+        const {name, value} = e.target;
+
+        setSettings(prev => ({
+            ...prev,
+            [name]: value
+        }));
+
+    }
 
     return (
         <div>
@@ -19,9 +32,75 @@ const LiveChatSettings = () => {
                         <span>Live Chat</span>
                     </h6>
                 </div>
-                <div className="mt-4">
-                    Live Chat Settings
-                    
+                <div className="d-flex justify-content-between flex-row">
+                    <h5 className="mt-3 mb-4 fs-6 fw-bold">Widget Settings</h5>
+                </div>
+                <div className="mt-1">
+                    <div>
+                        <div className="w-75">
+                            <form className="tl-form" onSubmit={e => e.preventDefault()}>
+                                <div>
+                                    <div className="form-group mt-3">
+                                        <label className="f-14 mb-1">
+                                            Title
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="form-control form-control"
+                                            name="title"
+                                            value={settings.title}
+                                            onChange={handleInputChange}/>
+                                    </div>
+
+                                    <div className="form-group mt-4">
+                                        <label className="f-14 mb-1">
+                                            Short Description:
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="form-control form-control"
+                                            name="description"
+                                            value={settings.description}
+                                            onChange={handleInputChange}/>
+                                    </div>
+
+                                    <div className="form-group mt-4">
+                                        <label className="f-14 mb-1">
+                                            Initial chat text
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="form-control form-control"
+                                            name="initialText"
+                                            value={settings.initialText}
+                                            onChange={handleInputChange}/>
+                                    </div>
+
+
+                                    <div className="form-group mt-4">
+                                        <label className="f-14 mb-1">
+                                            Color
+                                        </label>
+                                        <div><small>Select your widget color.</small></div>
+                                        <input
+                                            type="text"
+                                            className="form-control form-control"
+                                            name="initialText"
+                                            value={settings.initialText}
+                                            onChange={handleInputChange}/>
+                                        <div><small>This is the primary color of your widget.</small></div>
+                                    </div>
+                                </div>
+                                <div className="my-3 mt-4">
+                                    <button
+                                        className="btn btn-sm bg-at-blue-light px-3"
+                                        disabled={false}>Save Changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div></div>
+
                 </div>
             </div>
         </div>
