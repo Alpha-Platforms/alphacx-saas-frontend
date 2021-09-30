@@ -69,6 +69,7 @@ import NewRole from "./components/pages/settings/roles/NewRole";
 import Form from "./components/pages/settings/forms/Form";
 import HelpCenterSettings from "./components/pages/settings/help_center/helpCenterSettings";
 import NewArticle from "./components/pages/settings/help_center/components/newArticle";
+import ArticleCategories from "./components/pages/settings/help_center/components/ArticleCategories";
 import TicketSettings from "./components/pages/settings/ticketsettings/TicketSettings";
 import AutomationSettings from "./components/pages/settings/automation/automationSettings.jsx";
 import NewAutomationPolicy from "./components/pages/settings/automation/components/NewAutomationPolicy";
@@ -165,7 +166,7 @@ const SiteRouter = connect(mapStateToProps, {
                             <Route exact path="/help" component={HelpCenter}/>
                             <Route exact path="/help/:topic" component={ArticleList}/>
                             <Route exact path="/help/:topic/:article" component={Article}/> {/* help pages end */}
-                            <Route exact path="/feedback" component={RatingsForm}/> {/* help pages end */}
+                            <Route exact path="/feedback/:ticketId/:customerId" component={RatingsForm}/> {/* help pages end */}
                             <Route exact path="/account-verified" component={AccountVerified}/> {/* Customer Portal */}
                             <Route exact path="/customer-portal/tickets" component={CustomerPortal}/>
 
@@ -288,6 +289,11 @@ const SiteRouter = connect(mapStateToProps, {
                                 path="/settings/help-center"
                                 pageName="Settings"
                                 component={HelpCenterSettings}/>
+                            <SettingsLayoutRoute
+                                exact
+                                path="/settings/help-center/categories"
+                                pageName="Settings"
+                                component={ArticleCategories}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/help-center/article"

@@ -356,7 +356,8 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       if (res.status === "success") {
         setTags(res?.data?.tags_names.tags);
       } else {
-        return NotificationManager.error(res.er.message, "Error", 4000);
+        return;
+        // return NotificationManager.error(res.er.message, "Error", 4000);
       }
     };
 

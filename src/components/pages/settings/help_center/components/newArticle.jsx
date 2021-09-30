@@ -29,6 +29,7 @@ import { NotificationManager } from "react-notifications";
 import { Link, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import ScaleLoader from "react-spinners/ScaleLoader";
+import axios from 'axios';
 
 // 67796966-e0c2-44db-b184-cc4a7e19bee0
 const NewArticle = () => {
@@ -111,6 +112,7 @@ const NewArticle = () => {
     console.log(richText);
   };
   const _uploadImageCallBack = (file) => {
+    console.log('upload image callback')
     // long story short, every time we upload an image, we
     // need to save it to the state so we can get it's data
     // later when we decide what to do with it.
@@ -132,8 +134,20 @@ const NewArticle = () => {
     // the img src we will use here will be what's needed
     // to preview it in the browser. This will be different than what
     // we will see in the index.md file we generate.
-    return new Promise((resolve, reject) => {
-      resolve({ data: { link: imageObject.localSrc } });
+    return new Promise(async (resolve, reject) => {
+        const data = new FormData();
+        data.append('file', imageObject.file);
+        data.append('upload_preset', 'i5bn3icr');
+        data.append('cloud_name', 'alphacx-co');
+        try {
+          const res = await axios.post(`https://api.cloudinary.com/v1_1/alphacx-co/image/upload`, data)
+          resolve({ data: {link: res.data?.url }});
+        } catch(err) {
+          console.log(err);
+          NotificationManager.error("Photo could not be uploaded", "Error");
+          reject('Photo not uploaded');
+        }
+      // resolve({ data: { link: imageObject.localSrc } });
     });
   };
 
