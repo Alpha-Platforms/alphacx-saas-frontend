@@ -67,7 +67,7 @@ const [tabKey, setTabKey] = useState("category-form");
         setPolicyLoading(false);
         if (res
             ?.status === "success") {
-            console.log(res);
+            console.log('Cat Response => ', res);
         } else {
             return NotificationManager.error(res
                 ?.er
@@ -197,7 +197,7 @@ const tableTheme = createTheme({
                     <h5 className="mt-3 mb-4 fs-6 fw-bold">Article Categories</h5>
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-0">
                 <ul className="nav nav-pills" id="fieldTabsSelector" role="tablist">
                     <li className="nav-item" role="presentation">
                     <button
