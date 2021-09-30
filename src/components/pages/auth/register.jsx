@@ -7,7 +7,7 @@ import Symbol1 from "../../../assets/imgF/symbolAuth.png";
 import Symbol2 from "../../../assets/imgF/symbolAuth2.png";
 import {NotificationManager} from "react-notifications";
 import swal from "sweetalert";
-import {ValidateEmail, validatePassword} from "../../../helpers/validateInput";
+import {ValidateEmail, validatePassword, Validate} from "../../../helpers/validateInput";
 import {httpPost} from "../../../helpers/httpMethods";
 import {css} from "@emotion/react";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -63,32 +63,7 @@ const Login = ({history}) => {
 
     const handleSubmit = async(e) => {
         e.preventDefault();
-        const validateEmail = ValidateEmail(userInput.email);
-
-        // if (validateEmail == false) {
-        //     return NotificationManager.warning("Invalid email address", "Validation Warning", 4000);
-        // }
-
-        // if (userInput.firstName == "") {
-        //     return NotificationManager.warning("First name is required", "Validation Warning", 4000);
-        // }
-
-        // if (userInput.lastName == "") {
-        //     return NotificationManager.warning("Last name is required", "Validation Warning", 4000);
-        // }
-
-        // if (userInput.companyName == "") {
-        //     return NotificationManager.warning("Company name is required", "Validation Warning", 4000);
-        // }
-
-        // if (userInput.domain == "") {
-        //     return NotificationManager.warning("Domain  is required", "Validation Warning", 4000);
-        // }
-
-        // const validatepassword = validatePassword(userInput.password);
-        // if (validatepassword != "Looks Good!") {
-        //     return NotificationManager.warning(validatepassword, "Validation Warning", 4000);
-        // }
+        const validateEmail = ValidateEmail (userInput.email);
 
         const data = {
             domain: userInput.domain,
@@ -115,6 +90,20 @@ const Login = ({history}) => {
         }
 
     };
+
+    // ONBLUR VALIDATION
+    const handleBlur = (e) => {   
+        if (e.target.name === "email") {
+            Validate.email(e, userInput, setUserInput)
+
+        } else if (e.target.name === "password") {
+            Validate.password(e, userInput, setUserInput)
+
+        } else if (e.target.name === "firstName" || e.target.name === "lastName") {
+            Validate.length(e, userInput, setUserInput)
+        }
+        
+    }
 
     const checkContinue = () => {
         const {firstName, lastName, email, password} = userInput;
@@ -164,6 +153,7 @@ const Login = ({history}) => {
                                         <input
                                             type="text"
                                             onChange={handleChange}
+                                            onBlur={handleBlur}
                                             name="firstName"
                                             autoComplete="off"
                                             value={userInput.firstName}/>
@@ -174,6 +164,7 @@ const Login = ({history}) => {
                                         <input
                                             type="text"
                                             onChange={handleChange}
+                                            onBlur={handleBlur}
                                             name="lastName"
                                             autoComplete="off"
                                             className="d-inline-block me-0 w-100"
@@ -187,6 +178,7 @@ const Login = ({history}) => {
                                         <input
                                             type="text"
                                             onChange={handleChange}
+                                            onBlur={handleBlur}
                                             name="email"
                                             autoComplete="off"
                                             value={userInput.email}/>
@@ -200,6 +192,7 @@ const Login = ({history}) => {
                                         ? "text"
                                         : "password"}`}
                                         onChange={handleChange}
+                                        onBlur={handleBlur}
                                         name="password"
                                         autoComplete="new-password"
                                         value={userInput.password}/>

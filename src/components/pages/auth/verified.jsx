@@ -17,7 +17,7 @@ const override = css``;
 const AccountVerified = ({match, ...props}) => {
 
   const [message, setMessage] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [isTenantVerified, setIsTenantVerified] = useState(false)
   const [token, setToken] = useState("")
   const [isChecked, setIsChecked] = useState(false)
@@ -45,21 +45,19 @@ const AccountVerified = ({match, ...props}) => {
   // VERFICATION
   const verify = async (token) => {
 
-    setLoading(true);
-    setIsChecked(true);
-      
     const res = await httpPost("auth/verify", {token});
 
     if (res.status === "success") {
       setIsTenantVerified(true)
+      setIsChecked(true);
       setLoading(false);
       setMessage(res.message)
       NotificationManager.success("Verification successful", message, 4000);
       
     } else {
-      console.clear()
-      console.log(res);
+      
       setLoading(false);
+      setIsChecked(true);
       NotificationManager.error(wordCapitalize(res?.er?.message), "Domain not verified", 4000);
     }
 
@@ -68,6 +66,22 @@ const AccountVerified = ({match, ...props}) => {
   return (
 
     <>
+    { (loading && !isChecked) && 
+      <div style={{
+        "justifyContent": "center",
+        "display": "flex",
+        "alignItems": "center",
+        "height": "100vh"
+      }}>
+        <ClipLoader
+          color={"#0796f7"}
+          loading={true}
+          css={override}
+          size={75}
+        />
+      </div>
+
+    }
     { isChecked ?
 
       <div className="auth-container d-flex justify-content-center">
@@ -114,21 +128,8 @@ const AccountVerified = ({match, ...props}) => {
         </div>
       </div>
         
-    :
-
-    <div style={{
-        "justifyContent": "center",
-        "display": "flex",
-        "alignItems": "center",
-        "height": "100vh"
-      }}>
-        <ClipLoader
-          color={"#0796f7"}
-          loading={true}
-          css={override}
-          size={75}
-        />
-      </div>
+    : ""
+    
 
     }
     </>
