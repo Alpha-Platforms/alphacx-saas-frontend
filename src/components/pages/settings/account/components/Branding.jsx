@@ -147,7 +147,7 @@ const Branding = () => {
             </p>
             <p className="uploadInfoWrapper">
               <small id="uploadPersonalPhotoInputInfo">
-                Upload logo for the Help Center, logo must be a PNG file with
+                Upload logo for the Knowledge Base, logo must be a PNG file with
                 maximum dimensions of 300px x 100px
               </small>
             </p>

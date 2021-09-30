@@ -275,11 +275,11 @@ const HelpCenterSettings = () => {
             <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
             {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
                             className="img-fluid mx-2 me-3"></object> */}
-            <span>Help Center</span>
+            <span>Knowledge Base</span>
           </h6>
         </div>
         <div class="d-flex justify-content-between flex-row">
-          <h5 class="mt-3 mb-4 fs-6 fw-bold">Help Center Settings</h5>
+          <h5 class="mt-3 mb-4 fs-6 fw-bold">Knowledge Base Settings</h5>
           <div>
           <Link
               class="btn btn-primary btn-sm ms-2"

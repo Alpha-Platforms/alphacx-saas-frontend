@@ -187,7 +187,7 @@ const tableTheme = createTheme({
                         <img src={RightArrow} alt="" className="img-fluid mx-2 me-3"/> {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
                             className="img-fluid mx-2 me-3"></object> */}
                         <Link to="/settings/knowledge-base">
-                            <span className="text-custom">Help Center</span>
+                            <span className="text-custom">Knowledge Base</span>
                         </Link>
                         <img src={RightArrow} alt="" className="img-fluid mx-2 me-3"/>
                         <span>Article Categories</span>
