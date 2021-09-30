@@ -200,25 +200,26 @@ const NewArticle = () => {
       let { title, body, folders } = res?.data;
       console.clear();
       // get category id
-      let folder = folders[0];
-      let categoryId;
+      // let folder = folders[0];
+      // let categoryId;
 
-      for (var i = 0; i < categories.length; i++) {
-        for (var j = 0; j < categories[i].folders.length; j++) {
-          console.log("[" + i + "]" + "[" + j + "]");
-          if (categories[i].folders[j].id == folder.id) {
-            categoryId = categories[i].id;
-            console.log("found");
-            break;
-          }
-        }
-      }
+      // for (var i = 0; i < categories.length; i++) {
+      //   for (var j = 0; j < categories[i].folders.length; j++) {
+      //     console.log("[" + i + "]" + "[" + j + "]");
+      //     if (categories[i].folders[j].id == folder.id) {
+      //       categoryId = categories[i].id;
+      //       console.log("found");
+      //       break;
+      //     }
+      //   }
+      // }
 
       setNewPost({
         ...newPost,
         title,
         richText: body,
-        folderId: folder.id,
+        folderId: folders[0]?.id,
+        categoryId: folders[0]?.category?.id
       });
 
       // convert rich text to plain text in editor
@@ -290,8 +291,8 @@ const NewArticle = () => {
   };
 
   useEffect(() => {
+    fetchCategories();
     if (!articleId) {
-      fetchCategories();
     } else {
       fetchArticleDetails(categories);
     }
