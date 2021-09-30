@@ -134,7 +134,7 @@ const HelpCenterSettings = () => {
       width: "40%",
       render: (rowData) => {
         return (
-        <Link to={`/settings/help-center/edit/${articles[rowData.tableData.id].id}`}>
+        <Link to={`/settings/knowledge-base/edit/${articles[rowData.tableData.id].id}`}>
           {articles[rowData.tableData.id].title}
         </Link>
       )}
@@ -191,7 +191,7 @@ const HelpCenterSettings = () => {
                 className="black-text"
                 onClick={() => {
                   // console.log(articles.articles[rowData.tableData.id].id);
-                  window.location.href = `/settings/help-center/edit/${
+                  window.location.href = `/settings/knowledge-base/edit/${
                     articles[rowData.tableData.id].id
                   }`;
                 }}
@@ -275,21 +275,21 @@ const HelpCenterSettings = () => {
             <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
             {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
                             className="img-fluid mx-2 me-3"></object> */}
-            <span>Help Center</span>
+            <span>Knowledge Base</span>
           </h6>
         </div>
         <div class="d-flex justify-content-between flex-row">
-          <h5 class="mt-3 mb-4 fs-6 fw-bold">Help Center Settings</h5>
+          <h5 class="mt-3 mb-4 fs-6 fw-bold">Knowledge Base Settings</h5>
           <div>
           <Link
               class="btn btn-primary btn-sm ms-2"
-              to="/settings/help-center/categories"
+              to="/settings/knowledge-base/categories"
             >
               <span>Categories</span>
             </Link>
             <Link
               class="btn btn-primary btn-sm ms-2"
-              to="/settings/help-center/article"
+              to="/settings/knowledge-base/article"
             >
               <span>New Article</span>
             </Link>
