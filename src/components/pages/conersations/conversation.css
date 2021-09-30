@@ -210,10 +210,10 @@
   top: -5px;
 }
 .message-list-container {
-  height: 80%;
   overflow: hidden;
   overflow-y: scroll;
-  padding-bottom: 0px !important;
+  padding-bottom: 10px !important;
+  flex-grow: 1;
 }
 
 .message-list-container .message-listmain:last-child {
@@ -906,6 +906,8 @@ select {
   background-color: #fafafa;
   border-right: 1px solid rgba(0, 98, 152, 0.1);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .conversation-layout .conversation-layout-col-two {
@@ -941,6 +943,7 @@ select {
   height: 12%;
   position: relative;
   border-bottom: 1px solid rgba(0, 98, 152, 0.1);
+  flex-shrink: 0; 
 }
 
 .conversationHeaderMainV2 {
@@ -955,11 +958,11 @@ select {
 
 .conversationsMain {
   width: 100%;
-  height: 68%;
-
+  /* height: 68%; */
   overflow: hidden;
   overflow-y: scroll;
   padding-bottom: 30px;
+  flex-grow: 1;
 }
 .conversationsMain::-webkit-scrollbar {
   width: 0.5px !important;
@@ -968,13 +971,17 @@ select {
 .conversationCommentBox {
   width: 100%;
   height: 24%;
+  min-height: 24%;
   overflow: hidden;
-  padding-left: 30px;
-  padding-right: 30px;
+  padding: 20px 30px 20px 30px;
   margin-top: 0px;
   background-color: #fafafa;
-  padding-top: 20px;
   /* margin-bottom: 17px; */
+}
+
+/*  */
+.single-chat-ckeditor{
+  padding-bottom: 0px;
 }
 
 .custormChatHeaderInfo {
