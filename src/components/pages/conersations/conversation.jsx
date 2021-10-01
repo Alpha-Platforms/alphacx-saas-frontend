@@ -1150,12 +1150,6 @@ export default function Conversation() {
                 />
               </Form.Group>
 
-              {/* 
-              Andy's setters
-              setCategoryUpdate,
-              updateTicket              
-              */}
-
               <Col md={6} className="">
                 <label className="mb-0">Category</label>
                 <RSelect

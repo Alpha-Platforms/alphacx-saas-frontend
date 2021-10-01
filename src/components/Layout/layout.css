@@ -10,10 +10,11 @@
   left: 0px;
   top: 50px;
   left: 0px;
-  /* overflow-x: hidden; */
-  /* width: calc(100vw - 50px); */
   width: calc(100vw - 40px);
   height: calc(100vh - 75px);
+  padding-bottom: 30px;
+  padding: 0;
+  transition: 0.25s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 .navbar-wrap {
@@ -92,16 +93,6 @@
 }
 .sidebar-wrap.collapsed header.sidebar-header .sidebar-header--logo {
   display: block;
-}
-
-.app-container {
-  position: relative;
-  /* width: calc(100vw - 275px); */
-  /* left: 220px; */
-  top: -7px;
-  padding-bottom: 30px;
-  padding: 0;
-  transition: 0.25s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 .settings-container {
