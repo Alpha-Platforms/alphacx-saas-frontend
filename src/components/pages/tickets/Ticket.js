@@ -189,7 +189,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         // emit ws_tickets event on reply
         let channelData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
         AppSocket.io.emit(`ws_tickets`, channelData);
-        // scrollPosSendMsgList();
+        scrollPosSendMsgList();
         // sortMsges((item) => [...item, msg]);
       });
       return () => {
@@ -304,7 +304,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         AppSocket.createConnection();
         let channelData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
         AppSocket.io.emit(`ws_tickets`, channelData);
-        // scrollPosSendMsgList();
+        scrollPosSendMsgList();
       } else {
         // setLoadingTicks(false);
         setsendingReply(false);
@@ -578,13 +578,13 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                 </div>
                 <div id="ticketDetailsRightPane"
                     style={{overflowX: "hidden"}}
-                    className="bg-secondary py-3 pt-0 bg-white">
+                    className="bg-secondary pt-0 bg-white">
                     {/* Conversation Part */}
 
                   {/* CHAT COL TWO */}
 
                   <div
-                    className={`conversation-layout-col-two`}>
+                    className={`conversation-layout-col-two h-100`}>
                     {firstTimeLoad ? (
                       <div className="single-cust-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
                     ) : loadSingleTicket ? (
@@ -665,7 +665,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                               </div>
                           </div>
                           {/* CHAT SECTION */}
-                          <div id="ticketConvoBox" className="conversationsMain pb-5">
+                          <div id="ticketConvoBox" className="conversationsMain">
                             <div className="chatDateHeader">
                               <div className="chatDateHeaderhr1"></div>
                               <div className="chatDateHeaderTitle">

@@ -191,16 +191,18 @@
 }
 
 #ticketConvoEditorBox {
-    height: 9rem;
-    position: fixed;
-    bottom: 1.2rem;
+    height: 10rem;
+    min-height: 24% !important;
+    /* position: fixed;
+    bottom: 1.2rem; */
     width: calc(100vw - 421px);
     background-color: #fafafa;
+    flex-shrink: 0;
+    padding-bottom: 20px;
 }
 
-
 #ticketConvoEditorBox > div {
-    position: fixed;
+    /* position: fixed; */
     bottom: 0;
     width: calc(100vw - 480px);
     /* width: 100%; */
@@ -216,21 +218,21 @@
 #ticketDetailsWrapper {
     position: fixed;
     width: calc(100vw - 140px);
-    height: calc(100vh - 7.5rem) !important;
+    height: calc(100vh - 75px) !important;
     overflow: hidden;
 }
 
 #ticketConvoBox {
     position: relative;
-    height: calc(100vh - 22rem) !important;
+    /* height: calc(100vh - 22rem) !important; */
     max-height: 100%;
-    margin-bottom: 3rem;
+    /* margin-bottom: 3rem; */
     overflow: scroll;
     padding-bottom: 0 !important;
 }
 
 #ticketDetailsRightPane {
-    height: calc(100vh - 7.5rem) !important;
+    height: calc(100vh - 75px) !important;
     position: relative;
 }
 
