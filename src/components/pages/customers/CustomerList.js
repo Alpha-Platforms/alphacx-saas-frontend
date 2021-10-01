@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {useState, useEffect} from 'react';
 import {ReactComponent as UploadSvg} from '../../../assets/svgicons/Upload.svg';
 import {Modal} from 'react-bootstrap';
@@ -19,7 +20,7 @@ import {ReactComponent as DotSvg} from '../../../assets/icons/dots.svg';
 import SaveAlt from '@material-ui/icons/SaveAlt';
     
 
-const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPaginatedCustomers}) => {
+const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPaginatedCustomers, isUserAuthenticated}) => {
     const [createModalShow,
         setCreateModalShow] = useState(false);
     const [uploadModalShow,
@@ -29,6 +30,13 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
     const [changingRow, setChangingRow] = useState(false);
     const [customerId, setCustomerId] = useState('');
     let selectedRows = [];
+
+    useEffect(() => {
+        if (isUserAuthenticated) {
+            getPaginatedCustomers(10, 1);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isUserAuthenticated]);
 
         useEffect(() => {
             setCustLoading(!isCustomersLoaded);
@@ -365,6 +373,6 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
         )
     }
 
-    const mapStateToProps = (state, ownProps) => ({customers: state.customer.customers, isCustomersLoaded: state.customer.isCustomersLoaded, meta: state.customer.meta})
+    const mapStateToProps = (state, ownProps) => ({customers: state.customer.customers, isCustomersLoaded: state.customer.isCustomersLoaded, meta: state.customer.meta, isUserAuthenticated: state.userAuth.isUserAuthenticated})
 
     export default connect(mapStateToProps, {getCustomers, getPaginatedCustomers})(CustomerList);

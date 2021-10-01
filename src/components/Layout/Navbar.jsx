@@ -261,7 +261,7 @@ function Navbar({
                   <BellIconNavbar />
                 </div>
 
-                <Link to="/help" target="_blank">
+                <Link to="/knowledge-base" target="_blank">
                   <HelpIcon />
                 </Link>
 

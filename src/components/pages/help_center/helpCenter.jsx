@@ -55,7 +55,7 @@ const HelpCenter = () => {
               <input
                 type="text"
                 value={search}
-                placeholder="Search help center"
+                placeholder="Search knowledge base"
                 onChange={handleChange}
               />
               <button>
