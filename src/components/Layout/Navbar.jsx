@@ -14,139 +14,48 @@ import CreateCustomerModal from '../pages/customers/CreateCustomerModal';
 import dummyavatar from '../../assets/images/dummyavatar.jpeg';
 import '../../styles/Navbar.css';
 import {connect} from 'react-redux';
+import {DowncaretIcon, PlusIcon} from "../../assets/SvgIconsSet.jsx";
+import { Dropdown } from "react-bootstrap";
 
-// --- dropdown component
-function PlusIcon() {
+
+function DropDown() {
+  const [createCustModalShow, setCreateCustModalShow] = useState(false)
+  const [createTicketModalShow, setCreateTicketModalShow] = useState(false)
   return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 14 14"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M9.19486 6.95428L4.79963 7.02689"
-        stroke="currentColor"
-        strokeWidth="1.21622"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M7.03707 9.19234L6.96484 4.79297"
-        stroke="currentColor"
-        strokeWidth="1.21622"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M9.81124 1H4.18811C2.22854 1 1 2.38746 1 4.35092V9.64908C1 11.6125 2.2227 13 4.18811 13H9.81059C11.7766 13 13 11.6125 13 9.64908V4.35092C13 2.38746 11.7766 1 9.81124 1Z"
-        stroke="currentColor"
-        strokeWidth="1.21622"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function DowncaretIcon() {
-  return (
-    <svg
-      width="10"
-      height="6"
-      viewBox="0 0 10 6"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M8.5 1.25L5 4.75L1.5 1.25"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function Dropdown() {
-  const [isVisible, setInvisible] = useState(false);
-  const [createTicketModalShow, setCreateTicketModalShow] = useState(false);
-  const [createCustModalShow, setCreateCustModalShow] = useState(false);
+    <>
+      <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown global-create-dropdown">
+        <Dropdown.Toggle variant="" size="" >
+          <button className="btn acx-btn-primary" style={{borderRadius: ".15rem", padding: ".25rem .5rem"}}>
+          <PlusIcon /> <span className="px-2">Create</span> <DowncaretIcon />
+          </button>
+        </Dropdown.Toggle>
+        <Dropdown.Menu>
+          <Dropdown.Item eventKey="1">
+            <button onClick={() => setCreateTicketModalShow(true)}>Ticket</button>
+          </Dropdown.Item>
+          <Dropdown.Item eventKey="2">
+            <button onClick={() => setCreateCustModalShow(true)}>Customer</button>
+          </Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
 
 
-  return (
-      <div className="" style={{ fontSize: "0.8rem"}} onMouseLeave={() => setInvisible(false)} >
-              <button 
-                onClick={() => setInvisible(isVisible => !isVisible)}
-                style={{ 
-                    color: "white",
-                    padding: "0.5rem 0",
-                    backgroundColor: "#006298",
-                    borderRadius: "3px",
-                    width: "7rem",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center"
-                }}
-              className="" 
-              type="button" 
-              id="dropdownMenuButtonSM">
-              
-              <span style={{padding: 0}}>               
-                  <PlusIcon />
-              </span>
-              <span style={{padding: "0 0.5rem"}}>Create</span>
-              <span>
-                  <DowncaretIcon />
-              </span>
-              
-              </button>
-              {
-                  isVisible &&
-                  <ul className="dd_menu list-unstyled"
-                    style={{ 
-                        // padding: "0.25rem 0.75rem 0.5rem",
-                        backgroundColor: "white",
-                        borderRadius: "3px",
-                        marginTop: "0px",
-                        position: "fixed",
-                        textAlign: "center"
-                    }}
-                  >
-                      <li style={{}}>
-                        <button 
-                          className="dd_item btn rounded-0"                          
-                          onClick={() => setCreateTicketModalShow(true)}
-                          >Ticket</button>
-                      </li>
-                      <li style={{}}>
-                        <button 
-                          className="dd_item btn rounded-0"
-                          onClick={() => setCreateCustModalShow(true)}
-                        >Contact</button>
-                      </li>
-                  </ul>
-              }
-              <CreateTicketModal
-                createModalShow={createTicketModalShow}
-                setCreateModalShow={setCreateTicketModalShow}
-                // setChangingRow={setChangingRow}
-              />
-              <CreateCustomerModal 
-                createModalShow={createCustModalShow} 
-                setCreateModalShow={setCreateCustModalShow} 
-                isEditing={false}
-                // setChangingRow={setChangingRow} 
-              />
-          </div>
-      
+
+      <CreateTicketModal
+        createModalShow={createTicketModalShow}
+        setCreateModalShow={setCreateTicketModalShow}
+        // setChangingRow={setChangingRow}
+      />
+      <CreateCustomerModal 
+        createModalShow={createCustModalShow} 
+        setCreateModalShow={setCreateCustModalShow} 
+        isEditing={false}
+        // setChangingRow={setChangingRow} 
+      />
+    </>
   )
 }
-// --- //dropdown component
+
 
 
 function Navbar({
@@ -255,7 +164,7 @@ function Navbar({
                   </div>
                 </form>
 
-                <Dropdown />
+                <DropDown />
 
                 <div style={{ width: "1.5" }}>
                   <BellIconNavbar />
