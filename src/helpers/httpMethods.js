@@ -191,6 +191,44 @@ export const httpGetMain = async (url) => {
   }
 };
 
+export const httpGetMainNoAuth = async (url, newHeaders) => {
+  if (!navigator.onLine) {
+    return NotificationManager.error(
+      "Please check your internet",
+      "Opps!",
+      3000
+    );
+  }
+  try {
+    const res = await axios.get(`${baseUrlMain}/${url}`, {
+      headers: { 
+         ...newHeaders,
+        'Access-Control-Allow-Origin': '*'
+        // 'Content-Type': 'application/json' 
+      },
+    });
+
+    return res.data;
+  } catch (error) {
+    // hideLoader();
+    // console.log("eeeeeeee", error.response.data.message);
+    if (
+      error.response.data.message ===
+      "Unauthorized, Your token is invalid or expired"
+    ) {
+      return { er: error.response.data.message };
+    }
+    if (error.response.data.message === "Validation Error!") {
+      NotificationManager.error(
+        Object.values(error.response.data.data).join("  ")
+      );
+      return;
+    }
+    return { er: error.response.data };
+  }
+};
+
+
 export const httpGet = async (url) => {
   if (!navigator.onLine) {
     return NotificationManager.error(
