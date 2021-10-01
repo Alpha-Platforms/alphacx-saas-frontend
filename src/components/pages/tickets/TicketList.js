@@ -27,11 +27,20 @@ const TicketList = ({
   tickets,
   meta,
   getPaginatedTickets,
+  isUserAuthenticated
 }) => {
   const [ticketLoading, setTicketLoading] = useState(false);
   const [createModalShow, setCreateModalShow] = useState(false);
   const [changingRow, setChangingRow] = useState(false);
   let selectedRows = [];
+
+  useEffect(() => {
+    if (isUserAuthenticated) {
+        // get first set of tickets
+        getPaginatedTickets(10, 1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [isUserAuthenticated]);
 
   useEffect(() => {
     setTicketLoading(!isTicketsLoaded);
@@ -432,6 +441,7 @@ const mapStateToProps = (state, ownProps) => ({
   isTicketsLoaded: state.ticket.isTicketsLoaded,
   meta: state.ticket.meta,
   isTicketsFullyLoaded: state.ticket.isTicketsFullyLoaded,
+  isUserAuthenticated: state.userAuth.isUserAuthenticated
 });
 
 export default connect(mapStateToProps, { getPaginatedTickets })(TicketList);

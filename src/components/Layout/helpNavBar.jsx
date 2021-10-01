@@ -16,7 +16,7 @@ const HelpNavBar = ({ activeBG }) => {
       </div>
       <div className="nav-links">
         <p className="link">FAQ</p>
-        <Link to="/help/tickets">
+        <Link to="/knowledge-base/tickets">
           <p className="link">Submit a ticket</p>
         </Link>
         <Link to="/register">

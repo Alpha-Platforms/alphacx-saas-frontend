@@ -18,7 +18,7 @@ const TopBar = ({ categoryId }) => {
   return (
     <div className="top-bar">
       <div className="breadcrumbs">
-        <Link to="/help">
+        <Link to="/knowledge-base">
           <p className="link active">Home</p>
         </Link>
         {links.map((link, i) => (
@@ -28,7 +28,7 @@ const TopBar = ({ categoryId }) => {
           >
             {i === links.length - 2 ? (
               <Link
-                to={`/help/${link}${categoryId ? "?cat=" + categoryId : ""}`}
+                to={`/knowledge-base/${link}${categoryId ? "?cat=" + categoryId : ""}`}
               >
                 {link.replaceAll("-", " ")}
               </Link>

@@ -301,7 +301,7 @@ const Login = ({history}) => {
                     </div>
         
                     <div className="submit-auth-btn text-center mt-4">
-                        <a className="fs-6" href="https://app.alphacx.co/help">
+                        <a className="fs-6" href="https://app.alphacx.co/knowledge-base">
                             See Quick Setup Steps
                         </a>
                     </div>

@@ -1,4 +1,5 @@
 // @ts-nocheck
+import {useEffect} from 'react';
 import '../../../styles/Dashboard.css';
 import {CircularProgressbar, buildStyles} from "react-circular-progressbar";
 import TicketCategoryBar from './components/TicketCategoryBar';
@@ -10,8 +11,16 @@ import { Fragment } from 'react';
 import {connect} from 'react-redux';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import {textCapitalize} from '../../../helper';
+import { getAnalytics } from './../../../reduxstore/actions/analyticsActions';
 
-const DashboardTwo = ({isAnalyticsLoaded, analytics, user}) => {
+const DashboardTwo = ({isAnalyticsLoaded, analytics, user, getAnalytics, isUserAuthenticated}) => {
+
+    useEffect(() => {
+        if (isUserAuthenticated) {
+            getAnalytics()
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isUserAuthenticated]);
 
     return (
         <Fragment>
@@ -72,7 +81,8 @@ const DashboardTwo = ({isAnalyticsLoaded, analytics, user}) => {
 const mapStateToProps = (state, ownProps) => ({
     isAnalyticsLoaded: state.analytics.isAnalyticsLoaded,
     analytics: state.analytics.analytics,
-    user: state.userAuth.user
+    user: state.userAuth.user,
+    isUserAuthenticated: state.userAuth.isUserAuthenticated
 });
 
-export default connect(mapStateToProps, null)(DashboardTwo);
+export default connect(mapStateToProps, { getAnalytics })(DashboardTwo);
