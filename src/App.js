@@ -144,6 +144,8 @@ const SiteRouter = connect(mapStateToProps, {
             // getAdmins();
             // getSupervisors();
             // getSubCategories();
+
+            // getAnalytics()
             
             getPriorities();
             getCategories();
@@ -151,7 +153,6 @@ const SiteRouter = connect(mapStateToProps, {
             getGroups();
             getTags();
             getConfigs();
-            getAnalytics()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
