@@ -15,7 +15,7 @@ import Image  from 'react-bootstrap/Image';
 import StarRatings from 'react-star-ratings';
 import { useLocation, useParams } from "react-router-dom";
 // 
-import { httpPostNoAuth } from "../../../helpers/httpMethods";
+import { httpPostNoAuth, httpGetMainNoAuth } from "../../../helpers/httpMethods";
 import "../settings/settings.css";
 
 export default function RatingsForm() {
@@ -23,9 +23,36 @@ export default function RatingsForm() {
     const [npsScore, setNpsScore] = useState(0);
     const [comment, setComment] = useState("");
     const [processing, setProcessing] = useState(false);
+    const [ratingsConfig, setRatingsConfig] = useState({
+        "npsLabel": "How likely are you to recommend IFlux to a friend or colleague?",
+        "ratingLabel": "Satisfied with our customer support service? Click on the stars below to rate us.",
+        "commentLabel": "Tell us what we can improved upon"
+    });
     // 
     const { domain, ticketId, customerId } = useParams();
     // 
+
+    useEffect(() => {
+        getRatingConfig(domain)
+    },[domain])
+
+    const getRatingConfig = async (domain) =>{
+        const headers = {
+            "domain": domain
+        }
+        const res = await httpGetMainNoAuth(`settings/config?type=rating`, headers);
+        if (res?.status === "success") {
+            setRatingsConfig({
+                ...ratingsConfig,
+                npsLabel: res?.data.npsLabel,
+                ratingLabel: res?.data.ratingLabel,
+                commentLabel: res?.data.commentLabel,
+            });
+        } else {
+            return NotificationManager.error(res?.er?.message, "Error", 4000);
+        }
+    };
+
     const handleSubmit = async () =>{
         setProcessing(true);
         if(ticketId == null ){
@@ -68,7 +95,7 @@ export default function RatingsForm() {
                         <Form className="mt-3" onSubmit={e => e.preventDefault()}>
                             <div className="text-center mb-4">
                                 <h1 className="mb-3">Rate Your Experience</h1>
-                                <p className="">Are you satisfied with our customer support service? Click on the stars below to rate us.</p>
+                                <p className="">{ratingsConfig.ratingLabel}</p>
                             </div>
                             <div className="p-3 mb-4">
                                 <div className="d-flex justify-content-center align-items-center">
@@ -87,12 +114,12 @@ export default function RatingsForm() {
                             </div>
                             <hr className="mb-5"/>
                             <Form.Group className="mb-5 form-group acx-form-group" controlId="improveMessage">
-                                <Form.Label>Tell us what can be improved?</Form.Label>
+                                <Form.Label>{ratingsConfig.commentLabel}</Form.Label>
                                 <Form.Control onChange={e => { setComment(e.target.value) }} className="shadow-sm" as="textarea" defaultValue=" " placeholder="Tell us how we can improve..." rows={6}/>
                             </Form.Group>
                             <div className="mb-5">
                                 <div className="">
-                                    <p className="mb-2">How likely are you to recommend AlphaCX to a friend or colleague?</p>
+                                    <p className="mb-2">{ratingsConfig.npsLabel}</p>
                                 </div>
                                 <div className="p-3 bg-light border acx-hover-border-primary rounded ">
                                     <div className="d-flex justify-content-between align-items-center">
