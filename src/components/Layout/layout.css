@@ -12,7 +12,7 @@
   left: 0px;
   /* overflow-x: hidden; */
   /* width: calc(100vw - 50px); */
-  width: calc(100vw - 16px);
+  width: calc(100vw - 40px);
   height: calc(100vh - 75px);
 }
 
@@ -29,6 +29,7 @@
   background: #ffffff;
   box-shadow: 0px 0px 10px rgba(43, 48, 77, 0.1);
   width: calc(100vw - 240px) !important;
+  /* width: 100vw; */
   /* transition: all 400ms ease-in; */
 }
 

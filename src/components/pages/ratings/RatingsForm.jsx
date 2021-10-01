@@ -11,12 +11,11 @@ import Form from 'react-bootstrap/Form';
 import Button  from 'react-bootstrap/Button';
 import Spinner  from 'react-bootstrap/Spinner';
 import Image  from 'react-bootstrap/Image';
-
 // 
 import StarRatings from 'react-star-ratings';
 import { useLocation, useParams } from "react-router-dom";
 // 
-import { httpPostMain } from "../../../helpers/httpMethods";
+import { httpPostNoAuth } from "../../../helpers/httpMethods";
 import "../settings/settings.css";
 
 export default function RatingsForm() {
@@ -25,7 +24,7 @@ export default function RatingsForm() {
     const [comment, setComment] = useState("");
     const [processing, setProcessing] = useState(false);
     // 
-    const { ticketId, customerId } = useParams();
+    const { domain, ticketId, customerId } = useParams();
     // 
     const handleSubmit = async () =>{
         setProcessing(true);
@@ -48,13 +47,15 @@ export default function RatingsForm() {
             "customerId": customerId,
             "comment": comment
         };
-        const res = await httpPostMain(`ratings`, data);
+        const headers = {
+            "domain": domain
+        }
+        const res = await httpPostNoAuth(`ratings`, data, headers);
         if (res?.status === "success") {
             setProcessing(false);
             return NotificationManager.success("Thanks for your feedback 😃", "Success");
         } else {
             setProcessing(false);
-            console.log(res);
             return NotificationManager.error(res?.er?.message, "Error", 4000);
         }
     }
@@ -111,7 +112,7 @@ export default function RatingsForm() {
                                 </div>
                             </div>
                             <div className="mb-3 text-center">
-                                <Button type="submit" onClick={handleSubmit} size="lg" disabled={processing} variant="secondary" className="px-4"> 
+                                <Button type="submit" onClick={handleSubmit} size="lg" disabled={processing} className="acx-btn-primary px-4"> 
                                     {(processing) ? <span className="text-light"><Spinner as="span" 
                                             animation="border" variant="light" size="sm" role="status" 
                                             aria-hidden="true"/> Loading...

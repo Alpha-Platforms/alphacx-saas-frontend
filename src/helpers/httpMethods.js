@@ -119,6 +119,39 @@ export const httpPostData = async (url, postBody) => {
     return { er: error.response.data };
   }
 };
+export const httpPostNoAuth = async (url, postBody, newHeaders) => {
+  if (!navigator.onLine) {
+    return NotificationManager.error(
+      "Please check your internet",
+      "Opps!",
+      3000
+    );
+  }
+
+  try {
+    const res = await axios.post(`${baseUrlMain}/${url}`, postBody, {
+      headers: {
+        ...newHeaders,
+        // "Content-Type": "multipart/form-data",
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+    return res.data;
+  } catch (error) {
+    // hideLoader();
+    if (
+      error.response.data.message ===
+      "Unauthorized, Your token is invalid or expired"
+    ) {
+      NotificationManager.error(
+        "Your token is invalid or expired, please login",
+        "Opps!",
+        5000
+      );
+    }
+    return { er: error.response.data };
+  }
+};
 
 export const httpGetMain = async (url) => {
   if (!navigator.onLine) {
