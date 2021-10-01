@@ -25,6 +25,8 @@ import Swal from "sweetalert2";
 import { wordCapitalize, getUserInitials } from "../../../../helper";
 import {updateUser} from '../../../../reduxstore/actions/userActions';
 import {getAgents, negateActiveState} from '../../../../reduxstore/actions/agentActions';
+import {getAdmins} from '../../../../reduxstore/actions/adminActions';
+import {getSupervisors} from '../../../../reduxstore/actions/supervisorActions';
 import "../../../../styles/Setting.css";
 import {NotificationManager} from 'react-notifications';
 
@@ -38,38 +40,36 @@ const UserList = ({
   supervisors,
   isAgentsLoaded,
   groups,
-  getAgents,
   negateActiveState,
   isAdminsLoaded,
   isSupervisorLoaded,
-  isUserAuthenticated
+  isUserAuthenticated,
+  getAgents,
+  getAdmins,
+  getSupervisors
 }) => {
   const [createModalShow, setCreateModalShow] = useState(false);
   const [inviteModalShow, setInviteModalShow] = useState(false);
   const [importModalShow, setImportModalShow] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
 
-  /* useEffect(() => {
-    setUserLoading(!isAgentsLoaded);
-    if (isAgentsLoaded) {
-      setUserLoading(false);
-    }
-  }, [isAgentsLoaded]); */
-
   useEffect(() => {
     if (isUserAuthenticated) {
         // get the first set of users
-        getPaginatedUsers(10, 1);
+        // getPaginatedUsers(10, 1);
+        getAgents();
+        getSupervisors();
+        getAdmins();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [isUserAuthenticated]);
 
-  useEffect(() => {
-    setUserLoading(!agents);
-    if (isAgentsLoaded) {
-      setUserLoading(false);
-    }
-  }, [isAgentsLoaded]);
+  // useEffect(() => {
+  //   setUserLoading(!agents);
+  //   if (isAgentsLoaded) {
+  //     setUserLoading(false);
+  //   }
+  // }, [isAgentsLoaded]);
   
   function AlphacxMTPagination2(props) {
     const {
@@ -114,14 +114,12 @@ const UserList = ({
   });
 
   const changeActiveState = async (id, isActivated) => {
-    setUserLoading(true);
     const userRes = await updateUser({
       id,
       role: "Agent",
       isActivated: !isActivated ? true : "false"
     });
     console.log('userRes: ', userRes);
-    setUserLoading(false);  
     if (userRes?.status === 'success') {
       NotificationManager.success('Info has been updated', 'Success');
       // getAgents()
@@ -214,8 +212,8 @@ const UserList = ({
                         placeholder="Search agents"/> */}
         </div>
 
+          {(isAgentsLoaded && isAdminsLoaded && isSupervisorLoaded) ? (
         <div id="alphacxMTable" className="mb-3 acx-user-table acx-user-table-2">
-          {(isAgentsLoaded && isAdminsLoaded && isSupervisorLoaded) && (
             <MuiThemeProvider theme={tableTheme}>
               <MaterialTable
                 title=""
@@ -348,8 +346,10 @@ const UserList = ({
                 }
               />
             </MuiThemeProvider>
-          )}
         </div>
+          ) : <div className="cust-table-loader">
+          <ScaleLoader loading={true} color={"#006298"} />
+        </div>}
 
         {/* <div className="text-center empty-state" id="agent-empty">
                     <CardDesignSvg/>
@@ -396,4 +396,4 @@ const mapStateToProps = (state, ownProps) => ({
   isUserAuthenticated: state.userAuth.isUserAuthenticated
 });
 
-export default connect(mapStateToProps, { getPaginatedUsers, getAgents, negateActiveState })(UserList);
+export default connect(mapStateToProps, { getPaginatedUsers, getAgents, getSupervisors, getAdmins, negateActiveState })(UserList);

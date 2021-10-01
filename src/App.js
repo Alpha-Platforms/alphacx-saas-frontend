@@ -140,15 +140,15 @@ const SiteRouter = connect(mapStateToProps, {
             // getPaginatedTickets(10, 1);
             // getPaginatedUsers(10, 1);
 
+            // getAgents();
+            // getAdmins();
+            // getSupervisors();
             // getSubCategories();
             
             getPriorities();
             getCategories();
             getStatuses();
             getGroups();
-            getAgents();
-            getAdmins();
-            getSupervisors();
             getTags();
             getConfigs();
             getAnalytics()
