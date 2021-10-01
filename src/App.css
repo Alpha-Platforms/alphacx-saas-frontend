@@ -51,7 +51,6 @@ input:disabled {
   cursor: not-allowed !important;
 }
 
-.btn,
 body,
 table {
   color: var(--text-color) !important;
@@ -1286,5 +1285,5 @@ a object {
 
 /* Bootstrap adjustment */
 .form-check-input {
-  margin-top: .2em!important;
+  margin-top: 0.2em !important;
 }
