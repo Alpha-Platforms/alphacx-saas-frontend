@@ -134,10 +134,14 @@ const SiteRouter = connect(mapStateToProps, {
     useEffect(() => {
         if (isUserAuthenticated) {
             // getCustomers();
-            getPaginatedCustomers(10, 1);
             // getTickets();
-            getPaginatedTickets(10, 1);
-            getPaginatedUsers(10, 1);
+
+            // getPaginatedCustomers(10, 1);
+            // getPaginatedTickets(10, 1);
+            // getPaginatedUsers(10, 1);
+
+            // getSubCategories();
+            
             getPriorities();
             getCategories();
             getStatuses();
@@ -146,7 +150,6 @@ const SiteRouter = connect(mapStateToProps, {
             getAdmins();
             getSupervisors();
             getTags();
-            // getSubCategories();
             getConfigs();
             getAnalytics()
         }

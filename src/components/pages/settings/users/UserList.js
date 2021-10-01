@@ -41,7 +41,8 @@ const UserList = ({
   getAgents,
   negateActiveState,
   isAdminsLoaded,
-  isSupervisorLoaded
+  isSupervisorLoaded,
+  isUserAuthenticated
 }) => {
   const [createModalShow, setCreateModalShow] = useState(false);
   const [inviteModalShow, setInviteModalShow] = useState(false);
@@ -54,6 +55,14 @@ const UserList = ({
       setUserLoading(false);
     }
   }, [isAgentsLoaded]); */
+
+  useEffect(() => {
+    if (isUserAuthenticated) {
+        // get the first set of users
+        getPaginatedUsers(10, 1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [isUserAuthenticated]);
 
   useEffect(() => {
     setUserLoading(!agents);
@@ -384,6 +393,7 @@ const mapStateToProps = (state, ownProps) => ({
   isAdminsLoaded: state.admin.isAdminsLoaded,
   isSupervisorLoaded: state.supervisor.isSupervisorsLoaded,
   groups: state.group.groups,
+  isUserAuthenticated: state.userAuth.isUserAuthenticated
 });
 
 export default connect(mapStateToProps, { getPaginatedUsers, getAgents, negateActiveState })(UserList);
