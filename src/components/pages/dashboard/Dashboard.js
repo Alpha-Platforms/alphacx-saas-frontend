@@ -18,9 +18,9 @@ const DashboardTwo = ({isAnalyticsLoaded, analytics, user}) => {
             {!isAnalyticsLoaded ?
                 <div className="text-center mt-4"><ScaleLoader loading={true} color={"#006298"}/></div>
              : <div className="dashboard-main">
-                <div>
+                {/* <div>
                     <h3 className="wlc-text">Hi, {textCapitalize(`${user?.firstname || ""}`)}</h3>
-                </div>
+                </div> */}
                 <div className="dashboard-wrapper">
                     <div className="box-1">
 
