@@ -4,7 +4,7 @@ import { useState } from "react";
 import { NotificationManager } from "react-notifications";
 import { useLocation, useParams, Link } from "react-router-dom";
 import { HelpNavIcon } from "../../../../assets/images/svgs";
-import { httpGetMain } from "../../../../helpers/httpMethods";
+import { httpGetMain, httpGetMainKB } from "../../../../helpers/httpMethods";
 import HelpNavBar from "../../../Layout/helpNavBar";
 import TopBar from "../components/topBar/topBar";
 import { faqs, navigation } from "../faq";
@@ -34,7 +34,7 @@ const ArticleList = () => {
   }
 
   const fetchAllArticles = async () => {
-    const res = await httpGetMain(`articles/categories/${query.get("cat")}`);
+    const res = await httpGetMainKB(`articles/categories/${query.get("cat")}`);
     setPolicyLoading(false);
     if (res?.status == "success") {
       let folders = res?.data?.folders;

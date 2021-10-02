@@ -9,7 +9,7 @@ import Accordion from "../components/accordion/Accordion";
 import StarRating from "../components/starRating/starRating";
 import matter from "gray-matter";
 
-import { httpGetMain } from "../../../../helpers/httpMethods";
+import { httpGetMain, httpGetMainKB } from "../../../../helpers/httpMethods";
 import { useLocation } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
@@ -29,7 +29,7 @@ const Article = () => {
   const fetchCategory = async (id) => {
     console.clear();
     console.log("running", id);
-    const res = await httpGetMain(`articles/folder/${id}`);
+    const res = await httpGetMainKB(`articles/folder/${id}`);
     if (res?.status == "success") {
       let categories = res?.data;
       console.clear();
@@ -39,7 +39,7 @@ const Article = () => {
 
   const fetchArticleDetails = async (categories) => {
     setPolicyLoading(true);
-    const res = await httpGetMain(`article/${query.get("id")}`);
+    const res = await httpGetMainKB(`article/${query.get("id")}`);
     if (res?.status == "success") {
       console.log(res);
       setArticleContent(res?.data);
