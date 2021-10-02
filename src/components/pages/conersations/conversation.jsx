@@ -86,10 +86,13 @@ export default function Conversation() {
   const [MessageSenderId, setMessageSenderId] = useState("");
   const [TicketId, setTicketId] = useState("");
   const [showUserProfile, setshowUserProfile] = useState(false);
+  // 
   const [ReplyTicket, setReplyTicket] = useState({
     plainText: "",
     richText: "",
   });
+  const [replyType, setReplyType] = useState("reply");
+  // 
   const [Agents, setAgents] = useState([]);
   const [Statuses, setStatuses] = useState([]);
   const [UserInfo, setUserInfo] = useState({});
@@ -239,6 +242,12 @@ export default function Conversation() {
     setReplyTicket({ plainText, richText });
     // console.log(">>>>", richText, richText);
   };
+
+  // 
+  const onReplyTypeChange = (event) => {
+    setReplyType(event.target.value);
+  }
+
   const getTickets = async () => {
     const res = await httpGetMain("tickets?channel=whatsapp");
     if (res?.status === "success") {
@@ -286,7 +295,7 @@ export default function Conversation() {
     setTickets(newTicket);
     // console.log(filterSentTick);
     const data = {
-      type: "note",
+      type: replyType,
       response: reply.richText,
       plainResponse: reply.plainText,
       phoneNumber: singleTicketFullInfo.customer.phone_number,
@@ -296,6 +305,7 @@ export default function Conversation() {
       attachment: null,
       created_at: new Date(),
       plain_response: reply.plainText,
+      type: replyType,
       response: reply.richText,
       // user: SenderInfo?.customer,
       user: ticket[0]?.assignee,
@@ -1000,7 +1010,7 @@ export default function Conversation() {
                 </React.Fragment>
                 {/* CHAT COMMENT BOX SECTION */}
                 <div className="conversationCommentBox">
-                  <div className="single-chat-ckeditor">
+                  <div className="single-chat-ckeditor position-relative">
                     <div
                       className="showBackArrowOnMobile"
                       onClick={() =>
@@ -1009,7 +1019,28 @@ export default function Conversation() {
                     >
                       <img src={BackArrow} alt="" />
                     </div>
-
+                    <div className="position-absolute ps-1 pt-1 bg-white rounded-top border w-100" style={{"zIndex": "2"}}>
+                      <Form.Check
+                        inline
+                        label="Reply"
+                        value="reply"
+                        name="reply_type"
+                        checked={replyType === "reply"}
+                        onChange={onReplyTypeChange}
+                        type="radio"
+                        id={`inline-response_type-1`}
+                      />
+                      <Form.Check
+                        inline
+                        label="Comment"
+                        value="note"
+                        name="reply_type"
+                        checked={replyType === "note"}
+                        onChange={onReplyTypeChange}
+                        type="radio"
+                        id={`inline-response_type-2`}
+                      />
+                    </div>
                     <Editor
                       editorState={editorState}
                       toolbar={{
