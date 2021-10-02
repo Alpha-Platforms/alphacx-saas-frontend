@@ -291,7 +291,7 @@ const TicketLineGraph = ({analytics}) => {
 
     return (
         <div>
-            <div className="dashboard-box-top px-2 py-3">
+            <div className="dashboard-box-top ps-2 pt-3">
                 <div>Ticket Sources</div>
                 <div>
                     {/* <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
@@ -310,9 +310,9 @@ const TicketLineGraph = ({analytics}) => {
                     </Dropdown> */}
                 </div>
             </div>
-            <div className="tclinegraph-wrapper">
+            {/* <div className="tclinegraph-wrapper">
                 {allDataSet && <Line data={data} options={options} height={130}/>}
-            </div>
+            </div> */}
             {/*  Line graph check and legend */}
             <div
                 className="d-flex justify-content-center align-items-center flex-wrap mt-0">
@@ -418,6 +418,11 @@ const TicketLineGraph = ({analytics}) => {
                     </div>
                 </div>
             </div>
+
+            <div className="tclinegraph-wrapper">
+                {allDataSet && <Line data={data} options={options} height={130}/>}
+            </div>
+
         </div>
     )
 }

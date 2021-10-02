@@ -6,8 +6,9 @@ import NavCard from "./components/navCard/navCard";
 import { faqs } from "./faq";
 import "./helpCenter.scss";
 import LogoBG from "../../../assets/imgF/logoBG.png";
-import { httpGetMain } from "../../../helpers/httpMethods";
+import { httpGetMain, getTenantDomain, httpGetMainKB } from "../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
+
 
 const HelpCenter = () => {
   const [categories, setCategories] = useState([]);
@@ -26,7 +27,7 @@ const HelpCenter = () => {
   };
 
   const fetchCategories = async () => {
-    const res = await httpGetMain("articles/categories");
+    const res = await httpGetMainKB("articles/categories");
     if (res?.status == "success") {
       let categories = res?.data;
       console.clear();
@@ -36,6 +37,8 @@ const HelpCenter = () => {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
+
+  console.log('Tenant domain => ', getTenantDomain());
 
   useEffect(() => {
     fetchCategories();

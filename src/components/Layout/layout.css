@@ -4,6 +4,19 @@
   overflow-y: auto;
 }
 
+.app-container {
+  background-color: #fff;
+  position: relative;
+  left: 0px;
+  top: 70px;
+  left: 0px;
+  width: calc(100vw - 40px);
+  height: calc(100vh - 75px);
+  padding-bottom: 30px;
+  padding: 0;
+  transition: 0.25s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
 .navbar-wrap {
   height: 90px;
   position: fixed;
@@ -77,16 +90,6 @@
 }
 .sidebar-wrap.collapsed header.sidebar-header .sidebar-header--logo {
   display: block;
-}
-
-.app-container {
-  position: relative;
-  /* width: calc(100vw - 275px); */
-  /* left: 220px; */
-  top: -7px;
-  padding-bottom: 30px;
-  padding: 0;
-  transition: 0.25s cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 .settings-container {

@@ -77,7 +77,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
             <h6            
               className="mb-0 text-capitalize mt-2 pb-0"
             >
-              <Link to={`/customers/${ticket[0]?.customer.id}`}>
+              <Link to={`/customers/${ticket[0]?.customer.id}`} className="text-at-blue">
                 {`${capitalize(ticket[0]?.customer?.firstname  || '')} 
                   ${UserInfo?.lastname == "default"? "" : capitalize(ticket[0]?.customer?.lastname  || '')}`}
               </Link>
@@ -109,7 +109,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                   </p>
 
                   <p style={{ textTransform: "uppercase" }}>
-                    <Link to={`tickets/${ticket[0]?.id}`}>
+                    <Link to={`tickets/${ticket[0]?.id}`} className="text-at-blue">
                       #{ticket[0]?.id.slice(ticket[0]?.id?.length - 8)}
                     </Link>
                   </p>
@@ -146,7 +146,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                   <div>
                     <p className="acx-fs-8">Assigned to</p>
                     { ticket[0]?.assignee ?
-                      (<Link to={`/settings/profile/${ticket[0]?.assignee?.id}`}>
+                      (<Link to={`/settings/profile/${ticket[0]?.assignee?.id}`} className="text-at-blue">
                         {`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(ticket[0]?.assignee?.lastname)}`}
                       </Link>) 
                       :
@@ -214,7 +214,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                   <div>
                     <p className="acx-fs-8 mb-0">Assigned to</p>
                     { ticket[0]?.assignee?
-                      (<Link to={`/settings/profile/${ticket[0]?.assignee?.id}`}>
+                      (<Link to={`/settings/profile/${ticket[0]?.assignee?.id}`} className="text-at-blue">
                         {`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(ticket[0]?.assignee?.lastname)}`}
                       </Link>) 
                       :

@@ -1,244 +1,240 @@
 .cust-grey-circle {
-    width: 2.0rem;
-    height: 2.0rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 98, 152, 0.1);
-    border-radius: 6.25rem;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 98, 152, 0.1);
+  border-radius: 6.25rem;
 }
 
 .cust-profile-info {
-    padding-left: 0;
-    margin-bottom: 0;
+  padding-left: 0;
+  margin-bottom: 0;
 }
 
 .cust-profile-info li {
-    list-style: none;
-    display: grid;
-    grid-template-columns: 3.25rem 1fr;
-    margin: 0 0.625rem 0.2rem;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 3.25rem 1fr;
+  margin: 0 0.625rem 0.2rem;
 }
 .cust-profile-info li:last-child {
-    margin-bottom: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 .update-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1039;
-    width: 100vw;
-    height: 100vh;
-    content: "";
-    background-color: rgba(0,0,0,.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1039;
+  width: 100vw;
+  height: 100vh;
+  content: "";
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .update-close-wrap {
-    border: 1px solid rgba(0, 0, 0, 0.4);
-    border-radius: 10rem;
-    width: 34px;
-    height: 34px;
-    transform: scale(0.8);
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  border-radius: 10rem;
+  width: 34px;
+  height: 34px;
+  transform: scale(0.8);
 }
 
 .timeline-tree {
-    padding-left: 0;
-    margin: 1.5rem 0 0;
+  padding-left: 0;
+  margin: 1.5rem 0 0;
 }
 
 .timeline-tree li {
-    list-style: none;
-    display: grid;
-    grid-template-columns: 11rem 1fr;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 11rem 1fr;
 }
 
 .timeline-tree li:not(:last-child) > div:nth-child(1) {
-    border-right: 2px solid rgba(0, 0, 0, 0.4);
-    padding-bottom: 2rem;
+  border-right: 2px solid rgba(0, 0, 0, 0.4);
+  padding-bottom: 2rem;
 }
 
 .timeline-tree li > div:nth-child(1) {
-    position: relative;
+  position: relative;
 }
 
 .timeline-tree li > div:nth-child(1)::after {
-    content: '';
-    width: 1rem;
-    height: 1rem;
-    border: 1px solid rgba(0, 0, 0, 0.4);
-    position: absolute;
-    top: 0;
-    right: -0.5rem;
-    border-radius: 10rem;
-    background-color: white;
-
+  content: "";
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  position: absolute;
+  top: 0;
+  right: -0.5rem;
+  border-radius: 10rem;
+  background-color: white;
 }
 
-
 .timeline-tree li > div:nth-child(2) {
-    padding-left: 1rem;
+  padding-left: 1rem;
 }
 
 #customerTable tbody {
-    position: relative;
+  position: relative;
 }
 
 .cust-table-loader {
-    position: fixed;
-    width: 100%;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
-    background-color: rgba(0, 0, 0, 0.1);
-    z-index: 100000;
-    /* opacity: 0; */
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: 100000;
+  /* opacity: 0; */
 }
 
 #customerTable a {
-    font-size: 0.9rem !important;
+  font-size: 0.9rem !important;
 }
 
 #customerTable input {
-    
 }
 
 #pills-tab .nav-link.nav-active {
-    color: var(--at-blue-light) !important;
-    text-shadow: 0px 0px 1px var(--at-blue-light);
+  color: var(--at-blue-light) !important;
+  text-shadow: 0px 0px 1px var(--at-blue-light);
 }
 
 .single-cust-loader {
-    text-align: center;
-    margin-top: 2rem;
+  text-align: center;
+  margin-top: 2rem;
 }
 
 #export-dropdown {
-    background: transparent !important;
-    font-size: 0.8rem;
+  background: transparent !important;
+  font-size: 0.8rem;
+  color: #212529;
 }
 
 #export-dropdown::after {
-    content: none;
-    display: none;
+  content: none;
+  display: none;
 }
 
 #export-dropdown + div {
-    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.1);
 }
 
 #export-dropdown + div button:hover {
-    background-color: rgba(0, 0, 0, 0.1) !important;
+  background-color: rgba(0, 0, 0, 0.1) !important;
 }
 
-
 .cust-table-dots {
-    display: inline-block;
-    transform: rotate(90deg);
+  display: inline-block;
+  transform: rotate(90deg);
 }
 
 #cust-table-dropdown button::after {
-    content: none;
+  content: none;
 }
 
 #cust-export-dropdown {
-    /*position: absolute;
+  /*position: absolute;
     left: 19.5rem;
-    *//*margin-left: 19rem;
-    */margin-left: 0;
-    padding-left: 0;
-    transform: translateX(-15px);
-    z-index: 40 !important;
-    position: relative;
-    -webkit-transform: translateX(-15px);
-    -moz-transform: translateX(-15px);
-    -ms-transform: translateX(-15px);
-    -o-transform: translateX(-15px);
+    */ /*margin-left: 19rem;
+    */
+  margin-left: 0;
+  padding-left: 0;
+  transform: translateX(-15px);
+  z-index: 40 !important;
+  position: relative;
+  -webkit-transform: translateX(-15px);
+  -moz-transform: translateX(-15px);
+  -ms-transform: translateX(-15px);
+  -o-transform: translateX(-15px);
 }
 
 .cust-table-btns-wrapper {
-    /*border: 1px solid red;
-    */margin-left: 18.5rem;
-    transform: translateY(4px);
-    -webkit-transform: translateY(4px);
-    -moz-transform: translateY(4px);
-    -ms-transform: translateY(4px);
-    -o-transform: translateY(4px);
+  /*border: 1px solid red;
+    */
+  margin-left: 18.5rem;
+  transform: translateY(4px);
+  -webkit-transform: translateY(4px);
+  -moz-transform: translateY(4px);
+  -ms-transform: translateY(4px);
+  -o-transform: translateY(4px);
 }
 
 .cust-avatar {
-    width: 100%;
-    height: 100%;
-    border-radius: 100rem;
-    display: inline-block;
-    /* transform: translateY(-2px) scale(1.05); */
+  width: 100%;
+  height: 100%;
+  border-radius: 100rem;
+  display: inline-block;
+  /* transform: translateY(-2px) scale(1.05); */
 }
 
 #alphacxMTable.acx-single-cust-table th {
-    white-space: nowrap;
-
+  white-space: nowrap;
 }
 
 .workphone-group select {
-    display: inline !important;
-    /* width: 4rem; */
-    -webkit-appearance: none;
-       -moz-appearance: none;
-            appearance: none;
-    padding-right: 0 !important;
-    margin-right: 0 !important;
-    padding-left: 1.7rem;
-    outline: none;
+  display: inline !important;
+  /* width: 4rem; */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding-right: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 1.7rem;
+  outline: none;
 }
 
 #alphacxMTable.acx-cust-table th {
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
-
 .workphone-dd-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
 .workphone-dd-wrapper > span:nth-of-type(1) {
-    width: 1.4rem;
-    height: 1.4rem;
-    display: inline-block;
-    position: absolute;
-    left: 0;
-    padding-left: 0.3rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  padding-left: 0.3rem;
 }
 
 .workphone-dd-wrapper > span:nth-of-type(1) > img {
-    max-width: 100%;
-    max-height: 100%;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .workphone-dropdown + ul {
-    position: absolute;
-    top: 2.2rem;
-    z-index: 2;
-    background-color: white;
-    box-shadow: 0px 0px 15px 2px rgba(0, 0, 0, 0.1);
-    padding: 0.5rem;
-    max-height: 10rem;
-    overflow: auto;
+  position: absolute;
+  top: 2.2rem;
+  z-index: 2;
+  background-color: white;
+  box-shadow: 0px 0px 15px 2px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem;
+  max-height: 10rem;
+  overflow: auto;
 }
 
 .workphone-dropdown + ul li {
-    list-style: none;
+  list-style: none;
 }
 
-
 .workphone-dd-wrapper > select {
-    height: 100%;
-    display: block;
-    border: 1px solid rgba(0, 0, 0, 0.2);
+  height: 100%;
+  display: block;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
