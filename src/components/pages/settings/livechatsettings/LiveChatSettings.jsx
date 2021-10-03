@@ -2,6 +2,8 @@
 import {useState} from "react";
 import {Link} from "react-router-dom";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
+import './LiveChatSettings.css';
+
 
 const LiveChatSettings = () => {
 
@@ -82,12 +84,10 @@ const LiveChatSettings = () => {
                                             Color
                                         </label>
                                         <div><small>Select your widget color.</small></div>
-                                        <input
-                                            type="text"
-                                            className="form-control form-control"
-                                            name="initialText"
-                                            value={settings.initialText}
-                                            onChange={handleInputChange}/>
+                                        <div className="d-flex my-2 mb-0 widgetcolor-wrapper">
+                                            <span>004882</span>
+                                            <input type="color" name="colorThemeInput" className="colorThemeInput" id="colorThemeInput" />
+                                        </div>
                                         <div><small>This is the primary color of your widget.</small></div>
                                     </div>
                                 </div>

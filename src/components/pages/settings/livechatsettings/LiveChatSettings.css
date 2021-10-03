@@ -1,0 +1,12 @@
+.widgetcolor-wrapper {
+    border: 1px solid rgba(45, 50, 80, 0.22);
+    width: 165px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px;
+}
