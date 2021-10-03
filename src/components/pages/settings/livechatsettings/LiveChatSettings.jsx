@@ -8,7 +8,11 @@ import './LiveChatSettings.css';
 const LiveChatSettings = () => {
 
     const [settings, setSettings] = useState({
-
+        title: '',
+        description: '',
+        initialText: '',
+        domains: '',
+        theme: ''
     });
 
     const handleInputChange = e => {
@@ -20,6 +24,8 @@ const LiveChatSettings = () => {
         }));
 
     }
+
+    console.log('Settings => ', settings);
 
     return (
         <div>
@@ -35,12 +41,12 @@ const LiveChatSettings = () => {
                     </h6>
                 </div>
                 <div className="d-flex justify-content-between flex-row">
-                    <h5 className="mt-3 mb-4 fs-6 fw-bold">Widget Settings</h5>
+                    <h5 className="mt-3 mb-2 fs-6 fw-bold">Widget Settings</h5>
                 </div>
                 <div className="mt-1">
                     <div>
                         <div className="w-75">
-                            <form className="tl-form" onSubmit={e => e.preventDefault()}>
+                            <form className="livechat-settings-form" onSubmit={e => e.preventDefault()}>
                                 <div>
                                     <div className="form-group mt-3">
                                         <label className="f-14 mb-1">
@@ -51,6 +57,7 @@ const LiveChatSettings = () => {
                                             className="form-control form-control"
                                             name="title"
                                             value={settings.title}
+                                            placeholder="Hello, we’re AlphaCX!"
                                             onChange={handleInputChange}/>
                                     </div>
 
@@ -63,32 +70,57 @@ const LiveChatSettings = () => {
                                             className="form-control form-control"
                                             name="description"
                                             value={settings.description}
+                                            placeholder="Here’ s a few quick ways you can connect with us."
                                             onChange={handleInputChange}/>
                                     </div>
 
                                     <div className="form-group mt-4">
                                         <label className="f-14 mb-1">
-                                            Initial chat text
+                                            Initial chat <small>({`NB: {{customer}} is replaced with customer's name`})</small>
                                         </label>
                                         <input
                                             type="text"
                                             className="form-control form-control"
                                             name="initialText"
                                             value={settings.initialText}
+                                            placeholder="Hello {{customer}}, how can we serve you today?"
                                             onChange={handleInputChange}/>
                                     </div>
 
+                                    <div className="form-group mt-4">
+                                        <label className="f-14 mb-1">
+                                            Domain of Widget Host <small>({`Semi-colon seperated list`})</small>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="form-control form-control"
+                                            name="domains"
+                                            value={settings.domains}
+                                            placeholder="alphacx.co;google.com"
+                                            style={{ fontFamily: 'monospace' }}
+                                            onChange={handleInputChange}/>
+                                    </div>
 
                                     <div className="form-group mt-4">
                                         <label className="f-14 mb-1">
                                             Color
                                         </label>
                                         <div><small>Select your widget color.</small></div>
-                                        <div className="d-flex my-2 mb-0 widgetcolor-wrapper">
-                                            <span>004882</span>
-                                            <input type="color" name="colorThemeInput" className="colorThemeInput" id="colorThemeInput" />
+                                        <div className="d-flex my-2 mb-1 widgetcolor-wrapper">
+                                            <span>{settings.theme || '#000000'}</span>
+                                            <input type="color" name="theme" onChange={handleInputChange} className="colorThemeInput" id="colorThemeInput" />
                                         </div>
                                         <div><small>This is the primary color of your widget.</small></div>
+                                    </div>
+
+                                    <div className="form-group mt-4">
+                                        <label className="f-14 mb-1">
+                                            Link
+                                        </label>
+                                        <div className="link-copy-box mb-1">
+                                            <span>{`<script src='//fw-cdn.com/1064411/2135616.js' chat='false'></script>`}</span> <button className="link-copy-btn">Copy</button>
+                                        </div>
+                                        <div><small>Copy and paste on your website body.</small></div>
                                     </div>
                                 </div>
                                 <div className="my-3 mt-4">
