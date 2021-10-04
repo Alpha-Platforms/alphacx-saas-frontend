@@ -1,63 +1,57 @@
 import axios from "axios";
 // import { hideLoader } from '../helpers/loader';
 import { NotificationManager } from "react-notifications";
-import { parseDomain, ParseResultType } from "parse-domain";
+// import { parseDomain, ParseResultType } from "parse-domain";
 
 export let baseUrl = process.env.REACT_APP_AUTH_BASE_URL;
 export let baseUrlMain = process.env.REACT_APP_API_BASE_URL;
 
-export const getSubdomain = hostname => {
-  var regexParse = new RegExp('[a-z\-0-9]{2,63}\.[a-z\.]{2,5}$');
-  var urlParts = regexParse.exec(hostname);
-  return hostname.replace(urlParts[0],'').slice(0, -1);
-}
+// export const getSubdomain = hostname => {
+//   var regexParse = new RegExp('[a-z\-0-9]{2,63}\.[a-z\.]{2,5}$');
+//   var urlParts = regexParse.exec(hostname);
+//   return hostname.replace(urlParts[0],'').slice(0, -1);
+// }
 
-export const splitHostname = hostname => {
-  const parseResult = parseDomain(window.location.hostname);
+// export const splitHostname = hostname => {
+//   const parseResult = parseDomain(window.location.hostname);
+//   // Check if the domain is listed in the public suffix list
+//   if (parseResult.type === ParseResultType.Listed) {
+//     const { subDomains, domain, topLevelDomains } = parseResult;
+//     return {subDomains, domain, topLevelDomains};
+//   } else {
+//     // if not a valid domain
+//     return false;
+//   }
+// }
 
-  // Check if the domain is listed in the public suffix list
-  if (parseResult.type === ParseResultType.Listed) {
-    const { subDomains, domain, topLevelDomains } = parseResult;
-    return {subDomains, domain, topLevelDomains};
-  } else {
-    // if not a valid domain
-    return false;
-  }
-}
-
-export const getTenantDomain = () => {
-
-  const fallbackTenant = 'techpoint';
-
-  // get hostname
-  const hostname = window.location.hostname;
-
-  // get splitted hostname
-
-  const splittedHostname = splitHostname(hostname);
-
-  if (splittedHostname) {
-    const {subDomains, domain, topLevelDomains} = splittedHostname;
-    if (domain === "alphacx") {
-      // check if the subdomain on alphacx is app or dev
-      if (['dev', 'app'].includes(subDomains[0])) {
-        return fallbackTenant;
-      } else {
-        return subDomains[0]
-      }
-    } else {
-      return fallbackTenant;
-    }
-  } else {
-    // domain is likely to be dev localhost
-    const splitLocal = hostname.split('.')[0];
-    if (splitLocal.slice(0, 9) === "localhost") {
-      return fallbackTenant;
-    } else {
-      return splitLocal;
-    }
-  }
-}
+// export const getTenantDomain = () => {
+//   const fallbackTenant = 'techpoint';
+//   // get hostname
+//   const hostname = window.location.hostname;
+//   // get splitted hostname
+//   const splittedHostname = splitHostname(hostname);
+//   if (splittedHostname) {
+//     const {subDomains, domain, topLevelDomains} = splittedHostname;
+//     if (domain === "alphacx") {
+//       // check if the subdomain on alphacx is app or dev
+//       if (['dev', 'app'].includes(subDomains[0])) {
+//         return fallbackTenant;
+//       } else {
+//         return subDomains[0]
+//       }
+//     } else {
+//       return fallbackTenant;
+//     }
+//   } else {
+//     // domain is likely to be dev localhost
+//     const splitLocal = hostname.split('.')[0];
+//     if (splitLocal.slice(0, 9) === "localhost") {
+//       return fallbackTenant;
+//     } else {
+//       return splitLocal;
+//     }
+//   }
+// }
 
 export const httpPostMain = async (url, postBody) => {
 
@@ -258,9 +252,10 @@ export const httpGetMainKB = async (url) => {
     const res = await axios.get(`${baseUrlMain}/${url}`, {
       headers: { 
         Authorization: `Bearer ${localStorage.getItem("token")}`,
-        'domain': localStorage.getItem("domain") || getTenantDomain(),
+        // 'domain': localStorage.getItem("domain") || getTenantDomain(),
+        'domain': localStorage.getItem("domain"),
         'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json' 
+        'Content-Type': 'application/json'
       },
     });
 
