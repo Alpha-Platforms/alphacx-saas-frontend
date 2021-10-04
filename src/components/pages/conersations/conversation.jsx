@@ -377,7 +377,8 @@ export default function Conversation() {
     if (res.status === "success") {
       setTags(res?.data?.tags_names.tags);
     } else {
-      return NotificationManager.error(res.er.message, "Error", 4000);
+      return;
+      // return NotificationManager.error(res.er.message, "Error", 4000);
     }
   };
   const getAgents = async () => {
@@ -732,7 +733,7 @@ export default function Conversation() {
                   </div>
                   {/* CHAT SECTION */}
                   <div className="conversationsMain">
-                    {AchiveMsges.length == 0 ? (
+                    {/* {AchiveMsges.length == 0 ? (
                       ""
                     ) : (
                       <div
@@ -752,7 +753,7 @@ export default function Conversation() {
                           </span>
                         )}
                       </div>
-                    )}
+                    )} */}
 
                     <div className="chatDateHeader">
                       <div className="chatDateHeaderhr1"></div>
@@ -823,11 +824,11 @@ export default function Conversation() {
                     </div>
 
                     <div
-                      className={` ${
-                        ShowAchive && AchiveMsges.length > 0
-                          ? "showAchivesWrap"
-                          : "hideAchivesWrap"
-                      }`}
+                      // className={` ${
+                      //   ShowAchive && AchiveMsges.length > 0
+                      //     ? "showAchivesWrap"
+                      //     : "hideAchivesWrap"
+                      // }`}
                     >
                       {AchiveMsges.map((data) => {
                         return (
@@ -1042,6 +1043,8 @@ export default function Conversation() {
                       />
                     </div>
                     <Editor
+                      disabled={(ticket[0].status.status === "Closed")? true : false}
+                      readOnly={(ticket[0].status.status === "Closed")? true : false}
                       editorState={editorState}
                       toolbar={{
                         options: ["emoji", "inline", "image"],
@@ -1121,8 +1124,8 @@ export default function Conversation() {
 
                     <div className="sendMsg">
                       <button
-                        disabled={sendingReply}
                         onClick={() => replyTicket(ReplyTicket, "attachment")}
+                        disabled={(sendingReply)? true : (ticket[0].status.status === "Closed")? true : false}
                       >
                         <SendMsgIcon /> Send
                       </button>

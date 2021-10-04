@@ -655,7 +655,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                             </div>
                           </div>
                           <div>
-                            <div
+                            {/* <div
                                 className="achivemsagesSection pt-3"
                                 onClick={() => setShowAchive(!ShowAchive)}
                               >
@@ -671,7 +671,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                     ({AchiveMsges.length})
                                   </span>
                                 )}
-                              </div>
+                              </div> */}
                           </div>
                           {/* CHAT SECTION */}
                           <div id="ticketConvoBox" className="conversationsMain">
@@ -761,11 +761,11 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                             </div> */}
 
                             <div
-                              className={` ${
-                                ShowAchive && AchiveMsges.length > 0
-                                  ? "showAchivesWrap"
-                                  : "hideAchivesWrap"
-                              }`}
+                              // className={` ${
+                              //   ShowAchive && AchiveMsges.length > 0
+                              //     ? "showAchivesWrap"
+                              //     : "hideAchivesWrap"
+                              // }`}
                             >
                               {AchiveMsges.map((data) => {
                                 return (
@@ -977,6 +977,8 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                 />
                               </div>
                               <Editor
+                                disabled={(ticket[0].status.status === "Closed")? true : false}
+                                readOnly={(ticket[0].status.status === "Closed")? true : false}
                                 editorState={editorState}
                                 toolbar={{
                                   options: ["emoji", "inline", "image"],
@@ -1057,7 +1059,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
 
                             <div className="sendMsg">
                               <button
-                                disabled={sendingReply}
+                                disabled={(sendingReply)? true : (ticket[0].status.status === "Closed")? true : false}
                                 onClick={() => replyTicket(ReplyTicket, "attachment")}
                               >
                                 <SendMsgIcon /> Send
