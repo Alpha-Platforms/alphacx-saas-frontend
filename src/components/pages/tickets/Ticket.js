@@ -117,10 +117,13 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     const [MessageSenderId, setMessageSenderId] = useState("");
     const [TicketId, setTicketId] = useState("");
     const [showUserProfile, setshowUserProfile] = useState(false);
+    // 
     const [ReplyTicket, setReplyTicket] = useState({
       plainText: "",
       richText: "",
     });
+    const [replyType, setReplyType] = useState("reply");
+    // 
     const [Agents, setAgents] = useState([]);
     const [Statuses, setStatuses] = useState([]);
     const [UserInfo, setUserInfo] = useState({});
@@ -239,6 +242,12 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       setEditorState(editorState);
       setReplyTicket({ plainText, richText });
     };
+    // 
+    // 
+    const onReplyTypeChange = (event) => {
+      setReplyType(event.target.value);
+    }
+    // 
     const getTickets = async () => {
       const res = await httpGetMain("tickets?channel=whatsapp");
       if (res?.status == "success") {
@@ -934,7 +943,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                         </Fragment>
                         {/* CHAT COMMENT BOX SECTION */}
                         <div id="ticketConvoEditorBox" className="conversationCommentBox">
-                          <div className="single-chat-ckeditor">
+                          <div className="single-chat-ckeditor position-relative">
                             <div
                               className="showBackArrowOnMobile"
                               onClick={() =>
@@ -945,6 +954,28 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                             </div>
 
                             <div className="ticket-convo-editor">
+                              <div className="position-absolute ps-1 pt-1 bg-white rounded-top border w-100" style={{"zIndex": "2"}}>
+                                <Form.Check
+                                  inline
+                                  label="Reply"
+                                  value="reply"
+                                  name="reply_type"
+                                  checked={replyType === "reply"}
+                                  onChange={onReplyTypeChange}
+                                  type="radio"
+                                  id={`inline-response_type-1`}
+                                />
+                                <Form.Check
+                                  inline
+                                  label="Comment"
+                                  value="note"
+                                  name="reply_type"
+                                  checked={replyType === "note"}
+                                  onChange={onReplyTypeChange}
+                                  type="radio"
+                                  id={`inline-response_type-2`}
+                                />
+                              </div>
                               <Editor
                                 editorState={editorState}
                                 toolbar={{
