@@ -8,7 +8,7 @@ import "./helpCenter.scss";
 import LogoBG from "../../../assets/imgF/logoBG.png";
 import { 
   httpGetMain, 
-  // getTenantDomain, 
+  getTenantDomain, 
   httpGetMainKB 
 } from "../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
