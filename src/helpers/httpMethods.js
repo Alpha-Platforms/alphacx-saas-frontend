@@ -14,7 +14,6 @@ export const getSubdomain = hostname => {
 
 export const splitHostname = hostname => {
   const parseResult = parseDomain(window.location.hostname);
-
   // Check if the domain is listed in the public suffix list
   if (parseResult.type === ParseResultType.Listed) {
     const { subDomains, domain, topLevelDomains } = parseResult;
@@ -26,16 +25,11 @@ export const splitHostname = hostname => {
 }
 
 export const getTenantDomain = () => {
-
   const fallbackTenant = 'techpoint';
-
   // get hostname
   const hostname = window.location.hostname;
-
   // get splitted hostname
-
   const splittedHostname = splitHostname(hostname);
-
   if (splittedHostname) {
     const {subDomains, domain, topLevelDomains} = splittedHostname;
     if (domain === "alphacx") {
@@ -260,7 +254,7 @@ export const httpGetMainKB = async (url) => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
         'domain': localStorage.getItem("domain") || getTenantDomain(),
         'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json' 
+        'Content-Type': 'application/json'
       },
     });
 
