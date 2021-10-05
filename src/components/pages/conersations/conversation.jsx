@@ -130,7 +130,7 @@ export default function Conversation() {
   const [RSTicketAssignee, setRSTicketAssignee] = useState([]);
   const [RSTicketCategory, setRSTicketCategory] = useState("");
   const [RSTicketSubject, setRSTicketSubject] = useState("");
-  const [RSTicketStage, setRSTicketStage] = useState("");
+  const [RSTicketStage, setRSTicketStage] = useState({});
   const [RSTicketPriority, setRSTicketPriority] = useState("");
   const [RSTicketRemarks, setRSTicketRemarks] = useState("");
   const [RSTicketAssignedAgent, setRSTicketAssignedAgent] = useState("");
@@ -390,18 +390,24 @@ export default function Conversation() {
     }
   };
 
-  const upTicketStatus = async (id) => {
-    const data = { statusId: id };
-    const res = await httpPatchMain(`tickets/${TicketId}`, data);
-    if (res.status === "success") {
-      // setStatuses(res?.data?.statuses);
-      return NotificationManager.success(
-        "Ticket status update successfully",
-        "Success",
-        4000
-      );
-    } else {
-      return NotificationManager.error(res.er.message, "Error", 4000);
+  const updateTicketStatus = async () => {
+    if(RSTicketStage.label === "Closed"){
+      let base_url = window.location.origin;
+      let complete_url = `${base_url}/feedback/${localStorage.domain}/${ticket[0].id}/${ticket[0].customer.id}`;
+      let rich_text = `<p>Please click on the link to rate this conversation <a href='${complete_url}'>rate us here</a></p>`;
+      let rich_text_encode = rich_text;
+      let ReplyTicket = {
+        richText : rich_text_encode,
+        plainText : "Please click on the link to rate this conversation"
+      }
+      replyTicket(ReplyTicket, "attachment")
+    }
+      
+    const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, {"statusId": RSTicketStage.value});
+    if (statusRes.status === "success") {
+      return NotificationManager.success("Ticket status successfully updated", "Success");
+    } else{
+      return NotificationManager.error(statusRes.er.message, "Error", 4000);
     }
   };
 
@@ -469,19 +475,14 @@ export default function Conversation() {
       assigneeId: RSTicketAssignee,
       tags: (!Array.isArray(RSTicketTags) || !RSTicketTags.length) ? null : RSTicketTags,
     };
-    if(RSTicketStage){
-      const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, {"statusId": RSTicketStage});
-      if (statusRes.status === "success") {
-        NotificationManager.success("Ticket status successfully updated", "Success");
-      } else{
-        NotificationManager.error(statusRes.er.message, "Error", 4000);
-      }
+    if(Object.keys(RSTicketStage).length > 0){
+      updateTicketStatus();
     }
     const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
     if (res.status === "success") {
       setProcessing(false);
       closeSaveTicketModal();
-      NotificationManager.success("Ticket status successfully updated","Success");
+      NotificationManager.success("Ticket successfully updated","Success");
       AppSocket.createConnection();
       let data = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, data);
@@ -507,7 +508,7 @@ export default function Conversation() {
       description: [],
       category: "",
     });
-    setRSTicketStage(ticket[0].status.id);
+    // setRSTicketStage(ticket[0].status.id);
     setRSTicketPriority(ticket[0].priority.id);
     setRSTicketCategory(ticket[0].category.id);
     setRSTicketSubject(ticket[0].subject);
@@ -1211,7 +1212,11 @@ export default function Conversation() {
                   className="rselectfield"
                   style={{ fontSize: "12px" }}
                   onChange={(newValue, actionMeta) => {
-                    setRSTicketStage(newValue.value);
+                    setRSTicketStage(prevState => ({
+                      ...prevState,
+                      value: newValue.value,
+                      label: newValue.label
+                    }));
                   }}
                   isClearable={false}
                   defaultValue={{
