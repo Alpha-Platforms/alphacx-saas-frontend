@@ -220,6 +220,7 @@ const NewArticle = () => {
         richText: body,
         folderId: folders[0]?.id,
         categoryId: folders[0]?.category?.id
+        // categoryId: folders[0]?.id
       });
 
       // convert rich text to plain text in editor
