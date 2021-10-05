@@ -394,7 +394,7 @@ export default function Conversation() {
     if(RSTicketStage.label === "Closed"){
       let base_url = window.location.origin;
       let complete_url = `${base_url}/feedback/${localStorage.domain}/${ticket[0].id}/${ticket[0].customer.id}`;
-      let rich_text = `<p>Please click on the link to rate this conversation <a href='${complete_url}'>rate us here</a></p>`;
+      let rich_text = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation <a href='${complete_url}'>rate us here</a></p>`;
       let rich_text_encode = rich_text;
       let ReplyTicket = {
         richText : rich_text_encode,
