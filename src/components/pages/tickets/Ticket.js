@@ -380,6 +380,17 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     };
   
     const updateTicketStatus = async () => {
+      if(RSTicketStage.label === "Closed"){
+      let base_url = window.location.origin;
+      let complete_url = `${base_url}/feedback/${localStorage.domain}/${ticket[0].id}/${ticket[0].customer.id}`;
+      let rich_text = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation <a href='${complete_url}'>rate us here</a></p>`;
+      let rich_text_encode = rich_text;
+      let ReplyTicket = {
+          richText : rich_text_encode,
+          plainText : "Your ticket has been marked as closed, Please click on the link to rate this conversation"
+        }
+        replyTicket(ReplyTicket, "attachment")
+      }
       const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, {"statusId": RSTicketStage.value});
       if (statusRes.status === "success") {
         return NotificationManager.success("Ticket status successfully updated", "Success");

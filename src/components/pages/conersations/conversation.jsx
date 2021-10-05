@@ -398,11 +398,10 @@ export default function Conversation() {
       let rich_text_encode = rich_text;
       let ReplyTicket = {
         richText : rich_text_encode,
-        plainText : "Please click on the link to rate this conversation"
+        plainText : "Your ticket has been marked as closed, Please click on the link to rate this conversation"
       }
       replyTicket(ReplyTicket, "attachment")
     }
-      
     const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, {"statusId": RSTicketStage.value});
     if (statusRes.status === "success") {
       return NotificationManager.success("Ticket status successfully updated", "Success");
