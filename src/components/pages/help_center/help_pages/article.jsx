@@ -74,7 +74,7 @@ const Article = () => {
           <h3 className="title mb-5">{articleContent?.title}</h3>
           <div
             dangerouslySetInnerHTML={{
-              __html: `<span>${articleContent.body}</span>`,
+              __html: `<span>${articleContent?.body || ''}</span>`,
             }}
           />
           <div className="attachments">

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { SearchIconNavbr } from "../../../../../assets/images/svgs";
 import "./topBar.scss";
+import {slugify} from '../../../../../helper';
 
 const TopBar = ({ categoryId }) => {
   const location = useLocation();
@@ -28,7 +29,7 @@ const TopBar = ({ categoryId }) => {
           >
             {i === links.length - 2 ? (
               <Link
-                to={`/knowledge-base/${link}${categoryId ? "?cat=" + categoryId : ""}`}
+                to={`/knowledge-base/${slugify(link)}`}
               >
                 {link.replaceAll("-", " ")}
               </Link>

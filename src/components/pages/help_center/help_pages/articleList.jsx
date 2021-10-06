@@ -14,7 +14,7 @@ import {slugify} from '../../../../helper';
 
 const ArticleList = () => {
   let query = useQuery();
-  let { topic } = useParams();
+  let { category } = useParams();
   const pageUrl = useLocation().pathname;
   const info = navigation.filter((i) => pageUrl.includes(i.link));
   const [pageInfo, setPageInfo] = useState(info);
@@ -37,7 +37,7 @@ const ArticleList = () => {
   }
 
   const fetchAllArticles = async () => {
-    const res = await httpGetMainKB(`articles/categories/${query.get("cat")}`);
+    const res = await httpGetMainKB(`articles/category?slug=${category}`);
     setPolicyLoading(false);
     if (res?.status == "success") {
       let folders = res?.data?.folders;
@@ -51,7 +51,8 @@ const ArticleList = () => {
 
       setArticles(articles);
     } else {
-      return NotificationManager.error(res?.er?.message, "Error", 4000);
+      // return NotificationManager.error(res?.er?.message, "Error", 4000);
+      return NotificationManager.error('', 'No Articles Found', 4000);
     }
   };
 
@@ -101,6 +102,9 @@ const ArticleList = () => {
             //   .toLowerCase()
             //   .replaceAll(" ", "-")}?id=${item.id}
           ))}
+          {
+            (!policyLoading && articles.length === 0) && <div>No Articles Found.</div>
+          }
         </div>
         <div className="sidebar">
           <p className="header">Need Support?</p>

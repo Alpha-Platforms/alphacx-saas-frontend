@@ -2,13 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { HelpNavIcon } from "../../../../../assets/images/svgs";
 import "./navCard.scss";
+import {slugify} from '../../../../../helper';
 
 const NavCard = ({ title, icon, folders, id }) => {
   return (
     <div className="nav-card">
       <Link
         to={
-          `/knowledge-base/${title.toLowerCase().replaceAll(" ", "-")}?cat=${id}` ||
+          `/knowledge-base/${slugify(title.toLowerCase())}` ||
           "/knowledge-base"
         }
       >
