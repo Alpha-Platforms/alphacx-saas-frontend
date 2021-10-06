@@ -247,7 +247,7 @@ const Login = ({history}) => {
                                             onChange={handleChange}
                                             value={userInput.domain}
                                         />
-                                        <span className="input-group-text" id="basic-addon2">.alphacx.co</span>
+                                        <span className="input-group-text text-muted" id="basic-addon2">.alphacx.co</span>
                                     </div>
 
                                 </div>
