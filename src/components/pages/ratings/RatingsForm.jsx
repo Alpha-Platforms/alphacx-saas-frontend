@@ -49,7 +49,8 @@ export default function RatingsForm() {
                 commentLabel: res?.data.commentLabel,
             });
         } else {
-            return NotificationManager.error(res?.er?.message, "Error", 4000);
+            return;
+            // return NotificationManager.error(res?.er?.message, "Error", 4000);
         }
     };
 
@@ -115,7 +116,7 @@ export default function RatingsForm() {
                             <hr className="mb-5"/>
                             <Form.Group className="mb-5 form-group acx-form-group" controlId="improveMessage">
                                 <Form.Label>{ratingsConfig.commentLabel}</Form.Label>
-                                <Form.Control onChange={e => { setComment(e.target.value) }} className="shadow-sm" as="textarea" defaultValue=" " placeholder="Tell us how we can improve..." rows={6}/>
+                                <Form.Control onChange={e => { setComment(e.target.value) }} className="shadow-sm" as="textarea" defaultValue=" " placeholder="Tell us how we can improve..." rows={6} />
                             </Form.Group>
                             <div className="mb-5">
                                 <div className="">
@@ -128,8 +129,8 @@ export default function RatingsForm() {
                                             for (let i = 0; i <= 10; i++) {
                                                 rows.push(
                                                     <button type="button" key={i} onClick={() => setNpsScore(i)}
-                                                            className={`mb-0 btn acx-btn-icon acx-hover-border-primary rounded-1 ${(npsScore == i ? "acx-bg-primary": "")}`}>
-                                                        <span className={`${(npsScore == i ? "text-white": "")}`}>{i}</span>
+                                                            className={`mb-0 btn acx-btn-icon acx-hover-border-primary rounded-1 ${(npsScore === i ? "acx-bg-primary": "")}`}>
+                                                        <span className={`${(npsScore === i ? "text-white": "")}`}>{i}</span>
                                                     </button>
                                                 );
                                             }
