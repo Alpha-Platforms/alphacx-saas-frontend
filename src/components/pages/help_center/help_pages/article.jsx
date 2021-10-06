@@ -10,13 +10,16 @@ import StarRating from "../components/starRating/starRating";
 import matter from "gray-matter";
 
 import { httpGetMain, httpGetMainKB } from "../../../../helpers/httpMethods";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
 
 const Article = () => {
+  const {slug} = useParams();
+
+  console.log("Slug => ", slug);
   let query = useQuery();
-  const file_name = "blog-one.md";
+  // const file_name = "blog-one.md";
 
   const [policyLoading, setPolicyLoading] = useState(false);
   const [articleContent, setArticleContent] = useState({});
@@ -39,7 +42,7 @@ const Article = () => {
 
   const fetchArticleDetails = async (categories) => {
     setPolicyLoading(true);
-    const res = await httpGetMainKB(`article/${query.get("id")}`);
+    const res = await httpGetMainKB(`article?slug=${slug}`);
     if (res?.status == "success") {
       console.log(res);
       setArticleContent(res?.data);

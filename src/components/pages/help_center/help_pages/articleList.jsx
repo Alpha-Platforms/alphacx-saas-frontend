@@ -10,6 +10,7 @@ import TopBar from "../components/topBar/topBar";
 import { faqs, navigation } from "../faq";
 import "./articleList.scss";
 import ScaleLoader from "react-spinners/ScaleLoader";
+import {slugify} from '../../../../helper';
 
 const ArticleList = () => {
   let query = useQuery();
@@ -28,6 +29,8 @@ const ArticleList = () => {
     "settings",
     "document",
   ];
+
+  console.log('articles => ', articles);
 
   function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -87,10 +90,7 @@ const ArticleList = () => {
           {articles.map((item, i) => (
             <Link
               key={i}
-              to={`${pageUrl}/${item?.title
-                ?.toLowerCase()
-                .replace(/ /g, "-")
-                .replace("?", "")}?id=${item?.id}&cat=${query.get("cat")}`}
+              to={`${pageUrl}/${slugify(item?.title?.toLowerCase())}`}
             >
               <div className="article-link">
                 <h3 className="title">{item?.title}</h3>
