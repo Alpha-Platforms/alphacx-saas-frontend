@@ -185,20 +185,11 @@ const Login = ({match: {params}}) => {
                   onChange={handleChange}
                   value={userInput.domain}
               />
-              <span className="input-group-text" id="basic-addon2">.alphacx.co</span>
+              <span className="input-group-text text-muted" id="basic-addon2">.alphacx.co</span>
           </div>          
 
           <div className="haveAnAccou">
-            {
-              (hostName[0] === "dev" || hostName[0] === "app" || hostName[1] === "netlify" || hostName.includes("localhost")) ?
-               <a href="/register">First time user? Sign up</a>
-               
-              :
-
-              <a href="https://app.alphacx.co/register">First time user? Sign up</a>
-              
-            }
-            
+            <a href="/register">First time user? Sign up</a>
           </div>
 
           <div className="submit-auth-btn">
