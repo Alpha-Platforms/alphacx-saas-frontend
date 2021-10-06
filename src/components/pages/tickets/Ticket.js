@@ -117,13 +117,10 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     const [MessageSenderId, setMessageSenderId] = useState("");
     const [TicketId, setTicketId] = useState("");
     const [showUserProfile, setshowUserProfile] = useState(false);
-    // 
     const [ReplyTicket, setReplyTicket] = useState({
       plainText: "",
       richText: "",
     });
-    const [replyType, setReplyType] = useState("reply");
-    // 
     const [Agents, setAgents] = useState([]);
     const [Statuses, setStatuses] = useState([]);
     const [UserInfo, setUserInfo] = useState({});
@@ -156,7 +153,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     const [RSTicketTags, setRSTicketTags] = useState([]);
     const [RSTicketCategory, setRSTicketCategory] = useState("");
     const [RSTicketSubject, setRSTicketSubject] = useState("");
-    const [RSTicketStage, setRSTicketStage] = useState({});
+    const [RSTicketStage, setRSTicketStage] = useState("");
     const [RSTicketPriority, setRSTicketPriority] = useState("");
     const [RSTicketRemarks, setRSTicketRemarks] = useState("");
     const [RSTicketAssignee, setRSTicketAssignee] = useState([]);
@@ -192,7 +189,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         // emit ws_tickets event on reply
         let channelData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
         AppSocket.io.emit(`ws_tickets`, channelData);
-        // scrollPosSendMsgList();
+        scrollPosSendMsgList();
         // sortMsges((item) => [...item, msg]);
       });
       return () => {
@@ -242,12 +239,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       setEditorState(editorState);
       setReplyTicket({ plainText, richText });
     };
-    // 
-    // 
-    const onReplyTypeChange = (event) => {
-      setReplyType(event.target.value);
-    }
-    // 
     const getTickets = async () => {
       const res = await httpGetMain("tickets?channel=whatsapp");
       if (res?.status == "success") {
@@ -276,10 +267,10 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       }
     };
   
-    // const scrollPosSendMsgList = () => {
-    //   // let element = document.getElementById("lastMsg");
-    //   // element.scrollIntoView({behavior: 'smooth'});
-    // }
+    const scrollPosSendMsgList = () => {
+      let element = document.getElementById("lastMsg");
+      element.scrollIntoView({behavior: 'smooth'});
+    }
     const replyTicket = async (reply, attachment) => {
       const data = {
         // type: "note",
@@ -313,7 +304,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         AppSocket.createConnection();
         let channelData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
         AppSocket.io.emit(`ws_tickets`, channelData);
-        // scrollPosSendMsgList();
+        scrollPosSendMsgList();
       } else {
         // setLoadingTicks(false);
         setsendingReply(false);
@@ -379,23 +370,17 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       }
     };
   
-    const updateTicketStatus = async () => {
-      if(RSTicketStage.label === "Closed"){
-      let base_url = window.location.origin;
-      let complete_url = `${base_url}/feedback/${localStorage.domain}/${ticket[0].id}/${ticket[0].customer.id}`;
-      let rich_text = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation <a href='${complete_url}'>rate us here</a></p>`;
-      let rich_text_encode = rich_text;
-      let ReplyTicket = {
-          richText : rich_text_encode,
-          plainText : "Your ticket has been marked as closed, Please click on the link to rate this conversation"
-        }
-        replyTicket(ReplyTicket, "attachment")
-      }
-      const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, {"statusId": RSTicketStage.value});
-      if (statusRes.status === "success") {
-        return NotificationManager.success("Ticket status successfully updated", "Success");
-      } else{
-        return NotificationManager.error(statusRes.er.message, "Error", 4000);
+    const upTicketStatus = async (id) => {
+      const data = { statusId: id };
+      const res = await httpPatchMain(`tickets/${TicketId}`, data);
+      if (res.status == "success") {
+        return NotificationManager.success(
+          "Ticket status update successfully",
+          "Success",
+          4000
+        );
+      } else {
+        return NotificationManager.error(res.er.message, "Error", 4000);
       }
     };
   
@@ -458,14 +443,19 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         assigneeId: RSTicketAssignee,
         tags: (!Array.isArray(RSTicketTags) || !RSTicketTags.length) ? null : RSTicketTags,
       };
-      if(Object.keys(RSTicketStage).length > 0){
-        updateTicketStatus()
+      if(RSTicketStage){
+        const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, {"statusId": RSTicketStage});
+        if (statusRes.status === "success") {
+          NotificationManager.success("Ticket status successfully updated", "Success");
+        } else{
+          NotificationManager.error(statusRes.er.message, "Error", 4000);
+        }
       }
       const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
       if (res.status === "success") {
         setProcessing(false);
         closeSaveTicketModal();
-        NotificationManager.success("Ticket successfully updated","Success");
+        NotificationManager.success("Ticket status successfully updated","Success");
         const ticketRes = await httpGetMain(`tickets/${ticket[0].id}`);
         if (ticketRes.status === "success") {
             setTicket(ticketRes?.data);
@@ -488,11 +478,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         description: [],
         category: "",
       });
-      // setRSTicketStage(prevState => ({
-      //   ...prevState,
-      //   "value": ticket[0].status.id,
-      //   "label": ticket[0].status.status
-      // }));
+      setRSTicketStage(ticket[0].status.id);
       setRSTicketPriority(ticket[0].priority.id);
       setRSTicketCategory(ticket[0].category.id);
       setRSTicketSubject(ticket[0].subject);
@@ -660,7 +646,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                             </div>
                           </div>
                           <div>
-                            {/* <div
+                            <div
                                 className="achivemsagesSection pt-3"
                                 onClick={() => setShowAchive(!ShowAchive)}
                               >
@@ -676,7 +662,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                     ({AchiveMsges.length})
                                   </span>
                                 )}
-                              </div> */}
+                              </div>
                           </div>
                           {/* CHAT SECTION */}
                           <div id="ticketConvoBox" className="conversationsMain">
@@ -766,11 +752,11 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                             </div> */}
 
                             <div
-                              // className={` ${
-                              //   ShowAchive && AchiveMsges.length > 0
-                              //     ? "showAchivesWrap"
-                              //     : "hideAchivesWrap"
-                              // }`}
+                              className={` ${
+                                ShowAchive && AchiveMsges.length > 0
+                                  ? "showAchivesWrap"
+                                  : "hideAchivesWrap"
+                              }`}
                             >
                               {AchiveMsges.map((data) => {
                                 return (
@@ -948,7 +934,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                         </Fragment>
                         {/* CHAT COMMENT BOX SECTION */}
                         <div id="ticketConvoEditorBox" className="conversationCommentBox">
-                          <div className="single-chat-ckeditor position-relative">
+                          <div className="single-chat-ckeditor">
                             <div
                               className="showBackArrowOnMobile"
                               onClick={() =>
@@ -959,31 +945,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                             </div>
 
                             <div className="ticket-convo-editor">
-                              <div className="position-absolute ps-1 pt-1 bg-white rounded-top border w-100" style={{"zIndex": "2"}}>
-                                <Form.Check
-                                  inline
-                                  label="Reply"
-                                  value="reply"
-                                  name="reply_type"
-                                  checked={replyType === "reply"}
-                                  onChange={onReplyTypeChange}
-                                  type="radio"
-                                  id={`inline-response_type-1`}
-                                />
-                                <Form.Check
-                                  inline
-                                  label="Comment"
-                                  value="note"
-                                  name="reply_type"
-                                  checked={replyType === "note"}
-                                  onChange={onReplyTypeChange}
-                                  type="radio"
-                                  id={`inline-response_type-2`}
-                                />
-                              </div>
                               <Editor
-                                disabled={(ticket[0].status.status === "Closed")? true : false}
-                                readOnly={(ticket[0].status.status === "Closed")? true : false}
                                 editorState={editorState}
                                 toolbar={{
                                   options: ["emoji", "inline", "image"],
@@ -1064,7 +1026,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
 
                             <div className="sendMsg">
                               <button
-                                disabled={(sendingReply)? true : (ticket[0].status.status === "Closed")? true : false}
+                                disabled={sendingReply}
                                 onClick={() => replyTicket(ReplyTicket, "attachment")}
                               >
                                 <SendMsgIcon /> Send
@@ -1129,15 +1091,11 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                   className="rselectfield"
                   style={{ fontSize: "12px" }}
                   onChange={(newValue, actionMeta) => {
-                    setRSTicketStage(prevState => ({
-                      ...prevState,
-                      value: newValue.value,
-                      label: newValue.label
-                    }));
+                    setRSTicketStage(newValue.value);
                   }}
                   isClearable={false}
                   defaultValue={{
-                    value: ticket[0]?.status?.id, 
+                    value: ticket[0]?.status?.id , 
                     label: ticket[0]?.status?.status
                   }}
                   options={

@@ -30,7 +30,7 @@ const Login = ({match: {params}}) => {
   const [hostName] = useState(() => {
     return window.location.hostname.split(".") 
   })
-  
+
 
   useEffect(() => {         
     if(hostName[0] !== "app" && hostName[0] !== "qustomar" && hostName[0] !== "localhost" && hostName[1] !== "netlify"){ // CHANGE TO 3 ON LIVE SERVER 
