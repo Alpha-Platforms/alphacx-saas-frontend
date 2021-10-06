@@ -108,3 +108,7 @@ export const uuid =() => {
 export const textCapitalize = (str) => {
     return str.toLowerCase().replace(/(^|\s)\S/g, L => L.toUpperCase());
 }
+
+export const slugify = (str) => {
+	return str.toLowerCase().replace(/\W+/gi, ' ').replace(/_/gi, ' ').trim().replace(/\s+/gi, '-');
+}
