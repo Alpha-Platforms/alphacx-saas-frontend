@@ -34,7 +34,7 @@ const LiveChatSettings = () => {
         }));
     }
 
-    const embedText = `<script src='https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.js'>ACX.createLiveChatWidget({payload: ${encryptedData}})</script>`;
+    const embedText = `<script src='https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.js'>ACX.createLiveChatWidget({payload: "${encryptedData}"})</script>`;
 
     console.log('Settings => ', settings);
 
