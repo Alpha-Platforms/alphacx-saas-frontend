@@ -33,11 +33,34 @@ const Login = ({match: {params}}) => {
 
 
   useEffect(() => {         
-    if(hostName.length === 3 && hostName[0] !== "dev" && hostName[0] !== "app" && hostName[1] !== "netlify"){ // CHANGE TO 3 ON LIVE SERVER 
+    if(hostName[0] !== "app" && hostName[0] !== "qustomar" && hostName[0] !== "localhost" && hostName[1] !== "netlify"){ // CHANGE TO 3 ON LIVE SERVER 
       window.localStorage.setItem("domain", domain)
       setDomain(hostName[0]) // if sub-domain is available it is correct else you'd get a 404
     }
   }, [])
+
+
+/**  
+ * 3 
+ * app.acx --> redirect
+ * or netlify --> no redirect
+ * 
+ * 
+ * 2
+ * qus.com --> redirect
+ * 
+ * 
+ * 1
+ * localhost --> redirect
+ * 
+ * 
+ * or tenant. ---> no redirect
+ * 
+ */
+
+
+
+
 
   useEffect(() => {
     if(domain){
@@ -74,24 +97,6 @@ const Login = ({match: {params}}) => {
     if(domain){// PASSWORD LOGIN
 
       if(userInput.email && userInput.password){
-
-        // const validateEmail = ValidateEmail(userInput.email);
-        // if (validateEmail == false) {
-        //   return NotificationManager.warning(
-        //     "Invalid email address",
-        //     "Validation Warning",
-        //     4000
-        //   );
-        // }
-    
-        // const validatepassword = validatePassword(userInput.password);
-        // if (validatepassword != "Looks Good!") {
-        //   return NotificationManager.warning(
-        //     validatepassword,
-        //     "Validation Warning",
-        //     4000
-        //   );
-        // }
     
         const data = {
           email: userInput.email,
@@ -113,7 +118,7 @@ const Login = ({match: {params}}) => {
           window.location.href = `/`;
     
         } else {
-          // Login failed
+          // Login fails
           setLoading(false);
           NotificationManager.error(res?.er?.message, "Error", 4000);
         }
@@ -133,8 +138,11 @@ const Login = ({match: {params}}) => {
       if (res.status === "success") {
         setLoading(false)
 
-        if(hostName.length === 3 && hostName[0] === "app"){
+        if(hostName[0] === "app"){
           window.location.href = `https://${res?.data?.domain}.alphacx.co`;
+        
+        } else if(hostName[0] === "qustomar" || hostName[0] === "localhost"){
+          window.location.href = `${window.location.protocol}//${res?.data?.domain}.${window.location.hostname}:${window.location.port}`;
 
         } else {
           // window.location.href = "/";
