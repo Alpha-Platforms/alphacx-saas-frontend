@@ -30,7 +30,7 @@ const Login = ({match: {params}}) => {
   const [hostName] = useState(() => {
     return window.location.hostname.split(".") 
   })
-  
+
 
   useEffect(() => {         
     if(hostName.length === 3 && hostName[0] !== "dev" && hostName[0] !== "app" && hostName[1] !== "netlify"){ // CHANGE TO 3 ON LIVE SERVER 
@@ -133,9 +133,8 @@ const Login = ({match: {params}}) => {
       if (res.status === "success") {
         setLoading(false)
 
-        // if(hostName.length === 3 && hostName[0] === "app"){
-        if(hostName[1] !== "netlify"){
-          window.location.href = `${window.location.protocol}//${res?.data?.domain}.${window.location.hostname}:${window.location.port}`;
+        if(hostName.length === 3 && hostName[0] === "app"){
+          window.location.href = `https://${res?.data?.domain}.alphacx.co`;
 
         } else {
           // window.location.href = "/";

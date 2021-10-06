@@ -15,7 +15,6 @@ import {CSSTransition} from 'react-transition-group';
 import {countries} from '../../../components/shared/countries';
 import RSelect from 'react-select';
 import ThankYou from "../../../assets/imgF/thank-you.png";
-import {ReactComponent as ApproveIcon} from "../../../assets/icons/check-green.svg";
 
 const override = css ``;
 
@@ -28,22 +27,29 @@ const Login = ({history}) => {
         password: "",
         companyName: "",
         domain: "",
-        country: ""
+        region: ""
     });
 
-    const [showPassword, setShowPassword] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [color, setColor] = useState("#ffffff");
-    const [activeForm, setActiveForm] = useState('form-one');
-    const [menuHeight, setMenuHeight] = useState(null);
-    const [isVerified, setIsVerified] = useState(false)
-    const [domainChecking, setDomainChecking] = useState(false)
-    const [lockDomain, setLockDomain] = useState(false)
+    const [showPassword,
+        setShowPassword] = useState(false);
+    const [loading,
+        setLoading] = useState(false);
+    const [color,
+        setColor] = useState("#ffffff");
+
+    const [activeForm,
+        setActiveForm] = useState('form-one');
+    const [menuHeight,
+        setMenuHeight] = useState(null);
 
     const calcHeight = el => {
         const height = el.offsetHeight;
+        console.log("height => ", height);
         setMenuHeight(height);
     }
+
+    const [isVerified, setIsVerified] = useState(false)
+
 
     const handleChange = (e) => {
         setUserInput({
@@ -54,13 +60,6 @@ const Login = ({history}) => {
             localStorage.setItem("tenantEmail", e.target.value)
         }
     };
-
-    const handleRSChange = ({value}, {name}) => {
-        setUserInput({
-            ...userInput,
-            [name]: value
-        });
-    }
 
     const handleSubmit = async(e) => {
         e.preventDefault();
@@ -73,11 +72,12 @@ const Login = ({history}) => {
             companyName: userInput.companyName,
             email: userInput.email,
             password: userInput.password,
-            country: userInput.country,
+            region: userInput.region || "",
             currency: "Naira"
         };
 
         setLoading(true);
+
         const res = await httpPost("auth/register", data);
 
         if (res.status === "success") {
@@ -103,29 +103,6 @@ const Login = ({history}) => {
             Validate.length(e, userInput, setUserInput)
         }
         
-    }
-
-    const verifyDomain = async (e) => {
-
-        const domain = userInput.domain;
-
-        setDomainChecking(true);
-        const res = await httpPost(`auth/login`, {domain});
-
-        if (res.status === "success") {
-            setDomainChecking(false)
-            setUserInput({
-                ...userInput,
-                [e.target.name]: ""
-            });
-
-            NotificationManager.error(res?.er?.message, "This domain already exists", 4000);
-
-        } else {
-            setDomainChecking(false);
-            setLockDomain(true)
-        }
-
     }
 
     const checkContinue = () => {
@@ -154,7 +131,7 @@ const Login = ({history}) => {
                         style={{
                         marginBottom: "30px"
                     }}>
-                        <h3>Welcome to AlphaCX</h3>
+                        <h3>Welcome Back</h3>
                         <p>Create an account for your business</p>
                     </div>
 
@@ -265,24 +242,12 @@ const Login = ({history}) => {
                                     <label htmlFor="" className="form-label">Domain</label>
                                     <div className="input-group">
                                         <input type="text" className="form-control" 
-                                            disabled={lockDomain}
                                             name="domain"
                                             autoComplete="off"
                                             onChange={handleChange}
-                                            onBlur={verifyDomain}
                                             value={userInput.domain}
                                         />
-                                        <span className="input-group-text" id="basic-addon2">
-                                            { domainChecking ? 
-                                                (<ClipLoader color={color} loading={domainChecking} css={override} size={20}/>) 
-                                            :lockDomain?
-                                                <><ApproveIcon style={{color: "#0f9d15", marginRight: "5px"}} /><span>alphacx.co</span></>
-                                                
-                                            :
-                                                (".alphacx.co")
-                                            }
-                                        </span>
-
+                                        <span className="input-group-text" id="basic-addon2">.alphacx.co</span>
                                     </div>
 
                                 </div>
@@ -294,7 +259,9 @@ const Login = ({history}) => {
                                             style={{ fontSize: "12px" }}
                                             name="country"
                                             placeholder="Search or select country"
-                                            onChange={handleRSChange}
+                                            onChange={(inputValue, meta) => {
+                                                console.log(inputValue.value)
+                                            }}
                                             isClearable={false}
                                             isMulti={false}
                                             options={
