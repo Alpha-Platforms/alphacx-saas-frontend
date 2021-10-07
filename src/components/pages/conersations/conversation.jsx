@@ -361,7 +361,7 @@ export default function Conversation() {
     if (res.status === "success") {
       setCategory(res?.data?.categories);
     } else {
-      return NotificationManager.error(res.er.message, "Error", 4000);
+      return;
     }
   };
   const getPriorities = async () => {
@@ -369,7 +369,7 @@ export default function Conversation() {
     if (res.status === "success") {
       setPriority(res?.data?.priorities);
     } else {
-      return NotificationManager.error(res.er.message, "Error", 4000);
+      return;
     }
   };
   const getTags = async () => {
@@ -378,7 +378,6 @@ export default function Conversation() {
       setTags(res?.data?.tags_names.tags);
     } else {
       return;
-      // return NotificationManager.error(res.er.message, "Error", 4000);
     }
   };
   const getAgents = async () => {
@@ -394,16 +393,17 @@ export default function Conversation() {
     if(RSTicketStage.label === "Closed"){
       let base_url = window.location.origin;
       let complete_url = `${base_url}/feedback/${localStorage.domain}/${ticket[0].id}/${ticket[0].customer.id}`;
-      let rich_text = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation <a href='${complete_url}'>rate us here</a></p>`;
-      let rich_text_encode = rich_text;
+      let rich_text = `Your ticket has been marked as closed, Please click on the link to rate this conversation ${complete_url}`;
       let ReplyTicket = {
-        richText : rich_text_encode,
+        richText : rich_text,
         plainText : "Your ticket has been marked as closed, Please click on the link to rate this conversation"
       }
-      replyTicket(ReplyTicket, "attachment")
+      replyTicket(ReplyTicket, "attachment");
     }
     const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, {"statusId": RSTicketStage.value});
     if (statusRes.status === "success") {
+      let channelData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
+      AppSocket.io.emit(`ws_tickets`, channelData);
       return NotificationManager.success("Ticket status successfully updated", "Success");
     } else{
       return NotificationManager.error(statusRes.er.message, "Error", 4000);
