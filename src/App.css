@@ -192,6 +192,11 @@ button:disabled {
   border-color: rgba(0, 98, 152, 30%) !important;
 }
 
+.acx-bg-gray-30 {
+  background-color: rgba(16, 62, 101, 6%) !important;
+  color: var(--text-color) !important;
+  border-color: rgba(16, 62, 101, 30%) !important;
+}
 #sidebarMenu {
   width: var(--sidebar-width) !important;
 }
