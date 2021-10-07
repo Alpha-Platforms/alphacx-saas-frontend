@@ -3,7 +3,7 @@ import {useState} from "react";
 import {Link} from "react-router-dom";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
 import SimpleCrypto from 'simple-crypto-js';
-import './LiveChatSettings.css';
+// import './LiveChatSettings.css';
 // import ChatPreview from '../../../../assets/images/ChatWidget.png';
 import copy from 'copy-to-clipboard';
 import {NotificationManager} from 'react-notifications';

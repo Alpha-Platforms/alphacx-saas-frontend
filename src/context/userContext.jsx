@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import Loader from "react-loader-spinner";
+// import Loader from "react-loader-spinner";
 import "react-responsive-modal/styles.css";
 import axios from "axios";
 import { getLocalItem } from "../components/helpers/authService";
