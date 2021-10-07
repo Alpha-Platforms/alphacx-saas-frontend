@@ -23,6 +23,7 @@ import { Link } from "react-router-dom";
 import { ReactComponent as DotSvg } from "../../../../assets/icons/dots.svg";
 import { httpGetMain } from "../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
+import { wordCapitalize } from "helper";
 
 const GroupList = ({ groups, categories, isGroupsLoaded }) => {
   const [addGroupModalShow, setAddGroupModalShow] = useState(false);
@@ -31,6 +32,19 @@ const GroupList = ({ groups, categories, isGroupsLoaded }) => {
   const [groupId, setGroupId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [groupsLoading, setGroupsLoading] = useState(false);
+
+  const [tagColors] = useState([
+    "acx-bg-green-30", 
+    "acx-bg-red-30", 
+    "acx-bg-blue-light-30",
+    "acx-bg-blue-30"
+  ])
+
+
+  useEffect(() => {
+    setGroupsLoading(!isGroupsLoaded);
+}, [isGroupsLoaded]);
+
 
   /* useEffect(() => {
             setUserLoading(!isUsersLoaded);
@@ -122,10 +136,6 @@ const GroupList = ({ groups, categories, isGroupsLoaded }) => {
     );
   }; */
 
-  useEffect(() => {
-    setGroupsLoading(!isGroupsLoaded);
-}, [isGroupsLoaded]);
-
   const tableTheme = createTheme({
     palette: {
       primary: {
@@ -208,8 +218,18 @@ const GroupList = ({ groups, categories, isGroupsLoaded }) => {
                     title: "Category",
                     field: "category",
                     width: '40%',
-                    // render: rowData => (<div className={"table-tags"}><span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">{rowData.category}</span><span className="badge rounded-pill acx-bg-blue-light-30 px-3 py-2 me-1 my-1">Billing</span><span className="badge rounded-pill acx-bg-red-30 px-3 py-2 me-1 my-1">Pharmaceuticals</span><span className="badge rounded-pill acx-bg-green-30 px-3 py-2 me-1 my-1">Active</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">+2</span></div>),
-                    render: rowData => (<div className={"table-tags"}>{rowData.category && <span className="badge rounded-pill acx-bg-purple-30 px-3 py-2 me-1 my-1">{rowData.category}</span>}</div>),
+
+                    render: rowData => (
+                      <div className={"table-tags"}>
+                        
+
+                        {rowData.category.map( (item, index) => 
+                          ( index <= 1 && (<span className="badge rounded-pill acx-bg-gray-30 px-3 py-2 me-1 my-1">{item.category.name}</span>) )
+                        )}
+
+                        {rowData.category.length > 2 && <span className="badge rounded-pill text-muted border px-2 py-1 my-1">{`+${rowData.category.length-2}`}</span>}
+                      </div>),
+                    
                   },
                   {
                     title: "Action",
@@ -238,11 +258,11 @@ const GroupList = ({ groups, categories, isGroupsLoaded }) => {
                     ),
                   },
                 ]}
-                data={groups.map(({ id, name, description, category_id }) => ({
-                  name,
-                  description,
+                data={groups.map(({ id, name, description, category_id, groupCategories }) => ({
+                  name: wordCapitalize(name),
+                  description: wordCapitalize(description),
                   members: 5,
-                  category: categories.find(cat => cat?.id === category_id)?.name,
+                  category: groupCategories,
                   updated: "21 Jul 2021",
                   id
                 }))}
