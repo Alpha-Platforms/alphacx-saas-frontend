@@ -261,7 +261,6 @@ const Login = ({history}) => {
                                 </div>
 
                                 <div className="input-wrap">
-
                                     <label htmlFor="" className="form-label">Domain</label>
                                     <div className="input-group">
                                         <input type="text" className="form-control" 

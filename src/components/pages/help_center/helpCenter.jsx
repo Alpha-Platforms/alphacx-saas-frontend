@@ -6,11 +6,7 @@ import NavCard from "./components/navCard/navCard";
 import { faqs } from "./faq";
 import "./helpCenter.scss";
 import LogoBG from "../../../assets/imgF/logoBG.png";
-import { 
-  httpGetMain, 
-  getTenantDomain, 
-  httpGetMainKB 
-} from "../../../helpers/httpMethods";
+import { httpGetMain, getTenantDomain, httpGetMainKB } from "../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 
 
@@ -42,7 +38,7 @@ const HelpCenter = () => {
     }
   };
 
-  // console.log('Tenant domain => ', getTenantDomain());
+  console.log('Tenant domain => ', getTenantDomain());
 
   useEffect(() => {
     fetchCategories();

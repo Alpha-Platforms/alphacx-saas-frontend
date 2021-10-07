@@ -8,20 +8,6 @@ import {getGroups, updateGroup} from '../../../../../reduxstore/actions/groupAct
 import RSelect from 'react-select';
 import "../../../../../styles/ModalCustomStyle.css";
 
-const RSelectStyles = {
-  // menu: (provided, state) => ({
-  //   ...provided,
-  //   width: state.selectProps.width,
-  //   borderBottom: '1px dotted green',
-  //   color: state.selectProps.menuColor,
-  //   padding: 20,
-  // }),
-
-  control: (_, { selectProps: { width }}) => ({
-    width: width
-  })
-}
-
 
 const AddGroupModal = ({
   addGroupModalShow,
@@ -36,24 +22,16 @@ const AddGroupModal = ({
   //create user modal
   const [creating, setCreating] = useState(false);
   const [editing, setEditing] = useState(false);
-
+  const [RSCategories, setRSCategories] = useState([])
   const [newTeam, setNewTeam] = useState({
     name: '',
     description: '',
     categoryIds: []
   });
 
-  const [RSCategories, setRSCategories] = useState([])
-  const [RSCategoriesSelected, setRSCategoriesSelected] = useState([])
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "categoryIds") {
-      setNewTeam({ ...newTeam, [name]: [value] });
-    } else {
-      setNewTeam({ ...newTeam, [name]: value });
-    }
-    
+    setNewTeam({ ...newTeam, [name]: value });
   };
 
   const loadRSCategoryOptions = () => {
@@ -65,26 +43,18 @@ const AddGroupModal = ({
 
   const handleModalRSInput = (values, {name}) => {
 
-    //WHEN FEMI'S UPDATE TO SELECT MULTI IS DONE
-    // const selectedTeams = values.map(item => item.value)
-    // setRSCategoriesSelected(prev => ({
-    //     ...prev,
-    //     [name]: selectedTeams
-    // }));
+    const temp = values.map( item => {
+      return item.value           
+    })
 
-    // FOR NOW
-    const {value} = values;
-    setNewTeam({ ...newTeam, [name]: [value] });
+    setNewTeam( prev => {
+      return {...prev, [name]: temp }
+    })
   }
 
   // add new team
   const submitNewTeam = async () => {
-
-    // console.clear()
-    // console.log(newTeam)
-    // return null
-
-    const {name, description, categoryIds} = newTeam;
+    const {name, categoryIds} = newTeam;
 
     if (!name || categoryIds.length === 0) {
       return NotificationManager.error('All fields are required', 'Opps!');
@@ -106,9 +76,11 @@ const AddGroupModal = ({
   // update a team
   const updateTeam = () => {
     const {name, description, categoryIds} = newTeam;
+
     if (!name || categoryIds.length === 0) {
       return NotificationManager.error('All fields are required', 'Opps!');
     }
+
 
     setEditing(true);
     updateGroup(groupId, newTeam, () => {
@@ -131,13 +103,15 @@ const AddGroupModal = ({
       if (groupId) {
         const currentGroup = groups.find(x => x.id === groupId);
         if (currentGroup) {
-          const {name, description, category_id} = currentGroup;
+          const {name, description, groupCategories} = currentGroup;
           // fill fields
           setNewTeam(prev => ({
             ...prev,
             name,
             description,
-            categoryIds: category_id
+            categoryIds: groupCategories.map( item => {
+                  return {label: item.category.name, value: item.category.id}            
+              })
           }));
         }
       }
@@ -150,7 +124,6 @@ const AddGroupModal = ({
         categoryIds: []
       }));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addGroupModalShow])
 
   return (
@@ -187,25 +160,18 @@ const AddGroupModal = ({
               </div>
 
               <div className="col-12 mt-3">
-              <label className="form-label" htmlFor="groupDesc">
-                Team Description
-              </label>
-              {/* <input
-                type="text"
-                id="groupDesc"
-                className="form-control"
-                name="description"
-                value={newTeam.description || ""}
-                onChange={handleChange}
-              /> */}
 
-              <textarea
-                id="groupDesc"
-                className="form-control"
-                name="description"
-                value={newTeam.description || ""}
-                onChange={handleChange}
-              ></textarea>
+                <label className="form-label" htmlFor="groupDesc">
+                  Team Description
+                </label>
+
+                <textarea
+                  id="groupDesc"
+                  className="form-control"
+                  name="description"
+                  value={newTeam.description || ""}
+                  onChange={handleChange}
+                ></textarea>
               </div>
 
               <div className="col-12 mt-3">
@@ -220,10 +186,10 @@ const AddGroupModal = ({
                   isLoading={false}
                   placeholder="Select categories"
                   name="categoryIds"
-                  isMulti={false}
+                  isMulti={true}
                   onChange={handleModalRSInput}
                   options={RSCategories}
-                  // styles={RSelectStyles}
+                  defaultValue={newTeam.categoryIds}
                   width="500"
               />
               </div>
