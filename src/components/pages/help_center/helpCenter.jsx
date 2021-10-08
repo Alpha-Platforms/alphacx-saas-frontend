@@ -11,12 +11,14 @@ import { httpGetMain, getTenantDomain, httpGetMainKB, invalidTenant } from "../.
 import { NotificationManager } from "react-notifications";
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import {Link} from 'react-router-dom';
+import {shuffleArray} from '../../../helper';
 
 
 const HelpCenter = () => {
   const [categories, setCategories] = useState([]);
   const [shouldReturn404, setShouldReturn404] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [articles, setArticles] = useState([]);
   const icons = [
     "work",
     "account",
@@ -42,6 +44,19 @@ const HelpCenter = () => {
         console.clear();
         console.log(categories);
         setCategories(categories);
+        let articles = [];
+        categories.forEach((cat, idx) => {
+          // console.log(`Category ${idx} => `, cat);
+          cat?.folders?.forEach((folder, idx) => {
+            folder?.articles?.forEach((art, idx) => {
+              articles.push({...art, catName: cat?.name});
+            })
+          });
+        })
+        // console.clear();
+        console.log("Shuffled Array => ", shuffleArray(articles));
+        console.log("articles", articles);
+      setArticles(articles);
       } else {
         return NotificationManager.error(res?.er?.message, "Error", 4000);
       }
@@ -105,13 +120,14 @@ const HelpCenter = () => {
             
 
             <div className="popular-questions">
-              <h3>Most Popular Questions</h3>
+              <h3>Most Popular Articles</h3>
               <div className="accordions">
-                {faqs.map((item) => (
+                {shuffleArray(articles)?.slice(0, 5).map((item) => (
                   <Accordion
                     key={item.id}
-                    question={item.question}
+                    question={item.title}
                     solution={item.solution}
+                    category={item.catName}
                   />
                 ))}
               </div>
