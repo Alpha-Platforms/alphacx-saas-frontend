@@ -8,7 +8,7 @@ const Accordion = ({ question, solution }) => {
 
   const handleAction = () => {
     console.log("actioned");
-    setOpen(!open);
+    // setOpen(!open);
   };
   return (
     <div className={`accordion ${open ? "expand" : ""}`}>

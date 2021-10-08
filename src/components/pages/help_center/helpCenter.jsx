@@ -10,6 +10,7 @@ import LogoBG from "../../../assets/imgF/logoBG.png";
 import { httpGetMain, getTenantDomain, httpGetMainKB, invalidTenant } from "../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import ScaleLoader from 'react-spinners/ScaleLoader';
+import {Link} from 'react-router-dom';
 
 
 const HelpCenter = () => {
@@ -49,6 +50,7 @@ const HelpCenter = () => {
   };
 
   console.log('Tenant domain => ', getTenantDomain());
+  console.log('Article Categories => ', categories);
 
   useEffect(() => {
     fetchCategories();
@@ -78,9 +80,15 @@ const HelpCenter = () => {
               </form>
             </div>
           </div>
-          <div className="navigation-cards">
+          {categories.length === 0 ? <div style={{ 
+            margin: '0 1rem',
+            textAlign: 'center',
+            padding: '6rem 0'
+           }}>
+            <h2>No Categories or Articles found.</h2>
+          </div> : <div className="navigation-cards">
             <div className="nav-cards">
-              {categories.map((cat, i) => (
+              {categories?.slice(0, 6)?.map((cat, i) => (
                 <NavCard
                   key={`item-${i + 1}`}
                   icon={icons[i]}
@@ -90,7 +98,11 @@ const HelpCenter = () => {
                   // link={nav.link}
                 />
               ))}
+              {categories.length > 6 && <div>
+              <Link to="/knowledge-base/categories" className="show-all-cat">Show all categories</Link>
+            </div>}
             </div>
+            
 
             <div className="popular-questions">
               <h3>Most Popular Questions</h3>
@@ -104,7 +116,7 @@ const HelpCenter = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </div>}
         </div>
       </Fragment> : <div
             style={{
