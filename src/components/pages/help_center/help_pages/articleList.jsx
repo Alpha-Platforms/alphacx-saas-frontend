@@ -111,7 +111,7 @@ const ArticleList = () => {
               //   .replaceAll(" ", "-")}?id=${item.id}
             ))}
             {
-              (!policyLoading && articles.length === 0) && <div>No Articles Found.</div>
+              (!policyLoading && articles.length === 0) && <h1>No Articles Found.</h1>
             }
           </div>
           <div className="sidebar">

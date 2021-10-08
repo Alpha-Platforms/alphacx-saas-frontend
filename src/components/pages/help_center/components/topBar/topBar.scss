@@ -36,6 +36,10 @@
         padding-left: 0;
         background-image: none;
       }
+
+      &:not(.active) {
+        cursor: default;
+      }
     }
     .active {
       color: #006298;
