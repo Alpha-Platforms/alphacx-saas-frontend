@@ -12,6 +12,7 @@ import {
 import draftToHtml from "draftjs-to-html";
 import AddCategory from "../../../../../assets/imgF/addCategory.png";
 import boldB from "../../../../../assets/imgF/boldB.png";
+import insertLink from "../../../../../assets/imgF/insertLink.png"
 import Smiley from "../../../../../assets/imgF/Smiley.png";
 import editorImg from "../../../../../assets/imgF/editorImg.png";
 import TextItalic from "../../../../../assets/imgF/TextItalic.png";
@@ -351,14 +352,14 @@ const NewArticle = () => {
                 editorState={editorState}
                 toolbar={{
                   options: [
+                    "blockType",
                     "emoji",
                     "inline",
-                    // "blockType",
+                    "link",
 
                     // "list",
                     "textAlign",
                     // "colorPicker",
-                    // "link",
                     // "embedded",
                     "image",
                   ],
@@ -405,6 +406,10 @@ const NewArticle = () => {
                   },
                   blockType: {
                     inDropdown: true,
+                    options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote', 'Code'],
+                    className: undefined,
+                    component: undefined,
+                    dropdownClassName: "artblocktype-dropdown",
                   },
 
                   list: {
@@ -423,7 +428,17 @@ const NewArticle = () => {
                   },
 
                   link: {
-                    inDropdown: true,
+                    inDropdown: false,
+                    className: "art-link",
+                    component: undefined,
+                    popupClassName: "art-link-popup",
+                    dropdownClassName: undefined,
+                    showOpenOptionOnHover: true,
+                    defaultTargetOption: '_self',
+                    options: ['link'],
+                    link: { icon: insertLink, className: undefined },
+                    unlink: { className: "unlink-icon" },
+                    linkCallback: undefined
                   },
 
                   history: {
