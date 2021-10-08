@@ -2,7 +2,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { SearchIconNavbr, SendIcon } from "../../../assets/images/svgs";
 import HelpNavBar from "../../Layout/helpNavBar";
-import Accordion from "./components/accordion/Accordion";
+import AccordionLink from "./components/accordion/AccordionLink";
 import NavCard from "./components/navCard/navCard";
 import { faqs } from "./faq";
 import "./helpCenter.scss";
@@ -123,7 +123,7 @@ const HelpCenter = () => {
               <h3>Most Popular Articles</h3>
               <div className="accordions">
                 {shuffleArray(articles)?.slice(0, 5).map((item) => (
-                  <Accordion
+                  <AccordionLink
                     key={item.id}
                     question={item.title}
                     solution={item.solution}
