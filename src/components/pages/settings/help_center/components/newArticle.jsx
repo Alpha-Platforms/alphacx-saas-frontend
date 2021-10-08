@@ -276,7 +276,6 @@ const NewArticle = () => {
       body: newPost.richText,
     };
     console.clear();
-    console.log("article", data);
 
     const res = await httpPatchMain(`articles/${articleId}`, data);
 
