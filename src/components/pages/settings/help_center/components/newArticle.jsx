@@ -439,12 +439,12 @@ const NewArticle = () => {
           </div>
           <div className="side-content col-md-4">
             <div className="mb-5 top">
-              <Link
+              {/* <Link
                 to="/settings/knowledge-base/article"
                 className="btn btn-sm f-12 bg-outline-custom cancel px-4 w-50"
               >
                 <p>Preview</p>
-              </Link>
+              </Link> */}
               <button
                 className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
                 onClick={

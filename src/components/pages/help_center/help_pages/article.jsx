@@ -78,6 +78,7 @@ const Article = () => {
           <div className="content">
             <h3 className="title mb-5">{articleContent?.title}</h3>
             <div
+              className="postBody"
               dangerouslySetInnerHTML={{
                 __html: `<span>${articleContent?.body || ''}</span>`,
               }}
