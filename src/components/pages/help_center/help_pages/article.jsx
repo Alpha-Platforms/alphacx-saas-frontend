@@ -142,7 +142,7 @@ const Article = () => {
           <div className="sidebar">
             <p>Content</p>
             {headings ?  <div className="content-nav">
-              {headings.filter(x => x.innerText).map(heading => <p className={`${heading.active ? 'active' : ''}`} onClick={() => handleHeadingClick(heading)}>{heading.innerText}</p>)}
+              {headings.filter(x => x.innerText).sort((a, b) => a.distanceToTop - b.distanceToTop).map(heading => <p className={`${heading.active ? 'active' : ''}`} onClick={() => handleHeadingClick(heading)}>{heading.innerText}</p>)}
             </div> : <div className="single-cust-loader"><ScaleLoader loading={true} color={"#006298"}/></div>}
           </div>
         </div>

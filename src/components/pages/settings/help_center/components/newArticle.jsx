@@ -175,7 +175,7 @@ const NewArticle = () => {
     let selectedCategory = categories.filter(
       (item) => item.id === newPost?.categoryId
     );
-    let folderId = selectedCategory[0]?.folders[0].id;
+    let folderId = selectedCategory[0]?.folders[0]?.id;
     setNewPost({ ...newPost, folderId });
     setFolders(selectedCategory[0]?.folders);
   };
@@ -274,6 +274,7 @@ const NewArticle = () => {
     const data = {
       title: newPost.title,
       body: newPost.richText,
+      categoryId: newPost.categoryId
     };
     console.clear();
 
