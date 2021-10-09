@@ -86,13 +86,10 @@ export default function Conversation() {
   const [MessageSenderId, setMessageSenderId] = useState("");
   const [TicketId, setTicketId] = useState("");
   const [showUserProfile, setshowUserProfile] = useState(false);
-  // 
   const [ReplyTicket, setReplyTicket] = useState({
     plainText: "",
     richText: "",
   });
-  const [replyType, setReplyType] = useState("reply");
-  // 
   const [Agents, setAgents] = useState([]);
   const [Statuses, setStatuses] = useState([]);
   const [UserInfo, setUserInfo] = useState({});
@@ -130,7 +127,7 @@ export default function Conversation() {
   const [RSTicketAssignee, setRSTicketAssignee] = useState([]);
   const [RSTicketCategory, setRSTicketCategory] = useState("");
   const [RSTicketSubject, setRSTicketSubject] = useState("");
-  const [RSTicketStage, setRSTicketStage] = useState({});
+  const [RSTicketStage, setRSTicketStage] = useState("");
   const [RSTicketPriority, setRSTicketPriority] = useState("");
   const [RSTicketRemarks, setRSTicketRemarks] = useState("");
   const [RSTicketAssignedAgent, setRSTicketAssignedAgent] = useState("");
@@ -242,12 +239,6 @@ export default function Conversation() {
     setReplyTicket({ plainText, richText });
     // console.log(">>>>", richText, richText);
   };
-
-  // 
-  const onReplyTypeChange = (event) => {
-    setReplyType(event.target.value);
-  }
-
   const getTickets = async () => {
     const res = await httpGetMain("tickets?channel=whatsapp");
     if (res?.status === "success") {
@@ -295,7 +286,7 @@ export default function Conversation() {
     setTickets(newTicket);
     // console.log(filterSentTick);
     const data = {
-      type: replyType,
+      type: "note",
       response: reply.richText,
       plainResponse: reply.plainText,
       phoneNumber: singleTicketFullInfo.customer.phone_number,
@@ -305,7 +296,6 @@ export default function Conversation() {
       attachment: null,
       created_at: new Date(),
       plain_response: reply.plainText,
-      type: replyType,
       response: reply.richText,
       // user: SenderInfo?.customer,
       user: ticket[0]?.assignee,
@@ -474,14 +464,19 @@ export default function Conversation() {
       assigneeId: RSTicketAssignee,
       tags: (!Array.isArray(RSTicketTags) || !RSTicketTags.length) ? null : RSTicketTags,
     };
-    if(Object.keys(RSTicketStage).length > 0){
-      updateTicketStatus();
+    if(RSTicketStage){
+      const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, {"statusId": RSTicketStage});
+      if (statusRes.status === "success") {
+        NotificationManager.success("Ticket status successfully updated", "Success");
+      } else{
+        NotificationManager.error(statusRes.er.message, "Error", 4000);
+      }
     }
     const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
     if (res.status === "success") {
       setProcessing(false);
       closeSaveTicketModal();
-      NotificationManager.success("Ticket successfully updated","Success");
+      NotificationManager.success("Ticket status successfully updated","Success");
       AppSocket.createConnection();
       let data = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, data);
@@ -507,7 +502,7 @@ export default function Conversation() {
       description: [],
       category: "",
     });
-    // setRSTicketStage(ticket[0].status.id);
+    setRSTicketStage(ticket[0].status.id);
     setRSTicketPriority(ticket[0].priority.id);
     setRSTicketCategory(ticket[0].category.id);
     setRSTicketSubject(ticket[0].subject);
@@ -733,7 +728,7 @@ export default function Conversation() {
                   </div>
                   {/* CHAT SECTION */}
                   <div className="conversationsMain">
-                    {/* {AchiveMsges.length == 0 ? (
+                    {AchiveMsges.length == 0 ? (
                       ""
                     ) : (
                       <div
@@ -753,7 +748,7 @@ export default function Conversation() {
                           </span>
                         )}
                       </div>
-                    )} */}
+                    )}
 
                     <div className="chatDateHeader">
                       <div className="chatDateHeaderhr1"></div>
@@ -824,11 +819,11 @@ export default function Conversation() {
                     </div>
 
                     <div
-                      // className={` ${
-                      //   ShowAchive && AchiveMsges.length > 0
-                      //     ? "showAchivesWrap"
-                      //     : "hideAchivesWrap"
-                      // }`}
+                      className={` ${
+                        ShowAchive && AchiveMsges.length > 0
+                          ? "showAchivesWrap"
+                          : "hideAchivesWrap"
+                      }`}
                     >
                       {AchiveMsges.map((data) => {
                         return (
@@ -1011,7 +1006,7 @@ export default function Conversation() {
                 </React.Fragment>
                 {/* CHAT COMMENT BOX SECTION */}
                 <div className="conversationCommentBox">
-                  <div className="single-chat-ckeditor position-relative">
+                  <div className="single-chat-ckeditor">
                     <div
                       className="showBackArrowOnMobile"
                       onClick={() =>
@@ -1020,31 +1015,8 @@ export default function Conversation() {
                     >
                       <img src={BackArrow} alt="" />
                     </div>
-                    <div className="position-absolute ps-1 pt-1 bg-white rounded-top border w-100" style={{"zIndex": "2"}}>
-                      <Form.Check
-                        inline
-                        label="Reply"
-                        value="reply"
-                        name="reply_type"
-                        checked={replyType === "reply"}
-                        onChange={onReplyTypeChange}
-                        type="radio"
-                        id={`inline-response_type-1`}
-                      />
-                      <Form.Check
-                        inline
-                        label="Comment"
-                        value="note"
-                        name="reply_type"
-                        checked={replyType === "note"}
-                        onChange={onReplyTypeChange}
-                        type="radio"
-                        id={`inline-response_type-2`}
-                      />
-                    </div>
+
                     <Editor
-                      disabled={(ticket[0].status.status === "Closed")? true : false}
-                      readOnly={(ticket[0].status.status === "Closed")? true : false}
                       editorState={editorState}
                       toolbar={{
                         options: ["emoji", "inline", "image"],
@@ -1124,8 +1096,8 @@ export default function Conversation() {
 
                     <div className="sendMsg">
                       <button
+                        disabled={sendingReply}
                         onClick={() => replyTicket(ReplyTicket, "attachment")}
-                        disabled={(sendingReply)? true : (ticket[0].status.status === "Closed")? true : false}
                       >
                         <SendMsgIcon /> Send
                       </button>
@@ -1211,11 +1183,7 @@ export default function Conversation() {
                   className="rselectfield"
                   style={{ fontSize: "12px" }}
                   onChange={(newValue, actionMeta) => {
-                    setRSTicketStage(prevState => ({
-                      ...prevState,
-                      value: newValue.value,
-                      label: newValue.label
-                    }));
+                    setRSTicketStage(newValue.value);
                   }}
                   isClearable={false}
                   defaultValue={{

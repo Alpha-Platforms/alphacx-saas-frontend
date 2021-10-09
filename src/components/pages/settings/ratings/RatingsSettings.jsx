@@ -43,8 +43,7 @@ export default function RatingsSettings() {
                 ...res?.data
             });
         } else {
-            return;
-            // return NotificationManager.error(res.er.message, "Error", 4000);
+            return NotificationManager.error(res.er.message, "Error", 4000);
         }
     };
     const handleSubmit = (e) => {
