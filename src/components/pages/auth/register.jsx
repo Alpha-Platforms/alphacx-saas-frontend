@@ -95,7 +95,7 @@ const Login = ({history}) => {
     const handleBlur = (e) => {   
         if (e.target.name === "email") {
             Validate.email(e, userInput, setUserInput)
-
+            
         } else if (e.target.name === "password") {
             Validate.password(e, userInput, setUserInput)
 
@@ -110,8 +110,10 @@ const Login = ({history}) => {
         const domain = userInput.domain;
 
         setDomainChecking(true);
-        const res = await httpPost(`auth/login`, {domain});
 
+        Validate.length(e, userInput, setUserInput)
+
+        const res = await httpPost(`auth/login`, {domain});
         if (res.status === "success") {
             setDomainChecking(false)
             setUserInput({

@@ -98,12 +98,8 @@ const Registration = () => {
     // 
     const handleSubmit = async(event) => {
         setLoading(true);
-        const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-            setLoading(false);
-        }
+        event.preventDefault();
+        event.stopPropagation();
         setValidated(true);
         const data = {
             domain: userInput.domain,
@@ -115,7 +111,17 @@ const Registration = () => {
             country: userInput.country,
             currency: "Naira"
         };
-        setLoading(true);
+        const requiredData = {
+            ...data
+        }
+        delete requiredData.companyName;
+        const hasEmpty = Object.values(requiredData).some(x => x == null || x == "");
+
+        if(hasEmpty) {
+            setLoading(false);
+            return NotificationManager.error("Please fill all required field", 4000);
+        }
+
         const res = await httpPost("auth/register", data);
         if (res.status === "success") {
             setLoading(false);
@@ -132,21 +138,21 @@ const Registration = () => {
                 <Row className="min-vh-100">
                     <Col md={5} className="bg-white vh-100 hide-scrollbar d-flex justify-content-center align-items-center">
                         <section className="px-md-5 py-3 flex-grow-1 auth-form-container h-100">
-                            <div className="px-md-3">
+                            <div className="px-3">
                                 <div className="">
                                     <h1 className="acx-text-gray-700 fw-bold fs-3">Get Started</h1>
                                     <p className="text-muted mb-3">Already have an account? <Link to="/login" className="acx-link-primary">Login</Link></p>
                                 </div>
-                                <Form className="" noValidate validated={validated} onSubmit={handleSubmit}>
+                                <Form className="">
                                     <Row>
                                         <Col>
                                             <Form.Group className="mb-3 form-group acx-form-group">
                                                 <Form.Label className="mb-1">First Name </Form.Label>
                                                 <Form.Control type="text" required
-                                                    autoComplete="first-name" 
+                                                    autoComplete="off" 
                                                     name="firstName"
-                                                    onChange={() => handleChange}
-                                                    onBlur={() => handleBlur}
+                                                    onChange={(e) => handleChange(e)}
+                                                    onBlur={(e) => handleBlur(e)}
                                                     className="bg-light acx-form-control" 
                                                     placeholder="Enter first name" />   
                                             </Form.Group>
@@ -155,10 +161,10 @@ const Registration = () => {
                                             <Form.Group className="mb-3 form-group acx-form-group">
                                                 <Form.Label className="mb-1">Last Name </Form.Label>
                                                 <Form.Control type="text" required 
-                                                    autoComplete="last-name" 
+                                                    autoComplete="off" 
                                                     name="lastName"
-                                                    onChange={() => handleChange}
-                                                    onBlur={() => handleBlur}
+                                                    onChange={(e) => handleChange(e)}
+                                                    onBlur={(e) => handleBlur(e)}
                                                     placeholder="Enter last name"   
                                                     className="bg-light acx-form-control"/> 
                                             </Form.Group>
@@ -167,10 +173,10 @@ const Registration = () => {
                                     <Form.Group className="mb-3 form-group acx-form-group">
                                         <Form.Label className="mb-1">Your work email </Form.Label>
                                         <Form.Control type="email" required
-                                            autoComplete="email" 
+                                            autoComplete="off" 
                                             className="bg-light acx-form-control" 
-                                            onChange={() => handleChange}
-                                            onBlur={() => handleBlur}
+                                            onChange={(e) => handleChange(e)}
+                                            onBlur={(e) => handleBlur(e)}
                                             name="email"
                                             value={userInput.email}
                                             placeholder="Enter work email" />   
@@ -179,13 +185,13 @@ const Registration = () => {
                                         <Form.Label className="mb-1">Password </Form.Label>
                                         <div className="position-relative">
                                             <Form.Control type={passwordShown ? "text" : "password"} 
-                                                autoComplete="password" required
+                                                autoComplete="off" required
                                                 className="bg-light acx-form-control" 
                                                 placeholder="Enter password"
-                                                onChange={() => handleChange}
-                                                onBlur={() => handleBlur}
+                                                onChange={(e) => handleChange(e)}
+                                                onBlur={(e) => handleBlur(e)}
                                                 name="password"
-                                                autoComplete="new-password"
+                                                autoComplete="off"
                                                 value={userInput.password} /> 
                                             <span className="position-absolute end-0 top-50 app-text-gray-500 translate-middle-y">
                                                 <Button onClick={togglePasswordVisibility} 
@@ -199,10 +205,10 @@ const Registration = () => {
                                     <Form.Group className="mb-3 form-group acx-form-group">
                                         <Form.Label className="mb-1">Company Name </Form.Label>
                                         <Form.Control type="text" required 
-                                            autoComplete="company-name" 
+                                            autoComplete="off" 
                                             placeholder="Enter company name"  
                                             name="companyName"
-                                            onChange={() => handleChange}
+                                            onChange={(e) => handleChange(e)}
                                             value={userInput.companyName} 
                                             className="bg-light acx-form-control"/> 
                                     </Form.Group>
@@ -210,12 +216,12 @@ const Registration = () => {
                                         <Form.Label className="mb-1">Domain </Form.Label>
                                         <InputGroup className="">
                                             <Form.Control type="text" required 
-                                                autoComplete="domain" 
+                                                autoComplete="off" 
                                                 placeholder="Enter domain"   
                                                 disabled={lockDomain}
-                                                onChange={() => handleChange}
+                                                onChange={(e) => handleChange(e)}
                                                 name="domain"
-                                                onBlur={() => verifyDomain}
+                                                onBlur={(e) => verifyDomain(e)}
                                                 value={userInput.domain}
                                                 className="bg-light acx-form-control"/> 
                                             <InputGroup.Text>
@@ -225,7 +231,7 @@ const Registration = () => {
                                                     </span>
                                                 :lockDomain?
                                                     <span className="">
-                                                        <i className="bi-check-circle text-success"></i><span>alphacx.co</span>
+                                                        <i className="bi-check2-circle text-success"></i><span> alphacx.co</span>
                                                     </span>
                                                 :
                                                     (".alphacx.co")
@@ -249,7 +255,7 @@ const Registration = () => {
                                         />
                                     </Form.Group>
                                     <div className="mb-2 submit-auth-btn">
-                                        <Button type="submit"  disabled={loading}
+                                        <Button type="submit" onClick={handleSubmit}  disabled={loading}
                                                 className="w-100 mt-3">
                                             {loading ?
                                                 <span>
@@ -269,7 +275,7 @@ const Registration = () => {
                     <Col md={7} className="d-none h-100 min-vh-100 h-100 d-md-block position-relative">
                         <Row gap={0} className="h-100">
                             <Col md={10} className="pe-0 h-100 auth-bg-gradient">
-                                <section className="py-3 min-vh-100">
+                                <section className="py-3 min-vh-100 d-flex flex-column justify-content-between">
                                     <div className="text-end mb-4 pe-5">
                                         <img src={AlphaLogo} height="40" alt=""/>{' '}
                                         <img src={Logo} height="25" alt=""/>
