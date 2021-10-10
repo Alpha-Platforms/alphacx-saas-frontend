@@ -20,10 +20,10 @@ const LiveChatSettings = () => {
         tenantDomain: ''
     });
 
+    const [embedText, setEmbedText] = useState('Fill field to generate script code');
+
     const secretKey = "@alphacxcryptkey";
     const simpleCrypto = new SimpleCrypto(secretKey)
-
-    const encryptedData = simpleCrypto.encrypt(JSON.stringify(settings));
 
     const handleInputChange = e => {
         const {name, value} = e.target;
@@ -32,11 +32,9 @@ const LiveChatSettings = () => {
             ...prev,
             [name]: value
         }));
+        setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.js"></script>
+<script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(JSON.stringify(settings))}'});</script>`);
     }
-
-
-    const embedText = `<script src="../dist/acx-livechat-widget.js"></script>
-<script>ACX.createLiveChatWidget({payload: '${encryptedData}'});</script>`;
 
 
     // console.log('Settings => ', settings);
@@ -47,9 +45,9 @@ const LiveChatSettings = () => {
         if (!title || !description || !initialText || !domains || !theme || !tenantDomain) {
             NotificationManager.error('Please, fill all fields', 'Opps')
         } else {
-            copy(embedText, {onCopy: () => NotificationManager.success('', 'Copied')})
+            copy(`${embedText}`);
+            NotificationManager.success('', 'Copied', 4000);
         }
-        
     }
 
 
