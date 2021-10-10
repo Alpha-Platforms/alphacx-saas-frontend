@@ -1,5 +1,5 @@
 // @ts-nocheck
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {Link} from "react-router-dom";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
 import SimpleCrypto from 'simple-crypto-js';
@@ -34,9 +34,23 @@ const LiveChatSettings = () => {
         }));
     }
 
-    const embedText = `<script src='https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.js'>ACX.createLiveChatWidget({payload: "${encryptedData}"})</script>`;
 
-    console.log('Settings => ', settings);
+    const embedText = `<script src="../dist/acx-livechat-widget.js"></script>
+<script>ACX.createLiveChatWidget({payload: '${encryptedData}'});</script>`;
+
+
+    // console.log('Settings => ', settings);
+
+    const handleScriptCopy = () => {
+        const {title, description, initialText, domains, theme, tenantDomain} = settings;
+
+        if (!title || !description || !initialText || !domains || !theme || !tenantDomain) {
+            NotificationManager.error('Please, fill all fields', 'Opps')
+        } else {
+            copy(embedText, {onCopy: () => NotificationManager.success('', 'Copied')})
+        }
+        
+    }
 
 
     return (
@@ -102,14 +116,14 @@ const LiveChatSettings = () => {
 
                                     <div className="form-group mt-4">
                                         <label className="f-14 mb-1">
-                                            Domain of Widget Host <small>({`Semi-colon seperated list`})</small>
+                                            Widget's Host Name <small>({`Hostname of site where widget will be embedded (Semi-colon seperated list)`})</small>
                                         </label>
                                         <input
                                             type="text"
                                             className="form-control form-control"
                                             name="domains"
                                             value={settings.domains}
-                                            placeholder="alphacx.co;google.com"
+                                            placeholder="alphacx.co;sub.site.com;google.com"
                                             style={{ fontFamily: 'monospace' }}
                                             onChange={handleInputChange}/>
                                     </div>
@@ -144,7 +158,7 @@ const LiveChatSettings = () => {
                                             Link
                                         </label>
                                         <div className="link-copy-box mb-1">
-                                            <span>{embedText}</span> <button className="link-copy-btn" onClick={() => copy(embedText, {onCopy: () => NotificationManager.success('', 'Copied')})}>Copy</button>
+                                            <span>{embedText}</span> <button className="link-copy-btn" onClick={handleScriptCopy}>Copy</button>
                                         </div>
                                         <div><small>Copy and paste on your website body.</small></div>
                                     </div>

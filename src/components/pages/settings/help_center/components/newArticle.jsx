@@ -268,14 +268,19 @@ const NewArticle = () => {
     }
   };
 
+  console.log('NEW POST => ', newPost);
+
   // function to edit/patch existing articles
   const handlePatchArticle = async () => {
     setPolicyLoading(true);
     const data = {
       title: newPost.title,
       body: newPost.richText,
-      categoryId: newPost.categoryId
+      // categoryId: newPost.categoryId,
+      folderId: newPost.folderId
     };
+    console.log('Data for patch => ', data);
+    // return
     console.clear();
 
     const res = await httpPatchMain(`articles/${articleId}`, data);
