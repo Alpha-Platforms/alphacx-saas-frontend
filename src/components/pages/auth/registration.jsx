@@ -136,12 +136,12 @@ const Registration = () => {
         <main className="auth-bg-dark min-vh-100 auth-main">
             <Container fluid className="min-vh-100">
                 <Row className="min-vh-100">
-                    <Col md={5} className="bg-white vh-100 hide-scrollbar d-flex justify-content-center align-items-center">
+                    <Col md={5} className="bg-white vh-100 hide-scrollbar d-flex flex-column justify-content-center align-items-center">
                         <section className="px-md-5 py-3 flex-grow-1 auth-form-container h-100">
-                            <div className="px-3">
+                            <div className="px-3 min-vh-100 d-flex flex-column justify-content-between">
                                 { !isVerified ?
-                                    <React.Fragment>
-                                        <div className="">
+                                    <div className="flex-grow-1 d-flex flex-column justify-content-center">
+                                        <div className="mb-3">
                                             <h1 className="acx-text-gray-700 fw-bold fs-3">Get Started</h1>
                                             <p className="text-muted mb-3">Already have an account? <Link to="/login" className="acx-link-primary">Login</Link></p>
                                         </div>
@@ -266,8 +266,8 @@ const Registration = () => {
                                                 </Button>
                                             </div>
                                         </Form>
-                                    </React.Fragment>
-                                :   <React.Fragment>
+                                    </div>
+                                :   <div className="flex-grow-1 d-flex flex-column justify-content-center">
                                         <div className="d-flex justify-content-center my-4">
                                             <Image src={ThankYou } alt="" />
                                         </div>
@@ -281,7 +281,7 @@ const Registration = () => {
                                                 See Quick Setup Steps
                                             </a>
                                         </div>
-                                    </React.Fragment>
+                                    </div>
                                 }
                                 <div className="text-center mb-3 pb-3">
                                     <p className="text-muted">
@@ -294,13 +294,13 @@ const Registration = () => {
                     <Col md={7} className="d-none h-100 min-vh-100 h-100 d-md-block position-relative">
                         <Row gap={0} className="h-100">
                             <Col md={10} className="pe-0 h-100 auth-bg-gradient">
-                                <section className="py-3 min-vh-100 d-flex flex-column justify-content-between">
+                                <section className="py-3 min-vh-100 d-flex flex-column justify-content-around">
                                     <div className="text-end mb-4 pe-5">
                                         <img src={AlphaLogo} height="40" alt=""/>{' '}
                                         <img src={Logo} height="25" alt=""/>
                                     </div>
                                     <div className="text-end">
-                                        <Image src={ConversationsImg} className="acx-rounded-start-10" height="430"/>
+                                        <Image src={ConversationsImg} className="acx-rounded-start-10" width="86%"/>
                                     </div>
                                     <div className="text-center mt-3">
                                         <h2 className="text-white fs-3 mb-2">
