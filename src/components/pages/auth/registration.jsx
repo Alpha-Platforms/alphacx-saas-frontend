@@ -24,7 +24,7 @@ import Logo from "../../../assets/imgF/logo.png";
 import AlphaLogo from "../../../assets/imgF/alpha.png";
 import ConversationsImg from "../../../assets/images/conversations.png";
 import Symbol1 from "../../../assets/imgF/symbolAuth.png";
-import {ReactComponent as ApproveIcon} from "../../../assets/icons/check-green.svg";
+import ThankYou from "../../../assets/imgF/thank-you.png";
 
 const Registration = () => {
      // 
@@ -126,7 +126,7 @@ const Registration = () => {
         if (res.status === "success") {
             setLoading(false);
             setIsVerified(true)
-            NotificationManager.success("Verification mail has been to you", "Acount Created!", 4000);
+            NotificationManager.success("Verification mail has been to you", "Account Created!", 4000);
         } else {
             setLoading(false);
             NotificationManager.error(res?.er?.message, "Error", 4000);
@@ -139,131 +139,150 @@ const Registration = () => {
                     <Col md={5} className="bg-white vh-100 hide-scrollbar d-flex justify-content-center align-items-center">
                         <section className="px-md-5 py-3 flex-grow-1 auth-form-container h-100">
                             <div className="px-3">
-                                <div className="">
-                                    <h1 className="acx-text-gray-700 fw-bold fs-3">Get Started</h1>
-                                    <p className="text-muted mb-3">Already have an account? <Link to="/login" className="acx-link-primary">Login</Link></p>
-                                </div>
-                                <Form className="">
-                                    <Row>
-                                        <Col>
+                                { !isVerified ?
+                                    <React.Fragment>
+                                        <div className="">
+                                            <h1 className="acx-text-gray-700 fw-bold fs-3">Get Started</h1>
+                                            <p className="text-muted mb-3">Already have an account? <Link to="/login" className="acx-link-primary">Login</Link></p>
+                                        </div>
+                                        <Form className="">
+                                            <Row>
+                                                <Col>
+                                                    <Form.Group className="mb-3 form-group acx-form-group">
+                                                        <Form.Label className="mb-1">First Name </Form.Label>
+                                                        <Form.Control type="text" required
+                                                            autoComplete="off" 
+                                                            name="firstName"
+                                                            onChange={(e) => handleChange(e)}
+                                                            onBlur={(e) => handleBlur(e)}
+                                                            className="bg-light acx-form-control" 
+                                                            placeholder="Enter first name" />   
+                                                    </Form.Group>
+                                                </Col>
+                                                <Col>
+                                                    <Form.Group className="mb-3 form-group acx-form-group">
+                                                        <Form.Label className="mb-1">Last Name </Form.Label>
+                                                        <Form.Control type="text" required 
+                                                            autoComplete="off" 
+                                                            name="lastName"
+                                                            onChange={(e) => handleChange(e)}
+                                                            onBlur={(e) => handleBlur(e)}
+                                                            placeholder="Enter last name"   
+                                                            className="bg-light acx-form-control"/> 
+                                                    </Form.Group>
+                                                </Col>
+                                            </Row>
                                             <Form.Group className="mb-3 form-group acx-form-group">
-                                                <Form.Label className="mb-1">First Name </Form.Label>
-                                                <Form.Control type="text" required
+                                                <Form.Label className="mb-1">Your work email </Form.Label>
+                                                <Form.Control type="email" required
                                                     autoComplete="off" 
-                                                    name="firstName"
+                                                    className="bg-light acx-form-control" 
                                                     onChange={(e) => handleChange(e)}
                                                     onBlur={(e) => handleBlur(e)}
-                                                    className="bg-light acx-form-control" 
-                                                    placeholder="Enter first name" />   
+                                                    name="email"
+                                                    value={userInput.email}
+                                                    placeholder="Enter work email" />   
                                             </Form.Group>
-                                        </Col>
-                                        <Col>
                                             <Form.Group className="mb-3 form-group acx-form-group">
-                                                <Form.Label className="mb-1">Last Name </Form.Label>
+                                                <Form.Label className="mb-1">Password </Form.Label>
+                                                <div className="position-relative">
+                                                    <Form.Control type={passwordShown ? "text" : "password"} 
+                                                        autoComplete="off" required
+                                                        className="bg-light acx-form-control" 
+                                                        placeholder="Enter password"
+                                                        onChange={(e) => handleChange(e)}
+                                                        onBlur={(e) => handleBlur(e)}
+                                                        name="password"
+                                                        autoComplete="off"
+                                                        value={userInput.password} /> 
+                                                    <span className="position-absolute end-0 top-50 app-text-gray-500 translate-middle-y">
+                                                        <Button onClick={togglePasswordVisibility} 
+                                                                className="acx-btn-icon acx-btn-icon-lg bg-transparent shadow-none" 
+                                                                title={passwordShown ? "hide password" : "show password"}>
+                                                            <i className={passwordShown ? "bi-eye" : "bi-eye-slash"}></i>
+                                                        </Button>
+                                                    </span>  
+                                                </div>
+                                            </Form.Group>
+                                            <Form.Group className="mb-3 form-group acx-form-group">
+                                                <Form.Label className="mb-1">Company Name </Form.Label>
                                                 <Form.Control type="text" required 
                                                     autoComplete="off" 
-                                                    name="lastName"
+                                                    placeholder="Enter company name"  
+                                                    name="companyName"
                                                     onChange={(e) => handleChange(e)}
-                                                    onBlur={(e) => handleBlur(e)}
-                                                    placeholder="Enter last name"   
+                                                    value={userInput.companyName} 
                                                     className="bg-light acx-form-control"/> 
                                             </Form.Group>
-                                        </Col>
-                                    </Row>
-                                    <Form.Group className="mb-3 form-group acx-form-group">
-                                        <Form.Label className="mb-1">Your work email </Form.Label>
-                                        <Form.Control type="email" required
-                                            autoComplete="off" 
-                                            className="bg-light acx-form-control" 
-                                            onChange={(e) => handleChange(e)}
-                                            onBlur={(e) => handleBlur(e)}
-                                            name="email"
-                                            value={userInput.email}
-                                            placeholder="Enter work email" />   
-                                    </Form.Group>
-                                    <Form.Group className="mb-3 form-group acx-form-group">
-                                        <Form.Label className="mb-1">Password </Form.Label>
-                                        <div className="position-relative">
-                                            <Form.Control type={passwordShown ? "text" : "password"} 
-                                                autoComplete="off" required
-                                                className="bg-light acx-form-control" 
-                                                placeholder="Enter password"
-                                                onChange={(e) => handleChange(e)}
-                                                onBlur={(e) => handleBlur(e)}
-                                                name="password"
-                                                autoComplete="off"
-                                                value={userInput.password} /> 
-                                            <span className="position-absolute end-0 top-50 app-text-gray-500 translate-middle-y">
-                                                <Button onClick={togglePasswordVisibility} 
-                                                        className="acx-btn-icon acx-btn-icon-lg bg-transparent shadow-none" 
-                                                        title={passwordShown ? "hide password" : "show password"}>
-                                                    <i className={passwordShown ? "bi-eye" : "bi-eye-slash"}></i>
+                                            <Form.Group className="mb-3 form-group acx-form-group">
+                                                <Form.Label className="mb-1">Domain </Form.Label>
+                                                <InputGroup className="">
+                                                    <Form.Control type="text" required 
+                                                        autoComplete="off" 
+                                                        placeholder="Enter domain"   
+                                                        disabled={lockDomain}
+                                                        onChange={(e) => handleChange(e)}
+                                                        name="domain"
+                                                        onBlur={(e) => verifyDomain(e)}
+                                                        value={userInput.domain}
+                                                        className="bg-light acx-form-control"/> 
+                                                    <InputGroup.Text>
+                                                        { domainChecking ? 
+                                                            <span>
+                                                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...
+                                                            </span>
+                                                        :lockDomain?
+                                                            <span className="">
+                                                                <i className="bi-check2-circle text-success"></i><span> alphacx.co</span>
+                                                            </span>
+                                                        :
+                                                            (".alphacx.co")
+                                                        }
+                                                    </InputGroup.Text>
+                                                </InputGroup>
+                                            </Form.Group>
+                                            <Form.Group className="mb-3 form-group acx-form-group">
+                                                <Form.Label className="mb-1">Country </Form.Label>
+                                                <RSelect className="rselectfield bg-light acx-form-control"
+                                                    name="country"
+                                                    placeholder="Search or select country"
+                                                    onChange={handleRSChange}
+                                                    isClearable={false}
+                                                    isMulti={false}
+                                                    options={
+                                                        countries?.map(item => {
+                                                            return {value: item.name, label: item.name}
+                                                        })
+                                                    }
+                                                />
+                                            </Form.Group>
+                                            <div className="mb-2 submit-auth-btn">
+                                                <Button type="submit" onClick={handleSubmit}  disabled={loading}
+                                                        className="w-100 mt-3">
+                                                    {loading ?
+                                                        <span>
+                                                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...
+                                                        </span> : "Sign Up" } 
                                                 </Button>
-                                            </span>  
+                                            </div>
+                                        </Form>
+                                    </React.Fragment>
+                                :   <React.Fragment>
+                                        <div className="d-flex justify-content-center my-4">
+                                            <Image src={ThankYou } alt="" />
                                         </div>
-                                    </Form.Group>
-                                    <Form.Group className="mb-3 form-group acx-form-group">
-                                        <Form.Label className="mb-1">Company Name </Form.Label>
-                                        <Form.Control type="text" required 
-                                            autoComplete="off" 
-                                            placeholder="Enter company name"  
-                                            name="companyName"
-                                            onChange={(e) => handleChange(e)}
-                                            value={userInput.companyName} 
-                                            className="bg-light acx-form-control"/> 
-                                    </Form.Group>
-                                    <Form.Group className="mb-3 form-group acx-form-group">
-                                        <Form.Label className="mb-1">Domain </Form.Label>
-                                        <InputGroup className="">
-                                            <Form.Control type="text" required 
-                                                autoComplete="off" 
-                                                placeholder="Enter domain"   
-                                                disabled={lockDomain}
-                                                onChange={(e) => handleChange(e)}
-                                                name="domain"
-                                                onBlur={(e) => verifyDomain(e)}
-                                                value={userInput.domain}
-                                                className="bg-light acx-form-control"/> 
-                                            <InputGroup.Text>
-                                                { domainChecking ? 
-                                                    <span>
-                                                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...
-                                                    </span>
-                                                :lockDomain?
-                                                    <span className="">
-                                                        <i className="bi-check2-circle text-success"></i><span> alphacx.co</span>
-                                                    </span>
-                                                :
-                                                    (".alphacx.co")
-                                                }
-                                            </InputGroup.Text>
-                                        </InputGroup>
-                                    </Form.Group>
-                                    <Form.Group className="mb-3 form-group acx-form-group">
-                                        <Form.Label className="mb-1">Country </Form.Label>
-                                        <RSelect className="rselectfield bg-light acx-form-control"
-                                            name="country"
-                                            placeholder="Search or select country"
-                                            onChange={handleRSChange}
-                                            isClearable={false}
-                                            isMulti={false}
-                                            options={
-                                                countries?.map(item => {
-                                                    return {value: item.name, label: item.name}
-                                                })
-                                            }
-                                        />
-                                    </Form.Group>
-                                    <div className="mb-2 submit-auth-btn">
-                                        <Button type="submit" onClick={handleSubmit}  disabled={loading}
-                                                className="w-100 mt-3">
-                                            {loading ?
-                                                <span>
-                                                    <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...
-                                                </span> : "Sign Up" } 
-                                        </Button>
-                                    </div>
-                                </Form>
+                                        <div className="Auth-header mb-2">
+                                            <h3 className="mb-3">Congratulations!</h3>
+                                            <p className="text-center">Your account has been created successfully. <br />An activation mail has been sent to <strong>{userInput?.email}</strong></p>
+                                        </div>
+                            
+                                        <div className="submit-auth-btn text-center mt-4">
+                                            <a className="fs-6" href="https://app.alphacx.co/knowledge-base">
+                                                See Quick Setup Steps
+                                            </a>
+                                        </div>
+                                    </React.Fragment>
+                                }
                                 <div className="text-center mb-3 pb-3">
                                     <p className="text-muted">
                                         © {new Date().getFullYear()} AlphaCX. All rights reserved

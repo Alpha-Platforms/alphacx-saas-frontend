@@ -53,7 +53,7 @@ import { Modal } from "react-responsive-modal";
 const CircleIcon = (props) => <span className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
 
 
-const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, currentTicket}) => {
+const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, currentTicket, user}) => {
   
   const {id} = useParams();
   
@@ -288,7 +288,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         plain_response: reply.plainText,
         response: reply.richText,
         // user: SenderInfo?.customer,
-        user: ticket[0]?.assignee,
+        user: user,
       };
       setMsgHistory((item) => [...item, replyData]);
       const res = await httpPostMain(
@@ -1236,6 +1236,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     )
 }
 
-const mapStateToProps = (state, ownProps) => ({tickets: state.ticket.tickets, isTicketLoaded: state.ticket.isTicketLoaded, isCurrentTicketLoaded: state.ticket.isCurrentTicketLoaded, currentTicket: state.ticket.currentTicket});
+const mapStateToProps = (state, ownProps) => ({tickets: state.ticket.tickets, isTicketLoaded: state.ticket.isTicketLoaded, isCurrentTicketLoaded: state.ticket.isCurrentTicketLoaded, currentTicket: state.ticket.currentTicket, user: state.userAuth.user});
 
 export default connect(mapStateToProps, {getCurrentTicket})(Ticket);

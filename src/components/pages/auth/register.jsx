@@ -82,7 +82,7 @@ const Login = ({history}) => {
 
         if (res.status === "success") {
             setLoading(false);
-            setIsVerified(true)
+            setIsVerified(true);
             NotificationManager.success("Verification mail has been to you", "Acount Created!", 4000);
         } else {
             setLoading(false);
@@ -327,11 +327,11 @@ const Login = ({history}) => {
                 :
                 <form>
                     <div className="d-flex justify-content-center my-4">
-                    <img src={ThankYou } alt="" />
+                        <img src={ThankYou } alt="" />
                     </div>
                     <div className="Auth-header mb-2">
-                    <h3 className="mb-3">Congratulations!</h3>
-                    <p className="text-center">Your account has been created successfully. <br />An activation mail has been sent to <strong>{userInput?.email}</strong></p>
+                        <h3 className="mb-3">Congratulations!</h3>
+                        <p className="text-center">Your account has been created successfully. <br />An activation mail has been sent to <strong>{userInput?.email}</strong></p>
                     </div>
         
                     <div className="submit-auth-btn text-center mt-4">
