@@ -12,6 +12,7 @@ import {
 import draftToHtml from "draftjs-to-html";
 import AddCategory from "../../../../../assets/imgF/addCategory.png";
 import boldB from "../../../../../assets/imgF/boldB.png";
+import insertLink from "../../../../../assets/imgF/insertLink.png"
 import Smiley from "../../../../../assets/imgF/Smiley.png";
 import editorImg from "../../../../../assets/imgF/editorImg.png";
 import TextItalic from "../../../../../assets/imgF/TextItalic.png";
@@ -174,7 +175,7 @@ const NewArticle = () => {
     let selectedCategory = categories.filter(
       (item) => item.id === newPost?.categoryId
     );
-    let folderId = selectedCategory[0]?.folders[0].id;
+    let folderId = selectedCategory[0]?.folders[0]?.id;
     setNewPost({ ...newPost, folderId });
     setFolders(selectedCategory[0]?.folders);
   };
@@ -267,15 +268,20 @@ const NewArticle = () => {
     }
   };
 
+  console.log('NEW POST => ', newPost);
+
   // function to edit/patch existing articles
   const handlePatchArticle = async () => {
     setPolicyLoading(true);
     const data = {
       title: newPost.title,
       body: newPost.richText,
+      // categoryId: newPost.categoryId,
+      folderId: newPost.folderId
     };
+    console.log('Data for patch => ', data);
+    // return
     console.clear();
-    console.log("article", data);
 
     const res = await httpPatchMain(`articles/${articleId}`, data);
 
@@ -351,14 +357,14 @@ const NewArticle = () => {
                 editorState={editorState}
                 toolbar={{
                   options: [
+                    "blockType",
                     "emoji",
                     "inline",
-                    // "blockType",
+                    "link",
 
                     // "list",
                     "textAlign",
                     // "colorPicker",
-                    // "link",
                     // "embedded",
                     "image",
                   ],
@@ -405,6 +411,10 @@ const NewArticle = () => {
                   },
                   blockType: {
                     inDropdown: true,
+                    options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote', 'Code'],
+                    className: undefined,
+                    component: undefined,
+                    dropdownClassName: "artblocktype-dropdown",
                   },
 
                   list: {
@@ -423,7 +433,17 @@ const NewArticle = () => {
                   },
 
                   link: {
-                    inDropdown: true,
+                    inDropdown: false,
+                    className: "art-link",
+                    component: undefined,
+                    popupClassName: "art-link-popup",
+                    dropdownClassName: undefined,
+                    showOpenOptionOnHover: true,
+                    defaultTargetOption: '_self',
+                    options: ['link'],
+                    link: { icon: insertLink, className: undefined },
+                    unlink: { className: "unlink-icon" },
+                    linkCallback: undefined
                   },
 
                   history: {
@@ -439,12 +459,12 @@ const NewArticle = () => {
           </div>
           <div className="side-content col-md-4">
             <div className="mb-5 top">
-              <Link
+              {/* <Link
                 to="/settings/knowledge-base/article"
                 className="btn btn-sm f-12 bg-outline-custom cancel px-4 w-50"
               >
                 <p>Preview</p>
-              </Link>
+              </Link> */}
               <button
                 className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
                 onClick={
