@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect, useContext } from "react";
 import { UserDataContext } from "../../../context/userContext";
 import "./conversation.css";
@@ -135,6 +136,17 @@ export default function Conversation() {
   const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(
     false
   );
+  const [addHist, setAddHist] = useState(false);
+
+  useEffect(() => {
+    if (addHist) {
+      setTimeout(() => {
+        setAddHist(false);
+      }, 2000);
+    }
+    
+  }, [addHist])
+  
   useEffect(() => {
     // getTickets();
     sortMsges(msgHistory);
@@ -156,16 +168,12 @@ export default function Conversation() {
     });
     
     AppSocket.io.on(`ws_ticket`, (data) => {
-      // console.log(data);
       let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, ticketsData);
     });
-    return () => { AppSocket.io.disconnect()};
-  },[]);
 
-  useEffect(() => {
     AppSocket.io.on(`message`, (data) => {
-      if(data.id === TicketId){
+      if (data?.channel === "livechat") {
         let msg = {
           created_at: data.created_at,
           id: data?.history?.id || data?.id,
@@ -175,6 +183,19 @@ export default function Conversation() {
           user: data.user,
         };
         setMsgHistory((item) => [...item, msg]);
+
+      } else if(data.id === TicketId){
+        let msg = {
+          created_at: data.created_at,
+          id: data?.history?.id || data?.id,
+          plain_response: data?.history?.plain_response || data?.plain_response,
+          response: data?.history?.response || data?.response,
+          type: "reply",
+          user: data.user,
+        };
+        setMsgHistory((item) => [...item, msg]);
+      } else {
+       
       }
       
       let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
@@ -184,7 +205,14 @@ export default function Conversation() {
       // }
       // sortMsges((item) => [...item, msg]);
     });
-  },[TicketId]);
+
+    AppSocket.io.on('join_private', (data) => { })
+    // return () => { AppSocket.io.disconnect()};
+  },[]);
+
+  useEffect(() => {
+    
+  },[]);
   // const getSocketItems = () =>{
 
   // }
@@ -286,7 +314,7 @@ export default function Conversation() {
     setTickets(newTicket);
     // console.log(filterSentTick);
     const data = {
-      type: "note",
+      type: ticket[0]?.channel !== "livechat" ? "note" : "reply",
       response: reply.richText,
       plainResponse: reply.plainText,
       phoneNumber: singleTicketFullInfo.customer.phone_number,
@@ -301,7 +329,7 @@ export default function Conversation() {
       user: ticket[0]?.assignee,
     };
     // console.log(replyData);
-    setMsgHistory((item) => [...item, replyData]);
+    ticket[0]?.channel !== "livechat" && setMsgHistory((item) => [...item, replyData]);
     const res = await httpPostMain(
       `tickets/${singleTicketFullInfo.id}/replies`,
       data
@@ -558,7 +586,7 @@ export default function Conversation() {
     };
 
     uploadedImages.push(imageObject);
-    console.log(imageObject);
+    // console.log(imageObject);
 
     //this.setState(uploadedImages: uploadedImages)
 
