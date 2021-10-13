@@ -49,6 +49,14 @@ const TicketList = ({
     }
   }, [isTicketsLoaded]);
 
+  useEffect(() => {
+    if(isTicketsLoaded){
+      console.clear()
+      console.log(tickets)
+
+    }
+  }, [isTicketsLoaded])
+
   const tableTheme = createTheme({
     palette: {
       primary: {
@@ -185,10 +193,10 @@ const TicketList = ({
       width: "40%",
       render: (rowData) => (
         <Link
-          to={`/tickets/${rowData.ticketId}`}
+          to={`/tickets/${rowData.ticketUid}`}
           style={{ textTransform: "uppercase" }}
         >
-          {rowData.ticketId.slice(-8)}
+          {rowData.ticketId}
         </Link>
       ),
     },
@@ -264,11 +272,12 @@ const TicketList = ({
         selectedRows.length !== 0
           ? selectedRows
           : tickets.map(
-              ({ customer, subject, id, category, created_at, status, assignee, rating }) => ({
+              ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id }) => ({
                 name: `${customer.firstname} ${customer.lastname == "default" ? "" : customer.lastname || "" }`,
                 email: customer.email,
                 subject: `${subject.substr(0, 25)}...`,
-                ticketId: id.slice(-8),
+                ticketUid: id,
+                ticketId: ticket_id,
                 category: category.name,
                 created: moment(created_at).format("DD MMM, YYYY"),
                 state: status,
@@ -286,11 +295,12 @@ const TicketList = ({
         selectedRows.length !== 0
           ? selectedRows
           : tickets.map(
-              ({ customer, subject, id, category, created_at, status, assignee, rating }) => ({
+              ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id  }) => ({
                 name: textCapitalize(`${customer.firstname} ${customer.lastname == "default"? "" : customer.lastname || ""}`),
                 email: customer.email,
                 subject: `${subject.substr(0, 25)}...`,
-                ticketId: id.slice(-8),
+                // ticketId: id.slice(-8),
+                ticketId: ticket_id,
                 category: category.name,
                 created: moment(created_at).format("DD MMM, YYYY"),
                 state: status,
@@ -383,11 +393,13 @@ const TicketList = ({
                     created_at,
                     status,
                     assignee,
-                    rating
+                    rating,
+                    ticket_id
                   }) => ({
                     name: `${customer?.firstname} ${customer?.lastname == "default"? "" : customer?.lastname || ""}`,
                     customerId: customer?.id,
-                    ticketId: id,
+                    ticketId: ticket_id,
+                    ticketUid: id,
                     email: customer?.email,
                     subject: `${subject?.substr(0, 25)}...`,
                     category: category?.name,

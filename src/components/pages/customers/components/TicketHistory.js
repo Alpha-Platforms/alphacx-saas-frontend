@@ -70,12 +70,10 @@ const TicketHistory = ({ currentCustomerTicketsMeta, currentCustomerId, getPagin
             title: 'Ticket ID',
             field: 'ticketId',
             render: rowData => <Link
-                    to={`/tickets/${rowData.ticketId}`}
+                    to={`/tickets/${rowData.ticketUid}`}
                     style={{
                     textTransform: 'uppercase'
-                }}>{rowData
-                        .ticketId
-                        .slice(-8)}</Link>
+                }}>{rowData.ticketId}</Link>
         }, {
             title: 'Subject',
             field: 'subject',
@@ -164,9 +162,10 @@ const TicketHistory = ({ currentCustomerTicketsMeta, currentCustomerId, getPagin
                                 tableIcons
                             }
                             columns = {tableColumns}
-                            data = {currentCustomerTickets.map(({subject, id, category, created_at, status, assignee, updated_at}) => ({
+                            data = {currentCustomerTickets.map(({subject, id, ticket_id, category, created_at, status, assignee, updated_at}) => ({
                                 date: moment(updated_at).format('DD MMM, YYYY'),
-                                ticketId: id,
+                                ticketId: id.slice(0,8),
+                                ticketUid: id,
                                 subject: `${subject.substr(0, 25)}...`,
                                 category: `Enquiry`,
                                 // category: category.name,
