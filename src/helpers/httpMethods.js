@@ -399,9 +399,7 @@ export const httpPut = async (url, postBody) => {
 export const httpPatchMain = async (url, postBody) => {
   if (!navigator.onLine) {
     return NotificationManager.error(
-      "Please check your internet",
-      "Opps!",
-      3000
+      "Please check your internet","Opps!", 3000
     );
   }
 
@@ -418,9 +416,7 @@ export const httpPatchMain = async (url, postBody) => {
   } catch (error) {
     // hideLoader();
     NotificationManager.error(
-      "Your token is invalid or expired, please login",
-      "Opps!",
-      5000
+      "Your token is invalid or expired, please login","Opps!", 5000
     );
     if (
       error.response.data.message ===
@@ -432,12 +428,34 @@ export const httpPatchMain = async (url, postBody) => {
   }
 };
 
+export const httpPatch = async (url, postBody) => {
+  if (!navigator.onLine) {
+    return NotificationManager.error(
+      "Please check your internet","Opps!", 3000
+    );
+  }
+
+  try {
+    const res = await axios.patch(`${baseUrl}/${url}`, postBody, {
+      headers: { 
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        'domain': localStorage.getItem("domain") || "",
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json' 
+      },
+    });
+    return res.data;
+
+  } catch (error) {
+    NotificationManager.error("Your token is invalid or expired, please login","Opps!", 5000);
+    return { er: error.response.data };
+  }
+};
+
 export const httpDelete = async (url) => {
   if (!navigator.onLine) {
     return NotificationManager.error(
-      "Please check your internet",
-      "Opps!",
-      3000
+      "Please check your internet", "Opps!", 3000
     );
   }
   try {
