@@ -430,19 +430,12 @@ export const httpPatchMain = async (url, postBody) => {
 
 export const httpPatch = async (url, postBody) => {
   if (!navigator.onLine) {
-    return NotificationManager.error(
-      "Please check your internet","Opps!", 3000
-    );
+    return NotificationManager.error("Please check your internet","Opps!", 3000);
   }
 
   try {
     const res = await axios.patch(`${baseUrl}/${url}`, postBody, {
-      headers: { 
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        'domain': localStorage.getItem("domain") || "",
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json' 
-      },
+      headers: {'Content-Type': 'application/json'}
     });
     return res.data;
 
