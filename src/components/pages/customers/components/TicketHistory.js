@@ -164,7 +164,8 @@ const TicketHistory = ({ currentCustomerTicketsMeta, currentCustomerId, getPagin
                             columns = {tableColumns}
                             data = {currentCustomerTickets.map(({subject, id, ticket_id, category, created_at, status, assignee, updated_at}) => ({
                                 date: moment(updated_at).format('DD MMM, YYYY'),
-                                ticketId: id.slice(0,8),
+                                // ticketId: id.slice(0,8),
+                                ticketId: ticket_id,
                                 ticketUid: id,
                                 subject: `${subject.substr(0, 25)}...`,
                                 category: `Enquiry`,
