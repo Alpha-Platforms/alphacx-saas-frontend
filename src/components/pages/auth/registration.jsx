@@ -141,7 +141,7 @@ const Registration = () => {
                             <div className="px-3 min-vh-100 d-flex flex-column justify-content-between">
                                 { !isVerified ?
                                     <div className="flex-grow-1 d-flex flex-column justify-content-center">
-                                        <div className="mb-3">
+                                        <div className="mb-4">
                                             <h1 className="acx-text-gray-700 fw-bold fs-3">Get Started</h1>
                                             <p className="text-muted mb-3">Already have an account? <Link to="/login" className="acx-link-primary">Login</Link></p>
                                         </div>
@@ -293,14 +293,14 @@ const Registration = () => {
                     </Col>
                     <Col md={7} className="d-none h-100 min-vh-100 h-100 d-md-block position-relative">
                         <Row gap={0} className="h-100">
-                            <Col md={10} className="pe-0 h-100 auth-bg-gradient">
+                            <Col md={12} className="pe-0 h-100 auth-bg-gradient">
                                 <section className="py-3 min-vh-100 d-flex flex-column justify-content-around">
-                                    <div className="text-end mb-4 pe-5">
+                                    {/* <div className="text-end mb-4 pe-5">
                                         <img src={AlphaLogo} height="40" alt=""/>{' '}
                                         <img src={Logo} height="25" alt=""/>
-                                    </div>
+                                    </div> */}
                                     <div className="text-end">
-                                        <Image src={ConversationsImg} className="acx-rounded-start-10" width="86%"/>
+                                        <Image src={ConversationsImg} className="acx-rounded-start-10" width="75%"/>
                                     </div>
                                     <div className="text-center mt-3">
                                         <h2 className="text-white fs-3 mb-2">
@@ -314,7 +314,6 @@ const Registration = () => {
                                     </div>
                                 </section>
                             </Col>
-                            <Col md={2}></Col>
                         </Row>
                         <div className="symbol-wrap">
                             <img src={Symbol1} alt=""/>
