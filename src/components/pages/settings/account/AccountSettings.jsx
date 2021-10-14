@@ -1,31 +1,21 @@
-import React from "react";
-import "./AccountSettings.scss";
-import RightArrow from "../../../../assets/imgF/arrow_right.png";
-import { useState } from "react";
-import Branding from "./components/Branding";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { timezone } from "../../../shared/timezone";
 import { languages } from "../../../shared/languages";
 import { countries } from "../../../shared/countries";
-import { useEffect } from "react";
 import { httpGet, httpPatch } from "../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
+import RightArrow from "../../../../assets/imgF/arrow_right.png";
 import RSelect from "react-select";
-import axios from "axios";
+import "./AccountSettings.scss";
 
 const AccountSettings = () => {
 
   const [accountLoading, setAccountLoading] = useState(false);
-  const [personalInformation, setPersonalInformation] = useState({
-    avatar: {},
-    notifications: false,
-    security: false,
-  });
-
   const [RSCountries, setRSCountries] = useState([])
   const [RSLanguage, setRSLanguage] = useState([])
-
+  const [defaultCountry, setDefaultCountry] = useState([])
   const [organisation, setOrganisation] = useState({
     company_name: "",
     email: "",
@@ -46,17 +36,16 @@ const AccountSettings = () => {
     setRSLanguage(() => languages.map(item => ({value: item.name, label: item.name})))
   }, []);
 
-
   useEffect(() => {
-    // console.clear()
-    // console.log(languages)
-  }, [organisation])
+    setDefaultCountry(() => RSCountries.filter(item => item.value === organisation.region))
+  }, [RSCountries, organisation])
 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setOrganisation(prev => ({...prev, [name]: value}));
   };
+
 
   const handleRSChange = ({value}, {name}) => {
     setOrganisation(prev => ({...prev, [name]: value}));
@@ -108,6 +97,7 @@ const AccountSettings = () => {
     if (res?.status == "success") {
       console.clear();
       console.log(res);
+      setOrganisation(prev => ({...prev, ...res?.data}))
     } else {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
@@ -200,7 +190,7 @@ const AccountSettings = () => {
                   className="form-control"
                   id="account-email"
                   value={organisation.email}
-                  onChange={handleChange}
+                  disabled
                 />
               </div>
 
@@ -275,6 +265,7 @@ const AccountSettings = () => {
                   id="language"
                   options={RSLanguage}
                   onChange={handleRSChange}
+                  defaultValue={RSLanguage[9]}
                 />                
               </div>
             </div>
@@ -288,6 +279,7 @@ const AccountSettings = () => {
                 id="region"
                 options={RSCountries}
                 onChange={handleRSChange}
+                defaultValue={defaultCountry}
               />
             </div>
             
