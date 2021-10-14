@@ -1,26 +1,21 @@
-import React from "react";
-import "./AccountSettings.scss";
-import RightArrow from "../../../../assets/imgF/arrow_right.png";
-import { useState } from "react";
-import Branding from "./components/Branding";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { timezone } from "../../../shared/timezone";
 import { languages } from "../../../shared/languages";
 import { countries } from "../../../shared/countries";
-import { useEffect } from "react";
-import { httpGet, httpGetMain, httpPatch } from "../../../../helpers/httpMethods";
+import { httpGet, httpPatch } from "../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
+import RightArrow from "../../../../assets/imgF/arrow_right.png";
+import RSelect from "react-select";
+import "./AccountSettings.scss";
 
 const AccountSettings = () => {
 
   const [accountLoading, setAccountLoading] = useState(false);
-  const [personalInformation, setPersonalInformation] = useState({
-    avatar: {},
-    notifications: false,
-    security: false,
-  });
-
+  const [RSCountries, setRSCountries] = useState([])
+  const [RSLanguage, setRSLanguage] = useState([])
+  const [defaultCountry, setDefaultCountry] = useState([])
   const [organisation, setOrganisation] = useState({
     company_name: "",
     email: "",
@@ -37,12 +32,13 @@ const AccountSettings = () => {
 
   useEffect(() => {
     getUserInfo();
+    setRSCountries(() => countries.map(item => ({value: item.name, label: item.name})))
+    setRSLanguage(() => languages.map(item => ({value: item.name, label: item.name})))
   }, []);
 
-
   useEffect(() => {
-    //
-  }, [organisation])
+    setDefaultCountry(() => RSCountries.filter(item => item.value === organisation.region))
+  }, [RSCountries, organisation])
 
 
   const handleChange = (e) => {
@@ -50,6 +46,10 @@ const AccountSettings = () => {
     setOrganisation(prev => ({...prev, [name]: value}));
   };
 
+
+  const handleRSChange = ({value}, {name}) => {
+    setOrganisation(prev => ({...prev, [name]: value}));
+  };
 
   // const handleAvatar = (e) => {
   //   e.preventDefault();
@@ -61,16 +61,13 @@ const AccountSettings = () => {
   //   });
   // };
 
-
   const getUserInfo = async () => {
     setAccountLoading(true);
     const res = await httpGet("auth/tenant-info/techpoint");
     setAccountLoading(false);
 
     if (res?.status === "success") {
-
       setOrganisation(prev => ({...prev, ...res?.data}))
-
     } else {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
@@ -80,7 +77,6 @@ const AccountSettings = () => {
     e.preventDefault()
     setAccountLoading(true);
 
-  
 
     const {company_name, email, phone_number, address, website, profile, region, language} = organisation
     const payload = {
@@ -94,13 +90,14 @@ const AccountSettings = () => {
       region
     }
 
-    const res = await httpPatch("auth/tenant-info/techpoint", organisation);
+    const res = await httpPatch("auth/tenant-info/techpoint", payload);
 
     setAccountLoading(false);
 
     if (res?.status == "success") {
       console.clear();
       console.log(res);
+      setOrganisation(prev => ({...prev, ...res?.data}))
     } else {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
@@ -148,7 +145,7 @@ const AccountSettings = () => {
               </label>
               <input
                 type="text"
-                name="name"
+                name="company_name"
                 className="form-control"
                 id="organisation-name"
                 value={organisation.company_name}
@@ -165,7 +162,7 @@ const AccountSettings = () => {
                 className="form-control"
                 id="domain-field"
                 value={organisation.domain}
-                onChange={handleChange}
+                disabled
               />
             </div>
 
@@ -193,7 +190,7 @@ const AccountSettings = () => {
                   className="form-control"
                   id="account-email"
                   value={organisation.email}
-                  onChange={handleChange}
+                  disabled
                 />
               </div>
 
@@ -230,7 +227,7 @@ const AccountSettings = () => {
                   Phone
                 </label>
                 <input
-                  name="phone"
+                  name="phone_number"
                   type="tel"
                   className="form-control"
                   id="account-phone"
@@ -260,43 +257,30 @@ const AccountSettings = () => {
               </div>
 
               <div className="mb-3 col-6">
-                <label htmlFor="account-language" className="form-label">
+                <label htmlFor="language" className="form-label">
                   Language
                 </label>
-                <select
-                  name="account-language"
-                  id="account-language"
-                  className="form-select"
-                  aria-label="Default select example"
-                  value="English"
-                >
-                  <option value="">Select language</option>
-                  {languages.map((lang, i) => (
-                    <option key={i} value={lang?.name}>
-                      {lang?.name}
-                    </option>
-                  ))}
-                </select>
+                <RSelect 
+                  name="language"
+                  id="language"
+                  options={RSLanguage}
+                  onChange={handleRSChange}
+                  defaultValue={RSLanguage[9]}
+                />                
               </div>
             </div>
 
             <div className="mb-3">
-              <label htmlFor="account-country" className="form-label">
-                Country
+              <label htmlFor="region" className="form-label">
+                Country/Region
               </label>
-              <select
-                name="account-country"
-                id="account-country"
-                className="form-select"
-                aria-label="Default select example"
-              >
-                <option value="">Select country</option>
-                {countries.map((country, i) => (
-                  <option key={i} value={country.name}>
-                    {country.name}
-                  </option>
-                ))}
-              </select>
+              <RSelect 
+                name="region"
+                id="region"
+                options={RSCountries}
+                onChange={handleRSChange}
+                defaultValue={defaultCountry}
+              />
             </div>
             
           </div>
@@ -305,7 +289,7 @@ const AccountSettings = () => {
                 type="button"
                 className="btn btn-sm bg-at-blue-light text-white px-4"
                 onClick={updateUserInfo}
-                disabled={true}
+                // disabled={true}
               >
                 Save Changes
               </button>
