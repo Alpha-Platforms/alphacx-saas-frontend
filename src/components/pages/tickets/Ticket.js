@@ -53,7 +53,7 @@ import { Modal } from "react-responsive-modal";
 const CircleIcon = (props) => <span className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
 
 
-const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, currentTicket}) => {
+const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, currentTicket, user}) => {
   
   const {id} = useParams();
   
@@ -288,7 +288,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         plain_response: reply.plainText,
         response: reply.richText,
         // user: SenderInfo?.customer,
-        user: ticket[0]?.assignee,
+        user: user,
       };
       setMsgHistory((item) => [...item, replyData]);
       const res = await httpPostMain(
@@ -331,7 +331,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         // getTickets();
         setStatuses(res?.data?.statuses);
       } else {
-        return NotificationManager.error(res.er.message, "Error", 4000);
+        return;
       }
     };
   
@@ -340,7 +340,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       if (res.status == "success") {
         setCategory(res?.data?.categories);
       } else {
-        return NotificationManager.error(res.er.message, "Error", 4000);
+        return;
       }
     };
     const getPriorities = async () => {
@@ -357,7 +357,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         setTags(res?.data?.tags_names.tags);
       } else {
         return;
-        // return NotificationManager.error(res.er.message, "Error", 4000);
       }
     };
 
@@ -370,17 +369,23 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       }
     };
   
-    const upTicketStatus = async (id) => {
-      const data = { statusId: id };
-      const res = await httpPatchMain(`tickets/${TicketId}`, data);
-      if (res.status == "success") {
-        return NotificationManager.success(
-          "Ticket status update successfully",
-          "Success",
-          4000
-        );
-      } else {
-        return NotificationManager.error(res.er.message, "Error", 4000);
+    const updateTicketStatus = async () => {
+      if(RSTicketStage.label === "Closed"){
+      let base_url = window.location.origin;
+      let complete_url = `${base_url}/feedback/${localStorage.domain}/${ticket[0].id}/${ticket[0].customer.id}`;
+      let rich_text = `Your ticket has been marked as closed, Please click on the link to rate this conversation ${complete_url}`;
+      let rich_text_encode = rich_text;
+      let ReplyTicket = {
+          richText : rich_text_encode,
+          plainText : "Your ticket has been marked as closed, Please click on the link to rate this conversation"
+        }
+        replyTicket(ReplyTicket, "attachment")
+      }
+      const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, {"statusId": RSTicketStage.value});
+      if (statusRes.status === "success") {
+        return NotificationManager.success("Ticket status successfully updated", "Success");
+      } else{
+        return NotificationManager.error(statusRes.er.message, "Error", 4000);
       }
     };
   
@@ -1231,6 +1236,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     )
 }
 
-const mapStateToProps = (state, ownProps) => ({tickets: state.ticket.tickets, isTicketLoaded: state.ticket.isTicketLoaded, isCurrentTicketLoaded: state.ticket.isCurrentTicketLoaded, currentTicket: state.ticket.currentTicket});
+const mapStateToProps = (state, ownProps) => ({tickets: state.ticket.tickets, isTicketLoaded: state.ticket.isTicketLoaded, isCurrentTicketLoaded: state.ticket.isCurrentTicketLoaded, currentTicket: state.ticket.currentTicket, user: state.userAuth.user});
 
 export default connect(mapStateToProps, {getCurrentTicket})(Ticket);
