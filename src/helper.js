@@ -108,3 +108,19 @@ export const uuid =() => {
 export const textCapitalize = (str) => {
     return str.toLowerCase().replace(/(^|\s)\S/g, L => L.toUpperCase());
 }
+
+export const slugify = (str) => {
+	return str.toLowerCase().replace(/\W+/gi, ' ').replace(/_/gi, ' ').trim().replace(/\s+/gi, '-');
+}
+
+export const shuffleArray = (array) => {
+    // clone the array
+    const clonedArray = JSON.parse(JSON.stringify(array));
+    // randomly shuffle the array
+    for (let i = clonedArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [clonedArray[i], clonedArray[j]] = [clonedArray[j], clonedArray[i]];
+    }
+    // return shuffled array
+    return clonedArray;
+}

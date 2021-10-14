@@ -12,7 +12,7 @@ import ArticleCatTable from './ArticleCatTable';
 
 
 const ArticleCategories = () => {
-const [tabKey, setTabKey] = useState("category-form");
+const [tabKey, setTabKey] = useState("category-table");
 
     const [policyLoading,
         setPolicyLoading] = useState(false);
@@ -152,21 +152,6 @@ const [tabKey, setTabKey] = useState("category-form");
                     <li className="nav-item" role="presentation">
                     <button
                         className={`nav-link px-0 me-5 ${
-                        tabKey === "category-form" && "active"
-                        } text-muted`}
-                        id="pills-customer-tab"
-                        type="button"
-                        role="tab"
-                        onClick={() => setTabKey("category-form")}
-                        aria-controls="customer-field-view"
-                        aria-selected="true"
-                    >
-                        Category Form
-                    </button>
-                    </li>
-                    <li className="nav-item" role="presentation">
-                    <button
-                        className={`nav-link px-0 me-5 ${
                         tabKey === "category-table" && "active"
                         } text-muted`}
                         id="pills-ticket-tab"
@@ -177,6 +162,21 @@ const [tabKey, setTabKey] = useState("category-form");
                         aria-selected="false"
                     >
                         Categories
+                    </button>
+                    </li>
+                    <li className="nav-item" role="presentation">
+                    <button
+                        className={`nav-link px-0 me-5 ${
+                        tabKey === "category-form" && "active"
+                        } text-muted`}
+                        id="pills-customer-tab"
+                        type="button"
+                        role="tab"
+                        onClick={() => setTabKey("category-form")}
+                        aria-controls="customer-field-view"
+                        aria-selected="true"
+                    >
+                        {isEditing ? 'Edit Category' : 'New Category'}
                     </button>
                     </li>
                 </ul>

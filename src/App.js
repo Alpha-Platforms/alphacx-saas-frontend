@@ -48,6 +48,7 @@ import "./App.css";
 import "./styles/Custom.css";
 import {SocketDataProvider} from "./context/socket";
 import ArticleList from "./components/pages/help_center/help_pages/articleList";
+import ArticleCategoryList from "./components/pages/help_center/help_pages/categoryList";
 import Article from "./components/pages/help_center/help_pages/article";
 import EmailSettings from "./components/pages/settings/email/emailSettings";
 import SettingsEmail from "./components/pages/settings/email/emailSettings";
@@ -171,8 +172,9 @@ const SiteRouter = connect(mapStateToProps, {
                             <Route exact path="/register" component={Register}/> {/* help pages */}
                             <Route exact path="/registration" component={Registration}/> {/* help pages */}
                             <Route exact path="/knowledge-base" component={HelpCenter}/>
-                            <Route exact path="/knowledge-base/:topic" component={ArticleList}/>
-                            <Route exact path="/knowledge-base/:topic/:article" component={Article}/> {/* help pages end */}
+                            <Route exact path="/knowledge-base/categories" component={ArticleCategoryList}/>
+                            <Route exact path="/knowledge-base/:category" component={ArticleList}/>
+                            <Route exact path="/knowledge-base/:category/:slug" component={Article}/> {/* help pages end */}
                             <Route exact path="/feedback/:domain/:ticketId/:customerId" component={RatingsForm}/> {/* help pages end */}
                             <Route exact path="/account-verified" component={AccountVerified}/> {/* Customer Portal */}
                             <Route exact path="/customer-portal/tickets" component={CustomerPortal}/>

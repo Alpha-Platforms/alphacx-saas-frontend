@@ -110,7 +110,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
 
                   <p style={{ textTransform: "uppercase" }}>
                     <Link to={`tickets/${ticket[0]?.id}`} className="text-at-blue">
-                      #{ticket[0]?.id.slice(ticket[0]?.id?.length - 8)}
+                      #{ticket[0]?.ticket_id}
                     </Link>
                   </p>
                 </div>
@@ -232,7 +232,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                       <div>
                         <p className="pb-0 mb-0 f-12 text-muted op-9">Ticket ID</p>
                         <p className="text-muted f-13 text-uppercase" title={`${ticket[0]?.id}`}>
-                          #{ticket[0]?.id.slice(0, 8)}...
+                          #{ticket[0]?.ticket_id}
                         </p>
                       </div>
                   </li>

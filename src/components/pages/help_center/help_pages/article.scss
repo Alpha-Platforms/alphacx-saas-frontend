@@ -75,3 +75,142 @@
     }
   }
 }
+
+.postBody {
+  font-size: 62.5%;
+}
+
+.postBody p, .postBody span {
+  font-size: 16px;
+  margin: 0 0 10px;
+  line-height: 28px;
+  word-spacing: 1px;
+  opacity: 1;
+  overflow-wrap: break-word;
+}
+
+.postBody pre {
+  font-family: monospace !important;
+}
+
+.postBody h1 {
+  font-size: 30px;
+  line-height: 30px;
+  margin: 1rem 0 20px !important;
+  overflow-wrap: break-word;
+}
+
+.postBody h2 {
+  margin: 32px 0 16px;
+  overflow-wrap: break-word;
+  font-size: 24px;
+  opacity: 1 !important;
+}
+
+.postBody h3 {
+  margin: 28px 0 8px;
+  overflow-wrap: break-word;
+}
+
+.postBody h4 {
+  margin: 0 0 8px;
+  overflow-wrap: break-word;
+}
+
+.postBody h5,
+.postBody h6 {
+  overflow-wrap: break-word;
+}
+
+.postBody ul {
+  margin: 20px 0;
+  line-height: 28px;
+  opacity: 1;
+}
+/* code backgroud-color: #f0efed; */
+.postBody li {
+  line-height: 28px;
+  list-style-position: inside;
+  margin: 4px 0;
+  overflow-wrap: break-word;
+  list-style-type: circle;
+}
+.postBody li > h1:first-child,
+.postBody li > h2:first-child,
+.postBody li > h3:first-child,
+.postBody li > h4:first-child,
+.postBody li > h5:first-child,
+.postBody li > h6:first-child {
+  display: inline-block !important;
+}
+
+.postBody li ul li {
+  padding: 0 0 0 22px;
+}
+
+.postBody code {
+  line-height: 22.4px;
+  font-size: 13.5px;
+  font-family: monospace !important;
+  border-radius: 4px;
+  padding: 0.4px;
+  font-weight: 500 !important;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+}
+
+.postBody a {
+  opacity: 1;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.postBody blockquote {
+  border-left: 4px solid #e5e7eb;
+  padding: 0 0 0 19px;
+  margin: 19px 0;
+  line-height: 24px;
+  opacity: 1;
+}
+
+.postBody table {
+  font-size: 14px;
+  border-collapse: collapse;
+  opacity: 1;
+  overflow-x: scroll;
+  margin-bottom: 10px;
+}
+
+.postBody table thead tr {
+}
+
+.postBody table tr {
+  text-align: left;
+  overflow: scroll;
+}
+
+.postBody table th {
+  padding: 1px 12px 1px 1px;
+  text-align: left;
+
+}
+
+.postBody table td {
+  padding: 8px 12px 8px 0;
+  text-align: left;
+  min-width: 200px;
+  width: auto;
+  max-width: max-content;
+  max-width: -webkit-max-content;
+  max-width: -moz-max-content;
+}
+
+.postBody img {
+  display: block;
+  max-width: 100%;
+  margin: 32px auto;
+  line-height: 28px;
+}
+
