@@ -338,3 +338,14 @@
 .auth-bg-dark{
   background-color: #0d4166;
 }
+
+.registeration-carousel .carousel-indicators{
+  bottom: -50px !important;
+}
+.registeration-carousel .carousel-indicators [data-bs-target]{
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50%;
+  margin-left: 8px;
+  margin-right: 8px;
+}
