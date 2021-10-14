@@ -105,7 +105,7 @@ const Fields = () => {
         if (res.status === "success") {
             setProcessing(false);
             setAddModalShow(false);
-            getCustomField();
+            setCustomFieldData((prevState) => [...prevState, res?.data]);
             return NotificationManager.success( "Labels updated successfully", "Success", 4000);
         } else {
             setProcessing(false);
