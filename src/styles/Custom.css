@@ -496,11 +496,14 @@ a.acx-link-dark:visited, a.acx-link-dark:focus {
 }
 
 /* font size style */
+.acx-fs-12{
+    font-size: 12px !important
+}
 .acx-fs-14{
     font-size: 14px !important
 }
-.acx-fs-12{
-    font-size: 12px !important
+.acx-fs-16{
+    font-size: 16px !important
 }
 
 /*  */
@@ -638,6 +641,38 @@ input:-webkit-autofill::first-line {
     background: var(--color-gray-50) !important;
     box-shadow: none;
 }
+
+.form-group.acx-form-group .acx-form-control{
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    border-radius: 2px;
+    height: 45px !important;
+    box-shadow: none !important;
+}
+.form-group.acx-form-group .acx-form-control:hover,
+.form-group.acx-form-group .acx-form-control:focus,
+.form-group.acx-form-group .acx-form-control:active,
+.form-group.acx-form-group .acx-form-control.active{
+    border: 1px solid #0796f7;
+}
+.form-group.acx-form-group .acx-form-control.rselectfield{
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    border: 1px solid transparent;
+}
+.form-group.acx-form-group .acx-form-control.rselectfield:hover,
+.form-group.acx-form-group .acx-form-control.rselectfield:focus,
+.form-group.acx-form-group .acx-form-control.rselectfield:active,
+.form-group.acx-form-group .acx-form-control.rselectfield.active{
+    border: 1px solid transparent;
+}
+.form-group.acx-form-group .acx-form-control.rselectfield div[class*=-control]{
+    border-radius: 2px !important;
+    height: 45px !important;
+    box-shadow: none !important;
+}
+
+
 /* search input */
 input.search-input {
     background-image: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24'><path fill='gray' d='M15.2 16.34a7.5 7.5 0 1 1 1.38-1.45l4.2 4.2a1 1 0 1 1-1.42 1.41l-4.16-4.16zm-4.7.16a6 6 0 1 0 0-12 6 6 0 0 0 0 12z'/></svg>") !important;
@@ -1034,4 +1069,14 @@ input.search-input-right {
 
 .acx-rounded-5{
     border-radius: 5px!important;
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    overflow-y: auto;
+    overflow-x: hidden
+}
+.hide-scrollbar::-webkit-scrollbar {
+    display: none
 }
