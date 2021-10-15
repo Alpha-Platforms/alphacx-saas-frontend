@@ -117,10 +117,13 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     const [MessageSenderId, setMessageSenderId] = useState("");
     const [TicketId, setTicketId] = useState("");
     const [showUserProfile, setshowUserProfile] = useState(false);
+    // 
     const [ReplyTicket, setReplyTicket] = useState({
       plainText: "",
       richText: "",
     });
+    const [replyType, setReplyType] = useState("reply");
+    // 
     const [Agents, setAgents] = useState([]);
     const [Statuses, setStatuses] = useState([]);
     const [UserInfo, setUserInfo] = useState({});
@@ -312,6 +315,11 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       }
     };
   
+    const onReplyTypeChange = (event) => {
+      setReplyType(event.target.value);
+    }
+    // 
+
     const ReloadloadSingleMessage = async () => {
       setLoadSingleTicket(true);
   
@@ -650,11 +658,9 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                               </div>
                             </div>
                           </div>
-                          <div>
-                            <div
-                                className="achivemsagesSection pt-3"
-                                onClick={() => setShowAchive(!ShowAchive)}
-                              >
+                          {/* <div>
+                            <div className="achivemsagesSection pt-3"
+                                onClick={() => setShowAchive(!ShowAchive)}>
                                 <ExpandChat />
                                 {AchiveMsges.length == 0 &&
                                 TodayMsges.length == 0 &&
@@ -668,7 +674,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                   </span>
                                 )}
                               </div>
-                          </div>
+                          </div> */}
                           {/* CHAT SECTION */}
                           <div id="ticketConvoBox" className="conversationsMain">
                             <div className="chatDateHeader">
@@ -687,32 +693,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                               </div>
                               <div className="chatDateHeaderhr2"></div>
                             </div>
-
-                            {/* <div className="customerTiketChat">
-                              <div className="customerTImageHeader">
-                                <div className="imgContainercth">
-                                  {SenderInfo?.customer?.avatar ? (
-                                    <img src={SenderInfo?.customer?.avatar} alt="" />
-                                  ) : (
-                                    <div className="singleChatSenderImg">
-                                      <p>{`${SenderInfo?.customer?.firstname?.slice(0,1)}${SenderInfo?.customer?.lastname == "default" ? "" : SenderInfo?.customer?.lastname?.slice(0,1)}`}</p>
-                                    </div>
-                                  )}
-                                  <div className="custorActiveStateimgd"></div>
-                                </div>
-                              </div>
-                              <div className="custormernameticket">
-                                <p className="mb-1" style={{ color: "#006298" }}>
-                                  {`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(ticket[0]?.customer?.lastname == "default" ? "" : ticket[0]?.customer?.lastname)}`}
-                                </p>
-                                <p>{`Via ${ticket[0].channel} . ${dateFormater(
-                                  ticket[0].created_at
-                                )}`}</p>
-                              </div>
-                            </div> */}
-                            {/* <div className="msgbodyticketHeader">
-                              {capitalize(ticket[0]?.description  || '')}
-                            </div> */}
                             <div className="msgAssingedToee3">
                               This message is assigned to{" "}
                               <span>
@@ -738,31 +718,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                               <span> {ticket[0].status.status}</span>
                             </div>
 
-                            {/* <div
-                              className="achivemsagesSection"
-                              onClick={() => setShowAchive(!ShowAchive)}
-                            >
-                              <ExpandChat />
-                              {AchiveMsges.length == 0 &&
-                              TodayMsges.length == 0 &&
-                              YesterdayMsges.length == 0 ? (
-                                <span> No response found ({AchiveMsges.length})</span>
-                              ) : (
-                                <span>
-                                  {" "}
-                                  {ShowAchive ? "Condense" : "Expand"} all conversation
-                                  ({AchiveMsges.length})
-                                </span>
-                              )}
-                            </div> */}
-
-                            <div
-                              className={` ${
-                                ShowAchive && AchiveMsges.length > 0
-                                  ? "showAchivesWrap"
-                                  : "hideAchivesWrap"
-                              }`}
-                            >
+                            <div className="">
                               {AchiveMsges.map((data) => {
                                 return (
                                   <Fragment>
@@ -939,7 +895,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                         </Fragment>
                         {/* CHAT COMMENT BOX SECTION */}
                         <div id="ticketConvoEditorBox" className="conversationCommentBox">
-                          <div className="single-chat-ckeditor">
+                          <div className="single-chat-ckeditor position-relative">
                             <div
                               className="showBackArrowOnMobile"
                               onClick={() =>
@@ -948,8 +904,29 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                             >
                               <img src={BackArrow} alt="" />
                             </div>
-
                             <div className="ticket-convo-editor">
+                              <div className="position-absolute ps-1 pt-1 bg-white rounded-top border w-100" style={{"zIndex": "2"}}>
+                                <Form.Check
+                                  inline
+                                  label="Reply"
+                                  value="reply"
+                                  name="reply_type"
+                                  checked={replyType === "reply"}
+                                  onChange={onReplyTypeChange}
+                                  type="radio"
+                                  id={`inline-response_type-1`}
+                                />
+                                <Form.Check
+                                  inline
+                                  label="Comment"
+                                  value="note"
+                                  name="reply_type"
+                                  checked={replyType === "note"}
+                                  onChange={onReplyTypeChange}
+                                  type="radio"
+                                  id={`inline-response_type-2`}
+                                />
+                              </div>
                               <Editor
                                 editorState={editorState}
                                 toolbar={{
