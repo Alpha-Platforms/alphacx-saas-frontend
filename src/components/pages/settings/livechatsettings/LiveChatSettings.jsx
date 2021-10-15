@@ -22,8 +22,7 @@ const LiveChatSettings = () => {
 
     const [embedText, setEmbedText] = useState('Fill field to generate script code');
 
-    const secretKey = "@alphacxcryptkey";
-    const simpleCrypto = new SimpleCrypto(secretKey)
+    const simpleCrypto = new SimpleCrypto("@alphacxcryptkey")
 
     const handleInputChange = e => {
         const {name, value} = e.target;
@@ -32,7 +31,7 @@ const LiveChatSettings = () => {
             ...prev,
             [name]: value
         }));
-        setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.js"></script>
+        setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
 <script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(JSON.stringify(settings))}'});</script>`);
     }
 
