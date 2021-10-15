@@ -7,9 +7,12 @@ import './LiveChatSettings.css';
 // import ChatPreview from '../../../../assets/images/ChatWidget.png';
 import copy from 'copy-to-clipboard';
 import {NotificationManager} from 'react-notifications';
+import {connect} from 'react-redux';
+import {getLivechatConfig, updateLivechatConfig} from '../../../../reduxstore/actions/livechatActions';
+import ScaleLoader from 'react-spinners/ScaleLoader';
 
 
-const LiveChatSettings = () => {
+const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getLivechatConfig, updateLivechatConfig}) => {
 
     const [settings, setSettings] = useState({
         title: '',
@@ -17,25 +20,44 @@ const LiveChatSettings = () => {
         initialText: '',
         domains: '',
         theme: '#004882',
-        tenantDomain: ''
+        tenantDomain: window.localStorage.getItem('domain')
     });
 
-    const [embedText, setEmbedText] = useState('Fill field to generate script code');
+    const [loading, setLoading] = useState(false);
 
-    const secretKey = "@alphacxcryptkey";
-    const simpleCrypto = new SimpleCrypto(secretKey)
-
+    
+    const [embedText, setEmbedText] = useState('Loading...');
+    
+    const simpleCrypto = new SimpleCrypto("@alphacxcryptkey")
+    
     const handleInputChange = e => {
         const {name, value} = e.target;
-
+        
         setSettings(prev => ({
             ...prev,
             [name]: value
         }));
-        setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.js"></script>
-<script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(JSON.stringify(settings))}'});</script>`);
+        setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
+        <script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(JSON.stringify(settings))}'});</script>`);
     }
-
+    
+    useEffect(() => {
+        setLoading(true);
+        getLivechatConfig(config => {
+            setSettings(prev => ({
+                ...prev,
+                title: config?.title || '',
+                description: config?.description || '',
+                initialText: config?.initialChat || '',
+                domains: config?.hostName || '',
+                theme: config?.color || ''
+            }));
+            setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
+<script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(JSON.stringify(settings))}'});</script>`);
+        });
+            setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     // console.log('Settings => ', settings);
 
@@ -50,9 +72,34 @@ const LiveChatSettings = () => {
         }
     }
 
+    const handleConfigSave = () => {
+        const {title, description, initialText, domains, theme, tenantDomain} = settings;
+
+        const newConfig = {
+            title,
+            description,
+            initialChat: initialText,
+            hostName: domains,
+            color: theme,
+            domain: tenantDomain
+        };
+
+        setLoading(true);
+        updateLivechatConfig(newConfig, 
+            () => {
+                NotificationManager.success('Updated successfully', 'Success', 4000);
+                setLoading(false);
+            }, 
+            () => {
+                NotificationManager.error('Something went wrong', 'Error', 4000);
+                setLoading(false);
+            });
+
+    }
 
     return (
         <div>
+        {loading && <div className="cust-table-loader"><ScaleLoader loading={true} color={"#006298"}/></div>}
             <div className="card card-body bg-white border-0 p-0 mb-4">
                 <div id="mainContentHeader">
                     <h6 className="text-muted f-14">
@@ -114,7 +161,7 @@ const LiveChatSettings = () => {
 
                                     <div className="form-group mt-4">
                                         <label className="f-14 mb-1">
-                                            Widget's Host Name <small>({`Hostname of site where widget will be embedded (Semi-colon seperated list)`})</small>
+                                            Widget's Host Name <small>({`Hostname of sites where widget will be embedded (Semi-colon seperated list)`})</small>
                                         </label>
                                         <input
                                             type="text"
@@ -126,7 +173,7 @@ const LiveChatSettings = () => {
                                             onChange={handleInputChange}/>
                                     </div>
 
-                                    <div className="form-group mt-4">
+                                    {/* <div className="form-group mt-4">
                                         <label className="f-14 mb-1">
                                             Tenant Domain <small>({`Your AlphaCX tenant domain.`})</small>
                                         </label>
@@ -137,7 +184,7 @@ const LiveChatSettings = () => {
                                             value={settings.tenantDomain}
                                             placeholder="support"
                                             onChange={handleInputChange}/>
-                                    </div>
+                                    </div> */}
 
                                     <div className="form-group mt-4">
                                         <label className="f-14 mb-1">
@@ -163,6 +210,7 @@ const LiveChatSettings = () => {
                                 </div>
                                 <div className="my-3 mt-4">
                                     <button
+                                        onClick={handleConfigSave}
                                         className="btn btn-sm bg-at-blue-light px-3"
                                         disabled={false}>Save Changes</button>
                                 </div>
@@ -181,4 +229,10 @@ const LiveChatSettings = () => {
     );
 };
 
-export default LiveChatSettings;
+const mapStateToProps = (state, ownProps) => ({
+    livechatConfig: state.livechat.livechatConfig,
+    isConfigLoading: state.livechat.isConfigLoading,
+    isConfigLoaded: state.livechat.isConfigLoaded
+});
+
+export default connect(mapStateToProps, {getLivechatConfig, updateLivechatConfig})(LiveChatSettings);
