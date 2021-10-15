@@ -9,9 +9,10 @@ import copy from 'copy-to-clipboard';
 import {NotificationManager} from 'react-notifications';
 import {connect} from 'react-redux';
 import {getLivechatConfig, updateLivechatConfig} from '../../../../reduxstore/actions/livechatActions';
+import ScaleLoader from 'react-spinners/ScaleLoader';
 
 
-const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getLivechatConfig}) => {
+const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getLivechatConfig, updateLivechatConfig}) => {
 
     const [settings, setSettings] = useState({
         title: '',
@@ -21,6 +22,8 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
         theme: '#004882',
         tenantDomain: window.localStorage.getItem('domain')
     });
+
+    const [loading, setLoading] = useState(false);
 
     
     const [embedText, setEmbedText] = useState('Loading...');
@@ -39,6 +42,7 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
     }
     
     useEffect(() => {
+        setLoading(true);
         getLivechatConfig(config => {
             setSettings(prev => ({
                 ...prev,
@@ -51,6 +55,7 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
             setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
 <script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(JSON.stringify(settings))}'});</script>`);
         });
+            setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -67,9 +72,34 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
         }
     }
 
+    const handleConfigSave = () => {
+        const {title, description, initialText, domains, theme, tenantDomain} = settings;
+
+        const newConfig = {
+            title,
+            description,
+            initialChat: initialText,
+            hostName: domains,
+            color: theme,
+            domain: tenantDomain
+        };
+
+        setLoading(true);
+        updateLivechatConfig(newConfig, 
+            () => {
+                NotificationManager.success('Updated successfully', 'Success', 4000);
+                setLoading(false);
+            }, 
+            () => {
+                NotificationManager.error('Something went wrong', 'Error', 4000);
+                setLoading(false);
+            });
+
+    }
 
     return (
         <div>
+        {loading && <div className="cust-table-loader"><ScaleLoader loading={true} color={"#006298"}/></div>}
             <div className="card card-body bg-white border-0 p-0 mb-4">
                 <div id="mainContentHeader">
                     <h6 className="text-muted f-14">
@@ -131,7 +161,7 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
 
                                     <div className="form-group mt-4">
                                         <label className="f-14 mb-1">
-                                            Widget's Host Name <small>({`Hostname of site where widget will be embedded (Semi-colon seperated list)`})</small>
+                                            Widget's Host Name <small>({`Hostname of sites where widget will be embedded (Semi-colon seperated list)`})</small>
                                         </label>
                                         <input
                                             type="text"
@@ -180,6 +210,7 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
                                 </div>
                                 <div className="my-3 mt-4">
                                     <button
+                                        onClick={handleConfigSave}
                                         className="btn btn-sm bg-at-blue-light px-3"
                                         disabled={false}>Save Changes</button>
                                 </div>
