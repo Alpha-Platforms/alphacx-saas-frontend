@@ -310,14 +310,13 @@ export default function Conversation() {
       // attachment: "",
     };
     const replyData = {
+      type: replyType,
       attachment: null,
       created_at: new Date(),
       plain_response: reply.plainText,
       response: reply.richText,
-      // user: SenderInfo?.customer,
       user: ticket[0]?.assignee,
     };
-    // console.log(replyData);
     ticket[0]?.channel !== "livechat" && setMsgHistory((item) => [...item, replyData]);
     const res = await httpPostMain(
       `tickets/${singleTicketFullInfo.id}/replies`,
@@ -326,8 +325,6 @@ export default function Conversation() {
 
     if (res?.status === "success") {
       scollPosSendMsgList();
-      // setSendingReply(false);
-      // ReloadloadSingleMessage();
       setEditorState(initialState);
       setReplyTicket({ plainText: "", richText: "" });
       // emit ws_tickets event on reply

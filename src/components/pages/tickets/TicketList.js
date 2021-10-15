@@ -52,8 +52,6 @@ const TicketList = ({
   useEffect(() => {
     if(isTicketsLoaded){
       console.clear()
-      console.log(tickets)
-
     }
   }, [isTicketsLoaded])
 
