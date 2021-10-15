@@ -85,7 +85,7 @@ export default function Conversation() {
   const [editorState, setEditorState] = useState(initialState);
   const [firstTimeLoad, setfirstTimeLoad] = useState(true);
   const [MessageSenderId, setMessageSenderId] = useState("");
-  const [TicketId, setTicketId] = useState("");
+  const [ticketId, setTicketId] = useState("");
   const [showUserProfile, setshowUserProfile] = useState(false);
   // 
   const [ReplyTicket, setReplyTicket] = useState({
@@ -175,47 +175,27 @@ export default function Conversation() {
       AppSocket.io.emit(`ws_tickets`, ticketsData);
     });
 
-    AppSocket.io.on(`message`, (data) => {
-      if (data?.channel === "livechat") {
-        let msg = {
-          created_at: data.created_at,
-          id: data?.history?.id || data?.id,
-          plain_response: data?.history?.plain_response || data?.plain_response,
-          response: data?.history?.response || data?.response,
-          type: "reply",
-          user: data.user,
-        };
-        setMsgHistory((item) => [...item, msg]);
-
-      } else if(data.id === TicketId){
-        let msg = {
-          created_at: data.created_at,
-          id: data?.history?.id || data?.id,
-          plain_response: data?.history?.plain_response || data?.plain_response,
-          response: data?.history?.response || data?.response,
-          type: "reply",
-          user: data.user,
-        };
-        setMsgHistory((item) => [...item, msg]);
-      } else {
-       
-      }
-      
-      let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
-      AppSocket.io.emit(`ws_tickets`, ticketsData);
-
-      scollPosSendMsgList();
-      // }
-      // sortMsges((item) => [...item, msg]);
-    });
-
-    AppSocket.io.on('join_private', (data) => { })
-    // return () => { AppSocket.io.disconnect()};
+    return () => { AppSocket.io.disconnect()};
   },[]);
 
   useEffect(() => {
-    
-  },[]);
+    console.log("ticket id", ticketId);
+    AppSocket.io.on(`message`, (data) => {
+      if(data?.channel === "livechat" || data.id === ticketId){
+        let msg = {
+          created_at: data.created_at,
+          id: data?.history?.id || data?.id,
+          plain_response: data?.history?.plain_response || data?.plain_response,
+          response: data?.history?.response || data?.response,
+          type: "reply",
+          user: data.user,
+        };
+        setMsgHistory((item) => [...item, msg]);
+      }
+      scollPosSendMsgList();
+    });
+  },[ticketId]);
+
   // const getSocketItems = () =>{
 
   // }
@@ -314,7 +294,7 @@ export default function Conversation() {
     let filterSentTickAll = tickets.filter((tic) => {
       return tic.id != singleTicketFullInfo.id;
     });
-    setActiveChat(TicketId);
+    setActiveChat(ticketId);
     filterSentTick[0]["__meta__"].history_count = ++filterSentTick[0][
       "__meta__"
     ].history_count;
@@ -437,6 +417,7 @@ export default function Conversation() {
     }
   };
 
+  // 
   const loadSingleMessage = async ({ id, customer, assignee, subject }) => {
     setShowAchive(false);
     setAchiveMsges([]);
@@ -686,12 +667,12 @@ export default function Conversation() {
               LoadingTick={LoadingTick}
               loadSingleMessage={loadSingleMessage}
               setTingleTicketFullInfo={setTingleTicketFullInfo}
-              setTicketId={setTicketId}
               filterChat={filterChat}
               filterTicketsState={filterTicketsState}
               activeChat={activeChat}
               setActiveChat={setActiveChat}
               scollPosSendMsgList={scollPosSendMsgList}
+              setTicketId={setTicketId}
             />
           </div>
 
@@ -725,21 +706,6 @@ export default function Conversation() {
             ) : (
               <div className="conversation-layout-col-two-chatCol vgb">
                 {" "}
-                {/* CHAT HEADER BOX SECTION */}
-                {/* {noResponseFound ? (
-                <p
-                  style={{
-                    textAlign: "center",
-                    paddingTop: "30px",
-                    paddingBottom: "30px",
-                    marginBottom: "auto",
-                    marginTop: "auto",
-                  }}
-                >
-                  {" "}
-                  <NoChatFound value="No response found" />
-                </p>
-              ) : ( */}
                 <React.Fragment>
                   <div className="conversationHeaderV2">
                     <div className="conversationHeaderMainV2">
@@ -750,7 +716,7 @@ export default function Conversation() {
                             {`${capitalize(SenderInfo?.customer?.firstname)} 
                               ${capitalize(SenderInfo?.customer?.lastname == "default"? "":SenderInfo?.customer?.lastname)} 
                               ${capitalize(SenderInfo?.customer?.email)}`}
-                            <div className="custormChatHeaderDot"></div>{" "}
+                            <span className="custormChatHeaderDot d-block"></span>{" "}
                             <span>{dateFormater(ticket[0]?.updated_at)}</span>
                           </p>
                         </div>
