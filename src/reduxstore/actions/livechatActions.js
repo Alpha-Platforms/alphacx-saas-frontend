@@ -4,20 +4,25 @@ import {config} from '../../config/keys';
 import {returnErrors} from './errorActions';
 import {userTokenConfig} from '../../helper';
 
-export const getLivechatConfig = () => (dispatch, getState) => {
+export const getLivechatConfig = (updateStateConfig) => (dispatch, getState) => {
     if (!navigator.onLine) {
         return;
     }
     dispatch(setTagsLoading());
     axios
         .get(`${config.stagingBaseUrl}/settings/config?type=livechat`, userTokenConfig(getState))
-        .then(res => dispatch({
-            type: types.GET_LIVECHAT_CONFIG,
-            payload: res.data.status === "success"
-                ? res.data
-                    ?.data
-                    : {}
-        }))
+        .then(res => {
+            dispatch({
+                type: types.GET_LIVECHAT_CONFIG,
+                payload: res.data.status === "success"
+                    ? res.data
+                        ?.data
+                        : {}
+            });
+            if (res.data?.status === "success") {
+                updateStateConfig && updateStateConfig(res.data?.data);
+            }
+        })
         .catch(err => {
             dispatch({
                 type: types.GET_LIVECHAT_CONFIG,

@@ -7,9 +7,11 @@ import './LiveChatSettings.css';
 // import ChatPreview from '../../../../assets/images/ChatWidget.png';
 import copy from 'copy-to-clipboard';
 import {NotificationManager} from 'react-notifications';
+import {connect} from 'react-redux';
+import {getLivechatConfig, updateLivechatConfig} from '../../../../reduxstore/actions/livechatActions';
 
 
-const LiveChatSettings = () => {
+const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getLivechatConfig}) => {
 
     const [settings, setSettings] = useState({
         title: '',
@@ -17,24 +19,40 @@ const LiveChatSettings = () => {
         initialText: '',
         domains: '',
         theme: '#004882',
-        tenantDomain: ''
+        tenantDomain: window.localStorage.getItem('domain')
     });
 
-    const [embedText, setEmbedText] = useState('Fill field to generate script code');
-
+    
+    const [embedText, setEmbedText] = useState('Loading...');
+    
     const simpleCrypto = new SimpleCrypto("@alphacxcryptkey")
-
+    
     const handleInputChange = e => {
         const {name, value} = e.target;
-
+        
         setSettings(prev => ({
             ...prev,
             [name]: value
         }));
         setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
-<script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(JSON.stringify(settings))}'});</script>`);
+        <script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(JSON.stringify(settings))}'});</script>`);
     }
-
+    
+    useEffect(() => {
+        getLivechatConfig(config => {
+            setSettings(prev => ({
+                ...prev,
+                title: config?.title || '',
+                description: config?.description || '',
+                initialText: config?.initialChat || '',
+                domains: config?.hostName || '',
+                theme: config?.color || ''
+            }));
+            setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
+<script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(JSON.stringify(settings))}'});</script>`);
+        });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     // console.log('Settings => ', settings);
 
@@ -125,7 +143,7 @@ const LiveChatSettings = () => {
                                             onChange={handleInputChange}/>
                                     </div>
 
-                                    <div className="form-group mt-4">
+                                    {/* <div className="form-group mt-4">
                                         <label className="f-14 mb-1">
                                             Tenant Domain <small>({`Your AlphaCX tenant domain.`})</small>
                                         </label>
@@ -136,7 +154,7 @@ const LiveChatSettings = () => {
                                             value={settings.tenantDomain}
                                             placeholder="support"
                                             onChange={handleInputChange}/>
-                                    </div>
+                                    </div> */}
 
                                     <div className="form-group mt-4">
                                         <label className="f-14 mb-1">
@@ -180,4 +198,10 @@ const LiveChatSettings = () => {
     );
 };
 
-export default LiveChatSettings;
+const mapStateToProps = (state, ownProps) => ({
+    livechatConfig: state.livechat.livechatConfig,
+    isConfigLoading: state.livechat.isConfigLoading,
+    isConfigLoaded: state.livechat.isConfigLoaded
+});
+
+export default connect(mapStateToProps, {getLivechatConfig, updateLivechatConfig})(LiveChatSettings);

@@ -42,7 +42,7 @@ const rootReducer = combineReducers({
     subCategory: subCategoryReducer,
     config: configReducer,
     analytics: analyticsReducer,
-    livechhat: livechatReducer
+    livechat: livechatReducer
 });
 
 export default persistReducer(persistConfig, rootReducer);
