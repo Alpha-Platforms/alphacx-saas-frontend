@@ -8,9 +8,7 @@ import {LayoutProvider} from "./context/layoutContext";
 import {UserDataProvider} from "./context/userContext";
 import {AuthProvider} from "./context/authContext";
 import Login from "./components/pages/auth/login.jsx";
-import Domain from "./components/pages/auth/login";
-import Register from "./components/pages/auth/register.jsx";
-import Registration from "./components/pages/auth/registration.jsx";
+import signUp from "./components/pages/auth/signUp.jsx";
 import Reset from "./components/pages/auth/forgotPassword";
 import "react-responsive-modal/styles.css";
 
@@ -168,9 +166,7 @@ const SiteRouter = connect(mapStateToProps, {
                     <SocketDataProvider>
                         <Switch>
                             <Route exact path="/login" component={Login}/> {/* <Route exact path="/login/:domain" component={Login}/> */}
-
-                            <Route exact path="/register" component={Register}/> {/* help pages */}
-                            <Route exact path="/registration" component={Registration}/> {/* help pages */}
+                            <Route exact path="/sign-up" component={signUp}/> {/* help pages */}
                             <Route exact path="/knowledge-base" component={HelpCenter}/>
                             <Route exact path="/knowledge-base/categories" component={ArticleCategoryList}/>
                             <Route exact path="/knowledge-base/:category" component={ArticleList}/>

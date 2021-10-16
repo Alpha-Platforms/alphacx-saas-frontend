@@ -16,7 +16,7 @@ import {NotificationManager} from "react-notifications";
 // resource 
 import {httpPost} from "../../../helpers/httpMethods";
 import { Validate} from "../../../helpers/validateInput";
-import {countries} from '../../../components/shared/countries';
+import {countries} from '../../shared/countries';
 import "./login.css";
 // assets
 import Logo from "../../../assets/imgF/logo.png";
@@ -264,7 +264,7 @@ const Registration = () => {
                                                 />
                                             </Form.Group>
                                             <div className="mb-2 submit-auth-btn">
-                                                <Button type="submit" onClick={handleSubmit}  disabled={loading}
+                                                <Button type="submit" onClick={handleSubmit}   disabled={loading || domainChecking}
                                                         className="w-100 mt-3">
                                                     {loading ?
                                                         <span>
@@ -292,7 +292,7 @@ const Registration = () => {
                                 }
                                 <div className="text-center mb-3 pb-3">
                                     <p className="text-muted">
-                                        © {new Date().getFullYear()} AlphaCX. All rights reserved
+                                        © {new Date().getFullYear()} AlphaCX Intelligent Platforms. All rights reserved.
                                     </p>
                                 </div>
                             </div>
