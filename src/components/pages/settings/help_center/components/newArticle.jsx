@@ -268,7 +268,7 @@ const NewArticle = () => {
     }
   };
 
-  console.log('NEW POST => ', newPost);
+  // console.log('NEW POST => ', newPost);
 
   // function to edit/patch existing articles
   const handlePatchArticle = async () => {

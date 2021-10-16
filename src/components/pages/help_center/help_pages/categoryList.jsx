@@ -40,7 +40,7 @@ const ArticleCategoryList = () => {
                 let categories = res
                     ?.data;
                 console.clear();
-                console.log(categories);
+                // console.log(categories);
                 setCategories(categories);
             } else {
                 return NotificationManager.error(res
