@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { ReactComponent as DocSvg } from "../../../../../assets/icons/Document2.svg";
+import { ReactComponent as Folder } from "../../../../../assets/icons/Folder.svg";
 import "./navCard.scss";
 import {slugify, textCapitalize} from '../../../../../helper';
 
@@ -14,7 +15,7 @@ const NavCard = ({ title, icon, folders, id }) => {
         }
       >
         <div className="nav-icon">
-          <DocSvg/>
+          <Folder/>
         </div>
         <p className="title">{textCapitalize(title)}</p>
         <div className="description">
