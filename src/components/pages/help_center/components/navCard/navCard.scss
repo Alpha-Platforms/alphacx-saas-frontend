@@ -1,6 +1,10 @@
 .nav-card {
   height: 250px;
-  width: 30%;
+  // width: 30%;
+  width: 350px;
+  max-width: 100%;
+  margin-right: auto;
+  margin-left: auto;
   background: #ffffff;
   border: 0.5px solid #dadada;
   box-sizing: border-box;
@@ -12,6 +16,8 @@
   align-items: center;
   transition: all 0.3s ease-in-out;
   margin-bottom: 40px;
+  padding: 0.8rem;
+  
   a {
     color: unset;
     display: flex;
@@ -45,6 +51,8 @@
     flex-wrap: wrap;
     width: 90%;
     p {
+      width: -webkit-fit-content;
+      width: -moz-fit-content;
       width: fit-content;
       margin: 0;
       padding-left: 15px;
