@@ -53,12 +53,15 @@ const [tabKey, setTabKey] = useState("category-table");
         }
     };
 
-    const addNewCategory = async () => {
-        setPolicyLoading(true);
-        const res = await httpPostMain("articles/categories", newCategory);
+    const createGeneralFolder = async (categoryId, categoryName) => {
+        const newFolder = {
+            name: `general-${categoryName}`,
+            categoryId,
+            description: "general folder"
+          }
+        const res = await httpPostMain("articles/folders", newFolder);
         setPolicyLoading(false);
-        if (res
-            ?.status === "success") {
+        if (res?.status === "success") {
             setNewCategory(prev => ({
                 ...prev,
                 name: '',
@@ -67,8 +70,21 @@ const [tabKey, setTabKey] = useState("category-table");
             setIsEditing(false);
             setTabKey('category-table');
             fetchCategories();
-
         } else {
+            return NotificationManager.error(res
+                ?.er
+                    ?.message, "Error", 4000);
+        }
+    }
+
+    const addNewCategory = async () => {
+        setPolicyLoading(true);
+        const res = await httpPostMain("articles/categories", newCategory);
+        if (res
+            ?.status === "success") {
+                createGeneralFolder(res?.data?.id, res?.data?.name);
+        } else {
+            setPolicyLoading(false);
             return NotificationManager.error(res
                 ?.er
                     ?.message, "Error", 4000);
@@ -102,7 +118,6 @@ const [tabKey, setTabKey] = useState("category-table");
 
     const handleSubmit = e => {
         e.preventDefault();
-        console.log('Creating category');
         if (isEditing) {
             editCategory(editId);
         } else {
