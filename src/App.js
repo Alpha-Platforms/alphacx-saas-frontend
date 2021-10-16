@@ -316,7 +316,7 @@ const SiteRouter = connect(mapStateToProps, {
                                 component={TicketSettings}/>
                             <SettingsLayoutRoute
                                 exact
-                                path="/settings/livechat"
+                                path="/settings/integrations/livechat"
                                 pageName="Settings"
                                 component={LiveChatSettings}/>
                             <SettingsLayoutRoute
