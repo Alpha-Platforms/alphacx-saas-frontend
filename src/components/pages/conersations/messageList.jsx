@@ -23,7 +23,7 @@ export default function MessageList({
     checkRender();//, [filterChat, tickets, filterTicketsState]
   });
   const checkRender = () => {
-    if (filterChat == "system") {
+    if (filterChat === "system") {
       setRenderTicket(tickets);
     } else {
       setRenderTicket(filterTicketsState);
@@ -81,7 +81,6 @@ export default function MessageList({
                 setTingleTicketFullInfo(data);
                 setTicketId(data.id);
                 setActiveChat(data.id);
-                // setActiveChat(index + 1);
               }}
               id="msgListTop"
             >

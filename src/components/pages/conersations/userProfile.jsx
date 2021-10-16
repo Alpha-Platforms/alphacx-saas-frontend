@@ -388,32 +388,12 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                 </p>
               ) : (
                 ticket[0]?.tags?.map((data) => {
-                  return <div>{data}</div>;
+                  return <div key={data}>{data}</div>;
                 })
               )}
             </div>
           </div>
         </div>
-
-        {/* <div className="userTopActivities">
-          {[..."123"].map((data) => {
-            return (
-              <div className="activityConPRcov">
-                <div className="activityCountconvers">
-                  {data}{" "}
-                  <div
-                    className="lineactivitivy"
-                    style={data == 3 ? { display: "none" } : {}}
-                  ></div>
-                </div>
-                <div className="activityCountconversText">
-                  {" "}
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.{" "}
-                </div>
-              </div>
-            );
-          })}
-        </div> */}
         {timeLine ? (
           <div className="container-timeline">
             <div className="box">
@@ -464,7 +444,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
             )}
             {timeStampsMsg.map((data) => {
               return(
-                <div className="box">
+                <div key={data.id} className="box">
                   <div className="borderContaner">
                     <div className="circle"></div>
                     <div className="img"></div>

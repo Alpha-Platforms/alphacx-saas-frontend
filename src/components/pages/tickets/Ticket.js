@@ -95,7 +95,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
   
     const {
       AppSocket,
-      //wsTickets,
       setWsTicketFilter,
       wsTicketFilter,
       // setMsgHistory,
@@ -179,21 +178,17 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         setwsTickets(data?.data?.tickets);
       });
       AppSocket.io.on(`message`, (data) => {
-        let msg = {
-          created_at: data.created_at,
-          id: data?.history?.id || data?.id,
-          plain_response: data?.history?.plain_response || data?.plain_response,
-          response: data?.history?.response || data?.response,
-          type: "reply",
-          user: data.user,
-        };
-  
-        setMsgHistory((item) => [...item, msg]);
-        // emit ws_tickets event on reply
-        let channelData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
-        AppSocket.io.emit(`ws_tickets`, channelData);
-        scrollPosSendMsgList();
-        // sortMsges((item) => [...item, msg]);
+        if(data.id == id){
+          let msg = {
+            created_at: data.created_at,
+            id: data?.history?.id || data?.id,
+            plain_response: data?.history?.plain_response || data?.plain_response,
+            response: data?.history?.response || data?.response,
+            type: "reply",
+            user: data.user,
+          };
+          setMsgHistory((item) => [...item, msg]);
+        }
       });
       return () => {
         AppSocket.io.disconnect();
@@ -276,15 +271,12 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     }
     const replyTicket = async (reply, attachment) => {
       const data = {
-        // type: "note",
+        type: replyType,
         response: reply.richText,
         plainResponse: reply.plainText,
         phoneNumber: currentTicket.customer.phone_number,
         // attachment: "",
       };
-      // console.log(currentTicket.customer.phone_number);
-      // console.log(data);
-      // setsendingReply(true);
       const replyData = {
         attachment: null,
         created_at: new Date(),
@@ -299,8 +291,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         data
       );
       if (res?.status === "success") {
-        // setsendingReply(false);
-        // ReloadloadSingleMessage();
         setEditorState(initialState);
         setReplyTicket({ plainText: "", richText: "" });
         // emit ws_tickets event on reply
