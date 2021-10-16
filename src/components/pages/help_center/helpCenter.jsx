@@ -106,11 +106,11 @@ const HelpCenter = () => {
                   // link={nav.link}
                 />
               ))}
-              {categories.length > 6 && <div>
-            </div>}
             </div>
-            
+              {categories.length > 6 && <div>
               <Link to="/knowledge-base/categories" className="show-all-cat">Show all categories</Link>
+            </div>}
+            
 
             <div className="popular-questions">
               <h3>Most Popular Articles</h3>
