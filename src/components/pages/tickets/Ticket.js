@@ -457,7 +457,8 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         tags: (!Array.isArray(RSTicketTags) || !RSTicketTags.length) ? null : RSTicketTags,
       };
       if(Object.keys(RSTicketStage).length > 0){
-        updateTicketStatus()
+        updateTicketStatus();
+        setRSTicketStage({});
       }
       const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
       if (res.status === "success") {
