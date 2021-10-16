@@ -255,11 +255,13 @@ const Login = ({match: {params}}) => {
                <a href="/sign-up">First time user? Sign up</a>
 
               :
-
+              
+              hostName[1] === "qustomar"?
+              <a href="https://qustomar.com/sign-up">First time user? Sign up</a>
+              :
               <a href="https://app.alphacx.co/sign-up">First time user? Sign up</a>
               
-            }
-            
+            }            
           </div>
 
           <div className="submit-auth-btn">
