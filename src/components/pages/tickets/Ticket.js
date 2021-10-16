@@ -155,7 +155,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     const [RSTicketTags, setRSTicketTags] = useState([]);
     const [RSTicketCategory, setRSTicketCategory] = useState("");
     const [RSTicketSubject, setRSTicketSubject] = useState("");
-    const [RSTicketStage, setRSTicketStage] = useState("");
+    const [RSTicketStage, setRSTicketStage] = useState({});
     const [RSTicketPriority, setRSTicketPriority] = useState("");
     const [RSTicketRemarks, setRSTicketRemarks] = useState("");
     const [RSTicketAssignee, setRSTicketAssignee] = useState([]);
@@ -369,18 +369,28 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
   
     const updateTicketStatus = async () => {
       if(RSTicketStage.label === "Closed"){
-      let base_url = window.location.origin;
-      let complete_url = `${base_url}/feedback/${localStorage.domain}/${ticket[0].id}/${ticket[0].customer.id}`;
-      let rich_text = `Your ticket has been marked as closed, Please click on the link to rate this conversation ${complete_url}`;
-      let rich_text_encode = rich_text;
-      let ReplyTicket = {
-          richText : rich_text_encode,
-          plainText : "Your ticket has been marked as closed, Please click on the link to rate this conversation"
+        // get url and replace domain
+        let base_url = window.location.origin.replace(`${localStorage.domain}.`, "");
+        let complete_url = `${base_url}/feedback/${localStorage.domain}/${ticket[0].id}/${ticket[0].customer.id}`;
+        let rich_text = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation : <a href='${complete_url}'>rate us here</a></p>`;
+        let ReplyTicket = {
+          richText : rich_text,
+          plainText : `Your ticket has been marked as closed, Please click on the link to rate this conversation ${complete_url}`
         }
-        replyTicket(ReplyTicket, "attachment")
+        replyTicket(ReplyTicket, "attachment");
       }
       const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, {"statusId": RSTicketStage.value});
       if (statusRes.status === "success") {
+        const replyData = {
+          type: "reply",
+          status_action: true,
+          attachment: null,
+          created_at: new Date(),
+          plain_response: `Ticket Stage has been marked as ${RSTicketStage.label}`,
+          response: `Ticket Stage has been marked as ${RSTicketStage.label}`,
+          user: ticket[0]?.assignee,
+        };
+        setMsgHistory((item) => [...item, replyData]);
         return NotificationManager.success("Ticket status successfully updated", "Success");
       } else{
         return NotificationManager.error(statusRes.er.message, "Error", 4000);
@@ -446,23 +456,18 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         assigneeId: RSTicketAssignee,
         tags: (!Array.isArray(RSTicketTags) || !RSTicketTags.length) ? null : RSTicketTags,
       };
-      if(RSTicketStage){
-        const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, {"statusId": RSTicketStage});
-        if (statusRes.status === "success") {
-          NotificationManager.success("Ticket status successfully updated", "Success");
-        } else{
-          NotificationManager.error(statusRes.er.message, "Error", 4000);
-        }
+      if(Object.keys(RSTicketStage).length > 0){
+        updateTicketStatus()
       }
       const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
       if (res.status === "success") {
         setProcessing(false);
         closeSaveTicketModal();
-        NotificationManager.success("Ticket status successfully updated","Success");
+        NotificationManager.success("Ticket successfully updated","Success");
         const ticketRes = await httpGetMain(`tickets/${ticket[0].id}`);
         if (ticketRes.status === "success") {
             setTicket(ticketRes?.data);
-            NotificationManager.success("Data updated", "Successful");
+            return;
         } else {
           setLoadSingleTicket(false);
           NotificationManager.info("please refresh your page to see changes");
@@ -481,7 +486,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         description: [],
         category: "",
       });
-      setRSTicketStage(ticket[0].status.id);
       setRSTicketPriority(ticket[0].priority.id);
       setRSTicketCategory(ticket[0].category.id);
       setRSTicketSubject(ticket[0].subject);
@@ -918,6 +922,8 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                 />
                               </div>
                               <Editor
+                                disabled={(ticket[0].status.status === "Closed")? true : false}
+                                readOnly={(ticket[0].status.status === "Closed")? true : false}
                                 editorState={editorState}
                                 toolbar={{
                                   options: ["emoji", "inline", "image"],
@@ -964,20 +970,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                   list: {
                                     inDropdown: true,
                                   },
-                                  // textAlign: {
-                                  //   inDropdown: false,
-                                  //   className: undefined,
-                                  //   component: undefined,
-                                  //   dropdownClassName: undefined,
-                                  //   options: ["left", "center", "right"],
-                                  //   left: { icon: TextAlignLeft, className: undefined },
-                                  //   center: {
-                                  //     icon: TextAlignCenter,
-                                  //     className: undefined,
-                                  //   },
-                                  //   right: { icon: TextAlignRight, className: undefined },
-                                  //   // justify: { icon: TextAlignCenter, className: undefined },
-                                  // },
 
                                   link: {
                                     inDropdown: true,
@@ -998,7 +990,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
 
                             <div className="sendMsg">
                               <button
-                                disabled={sendingReply}
+                                disabled={(sendingReply)? true : (ticket[0].status.status === "Closed")? true : false}
                                 onClick={() => replyTicket(ReplyTicket, "attachment")}
                               >
                                 <SendMsgIcon /> Send
@@ -1063,11 +1055,15 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                   className="rselectfield"
                   style={{ fontSize: "12px" }}
                   onChange={(newValue, actionMeta) => {
-                    setRSTicketStage(newValue.value);
+                    setRSTicketStage(prevState => ({
+                      ...prevState,
+                      value: newValue.value,
+                      label: newValue.label
+                    }));
                   }}
                   isClearable={false}
                   defaultValue={{
-                    value: ticket[0]?.status?.id , 
+                    value: ticket[0]?.status?.id, 
                     label: ticket[0]?.status?.status
                   }}
                   options={
