@@ -1,23 +1,30 @@
 import {useState, Fragment, useEffect} from 'react';
+import {NotificationManager} from 'react-notifications';
+import {connect} from 'react-redux';
+import RSelect from 'react-select/creatable';
 // react bootstrap components
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Spinner from 'react-bootstrap/Spinner';
 import Collapse from 'react-bootstrap/Collapse';
-// functions
+// 
 import {getUserInitials} from '../../../../helper';
 import {
-  httpGetMain
-  /* httpPostMain,
-  httpPatchMain, */
+  httpGetMain,
+  httpPatchMain
+  /* httpPostMain,, */
 } from "../../../../helpers/httpMethods";
+import {updateCustomer} from '../../../../reduxstore/actions/customerActions';
+import {countrycodes} from '../../../shared/countrycodes';
+
 // resources
 import {ExpandChat} from "../../../../assets/images/svgs";
 
 
-const Profile = ({currentCustomer, ...props}) => {
+const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
     const [editProfile, setEditProfile] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
     const [customFieldConfig, setCustomFieldConfig] = useState([]);
@@ -25,12 +32,13 @@ const Profile = ({currentCustomer, ...props}) => {
     const [customFieldIsSet, setCustomFieldIsSet] = useState(false);
     const [mergedCustomUserFields, setMergedCustomUserFields] = useState([]);
     // profile update info
+    const [processing, setProcessing] = useState(false);
     const [profileData, setProfileData] = useState({
         firstName: '', 
         lastName: '', 
         phone_number: '',
         avatar: '',
-        custom_fields: {} 
+        customFields: {} 
     });
     // avatar upload
     const [uploadInfo, setUploadInfo] = useState({
@@ -107,16 +115,25 @@ const Profile = ({currentCustomer, ...props}) => {
         const {name, value} = e.target;
         setProfileData((prevState) => ({
             ...prevState,
-            custom_fields: {
-                ...prevState.custom_fields,
+            customFields: {
+                ...prevState.customFields,
                 [name] : value
             }
         }));
     }
 
     // update profile function
-    const updateProfile = (e) => {
-        console.log(profileData)
+    const updateProfile = async(e) => {
+        setProcessing(true);
+        // updateCustomer(customerId, profileData);
+        const res = await httpPatchMain(`customer/${customerId}`, profileData);
+        if (res.status === "success") {
+            setProcessing(false);
+            return NotificationManager.success("Profile successfully updated", "Success");
+        }else{
+            setProcessing(false);
+            return NotificationManager.error(res.er.message, "Error", 4000);
+        }
     }
 
     return (
@@ -138,7 +155,7 @@ const Profile = ({currentCustomer, ...props}) => {
                                 <Col>
                                     <Form.Group className={`d-inline-flex flex-column flex-grow-0 ${editProfile? "" : "border-bottom"} pb-2 form-group acx-form-group`}>
                                         <Form.Label className="text-muted small mb-1">First Name</Form.Label>
-                                        <Form.Control type="text" name="firstName" 
+                                        <Form.Control type="text" name="firstName" required
                                                       className={`text-dark ${editProfile? "" : "py-0"}`} 
                                                       plaintext={!editProfile} readOnly={!editProfile} 
                                                       defaultValue={currentCustomer?.firstname}
@@ -148,7 +165,7 @@ const Profile = ({currentCustomer, ...props}) => {
                                 <Col>
                                     <Form.Group className={`d-inline-flex flex-column flex-grow-0 ${editProfile? "" : "border-bottom"} pb-2 form-group acx-form-group`}>
                                         <Form.Label className="text-muted small mb-1">Last Name</Form.Label>
-                                        <Form.Control type="text" name="lastName" 
+                                        <Form.Control type="text" name="lastName" required
                                                     className={`text-dark ${editProfile? "" : "py-0"}`}
                                                     plaintext={!editProfile} readOnly={!editProfile} 
                                                     defaultValue={currentCustomer?.lastname}
@@ -160,7 +177,7 @@ const Profile = ({currentCustomer, ...props}) => {
                                 <Form.Group className={`d-inline-flex flex-column flex-grow-0 pb-2 form-group acx-form-group`}>
                                     <Form.Label className="text-muted small mb-1">Phone</Form.Label>
                                     <Form.Control type="tel" className={`text-dark ${editProfile? "" : "py-0"}`} 
-                                        plaintext={!editProfile} readOnly={!editProfile} 
+                                        plaintext={!editProfile} readOnly={!editProfile} required
                                         defaultValue={currentCustomer.phoneNumber ? currentCustomer.phoneNumber 
                                                     : currentCustomer.phone_number ? currentCustomer.phone_number : ''} 
                                         onChange={handleChange}/>
@@ -177,7 +194,7 @@ const Profile = ({currentCustomer, ...props}) => {
                                                         <Form.Label className="text-muted small mb-1">{data?.field_name}</Form.Label>
                                                         <Form.Select className={`text-dark ${editProfile? "" : "ps-0 py-0 border-0 bg-white"}`} 
                                                                     plaintext={`${!editProfile}`} readOnly={!editProfile} disabled={!editProfile} 
-                                                                    onChange={handleCustomFieldChange}>
+                                                                    onChange={handleCustomFieldChange} required={data?.required}>
                                                             <option>Select</option>
                                                         </Form.Select>
                                                     </Form.Group>
@@ -191,7 +208,7 @@ const Profile = ({currentCustomer, ...props}) => {
                                                         <Form.Control name={data?.id} type={data?.field_type} 
                                                                     className={`text-dark ${editProfile? "" : "py-0"}`} 
                                                                     plaintext={!editProfile} readOnly={!editProfile} 
-                                                                    defaultValue={data?.value || "N/A"}
+                                                                    defaultValue={data?.value || "N/A"} required={data?.required}
                                                                     onChange={handleCustomFieldChange}/>
                                                     </Form.Group>
                                                 </Col>
@@ -222,7 +239,18 @@ const Profile = ({currentCustomer, ...props}) => {
                     </Row>
                     <div className="py-3 text-end">
                         {(editProfile)? (
-                            <Button type="submit" onClick={updateProfile} className="acx-btn-primary px-3">Update Profile</Button>
+                            <Button type="submit" disabled={processing} onClick={updateProfile} className="acx-btn-primary px-3">
+                                {processing? 
+                                    <span className="text-light d-flex justify-content-center align-items-center">
+                                        <Spinner as="span" size="sm"
+                                            animation="border" variant="light"
+                                            aria-hidden="true"  role="status" /> 
+                                        <span className="ms-1"> Loading...</span>
+                                    </span>
+                                :
+                                    <span>Update Profile</span>
+                                }
+                            </Button>
                         ): ""}
                     </div>
                 </Container>
@@ -231,4 +259,5 @@ const Profile = ({currentCustomer, ...props}) => {
     );
 };
 
-export default Profile;
+const mapStateToProps = (state, ownProps) => ({});
+export default connect(mapStateToProps, {updateCustomer})(Profile);
