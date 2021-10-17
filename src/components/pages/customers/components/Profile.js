@@ -38,7 +38,7 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
         lastName: '', 
         phone_number: '',
         avatar: '',
-        customFields: {} 
+        customField: {} 
     });
     // avatar upload
     const [uploadInfo, setUploadInfo] = useState({
@@ -115,8 +115,8 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
         const {name, value} = e.target;
         setProfileData((prevState) => ({
             ...prevState,
-            customFields: {
-                ...prevState.customFields,
+            customField: {
+                ...prevState.customField,
                 [name] : value
             }
         }));

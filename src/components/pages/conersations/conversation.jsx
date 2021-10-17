@@ -181,7 +181,6 @@ export default function Conversation() {
   },[]);
 
   useEffect(() => {
-    console.log("ticket id", ticketId);
     AppSocket.io.on(`message`, (data) => {
       if(data?.channel === "livechat" || data.id === ticketId){
         let msg = {
