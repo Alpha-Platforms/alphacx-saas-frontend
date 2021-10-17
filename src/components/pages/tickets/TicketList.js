@@ -175,7 +175,7 @@ const TicketList = ({
   const tableColumns = [
     {
       title: "Name",
-      field: "name",
+      field: "contact",
       render: (rowData) => (
         <Link
           to={`/customers/${rowData.customerId}`}
