@@ -101,18 +101,21 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
         <div>
         {loading && <div className="cust-table-loader"><ScaleLoader loading={true} color={"#006298"}/></div>}
             <div className="card card-body bg-white border-0 p-0 mb-4">
-                <div id="mainContentHeader">
+                <header id="mainContentHeader" className="breadcrumb">
                     <h6 className="text-muted f-14">
                         <Link to="/settings">
                             <span className="text-custom">Settings</span>
                         </Link>{" "}
-                        <img src={RightArrow} alt="" className="img-fluid mx-2 me-3"/> {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
-                            className="img-fluid mx-2 me-3"></object> */}
+                        <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
+                        <Link to="/settings/integrations">
+                            <span className="text-custom">Integrations</span>
+                        </Link>{" "}
+                        <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
                         <span>Live Chat</span>
                     </h6>
-                </div>
+                </header>
                 <div className="d-flex justify-content-between flex-row">
-                    <h5 className="mt-3 mb-2 fs-6 fw-bold">Widget Settings</h5>
+                    <h5 className="mt-3 mb-2 ">Live Chat Widget</h5>
                 </div>
                 <div className="mt-1 lcsettingslayout">
                     <div>

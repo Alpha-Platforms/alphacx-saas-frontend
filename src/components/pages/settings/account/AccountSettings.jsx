@@ -29,11 +29,14 @@ const AccountSettings = () => {
     two_factor: false
   });
 
+  const [domain, setDomain] = useState("")
+
 
   useEffect(() => {
     getUserInfo();
     setRSCountries(() => countries.map(item => ({value: item.name, label: item.name})))
     setRSLanguage(() => languages.map(item => ({value: item.name, label: item.name})))
+    setDomain(window.localStorage.getItem("domain"))
   }, []);
 
   useEffect(() => {
@@ -63,7 +66,7 @@ const AccountSettings = () => {
 
   const getUserInfo = async () => {
     setAccountLoading(true);
-    const res = await httpGet("auth/tenant-info/techpoint");
+    const res = await httpGet(`auth/tenant-info/${domain}`);
     setAccountLoading(false);
 
     if (res?.status === "success") {
@@ -90,7 +93,7 @@ const AccountSettings = () => {
       region
     }
 
-    const res = await httpPatch("auth/tenant-info/techpoint", payload);
+    const res = await httpPatch(`auth/tenant-info/${domain}`, payload);
 
     setAccountLoading(false);
 

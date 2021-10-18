@@ -9,7 +9,6 @@ import Spinner from 'react-bootstrap/Spinner';
 import TicketIcon from '../../../assets/svgicons/Ticket.svg';
 import WorkIcon from '../../../assets/svgicons/Work.svg';
 import ProfileLightIcon from '../../../assets/svgicons/Profile-Light.svg';
-import FolderIcon from '../../../assets/icons/Folder.svg';
 import PinIcon from '../../../assets/icons/pin.svg';
 import '../../../styles/Ticket.css';
 import ScaleLoader from 'react-spinners/ScaleLoader';

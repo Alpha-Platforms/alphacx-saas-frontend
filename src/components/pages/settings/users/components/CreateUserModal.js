@@ -60,7 +60,7 @@ const CreateUserModal = ({
     const handleUserCreation = () => {
         const {firstName, lastName, email, teams, role, phoneNumber} = modalInputs;
 
-        if (!firstName || !lastName || !email || !teams  || !phoneNumber) {
+        if (!firstName || !lastName || !email || teams.length === 0  || !phoneNumber) {
             // all field not available
             NotificationManager.error('All fields are required', 'Error');
         } else {

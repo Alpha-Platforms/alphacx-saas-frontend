@@ -189,7 +189,7 @@ const Login = ({match: {params}}) => {
           </div>          
 
           <div className="haveAnAccou">
-            <a href="/register">First time user? Sign up</a>
+            <a href="/sign-up">First time user? Sign up</a>
           </div>
 
           <div className="submit-auth-btn">
@@ -252,14 +252,16 @@ const Login = ({match: {params}}) => {
           <div className="haveAnAccou">
             {
               (hostName[0] === "dev" || hostName[0] === "app" || hostName[1] === "netlify" || hostName.includes("localhost")) ?
-               <a href="/register">First time user? Sign up</a>
+               <a href="/sign-up">First time user? Sign up</a>
 
               :
-
-              <a href="https://app.alphacx.co/register">First time user? Sign up</a>
               
-            }
-            
+              hostName[1] === "qustomar"?
+              <a href="https://qustomar.com/sign-up">First time user? Sign up</a>
+              :
+              <a href="https://app.alphacx.co/sign-up">First time user? Sign up</a>
+              
+            }            
           </div>
 
           <div className="submit-auth-btn">
