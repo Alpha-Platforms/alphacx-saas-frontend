@@ -176,11 +176,13 @@ export default function Conversation() {
       let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, ticketsData);
     });
-
+// <<<<<<< HEAD
     return () => { AppSocket.io.disconnect()};
   },[]);
 
   useEffect(() => {
+// =======
+// >>>>>>> 5bdf1dbc910ce1693f7d007636a77ecf8592ded3
     AppSocket.io.on(`message`, (data) => {
       if(data?.channel === "livechat" || data.id === ticketId){
         let msg = {
@@ -193,9 +195,22 @@ export default function Conversation() {
         };
         setMsgHistory((item) => [...item, msg]);
       }
+      let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
+      AppSocket.io.emit(`ws_tickets`, ticketsData);
       scollPosSendMsgList();
     });
+
+    return () => { AppSocket.io.disconnect()};
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ticketId]);
+
+  useEffect(() => {
+    // causes livechat incoming replies to show twices as it component renders on ticketId change
+    // ticket id is needed on change to call the message socket event else no reply from customers comes in,
+    // it probably comes twice because
+    // console.log("ticket id", ticketId);
+    
+  },[]);
 
   // const getSocketItems = () =>{
 
@@ -302,7 +317,6 @@ export default function Conversation() {
     filterSentTick[0]["updated_at"] = new Date();
     const newTicket = [...filterSentTick, ...filterSentTickAll];
     setTickets(newTicket);
-    // console.log(filterSentTick);
     const data = {
       type: replyType,
       response: reply.richText,
