@@ -175,10 +175,10 @@ const Fields = () => {
                                         <button className="btn btn-sm acx-btn-outline-primary border px-3 me-3"
                                             onClick={() => setAddModalShow(true)}>+ Add New Field</button>
                                     </div>
-                                    <div className="text-end">
+                                    {/* <div className="text-end">
                                         <button type="button" className="btn btn-sm acx-btn-outline-primary border px-3 me-3">Discard Changes</button>
                                         <button type="button" className="btn btn-sm acx-btn-primary px-3">Save Changes</button>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </Card.Body>
                         </Card>

@@ -1,6 +1,8 @@
 import {useState, Fragment, useEffect} from 'react';
 import { capitalize } from "@material-ui/core";
 // 
+import Button from 'react-bootstrap/Button';
+// 
 import {ReactComponent as HamburgerSvg} from '../../../../assets/icons/hamburger.svg';
 
 const UserFieldList = (props) => {
@@ -14,7 +16,7 @@ const UserFieldList = (props) => {
         <Fragment>
             <div className="text-center">
                 <div className="fieldsWrapper" id="userFieldWrapper">
-                    {(userFields.length == 0)?
+                    {(userFields.length === 0)?
                         <div className="text-center pt-5">
                             <p className="">No data found</p>
                         </div>
@@ -30,12 +32,14 @@ const UserFieldList = (props) => {
                                     <div className="w-100 d-flex align-items-center justify-content-between ps-4">
                                         <span>{capitalize(`${data.field_name}`)}</span>
                                         <span className="d-flex align-items-center justify-content-between">
-                                            <span className="me-2">Required</span>
                                             {data.required?
-                                                <i className="bi-check-circle text-success" title="required"></i> 
+                                                <span className="me-2">Required</span> 
                                             :
-                                                <i className="bi-dash-circle text-muted" title="not required"></i> 
+                                                <span className="me-2">Optional</span>
                                             }
+                                            <Button className="acx-btn-icon rounded-circle" type="button">
+                                                <i className="bi-dash-circle text-danger" title="action "></i> 
+                                            </Button>
                                         </span>
                                     </div>
                                 </div>

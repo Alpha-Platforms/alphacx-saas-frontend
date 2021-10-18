@@ -212,23 +212,23 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
         createTags(newTags, tagCreated, tagNotCreated, newTag);
     }
 
-    function DowncaretIcon() {
+    function DownCaretIcon() {
         return (
-        <svg
-            width="10"
-            height="6"
-            viewBox="0 0 10 6"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path
-            d="M8.5 1.25L5 4.75L1.5 1.25"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            />
-        </svg>
+            <svg
+                width="10"
+                height="6"
+                viewBox="0 0 10 6"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <path
+                d="M8.5 1.25L5 4.75L1.5 1.25"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                />
+            </svg>
         );
     }
         
@@ -377,7 +377,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                 color: "#006298!important",
                             }}
                             onClick={() => setShowAddOption(x => !x)}>
-                            Additional Options <span><DowncaretIcon /></span>
+                            Additional Options <span><DownCaretIcon /></span>
                         </p>
                         {showAddOption && <div className="row g-3 pt-3">
                             {/* <div className="col-12 mt-1">

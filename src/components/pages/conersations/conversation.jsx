@@ -10,6 +10,8 @@ import searchIcon from "../../../assets/imgF/Search.png";
 import NoChatFound from "./noChatFound";
 // import SingleChatOpen from "./sigleChat";
 import {
+  getSubdomain,
+  getTenantDomain,
   httpGetMain,
   httpPostMain,
   httpPatchMain,
@@ -131,7 +133,7 @@ export default function Conversation() {
   const [RSTicketAssignee, setRSTicketAssignee] = useState([]);
   const [RSTicketCategory, setRSTicketCategory] = useState("");
   const [RSTicketSubject, setRSTicketSubject] = useState("");
-  const [RSTicketStage, setRSTicketStage] = useState("");
+  const [RSTicketStage, setRSTicketStage] = useState({});
   const [RSTicketPriority, setRSTicketPriority] = useState("");
   const [RSTicketRemarks, setRSTicketRemarks] = useState("");
   const [RSTicketAssignedAgent, setRSTicketAssignedAgent] = useState("");
@@ -174,7 +176,13 @@ export default function Conversation() {
       let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, ticketsData);
     });
+// <<<<<<< HEAD
+    return () => { AppSocket.io.disconnect()};
+  },[]);
 
+  useEffect(() => {
+// =======
+// >>>>>>> 5bdf1dbc910ce1693f7d007636a77ecf8592ded3
     AppSocket.io.on(`message`, (data) => {
       if(data?.channel === "livechat" || data.id === ticketId){
         let msg = {
@@ -187,18 +195,22 @@ export default function Conversation() {
         };
         setMsgHistory((item) => [...item, msg]);
       }
+      let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
+      AppSocket.io.emit(`ws_tickets`, ticketsData);
       scollPosSendMsgList();
     });
 
     return () => { AppSocket.io.disconnect()};
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+  },[ticketId]);
 
   useEffect(() => {
     // causes livechat incoming replies to show twices as it component renders on ticketId change
+    // ticket id is needed on change to call the message socket event else no reply from customers comes in,
+    // it probably comes twice because
     // console.log("ticket id", ticketId);
     
-  },[ticketId]);
+  },[]);
 
   // const getSocketItems = () =>{
 
@@ -305,7 +317,6 @@ export default function Conversation() {
     filterSentTick[0]["updated_at"] = new Date();
     const newTicket = [...filterSentTick, ...filterSentTickAll];
     setTickets(newTicket);
-    // console.log(filterSentTick);
     const data = {
       type: replyType,
       response: reply.richText,
@@ -399,19 +410,33 @@ export default function Conversation() {
 
   const updateTicketStatus = async () => {
     if(RSTicketStage.label === "Closed"){
-      let base_url = window.location.origin;
+      // get url and replace domain
+      let base_url = window.location.origin.replace(`${localStorage.domain}.`, "");
       let complete_url = `${base_url}/feedback/${localStorage.domain}/${ticket[0].id}/${ticket[0].customer.id}`;
-      let rich_text = `Your ticket has been marked as closed, Please click on the link to rate this conversation ${complete_url}`;
+      let rich_text = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation : <a href='${complete_url}'>rate us here</a></p>`;
       let ReplyTicket = {
         richText : rich_text,
-        plainText : "Your ticket has been marked as closed, Please click on the link to rate this conversation"
+        plainText : `Your ticket has been marked as closed, Please click on the link to rate this conversation ${complete_url}`
       }
       replyTicket(ReplyTicket, "attachment");
     }
     const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, {"statusId": RSTicketStage.value});
     if (statusRes.status === "success") {
+      const replyData = {
+        type: "reply",
+        status_action: true,
+        attachment: null,
+        created_at: new Date(),
+        plain_response: `Ticket Stage has been marked as ${RSTicketStage.label}`,
+        response: `Ticket Stage has been marked as ${RSTicketStage.label}`,
+        user: ticket[0]?.assignee,
+      };
+
+      setMsgHistory((item) => [...item, replyData]);
+
       let channelData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, channelData);
+
       return NotificationManager.success("Ticket status successfully updated", "Success");
     } else{
       return NotificationManager.error(statusRes.er.message, "Error", 4000);
@@ -483,26 +508,22 @@ export default function Conversation() {
       assigneeId: RSTicketAssignee,
       tags: (!Array.isArray(RSTicketTags) || !RSTicketTags.length) ? null : RSTicketTags,
     };
-    if(RSTicketStage){
-      const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, {"statusId": RSTicketStage});
-      if (statusRes.status === "success") {
-        NotificationManager.success("Ticket status successfully updated", "Success");
-      } else{
-        NotificationManager.error(statusRes.er.message, "Error", 4000);
-      }
+    if(Object.keys(RSTicketStage).length > 0){
+      updateTicketStatus();
+      setRSTicketStage({});
     }
     const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
     if (res.status === "success") {
       setProcessing(false);
       closeSaveTicketModal();
-      NotificationManager.success("Ticket status successfully updated","Success");
+      NotificationManager.success("Ticket successfully updated","Success");
       AppSocket.createConnection();
       let data = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, data);
       const ticketRes = await httpGetMain(`tickets/${ticket[0].id}`);
       if (ticketRes.status === "success") {
           setTicket(ticketRes?.data);
-          return NotificationManager.success("Data updated", "Success");
+          return;
       } else {
         setLoadSingleTicket(false);
         return NotificationManager.info("please refresh your page to see changes");
@@ -521,7 +542,6 @@ export default function Conversation() {
       description: [],
       category: "",
     });
-    setRSTicketStage(ticket[0].status.id);
     setRSTicketPriority(ticket[0].priority.id);
     setRSTicketCategory(ticket[0].category.id);
     setRSTicketSubject(ticket[0].subject);
@@ -981,6 +1001,8 @@ export default function Conversation() {
                       />
                     </div>
                     <Editor
+                      disabled={(ticket[0].status.status === "Closed")? true : false}
+                      readOnly={(ticket[0].status.status === "Closed")? true : false}
                       editorState={editorState}
                       toolbar={{
                         options: ["emoji", "inline", "image"],
@@ -1027,21 +1049,6 @@ export default function Conversation() {
                         list: {
                           inDropdown: true,
                         },
-                        // textAlign: {
-                        //   inDropdown: false,
-                        //   className: undefined,
-                        //   component: undefined,
-                        //   dropdownClassName: undefined,
-                        //   options: ["left", "center", "right"],
-                        //   left: { icon: TextAlignLeft, className: undefined },
-                        //   center: {
-                        //     icon: TextAlignCenter,
-                        //     className: undefined,
-                        //   },
-                        //   right: { icon: TextAlignRight, className: undefined },
-                        //   // justify: { icon: TextAlignCenter, className: undefined },
-                        // },
-
                         link: {
                           inDropdown: true,
                         },
@@ -1060,7 +1067,7 @@ export default function Conversation() {
 
                     <div className="sendMsg">
                       <button
-                        disabled={sendingReply}
+                        disabled={(sendingReply)? true : (ticket[0].status.status === "Closed")? true : false}
                         onClick={() => replyTicket(ReplyTicket, "attachment")}
                       >
                         <SendMsgIcon /> Send
@@ -1147,7 +1154,11 @@ export default function Conversation() {
                   className="rselectfield"
                   style={{ fontSize: "12px" }}
                   onChange={(newValue, actionMeta) => {
-                    setRSTicketStage(newValue.value);
+                    setRSTicketStage(prevState => ({
+                      ...prevState,
+                      value: newValue.value,
+                      label: newValue.label
+                    }));
                   }}
                   isClearable={false}
                   defaultValue={{
