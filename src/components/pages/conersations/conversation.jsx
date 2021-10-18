@@ -175,11 +175,6 @@ export default function Conversation() {
       AppSocket.io.emit(`ws_tickets`, ticketsData);
     });
 
-    return () => { AppSocket.io.disconnect()};
-  },[]);
-
-  useEffect(() => {
-    console.log("ticket id", ticketId);
     AppSocket.io.on(`message`, (data) => {
       if(data?.channel === "livechat" || data.id === ticketId){
         let msg = {
@@ -194,6 +189,15 @@ export default function Conversation() {
       }
       scollPosSendMsgList();
     });
+
+    return () => { AppSocket.io.disconnect()};
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
+
+  useEffect(() => {
+    // causes livechat incoming replies to show twices as it component renders on ticketId change
+    // console.log("ticket id", ticketId);
+    
   },[ticketId]);
 
   // const getSocketItems = () =>{
