@@ -174,17 +174,17 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                 <ul className="nav nav-pills" id="pills-tab" role="tablist">
                                     <li className="nav-item me-2" role="presentation">
                                         <button
-                                            className={`nav-link ${tabKey === 'profile' && 'nav-active'} text-muted ps-1 pe-3`}
-                                            id="pills-profile-tab"
-                                            type="button"
-                                            onClick={() => setTabKey('profile')}>Profile</button>
-                                    </li>
-                                    <li className="nav-item mx-3" role="presentation">
-                                        <button
-                                            className={`nav-link ${tabKey === 'ticket-history' && 'nav-active'} text-muted px-3`}
+                                            className={`nav-link ${tabKey === 'ticket-history' && 'nav-active'} text-muted ps-1 pe-3`}
                                             id="pills-profile-tab"
                                             type="button"
                                             onClick={() => setTabKey('ticket-history')}>Ticket History</button>
+                                    </li>
+                                    <li className="nav-item mx-3" role="presentation">
+                                        <button
+                                            className={`nav-link ${tabKey === 'profile' && 'nav-active'} text-muted px-3`}
+                                            id="pills-profile-tab"
+                                            type="button"
+                                            onClick={() => setTabKey('profile')}>Profile</button>
                                     </li>
                                     {/* <li className="nav-item ms-2" role="presentation">
                                         <button

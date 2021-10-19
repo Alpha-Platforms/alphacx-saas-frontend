@@ -38,7 +38,10 @@ const UserFieldList = (props) => {
                                                 <span className="me-2">Optional</span>
                                             }
                                             <Button className="acx-btn-icon rounded-circle" type="button">
-                                                <i className="bi-dash-circle text-danger" title="action "></i> 
+                                                <i className="bi-pencil-square acx-text-alpha-blue-400" title="edit"></i> 
+                                            </Button>
+                                            <Button className="acx-btn-icon rounded-circle" type="button">
+                                                <i className="bi-trash text-danger" title="delete "></i> 
                                             </Button>
                                         </span>
                                     </div>
