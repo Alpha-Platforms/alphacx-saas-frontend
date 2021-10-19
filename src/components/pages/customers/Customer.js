@@ -154,52 +154,6 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
 
                         <hr className="op-1 mt-0"/>
 
-                        {/* <div class="container-timeline">
-                            <div class="box">
-                            <div class="borderContaner">
-                                <div class="circle"></div>
-                                <div class="img"></div>
-                            </div>
-                            <div class="textTimeLineSec">
-                            <p className="pb-0 mb-0 f-13">
-                            <Link to="#">Olamide Adeleke</Link>&nbsp;changed ticket status from In progress to Closed</p>
-                                <div className="timeLinehashtags">
-                                <div className="d-none"></div>
-                                <div>01-05-2021, 12.00 AM</div>
-                                </div>
-                            </div>
-                            </div>
-                            <div class="box">
-                            <div class="borderContaner">
-                                <div class="circle"></div>
-                                <div class="img"></div>
-                            </div>
-                            <div class="textTimeLineSec">
-                            <p className="pb-0 mb-0 f-13">
-                            <Link to="#">Olamide Adeleke</Link>&nbsp;changed ticket status from In progress to Closed</p>
-                                <div className="timeLinehashtags">
-                                <div className="d-none"></div>
-                                <div>01-05-2021, 12.00 AM</div>
-                                </div>
-                            </div>
-                            </div>
-
-                            <div class="box">
-                            <div class="borderContaner">
-                                <div class="circle"></div>
-                                <div style={{ height: "0px" }} class="img"></div>
-                            </div>
-                            <div class="textTimeLineSec">
-                            <p className="pb-0 mb-0 f-13">
-                            <Link to="#">Olamide Adeleke</Link>&nbsp;changed priorrity from medium to high</p>
-                                <div className="timeLinehashtags">
-                                <div className="d-none"></div>
-                                <div>01-05-2021, 12.00 AM</div>
-                                </div>
-                            </div>
-                            </div>
-                        </div> */}
-
                         <div className="text-center my-4">
                             <Button
                                 className="bg-at-blue-light px-3"
@@ -264,7 +218,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                 onSelect={(k) => setTabKey(k)}
                                 className="mb-3">
                                 <Tab eventKey="profile" className="">
-                                    <Profile {...currentCustomer} />
+                                    <Profile isCustomerLoaded={isCustomerLoaded} currentCustomer={currentCustomer} customerId={id}/>
                                 </Tab>
 
                                 <Tab eventKey="ticket-history" className="">

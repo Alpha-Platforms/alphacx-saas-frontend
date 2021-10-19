@@ -290,7 +290,7 @@ function SettingsHome({signedUser}) {
             </Link>
           </div>
         </Col>
-        <Col sm={6} md={4} className="settings-menu-item">   
+        {/* <Col sm={6} md={4} className="settings-menu-item">   
           <div className="border rounded bg-light">
             <Link to="settings/livechat" className="d-block cursor text-decoration-none">
               <div className="d-flex p-md-4">
@@ -306,7 +306,7 @@ function SettingsHome({signedUser}) {
               </div>
             </Link>
           </div>
-        </Col>
+        </Col> */}
         {/* <Col sm={6} md={4} className="settings-menu-item">   
           <div className="h-100 border rounded bg-light">
             <Link to="settings/fields" className="d-block cursor text-decoration-none">

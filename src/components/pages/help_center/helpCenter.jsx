@@ -42,11 +42,9 @@ const HelpCenter = () => {
       if (res?.status == "success") {
         let categories = res?.data;
         console.clear();
-        console.log(categories);
         setCategories(categories);
         let articles = [];
         categories.forEach((cat, idx) => {
-          // console.log(`Category ${idx} => `, cat);
           cat?.folders?.forEach((folder, idx) => {
             folder?.articles?.forEach((art, idx) => {
               articles.push({...art, catName: cat?.name});
@@ -54,8 +52,6 @@ const HelpCenter = () => {
           });
         })
         // console.clear();
-        console.log("Shuffled Array => ", shuffleArray(articles));
-        console.log("articles", articles);
       setArticles(articles);
       } else {
         return NotificationManager.error(res?.er?.message, "Error", 4000);
@@ -63,9 +59,6 @@ const HelpCenter = () => {
     }
 
   };
-
-  console.log('Tenant domain => ', getTenantDomain());
-  console.log('Article Categories => ', categories);
 
   useEffect(() => {
     fetchCategories();
@@ -113,10 +106,10 @@ const HelpCenter = () => {
                   // link={nav.link}
                 />
               ))}
+            </div>
               {categories.length > 6 && <div>
               <Link to="/knowledge-base/categories" className="show-all-cat">Show all categories</Link>
             </div>}
-            </div>
             
 
             <div className="popular-questions">

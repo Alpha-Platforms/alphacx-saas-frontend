@@ -51,7 +51,7 @@ const TicketList = ({
 
   useEffect(() => {
     if(isTicketsLoaded){
-      console.clear()
+      // console.clear()
     }
   }, [isTicketsLoaded])
 
@@ -168,14 +168,14 @@ const TicketList = ({
     }
 
     return (<div className={"table-ratings"}>
-              {ratingArr.map(x => <span className="table-ratings-span">{x ? <StarYellowSvg /> : <StarUnactiveSvg />}</span>)}
+              {ratingArr.map((x, index) => <span key={index} className="table-ratings-span">{x ? <StarYellowSvg /> : <StarUnactiveSvg />}</span>)}
           </div>);
   }
 
   const tableColumns = [
     {
       title: "Name",
-      field: "name",
+      field: "contact",
       render: (rowData) => (
         <Link
           to={`/customers/${rowData.customerId}`}
@@ -394,6 +394,7 @@ const TicketList = ({
                     rating,
                     ticket_id
                   }) => ({
+                    key: ticket_id,
                     name: `${customer?.firstname} ${customer?.lastname == "default"? "" : customer?.lastname || ""}`,
                     customerId: customer?.id,
                     ticketId: ticket_id,
