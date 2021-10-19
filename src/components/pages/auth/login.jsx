@@ -188,7 +188,7 @@ const Login = ({match: {params}}) => {
               />
               <span className="input-group-text text-muted" id="basic-addon2">
                 
-                { environment === 'development'? ".alphacx.co" : ".qustomar.com"}
+                { environment === 'production'? ".alphacx.co" : ".qustomar.com"}
                 </span>
           </div>          
 
