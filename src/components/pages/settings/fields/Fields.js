@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { NotificationManager } from "react-notifications";
+import CreatableSelect from 'react-select/creatable';
 // 
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
@@ -19,6 +20,7 @@ import UserFieldList from "./UserFieldList.jsx";
 import { httpPostMain, httpGetMain } from "../../../../helpers/httpMethods";
 // styles & resources
 import '../../../../styles/Setting.css';
+import '../settings.css';
 import {ReactComponent as HamburgerSvg} from '../../../../assets/icons/hamburger.svg';
 import {ReactComponent as FormMinusSvg} from '../../../../assets/icons/form-minus.svg';
 import {ReactComponent as FormMinusNeutralSvg} from '../../../../assets/icons/form-minus-neutral.svg';
@@ -30,6 +32,11 @@ const Fields = () => {
     // custom fields
     const [ticketFields, setTicketFields] = useState([]);
     const [userFields, setUserFields] = useState([]);
+    const [customFieldOptions, setCustomFieldOptions] = useState({
+        selected: false,
+        multiple: false,
+        options: []
+    });
     // 
     const [customFieldData, setCustomFieldData] = useState([]);
     const [customFields, setCustomFields] = useState({
@@ -77,6 +84,17 @@ const Fields = () => {
             ...prevState,
             [name]: value
         }));
+        if(name == "fieldType" && value == "select"){
+            setCustomFieldOptions((prevState) => ({
+                ...prevState,
+                selected: true
+            }));
+        }else{
+             setCustomFieldOptions((prevState) => ({
+                ...prevState,
+                selected: false
+            }));
+        }
     }
 
     // 
@@ -205,6 +223,24 @@ const Fields = () => {
                                         name="fieldName"
                                         id="fieldName"/>
                                 </Form.Group>
+                                
+                                <Form.Group className="form-group acx-form-group mt-3">
+                                    <Form.Label className="f-12" htmlFor="fieldCategory">Field Category</Form.Label>
+                                    <CreatableSelect
+                                        className="rselectfield bg-white"
+                                        menuPlacement={"top"}
+                                        onChange={selectedOptions => {
+                                        //   setRSTicketTags(selectedOptions.map((item) => { return item.value} ))
+                                        }}
+                                        defaultValue={[]}
+                                        options={[
+                                            { "value": "data", 
+                                                "label": "data"
+                                            }
+                                        ]}
+                                    />
+                                </Form.Group>
+
                                 <Form.Group className="form-group acx-form-group mt-3">
                                     <Form.Label className="f-12" htmlFor="fieldType">Field Type</Form.Label>
                                     <Form.Select onChange={handleChange} name="fieldType" className="form-control" id="fieldType" required>
@@ -220,27 +256,55 @@ const Fields = () => {
                                         <option value="tel">Phone</option>
                                     </Form.Select>
                                 </Form.Group>
-                                <div id="allOptionsContainer" className="d-none">
-                                    <div className="form-group mt-3" id="fieldOptionsWrapper">
+                                <div id="allOptionsContainer" className="">
+                                    <div className="mt-3" id="fieldOptionsWrapper">
                                         <label className="f-12 d-block">Options</label>
-                                        <div className="optionsWrapper" id="optionsWrapper"></div>
-                                        <button
-                                            onClick="addOption(event)"
-                                            type="button"
-                                            className="no-focus btn btn-link f-12 text-decoration-none text-at-blue-light">+ Add option</button>
+                                        <div className="optionsWrapper" id="optionsWrapper">
+                                            <div className="d-flex align-items-center my-2">
+                                                <button type="button" className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                    <HamburgerSvg/>
+                                                </button>
+                                                <div className="flex-grow-1 mx-1">
+                                                    <input type="text" name="field-option" className="form-control form-control-sm" />
+                                                </div>
+                                                <Button className="acx-btn-icon rounded-circle" type="button">
+                                                    <i className="bi-dash-circle text-danger" title="delete "></i> 
+                                                </Button>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="no-focus btn btn-link f-12 ps-0 text-decoration-none text-at-blue-light">
+                                            <span className=""> + Add option </span>
+                                        </button>
                                     </div>
                                 </div>
-                                <Form.Group className="acx-form-group form-group mt-3">
-                                    <Form.Label className="f-12" htmlFor="makeOptional">Make field optional</Form.Label>
-                                    <Form.Check
-                                        onChange={handleSwitch}
-                                        value={customFields.required}
-                                        type="switch"
-                                        id="required"
-                                        name="required"
-                                        label=" "
-                                    />
-                                </Form.Group>
+                                <Row className="my-3">
+                                    <Col sm="auto">
+                                        <Form.Group className="acx-form-group form-group">
+                                            <Form.Check
+                                                onChange={handleSwitch}
+                                                value={customFields.required}
+                                                type="switch"
+                                                id="required"
+                                                name="required"
+                                                label="Make field optional"
+                                            />
+                                        </Form.Group>
+                                    </Col>
+                                    {customFieldOptions.selected? 
+                                        <Col sm="auto">
+                                            <Form.Group className="acx-form-group form-group">
+                                                <Form.Check
+                                                    // onChange={handleSwitch}
+                                                    // value={customFields.isMultiple}
+                                                    type="switch"
+                                                    id="isMultiple"
+                                                    name="isMultiple"
+                                                    label="Multiple Options"
+                                                />
+                                            </Form.Group>
+                                        </Col>
+                                    : ""}
+                                </Row>
                                 <div className="text-end">
                                     <Button type="button" className="acx-btn-outline-primary border px-4 me-3">
                                         Cancel
@@ -256,7 +320,6 @@ const Fields = () => {
                                         :
                                             <span>Add Field</span>
                                         }
-                                        
                                     </Button>
                                 </div>
                             </Form>

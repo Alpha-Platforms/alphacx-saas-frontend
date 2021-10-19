@@ -1,5 +1,7 @@
 // @ts-nocheck
 import React, { useState, useEffect, useContext } from "react";
+import {connect} from 'react-redux';
+
 import { UserDataContext } from "../../../context/userContext";
 import "./conversation.css";
 import { Modal } from "react-responsive-modal";
@@ -56,7 +58,7 @@ import { capitalize } from "@material-ui/core";
 import moment from "moment";
 import RSelect from "react-select/creatable";
 
-export default function Conversation() {
+function Conversation({user, ...props}) {
   const initialState = EditorState.createWithContent(
     ContentState.createFromText("")
   );
@@ -176,13 +178,10 @@ export default function Conversation() {
       let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, ticketsData);
     });
-// <<<<<<< HEAD
     return () => { AppSocket.io.disconnect()};
   },[]);
 
   useEffect(() => {
-// =======
-// >>>>>>> 5bdf1dbc910ce1693f7d007636a77ecf8592ded3
     AppSocket.io.on(`message`, (data) => {
       if(data?.channel === "livechat" || data.id === ticketId){
         let msg = {
@@ -330,15 +329,15 @@ export default function Conversation() {
       created_at: new Date(),
       plain_response: reply.plainText,
       response: reply.richText,
-      user: ticket[0]?.assignee,
+      user: user,
     };
-    ticket[0]?.channel !== "livechat" && setMsgHistory((item) => [...item, replyData]);
     const res = await httpPostMain(
       `tickets/${singleTicketFullInfo.id}/replies`,
       data
     );
 
     if (res?.status === "success") {
+      ticket[0]?.channel !== "livechat" && setMsgHistory((item) => [...item, replyData]);
       scollPosSendMsgList();
       setEditorState(initialState);
       setReplyTicket({ plainText: "", richText: "" });
@@ -1297,3 +1296,6 @@ export default function Conversation() {
     </React.Fragment>
   );
 }
+
+const mapStateToProps = (state, ownProps) => ({user: state.userAuth.user});
+export default connect(mapStateToProps)(Conversation);

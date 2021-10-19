@@ -31,6 +31,7 @@ export default function MessageList({
   };
 
     const getChannelColor = (channel, placement = "foreground") => {
+      channel = channel.toLowerCase();
       let obj = {
           "facebook": "#1877F2", 
           "email": "#2B304D", 

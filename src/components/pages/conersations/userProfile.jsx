@@ -455,8 +455,8 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                     </span>
                     <div className="timeLinehashtags flex-column align-items-start">
                       <div>
-                        <a href={`#${data?.id}`} className="acx-link-primary d-block" style={{ textTransform: "uppercase" }}>
-                          #{data?.id.slice(data?.id?.length - 8)}
+                        <a href={`#${data?.id}`} className="acx-link-primary d-block">
+                          Ticket {`${data.response.replace("Ticket Stage has been marked as ", "")}`}
                         </a>
                       </div>
                       <div>{dateFormater(data.created_at)}</div>
