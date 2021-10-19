@@ -66,7 +66,7 @@ const AccountSettings = () => {
 
   const getUserInfo = async () => {
     setAccountLoading(true);
-    const res = await httpGet(`auth/tenant-info/${domain}`);
+    const res = await httpGet(`auth/tenant-info/${window.localStorage.getItem("domain")}`);
     setAccountLoading(false);
 
     if (res?.status === "success") {
@@ -93,11 +93,11 @@ const AccountSettings = () => {
       region
     }
 
-    const res = await httpPatch(`auth/tenant-info/${domain}`, payload);
+    const res = await httpPatch(`auth/tenant-info/${window.localStorage.getItem("domain")}`, payload);
 
     setAccountLoading(false);
 
-    if (res?.status == "success") {
+    if (res?.status === "success") {
       console.clear();
       console.log(res);
       setOrganisation(prev => ({...prev, ...res?.data}))
