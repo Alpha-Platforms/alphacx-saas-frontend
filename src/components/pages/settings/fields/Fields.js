@@ -256,7 +256,7 @@ const Fields = () => {
                                         <option value="tel">Phone</option>
                                     </Form.Select>
                                 </Form.Group>
-                                <div id="allOptionsContainer" className="">
+                                <div id="allOptionsContainer" className={customFieldOptions.selected? "" : "d-none"}>
                                     <div className="mt-3" id="fieldOptionsWrapper">
                                         <label className="f-12 d-block">Options</label>
                                         <div className="optionsWrapper" id="optionsWrapper">
