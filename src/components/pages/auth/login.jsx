@@ -30,6 +30,7 @@ const Login = ({match: {params}}) => {
   const [hostName] = useState(() => {
     return window.location.hostname.split(".") 
   })
+  const [environment, setEnvironment] = useState(process.env.NODE_ENV)
 
 
   useEffect(() => {         
@@ -185,7 +186,10 @@ const Login = ({match: {params}}) => {
                   onChange={handleChange}
                   value={userInput.domain}
               />
-              <span className="input-group-text text-muted" id="basic-addon2">.alphacx.co</span>
+              <span className="input-group-text text-muted" id="basic-addon2">
+                
+                { environment === 'development'? ".alphacx.co" : ".qustomar.com"}
+                </span>
           </div>          
 
           <div className="haveAnAccou">
