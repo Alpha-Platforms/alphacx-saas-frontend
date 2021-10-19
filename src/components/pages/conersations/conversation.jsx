@@ -173,12 +173,11 @@ function Conversation({user, ...props}) {
       setTickets(data?.data?.tickets);
       setWsTickets(data?.data?.tickets);
     });
-    
     AppSocket.io.on(`ws_ticket`, (data) => {
       let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, ticketsData);
     });
-    return () => { AppSocket.io.disconnect()};
+    // return () => { AppSocket.io.disconnect()};
   },[]);
 
   useEffect(() => {
