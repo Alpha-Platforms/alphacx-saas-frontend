@@ -49,11 +49,11 @@ export const updateLivechatConfig = (newLivechatConfig, success, failed) => (dis
 				type: types.UPDATE_LIVECHAT_CONFIG
 			});
         } else {
-            failed && failed();
+            failed && failed('');
         }
     }).catch(err => {
         dispatch(returnErrors(err.response?.data, err.response?.status));
-        failed && failed();
+        failed && failed(err.response?.message || '');
     });
 }
 
