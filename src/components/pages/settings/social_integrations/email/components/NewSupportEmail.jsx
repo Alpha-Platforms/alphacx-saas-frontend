@@ -2,13 +2,13 @@ import React from "react";
 import { useState, useEffect } from "react";
 import "./newSupportEmail.scss";
 import UseOwnEmail from "./UseOwnEmail";
-import RightArrow from "../../../../../assets/imgF/arrow_right.png";
-import { httpPatchMain } from "../../../../../helpers/httpMethods";
+import RightArrow from "../../../../../../assets/imgF/arrow_right.png";
+import { httpPatchMain } from "../../../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import { Modal } from "react-responsive-modal";
 import { Link } from "react-router-dom";
 import {connect} from 'react-redux';
-import { getConfigs } from './../../../../../reduxstore/actions/configActions';
+import { getConfigs } from '../../../../../../reduxstore/actions/configActions';
 
 const NewSupportEmail = ({configs, getConfigs}) => {
   const [defaultServer, setDefaultServer] = useState(false);
@@ -26,7 +26,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
 
   const handleClose = () => {
     setShow(false);
-    window.location.href = "/settings/email";
+    window.location.href = "/settings/integrations/email";
   };
   const handleShow = () => setShow(true);
 
@@ -108,7 +108,11 @@ const NewSupportEmail = ({configs, getConfigs}) => {
               <span className="text-custom">Settings</span>
             </Link>{" "}
             <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
-            <Link to="/settings/email">
+            <Link to="/settings/integrations">
+                <span className="text-custom">Integrations</span>
+            </Link>{" "}
+            <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
+            <Link to="/settings/integrations/email">
               <span className="text-custom">Email</span>{" "}
             </Link>
             <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />

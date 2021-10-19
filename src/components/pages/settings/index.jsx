@@ -7,7 +7,6 @@ import AgentLightIcon from "../../../assets/icons/agent_light.svg";
 import AutomationIcon from "../../../assets/icons/Automation.svg";
 import ShieldIcon from "../../../assets/icons/Shield-Done.svg";
 import DepartmentLightIcon from "../../../assets/icons/department_light.svg";
-import MailLightIcon from "../../../assets/icons/mail_light.svg";
 import FieldsLightIcon from "../../../assets/icons/fields_light.svg";
 import FormsLightIcon from "../../../assets/icons/forms_light.svg";
 import HierarchyLightIcon from "../../../assets/icons/heirarchy_light.svg";
@@ -140,27 +139,7 @@ function SettingsHome({signedUser}) {
             </Link>
           </div>
         </Col>
-        <Col sm={6} md={4} className="settings-menu-item">   
-          <div className="border rounded bg-light">
-            <Link
-              to="/settings/email"
-              className="d-block cursor text-decoration-none"
-            >
-              <div className="d-flex p-md-4">
-                <div className="">
-                  <img src={MailLightIcon} alt="" />
-                </div>
-                <div className="ms-3">
-                  <h6 className="text-dark mb-0">Email</h6>
-                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                    Configure inbound and outbound email settings for your
-                    organization.
-                  </p>
-                </div>
-              </div>
-            </Link>
-          </div>
-        </Col>
+        
         {/*   ROLES */}
         {/*<Col sm={6} md={4} className="settings-menu-item">    <div className="border rounded bg-light">
           <Link
