@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState} from "react";
-import Gmail from "../../../../../assets/imgF/gmail.png";
-import OtherMail from "../../../../../assets/imgF/otherMail.png";
-import MicrosoftOffice from "../../../../../assets/imgF/microsoftOffice.png";
+import Gmail from "../../../../../../assets/imgF/gmail.png";
+import OtherMail from "../../../../../../assets/imgF/otherMail.png";
+import MicrosoftOffice from "../../../../../../assets/imgF/microsoftOffice.png";
 import {connect} from 'react-redux';
 
 const UseOwnEmail = ({emailState, setEmailState}) => {

@@ -48,8 +48,8 @@ import {SocketDataProvider} from "./context/socket";
 import ArticleList from "./components/pages/help_center/help_pages/articleList";
 import ArticleCategoryList from "./components/pages/help_center/help_pages/categoryList";
 import Article from "./components/pages/help_center/help_pages/article";
-import EmailSettings from "./components/pages/settings/email/emailSettings";
-import SettingsEmail from "./components/pages/settings/email/emailSettings";
+import EmailSettings from "./components/pages/settings/social_integrations/email";
+import SettingsEmail from "./components/pages/settings/social_integrations/email";
 import UserList from "./components/pages/settings/users/UserList";
 import UserPersonal from "./components/pages/settings/users/UserPersonal";
 import Fields from "./components/pages/settings/fields/Fields";
@@ -321,12 +321,12 @@ const SiteRouter = connect(mapStateToProps, {
                                 component={LiveChatSettings}/>
                             <SettingsLayoutRoute
                                 exact
-                                path="/settings/email"
+                                path="/settings/integrations/email"
                                 pageName="Settings"
                                 component={SettingsEmail}/>
                             <SettingsLayoutRoute
                                 exact
-                                path="/settings/email/:action"
+                                path="/settings/integrations/email/:action"
                                 pageName="Settings"
                                 component={SettingsEmail}/>
 

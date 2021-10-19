@@ -12,6 +12,7 @@ import { httpPatchMain, httpPostMain, httpGetMain, httpGet} from "../../../../he
 import { hideLoader, showLoader } from "../../../helpers/loader";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
 import AccountLightIcon from "../../../../assets/icons/Social-blurb.svg";
+import MailLightIcon from "../../../../assets/icons/mail_light.svg";
 
 import { NotificationManager } from "react-notifications";
 
@@ -105,6 +106,28 @@ export default function SocialIntegrations() {
                   <h6 className="text-dark mb-0"> SMS by Twilio</h6>
                   <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
                     Connect your to users, via SMS permissions
+                  </p>
+                </div>
+                <div className="">
+                  <Badge className="acx-bg-gray-100 text-muted px-3 py-2">Connect</Badge>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </div>
+      </div>
+      <div className="col-md-4 col-sm-6 col-12">
+        <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
+          <Link to="/settings/integrations/email" className="d-block cursor text-decoration-none">
+            <div className="d-flex align-items-start p-md-4 p-3">
+              <div className="w">
+                <img src={MailLightIcon} alt="" width="38"/>
+              </div>
+              <div className="ms-3 d-flex justify-content-between align-items-start">
+                <div className="me-2">
+                  <h6 className="text-dark mb-0">Email to Ticket</h6>
+                  <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
+                    Set up email server parameters to receive mails as tickets
                   </p>
                 </div>
                 <div className="">

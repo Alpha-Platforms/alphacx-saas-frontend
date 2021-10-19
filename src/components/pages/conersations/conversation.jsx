@@ -192,14 +192,24 @@ function Conversation({user, ...props}) {
           type: "reply",
           user: data.user,
         };
-        setMsgHistory((item) => [...item, msg]);
+        if (data?.channel === "livechat") {
+          setMsgHistory((item) => {
+            if (item[item.length - 1]?.id === msg?.id) {
+              return item;
+            } else {
+              return [...item, msg];
+            }
+          });
+        } else {
+          setMsgHistory((item) => [...item, msg]);
+        }
       }
       let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, ticketsData);
       scollPosSendMsgList();
     });
 
-    return () => { AppSocket.io.disconnect()};
+    // return () => { AppSocket.io.disconnect()};
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ticketId]);
 

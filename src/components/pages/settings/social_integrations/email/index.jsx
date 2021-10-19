@@ -3,18 +3,17 @@ import {useEffect} from "react";
 import {useState} from "react";
 import {useParams} from "react-router-dom";
 import NewSupportEmail from "./components/NewSupportEmail";
-import RightArrow from "../../../../assets/imgF/arrow_right.png";
+import RightArrow from "../../../../../assets/imgF/arrow_right.png";
 import {Link, useHistory} from "react-router-dom";
-import {ReactComponent as EmailEmptySvg} from '../../../../assets/icons/Email-Empty.svg';
 import {connect} from 'react-redux';
 import MaterialTable from "material-table";
-import tableIcons from "../../../../assets/materialicons/tableIcons";
+import tableIcons from "../../../../../assets/materialicons/tableIcons";
 import {
   ThemeProvider as MuiThemeProvider,
   createTheme,
 } from "@material-ui/core/styles";
 import { Dropdown } from "react-bootstrap";
-import { ReactComponent as DotSvg } from "../../../../assets/icons/dots.svg";
+import { ReactComponent as DotSvg } from "../../../../../assets/icons/dots.svg";
 
 import "./settingsEmail.scss";
 
@@ -67,7 +66,7 @@ const EmailSettings = ({configs, isConfigsLoaded}) => {
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <Dropdown.Item eventKey="1">
-                  <Link to="/settings/email/email-form">
+                  <Link to="/settings/integrations/email/email-form">
                     <span className="black-text">Edit</span>
                   </Link>
                 </Dropdown.Item>
@@ -83,7 +82,7 @@ const EmailSettings = ({configs, isConfigsLoaded}) => {
       useEffect(() => {
         if(isConfigsLoaded){
           if (!configs?.email_config?.email && !configs?.email_config?.host && !configs?.email_config?.port) {
-            history.push('/settings/email/email-form');
+            history.push('/settings/integrations/email/email-form');
           }
 
           console.log('EMAIL CONFIGS => ', configs);
@@ -101,6 +100,10 @@ const EmailSettings = ({configs, isConfigsLoaded}) => {
                             <Link to="/settings">
                                 <span className="text-custom">Settings</span>
                             </Link>{" "}
+                            <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
+                            <Link to="/settings/integrations">
+                                <span className="text-custom">Integrations</span>
+                            </Link>{" "}
                             <img src={RightArrow} alt="" className="img-fluid mx-2 me-3"/> {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
                             className="img-fluid mx-2 me-3"></object> */}
                             <span>Email</span>
@@ -114,7 +117,7 @@ const EmailSettings = ({configs, isConfigsLoaded}) => {
                 <span>Advanced Settings</span>
               </span>
             </a> */}
-                            <button disabled={true} className="btn btn-primary btn-sm ms-2" to="/settings/email/email-form">
+                            <button disabled={true} className="btn btn-primary btn-sm ms-2" to="/settings/email/integrations/email-form">
                                 <span>New support email</span>
                             </button>
                         </div>
