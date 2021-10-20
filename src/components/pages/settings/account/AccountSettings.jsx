@@ -29,14 +29,11 @@ const AccountSettings = () => {
     two_factor: false
   });
 
-  const [domain, setDomain] = useState("")
-
 
   useEffect(() => {
     getUserInfo();
     setRSCountries(() => countries.map(item => ({value: item.name, label: item.name})))
     setRSLanguage(() => languages.map(item => ({value: item.name, label: item.name})))
-    setDomain(window.localStorage.getItem("domain"))
   }, []);
 
   useEffect(() => {
@@ -66,6 +63,7 @@ const AccountSettings = () => {
 
   const getUserInfo = async () => {
     setAccountLoading(true);
+    const domain = window.localStorage.getItem("domain")
     const res = await httpGet(`auth/tenant-info/${domain}`);
     setAccountLoading(false);
 
@@ -93,6 +91,7 @@ const AccountSettings = () => {
       region
     }
 
+    const domain = window.localStorage.getItem("domain")
     const res = await httpPatch(`auth/tenant-info/${domain}`, payload);
 
     setAccountLoading(false);
