@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {ReactComponent as HamburgerSvg} from '../../../../../assets/icons/hamburger.svg';
 // import {ReactComponent as FormMinusSvg} from '../../../../../assets/icons/form-minus.svg';
 import {ReactComponent as DeleteGreySvg} from '../../../../../assets/icons/Delete-grey.svg';
@@ -12,6 +12,8 @@ const TicketStatusTab = ({statuses}) => {
     const [addModalShow, setAddModalShow] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editInfo, setEditInfo] = useState(null);
+
+    const [newStatus, addNewStatus] = useState(statuses)
 
     const openAddStage = () => {
         setAddModalShow(true)
@@ -38,7 +40,7 @@ const TicketStatusTab = ({statuses}) => {
                             <div className="text-center ">
                                 <div className="fieldsWrapper pb-3" id="ticketFieldWrapper">
 
-                                    {statuses && statuses.map(({status, id}, idx) => <div key={idx} className="fieldParent d-flex my-2">
+                                    {statuses && newStatus.map(({status, id}, idx) => <div key={idx} className="fieldParent d-flex my-2">
                                         {/* <button
                                             type="button"
                                             className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
@@ -69,7 +71,9 @@ const TicketStatusTab = ({statuses}) => {
                                     {/* <button
                                         className="btn btn-link text-decoration-none text-at-blue-light" disabled={true} onClick={openAddStage}>+ Add Stage</button> */}
                                     <button
-                                        className="btn btn-link text-decoration-none btn-sm disabled border" disabled={true} onClick={openAddStage}>+ Add Stage</button>
+                                        className="btn btn-link text-decoration-none btn-sm border" 
+                                        disabled={false} 
+                                        onClick={openAddStage}>+ Add Stage</button>
                                 </div>
 
                             </div>
@@ -80,7 +84,13 @@ const TicketStatusTab = ({statuses}) => {
 
             </div>
 
-            <AddStatusModal createModalShow={addModalShow} setCreateModalShow={setAddModalShow} isEditing={isEditing} editInfo={editInfo} />
+            <AddStatusModal 
+                createModalShow={addModalShow} 
+                setCreateModalShow={setAddModalShow} 
+                isEditing={isEditing} 
+                editInfo={editInfo} 
+                setStatuses={addNewStatus}
+            />
         </div>
     )
 }

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Modal} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {ReactComponent as HamburgerSvg} from '../../../../../assets/icons/hamburger.svg';
@@ -7,13 +7,14 @@ import {ReactComponent as HamburgerSvg} from '../../../../../assets/icons/hambur
 // import {ReactComponent as EditGreySvg} from '../../../../../assets/icons/Edit-grey.svg';
 import {ReactComponent as FormMinusSvg} from '../../../../../assets/icons/form-minus.svg';
 import {uuid} from '../../../../../helper';
-import { updateStatus } from './../../../../../reduxstore/actions/statusActions';
+import { updateStatus, addStatus } from './../../../../../reduxstore/actions/statusActions';
 import {NotificationManager} from 'react-notifications';
 import { setCurrentAgentLoading } from './../../../../../reduxstore/actions/agentActions';
+import { httpPostMain } from 'helpers/httpMethods';
 
-const AddStatusModal = ({createModalShow, setCreateModalShow, isEditing, editInfo, updateStatus}) => {
-    const [modalStatus,
-        setModalStatus] = useState({id: '', status: ''});
+const AddStatusModal = ({createModalShow, setCreateModalShow, isEditing, editInfo, updateStatus, addStatus, setStatuses}) => {
+    
+    const [modalStatus, setModalStatus] = useState({id: '', status: ''});
     const [editing, setEditing] = useState(false);
 
     const handleInputChange = e => {
@@ -59,10 +60,30 @@ const AddStatusModal = ({createModalShow, setCreateModalShow, isEditing, editInf
         NotificationManager.error('An error occurred', 'Error');
     }
 
-    const handleStatusUpdate = () => {
+    const handleStatusUpdate = async () => {
         setEditing(true);
         const {id, status} = modalStatus;
-        updateStatus(id, {status}, updateSuccess, updateFailed);
+
+        if (id) {
+            updateStatus(id, {status}, updateSuccess, updateFailed);
+
+        } else {
+            const data = {status}
+            const res = await httpPostMain("statuses", JSON.stringify(data));
+            setEditing(false);
+            setCreateModalShow(false);
+            
+            if (res?.status === "success") {                
+                setStatuses(prev => [...prev, res.data])
+            } else {
+                return NotificationManager.error(res?.er?.message, "Error Adding Status", 4000);
+            }
+
+            // addStatus({status})
+            // get back to 👆🏽 later. Status change must be instantanous!
+        }
+
+
     }
 
     //create user modal
@@ -93,12 +114,28 @@ const AddStatusModal = ({createModalShow, setCreateModalShow, isEditing, editInf
 
                         <div className="text-end">
                             <button
-                                style={{
-                                borderColor: "var(--at-blue-light)"
-                            }}
+                                style={{borderColor: "var(--at-blue-light)"}}
                                 className="btn btn-sm btn-outline-secondary px-3 me-2 text-at-blue-light reset-btn-outline"
-                                type="button" onClick={handleCancelClick}>Cancel</button>
-                            {!isEditing ? <button type="button" className="btn btn-custom btn-sm  px-3 d-inline-block">Add Stage</button> : <button onClick={handleStatusUpdate} type="button" disabled={editing} className="btn btn-custom btn-sm  px-3 d-inline-block">{editing ? 'Editing...' : 'Edit'} Stage</button>}
+                                type="button" onClick={handleCancelClick}>
+                                Cancel
+                            </button>
+
+                            {!isEditing ? 
+                                <button 
+                                    onClick={handleStatusUpdate} 
+                                    type="button" 
+                                    className="btn btn-custom btn-sm  px-3 d-inline-block">
+                                    Add Stage
+                                </button> 
+                            :
+                                <button 
+                                    onClick={handleStatusUpdate} 
+                                    type="button" 
+                                    disabled={editing} 
+                                    className="btn btn-custom btn-sm  px-3 d-inline-block">
+                                    {editing ? 'Editing...' : 'Edit'} Stage
+                                </button>
+                            }
 
                         </div>
 
@@ -111,4 +148,4 @@ const AddStatusModal = ({createModalShow, setCreateModalShow, isEditing, editInf
 
 const mapStateToProps = (state, ownProps) => ({});
 
-export default connect(mapStateToProps, {updateStatus})(AddStatusModal);
+export default connect(mapStateToProps, {updateStatus, addStatus})(AddStatusModal);
