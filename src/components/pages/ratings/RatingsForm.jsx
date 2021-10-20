@@ -26,9 +26,9 @@ export default function RatingsForm() {
     const [comment, setComment] = useState("");
     const [processing, setProcessing] = useState(false);
     const [ratingsConfig, setRatingsConfig] = useState({
-        "npsLabel": "How likely are you to recommend IFlux to a friend or colleague?",
         "ratingLabel": "Satisfied with our customer support service? Click on the stars below to rate us.",
-        "commentLabel": "Tell us what we can improved upon"
+        "commentLabel": "Tell us what we can improved upon",
+        "npsLabel": "How likely are you to recommend us to a friend or colleague?"
     });
     // 
     const [showModal, setShowModal] = useState(false);

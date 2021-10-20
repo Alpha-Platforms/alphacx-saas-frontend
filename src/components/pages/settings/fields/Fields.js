@@ -177,10 +177,10 @@ const Fields = () => {
                 <div id="mainContentHeader">
                     <h6 className="text-muted f-14">
                         <Link to="/settings">
-                            <span className="text-custom">Settings</span>
-                        </Link>{" "}
-                        <i className="bi bi-chevron-right"></i>
-                        <span className="">Fields</span>
+                            <span className="text-custom me-2">Settings</span>
+                        </Link>
+                        <i className="bi bi-chevron-right mx-2"></i>
+                        <span className="ms-2"> Fields</span>
                     </h6>
                 </div>
 
