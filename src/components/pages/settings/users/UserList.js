@@ -39,7 +39,7 @@ const UserList = ({
   admins,
   supervisors,
   isAgentsLoaded,
-  groups,
+  // groups,
   negateActiveState,
   isAdminsLoaded,
   isSupervisorLoaded,
@@ -64,6 +64,9 @@ const UserList = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [isUserAuthenticated]);
 
+  useEffect(() => {
+    console.log(admins);
+  },[]);
   // useEffect(() => {
   //   setUserLoading(!agents);
   //   if (isAgentsLoaded) {
@@ -251,7 +254,15 @@ const UserList = ({
                   },
                   {
                     title: "Team",
-                    field: "group",
+                    field: "groups",
+                    render: rowData => (
+                      <div className={"table-tags"}>
+                        {rowData.groups.map( (item, index) => 
+                          ( index <= 1 && (<span className="badge rounded-pill acx-bg-gray-30 px-3 py-2 me-1 my-1">{item.name}</span>) )
+                        )}
+
+                        {(rowData.groups.length > 2)? <span className="badge rounded-pill text-muted border px-2 py-1 my-1">{`+${rowData.groups.length-2}`}</span> : ""}
+                      </div>),
                   },
                   {
                     title: "Created",
@@ -261,7 +272,7 @@ const UserList = ({
                     title: "Active",
                     field: "action",
                     render: (rowData) => (
-                      <div class="form-check form-switch">
+                      <div className="form-check form-switch">
                         <input
                           className="form-check-input form-check-input-lg mt-1"
                           checked={rowData.isActivated}
@@ -303,7 +314,7 @@ const UserList = ({
                     role,
                     company,
                     email,
-                    group,
+                    groups,
                     created_at,
                     isActivated,
                     id,
@@ -314,9 +325,10 @@ const UserList = ({
                     emailAddress: email,
                     role,
                     // group: 'Head Office',
-                    group: groups.filter((x) => x.id === group_id)[0]?.name
-                      ? groups.filter((x) => x.id === group_id)[0]?.name
-                      : "",
+                    // groups: groups.filter((x) => x.id === group_id)[0]?.name
+                    //   ? groups.filter((x) => x.id === group_id)[0]?.name
+                    //   : "",
+                    groups,
                     created: moment(created_at).format('DD MMM, YYYY'),
                     // created: "13 Apr 2021",
                     contact: { firstname, lastname, id, avatar },
@@ -392,7 +404,7 @@ const mapStateToProps = (state, ownProps) => ({
   isAgentsLoaded: state.agent.isAgentsLoaded,
   isAdminsLoaded: state.admin.isAdminsLoaded,
   isSupervisorLoaded: state.supervisor.isSupervisorsLoaded,
-  groups: state.group.groups,
+  // groups: state.group.groups,
   isUserAuthenticated: state.userAuth.isUserAuthenticated
 });
 

@@ -221,8 +221,6 @@ const GroupList = ({ groups, categories, isGroupsLoaded }) => {
 
                     render: rowData => (
                       <div className={"table-tags"}>
-                        
-
                         {rowData.category.map( (item, index) => 
                           ( index <= 1 && (<span className="badge rounded-pill acx-bg-gray-30 px-3 py-2 me-1 my-1">{item.category.name}</span>) )
                         )}

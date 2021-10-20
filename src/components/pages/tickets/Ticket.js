@@ -888,116 +888,118 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                           </div>
                         </Fragment>
                         {/* CHAT COMMENT BOX SECTION */}
-                        <div id="ticketConvoEditorBox" className="conversationCommentBox">
-                          <div className="single-chat-ckeditor position-relative">
-                            <div
-                              className="showBackArrowOnMobile"
-                              onClick={() =>
-                                setChatCol({ col1: "showColOne", col2: "hideColTwo" })
-                              }
-                            >
-                              <img src={BackArrow} alt="" />
-                            </div>
-                            <div className="ticket-convo-editor">
-                              <div className="position-absolute ps-1 pt-1 bg-white rounded-top border w-100" style={{"zIndex": "2"}}>
-                                <Form.Check
-                                  inline
-                                  label="Reply"
-                                  value="reply"
-                                  name="reply_type"
-                                  checked={replyType === "reply"}
-                                  onChange={onReplyTypeChange}
-                                  type="radio"
-                                  id={`inline-response_type-1`}
-                                />
-                                <Form.Check
-                                  inline
-                                  label="Comment"
-                                  value="note"
-                                  name="reply_type"
-                                  checked={replyType === "note"}
-                                  onChange={onReplyTypeChange}
-                                  type="radio"
-                                  id={`inline-response_type-2`}
+                        {(ticket[0].status.status === "Closed")? "" : 
+                          <div id="ticketConvoEditorBox" className="conversationCommentBox">
+                            <div className="single-chat-ckeditor position-relative">
+                              <div className="showBackArrowOnMobile"
+                                    onClick={() =>
+                                      setChatCol({ col1: "showColOne", col2: "hideColTwo" })
+                                    }
+                                >
+                                <img src={BackArrow} alt="" />
+                              </div>
+                              <div className="ticket-convo-editor">
+                                <div className="position-absolute ps-1 pt-1 bg-white rounded-top border w-100" style={{"zIndex": "2"}}>
+                                  <Form.Check
+                                    inline
+                                    label="Reply"
+                                    value="reply"
+                                    name="reply_type"
+                                    checked={replyType === "reply"}
+                                    onChange={onReplyTypeChange}
+                                    type="radio"
+                                    id={`inline-response_type-1`}
+                                  />
+                                  <Form.Check
+                                    inline
+                                    label="Comment"
+                                    value="note"
+                                    name="reply_type"
+                                    checked={replyType === "note"}
+                                    onChange={onReplyTypeChange}
+                                    type="radio"
+                                    id={`inline-response_type-2`}
+                                  />
+                                </div>
+                                <Editor
+                                  disabled={(ticket[0].status.status === "Closed")? true : false}
+                                  readOnly={(ticket[0].status.status === "Closed")? true : false}
+                                  editorState={editorState}
+                                  toolbar={{
+                                    options: ["emoji", "inline", "image"],
+
+                                    inline: {
+                                      inDropdown: false,
+                                      className: undefined,
+                                      component: undefined,
+                                      dropdownClassName: undefined,
+                                      options: ["bold", "italic", "underline"],
+                                      bold: { icon: boldB, className: undefined },
+                                      italic: { icon: TextItalic, className: undefined },
+                                      underline: {
+                                        icon: TextUnderline,
+                                        className: undefined,
+                                      },
+                                    },
+
+                                    image: {
+                                      icon: editorImg,
+                                      className: undefined,
+                                      component: undefined,
+                                      popupClassName: undefined,
+                                      urlEnabled: true,
+                                      uploadEnabled: true,
+                                      alignmentEnabled: true,
+                                      uploadCallback: _uploadImageCallBack,
+                                      previewImage: true,
+                                      inputAccept:
+                                        "image/gif,image/jpeg,image/jpg,image/png,image/svg",
+                                      alt: { present: false, mandatory: false },
+                                      defaultSize: {
+                                        height: "auto",
+                                        width: "auto",
+                                      },
+                                    },
+                                    emoji: {
+                                      icon: Smiley,
+                                    },
+                                    blockType: {
+                                      inDropdown: true,
+                                    },
+
+                                    list: {
+                                      inDropdown: true,
+                                    },
+
+                                    link: {
+                                      inDropdown: true,
+                                    },
+
+                                    history: {
+                                      inDropdown: true,
+                                    },
+                                  }}
+                                  toolbarClassName="toolbarClassName"
+                                  wrapperClassName="wrapperClassName"
+                                  editorClassName="editorClassName"
+                                  onEditorStateChange={(editor) =>
+                                    onEditorStateChange(editor)
+                                  }
                                 />
                               </div>
-                              <Editor
-                                disabled={(ticket[0].status.status === "Closed")? true : false}
-                                readOnly={(ticket[0].status.status === "Closed")? true : false}
-                                editorState={editorState}
-                                toolbar={{
-                                  options: ["emoji", "inline", "image"],
 
-                                  inline: {
-                                    inDropdown: false,
-                                    className: undefined,
-                                    component: undefined,
-                                    dropdownClassName: undefined,
-                                    options: ["bold", "italic", "underline"],
-                                    bold: { icon: boldB, className: undefined },
-                                    italic: { icon: TextItalic, className: undefined },
-                                    underline: {
-                                      icon: TextUnderline,
-                                      className: undefined,
-                                    },
-                                  },
-
-                                  image: {
-                                    icon: editorImg,
-                                    className: undefined,
-                                    component: undefined,
-                                    popupClassName: undefined,
-                                    urlEnabled: true,
-                                    uploadEnabled: true,
-                                    alignmentEnabled: true,
-                                    uploadCallback: _uploadImageCallBack,
-                                    previewImage: true,
-                                    inputAccept:
-                                      "image/gif,image/jpeg,image/jpg,image/png,image/svg",
-                                    alt: { present: false, mandatory: false },
-                                    defaultSize: {
-                                      height: "auto",
-                                      width: "auto",
-                                    },
-                                  },
-                                  emoji: {
-                                    icon: Smiley,
-                                  },
-                                  blockType: {
-                                    inDropdown: true,
-                                  },
-
-                                  list: {
-                                    inDropdown: true,
-                                  },
-
-                                  link: {
-                                    inDropdown: true,
-                                  },
-
-                                  history: {
-                                    inDropdown: true,
-                                  },
-                                }}
-                                toolbarClassName="toolbarClassName"
-                                wrapperClassName="wrapperClassName"
-                                editorClassName="editorClassName"
-                                onEditorStateChange={(editor) =>
-                                  onEditorStateChange(editor)
-                                }
-                              />
-                            </div>
-
-                            <div className="sendMsg">
-                              <button
-                                disabled={(sendingReply)? true : (ticket[0].status.status === "Closed")? true : false}
-                                onClick={() => replyTicket(ReplyTicket, "attachment")}
-                              >
-                                <SendMsgIcon /> Send
-                              </button>
+                              <div className="sendMsg">
+                                <button
+                                  disabled={(sendingReply)? true : (ticket[0].status.status === "Closed")? true : false}
+                                  onClick={() => replyTicket(ReplyTicket, "attachment")}
+                                >
+                                  <SendMsgIcon /> Send
+                                </button>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        }
+                        {/*  */}
                       </div>
                     )}
                   </div>
