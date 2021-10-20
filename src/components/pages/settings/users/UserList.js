@@ -64,9 +64,9 @@ const UserList = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [isUserAuthenticated]);
 
-  // useEffect(() => {
-  //   console.log(admins);
-  // },[]);
+  useEffect(() => {
+    console.log(admins);
+  },[]);
   // useEffect(() => {
   //   setUserLoading(!agents);
   //   if (isAgentsLoaded) {
@@ -314,7 +314,7 @@ const UserList = ({
                     role,
                     company,
                     email,
-                    group,
+                    groups,
                     created_at,
                     isActivated,
                     id,
@@ -325,10 +325,10 @@ const UserList = ({
                     emailAddress: email,
                     role,
                     // group: 'Head Office',
-                    group: groups.filter((x) => x.id === group_id)[0]?.name
-                      ? groups.filter((x) => x.id === group_id)[0]?.name
-                      : "",
-                    // groups,
+                    // group: groups.filter((x) => x.id === group_id)[0]?.name
+                    //   ? groups.filter((x) => x.id === group_id)[0]?.name
+                    //   : "",
+                    group: groups.map( (item, index) => <span>{`${item.group.name}${groups.length-1 > index? ", ":" "}`}</span>),
                     created: moment(created_at).format('DD MMM, YYYY'),
                     // created: "13 Apr 2021",
                     contact: { firstname, lastname, id, avatar },
