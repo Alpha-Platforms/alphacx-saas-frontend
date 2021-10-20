@@ -349,7 +349,7 @@ const Fields = () => {
                                     : ""}
                                 </Row>
                                 <div className="text-end">
-                                    <Button type="button" className="acx-btn-outline-primary border px-4 me-3">
+                                    <Button onClick={() => setAddModalShow(false)} type="button" className="acx-btn-outline-primary border px-4 me-3">
                                         Cancel
                                     </Button>
                                     <Button type="button" className="acx-btn-primary px-4" disabled={processing} onClick={handleSubmit}>
