@@ -69,7 +69,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
 
     const handleCustomerCreation = async () => {
         const {firstname, lastname, workphone, emailaddress, organisation, ccode} = modalInputs;
-        if (!firstname || !lastname || !workphone || !emailaddress) {
+        if (!firstname || !lastname || !emailaddress) {
             NotificationManager.error("Fill up the required fields", 'Error');
         } else {
             setCreatingCust(true);

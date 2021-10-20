@@ -60,13 +60,12 @@ const CreateUserModal = ({
     const handleUserCreation = () => {
         const {firstName, lastName, email, teams, role, phoneNumber} = modalInputs;
 
-        if (!firstName || !lastName || !email || teams.length === 0  || !phoneNumber) {
+        if (!firstName || !lastName || !email || teams.length === 0) {
             // all field not available
             NotificationManager.error('All fields are required', 'Error');
         } else {
             setCreatingUser(true);
-            // all fields are passed
-
+            
             // The request function
             addAgent({firstName, lastName, email, groupIds: teams, role, phoneNumber});
         }
