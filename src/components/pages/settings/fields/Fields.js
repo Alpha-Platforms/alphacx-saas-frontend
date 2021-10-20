@@ -35,7 +35,9 @@ const Fields = () => {
     const [customFieldOptions, setCustomFieldOptions] = useState({
         selected: false,
         multiple: false,
-        options: []
+        options: [
+            {"option": ""}
+        ]
     });
     // 
     const [customFieldData, setCustomFieldData] = useState([]);
@@ -111,6 +113,43 @@ const Fields = () => {
         setCustomFields((prevState) => ({
             ...prevState,
             "belongsTo": tab.split("-")[0]
+        }));
+    }
+
+
+    // 
+    const handleOptionChange = (e, i) => {
+        let newFieldOptionsValue = [...customFieldOptions.options];
+        let value = e.target.value;
+
+        newFieldOptionsValue.splice(i, 1, value);
+
+        setCustomFieldOptions((prevState) => ({
+            ...prevState,
+            options: [
+                ...newFieldOptionsValue
+            ]
+        }));
+    }
+
+    const addCustomFieldsOptions = () => {
+        setCustomFieldOptions((prevState) => ({
+            ...prevState,
+            options: [
+                ...prevState.options, 
+                { option: "" }
+            ]
+        }));
+    }
+
+    const removeCustomFieldsOptions = (i) => {
+        let newCustomFieldOptions = [...customFieldOptions.options];
+        newCustomFieldOptions.splice(i, 1);
+        setCustomFieldOptions((prevState) => ({
+            ...prevState,
+            options: [
+                ...newCustomFieldOptions
+            ]
         }));
     }
 
@@ -260,19 +299,23 @@ const Fields = () => {
                                     <div className="mt-3" id="fieldOptionsWrapper">
                                         <label className="f-12 d-block">Options</label>
                                         <div className="optionsWrapper" id="optionsWrapper">
-                                            <div className="d-flex align-items-center my-2">
-                                                <button type="button" className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
-                                                    <HamburgerSvg/>
-                                                </button>
-                                                <div className="flex-grow-1 mx-1">
-                                                    <input type="text" name="field-option" className="form-control form-control-sm" />
-                                                </div>
-                                                <Button className="acx-btn-icon rounded-circle" type="button">
-                                                    <i className="bi-dash-circle text-danger" title="delete "></i> 
-                                                </Button>
-                                            </div>
+                                            {customFieldOptions.options.map((element, index) => (
+                                                <Form.Group className="d-flex align-items-center my-2 form-group acx-form-group" key={index}>
+                                                    <button type="button" className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
+                                                        <HamburgerSvg/>
+                                                    </button>
+                                                    <div className="flex-grow-1 mx-1">
+                                                        <Form.Control defaultValue={element.option} onChange={(e) => handleOptionChange(e, index)} type="text" size="sm" name="field-option" className="" />
+                                                    </div>
+                                                    { index ? 
+                                                        <Button onClick={() => removeCustomFieldsOptions(index)} className="acx-btn-icon rounded-circle" type="button">
+                                                            <i className="bi-dash-circle text-danger" title="delete "></i> 
+                                                        </Button>
+                                                    : null }
+                                                </Form.Group>
+                                            ))}
                                         </div>
-                                        <button type="button" class="no-focus btn btn-link f-12 ps-0 text-decoration-none text-at-blue-light">
+                                        <button type="button" onClick={addCustomFieldsOptions} class="no-focus btn btn-link f-12 ps-0 text-decoration-none text-at-blue-light">
                                             <span className=""> + Add option </span>
                                         </button>
                                     </div>
