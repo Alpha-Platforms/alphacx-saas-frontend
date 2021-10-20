@@ -119,7 +119,7 @@ const AccountSettings = () => {
       )}
 
       <div className="card card-body bg-white border-0">
-        <div id="mainContentHeader" className="breadcrumb">
+        {/* <div id="mainContentHeader" className="breadcrumb">
           <h6 className="text-muted f-14">
             <Link to="/settings">
               <span className="text-custom">Settings</span>
@@ -127,7 +127,7 @@ const AccountSettings = () => {
             <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
             <span>Account Settings</span>
           </h6>
-        </div>
+        </div> */}
 
         <div
           className="tab-pane"

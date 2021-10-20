@@ -74,6 +74,7 @@ import TicketSettings from "./components/pages/settings/ticketsettings/TicketSet
 import AutomationSettings from "./components/pages/settings/automation/automationSettings.jsx";
 import NewAutomationPolicy from "./components/pages/settings/automation/components/NewAutomationPolicy";
 import AccountSettings from "./components/pages/settings/account/AccountSettings";
+import AccountSettingsMain from "./components/pages/settings/account/AccountSettingsMain";
 import UserProfile from "./components/pages/settings/account/UserProfile";
 import UserProfileTwo from "./components/pages/settings/account/UserProfileTwo";
 import NotificationSettings from "./components/pages/settings/notifications/NotificationSettings";
@@ -237,7 +238,7 @@ const SiteRouter = connect(mapStateToProps, {
                                 exact
                                 path="/settings/account"
                                 pageName="Account"
-                                component={AccountSettings}/>
+                                component={AccountSettingsMain}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/automations"
