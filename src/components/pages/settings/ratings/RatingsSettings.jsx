@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
-import { hideLoader, showLoader } from "../../../helpers/loader";
-import RightArrow from "../../../../assets/imgF/arrow_right.png";
-import Logo from "../../../../assets/svgicons/Logo.svg";
+// 
+import StarRatings from 'react-star-ratings';
 // 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -11,10 +10,11 @@ import Form from 'react-bootstrap/Form';
 import Button  from 'react-bootstrap/Button';
 import Image  from 'react-bootstrap/Image';
 import Spinner  from 'react-bootstrap/Spinner';
+// assets
+import { hideLoader, showLoader } from "../../../helpers/loader";
+import RightArrow from "../../../../assets/imgF/arrow_right.png";
+import Logo from "../../../../assets/svgicons/Logo.svg";
 // 
-import StarRatings from 'react-star-ratings';
-// 
-
 import { httpPatchMain, httpGetMain } from "../../../../helpers/httpMethods";
 import "../settings.css";
 // 
@@ -31,6 +31,8 @@ export default function RatingsSettings() {
         "ratingLabel": "",
         "commentLabel": ""
     });
+    let history = useHistory();
+
     useEffect(() => {
         getRatingsConfig();
     },[]);
@@ -43,7 +45,7 @@ export default function RatingsSettings() {
                 ...res?.data
             });
         } else {
-            return NotificationManager.error(res.er.message, "Error", 4000);
+            return;
         }
     };
     const handleSubmit = (e) => {
@@ -64,7 +66,8 @@ export default function RatingsSettings() {
         const res = await httpPatchMain(`settings/rating-config`, data);
             if (res.status === "success") {
             setProcessing(false);
-            return NotificationManager.success( "Labels updated successfully", "Success", 4000);
+            NotificationManager.success( "Labels updated successfully", "Success", 4000);
+            return history.push('/settings')
         } else {
             setProcessing(false);
             return NotificationManager.error(res.er.message, "Error", 4000);
@@ -157,7 +160,7 @@ export default function RatingsSettings() {
                                         {/* <a href={`https://${tenantDomain}.alphacx.co/feedback`} target="_blank" className="acx-link-primary">https://{tenantDomain}.alphacx.co/feedback/</a> */}
                                     </div>
                                     <div className="text-center">
-                                        <Button type="submit" onClick={handleSubmit} size="lg" disabled={processing} size="lg" className="px-4 acx-btn-primary"> 
+                                        <Button type="submit" onClick={handleSubmit} disabled={processing} className="px-4 acx-btn-primary"> 
                                             {(processing) ? <span className="text-light"><Spinner as="span" 
                                                     animation="border" variant="light" size="sm" role="status" 
                                                     aria-hidden="true"/> Loading...
