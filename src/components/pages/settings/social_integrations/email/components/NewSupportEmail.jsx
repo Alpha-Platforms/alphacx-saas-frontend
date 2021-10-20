@@ -23,6 +23,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
   });
   
   const [show, setShow] = useState(false);
+  const [passwordChanged, setPasswordChanged] = useState(false)
 
   const handleClose = () => {
     setShow(false);
@@ -35,11 +36,11 @@ const NewSupportEmail = ({configs, getConfigs}) => {
       setEmailState({ ...emailState, activeRadio: e.target.value });
     }
   };
+  
   const handleSubmit = async () => {
-    console.clear();
     const { email, port, tls, host, password } = emailState.emailConfig;
     const data = {
-      email_config: password ? {
+      email_config: passwordChanged ? {
         email,
         password,
         host,
@@ -56,14 +57,28 @@ const NewSupportEmail = ({configs, getConfigs}) => {
     const res = await httpPatchMain("settings/email-config", JSON.stringify(data));
 
     if (res?.status === "success") {
-      console.clear();
       handleShow();
       getConfigs();
     } else {
-      console.log('Error from notification: ', res);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
 
+  };
+
+
+  const handleConfigChange = (e) => {
+    let {name, value, type, checked} = e.target;
+    value = type === "checkbox" ? checked : value;
+    if(type === "password"){setPasswordChanged(true)}
+    
+    setEmailState({
+        ...emailState,
+        emailConfig: {
+            ...emailState.emailConfig,
+            [name]: value
+        }
+    });
+    
   };
 
   useEffect(() => {
@@ -76,28 +91,12 @@ const NewSupportEmail = ({configs, getConfigs}) => {
           host: configs?.email_config?.host || '',
           email: configs?.email_config?.email || '',
           port: configs?.email_config?.port || null,
-          // password: configs?.email_config?.password || '',
-          password: ''
+          password: configs?.email_config?.password || '',
         }
       }));
     }
   }, [configs]);
 
-
-  const handleConfigChange = (e) => {
-    let {name, value, type, checked} = e.target;
-    value = type === "checkbox"
-        ? checked
-        : value;
-
-    setEmailState({
-        ...emailState,
-        emailConfig: {
-            ...emailState.emailConfig,
-            [name]: value
-        }
-    });
-};
 
   return (
     <div className="new-support-email">
@@ -284,7 +283,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
           </div>
           <div className="d-flex justify-content-end mb-1 mt-4 save-btn">
             <Link
-              to="/settings/email"
+              to="/settings/integrations/email"
               className="btn btn-sm px-4 bg-outline-custom cancel"
             >
               Cancel
@@ -318,7 +317,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
                   <h5 className="mt-4">Successful</h5>
                   <p className="text-center">Email has been edited successfully</p>
                   <Link
-                    to="/settings/email"
+                    to="/settings/integrations/email"
                     className="btn btn-sm bg-at-blue text-white px-5 f-16"
                     id="continue"
                   >
