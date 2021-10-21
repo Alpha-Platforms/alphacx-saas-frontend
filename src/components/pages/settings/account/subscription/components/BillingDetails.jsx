@@ -70,7 +70,7 @@ const BillingDetails = () => {
                 </div>
             </div>
 
-            <div>
+            <div className="billing-address">
                 <h6>Billing Address</h6>
                 <p>12 Ozumba Mbadiwe Street, Victoria Island, Lagos</p>
             </div>
