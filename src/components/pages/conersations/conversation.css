@@ -1214,7 +1214,8 @@ select {
   padding: 0.5rem 0.5rem;
 }
 .message-out .message-text {
-  background: #eff0f299;
+  /* background: #eff0f299; */
+  background: rgba(255, 159, 67, 0.1);
   border-radius: 5px;
 }
 .message-content:not(:last-child) .message-text {
