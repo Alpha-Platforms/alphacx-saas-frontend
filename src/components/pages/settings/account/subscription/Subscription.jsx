@@ -1,10 +1,12 @@
 // @ts-nocheck
+import {Fragment} from 'react';
 import SubTop from './components/SubTop';
 import CurrentPlan from './components/CurrentPlan';
 import Summary from './components/Summary';
 import BillingDetails from './components/BillingDetails';
 import './Subscription.scss'
 import PaymentHistory from './components/PaymentHistory';
+import PaymentForm from './components/PaymentForm';
 
 const Subscription = () => {
 
@@ -18,19 +20,25 @@ const Subscription = () => {
                 <SubTop/>
             </div>
 
-            <div>
-                <p className="current-plan-text">
-                    <small>Your current plan</small>
-                </p>
+            {false
+                ? <Fragment>
+                        <div>
+                            <p className="current-plan-text">
+                                <small>Your current plan</small>
+                            </p>
 
-                <div className="payment-sect-2">
-                    <div><CurrentPlan/></div>
-                    <div><Summary/></div>
-                    <div><BillingDetails/></div>
-                </div>
-            </div>
+                            <div className="payment-sect-2">
+                                <div><CurrentPlan/></div>
+                                <div><Summary/></div>
+                                <div><BillingDetails/></div>
+                            </div>
+                        </div>
+                        <div><PaymentHistory/></div>
+                    </Fragment>
+                : <Fragment>
+                    <PaymentForm/>
+                </Fragment>}
 
-            <div><PaymentHistory /></div>
         </div>
     )
 }
