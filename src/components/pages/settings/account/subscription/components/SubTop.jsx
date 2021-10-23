@@ -4,7 +4,7 @@ import {ReactComponent as OrgNameIcon} from '../../../../../../assets/icons/orgn
 import {ReactComponent as OrgDomainIcon} from '../../../../../../assets/icons/orgdomain.svg';
 import {ReactComponent as CurrentPlanIcon} from '../../../../../../assets/icons/currentplan.svg';
 
-const SubTop = () => {
+const SubTop = ({plan}) => {
 
     return (
         <div className="subtop">
@@ -36,7 +36,7 @@ const SubTop = () => {
                 <div><CurrentPlanIcon/></div>
                 <div>
                     <span>Current Plan</span>
-                    <span>Beta</span>
+                    <span>{plan?.name || ''} ({plan?.currency || "" })</span>
                 </div>
             </div>
 

@@ -120,7 +120,6 @@
 .updateplan-btn-wrapper {
 
     & > button {
-        background: #EDEEF1;
         border-radius: 4px;
         padding: 11px 28px;
         -webkit-border-radius: 4px;
@@ -129,8 +128,17 @@
         -o-border-radius: 4px;
         font-size: 14px;
         line-height: 19px;
-        color: #888888;
+    }
+    
+    & > button:nth-child(1) {
+        color: white;
+        background: var(--at-blue-light);
+    }
 
+    & > button:nth-child(2) {
+        background-color: rgba(0, 0, 0, 0.1);
+        margin-left: 1rem;
+        color: var(--at-blue-light);
     }
 }
 
@@ -238,7 +246,6 @@
                 width: 10.6875rem;
                 height: 2.0625rem;
                 padding: 8px;
-                border: 1px solid rgba(0, 0, 0, 0.5) !important;
                 &:focus {
                     border: 1px solid #2684ff !important;
                     outline: none;
@@ -247,8 +254,9 @@
 
             button {
                 padding: 5px 22px;
-                background: #EDEEF1;
-                color: rgba(136, 136, 136, 1);
+                // background: var(--at-blue-light);
+                background: rgba(81, 183, 79, 1);
+                color: white;
                 border-radius: 4px;
                 -webkit-border-radius: 4px;
                 -moz-border-radius: 4px;
@@ -274,10 +282,15 @@
             display: block;
             width: 100%;
             padding: 10px;
-            background: rgba(237, 238, 241, 1);
-            color: rgba(136, 136, 136, 1);
+            background: var(--at-blue-light);
+            color: white;
             font-size: 16px;
-        }
+            border-radius: 4px;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -ms-border-radius: 4px;
+            -o-border-radius: 4px;
+}
     }
 }
 

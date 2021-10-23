@@ -1,7 +1,7 @@
 // @ts-nocheck
-import Select from "react-select";
+// import Select from "react-select";
 
-const CurrentPlan = () => {
+const CurrentPlan = ({plan, planState, setPlanState}) => {
     const handlePlanChange = option => {
         console.log('plan was changed');
     }
@@ -13,13 +13,21 @@ const CurrentPlan = () => {
     > Enterprise
      */
 
+    const handleUpdatePlanBtn = () => {
+        if (planState.numOfAgents <= 0) {
+            window.document.getElementById('numOfAgents')?.focus();
+            return;
+        };
+        setPlanState(prev => ({...prev, isUpdatingPlan: true}))
+    }
+
     return (
         <div className="currentplan-box">
             <div className="cp-top">
                 <div>
                     <div>
                         <label>Plan</label>
-                        <Select
+                        {/* <Select
                             name="plan"
                             className="cptop-plan"
                             options={[
@@ -27,21 +35,25 @@ const CurrentPlan = () => {
                                 {value: 'alpha', label: 'Alpha'},
                                 {value: 'enterprise', label: 'Enterprise'}
                                 ]}
-                            onChange={handlePlanChange}/>
+                            onChange={handlePlanChange}/> */}
+                        <input type="text" className="form-control" value={plan?.name || ''} defaultValue={plan?.name || ''} disabled={true} name="agentsNo"/>
                     </div>
                 </div>
                 <div>
-                    <label>Agents</label>
-                    <div><input type="number" name="agentsNo"/></div>
+                    <label htmlFor="numOfAgents">Agents</label>
+                    <div><input type="number" className="form-control" value={planState.numOfAgents} name="numOfAgents" id="numOfAgents" min={0} onChange={e => setPlanState(prev => ({...prev, numOfAgents: e.target.value }))} disabled={planState.isUpdatingPlan} /></div>
                 </div>
                 <div>
-                    <span>200 USD / month</span>
+                    <span>{`${planState.numOfAgents * plan?.monthly_amount} ${plan?.currency || 'NGN'} / month`}</span>
                 </div>
             </div>
-            <p><small>50 USD per agent / month</small></p>
+            <p>
+                <small>{plan?.monthly_amount} {plan?.currency || 'NGN'} per agent / month</small>
+            </p>
 
             <div className="updateplan-btn-wrapper">
-                <button type="button">Update Plan</button>
+                <button onClick={handleUpdatePlanBtn} type="button">Update Plan</button>
+                {planState.isUpdatingPlan && <button onClick={() => setPlanState(prev => ({...prev, isUpdatingPlan: false}))} type="button">Cancel</button>}
             </div>
 
         </div>

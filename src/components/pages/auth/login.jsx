@@ -42,7 +42,9 @@ const Login = ({match: {params}}) => {
       setDomain(hostName[0]) // if sub-domain is available it is correct else you'd get a 404
       
       const res = await httpPost(`auth/login`, {domain: hostName[0]});
-      window.localStorage.setItem("tenantId", res?.data?.id || "");
+      if (res?.status === "success") {
+        window.localStorage.setItem("tenantId", res?.data?.id || "");
+      }
 
     }
   }, [])
