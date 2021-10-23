@@ -7,5 +7,6 @@
         "techpoint",
         "twillo",
         "unscrollable"
-    ]
+    ],
+    "git.ignoreLimitWarning": true
 }
