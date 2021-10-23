@@ -29,9 +29,9 @@ const Subscription = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    console.log('plan => ', plan);
+    // console.log('plan => ', plan);
 
-    console.log('planState => ', planState);
+    // console.log('planState => ', planState);
 
     return (
         <Fragment>
@@ -59,7 +59,7 @@ const Subscription = () => {
                                         {false && <div><BillingDetails/></div>}
                                     </div>
                                 </div>
-                                <div><PaymentHistory/></div>
+                                {false && <div><PaymentHistory/></div>}
                             </Fragment>
                         : <Fragment>
                             <PaymentForm/>

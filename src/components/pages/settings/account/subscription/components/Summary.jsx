@@ -17,7 +17,6 @@ const FlutterWaveAction = ({config, isVerifying, setIsVerifying, setPlanState}) 
         <button onClick={() => {
             handleFlutterPayment({
                 callback: async (response) => {
-                    console.log('Flutterwave Response => ', response);
                     closePaymentModal() // this will close the modal programmatically
 
                     if (response?.status === "successful") {
@@ -47,10 +46,8 @@ const Summary = ({planState, setPlanState, plan}) => {
     const [isContinuing, setIsContinuing] = useState(false);
     const [isVerifying, setIsVerifying] = useState(false);
 
-    console.log('Flutterwave config => ', flutterwaveConfig);
 
     const handleBillingChange = option => {
-        console.log('Option => ', option);
         setPlanState(prev => ({
             ...prev,
             billingCycle: option
@@ -58,7 +55,6 @@ const Summary = ({planState, setPlanState, plan}) => {
     }
 
     const handleInitiatePayment = async() => {
-        console.log('Attempting to initiate payment')
 
         // body data to initiate payment
         const initPaymentBody = {
