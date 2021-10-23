@@ -17,7 +17,7 @@ import ContactFieldList from "./ContactFieldList.jsx";
 import TicketFieldList from "./TicketFieldList.jsx";
 import UserFieldList from "./UserFieldList.jsx";
 // 
-import { httpPostMain, httpGetMain } from "../../../../helpers/httpMethods";
+import { httpPostMain, httpGetMain, httpDelete, httpPatchMain } from "../../../../helpers/httpMethods";
 // styles & resources
 import '../../../../styles/Setting.css';
 import '../settings.css';
@@ -27,7 +27,7 @@ import {ReactComponent as FormMinusNeutralSvg} from '../../../../assets/icons/fo
 
 const Fields = () => {
     const [tabKey, setTabKey] = useState('user-field');
-    const [addModalShow, setAddModalShow] = useState(false);
+    const [modalShow, setModalShow] = useState(false);
     const [processing, setProcessing] = useState(false);
     // custom fields
     const [ticketFields, setTicketFields] = useState([]);
@@ -48,6 +48,10 @@ const Fields = () => {
         "belongsTo": tabKey.split("-")[0]
     });
     // 
+    const [deleteConfirm, setDeleteConfirm] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
+    const [actionId, setActionId] = useState("");
+    // 
     useEffect(() => {
         getCustomField();
     }, []);
@@ -67,7 +71,7 @@ const Fields = () => {
         }
     };
 
-    //
+    // 
     const sortCustomFields = (data) => {
         let ticketResult = data.filter((observation) => {
             return (observation.belongs_to == "ticket");
@@ -79,7 +83,7 @@ const Fields = () => {
         setUserFields(userResult);
     }
 
-    // 
+    // form field input change
     const handleChange = (e) => {
         const {name, value} = e.target;
         setCustomFields((prevState) => ({
@@ -98,6 +102,42 @@ const Fields = () => {
             }));
         }
     }
+
+    //
+    const deleteCustomField = (id) => {
+        setActionId(id);
+        setDeleteConfirm(true);
+    }
+    //
+    const editCustomField = (id) => {
+        let customField = customFieldData.find((x) => {
+            return (x.id == id);
+        });
+        // 
+        setCustomFields((prevState) => ({
+            ...prevState,
+            "fieldName": customField.field_name,
+            "fieldType": customField.field_type,
+            "required": customField.required,
+            "belongsTo": customField.belongs_to
+        }))
+
+        // 
+        setActionId(id);
+        setIsEdit(true);
+        setModalShow(true);
+    }
+    // 
+    const clearCustomFields = () => {
+        setCustomFields((prevState) => ({
+            ...prevState,
+            "fieldName": "",
+            "fieldType": "",
+            "required": false,
+            "belongsTo": tabKey.split("-")[0]
+        }))
+    };
+
 
     // 
     const handleSwitch = (e) => {
@@ -153,7 +193,7 @@ const Fields = () => {
         }));
     }
 
-    // 
+    // submit/create field
     const handleSubmit = async(e) => {
         if(customFields.fieldName == "") return NotificationManager.error("Field name cannot be empty", "Error", 4000);
         if(customFields.fieldType == "") return NotificationManager.error("Field type is requied", "Error", 4000);
@@ -161,15 +201,43 @@ const Fields = () => {
         const res = await httpPostMain(`custom-field`, customFields);
         if (res.status === "success") {
             setProcessing(false);
-            setAddModalShow(false);
+            setModalShow(false);
             setCustomFieldData((prevState) => [...prevState, res?.data]);
-            return NotificationManager.success( "Labels updated successfully", "Success", 4000);
+            return NotificationManager.success( "Custom field created successfully", "Success", 4000);
         } else {
             setProcessing(false);
             return NotificationManager.error(res.er.message, "Error", 4000);
         }
         setProcessing(false);
     }    
+    // edit field
+    const handleEdit = async() => {
+        if(customFields.fieldName == "") return NotificationManager.error("Field name cannot be empty", "Error", 4000);
+        if(customFields.fieldType == "") return NotificationManager.error("Field type is requied", "Error", 4000);
+        setProcessing(true);
+        const res = await httpPatchMain(`custom-field/${actionId}`, customFields);
+        if (res.status === "success") {
+            setProcessing(false);
+            setModalShow(false);
+            getCustomField();
+            return NotificationManager.success( "Custom field updated successfully", "Success", 4000);
+        } else {
+            setProcessing(false);
+            return NotificationManager.error(res.er.message, "Error", 4000);
+        }
+        setProcessing(false);
+    }
+    // delete field
+    const handleDelete = async() => {
+        setDeleteConfirm(false);
+        const res = await httpDelete(`custom-field/${actionId}`);
+        if (res?.status === "success") {
+            getCustomField();
+            return NotificationManager.success("Custom field deleted", "Success");
+        } else {
+            return NotificationManager.error(res.message, "Error", 4000);
+        }
+    }
 
     return (
         <div>
@@ -220,17 +288,20 @@ const Fields = () => {
                                     className="mb-3">
                                     {/* User Field Tab */}
                                     <Tab eventKey="user-field" className="px-2">
-                                        <UserFieldList fieldData={userFields} />
+                                        <UserFieldList deleteCustomField={deleteCustomField} editCustomField={editCustomField} fieldData={userFields} />
                                     </Tab>
                                     {/* Ticket Field Tab */}
                                     <Tab eventKey="ticket-field" className="px-2">
-                                        <TicketFieldList fieldData={ticketFields} />
+                                        <TicketFieldList deleteCustomField={deleteCustomField} editCustomField={editCustomField} fieldData={ticketFields} />
                                     </Tab>
                                 </Tabs>
                                 <div className="">
                                     <div className="mb-2 mt-4">
                                         <button className="btn btn-sm acx-btn-outline-primary border px-3 me-3"
-                                            onClick={() => setAddModalShow(true)}>+ Add New Field</button>
+                                            onClick={() => {
+                                                setIsEdit(false);
+                                                setModalShow(true);
+                                            }}> + Add New Field </button>
                                     </div>
                                     {/* <div className="text-end">
                                         <button type="button" className="btn btn-sm acx-btn-outline-primary border px-3 me-3">Discard Changes</button>
@@ -244,8 +315,11 @@ const Fields = () => {
             </div>
             {/* Invite user modal */}
             <Modal
-                show={addModalShow}
-                onHide={() => setAddModalShow(false)}
+                show={modalShow}
+                onHide={() => {
+                    setModalShow(false);
+                    clearCustomFields();
+                }}
                 aria-labelledby="contained-modal-title-vcenter"
                 centered>
                 <Modal.Body>
@@ -258,14 +332,17 @@ const Fields = () => {
                                     <Form.Control
                                         required
                                         onChange={handleChange}
+                                        value={customFields.fieldName}
                                         type="text"
+                                        placeholder="Unique field name"
                                         name="fieldName"
                                         id="fieldName"/>
                                 </Form.Group>
                                 
                                 <Form.Group className="form-group acx-form-group mt-3">
-                                    <Form.Label className="f-12" htmlFor="fieldCategory">Field Category</Form.Label>
+                                    <Form.Label className="f-12" htmlFor="fieldSection">Field Section</Form.Label>
                                     <CreatableSelect
+                                        id="fieldSection"
                                         className="rselectfield bg-white"
                                         menuPlacement={"top"}
                                         onChange={selectedOptions => {
@@ -282,8 +359,8 @@ const Fields = () => {
 
                                 <Form.Group className="form-group acx-form-group mt-3">
                                     <Form.Label className="f-12" htmlFor="fieldType">Field Type</Form.Label>
-                                    <Form.Select onChange={handleChange} name="fieldType" className="form-control" id="fieldType" required>
-                                        <option selected disabled>Select Type</option>
+                                    <Form.Select defaultValue={customFields.fieldType} onChange={handleChange} name="fieldType" className="form-control" id="fieldType" required>
+                                        <option value="" disabled>Select Type</option>
                                         <option value="text">Single line text</option>
                                         <option value="number">Number</option>
                                         <option value="select">Dropdown</option>
@@ -315,7 +392,7 @@ const Fields = () => {
                                                 </Form.Group>
                                             ))}
                                         </div>
-                                        <button type="button" onClick={addCustomFieldsOptions} class="no-focus btn btn-link f-12 ps-0 text-decoration-none text-at-blue-light">
+                                        <button type="button" onClick={addCustomFieldsOptions} className="no-focus btn btn-link f-12 ps-0 text-decoration-none text-at-blue-light">
                                             <span className=""> + Add option </span>
                                         </button>
                                     </div>
@@ -325,6 +402,7 @@ const Fields = () => {
                                         <Form.Group className="acx-form-group form-group">
                                             <Form.Check
                                                 onChange={handleSwitch}
+                                                checked={customFields.required}
                                                 value={customFields.required}
                                                 type="switch"
                                                 id="required"
@@ -332,6 +410,7 @@ const Fields = () => {
                                                 label="Make field optional"
                                             />
                                         </Form.Group>
+                                        {customFields.required}
                                     </Col>
                                     {customFieldOptions.selected? 
                                         <Col sm="auto">
@@ -349,28 +428,79 @@ const Fields = () => {
                                     : ""}
                                 </Row>
                                 <div className="text-end">
-                                    <Button onClick={() => setAddModalShow(false)} type="button" className="acx-btn-outline-primary border px-4 me-3">
+                                    <Button onClick={() => {
+                                            setIsEdit(false);
+                                            setModalShow(false);
+                                        }} type="button" className="acx-btn-outline-primary border px-4 me-3">
                                         Cancel
                                     </Button>
-                                    <Button type="button" className="acx-btn-primary px-4" disabled={processing} onClick={handleSubmit}>
-                                        {processing? 
-                                            <span className="text-light d-flex justify-content-center align-items-center">
-                                                <Spinner as="span" size="sm"
-                                                    animation="border" variant="light"
-                                                    aria-hidden="true"  role="status" /> 
-                                                <span className="ms-1"> Loading...</span>
-                                            </span>
-                                        :
-                                            <span>Add Field</span>
-                                        }
-                                    </Button>
+                                    {isEdit?
+                                        <Button type="button" className="acx-btn-primary px-4" disabled={processing} onClick={handleEdit}>
+                                            {processing? 
+                                                <span className="text-light d-flex justify-content-center align-items-center">
+                                                    <Spinner as="span" size="sm"
+                                                        animation="border" variant="light"
+                                                        aria-hidden="true"  role="status" /> 
+                                                    <span className="ms-1"> Loading...</span>
+                                                </span>
+                                            :
+                                                <span>Edit Field</span>
+                                            }
+                                        </Button>
+                                    :
+                                        <Button type="button" className="acx-btn-primary px-4" disabled={processing} onClick={handleSubmit}>
+                                            {processing? 
+                                                <span className="text-light d-flex justify-content-center align-items-center">
+                                                    <Spinner as="span" size="sm"
+                                                        animation="border" variant="light"
+                                                        aria-hidden="true"  role="status" /> 
+                                                    <span className="ms-1"> Loading...</span>
+                                                </span>
+                                            :
+                                                <span>Add Field</span>
+                                            }
+                                        </Button>
+                                    }
                                 </div>
                             </Form>
                         </div>
                     </div>
                 </Modal.Body>
             </Modal>
-
+            <Modal
+                show={deleteConfirm}
+                onHide={() => {
+                    setDeleteConfirm(false)
+                }}
+                size="sm"
+                centered>
+                <Modal.Body>
+                    <div className="p-3 text-center">
+                        <h2 className="text-warning">
+                            <i className="bi-info-circle"></i>
+                        </h2>
+                        <h5 className="">Are you sure?</h5>
+                        <p className="mb-3">You won't be able to revert this!</p>
+                        <div className="d-flex justify-content-center">
+                            <button
+                                className="btn btn-sm f-12 border cancel px-4"
+                                onClick={() => setDeleteConfirm(false)}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className="btn btn-sm ms-2 f-12 bg-custom px-4"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    handleDelete();
+                                }}
+                            >
+                                Confirm
+                            </button>
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal>
         </div>
     );
 }

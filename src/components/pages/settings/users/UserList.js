@@ -225,12 +225,6 @@ const UserList = ({
                   {
                     title: "Name",
                     field: "name",
-                    // render: (rowData) => (
-                    //   <Link
-                    //     to={`/settings/profile/${rowData.contact.id}`}
-                    //     style={{ textTransform: "capitalize" }}
-                    //   >{`${rowData.name}`}</Link>
-                    // ),
                     render: ({contact}) => (<div className="d-flex user-initials-sm align-items-center">
                           <div>
                           <div
@@ -255,14 +249,6 @@ const UserList = ({
                   {
                     title: "Team",
                     field: "group",
-                    // render: rowData => (
-                    //   <div className={"table-tags"}>
-                    //     {rowData.groups.map( (item, index) => 
-                    //       ( index <= 1 && (<span className="badge rounded-pill acx-bg-gray-30 px-3 py-2 me-1 my-1">{item.name}</span>) )
-                    //     )}
-
-                    //     {(rowData.groups.length > 2)? <span className="badge rounded-pill text-muted border px-2 py-1 my-1">{`+${rowData.groups.length-2}`}</span> : ""}
-                    //   </div>),
                   },
                   {
                     title: "Created",
@@ -287,25 +273,6 @@ const UserList = ({
                       </div>
                     ),
                   },
-                  // {
-                  //   title: "",
-                  //   field: "dropdownAction",
-                  //   render: (rowData) => (
-                  //     <div>
-                  //       <DeleteGreySvg />
-                  //     </div>
-                  //   ),
-                  //   // render: rowData => (<Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
-                  //   //                             <Dropdown.Toggle variant="transparent" size="sm">
-                  //   //                                 <span className="cust-table-dots"><DotSvg/></span>
-                  //   //                             </Dropdown.Toggle>
-                  //   //                             <Dropdown.Menu>
-                  //   //                                 <Dropdown.Item eventKey="1"><Link to="/settings/users/personal-info-settings"><span className="black-text">Edit</span></Link></Dropdown.Item>
-                  //   //                                 <Dropdown.Item eventKey="2"><span className="black-text">Delete</span></Dropdown.Item>
-                  //   //                             </Dropdown.Menu>
-                  //   //                         </Dropdown>)
-                  //   // render: rowData => (<div><span className="cust-table-dots"><DotSvg/></span></div>)
-                  // },
                 ]}
                 data={[...admins,...supervisors, ...agents].map(
                   ({
@@ -324,10 +291,6 @@ const UserList = ({
                     name: `${firstname} ${lastname}`,
                     emailAddress: email,
                     role,
-                    // group: 'Head Office',
-                    // group: groups.filter((x) => x.id === group_id)[0]?.name
-                    //   ? groups.filter((x) => x.id === group_id)[0]?.name
-                    //   : "",
                     group: groups.map( (item, index) => <span>{`${item.group.name}${groups.length-1 > index? ", ":" "}`}</span>),
                     created: moment(created_at).format('DD MMM, YYYY'),
                     // created: "13 Apr 2021",
@@ -362,20 +325,6 @@ const UserList = ({
           ) : <div className="cust-table-loader">
           <ScaleLoader loading={true} color={"#006298"} />
         </div>}
-
-        {/* <div className="text-center empty-state" id="agent-empty">
-                    <CardDesignSvg/>
-                    <p className="text-center f-16">
-                        You currently have no Agent record at
-                        <br/>
-                        the moment
-                    </p>
-                    <button
-                        className="btn btn-sm px-5 btn-custom"
-                        onClick={() => setCreateModalShow(true)}>
-                        New User
-                    </button>
-                </div> */}
       </div>
 
       <CreateUserModal
