@@ -179,11 +179,6 @@ const SiteRouter = connect(mapStateToProps, {
 
                             <DefaultLayoutRoute
                                 exact
-                                path="/dashboard"
-                                pageName="Dashboard"
-                                component={DashboardOld}/>
-                            <DefaultLayoutRoute
-                                exact
                                 path="/conversation"
                                 component={Conversation}
                                 pageName="Conversations"/>
