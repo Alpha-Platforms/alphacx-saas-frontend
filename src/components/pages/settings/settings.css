@@ -39,6 +39,11 @@
   transition: 0.25s ease-in;
 }
 
+.rselectfield.bg-white div[class*="-control"]{
+  background: white !important;
+  border-radius: 4px !important;
+}
+
 /*  */
 .connectViaWhatsappInstr {
   display: flex;

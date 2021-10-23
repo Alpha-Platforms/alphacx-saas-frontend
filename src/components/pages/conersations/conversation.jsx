@@ -1,5 +1,7 @@
 // @ts-nocheck
 import React, { useState, useEffect, useContext } from "react";
+import {connect} from 'react-redux';
+
 import { UserDataContext } from "../../../context/userContext";
 import "./conversation.css";
 import { Modal } from "react-responsive-modal";
@@ -56,7 +58,7 @@ import { capitalize } from "@material-ui/core";
 import moment from "moment";
 import RSelect from "react-select/creatable";
 
-export default function Conversation() {
+function Conversation({user, ...props}) {
   const initialState = EditorState.createWithContent(
     ContentState.createFromText("")
   );
@@ -171,18 +173,14 @@ export default function Conversation() {
       setTickets(data?.data?.tickets);
       setWsTickets(data?.data?.tickets);
     });
-    
     AppSocket.io.on(`ws_ticket`, (data) => {
       let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, ticketsData);
     });
-// <<<<<<< HEAD
-    return () => { AppSocket.io.disconnect()};
+    // return () => { AppSocket.io.disconnect()};
   },[]);
 
   useEffect(() => {
-// =======
-// >>>>>>> 5bdf1dbc910ce1693f7d007636a77ecf8592ded3
     AppSocket.io.on(`message`, (data) => {
       if(data?.channel === "livechat" || data.id === ticketId){
         let msg = {
@@ -340,15 +338,15 @@ export default function Conversation() {
       created_at: new Date(),
       plain_response: reply.plainText,
       response: reply.richText,
-      user: ticket[0]?.assignee,
+      user: user,
     };
-    ticket[0]?.channel !== "livechat" && setMsgHistory((item) => [...item, replyData]);
     const res = await httpPostMain(
       `tickets/${singleTicketFullInfo.id}/replies`,
       data
     );
 
     if (res?.status === "success") {
+      ticket[0]?.channel !== "livechat" && setMsgHistory((item) => [...item, replyData]);
       scollPosSendMsgList();
       setEditorState(initialState);
       setReplyTicket({ plainText: "", richText: "" });
@@ -978,113 +976,117 @@ export default function Conversation() {
                   </div>
                 </React.Fragment>
                 {/* CHAT COMMENT BOX SECTION */}
-                <div className="conversationCommentBox">
-                  <div className="single-chat-ckeditor position-relative">
-                    <div
-                      className="showBackArrowOnMobile"
-                      onClick={() =>
-                        setChatCol({ col1: "showColOne", col2: "hideColTwo" })
-                      }
-                    >
-                      <img src={BackArrow} alt="" />
-                    </div>
-                    <div className="position-absolute ps-1 pt-1 bg-white rounded-top border w-100" style={{"zIndex": "2"}}>
-                      <Form.Check
-                        inline
-                        label="Reply"
-                        value="reply"
-                        name="reply_type"
-                        checked={replyType === "reply"}
-                        onChange={onReplyTypeChange}
-                        type="radio"
-                        id={`inline-response_type-1`}
-                      />
-                      <Form.Check
-                        inline
-                        label="Comment"
-                        value="note"
-                        name="reply_type"
-                        checked={replyType === "note"}
-                        onChange={onReplyTypeChange}
-                        type="radio"
-                        id={`inline-response_type-2`}
-                      />
-                    </div>
-                    <Editor
-                      disabled={(ticket[0].status.status === "Closed")? true : false}
-                      readOnly={(ticket[0].status.status === "Closed")? true : false}
-                      editorState={editorState}
-                      toolbar={{
-                        options: ["emoji", "inline", "image"],
+                {(ticket[0].status.status === "Closed")?
+                  ""
+                :
+                  <div className={`conversationCommentBox`}>
+                    <div className="single-chat-ckeditor position-relative">
+                      <div className="showBackArrowOnMobile"
+                          onClick={() =>
+                            setChatCol({ col1: "showColOne", col2: "hideColTwo" })
+                          }
+                        >
+                        <img src={BackArrow} alt="" />
+                      </div>
+                      <div className="position-absolute ps-1 pt-1 bg-white rounded-top border w-100" style={{"zIndex": "2"}}>
+                        <Form.Check
+                          inline
+                          label="Reply"
+                          value="reply"
+                          name="reply_type"
+                          checked={replyType === "reply"}
+                          onChange={onReplyTypeChange}
+                          type="radio"
+                          id={`inline-response_type-1`}
+                        />
+                        <Form.Check
+                          inline
+                          label="Comment"
+                          value="note"
+                          name="reply_type"
+                          checked={replyType === "note"}
+                          onChange={onReplyTypeChange}
+                          type="radio"
+                          id={`inline-response_type-2`}
+                        />
+                      </div>
+                      <Editor
+                        disabled={(ticket[0].status.status === "Closed")? true : false}
+                        readOnly={(ticket[0].status.status === "Closed")? true : false}
+                        editorState={editorState}
+                        toolbar={{
+                          options: ["emoji", "inline", "image"],
 
-                        inline: {
-                          inDropdown: false,
-                          className: undefined,
-                          component: undefined,
-                          dropdownClassName: undefined,
-                          options: ["bold", "italic", "underline"],
-                          bold: { icon: boldB, className: undefined },
-                          italic: { icon: TextItalic, className: undefined },
-                          underline: {
-                            icon: TextUnderline,
+                          inline: {
+                            inDropdown: false,
                             className: undefined,
+                            component: undefined,
+                            dropdownClassName: undefined,
+                            options: ["bold", "italic", "underline"],
+                            bold: { icon: boldB, className: undefined },
+                            italic: { icon: TextItalic, className: undefined },
+                            underline: {
+                              icon: TextUnderline,
+                              className: undefined,
+                            },
                           },
-                        },
 
-                        image: {
-                          icon: editorImg,
-                          className: undefined,
-                          component: undefined,
-                          popupClassName: undefined,
-                          urlEnabled: true,
-                          uploadEnabled: true,
-                          alignmentEnabled: true,
-                          uploadCallback: _uploadImageCallBack,
-                          previewImage: true,
-                          inputAccept:
-                            "image/gif,image/jpeg,image/jpg,image/png,image/svg",
-                          alt: { present: false, mandatory: false },
-                          defaultSize: {
-                            height: "auto",
-                            width: "auto",
+                          image: {
+                            icon: editorImg,
+                            className: undefined,
+                            component: undefined,
+                            popupClassName: undefined,
+                            urlEnabled: true,
+                            uploadEnabled: true,
+                            alignmentEnabled: true,
+                            uploadCallback: _uploadImageCallBack,
+                            previewImage: true,
+                            inputAccept:
+                              "image/gif,image/jpeg,image/jpg,image/png,image/svg",
+                            alt: { present: false, mandatory: false },
+                            defaultSize: {
+                              height: "auto",
+                              width: "auto",
+                            },
                           },
-                        },
-                        emoji: {
-                          icon: Smiley,
-                        },
-                        blockType: {
-                          inDropdown: true,
-                        },
+                          emoji: {
+                            icon: Smiley,
+                          },
+                          blockType: {
+                            inDropdown: true,
+                          },
 
-                        list: {
-                          inDropdown: true,
-                        },
-                        link: {
-                          inDropdown: true,
-                        },
+                          list: {
+                            inDropdown: true,
+                          },
+                          link: {
+                            inDropdown: true,
+                          },
 
-                        history: {
-                          inDropdown: true,
-                        },
-                      }}
-                      toolbarClassName="toolbarClassName"
-                      wrapperClassName="wrapperClassName"
-                      editorClassName="editorClassName"
-                      onEditorStateChange={(editor) =>
-                        onEditorStateChange(editor)
-                      }
-                    />
+                          history: {
+                            inDropdown: true,
+                          },
+                        }}
+                        toolbarClassName="toolbarClassName"
+                        wrapperClassName="wrapperClassName"
+                        editorClassName="editorClassName"
+                        onEditorStateChange={(editor) =>
+                          onEditorStateChange(editor)
+                        }
+                      />
 
-                    <div className="sendMsg">
-                      <button
-                        disabled={(sendingReply)? true : (ticket[0].status.status === "Closed")? true : false}
-                        onClick={() => replyTicket(ReplyTicket, "attachment")}
-                      >
-                        <SendMsgIcon /> Send
-                      </button>
+                      <div className="sendMsg">
+                        <button
+                          disabled={(sendingReply)? true : (ticket[0].status.status === "Closed")? true : false}
+                          onClick={() => replyTicket(ReplyTicket, "attachment")}
+                        >
+                          <SendMsgIcon /> Send
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
+                }
+                {/*  */}
               </div>
             )}
           </div>
@@ -1307,3 +1309,6 @@ export default function Conversation() {
     </React.Fragment>
   );
 }
+
+const mapStateToProps = (state, ownProps) => ({user: state.userAuth.user});
+export default connect(mapStateToProps)(Conversation);

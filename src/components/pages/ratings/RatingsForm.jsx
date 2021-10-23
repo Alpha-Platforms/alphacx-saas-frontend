@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { Link } from "react-router-dom";
 import { NotificationManager } from "react-notifications";
-import Logo from "../../../assets/svgicons/Logo.svg";
-
+import {Modal} from 'react-responsive-modal';
 // 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -16,6 +15,9 @@ import StarRatings from 'react-star-ratings';
 import { useLocation, useParams } from "react-router-dom";
 // 
 import { httpPostNoAuth, httpGetMainNoAuth } from "../../../helpers/httpMethods";
+// resources and assets
+import Buke from "../../../assets/svgicons/Buke.svg";
+import Logo from "../../../assets/svgicons/Logo.svg";
 import "../settings/settings.css";
 
 export default function RatingsForm() {
@@ -24,10 +26,12 @@ export default function RatingsForm() {
     const [comment, setComment] = useState("");
     const [processing, setProcessing] = useState(false);
     const [ratingsConfig, setRatingsConfig] = useState({
-        "npsLabel": "How likely are you to recommend IFlux to a friend or colleague?",
         "ratingLabel": "Satisfied with our customer support service? Click on the stars below to rate us.",
-        "commentLabel": "Tell us what we can improved upon"
+        "commentLabel": "Tell us what we can improved upon",
+        "npsLabel": "How likely are you to recommend us to a friend or colleague?"
     });
+    // 
+    const [showModal, setShowModal] = useState(false);
     // 
     const { domain, ticketId, customerId } = useParams();
     // 
@@ -80,6 +84,7 @@ export default function RatingsForm() {
         const res = await httpPostNoAuth(`ratings`, data, headers);
         if (res?.status === "success") {
             setProcessing(false);
+            setShowModal(true);
             return NotificationManager.success("Thanks for your feedback 😃", "Success");
         } else {
             setProcessing(false);
@@ -87,76 +92,107 @@ export default function RatingsForm() {
         }
     }
 
+    const handleHideModal = () => {
+        setShowModal(false);
+    }
+
     return(
-        <section className="ratings-page bg-white min-vh-100">
-            <Container fluid className="py-5">
-                <Row className="justify-content-center">
-                    <Col sm={12} md={8} lg={6}>
-                        <Form className="mt-3" onSubmit={e => e.preventDefault()}>
-                            <div className="text-center mb-4">
-                                <h1 className="mb-3">Rate Your Experience</h1>
-                                <p className="">{ratingsConfig.ratingLabel}</p>
-                            </div>
-                            <div className="p-3 mb-4">
-                                <div className="d-flex justify-content-center align-items-center">
-                                    <StarRatings
-                                        rating={rating}
-                                        starRatedColor="#DFB300"
-                                        starEmptyColor="#e2e2e2"
-                                        starHoverColor="#DFB300"
-                                        starSpacing="4px"
-                                        starDimension="40px"
-                                        changeRating={(newRating) => { setRating(newRating) }}
-                                        numberOfStars={5}
-                                        name='rating'
-                                    />
+        <Fragment>
+            <section className="ratings-page bg-white min-vh-100">
+                <Container fluid className="py-5">
+                    <Row className="justify-content-center">
+                        <Col sm={12} md={8} lg={6}>
+                            <Form className="mt-3" onSubmit={e => e.preventDefault()}>
+                                <div className="text-center mb-4">
+                                    <h1 className="mb-3">Rate Your Experience</h1>
+                                    <p className="">{ratingsConfig.ratingLabel}</p>
                                 </div>
-                            </div>
-                            <hr className="mb-5"/>
-                            <Form.Group className="mb-5 form-group acx-form-group" controlId="improveMessage">
-                                <Form.Label>{ratingsConfig.commentLabel}</Form.Label>
-                                <Form.Control onChange={e => { setComment(e.target.value) }} className="shadow-sm" as="textarea" defaultValue=" " placeholder="Tell us how we can improve..." rows={6}/>
-                            </Form.Group>
-                            <div className="mb-5">
-                                <div className="">
-                                    <p className="mb-2">{ratingsConfig.npsLabel}</p>
-                                </div>
-                                <div className="p-3 bg-light border acx-hover-border-primary rounded ">
-                                    <div className="d-flex justify-content-between align-items-center">
-                                        {(() => {
-                                            let rows = [];
-                                            for (let i = 0; i <= 10; i++) {
-                                                rows.push(
-                                                    <button type="button" key={i} onClick={() => setNpsScore(i)}
-                                                            className={`mb-0 btn acx-btn-icon acx-hover-border-primary rounded-1 ${(npsScore == i ? "acx-bg-primary": "")}`}>
-                                                        <span className={`${(npsScore == i ? "text-white": "")}`}>{i}</span>
-                                                    </button>
-                                                );
-                                            }
-                                            return rows;
-                                        })()}
+                                <div className="p-3 mb-4">
+                                    <div className="d-flex justify-content-center align-items-center">
+                                        <StarRatings
+                                            rating={rating}
+                                            starRatedColor="#DFB300"
+                                            starEmptyColor="#e2e2e2"
+                                            starHoverColor="#DFB300"
+                                            starSpacing="4px"
+                                            starDimension="40px"
+                                            changeRating={(newRating) => { setRating(newRating) }}
+                                            numberOfStars={5}
+                                            name='rating'
+                                        />
                                     </div>
                                 </div>
+                                <hr className="mb-5"/>
+                                <Form.Group className="mb-5 form-group acx-form-group" controlId="improveMessage">
+                                    <Form.Label>{ratingsConfig.commentLabel}</Form.Label>
+                                    <Form.Control onChange={e => { setComment(e.target.value) }} className="shadow-sm" as="textarea" defaultValue=" " placeholder="Tell us how we can improve..." rows={6}/>
+                                </Form.Group>
+                                <div className="mb-5">
+                                    <div className="">
+                                        <p className="mb-2">{ratingsConfig.npsLabel}</p>
+                                    </div>
+                                    <div className="p-3 bg-light border acx-hover-border-primary rounded ">
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            {(() => {
+                                                let rows = [];
+                                                for (let i = 0; i <= 10; i++) {
+                                                    rows.push(
+                                                        <button type="button" key={i} onClick={() => setNpsScore(i)}
+                                                                className={`mb-0 btn acx-btn-icon acx-hover-border-primary rounded-1 ${(npsScore == i ? "acx-bg-primary": "")}`}>
+                                                            <span className={`${(npsScore == i ? "text-white": "")}`}>{i}</span>
+                                                        </button>
+                                                    );
+                                                }
+                                                return rows;
+                                            })()}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="mb-3 text-center">
+                                    <Button type="submit" onClick={handleSubmit} size="lg" disabled={processing} className="acx-btn-primary px-4"> 
+                                        {(processing) ? <span className="text-light"><Spinner as="span" 
+                                                animation="border" variant="light" size="sm" role="status" 
+                                                aria-hidden="true"/> Loading...
+                                            </span>
+                                            : <span className="text-white">Submit</span>
+                                        }
+                                    </Button>
+                                </div>
+                            </Form>
+                        </Col>
+                    </Row>
+                    <footer className="">
+                        <p className="text-center">
+                            <Image src={Logo} className="me-2" height="16" width="auto" /> We care with AlphaCX
+                        </p>
+                    </footer>
+                </Container>
+            </section>
+            <Modal
+                open={showModal} onClose={handleHideModal}
+                aria-labelledby="contained-modal-title-vcenter"
+                size="lg"
+                centered>
+                {/* <Modal.Body> */}
+                <div className="p-4 saveTicketWrapModal">
+                    <div className="text-center">
+                        <div className="d-flex justify-content-center my-4">
+                            <Image src={Buke} alt="" />
+                        </div>
+                        <div className="Auth-header mb-2">
+                            <h3 className="mb-3">Review Submitted!</h3>
+                            <p className="text-center">
+                                Thank you for taking out time
+                                <br />to rate us
+                            </p>
+                            <div className="">
+                                <Button as="a" href="https://alphacx.co" variant="success" className="">Continue</Button>
                             </div>
-                            <div className="mb-3 text-center">
-                                <Button type="submit" onClick={handleSubmit} size="lg" disabled={processing} className="acx-btn-primary px-4"> 
-                                    {(processing) ? <span className="text-light"><Spinner as="span" 
-                                            animation="border" variant="light" size="sm" role="status" 
-                                            aria-hidden="true"/> Loading...
-                                        </span>
-                                        : <span className="text-white">Submit</span>
-                                    }
-                                </Button>
-                            </div>
-                        </Form>
-                    </Col>
-                </Row>
-                <footer className="">
-                    <p className="text-center">
-                        <Image src={Logo} className="me-2" height="16" width="auto" /> We care with AlphaCX
-                    </p>
-                </footer>
-            </Container>
-        </section>
+                        </div>
+                    </div>
+                </div>
+                {/* </Modal.Body> */}
+            </Modal>
+        </Fragment>
     );
 }

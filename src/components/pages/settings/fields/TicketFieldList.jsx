@@ -37,8 +37,11 @@ const TicketFieldList = (props) => {
                                             :
                                                 <span className="me-2">Optional</span>
                                             }
-                                            <Button className="acx-btn-icon rounded-circle" type="button">
-                                                <i className="bi-dash-circle text-danger" title="action "></i> 
+                                            <Button onClick={() => props.editCustomField(data.id)} className="acx-btn-icon rounded-circle" type="button" title="edit">
+                                                <i className="bi-pencil-square acx-text-alpha-blue-400" title="edit"></i> 
+                                            </Button>
+                                            <Button onClick={() => props.deleteCustomField(data.id)} className="acx-btn-icon rounded-circle" type="button" title="delete">
+                                                <i className="bi-trash text-danger" title="delete "></i> 
                                             </Button>
                                         </span>
                                     </div>

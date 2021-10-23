@@ -31,6 +31,7 @@ export default function MessageList({
   };
 
     const getChannelColor = (channel, placement = "foreground") => {
+      channel = channel.toLowerCase();
       let obj = {
           "facebook": "#1877F2", 
           "email": "#2B304D", 
@@ -56,15 +57,12 @@ export default function MessageList({
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-          }}
-        >
+          }}>
           {" "}
           <ClipLoader color="#0d4166" loading={LoadingTick} size={35} />
         </div>
-      ) : renderTicket.length === 0 ? (
-        <p
-          style={{ textAlign: "center", paddingTop: "20px", fontSize: "15px" }}
-        >
+        )  : Array.isArray(renderTicket) ? (renderTicket.length == 0 ? (
+        <p style={{ textAlign: "center", paddingTop: "20px", fontSize: "15px" }}>
           No ticket found
         </p>
       ) : (
@@ -137,7 +135,10 @@ export default function MessageList({
             </div>
           );
         })
-      )}
+      )) : 
+        <p style={{ textAlign: "center", paddingTop: "20px", fontSize: "15px" }}>
+          No ticket found
+        </p> }
     </div>
   );
 }

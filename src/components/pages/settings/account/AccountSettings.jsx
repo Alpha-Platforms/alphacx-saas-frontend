@@ -66,7 +66,8 @@ const AccountSettings = () => {
 
   const getUserInfo = async () => {
     setAccountLoading(true);
-    const res = await httpGet(`auth/tenant-info/${window.localStorage.getItem("domain")}`);
+    const domain = window.localStorage.getItem("domain")
+    const res = await httpGet(`auth/tenant-info/${domain}`);
     setAccountLoading(false);
 
     if (res?.status === "success") {
@@ -93,7 +94,8 @@ const AccountSettings = () => {
       region
     }
 
-    const res = await httpPatch(`auth/tenant-info/${window.localStorage.getItem("domain")}`, payload);
+    const domain = window.localStorage.getItem("domain")
+    const res = await httpPatch(`auth/tenant-info/${domain}`, payload);
 
     setAccountLoading(false);
 
