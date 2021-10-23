@@ -346,7 +346,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                                 name="ccode" id="ccode" 
                                                 value={modalInputs.ccode} 
                                                 onChange={handleModalInput}>
-                                            {countrycodes.sort((a, b) => Number(a.dial_code.slice(1)) - Number(b.dial_code.slice(1))).map(cc => <option value={cc.dial_code}>{cc.dial_code}</option>)}
+                                            {countrycodes.sort((a, b) => Number(a.dial_code.slice(1)) - Number(b.dial_code.slice(1))).map((cc, index) => <option key={index} value={cc.dial_code}>{cc.dial_code}</option>)}
                                         </select>
                                         {/* <span className="workphone-dropdown">lite</span>
                                         <ul>
