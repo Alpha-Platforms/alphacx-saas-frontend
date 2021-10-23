@@ -2,9 +2,9 @@
 // import Select from "react-select";
 
 const CurrentPlan = ({plan, planState, setPlanState}) => {
-    const handlePlanChange = option => {
-        console.log('plan was changed');
-    }
+    // const handlePlanChange = option => {
+    //     console.log('plan was changed');
+    // }
 
     /*
     plan options
