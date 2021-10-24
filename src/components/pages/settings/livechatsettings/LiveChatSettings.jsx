@@ -53,7 +53,6 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
             // getPaginatedUsers(10, 1);
             setLoading(true);
             getAgents(data => {
-                console.log('Data => ', data);
                 if (data?.users && data?.users?.length > 0) {
                     setShouldRender(true);
                     getLivechatConfig(config => {
@@ -144,7 +143,8 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
                 <div className="d-flex justify-content-between flex-row">
                     <h5 className="mt-3 mb-2 ">Live Chat Widget</h5>
                 </div>
-                {!shouldRender ? <div><br/>
+                {!loading && <div>
+                    {!shouldRender ? <div><br/>
                     You can't access the live chat widget until you have created at least one agent. Go to the <Link to="/settings/users">users settings page</Link> to create an agent.
 
                 </div> : <div className="mt-1 lcsettingslayout">
@@ -260,6 +260,7 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
                         </div>
                     </div>
                     </div>
+                </div>}
                 </div>}
             </div>
         </div>
