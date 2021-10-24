@@ -9,10 +9,13 @@ import copy from 'copy-to-clipboard';
 import {NotificationManager} from 'react-notifications';
 import {connect} from 'react-redux';
 import {getLivechatConfig, updateLivechatConfig} from '../../../../reduxstore/actions/livechatActions';
+import {getAgents} from '../../../../reduxstore/actions/agentActions';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 
 
-const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getLivechatConfig, updateLivechatConfig}) => {
+const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getLivechatConfig, updateLivechatConfig, getAgents, isUserAuthenticated}) => {
+
+    
 
     const [settings, setSettings] = useState({
         title: '',
@@ -23,12 +26,15 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
         tenantDomain: window.localStorage.getItem('domain')
     });
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [shouldRender, setShouldRender] = useState(false);
 
     
     const [embedText, setEmbedText] = useState('Embed Script');
     
-    const simpleCrypto = new SimpleCrypto("@alphacxcryptkey")
+    const simpleCrypto = new SimpleCrypto("@alphacxcryptkey");
+
+
     
     const handleInputChange = e => {
         const {name, value} = e.target;
@@ -40,22 +46,38 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
         setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
         <script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(JSON.stringify(settings))}'});</script>`);
     }
+
+    useEffect(() => {
+        if (isUserAuthenticated) {
+            // get the first set of users
+            // getPaginatedUsers(10, 1);
+            setLoading(true);
+            getAgents(data => {
+                if (data?.users && data?.users?.length > 0) {
+                    setShouldRender(true);
+                    getLivechatConfig(config => {
+                        setLoading(false);
+                        setSettings(prev => ({
+                            ...prev,
+                            title: config?.title || '',
+                            description: config?.description || '',
+                            initialText: config?.initialChat || '',
+                            domains: config?.hostName || '',
+                            theme: config?.color || ''
+                        }));
+                        setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
+            <script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(JSON.stringify(settings))}'});</script>`);
+                    });
+                } else {
+                    setLoading(false);
+                }
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isUserAuthenticated]);
     
     useEffect(() => {
-        setLoading(true);
-        getLivechatConfig(config => {
-            setSettings(prev => ({
-                ...prev,
-                title: config?.title || '',
-                description: config?.description || '',
-                initialText: config?.initialChat || '',
-                domains: config?.hostName || '',
-                theme: config?.color || ''
-            }));
-            setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
-<script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(JSON.stringify(settings))}'});</script>`);
-        });
-            setLoading(false);
+        
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -121,7 +143,11 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
                 <div className="d-flex justify-content-between flex-row">
                     <h5 className="mt-3 mb-2 ">Live Chat Widget</h5>
                 </div>
-                <div className="mt-1 lcsettingslayout">
+                {!loading && <div>
+                    {!shouldRender ? <div><br/>
+                    You can't access the live chat widget until you have created at least one agent. Go to the <Link to="/settings/users">users settings page</Link> to create an agent.
+
+                </div> : <div className="mt-1 lcsettingslayout">
                     <div>
                     <div>
                         <div className="w-75">
@@ -234,7 +260,8 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
                         </div>
                     </div>
                     </div>
-                </div>
+                </div>}
+                </div>}
             </div>
         </div>
     );
@@ -243,7 +270,8 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
 const mapStateToProps = (state, ownProps) => ({
     livechatConfig: state.livechat.livechatConfig,
     isConfigLoading: state.livechat.isConfigLoading,
-    isConfigLoaded: state.livechat.isConfigLoaded
+    isConfigLoaded: state.livechat.isConfigLoaded,
+    isUserAuthenticated: state.userAuth.isUserAuthenticated
 });
 
-export default connect(mapStateToProps, {getLivechatConfig, updateLivechatConfig})(LiveChatSettings);
+export default connect(mapStateToProps, {getLivechatConfig, getAgents, updateLivechatConfig})(LiveChatSettings);

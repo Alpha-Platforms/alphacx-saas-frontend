@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {useState, useEffect, useRef} from 'react';
 // import {Modal} from 'react-bootstrap';
 import {Modal} from 'react-responsive-modal';
@@ -19,6 +20,7 @@ import {
     httpPatchMain,
 } from "../../../helpers/httpMethods";
 import {createTags} from '../../../reduxstore/actions/tagActions';
+import axios from 'axios';
 
 
 const CreateTicketModal = ({
@@ -52,7 +54,14 @@ const CreateTicketModal = ({
         'Facebook',
         'Helpdesk',
         'WhatsApp'
-    ])
+    ]);
+    const [uploadInfo, setUploadInfo] = useState({
+        blob: null,
+        msg: 'Add file or drag file here',
+        error: false,
+        image: null,
+        ownAvatar: ''
+    });
 
     // ref to customer input
     const custInputRef = useRef(null);
@@ -126,7 +135,7 @@ const CreateTicketModal = ({
     }
 
     
-    const handleTicketCreation = e => {
+    const handleTicketCreation = async e => {
         e.preventDefault();
         const {
             customer,
@@ -146,7 +155,10 @@ const CreateTicketModal = ({
         if (!customer || !category || !stage || !subject || !description ) {
             NotificationManager.error('All fields are required', 'Error', 5000);
         } else {
-            const newTicket = {
+            // initiate ticket creation            
+            setCreatingTicket(true);
+
+            let newTicket = {
                 customer,
                 priorityId: priority || "5a6635d0-0561-11ea-8d71-362b9e155667",
                 assigneeId: assignee || null,
@@ -162,9 +174,31 @@ const CreateTicketModal = ({
                 dueDate: (dueDays * 24) + dueHours
             };
 
-            setCreatingTicket(true);
-            addTicket(newTicket);
-            // console.log(newTicket)
+            if (uploadInfo.image) {
+                const data = new FormData();
+                data.append('file', uploadInfo.image);
+                data.append('upload_preset', 'i5bn3icr');
+                data.append('cloud_name', 'alphacx-co');
+                axios
+                    .post(`https://api.cloudinary.com/v1_1/alphacx-co/image/upload`, data)
+                    .then(async res => {
+                        // add res
+
+                        // add attachment to ticket body
+                        newTicket.attachment = res?.data?.url || ''
+
+                        
+
+                        addTicket(newTicket, () => NotificationManager.success("Ticket created successfully", 'Successful'));
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        NotificationManager.error("Photo could not be uploaded", "Error");
+                        setCreatingTicket(false);
+                    });
+            } else {
+                addTicket(newTicket, () => NotificationManager.success("Ticket created successfully", 'Successful'));
+            }
             
         }
     }
@@ -172,12 +206,18 @@ const CreateTicketModal = ({
     useEffect(() => {
         if (isTicketCreated) {
             resetTicketCreated();
-            NotificationManager.success("Ticket created successfully", 'Successful');
             setCreateModalShow(false);
             setCreatingTicket(false);
             setSubCatLoading(false);
             // setChangingRow(true);
             getPaginatedTickets(10, 1);
+            setUploadInfo({
+                blob: null,
+                msg: 'Add file or drag file here.',
+                error: false,
+                image: null,
+                ownAvatar: ''
+            });
         }
 
         prepCategoriesAndSubs()
@@ -263,6 +303,13 @@ const CreateTicketModal = ({
             ...prev,
             openPreview: false
         }));
+        setUploadInfo({
+            blob: null,
+            msg: 'Add file or drag file here',
+            error: false,
+            image: null,
+            ownAvatar: ''
+        });
     }
 
     const searchTypeChecker = (query) => {
@@ -375,6 +422,70 @@ const CreateTicketModal = ({
             />
         </svg>
         );
+    }
+
+
+    const handleImgSelect = function (e) {
+        // store current input
+        const fileInput = e.target
+
+        // create a store for the current dimension and default info
+        let maxReqDimensions = {
+                width: 1500,
+                height: 1500
+            };
+
+        if (!fileInput.files.length) {
+            // No file is selected
+            setUploadInfo(prev => ({...prev, msg: 'No file is slected', error: true, blob: null, image: null, ownAvatar: ''}));
+            
+        } else {
+            // file selected
+            
+            // check if selected file is an image
+            if (fileInput.files[0].type.indexOf("image/") === -1) {
+                // Selected file is not an image
+                setUploadInfo(prev => ({...prev, msg: 'Selected file is not an image', error: true, blob: null, image: null, ownAvatar: ''}));
+            } else {
+                // Selected file is an image
+                /* 
+                * read the selected image to get the file width and height
+                */
+                // create a new file reader object
+                const reader = new FileReader();
+                reader.readAsDataURL(fileInput.files[0]);
+                reader.onload = function (e) {
+                    // when reader has loaded
+
+                    //create a new image object
+                    const currentImage = new Image();
+                    // set the source of the image to the base64 string from the file reader
+                    currentImage.src = this.result;
+
+                    currentImage.onload = function () {
+                        const [currentImageHeight, currentImageWidth] = [this.height, this
+                            .width
+                        ];
+
+                        if (currentImageWidth > maxReqDimensions.width ||
+                            currentImageHeight > maxReqDimensions.height) {
+                            // current selected image dimesions are not acceptable
+                            setUploadInfo(prev => ({...prev, msg: `Selected image should have max dimension of ${maxReqDimensions.width}x${maxReqDimensions.height}`, error: true, blog: null, image: null}));
+                        } else {
+                            // current selected image dimensions are acceptable
+                            const fileName = fileInput.files[0].name;
+                            const fileBlob = URL.createObjectURL(fileInput.files[0]);
+
+                            setUploadInfo(prev => ({...prev, blob: fileBlob, msg: fileName, error: false, image: fileInput.files[0], ownAvatar: ''}));
+                            /* 
+                            when the image with the blob loads call the below method
+                            URL.revokeObjectURL(this.src);  where this.src is the blob created
+                            */
+                        }
+                    }
+                }
+            }
+        }
     }
 
     return (
@@ -658,9 +769,13 @@ const CreateTicketModal = ({
                                         <label htmlFor="title" className="form-label">Attachment (If Any)</label>
                                         <div
                                             id="ticket-ath-box"
-                                            className="border border-1 d-block text-center f-14 p-3"><img src={PinIcon} alt=""/>
-                                            <span className="text-at-blue-light">Add file</span>&nbsp;
-                                            <span>or drag file here</span>
+                                            onClick={() => document.getElementById("ticketUploadFile").click()}
+                                            className="border border-1 d-block text-center f-14 p-3"><img src={PinIcon} 
+                                            alt=""/>
+                                            {/* <span className="text-at-blue-light">Add file</span>&nbsp;<span>or drag file here</span> */}
+                                            <span>{uploadInfo?.msg}</span>
+                                            <input type="file" name="ticketUploadFile" id="ticketUploadFile" onChange={handleImgSelect}/>
+                                        <p className="mb-0 text-at-red"></p>
                                         </div>
                                     </div>
             

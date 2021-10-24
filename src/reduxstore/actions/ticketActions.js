@@ -144,7 +144,7 @@ export const getCurrentTicket = (id) => (dispatch, getState) => {
     } */
 }
 
-export const addTicket = (newTicket) => (dispatch, getState) => {
+export const addTicket = (newTicket, success) => (dispatch, getState) => {
     
     //Request body
     const body = JSON.stringify(newTicket);
@@ -153,6 +153,7 @@ export const addTicket = (newTicket) => (dispatch, getState) => {
         .post(`${config.stagingBaseUrl}/tickets`, body, userTokenConfig(getState))
         .then(res => {
             dispatch({type: types.ADD_TICKET, payload: res.data})
+            success && success();
         })
         .catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
