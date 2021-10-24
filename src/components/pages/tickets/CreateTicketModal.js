@@ -767,17 +767,18 @@ const CreateTicketModal = ({
             
                                     <div className="col-12 mt-3">
                                         <label htmlFor="title" className="form-label">Attachment (If Any)</label>
-                                        <div
+                                        <label
                                             id="ticket-ath-box"
-                                            onClick={() => document.getElementById("ticketUploadFile").click()}
+                                            // onClick={() => document.getElementById("ticketUploadFile").click()}
+                                            htmlFor="ticketUploadFile"
                                             className="border border-1 d-block text-center f-14 p-3"><img src={PinIcon} 
                                             alt=""/>
                                             {/* <span className="text-at-blue-light">Add file</span>&nbsp;<span>or drag file here</span> */}
                                             <span>{uploadInfo?.msg}</span>
-                                            <input type="file" name="ticketUploadFile" id="ticketUploadFile" onChange={handleImgSelect}/>
                                         <p className="mb-0 text-at-red"></p>
-                                        </div>
+                                        </label>
                                     </div>
+                                    <input type="file" name="ticketUploadFile" id="ticketUploadFile" onChange={handleImgSelect}/>
             
                                 </div>
                             </div>
