@@ -189,7 +189,9 @@ const CreateTicketModal = ({
 
                         
 
-                        addTicket(newTicket, () => NotificationManager.success("Ticket created successfully", 'Successful'));
+                        addTicket(newTicket, () => {
+                            NotificationManager.success("Ticket created successfully", 'Successful')
+                        });
                     })
                     .catch(err => {
                         console.log(err);
@@ -197,7 +199,9 @@ const CreateTicketModal = ({
                         setCreatingTicket(false);
                     });
             } else {
-                addTicket(newTicket, () => NotificationManager.success("Ticket created successfully", 'Successful'));
+                addTicket(newTicket, () => {
+                    NotificationManager.success("Ticket created successfully", 'Successful')
+                });
             }
             
         }
