@@ -97,6 +97,7 @@ function Conversation({user, ...props}) {
     richText: "",
   });
   const [replyType, setReplyType] = useState("reply");
+  const [mentions, setMentions] = useState([]);
   // 
   const [Agents, setAgents] = useState([]);
   const [Statuses, setStatuses] = useState([]);
@@ -325,11 +326,25 @@ function Conversation({user, ...props}) {
     filterSentTick[0]["updated_at"] = new Date();
     const newTicket = [...filterSentTick, ...filterSentTickAll];
     setTickets(newTicket);
+    let agentMentions = [];
+    if(replyType === "note"){
+      // reply.richText
+      agentMentions = Agents.reduce(function(result, object) {
+          if (reply.richText.includes(object?.id)) {
+            result.push(object.id);
+          }
+          return result;
+      }, []);
+      
+      setMentions(()=>[ ...agentMentions]);
+    }
+
     const data = {
       type: replyType,
       response: reply.richText,
       plainResponse: reply.plainText,
       phoneNumber: singleTicketFullInfo.customer.phone_number,
+      "mentions": agentMentions
       // attachment: "",
     };
     const replyData = {
@@ -339,6 +354,7 @@ function Conversation({user, ...props}) {
       plain_response: reply.plainText,
       response: reply.richText,
       user: user,
+      "mentions": agentMentions
     };
     const res = await httpPostMain(
       `tickets/${singleTicketFullInfo.id}/replies`,
@@ -1073,6 +1089,14 @@ function Conversation({user, ...props}) {
                         onEditorStateChange={(editor) =>
                           onEditorStateChange(editor)
                         }
+                        
+                        mention={{
+                          separator: ' ',
+                          trigger: '@',
+                          suggestions: (replyType === "note")? Agents.map((data) => {
+                              return { text: `${data.firstname}  ${data.lastname}`, value: `${data.firstname}  ${data.lastname}`, url: `settings/profile/${data.id}`}
+                            }) : []
+                        }}
                       />
 
                       <div className="sendMsg">

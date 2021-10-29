@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { NotificationManager } from "react-notifications";
@@ -32,11 +33,12 @@ const Fields = () => {
     // custom fields
     const [ticketFields, setTicketFields] = useState([]);
     const [userFields, setUserFields] = useState([]);
+    // 
+    const [fieldSections, setFieldSections] = useState([]);
     const [customFieldOptions, setCustomFieldOptions] = useState({
         selected: false,
-        multiple: false,
         options: [
-            {"option": ""}
+            ""
         ]
     });
     // 
@@ -44,7 +46,9 @@ const Fields = () => {
     const [customFields, setCustomFields] = useState({
         "fieldName": "",
         "fieldType": "",
+        "fieldSection": "",
         "required": false,
+        "multipleOptions": false,
         "belongsTo": tabKey.split("-")[0]
     });
     // 
@@ -58,6 +62,7 @@ const Fields = () => {
     // 
     useEffect(() => {
         sortCustomFields(customFieldData);
+        getFieldSections(customFieldData);
     }, [customFieldData]);
 
     // 
@@ -71,7 +76,7 @@ const Fields = () => {
         }
     };
 
-    // 
+    // sort custom fields
     const sortCustomFields = (data) => {
         let ticketResult = data.filter((observation) => {
             return (observation.belongs_to == "ticket");
@@ -81,6 +86,19 @@ const Fields = () => {
         });
         setTicketFields(ticketResult);
         setUserFields(userResult);
+    }
+
+    // get field sections
+    const getFieldSections = (data) => {
+        const filterEmptyArray=(a,b)=>{return a.filter((e)=>{return e!=b})}
+
+        let fieldSectionsResult = data.reduce(function(result, object) {
+            if (object.field_section != "") {
+              result.push(object.field_section);
+            }
+            return result;
+        }, []);
+        setFieldSections(filterEmptyArray(fieldSectionsResult));
     }
 
     // form field input change
@@ -118,9 +136,18 @@ const Fields = () => {
             ...prevState,
             "fieldName": customField.field_name,
             "fieldType": customField.field_type,
+            "fieldSection": customField.field_section,
             "required": customField.required,
+            "multipleOptions": customField.multiple_options,
             "belongsTo": customField.belongs_to
         }))
+        if (customField.field_type == "select") {
+            setCustomFieldOptions((prevState) => ({
+                ...prevState,
+                "selected": true,
+                "options": customField.field_options.replace(/{|"|}/g, "").split(",")
+            }))
+        }
 
         // 
         setActionId(id);
@@ -133,7 +160,9 @@ const Fields = () => {
             ...prevState,
             "fieldName": "",
             "fieldType": "",
+            "fieldSection": "",
             "required": false,
+            "multipleOptions": false,
             "belongsTo": tabKey.split("-")[0]
         }))
     };
@@ -144,6 +173,13 @@ const Fields = () => {
         setCustomFields((prevState) => ({
             ...prevState,
             "required": !customFields.required
+        }));
+    }
+    // 
+    const handleMultiOptionSwitch = (e) => {
+        setCustomFields((prevState) => ({
+            ...prevState,
+            "multipleOptions": !customFields.multipleOptions
         }));
     }
 
@@ -177,7 +213,7 @@ const Fields = () => {
             ...prevState,
             options: [
                 ...prevState.options, 
-                { option: "" }
+                ""
             ]
         }));
     }
@@ -197,25 +233,46 @@ const Fields = () => {
     const handleSubmit = async(e) => {
         if(customFields.fieldName == "") return NotificationManager.error("Field name cannot be empty", "Error", 4000);
         if(customFields.fieldType == "") return NotificationManager.error("Field type is requied", "Error", 4000);
+        let data = {};
+        if(customFieldOptions.selected === true){
+            data = {
+                ...customFields,
+                "fieldOptions": customFieldOptions.options
+            }
+        }else{
+            data = {...customFields};
+        }
         setProcessing(true);
-        const res = await httpPostMain(`custom-field`, customFields);
+
+        const res = await httpPostMain(`custom-field`, data);
         if (res.status === "success") {
             setProcessing(false);
             setModalShow(false);
             setCustomFieldData((prevState) => [...prevState, res?.data]);
+            // console.log(res)
             return NotificationManager.success( "Custom field created successfully", "Success", 4000);
         } else {
             setProcessing(false);
+            // console.log(res)
             return NotificationManager.error(res.er.message, "Error", 4000);
         }
-        setProcessing(false);
     }    
+
     // edit field
     const handleEdit = async() => {
         if(customFields.fieldName == "") return NotificationManager.error("Field name cannot be empty", "Error", 4000);
         if(customFields.fieldType == "") return NotificationManager.error("Field type is requied", "Error", 4000);
+        let data = {};
+        if(customFieldOptions.selected === true){
+            data = {
+                ...customFields,
+                "fieldOptions": customFieldOptions.options
+            }
+        }else{
+            data = {...customFields};
+        }
         setProcessing(true);
-        const res = await httpPatchMain(`custom-field/${actionId}`, customFields);
+        const res = await httpPatchMain(`custom-field/${actionId}`, data);
         if (res.status === "success") {
             setProcessing(false);
             setModalShow(false);
@@ -225,7 +282,6 @@ const Fields = () => {
             setProcessing(false);
             return NotificationManager.error(res.er.message, "Error", 4000);
         }
-        setProcessing(false);
     }
     // delete field
     const handleDelete = async() => {
@@ -345,15 +401,21 @@ const Fields = () => {
                                         id="fieldSection"
                                         className="rselectfield bg-white"
                                         menuPlacement={"top"}
-                                        onChange={selectedOptions => {
-                                        //   setRSTicketTags(selectedOptions.map((item) => { return item.value} ))
+                                        onChange={(selectedSection) => {
+                                            setCustomFields((prevState)=> ({
+                                                ...prevState,
+                                                "fieldSection": selectedSection.value
+                                            }))
                                         }}
-                                        defaultValue={[]}
-                                        options={[
-                                            { "value": "data", 
-                                                "label": "data"
-                                            }
-                                        ]}
+                                        defaultValue={{ 
+                                            value: customFields.fieldSection, 
+                                            label: customFields.fieldSection
+                                         }}
+
+                                        options={ fieldSections.map((data) => {
+                                                return { "value": data, "label": data}
+                                            })
+                                        }
                                     />
                                 </Form.Group>
 
@@ -382,7 +444,7 @@ const Fields = () => {
                                                         <HamburgerSvg/>
                                                     </button>
                                                     <div className="flex-grow-1 mx-1">
-                                                        <Form.Control defaultValue={element.option} onChange={(e) => handleOptionChange(e, index)} type="text" size="sm" name="field-option" className="" />
+                                                        <Form.Control defaultValue={element} onChange={(e) => handleOptionChange(e, index)} type="text" size="sm" name="field-option" className="" />
                                                     </div>
                                                     { index ? 
                                                         <Button onClick={() => removeCustomFieldsOptions(index)} className="acx-btn-icon rounded-circle" type="button">
@@ -416,11 +478,12 @@ const Fields = () => {
                                         <Col sm="auto">
                                             <Form.Group className="acx-form-group form-group">
                                                 <Form.Check
-                                                    // onChange={handleSwitch}
-                                                    // value={customFields.isMultiple}
+                                                    onChange={handleMultiOptionSwitch}
+                                                    checked={customFields.multipleOptions}
+                                                    value={customFields.multipleOptions}
                                                     type="switch"
-                                                    id="isMultiple"
-                                                    name="isMultiple"
+                                                    id="multipleOptions"
+                                                    name="multipleOptions"
                                                     label="Multiple Options"
                                                 />
                                             </Form.Group>

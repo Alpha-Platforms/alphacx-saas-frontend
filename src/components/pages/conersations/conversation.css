@@ -1164,6 +1164,9 @@ select {
   -ms-flex-direction: row-reverse;
   flex-direction: row-reverse;
 }
+.message.message-note {
+  background-color: rgba(241, 233, 244, 0.5);
+}
 .message-inner {
   margin-left: 0.5rem;
 }
