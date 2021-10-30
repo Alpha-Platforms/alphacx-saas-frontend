@@ -6,6 +6,7 @@ import "./navCard.scss";
 import {slugify, textCapitalize} from '../../../../../helper';
 
 const NavCard = ({ title, icon, folders, id }) => {
+
   return (
     <div className="nav-card">
       <Link
@@ -19,9 +20,12 @@ const NavCard = ({ title, icon, folders, id }) => {
         </div>
         <p className="title">{textCapitalize(title)}</p>
         <div className="description">
-          {folders.map((item, i) => (
-            <p key={i}>{item.name}</p>
-          ))}
+            <p>{folders[0]?.name}</p>
+          {/* {folders.map((item, i) => {
+            return ( 
+            <p key={i}>dd{item.name}dd</p>
+          )
+          })} */}
         </div>
       </Link>
     </div>

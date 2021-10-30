@@ -13,7 +13,6 @@ const TopBar = ({ categoryId }) => {
     let pagelinks = location.pathname.split("/");
     pagelinks.shift();
     pagelinks.shift();
-    console.log("links", pagelinks);
     setLinks(pagelinks);
   }, []);
   return (
