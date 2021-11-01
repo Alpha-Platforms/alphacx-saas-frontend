@@ -35,14 +35,21 @@
     width: 70%;
     a {
       width: 100%;
+
+      &:not(:last-child) {
+        .article-link {
+          border-bottom: 1px solid #0000001a;
+        }
+      }
     }
     .article-link {
       width: 100%;
       padding: 20px 0;
-      border-top: 1px solid #0000001a;
       cursor: pointer;
+
       .title {
-        margin-bottom: 20px !important;
+        // margin-bottom: 20px !important;
+        margin: 10px 0px;
       }
 
       &:hover {

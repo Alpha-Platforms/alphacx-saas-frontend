@@ -4,6 +4,9 @@ import {config} from '../../config/keys';
 import {returnErrors} from './errorActions';
 import {userTokenConfig} from '../../helper';
 import {NotificationManager} from 'react-notifications';
+import {
+    httpPostMain
+} from "../../helpers/httpMethods";
 
 export const getTickets = () => (dispatch, getState) => {
     if (!navigator.onLine) {
@@ -144,15 +147,29 @@ export const getCurrentTicket = (id) => (dispatch, getState) => {
     } */
 }
 
-export const addTicket = (newTicket) => (dispatch, getState) => {
+export const addTicket = (newTicket, success) => (dispatch, getState) => {
     
     //Request body
     const body = JSON.stringify(newTicket);
 
     axios
         .post(`${config.stagingBaseUrl}/tickets`, body, userTokenConfig(getState))
-        .then(res => {
-            dispatch({type: types.ADD_TICKET, payload: res.data})
+        .then(async res => {
+            if (res.data?.status === "success") {
+                const replyData = {
+                    type: 'reply',
+                    attachment: null,
+                    response: res.data?.data?.description,
+                    plainResponse: res.data?.data?.plain_description
+                };
+                const replyRes = await httpPostMain(
+                    `tickets/${res.data?.data?.id}/replies`,
+                    replyData
+                );
+                dispatch({type: types.ADD_TICKET, payload: res.data})
+                success && success(res.data);
+            }
+            
         })
         .catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }

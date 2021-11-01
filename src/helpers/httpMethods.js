@@ -460,7 +460,7 @@ export const httpDelete = async (url) => {
         'Content-Type': 'application/json' 
       },
     });
-    return res;
+    return res.data;
   } catch (error) {
     return error.response.data;
   }

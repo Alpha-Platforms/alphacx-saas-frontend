@@ -97,6 +97,7 @@ function Conversation({user, ...props}) {
     richText: "",
   });
   const [replyType, setReplyType] = useState("reply");
+  const [mentions, setMentions] = useState([]);
   // 
   const [Agents, setAgents] = useState([]);
   const [Statuses, setStatuses] = useState([]);
@@ -325,11 +326,25 @@ function Conversation({user, ...props}) {
     filterSentTick[0]["updated_at"] = new Date();
     const newTicket = [...filterSentTick, ...filterSentTickAll];
     setTickets(newTicket);
+    let agentMentions = [];
+    if(replyType === "note"){
+      // reply.richText
+      agentMentions = Agents.reduce(function(result, object) {
+          if (reply.richText.includes(object?.id)) {
+            result.push(object.id);
+          }
+          return result;
+      }, []);
+      
+      setMentions(()=>[ ...agentMentions]);
+    }
+
     const data = {
       type: replyType,
       response: reply.richText,
       plainResponse: reply.plainText,
       phoneNumber: singleTicketFullInfo.customer.phone_number,
+      "mentions": agentMentions
       // attachment: "",
     };
     const replyData = {
@@ -339,6 +354,7 @@ function Conversation({user, ...props}) {
       plain_response: reply.plainText,
       response: reply.richText,
       user: user,
+      "mentions": agentMentions
     };
     const res = await httpPostMain(
       `tickets/${singleTicketFullInfo.id}/replies`,
@@ -742,9 +758,9 @@ function Conversation({user, ...props}) {
                         <div className="custormChatHeaderInfoData">
                           <h1>{ticket[0]?.subject}</h1>
                           <p>
-                            {`${capitalize(SenderInfo?.customer?.firstname)} 
-                              ${capitalize(SenderInfo?.customer?.lastname == "default"? "":SenderInfo?.customer?.lastname)} 
-                              ${capitalize(SenderInfo?.customer?.email)}`}
+                            {`${!SenderInfo?.customer?.firstname? "" : capitalize(SenderInfo?.customer?.firstname)} 
+                              ${!SenderInfo?.customer?.lastname? "" : capitalize(SenderInfo?.customer?.lastname == "default"? "": SenderInfo?.customer?.lastname)} 
+                              ${!SenderInfo?.customer?.email? "N/A" : capitalize(SenderInfo?.customer?.email)}`}
                             <span className="custormChatHeaderDot d-block"></span>{" "}
                             <span>{dateFormater(ticket[0]?.updated_at)}</span>
                           </p>
@@ -1073,6 +1089,14 @@ function Conversation({user, ...props}) {
                         onEditorStateChange={(editor) =>
                           onEditorStateChange(editor)
                         }
+                        
+                        mention={{
+                          separator: ' ',
+                          trigger: '@',
+                          suggestions: (replyType === "note")? Agents.map((data) => {
+                              return { text: `${data.firstname}  ${data.lastname}`, value: `${data.firstname}  ${data.lastname}`, url: `settings/profile/${data.id}`}
+                            }) : []
+                        }}
                       />
 
                       <div className="sendMsg">

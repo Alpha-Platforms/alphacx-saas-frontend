@@ -5,21 +5,25 @@ import { returnErrors } from './errorActions';
 import {userTokenConfig} from '../../helper';
 import { NotificationManager } from 'react-notifications';
 
-export const getAgents = () => (dispatch, getState) => {
+export const getAgents = (success, failed) => (dispatch, getState) => {
 	if (!navigator.onLine) {
 		return;
 	}
 	dispatch(setAgentsLoading());
 	axios.get(`${config.stagingBaseUrl}/users?role=Agent&per_page=500`, userTokenConfig(getState))
-		.then(res => dispatch({
-			type: types.GET_AGENTS,
-			payload: (res.data && res.data.status === "success") ? res.data.data : {}
-		}))
+		.then(res => {
+            dispatch({
+                type: types.GET_AGENTS,
+                payload: (res.data && res.data.status === "success") ? res.data.data : {}
+            });
+            success && success(res.data?.data);
+        })
 		.catch(err => {
             dispatch({
                 type: types.AGENTS_LOADING_FAILED
             });
             dispatch(returnErrors(err.response?.data, err.response?.status));
+            failed && failed();
         });
 }
 

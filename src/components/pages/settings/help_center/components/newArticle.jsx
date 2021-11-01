@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import RightArrow from "../../../../../assets/imgF/arrow_right.png";
 import EmptyArticle from "../../../../../assets/images/empty_article.png";
 import "./newArticle.scss";
@@ -57,6 +57,10 @@ const NewArticle = () => {
   });
   const [policyLoading, setPolicyLoading] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [catState, setCatState] = useState({
+    loading: true,
+    shouldRender: false
+  });
   const [folders, setFolders] = useState([]);
   const [editorState, setEditorState] = useState(initialState);
 
@@ -158,6 +162,20 @@ const NewArticle = () => {
     const res = await httpGetMain("articles/categories");
     if (res?.status == "success") {
       let categories = res?.data;
+      console.log('CATEGORI ES => ', categories);
+      if (!categories || categories?.length === 0) {
+        setCatState(prev => ({
+          ...prev,
+          loading: false,
+          shouldRender: false
+        }));
+      } else {
+        setCatState(prev => ({
+          ...prev,
+          loading: false,
+          shouldRender: true
+        }));
+      }
       setCategories(categories);
     } else {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
@@ -458,6 +476,8 @@ const NewArticle = () => {
             </div>
           </div>
           <div className="side-content col-md-4">
+            {catState.loading ? <div>Loading...</div> : !catState.shouldRender ? <div>There is no article category available yet. Go to <Link to="/settings/knowledge-base/categories">Article Categories</Link> page to create one.</div>
+             : <Fragment>
             <div className="mb-5 top">
               {/* <Link
                 to="/settings/knowledge-base/article"
@@ -572,6 +592,7 @@ const NewArticle = () => {
                 </button>
               </div> */}
             </div>
+            </Fragment>}
           </div>
         </div>
       </div>
