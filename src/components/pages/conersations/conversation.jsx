@@ -758,9 +758,9 @@ function Conversation({user, ...props}) {
                         <div className="custormChatHeaderInfoData">
                           <h1>{ticket[0]?.subject}</h1>
                           <p>
-                            {`${capitalize(SenderInfo?.customer?.firstname)} 
-                              ${capitalize(SenderInfo?.customer?.lastname == "default"? "":SenderInfo?.customer?.lastname)} 
-                              ${capitalize(SenderInfo?.customer?.email)}`}
+                            {`${!SenderInfo?.customer?.firstname? "" : capitalize(SenderInfo?.customer?.firstname)} 
+                              ${!SenderInfo?.customer?.lastname? "" : capitalize(SenderInfo?.customer?.lastname == "default"? "": SenderInfo?.customer?.lastname)} 
+                              ${!SenderInfo?.customer?.email? "N/A" : capitalize(SenderInfo?.customer?.email)}`}
                             <span className="custormChatHeaderDot d-block"></span>{" "}
                             <span>{dateFormater(ticket[0]?.updated_at)}</span>
                           </p>

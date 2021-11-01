@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { Fragment } from "react";
 import { ReactComponent as TicketAssignedSvg } from "../../../assets/icons/ticketassigned.svg";
 import { ReactComponent as TicketIdSvg } from "../../../assets/icons/ticketid.svg";
+import InitialsFromString from "../../helpers/InitialsFromString";
 import TicketIdIcon from "../../../assets/icons/ticketid.svg";
 import TicketPriorityIcon from "../../../assets/icons/ticketpriority.svg";
 import TicketStageIcon from "../../../assets/icons/ticketstage.svg";
@@ -65,15 +66,11 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
             ) : (
               // <img src={userImg} alt="" />
               <div className="userProfilePicConNoImgj">
-                <p className="text-capitalize"
-                  style={{ fontSize: "30px!important" }}
-                >{`${capitalize(ticket[0]?.customer?.firstname?.slice(0,1))}${ticket[0]?.customer?.lastname == "default"? "" : capitalize(ticket[0]?.customer?.lastname?.slice(0, 1))}`}</p>
+                <p className="text-capitalize" style={{ fontSize: "30px!important" }}>
+                  {InitialsFromString(`${ticket[0]?.customer?.firstname == "default" || !ticket[0]?.customer?.firstname? "" : ticket[0]?.customer?.firstname}`, `${ticket[0]?.customer?.lastname == "default" || !ticket[0]?.customer?.lastname ? "" : ticket[0]?.customer?.lastname}`)}
+                </p>
               </div>
             )}
-            {/* 
-            <p className="font-weight-bold"><b>{`${capitalize(ticket[0]?.customer?.firstname)} ${capitalize(
-              ticket[0]?.customer?.lastname
-            )}`}</b></p> */}
             <h6            
               className="mb-0 text-capitalize mt-2 pb-0"
             >

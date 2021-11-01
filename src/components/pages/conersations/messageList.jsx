@@ -3,7 +3,7 @@ import truncateWithEllipses from "../../helpers/truncate";
 import ClipLoader from "react-spinners/ClipLoader";
 import { timeFormater } from "../../helpers/dateFormater";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
-
+import InitialsFromString from "../../helpers/InitialsFromString";
 
 export default function MessageList({
   tickets,
@@ -85,8 +85,7 @@ export default function MessageList({
               <div className="message-user-img">
                 {data.customer.avatar == null ? (
                   <div className="message-user-noimg">
-                    <span>{`${capitalizeFirstLetter(data?.customer?.firstname?.slice(0, 1))}${data?.customer?.lastname == "default"? "" : capitalizeFirstLetter(data?.customer?.lastname?.slice(0, 1))}`}
-                    </span>
+                    <span>{InitialsFromString(`${data?.customer?.firstname == "default" || !data?.customer?.firstname? "" : data?.customer?.firstname}`, `${data?.customer?.lastname == "default" || !data?.customer?.lastname ? "" : data?.customer?.lastname}`)}</span>
                   </div>
                 ) : (
                   <img src={data?.customer?.avatar} alt="" />
@@ -94,18 +93,16 @@ export default function MessageList({
                 <div className="user-status-online"></div>
               </div>
               <div className="message-user-body">
-                <p className="senderName">{`${capitalizeFirstLetter(
-                  data?.customer?.firstname
-                )} ${data?.customer?.lastname == "default"? "" : capitalizeFirstLetter(data?.customer?.lastname)}`}</p>
+                <p className="senderName">
+                  {`${!data?.customer?.firstname || data?.customer?.firstname == "default"? "" : capitalizeFirstLetter(data?.customer?.firstname )} 
+                  ${!data?.customer?.lastname || data?.customer?.lastname == "default"? "" : capitalizeFirstLetter(data?.customer?.lastname)}`}
+                </p>
                 <p className="senderMSG text-truncate" style={{ "maxWidth": "160px" }}>
-                  {/* {truncateWithEllipses(data?.plain_description, 20)} */}
-                  {/* {(Array.isArray(data.history)) ? data.history.length :  ""} */}
                   {(!Array.isArray(data.history)) ? ""
                     : (data.history.length == 0)? "" 
                     : (data.history[0].plain_response === null || data.history[0].plain_response === undefined ) ? "" 
                     : data.history[0].plain_response
                   }
-                    {/* truncateWithEllipses(data.history.at(-1), 20) */}
                 </p>
                 <div className="msg-badges">
                   <div
