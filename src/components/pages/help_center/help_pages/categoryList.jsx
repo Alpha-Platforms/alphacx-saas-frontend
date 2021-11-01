@@ -65,7 +65,7 @@ const ArticleCategoryList = () => {
                             <TopBar/>
 
                             <div className="article-list">
-                                <h1 className="nav-info">Categories</h1>
+                                <h2 className="nav-info">Categories</h2>
                                 <div className="articles">
                                     {categories.map((item, i) => (
                                         <Link
@@ -74,8 +74,8 @@ const ArticleCategoryList = () => {
                                             ?.name
                                                 ?.toLowerCase())}`}>
                                             <div className="article-link">
-                                                <h3 className="title">{textCapitalize(item
-                                                        ?.name)}</h3>
+                                                <h4 className="title">{textCapitalize(item
+                                                        ?.name)}</h4>
                                                 {/* <p className="description">{item.solution}</p> */}
                                             </div>
                                         </Link>
