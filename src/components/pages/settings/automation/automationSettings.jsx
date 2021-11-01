@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useState } from "react";
 import "../help_center/helpCenter.scss";
 import "./automationSettings.scss";
@@ -100,46 +101,39 @@ const AutomationSettings = () => {
       ),
     },
   ];
-  const AlphacxMTPagination = (props) => {
+
+// --------------------------
+// Function to correct material table pagination
+// --------------------------
+  function AlphacxMTPagination2(props) {
     const {
       ActionsComponent,
       onChangePage,
       onChangeRowsPerPage,
       ...tablePaginationProps
     } = props;
-
+  
     return (
       <TablePagination
         {...tablePaginationProps}
-        rowsPerPageOptions={[10, 20, 30]}
-        rowsPerPage={tableMeta?.itemsPerPage || 5}
-        count={Number(tableMeta?.totalItems || 20)}
-        page={(tableMeta?.currentPage || 1) - 1}
+        // @ts-expect-error onChangePage was renamed to onPageChange
         onPageChange={onChangePage}
-        // when the number of rows per page changes
-        onRowsPerPageChange={(event) => {
-          setChangingRow(true);
-          // getPaginatedTickets(event.target.value, 1);
-        }}
+        onRowsPerPageChange={onChangeRowsPerPage}
         ActionsComponent={(subprops) => {
           const { onPageChange, ...actionsComponentProps } = subprops;
           return (
+            // @ts-expect-error ActionsComponent is provided by material-table
             <ActionsComponent
               {...actionsComponentProps}
-              onChangePage={(event, newPage) => {
-                // fetch tickets with new current page
-                // getPaginatedTickets(meta.itemsPerPage, newPage + 1);
-              }}
-              onRowsPerPageChange={(event) => {
-                // fetch tickets with new rows per page
-                // getPaginatedTickets(event.target.value, meta.currentPage);
-              }}
+              onChangePage={onPageChange}
             />
           );
         }}
       />
     );
-  };
+  }
+
+
   // --------------------------
   // Function to delete an automation Policy by ID
   // --------------------------
@@ -276,7 +270,7 @@ const AutomationSettings = () => {
                     },
                   }}
                   components={{
-                    Pagination: AlphacxMTPagination,
+                    Pagination: AlphacxMTPagination2,
                   }}
                 />
               </MuiThemeProvider>
