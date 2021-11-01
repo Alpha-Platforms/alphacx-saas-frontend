@@ -19,6 +19,8 @@
       padding-right: 25px;
       font-size: 12px;
       position: relative;
+      width: -webkit-fit-content;
+      width: -moz-fit-content;
       width: fit-content;
       p {
         margin: 0;
@@ -96,4 +98,26 @@
     width: 100px!important;
     text-align: center;
   }
+}
+
+.sla-form {
+  padding: 10px 30px;
+  background: #F6FAFD;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.select-light-blue > div:nth-of-type(1) {
+  background: #F6FAFD !important;
+  border: 1px solid rgba(45, 50, 80, 0.07) !important;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+}
+
+.input-light-blue {
+  background: #F6FAFD !important;
+  border: 1px solid rgba(45, 50, 80, 0.07) !important;
 }

@@ -248,12 +248,12 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
           </div>
           <div id="setting-form">
             <h5 className="mt-3 mb-4 f-16 fw-bold">
-              {automationId ? "Edit" : "New"} Automation
+              {automationId ? "Edit" : "New"} SLA Policy
             </h5>
-            <form action="">
+            <form action="" className="sla-form">
               <div className="form-group mt-3">
                 <label htmlFor="slaName" className="f-14 mb-1">
-                  Title
+                  SLA Name
                 </label>
                 <input
                   type="text"
@@ -343,7 +343,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
               </div>
 
               <div id="resolution-wrapper mt-4">
-                <label htmlFor="ticket" className="d-flex p-2 acx-bg-blue-light-30">
+                <label htmlFor="ticket" className="d-flex p-2 ps-0">
                   Actions
                 </label>
                 
