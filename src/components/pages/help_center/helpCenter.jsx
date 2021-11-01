@@ -108,7 +108,7 @@ const HelpCenter = () => {
               ))}
             </div>
               {categories.length > 6 && <div>
-              <Link to="/knowledge-base/categories" className="show-all-cat">Show all categories</Link>
+              <Link to="/knowledge-base/categories" className="show-all-cat btn py-2 px-3 bg-at-blue-light">View all categories</Link>
             </div>}
             
 

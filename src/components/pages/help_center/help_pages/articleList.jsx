@@ -11,7 +11,7 @@ import TopBar from "../components/topBar/topBar";
 import { faqs, navigation } from "../faq";
 import "./articleList.scss";
 import ScaleLoader from "react-spinners/ScaleLoader";
-import {slugify} from '../../../../helper';
+import {slugify, textCapitalize} from '../../../../helper';
 
 const ArticleList = () => {
   let query = useQuery();
@@ -23,6 +23,8 @@ const ArticleList = () => {
   const [articles, setArticles] = useState([]);
   const [policyLoading, setPolicyLoading] = useState(true);
   const [shouldReturn404, setShouldReturn404] = useState(false);
+  const [catName, setCatName] = useState('');
+  const location = useLocation();
   const icons = [
     "work",
     "account",
@@ -32,7 +34,6 @@ const ArticleList = () => {
     "document",
   ];
 
-  console.log('articles => ', articles);
 
   function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -50,9 +51,9 @@ const ArticleList = () => {
         for (let index = 0; index < folders.length; index++) {
           articles = [...articles, ...folders[index].articles];
         }
-        console.clear();
-        console.log("articles", articles);
-        console.log(pageUrl);
+        // console.clear();
+        // console.log("articles", articles);
+        // console.log(pageUrl);
   
         setArticles(articles);
       } else {
@@ -64,7 +65,12 @@ const ArticleList = () => {
   };
 
   useEffect(() => {
+    let pagelinks = location.pathname.split("/");
+    // console.log("links from article", );
+    setCatName(textCapitalize(pagelinks[pagelinks.length - 1]?.replaceAll('-', ' ')));
+
     fetchAllArticles();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <Fragment>
@@ -81,20 +87,7 @@ const ArticleList = () => {
           </div>
         )} */}
         <div className="article-list">
-          <div className="nav-info">
-            {/* <HelpNavIcon name={pageInfo[0].icon} size={70} /> */}
-            {/* <div className="textInfo">
-              <h3>{pageInfo[0].title}</h3>
-              <div>
-                {pageInfo[0].items.map((item, i) => (
-                  <p key={i}>
-                    {item}
-                    {i !== pageInfo[0].items.length - 1 ? "," : ""}
-                  </p>
-                ))}
-              </div>
-            </div> */}
-          </div>
+        <h2 className="nav-info">{catName}</h2>
           <div className="articles">
             {articles.map((item, i) => (
               <Link
@@ -102,7 +95,7 @@ const ArticleList = () => {
                 to={`${pageUrl}/${slugify(item?.title?.toLowerCase())}`}
               >
                 <div className="article-link">
-                  <h3 className="title">{item?.title}</h3>
+                  <h4 className="title">{item?.title}</h4>
                   {/* <p className="description">{item.solution}</p> */}
                 </div>
               </Link>
