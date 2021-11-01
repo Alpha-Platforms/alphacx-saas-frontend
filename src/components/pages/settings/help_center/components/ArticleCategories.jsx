@@ -45,6 +45,9 @@ const [tabKey, setTabKey] = useState("category-table");
             ?.status === "success") {
             let categories = res
                 ?.data;
+            if (!categories || categories?.length === 0) {
+                setTabKey("category-form");
+            } 
             setCategories(categories);
         } else {
             return NotificationManager.error(res
