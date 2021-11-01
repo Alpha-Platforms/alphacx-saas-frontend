@@ -866,7 +866,8 @@ select {
 }
 
 .DraftEditor-editorContainer {
-  padding: 30px 4px 4px 4px;
+  /* padding: 30px 4px 4px 4px; */
+  padding: 4px 4px 4px 4px;
   height: 72px !important;
   background-color: #ffff !important;
   border: none !important;
@@ -1149,19 +1150,12 @@ select {
   }
 }
 .message {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
   align-items: flex-start;
   padding-left: 30px;
   padding-right: 30px;
 }
 .message.message-out {
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: reverse;
-  -ms-flex-direction: row-reverse;
   flex-direction: row-reverse;
 }
 .message.message-note {
@@ -1185,20 +1179,13 @@ select {
   }
 }
 .message-content {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
 }
 .message-content + .message-content {
   margin-top: 0.75rem;
 }
 .message-out .message-content {
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: reverse;
-  -ms-flex-direction: row-reverse;
   flex-direction: row-reverse;
 }
 .message-gallery,
@@ -1253,8 +1240,6 @@ select {
 .message-inner {
   max-width: 100%;
   min-width: 0;
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
   flex: 1;
 }
 @media (min-width: 992px) {

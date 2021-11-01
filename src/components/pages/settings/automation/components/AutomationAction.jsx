@@ -124,7 +124,7 @@ const AutomationAction = ({
             <label htmlFor="channel">Send</label>
             
             <RSelect 
-              className=""
+              className="select-light-blue"
               id="channel"
               name="action"
               openMenuOnFocus={true}
@@ -156,7 +156,7 @@ const AutomationAction = ({
             <label htmlFor="subject">Subject</label>
             <input
               type="text"
-              className="form-control mt-2"
+              className="form-control mt-2 input-light-blue"
               id="subject"
               name="subject"
               value={action.subject}
@@ -195,7 +195,7 @@ const AutomationAction = ({
 
             <div className="form-group">
               <RSelect 
-                className=""
+                className="select-light-blue"
                 isClearable={false}
                 name="recipient"
                 isMulti
@@ -240,10 +240,10 @@ const AutomationAction = ({
 
           </div>
         </div>
-        <div className="card-footer bg-light" id="customer-choice">
+        <div className="card-footer bg-light px-3 py-3" id="customer-choice">
           <button className="addNewResolution" onClick={addAction}>
             <img src={AddIcon} alt="" className="img-fluid me-1 mt-n5 " />
-            Add New Action
+            New Action
           </button>
           
           {actions.length > 1 && (

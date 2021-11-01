@@ -8,5 +8,6 @@
         "twillo",
         "unscrollable"
     ],
-    "git.ignoreLimitWarning": true
+    "editor.fontFamily": "'SF Mono Bold', monolisa, Monolisa, monaco, Monaco, Consolas, 'Courier New', monospace",
+    "editor.fontWeight": "600"
 }
