@@ -133,6 +133,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
       const data = res?.data;
 
       if (data) {
+        // console.log('AUTOMATION DATA => ', data);
         setIsLoaded(true);
         setAutomationBody(prev => ({
           ...prev,
@@ -146,7 +147,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
           id: uuid(),
           channel: act?.action?.toLowerCase() === 'email' ? {value: wordCapitalize(act?.action || '').trim(), label: wordCapitalize(act?.action || '').trim()} : {value: act?.action?.toUpperCase(), label: act?.action?.toUpperCase()},
           days: act?.days || '',
-          hours: Math.floor(Number(act?.hours) / 60) || '',
+          hours: Math.floor(Number(act?.hours) / 60) || 0,
           subject: act?.subject || '',
           body: act.body,
           recipientType: act?.recipient?.type || 'agent',
@@ -164,16 +165,12 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
   useEffect(() => {
     if (isUserAuthenticated) {
         // agent is needed, so fetch agents
-        console.log('User is authenticated');
         getAgents();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [isUserAuthenticated]);
 
   useEffect(() => {
-    console.log('AgentLoaded => ', isAgentsLoaded);
-    console.log('isGroupsLoaded => ', isGroupsLoaded);
-
     if (isAgentsLoaded && isGroupsLoaded && !isLoaded) {
       // check for edit mode and get automation with id
       if(automationId){
