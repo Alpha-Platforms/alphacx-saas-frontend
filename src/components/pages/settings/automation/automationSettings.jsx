@@ -162,7 +162,9 @@ const AutomationSettings = () => {
   // Function to fetch automation
   // --------------------------
   const getAllAutomation = async () => {
+    setPolicyLoading(true);
     const res = await httpGetMain("sla");
+    setPolicyLoading(false);
     if (res?.status === "success") {
 
       // console.clear();
@@ -198,18 +200,18 @@ const AutomationSettings = () => {
         <div className="p-5 w-100">
           <h6 className="mb-4">Are you sure you want to delete this automation?</h6>
           <div className="d-flex justify-content-center">
-            <a
+            <button
               className="btn f-12 bg-outline-custom cancel px-4"
               onClick={() => setOpenDeleteActionModal(false)}
             >
               Cancel
-            </a>
-            <a
+            </button>
+            <button
               className="btn ms-2 f-12 bg-custom px-4"
               onClick={deleteAutomation}
             >
               Confirm
-            </a>
+            </button>
           </div>
         </div>
       </Modal>

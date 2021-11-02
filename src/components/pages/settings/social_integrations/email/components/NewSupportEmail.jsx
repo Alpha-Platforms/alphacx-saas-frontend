@@ -122,7 +122,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
         <div className="col-md-8">
           <h5 className="mt-3 mb-2 f-16 fw-bold">Email Settings</h5>
           <div className="form-group">
-            <label for="name" className="form-label f-14">
+            <label htmlFor="name" className="form-label f-14">
               Name
             </label>
             <input
@@ -136,7 +136,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
             </p>
           </div>
           {/* <div className="form-group mt-2">
-            <label for="email" className="form-label f-14">
+            <label htmlFor="email" className="form-label f-14">
               Your Support email <span className="text-danger">*</span>
             </label>
             <input
@@ -184,7 +184,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
           </div>
 
           {/* <div className="form-group mt-2">
-            <label for="group" className="form-label f-14">
+            <label htmlFor="group" className="form-label f-14">
               Assign to Group
             </label>
             <select id="group" className="form-select">
@@ -197,7 +197,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
             </p>
           </div> */}
           {/* <div className="form-group mt-2">
-            <label for="support" className="form-labedl f-14">
+            <label htmlFor="support" className="form-labedl f-14">
               Link support email with a product
             </label>
             <select id="support" className="form-select">
@@ -229,7 +229,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
                         checked={emailState.activeRadio === "default-server"}
                         onChange={handleServerChange}
                       />
-                      <label className="form-check-label f-14" for="radio-1">
+                      <label className="form-check-label f-14" htmlFor="radio-1">
                         Default (Alphatickets)
                       </label>
                     </div>
@@ -245,7 +245,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
                       checked={emailState.activeRadio === "own-server"}
                       onChange={handleServerChange}
                     />
-                    <label className="form-check-label f-14" for="radio-2">
+                    <label className="form-check-label f-14" htmlFor="radio-2">
                       Use your own mail server
                     </label>
                   </div>
@@ -259,7 +259,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
               // ...
               <div className="card-body d-block" id="default">
                 <div className="form-group">
-                  <label for="forward-mail" className="form-label f-14">
+                  <label htmlFor="forward-mail" className="form-label f-14">
                     Forward Your Emails to
                   </label>
                   <input
