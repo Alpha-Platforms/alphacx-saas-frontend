@@ -73,25 +73,24 @@ const AutomationSettings = () => {
       field: "dropdownAction",
       width: "50px",
       render: (rowData) => (
-        <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+        <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown email-dropdown">
           <Dropdown.Toggle variant="transparent" size="sm">
             <span className="cust-table-dots">
               <DotSvg />
             </span>
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item eventKey="1">
-              <span onClick={() => history.push(`/settings/automation/${automationPolicies[rowData.tableData.id].id}`)}>
+            <Dropdown.Item eventKey="1" onClick={() => history.push(`/settings/automation/${automationPolicies[rowData.tableData.id].id}`)}>
+              <span>
                 Edit
               </span>
             </Dropdown.Item>
-            <Dropdown.Item eventKey="2">
-              <span
-                className="black-text"
-                onClick={() => {
+            <Dropdown.Item eventKey="2" onClick={() => {
                   setOpenDeleteActionModal(true);
                   setDeleteUrl(automationPolicies[rowData.tableData.id].id);
-                }}
+                }}>
+              <span
+                className="black-text"
               >
                 Delete
               </span>
