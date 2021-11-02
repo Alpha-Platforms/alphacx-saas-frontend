@@ -14,13 +14,24 @@ const NewSupportEmail = ({configs, getConfigs}) => {
   const [defaultServer, setDefaultServer] = useState(false);
   const [emailState, setEmailState] = useState({
     activeRadio: "own-server",
-    // mailServer: "incoming",
     mailServer: "incoming-only",
     emailSystem: "imap",
     emailConfig: {
-      tls: false
+      tls: false,
+      host: '',
+      email: '',
+      port: '',
+      password: ''
     },
+    outgoingEmailConfig: {
+      tls: false,
+      // from: '', // sender email
+      host: '',
+      port: ''
+    }
   });
+
+  console.log('EMAIL STATE => ', emailState);
   
   const [show, setShow] = useState(false);
   const [passwordChanged, setPasswordChanged] = useState(false)
@@ -38,29 +49,73 @@ const NewSupportEmail = ({configs, getConfigs}) => {
   };
   
   const handleSubmit = async () => {
-    const { email, port, tls, host, password } = emailState.emailConfig;
-    const data = {
-      email_config: passwordChanged ? {
-        email,
-        password,
-        host,
-        port: Number(port),
-        tls,
-      } : {
-        email,
-        host,
-        port: Number(port),
-        tls,
+    if (emailState.mailServer === "incoming-only") {
+      console.log('Executing incoming only');
+      const { email, port, tls, host, password } = emailState.emailConfig;
+
+      if (email && port && host && password) {
+        const data = {
+          email_config: passwordChanged ? {
+            email,
+            password,
+            host,
+            port: Number(port),
+            tls,
+          } : {
+            email,
+            host,
+            port: Number(port),
+            tls,
+          }
+        };
+  
+        const res = await httpPatchMain("settings/email-config", JSON.stringify(data));
+  
+        if (res?.status === "success") {
+          handleShow();
+          getConfigs();
+        } else {
+          return NotificationManager.error(res?.er?.message, "Error", 4000);
+        }
+      } else {
+        NotificationManager.error('Fill up required fields', 'Error', 4000);
       }
-    };
-
-    const res = await httpPatchMain("settings/email-config", JSON.stringify(data));
-
-    if (res?.status === "success") {
-      handleShow();
-      getConfigs();
     } else {
-      return NotificationManager.error(res?.er?.message, "Error", 4000);
+      console.log('executing outgoing only');
+      const { email, password } = emailState.emailConfig;
+      const {port, tls, host} = emailState.outgoingEmailConfig;
+
+      if (email && password && port && host) {
+        const data = {
+          outgoingEmailConfig: passwordChanged ? {
+            email,
+            password,
+            from: email,
+            host,
+            port: Number(port),
+            tls,
+          } : {
+            email,
+            from: email,
+            host,
+            port: Number(port),
+            tls,
+          }
+        };
+  
+        const res = await httpPatchMain("settings/outgoing-email-config", JSON.stringify(data));
+  
+        if (res?.status === "success") {
+          handleShow();
+          getConfigs();
+        } else {
+          return NotificationManager.error(res?.er?.message, "Error", 4000);
+        }
+
+      } else {
+        NotificationManager.error('Fill up required fields', 'Error', 4000);
+      }
+      
     }
 
   };
@@ -92,6 +147,12 @@ const NewSupportEmail = ({configs, getConfigs}) => {
           email: configs?.email_config?.email || '',
           port: configs?.email_config?.port || null,
           password: configs?.email_config?.password || '',
+        },
+        outgoingEmailConfig: {
+          ...prev.outgoingEmailConfig,
+          tls: configs?.outgoing_email_config?.tls || false,
+          host: configs?.outgoing_email_config?.host || '',
+          port: configs?.outgoing_email_config?.port || ''
         }
       }));
     }
@@ -288,7 +349,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
             >
               Cancel
             </Link>
-            <a
+            <button
               className="btn btn-sm px-4 bg-custom ms-3"
               id="save-changes"
               data-bs-toggle="modal"
@@ -296,7 +357,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
               onClick={handleSubmit}
             >
               Save
-            </a>
+            </button>
           </div>
         </div>
       </div>
