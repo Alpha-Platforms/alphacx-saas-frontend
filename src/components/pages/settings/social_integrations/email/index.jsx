@@ -58,17 +58,17 @@ const EmailSettings = ({configs, isConfigsLoaded}) => {
           title: "",
           field: "dropdownAction",
           render: (rowData) => (
-            <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+            <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown email-dropdown">
               <Dropdown.Toggle variant="transparent" size="sm">
                 <span className="cust-table-dots">
                   <DotSvg />
                 </span>
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item eventKey="1">
-                  <Link to="/settings/integrations/email/email-form">
+                <Dropdown.Item to eventKey="1" onClick={() => history.push('/settings/integrations/email/email-form')}>
+                  {/* <Link to="/settings/integrations/email/email-form"> */}
                     <span className="black-text">Edit</span>
-                  </Link>
+                  {/* </Link> */}
                 </Dropdown.Item>
                 <Dropdown.Item eventKey="2">
                   <span className="black-text">Delete</span>
@@ -85,7 +85,7 @@ const EmailSettings = ({configs, isConfigsLoaded}) => {
             history.push('/settings/integrations/email/email-form');
           }
 
-          console.log('EMAIL CONFIGS => ', configs);
+          // console.log('EMAIL CONFIGS => ', configs);
         }
       }, [isConfigsLoaded]);
 

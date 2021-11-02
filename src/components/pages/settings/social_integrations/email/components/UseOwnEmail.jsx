@@ -88,7 +88,7 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                 className={emailState.emailSystem === "imap"
                 ? ""
                 : "d-none"}>
-                <h5 className="fs-6 fw-bold mt-2 mb-3">Use Mail Server for</h5>
+                <h5 className="fs-6 fw-bold mt-2 mb-3">Use Mail Server htmlFor</h5>
                 <div className="row">
                     <div className="col-md-3">
                         <div className="form-check">
@@ -100,12 +100,12 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                                 value="incoming-only"
                                 checked={emailState.mailServer === "incoming-only"}
                                 onChange={handleMailServerChange}/>
-                            <label className="form-check-label f-14" for="incoming-only">
+                            <label className="form-check-label f-14" htmlFor="incoming-only">
                                 Incoming only
                             </label>
                         </div>
                     </div>
-                    {/* <div className="col-md-3">
+                    <div className="col-md-3">
             <div className="form-check">
               <input
                 className="form-check-input"
@@ -116,12 +116,12 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                 checked={emailState.mailServer === "outgoing-only"}
                 onChange={handleMailServerChange}
               />
-              <label className="form-check-label f-14" for="outgoing-only">
+              <label className="form-check-label f-14" htmlFor="outgoing-only">
                 Outgoing only
               </label>
             </div>
           </div>
-          <div className="col-md-3">
+          {/* <div className="col-md-3">
             <div className="form-check">
               <input
                 className="form-check-input"
@@ -132,13 +132,15 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                 checked={emailState.mailServer === "both"}
                 onChange={handleMailServerChange}
               />
-              <label className="form-check-label f-14" for="both">
+              <label className="form-check-label f-14" htmlFor="both">
                 Both
               </label>
             </div>
           </div> */}
+
+
                 </div>
-                {(emailState.mailServer === "both" || emailState.mailServer === "incoming-only") && (
+                {(emailState.mailServer === "both" || emailState.mailServer === "incoming-only" || emailState.mailServer === "outgoing-only") && (
                     <div className="incoming-mail">
                         <h5 className="fs-6 fw-bold mt-4 mb-3">Incoming Mail Settings</h5>
                         <div className="row mt-2">
@@ -248,7 +250,7 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                                     </p>
                                 </div>
                             </div>
-                            <div className="col-md-4">
+                            <div className="col-md-6">
                                 <div className="form-group">
                                     <label htmlFor="port" className="form-label">
                                         SMTP Port<span className="text-danger">*</span>
@@ -256,7 +258,7 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                                     <input type="text" className="form-control form-control-sm" placeholder="997"/>
                                 </div>
                             </div>
-                            <div className="col-md-2 mt-5">
+                            <div className="col-md-12 mt-1 ms-1">
                                 <div className="form-check">
                                     <input className="form-check-input" type="checkbox" id="ssl"/>
                                     <label className="form-check-label" htmlFor="ssl">
@@ -275,22 +277,22 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                         </div>
 
                         <div>
-                            <div className="form-group mt-3">
+                            {/* {<div className="form-group mt-3">
                                 <label className="form-label">Authentication</label>
                                 <select className="form-select w-75">
                                     <option>plain</option>
                                     <option>plain</option>
                                     <option>plain</option>
                                 </select>
-                            </div>
+                            </div>} */}
                             <div className="d-flex align-items-center mt-4">
                                 <div className="vertical-line"></div>
                                 <div className="ms-4 flex-grow-1">
                                     <div className="form-group mt-2">
                                         <label className="form-label">
-                                            Username<span className="text-danger">*</span>
+                                            Email<span className="text-danger">*</span>
                                         </label>
-                                        <input type="text" autoComplete="off" className="form-control form-control-sm w-75"/>
+                                        <input type="email" autoComplete="off" className="form-control form-control-sm w-75"/>
                                     </div>
                                     <div className="form-group mt-2 mb-4">
                                         <label className="form-label">
