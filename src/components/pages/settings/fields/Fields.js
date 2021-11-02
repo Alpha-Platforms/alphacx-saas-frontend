@@ -90,7 +90,7 @@ const Fields = () => {
 
     // get field sections
     const getFieldSections = (data) => {
-        const filterEmptyArray=(a,b)=>{return a.filter((e)=>{return e!=b})}
+        const filterEmptyArray = (a,b) => {return a.filter((e)=>{return e!=b})}
 
         let fieldSectionsResult = data.reduce(function(result, object) {
             if (object.field_section != "") {
@@ -98,7 +98,7 @@ const Fields = () => {
             }
             return result;
         }, []);
-        setFieldSections(filterEmptyArray(fieldSectionsResult));
+        setFieldSections(filterEmptyArray([...new Set(fieldSectionsResult)]));
     }
 
     // form field input change
@@ -145,7 +145,7 @@ const Fields = () => {
             setCustomFieldOptions((prevState) => ({
                 ...prevState,
                 "selected": true,
-                "options": customField.field_options.replace(/{|"|}/g, "").split(",")
+                "options": customField.field_options? customField.field_options.replace(/{|"|}/g, "").split(",") : []
             }))
         }
 
