@@ -73,25 +73,24 @@ const AutomationSettings = () => {
       field: "dropdownAction",
       width: "50px",
       render: (rowData) => (
-        <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+        <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown email-dropdown">
           <Dropdown.Toggle variant="transparent" size="sm">
             <span className="cust-table-dots">
               <DotSvg />
             </span>
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item eventKey="1">
-              <span onClick={() => history.push(`/settings/automation/${automationPolicies[rowData.tableData.id].id}`)}>
+            <Dropdown.Item eventKey="1" onClick={() => history.push(`/settings/automation/${automationPolicies[rowData.tableData.id].id}`)}>
+              <span>
                 Edit
               </span>
             </Dropdown.Item>
-            <Dropdown.Item eventKey="2">
-              <span
-                className="black-text"
-                onClick={() => {
+            <Dropdown.Item eventKey="2" onClick={() => {
                   setOpenDeleteActionModal(true);
                   setDeleteUrl(automationPolicies[rowData.tableData.id].id);
-                }}
+                }}>
+              <span
+                className="black-text"
               >
                 Delete
               </span>
@@ -162,7 +161,9 @@ const AutomationSettings = () => {
   // Function to fetch automation
   // --------------------------
   const getAllAutomation = async () => {
+    setPolicyLoading(true);
     const res = await httpGetMain("sla");
+    setPolicyLoading(false);
     if (res?.status === "success") {
 
       // console.clear();
@@ -198,18 +199,18 @@ const AutomationSettings = () => {
         <div className="p-5 w-100">
           <h6 className="mb-4">Are you sure you want to delete this automation?</h6>
           <div className="d-flex justify-content-center">
-            <a
+            <button
               className="btn f-12 bg-outline-custom cancel px-4"
               onClick={() => setOpenDeleteActionModal(false)}
             >
               Cancel
-            </a>
-            <a
+            </button>
+            <button
               className="btn ms-2 f-12 bg-custom px-4"
               onClick={deleteAutomation}
             >
               Confirm
-            </a>
+            </button>
           </div>
         </div>
       </Modal>
