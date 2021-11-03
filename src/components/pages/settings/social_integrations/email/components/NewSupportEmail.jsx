@@ -25,7 +25,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
     },
     outgoingEmailConfig: {
       tls: false,
-      // from: '', // sender email
+      from: '', // sender email
       host: '',
       port: ''
     }
@@ -83,20 +83,20 @@ const NewSupportEmail = ({configs, getConfigs}) => {
     } else {
       console.log('executing outgoing only');
       const { email, password } = emailState.emailConfig;
-      const {port, tls, host} = emailState.outgoingEmailConfig;
+      const {port, tls, host, from} = emailState.outgoingEmailConfig;
 
       if (email && password && port && host) {
         const data = {
           outgoingEmailConfig: passwordChanged ? {
             email,
             password,
-            from: email,
+            from,
             host,
             port: Number(port),
             tls,
           } : {
             email,
-            from: email,
+            from,
             host,
             port: Number(port),
             tls,
@@ -152,7 +152,8 @@ const NewSupportEmail = ({configs, getConfigs}) => {
           ...prev.outgoingEmailConfig,
           tls: configs?.outgoing_email_config?.tls || false,
           host: configs?.outgoing_email_config?.host || '',
-          port: configs?.outgoing_email_config?.port || ''
+          port: configs?.outgoing_email_config?.port || '',
+          from: configs?.outgoing_email_config?.from || ''
         }
       }));
     }
