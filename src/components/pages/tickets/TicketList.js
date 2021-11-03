@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -32,6 +33,8 @@ const TicketList = ({
   const [ticketLoading, setTicketLoading] = useState(false);
   const [createModalShow, setCreateModalShow] = useState(false);
   const [changingRow, setChangingRow] = useState(false);
+  const [rowsSelected, setRowsSelected] = useState([]);
+
   let selectedRows = [];
 
   useEffect(() => {
@@ -312,7 +315,23 @@ const TicketList = ({
 
   const handleSelectionChange = (rows) => {
     selectedRows = rows;
+
+    // setTimeout(() => setRowsSelected(rows), 2000);
+    window.document.querySelector('#selected-row-count').innerHTML = rows.length;
+
+    const deleteBtnWrapper = window.document.querySelector('#delete-btn-wrapper');
+
+    if (rows.length > 0) {
+      deleteBtnWrapper?.classList.remove('d-none');
+    } else {
+      deleteBtnWrapper?.classList.add('d-none');
+    }
   };
+
+  const handleDeleteTicket = () => {
+
+    setRowsSelected([]);
+  }
 
   return (
     <div>
@@ -370,6 +389,15 @@ const TicketList = ({
               </Dropdown.Menu>
             </Dropdown>
           </div>
+
+              <div id="delete-btn-wrapper" className="delete-btn-wrapper d-none">
+                <div>
+                  <button onClick={handleDeleteTicket} className="btn" type="button"><i class="bi bi-trash"></i></button>
+                </div>
+                <div>
+                  <span><span id="selected-row-count">0</span> ticket(s) selected</span>
+                </div>
+            </div>
         </div>
 
         <div
