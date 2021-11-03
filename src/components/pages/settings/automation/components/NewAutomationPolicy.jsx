@@ -20,8 +20,9 @@ import AutomationAction from "./AutomationAction";
 import RSelect from "react-select";
 import { connect } from "react-redux";
 import {uuid, wordCapitalize} from '../../../../../helper';
+import { getAgents } from './../../../../../reduxstore/actions/agentActions';
 
-const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroupsLoaded}) => {
+const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroupsLoaded, getAgents, isUserAuthenticated}) => {
 
   let router = useHistory();
   let {automationId} = useParams();
@@ -46,6 +47,8 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
   });
 
   const [RSCategoriesOptions, setRSCategoriesOptions] = useState([]);
+
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const generateActionTemplate = id => ({
     id,
@@ -123,12 +126,15 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
 
   // FUNCTION TO GET AUTOMATION INFORMATION IF IN EDIT MODE
   const getAutomationInfo = async () => {
+    setPolicyLoading(true);
     const res = await httpGetMain(`sla/${automationId}`);
     setPolicyLoading(false);
     if (res?.status === "success") {
       const data = res?.data;
 
       if (data) {
+        // console.log('AUTOMATION DATA => ', data);
+        setIsLoaded(true);
         setAutomationBody(prev => ({
           ...prev,
           title: data?.name,
@@ -141,7 +147,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
           id: uuid(),
           channel: act?.action?.toLowerCase() === 'email' ? {value: wordCapitalize(act?.action || '').trim(), label: wordCapitalize(act?.action || '').trim()} : {value: act?.action?.toUpperCase(), label: act?.action?.toUpperCase()},
           days: act?.days || '',
-          hours: Math.floor(Number(act?.hours) / 60) || '',
+          hours: Math.floor(Number(act?.hours) / 60) || 0,
           subject: act?.subject || '',
           body: act.body,
           recipientType: act?.recipient?.type || 'agent',
@@ -157,8 +163,15 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
   };
 
   useEffect(() => {
+    if (isUserAuthenticated) {
+        // agent is needed, so fetch agents
+        getAgents();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [isUserAuthenticated]);
 
-    if (isAgentsLoaded && isGroupsLoaded) {
+  useEffect(() => {
+    if (isAgentsLoaded && isGroupsLoaded && !isLoaded) {
       // check for edit mode and get automation with id
       if(automationId){
         getAutomationInfo()
@@ -392,8 +405,9 @@ const mapStateToProps = state => {
     agents: state.agent.agents,
     isAgentsLoaded: state.agent.isAgentsLoaded,
     groups: state.group.groups,
-    isGroupsLoaded: state.group.isGroupsLoaded
+    isGroupsLoaded: state.group.isGroupsLoaded,
+    isUserAuthenticated: state.userAuth.isUserAuthenticated
   }
 }
 
-export default connect(mapStateToProps)(NewAutomationPolicy)
+export default connect(mapStateToProps, {getAgents})(NewAutomationPolicy)
