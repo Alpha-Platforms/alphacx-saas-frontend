@@ -293,6 +293,30 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                             </div>
                         </div>
 
+                        <div className="row mt-2">
+                            <div className="col-md-6">
+                                <div className="form-group">
+                                    <label htmlFor="outgoing-mail" className="form-label">
+                                        Sender Email
+                                        <span className="text-danger">*</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-control form-control-sm"
+                                        placeholder="name@email.com"
+                                        name="from"
+                                        value={emailState.outgoingEmailConfig.from || ""}
+                                        onChange={handleOutgoingConfig}
+                                        id="outgoing-from"/>
+                                    <p className="description-text f-12 text-muted mt-1">
+                                        {/* SMTP server name to fetch the details */}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="col-md-6">
+                            </div>
+                        </div>
+
 
 
                         <div className="col-md-12 mt-1 ms-1">
