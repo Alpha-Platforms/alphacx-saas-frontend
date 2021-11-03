@@ -37,19 +37,22 @@ export const getTickets = () => (dispatch, getState) => {
         });
 }
 
-export const getPaginatedTickets = (itemsPerPage, currentPage) => (dispatch, getState) => {
+export const getPaginatedTickets = (itemsPerPage, currentPage, success, failed) => (dispatch, getState) => {
     if (!navigator.onLine) {
         return console.error("Network error!");
     }
     dispatch(setTicketsLoading());
     axios
         .get(`${config.stagingBaseUrl}/tickets?per_page=${itemsPerPage}&page=${currentPage}`, userTokenConfig(getState))
-        .then(res => dispatch({
-            type: types.GET_TICKETS,
-            payload: (res.data && res.data.status === "success")
-                ? res.data?.data
-                : {}
-        }))
+        .then(res => {
+            dispatch({
+                type: types.GET_TICKETS,
+                payload: (res.data && res.data.status === "success")
+                    ? res.data?.data
+                    : {}
+            });
+            success && success();
+        })
         .catch(err => {
             dispatch({
                 type: types.GET_CUSTOMERS,
@@ -62,6 +65,7 @@ export const getPaginatedTickets = (itemsPerPage, currentPage) => (dispatch, get
                     }
                 }
             });
+            failed && failed();
             dispatch(returnErrors(err.response?.data, err.response?.status))});
 }
 

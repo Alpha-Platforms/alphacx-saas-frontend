@@ -167,6 +167,35 @@
 .ticket-table-wrapper {
     /* border: 1px solid rgba(0, 0, 0, 0.1); */
     border: 1px solid #f1f1f1;
+    position: relative;
+}
+
+.delete-btn-wrapper {
+    position: absolute;
+    right: 1rem;
+    display: flex;
+}
+
+.delete-btn-wrapper > div {
+    /* width: 2.5rem; */
+    /* height: 2.5rem; */
+}
+
+.delete-btn-wrapper > div:nth-child(1) button {
+    background: red;
+    color: white;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.delete-btn-wrapper > div:nth-child(2) {
+    border: 1px solid red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 4px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 #alphacxMTable.acx-ticket-cust-table thead tr th:nth-child(3) > span > div {
