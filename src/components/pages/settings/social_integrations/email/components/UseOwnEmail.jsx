@@ -303,7 +303,7 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                                     <input
                                         type="text"
                                         className="form-control form-control-sm"
-                                        placeholder="name@email.com"
+                                        placeholder="John Doe"
                                         name="from"
                                         value={emailState.outgoingEmailConfig.from || ""}
                                         onChange={handleOutgoingConfig}
