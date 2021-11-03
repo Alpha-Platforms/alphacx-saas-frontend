@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -21,6 +22,8 @@ import { exportTable, textCapitalize } from "../../../helper";
 import SaveAlt from "@material-ui/icons/SaveAlt";
 import { ReactComponent as StarUnactiveSvg } from "../../../assets/icons/Star-unactive.svg";
 import { ReactComponent as StarYellowSvg } from "../../../assets/icons/Star-yellow.svg";
+import { NotificationManager } from 'react-notifications';
+import { httpDeleteMain, httpDelete } from './../../../helpers/httpMethods';
 
 const TicketList = ({
   isTicketsLoaded,
@@ -32,6 +35,8 @@ const TicketList = ({
   const [ticketLoading, setTicketLoading] = useState(false);
   const [createModalShow, setCreateModalShow] = useState(false);
   const [changingRow, setChangingRow] = useState(false);
+  const [rowsSelected, setRowsSelected] = useState([]);
+
   let selectedRows = [];
 
   useEffect(() => {
@@ -312,7 +317,86 @@ const TicketList = ({
 
   const handleSelectionChange = (rows) => {
     selectedRows = rows;
+
+    const deleteBtnWrapper = window.document.querySelector('#delete-btn-wrapper');
+    const selectedRowCount = window.document.querySelector('#selected-row-count');
+    const ticketDeleteBtn = window.document.querySelector('#ticket-delete-btn');
+
+    // setTimeout(() => setRowsSelected(rows), 2000);
+    selectedRowCount.innerHTML = rows.length;
+
+    // show or hide button base on selected row count
+    if (rows.length > 0) {
+      deleteBtnWrapper?.classList.remove('d-none');
+    } else {
+      deleteBtnWrapper?.classList.add('d-none');
+    }
+
+    if (rows.length === 1) {
+      ticketDeleteBtn.disabled = false;
+    } else {
+      ticketDeleteBtn.disabled = false;
+    }
   };
+
+  useEffect(() => {
+    const deleteBtnWrapper = window.document.querySelector('#delete-btn-wrapper');
+    deleteBtnWrapper.classList.add('d-none');
+  })
+
+  const handleDeleteTicket = async () => {
+    // const deleteBtnWrapper = window.document.querySelector('#delete-btn-wrapper');
+    const selectedRowCount = window.document.querySelector('#selected-row-count');
+    // const ticketDeleteBtn = window.document.querySelector('#ticket-delete-btn');
+    // console.log('SELECTED ROWS => ', selectedRows);
+
+    // setRowsSelected([]);
+    if (selectedRows.length > 0) {
+
+      if (selectedRows.length === 1 ) {
+        setTicketLoading(true);
+        const res = await httpDeleteMain(`tickets/${selectedRows[0]?.ticketUid}`);
+        selectedRows = [];
+        // deleteBtnWrapper.classList.add('d-none');
+        selectedRowCount.innerHTML = 0;
+
+        if (res?.status === "success") {
+          NotificationManager.success('Ticket Deleted', 'Success', 4000);
+          getPaginatedTickets(10, 1, () => {
+            setTicketLoading(false);
+          }, () => {
+            setTicketLoading(false);
+          })
+        } else {
+          setTicketLoading(false);
+          return NotificationManager.error(res?.er?.message, "Error", 4000);
+        }
+      } else {
+
+        const ticketIds = selectedRows.map(row => row.ticketUid);
+        // console.log('Ticket ids => ', ticketIds);
+
+        setTicketLoading(true);
+        const res = await httpDeleteMain(`tickets`, JSON.stringify(ticketIds));
+        selectedRows = [];
+        // deleteBtnWrapper.classList.add('d-none');
+        selectedRowCount.innerHTML = 0;
+
+        if (res?.status === "success") {
+          NotificationManager.success('Ticket Deleted', 'Success', 4000);
+          getPaginatedTickets(10, 1, () => {
+            setTicketLoading(false);
+          }, () => {
+            setTicketLoading(false);
+          })
+        } else {
+          setTicketLoading(false);
+          return NotificationManager.error(res?.er?.message, "Error", 4000);
+        }
+      }
+
+    } 
+  }
 
   return (
     <div>
@@ -370,6 +454,15 @@ const TicketList = ({
               </Dropdown.Menu>
             </Dropdown>
           </div>
+
+              <div id="delete-btn-wrapper" className="delete-btn-wrapper d-none">
+                <div>
+                  <button onClick={handleDeleteTicket} id="ticket-delete-btn" className="btn" type="button"><i class="bi bi-trash"></i></button>
+                </div>
+                <div>
+                  <span><span id="selected-row-count">0</span> ticket(s) selected</span>
+                </div>
+            </div>
         </div>
 
         <div
