@@ -415,13 +415,13 @@ export const httpPatchMain = async (url, postBody) => {
     return res.data;
   } catch (error) {
     // hideLoader();
-    NotificationManager.error(
-      "Your token is invalid or expired, please login","Opps!", 5000
-    );
     if (
       error.response.data.message ===
       "Unauthorized, Your token is invalid or expired"
     ) {
+      NotificationManager.error(
+        "Your token is invalid or expired, please login","Opps!", 5000
+      );
     }
     // console.log("token", token);
     return { er: error.response.data };

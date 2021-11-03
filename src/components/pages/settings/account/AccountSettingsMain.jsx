@@ -7,10 +7,10 @@ import Subscription from './subscription/Subscription';
 import AccountSettings from './AccountSettings';
 
 const AccountSettingsMain = () => {
-    // const [tabKey,
-    //     setTabKey] = useState("acct-settings");
     const [tabKey,
-        setTabKey] = useState("sub-payment");
+        setTabKey] = useState("acct-settings");
+    // const [tabKey,
+    //     setTabKey] = useState("sub-payment");
 
     return (
         <div>
