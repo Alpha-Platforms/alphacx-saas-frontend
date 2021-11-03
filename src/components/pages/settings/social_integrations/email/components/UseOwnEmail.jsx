@@ -297,7 +297,7 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <label htmlFor="outgoing-mail" className="form-label">
-                                        Sender Email
+                                        Sender Name
                                         <span className="text-danger">*</span>
                                     </label>
                                     <input
