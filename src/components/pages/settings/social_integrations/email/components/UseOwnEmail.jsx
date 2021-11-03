@@ -297,13 +297,13 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <label htmlFor="outgoing-mail" className="form-label">
-                                        Sender Email
+                                        Sender Name
                                         <span className="text-danger">*</span>
                                     </label>
                                     <input
                                         type="text"
                                         className="form-control form-control-sm"
-                                        placeholder="name@email.com"
+                                        placeholder="John Doe"
                                         name="from"
                                         value={emailState.outgoingEmailConfig.from || ""}
                                         onChange={handleOutgoingConfig}
