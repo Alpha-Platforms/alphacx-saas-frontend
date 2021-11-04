@@ -3,7 +3,7 @@ import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import draftToHtml from "draftjs-to-html";
-export default function chatBox() {
+export default function chatBox({onEditorStateChange, editorState}) {
   return (
     <div>
       <Editor
@@ -35,7 +35,7 @@ export default function chatBox() {
             inputAccept: "image/gif,image/jpeg,image/jpg,image/png,image/svg",
             alt: { present: false, mandatory: false },
             defaultSize: {
-              height: "auto",
+              height: "2rem",
               width: "auto",
             },
           },
