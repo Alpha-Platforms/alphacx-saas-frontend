@@ -1,3 +1,4 @@
+// @ts-nocheck
 import axios from "axios";
 // import { hideLoader } from '../helpers/loader';
 import { NotificationManager } from "react-notifications";
@@ -415,13 +416,13 @@ export const httpPatchMain = async (url, postBody) => {
     return res.data;
   } catch (error) {
     // hideLoader();
-    NotificationManager.error(
-      "Your token is invalid or expired, please login","Opps!", 5000
-    );
     if (
       error.response.data.message ===
       "Unauthorized, Your token is invalid or expired"
     ) {
+      NotificationManager.error(
+        "Your token is invalid or expired, please login","Opps!", 5000
+      );
     }
     // console.log("token", token);
     return { er: error.response.data };
@@ -459,6 +460,28 @@ export const httpDelete = async (url) => {
         'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json' 
       },
+    });
+    return res.data;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+export const httpDeleteMain = async (url, body = {}) => {
+  if (!navigator.onLine) {
+    return NotificationManager.error(
+      "Please check your internet", "Opps!", 3000
+    );
+  }
+  try {
+    const res = await axios.delete(`${baseUrlMain}/${url}`, {
+      headers: { 
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        'Domain': localStorage.getItem("domain"),
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json' 
+      },
+      data: body
     });
     return res.data;
   } catch (error) {
