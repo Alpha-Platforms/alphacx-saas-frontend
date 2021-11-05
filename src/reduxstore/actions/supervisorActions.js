@@ -17,7 +17,8 @@ export const getSupervisors = () => (dispatch, getState) => {
 		}))
 		.catch(err => {
             dispatch({
-                type: types.SUPERVISORS_LOADING_FAILED
+                type: types.SUPERVISORS_LOADING_FAILED,
+                payload: {}
             });
             dispatch(returnErrors(err.response?.data, err.response?.status));
         });
