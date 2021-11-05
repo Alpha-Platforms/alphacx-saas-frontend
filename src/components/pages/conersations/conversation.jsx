@@ -3,13 +3,15 @@ import React, { useState, useEffect, useContext, Fragment } from "react";
 import {connect} from 'react-redux';
 
 import { UserDataContext } from "../../../context/userContext";
-import "./conversation.css";
 import { Modal } from "react-responsive-modal";
 import Spinner from 'react-bootstrap/Spinner';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 import PinIcon from '../../../assets/icons/pin.svg';
 import MessageList from "./messageList";
 import searchIcon from "../../../assets/imgF/Search.png";
 import NoChatFound from "./noChatFound";
+import "./conversation.css";
 // import SingleChatOpen from "./sigleChat";
 import {
   getSubdomain,
@@ -1010,7 +1012,7 @@ function Conversation({user, ...props}) {
                         >
                         <img src={BackArrow} alt="" />
                       </div>
-                      <div className="ps-1 pt-1 bg-white acx-rounded-top-10 border w-100">
+                      <div className="ps-1 pt-1 bg-white acx-rounded-top-10 border border-bottom-0 w-100">
                         <Form.Check
                           inline
                           label="Reply"
@@ -1031,6 +1033,10 @@ function Conversation({user, ...props}) {
                           type="radio"
                           id={`inline-response_type-2`}
                         />
+                        {/* <Tabs defaultActiveKey="reply" id="replyTypeToggle" className="mb-0 text-dark">
+                          <Tab className="text-dark" eventKey="reply" title="Reply"/>
+                          <Tab className="text-dark" eventKey="comment" title="Comment"/>
+                        </Tabs> */}
                       </div>
                       <Editor
                         disabled={(ticket[0].status.status === "Closed")? true : false}

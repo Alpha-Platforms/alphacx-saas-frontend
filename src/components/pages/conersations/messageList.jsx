@@ -72,10 +72,14 @@ export default function MessageList({
           <ScaleLoader color="#0d4166" loading={loadingTickets} size={35} />
         </div>
           : Array.isArray(renderTicket) ? (renderTicket.length == 0 ? (
-        <p className="text-center pt-5 lead h4">
-          No ticket found
-        </p>
-      ) : (
+          <div className="d-flex justify-content-center align-items-center pt-5 away">
+            {/* <p className="text-center pt-5 lead h4">
+              No ticket found
+            </p> */}
+            {" "}
+            <ScaleLoader color="#0d4166" loading={true} size={35} />
+          </div>
+        ) : (
         renderTicket.map((data, index) => {
           return (
             <div
