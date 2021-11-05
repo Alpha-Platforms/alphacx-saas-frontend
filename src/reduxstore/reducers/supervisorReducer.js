@@ -16,8 +16,8 @@ const supervisorReducer = (state = initialState, action) => {
 		case types.GET_SUPERVISORS:
 			return {
 				...state,
-				supervisors: action.payload.users || [],
-                meta: action.payload.meta || null,
+				supervisors: action.payload?.users || [],
+                meta: action.payload?.meta || null,
 				isSupervisorsLoading: false,
 				isSupervisorsLoaded: true
 				}
