@@ -44,14 +44,21 @@ const UserList = ({
   isAdminsLoaded,
   isSupervisorLoaded,
   isUserAuthenticated,
+  signedUser,
   getAgents,
   getAdmins,
   getSupervisors
 }) => {
+
   const [createModalShow, setCreateModalShow] = useState(false);
   const [inviteModalShow, setInviteModalShow] = useState(false);
   const [importModalShow, setImportModalShow] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
+  const [accessControl, setAccessControl] = useState(false)
+
+  useEffect(() => {
+    setAccessControl(signedUser.role === "Administrator");
+  }, [])
 
   useEffect(() => {
     if (isUserAuthenticated) {
@@ -64,9 +71,7 @@ const UserList = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [isUserAuthenticated]);
 
-  useEffect(() => {
-    console.log(admins);
-  },[]);
+  
   // useEffect(() => {
   //   setUserLoading(!agents);
   //   if (isAgentsLoaded) {
@@ -180,7 +185,10 @@ const UserList = ({
             <p className="text-custom-gray f-12"></p>
           </div>
           <div className="mt-3">
-            <button className="btn btn-custom btn-sm px-4 bg-at-blue-light py-2" onClick={() => setCreateModalShow(true)}>New User</button>
+            
+            { accessControl &&
+              <button className="btn btn-custom btn-sm px-4 bg-at-blue-light py-2" onClick={() => setCreateModalShow(true)}>New User</button>
+            }
 
             {/* <Dropdown className="new-user-dropdown" id="new-user-dropdown">
               <Dropdown.Toggle
@@ -354,7 +362,8 @@ const mapStateToProps = (state, ownProps) => ({
   isAdminsLoaded: state.admin.isAdminsLoaded,
   isSupervisorLoaded: state.supervisor.isSupervisorsLoaded,
   groups: state.group.groups,
-  isUserAuthenticated: state.userAuth.isUserAuthenticated
+  isUserAuthenticated: state.userAuth.isUserAuthenticated,
+  signedUser: state.userAuth.user
 });
 
 export default connect(mapStateToProps, { getPaginatedUsers, getAgents, getSupervisors, getAdmins, negateActiveState })(UserList);
