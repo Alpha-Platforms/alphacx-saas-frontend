@@ -927,7 +927,7 @@ select {
 .DraftEditor-editorContainer {
   /* padding: 30px 4px 4px 4px; */
   padding: 4px 4px 4px 4px;
-  height: 32px;
+  min-height: 32px;
   background-color: #ffff !important;
   border: none !important;
 }
