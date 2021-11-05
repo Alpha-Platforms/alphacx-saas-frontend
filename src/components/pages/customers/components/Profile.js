@@ -25,6 +25,8 @@ import {ExpandChat} from "../../../../assets/images/svgs";
 
 
 const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
+    const [errors, setErrors] = useState({});
+    // 
     const [editProfile, setEditProfile] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
     // 
@@ -155,23 +157,41 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
     }
 
     // update profile function
-    const updateProfile = async(e) => {
+    const updateProfile = async(event) => {
+        event.preventDefault();
         setProcessing(true);
-        // updateCustomer(customerId, profileData);
-        const res = await httpPatchMain(`customer/${customerId}`, profileData);
-        if (res.status === "success") {
-            setEditProfile(false);
-            setProcessing(false);
-            return NotificationManager.success("Profile successfully updated", "Success");
+        const form = event.target
+        const isValid = form.checkValidity() // returns true or false
+        const formData = new FormData(form)
+        const validationMessages = Array.from(formData.keys()).reduce((acc, key) => {
+            acc[key] = form.elements[key].validationMessage
+            return acc
+            }, {});
+        setErrors(validationMessages);
+
+        if(isValid){
+            // updateCustomer(customerId, profileData);
+            const res = await httpPatchMain(`customer/${customerId}`, profileData);
+            if (res.status === "success") {
+                setEditProfile(false);
+                setProcessing(false);
+                return NotificationManager.success("Profile successfully updated", "Success");
+            }else{
+                setProcessing(false);
+                return NotificationManager.error(res.er.message, "Error", 4000);
+            }
         }else{
             setProcessing(false);
-            return NotificationManager.error(res.er.message, "Error", 4000);
+            return NotificationManager.error("Please fill in all required fields", "error", 4000);
         }
     }
 
+    const hasError = (field) => !!errors[field];
+    const getError = (field) => errors[field];
+
     return (
         <Fragment>
-            <Form className="" onSubmit={(e) => e.preventDefault()}>
+            <Form className="" onSubmit={(event) => {updateProfile(event)}} noValidate>
                 <Container fluid className="px-5">
                     <div className="d-flex justify-content-between align-items-center mb-4">
                         <h6 className="text-muted acx-ls-30 acx-fs-12">CONTACT INFORMATION</h6>
@@ -214,48 +234,51 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
                                         defaultValue={currentCustomer.phoneNumber ? currentCustomer.phoneNumber 
                                                     : currentCustomer.phone_number ? currentCustomer.phone_number : ''} 
                                         onChange={handleChange}/>
+                                        <span className="text-danger d-block small">{getError("phoneNumber")}</span>
                                 </Form.Group>
                             </div>
                             {customFieldIsSet? 
                                 customFieldsGroup.map((mergedCustomUserFields) => {
                                     return(
-                                        <Fragment>
+                                        <Fragment key={mergedCustomUserFields.section}> 
                                             <h6 className="text-muted mb-4 acx-ls-30 acx-fs-12">{mergedCustomUserFields.section != 'null' || mergedCustomUserFields.section == null || mergedCustomUserFields.section == undefined ? mergedCustomUserFields.section.toUpperCase() : "OTHERS"}</h6>
-                                            <Row className="justify-content-between mb-4 border-bottom">
+                                            <Row className="mb-4 border-bottom">
                                                 {mergedCustomUserFields.fields.map((data) => {
                                                     if(data?.field_type == "select"){
                                                         return (
                                                             <Col md={4} key={data.id}>
-                                                                <Form.Group className={`d-flex flex-column flex-grow-1 ${editProfile? "" : "border-bottom"} pb-2 mb-0 form-group acx-form-group`}>
-                                                                    <Form.Label className="text-muted small mb-1">{data?.field_name}</Form.Label>
-                                                                    <Form.Select className={`text-dark ${editProfile? "" : "ps-0 py-0 border-0 bg-white"}`} 
+                                                                <Form.Group className={`d-flex flex-column flex-grow-1 ${editProfile? "" : "border-bottom"} pb-2 mb-3 form-group acx-form-group`}>
+                                                                    <Form.Label className="text-muted small mb-1">{data?.field_name}{" "}{data?.required ? <span className="text-danger">*</span> : ""}</Form.Label>
+                                                                    <Form.Select name={data.id} className={`text-dark ${editProfile? "" : "ps-0 py-0 border-0 bg-white"} mb-1`} 
                                                                                 plaintext={`${!editProfile}`} readOnly={!editProfile} disabled={!editProfile} 
                                                                                 onChange={handleCustomFieldChange} required={data?.required} 
-                                                                                defaultValue={data?.value || null}>
+                                                                                defaultValue={data?.value}>
                                                                         <option value="" disabled>Select Type</option>
                                                                         {data.field_options? 
                                                                             data.field_options.replace(/{|"|}/g, "").split(",").map((options) => {
                                                                                 return(
-                                                                                    <option value={options}>{options}</option>
+                                                                                    <option key={options} value={options}>{options}</option>
                                                                                 )
                                                                             })
                                                                         :
                                                                             null
                                                                         }
                                                                     </Form.Select>
+                                                                    <span className="text-danger d-block small">{getError(data?.id)}</span>
                                                                 </Form.Group>
                                                             </Col>
                                                         )
                                                     }else{
                                                         return (
                                                             <Col md={4} key={data.id}>
-                                                                <Form.Group className={`d-inline-flex flex-column flex-grow-0 ${editProfile? "" : "border-bottom"} pb-2 mb-0 form-group acx-form-group`}>
-                                                                    <Form.Label className="text-muted small mb-1">{data?.field_name}</Form.Label>
+                                                                <Form.Group className={`d-inline-flex flex-column flex-grow-0 ${editProfile? "" : "border-bottom"} pb-2 mb-3 form-group acx-form-group`}>
+                                                                    <Form.Label className="text-muted small mb-1">{data?.field_name}{" "}{data?.required ? <span className="text-danger">*</span> : ""}</Form.Label>
                                                                     <Form.Control name={data?.id} type={data?.field_type} 
-                                                                                className={`text-dark ${editProfile? "" : "py-0"}`} 
+                                                                                className={`text-dark ${editProfile? "" : "py-0"} mb-1`} 
                                                                                 plaintext={!editProfile} readOnly={!editProfile} 
                                                                                 defaultValue={data?.value || ""} required={data?.required}
                                                                                 onChange={handleCustomFieldChange}/>
+                                                                    <span className="text-danger d-block small">{getError(data?.id)}</span>
                                                                 </Form.Group>
                                                             </Col>
                                                         )
@@ -288,7 +311,7 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
                     </Row>
                     <div className="py-3 text-end">
                         {(editProfile)? (
-                            <Button type="submit" disabled={processing} onClick={updateProfile} className="acx-btn-primary px-3">
+                            <Button type="submit" disabled={processing} className="acx-btn-primary px-3">
                                 {processing? 
                                     <span className="text-light d-flex justify-content-center align-items-center">
                                         <Spinner as="span" size="sm"

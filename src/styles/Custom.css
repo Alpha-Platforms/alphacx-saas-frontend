@@ -1080,3 +1080,7 @@ input.search-input-right {
 .hide-scrollbar::-webkit-scrollbar {
     display: none
 }
+
+.acx-dropdown-hidden .dropdown-toggle::after{
+    display: none;
+}
