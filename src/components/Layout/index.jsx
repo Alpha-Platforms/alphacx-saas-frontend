@@ -22,10 +22,7 @@ export default function Index(props) {
           browserRouter={props.browserRouter}
           currentRoute={props.currentRoute}
         />
-
-        <div>
-          <section className="app-container">{props.children}</section>
-        </div>
+        <section className="app-container">{props.children}</section>
       </div>
     </React.Fragment>
   );

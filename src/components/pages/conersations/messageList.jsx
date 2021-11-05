@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import truncateWithEllipses from "../../helpers/truncate";
-import ClipLoader from "react-spinners/ClipLoader";
+import ScaleLoader from "react-spinners/ScaleLoader";
 import { timeFormater } from "../../helpers/dateFormater";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 import InitialsFromString from "../../helpers/InitialsFromString";
@@ -8,6 +8,7 @@ import InitialsFromString from "../../helpers/InitialsFromString";
 export default function MessageList({
   tickets,
   LoadingTick,
+  setLoadingTicks,
   loadSingleMessage,
   setTingleTicketFullInfo,
   setTicketId,
@@ -17,11 +18,25 @@ export default function MessageList({
   setActiveChat,
   scollPosSendMsgList,
 }) {
+
   const [renderTicket, setRenderTicket] = useState([]);
+  const [loadingTickets, setLoadingTickets] = useState(true);
 
   useEffect(() => {
+    setLoadingTicks(true);
     checkRender();//, [filterChat, tickets, filterTicketsState]
-  });
+  }, [filterChat, tickets, filterTicketsState]);
+
+  useEffect(() =>{
+    setLoadingTicks(false);
+  }, [renderTicket]);
+
+  useEffect(() =>{
+    if(LoadingTick == false){
+      setLoadingTickets(false);
+    }
+  }, [LoadingTick]);
+
   const checkRender = () => {
     if (filterChat === "system") {
       setRenderTicket(tickets);
@@ -51,18 +66,13 @@ export default function MessageList({
   }
   return (
     <div className="message-list-container">
-      {LoadingTick ? (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}>
+      {loadingTickets?
+        <div className="d-flex justify-content-center align-items-center pt-5 away">
           {" "}
-          <ClipLoader color="#0d4166" loading={LoadingTick} size={35} />
+          <ScaleLoader color="#0d4166" loading={loadingTickets} size={35} />
         </div>
-        )  : Array.isArray(renderTicket) ? (renderTicket.length == 0 ? (
-        <p style={{ textAlign: "center", paddingTop: "20px", fontSize: "15px" }}>
+          : Array.isArray(renderTicket) ? (renderTicket.length == 0 ? (
+        <p className="text-center pt-5 lead h4">
           No ticket found
         </p>
       ) : (
@@ -133,7 +143,7 @@ export default function MessageList({
           );
         })
       )) : 
-        <p style={{ textAlign: "center", paddingTop: "20px", fontSize: "15px" }}>
+        <p className="text-center pt-5 lead h4">
           No ticket found
         </p> }
     </div>

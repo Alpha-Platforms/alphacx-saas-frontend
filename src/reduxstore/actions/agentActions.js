@@ -20,7 +20,8 @@ export const getAgents = (success, failed) => (dispatch, getState) => {
         })
 		.catch(err => {
             dispatch({
-                type: types.AGENTS_LOADING_FAILED
+                type: types.AGENTS_LOADING_FAILED,
+                payload: {}
             });
             dispatch(returnErrors(err.response?.data, err.response?.status));
             failed && failed();

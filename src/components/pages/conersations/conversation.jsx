@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, Fragment } from "react";
 import {connect} from 'react-redux';
 
 import { UserDataContext } from "../../../context/userContext";
@@ -18,6 +18,7 @@ import {
   httpPostMain,
   httpPatchMain,
 } from "../../../helpers/httpMethods";
+import InitialsFromString from "../../helpers/InitialsFromString";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -79,7 +80,7 @@ function Conversation({user, ...props}) {
   const [tickets, setTickets] = useState([]);
   const [filterTicketsState, setFilterTicketsState] = useState([]);
   const [ticket, setTicket] = useState([]);
-  const [LoadingTick, setLoadingTicks] = useState(true);
+  const [loadingTicks, setLoadingTicks] = useState(true);
   const [loadSingleTicket, setLoadSingleTicket] = useState(false);
   const [SenderInfo, setSenderInfo] = useState(false);
   const [singleTicketFullInfo, setTingleTicketFullInfo] = useState(false);
@@ -261,10 +262,14 @@ function Conversation({user, ...props}) {
     setTimeStampsMsg(resultTimestamps);
   };
   useEffect(() => {
-    setLoadingTicks(true);
+    // setLoadingTicks(true);
     setTickets(wsTickets);
     setLoadingTicks(false);
   }, [wsTickets]);
+
+  const changeLoadingTickets = (value) =>{
+    setLoadingTicks(value);
+  }
 
   const onEditorStateChange = (editorState) => {
     // handleDescriptionValidation(editorState);
@@ -281,17 +286,17 @@ function Conversation({user, ...props}) {
     setReplyType(event.target.value);
   }
 
-  const getTickets = async () => {
-    const res = await httpGetMain("tickets?channel=whatsapp");
-    if (res?.status === "success") {
-      setLoadingTicks(true);
-      setTickets(res?.data?.tickets);
-      setLoadingTicks(false);
-    } else {
-      setLoadingTicks(false);
-      return NotificationManager.error(res?.er?.message, "Error", 4000);
-    }
-  };
+  // const getTickets = async () => {
+  //   const res = await httpGetMain("tickets?channel=whatsapp");
+  //   if (res?.status === "success") {
+  //     setLoadingTicks(true);
+  //     setTickets(res?.data?.tickets);
+  //     setLoadingTicks(false);
+  //   } else {
+  //     setLoadingTicks(false);
+  //     return NotificationManager.error(res?.er?.message, "Error", 4000);
+  //   }
+  // };
 
   const filterTicket = (value, type) => {
     if (type === "channel") {
@@ -707,18 +712,19 @@ function Conversation({user, ...props}) {
                 </div>
               </form>
             </div>
-            <MessageList
-              tickets={tickets}
-              LoadingTick={LoadingTick}
-              loadSingleMessage={loadSingleMessage}
-              setTingleTicketFullInfo={setTingleTicketFullInfo}
-              filterChat={filterChat}
-              filterTicketsState={filterTicketsState}
-              activeChat={activeChat}
-              setActiveChat={setActiveChat}
-              scollPosSendMsgList={scollPosSendMsgList}
-              setTicketId={setTicketId}
-            />
+              <MessageList
+                tickets={tickets}
+                LoadingTick={loadingTicks}
+                setLoadingTicks={setLoadingTicks}
+                loadSingleMessage={loadSingleMessage}
+                setTingleTicketFullInfo={setTingleTicketFullInfo}
+                filterChat={filterChat}
+                filterTicketsState={filterTicketsState}
+                activeChat={activeChat}
+                setActiveChat={setActiveChat}
+                scollPosSendMsgList={scollPosSendMsgList}
+                setTicketId={setTicketId}
+              />
           </div>
 
           {/* CHAT COL ONE END*/}
@@ -1004,7 +1010,7 @@ function Conversation({user, ...props}) {
                         >
                         <img src={BackArrow} alt="" />
                       </div>
-                      <div className="position-absolute ps-1 pt-1 bg-white rounded-top border w-100" style={{"zIndex": "2"}}>
+                      <div className="ps-1 pt-1 bg-white acx-rounded-top-10 border w-100">
                         <Form.Check
                           inline
                           label="Reply"
@@ -1094,7 +1100,14 @@ function Conversation({user, ...props}) {
                           separator: ' ',
                           trigger: '@',
                           suggestions: (replyType === "note")? Agents.map((data) => {
-                              return { text: `${data.firstname}  ${data.lastname}`, value: `${data.firstname}  ${data.lastname}`, url: `settings/profile/${data.id}`}
+                              return { 
+                                text:  <Fragment>
+                                    <span className="rdw-suggestion-option-avatar">{InitialsFromString(`${data.firstname}`, `${data.lastname}`)}</span> 
+                                    <span> {` ${data.firstname}  ${data.lastname}`}</span>
+                                  </Fragment>, 
+                                value: `${data.firstname}  ${data.lastname}`, 
+                                url: `settings/profile/${data.id}`
+                              }
                             }) : []
                         }}
                       />

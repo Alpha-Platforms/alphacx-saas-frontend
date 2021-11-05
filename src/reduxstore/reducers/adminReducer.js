@@ -16,8 +16,8 @@ const adminReducer = (state = initialState, action) => {
 		case types.GET_ADMINS:
 			return {
 				...state,
-				admins: action.payload.users || [],
-                meta: action.payload.meta || null,
+				admins: action.payload?.users || [],
+                meta: action.payload?.meta || null,
 				isAdminsLoading: false,
 				isAdminsLoaded: true
 				}
