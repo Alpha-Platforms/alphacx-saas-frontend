@@ -226,6 +226,7 @@ const AutomationAction = ({
 
             <EditorBox
               text={action.body || ""}
+              editorClassName="automation-editor"
               // textParent={newPolicy}
               textFormat={"plain"}
               updateText={val => setActionState({
