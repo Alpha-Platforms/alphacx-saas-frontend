@@ -117,7 +117,7 @@ function Notification(props){
         notifications.length == 0 || notifications == null || notifications == undefined?
         <NavDropdown.Item as="div">
             <div className="d-flex flex-column justify-content-center align-items-center py-3">
-              <h2 className="text-muted mb-2"><i className="bi-stars"></i> </h2>
+              <h2 className="text-muted mb-2"><i className="bi-bell-slash"></i> </h2>
               <p className="text-muted mb-0">No notifications</p>
             </div>
         </NavDropdown.Item>
@@ -126,7 +126,7 @@ function Notification(props){
           {
             notifications.map((data, index) => {
               return (
-                <NavDropdown.Item href="#action3">
+                <NavDropdown.Item key={index} href="#action3">
                     <div className="d-flex justify-content-start align-items-start">
                       <div className="me-3 flex-shrink-0">
                         <img
