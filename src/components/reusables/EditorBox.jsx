@@ -20,7 +20,8 @@ const EditorBox = ({
   updateText,
   textFormat,
   setPlaceholder,
-  updateVal
+  updateVal,
+  editorClassName
 }) => {
   const initialState = EditorState.createWithContent(
     ContentState.createFromText(text)
@@ -167,7 +168,7 @@ const EditorBox = ({
         }}
         toolbarClassName="toolbarClassName"
         wrapperClassName="wrapperClassName"
-        editorClassName="editorClassName"
+        editorClassName={editorClassName ? editorClassName : "editorClassName"}
         onEditorStateChange={(editor) => onEditorStateChange(editor)}
       />
     </div>

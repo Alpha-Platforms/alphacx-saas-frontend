@@ -17,7 +17,8 @@ export const getAdmins = () => (dispatch, getState) => {
 		}))
 		.catch(err => {
             dispatch({
-                type: types.ADMINS_LOADING_FAILED
+                type: types.ADMINS_LOADING_FAILED,
+                payload: {}
             });
             dispatch(returnErrors(err.response?.data, err.response?.status));
         });

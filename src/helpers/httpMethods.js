@@ -4,8 +4,17 @@ import axios from "axios";
 import { NotificationManager } from "react-notifications";
 import { parseDomain, ParseResultType } from "parse-domain";
 
-export let baseUrl = process.env.REACT_APP_AUTH_BASE_URL;
-export let baseUrlMain = process.env.REACT_APP_API_BASE_URL;
+// if (process.env.REACT_APP_ENVIRONMENT === 'cardinal') {
+//   export let baseUrl = process.env.REACT_APP_AUTH_BASE_URL_CARDINAL;
+//   export let baseUrlMain = process.env.REACT_APP_API_BASE_URL_CARDINAL;
+
+// } else {    
+  export let baseUrl = process.env.REACT_APP_AUTH_BASE_URL;
+  export let baseUrlMain = process.env.REACT_APP_API_BASE_URL;
+
+
+
+
 export const invalidTenant = 'invalid-tenant';
 
 export const getSubdomain = hostname => {
@@ -324,6 +333,25 @@ export const httpGetMainNoAuth = async (url, newHeaders) => {
       return;
     }
     return { er: error.response.data };
+  }
+};
+
+
+export const httpOnpremGet = async (url) => {
+  if (!navigator.onLine) {
+    return NotificationManager.error(
+      "Please check your internet",
+      "Opps!",
+      3000
+    );
+  }
+
+  try {
+    const res = await axios.get(`https://restserverstaging.cardinalstone.com/api/registrars/${url}`);
+    return res;
+
+  } catch (error) {
+    return { error };
   }
 };
 
