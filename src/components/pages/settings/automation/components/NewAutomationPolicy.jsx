@@ -20,8 +20,9 @@ import AutomationAction from "./AutomationAction";
 import RSelect from "react-select";
 import { connect } from "react-redux";
 import {uuid, wordCapitalize} from '../../../../../helper';
+import { getAgents } from './../../../../../reduxstore/actions/agentActions';
 
-const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroupsLoaded}) => {
+const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroupsLoaded, getAgents, isUserAuthenticated}) => {
 
   let router = useHistory();
   let {automationId} = useParams();
@@ -47,6 +48,8 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
 
   const [RSCategoriesOptions, setRSCategoriesOptions] = useState([]);
 
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const generateActionTemplate = id => ({
     id,
     channel: '',
@@ -61,6 +64,8 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
   });
 
   const [actions, setActions] = useState([generateActionTemplate(uuid())]);
+
+  // console.log('ACTIONS => ', actions);
 
   const mapRSelectNonPersonOptions = (entity, cb) => {
     const mappedItems = [];    
@@ -83,15 +88,15 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
 
   // FUNCTION TO CREATE AN AUTOMATION
   const createAutomation = async () => {
-    const dueDate = Number(automationBody.durationDays) * 24 + Number(automationBody.durationHours);
+    const dueDate = Math.floor((Number(automationBody.durationDays) || 0)) * 24 + Math.floor(Number(automationBody.durationHours));
     const requestBody = {
       name: automationBody.title,
-      dueDate: Math.ceil(dueDate * 60),
+      dueDate: dueDate * 60,
       reminder: {
         categories: automationBody.categories.map(cat => cat.value),
         agreements: actions.map(act => ({
-          days: Number(act.days),
-          hours: Math.ceil(act.hours * 60),
+          days: Math.floor(Number(act.days) || 0),
+          hours: Math.floor((Number(act.hours) || 0) * 60),
           action: act.channel.value,
           subject: act.subject,
           body: act.body,
@@ -104,6 +109,8 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
       )
       }
     };
+
+    console.log('AUTOMATION REQUEST BODY => ', requestBody);
 
     setPolicyLoading(true);
     const res = await httpPostMain("sla", requestBody);
@@ -123,25 +130,30 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
 
   // FUNCTION TO GET AUTOMATION INFORMATION IF IN EDIT MODE
   const getAutomationInfo = async () => {
+    setPolicyLoading(true);
     const res = await httpGetMain(`sla/${automationId}`);
     setPolicyLoading(false);
     if (res?.status === "success") {
       const data = res?.data;
 
+      console.log('AUTOMATION DATA => ', data)
+
       if (data) {
+        // console.log('AUTOMATION DATA => ', data);
+        setIsLoaded(true);
         setAutomationBody(prev => ({
           ...prev,
           title: data?.name,
-          durationDays: Math.floor(Number(data?.due_date) / 24) || '',
-          durationHours: Math.floor(Number(data?.due_date) % 24) || '',
+          durationDays: Math.floor((Number(data?.due_date) || 0) / 1440) || 0,
+          durationHours: Math.floor((Number(data?.due_date) % 1440) / 60) || 0,
           categories: data?.reminder?.categories?.map(catId => ({value: catId, label: categoriz.find(x => x.id === catId)?.name}))
         }));
 
         setActions(data?.reminder?.agreements?.map(act => ({
           id: uuid(),
           channel: act?.action?.toLowerCase() === 'email' ? {value: wordCapitalize(act?.action || '').trim(), label: wordCapitalize(act?.action || '').trim()} : {value: act?.action?.toUpperCase(), label: act?.action?.toUpperCase()},
-          days: act?.days || '',
-          hours: Math.floor(Number(act?.hours) / 60) || '',
+          days: act?.days || 0,
+          hours: Math.floor(Number(act?.hours) / 60) || 0,
           subject: act?.subject || '',
           body: act.body,
           recipientType: act?.recipient?.type || 'agent',
@@ -157,8 +169,15 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
   };
 
   useEffect(() => {
+    if (isUserAuthenticated) {
+        // agent is needed, so fetch agents
+        getAgents();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [isUserAuthenticated]);
 
-    if (isAgentsLoaded && isGroupsLoaded) {
+  useEffect(() => {
+    if (isAgentsLoaded && isGroupsLoaded && !isLoaded) {
       // check for edit mode and get automation with id
       if(automationId){
         getAutomationInfo()
@@ -172,16 +191,16 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
   // FUNCTION TO UPDATE AN AUTOMATION IF IN EDIT MODE
   const updateAutomationPolicy = async () => {
     setPolicyLoading(true);
-    const dueDate = Number(automationBody.durationDays) * 24 + Number(automationBody.durationHours);
+    const dueDate = Math.floor((Number(automationBody.durationDays) || 0)) * 24 + Math.floor(Number(automationBody.durationHours));
 
     const requestBody = {
       name: automationBody.title,
-      dueDate,
+      dueDate: dueDate * 60,
       reminder: {
         categories: automationBody.categories.map(cat => cat.value),
         agreements: actions.map(act => ({
-          days: act.days,
-          hours: act.hours,
+          days: Math.floor(Number(act.days) || 0),
+          hours: Math.floor((Number(act.hours) || 0) * 60),
           action: act.channel.value,
           subject: act.subject,
           body: act.body,
@@ -248,12 +267,12 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
           </div>
           <div id="setting-form">
             <h5 className="mt-3 mb-4 f-16 fw-bold">
-              {automationId ? "Edit" : "New"} Automation
+              {automationId ? "Edit" : "New"} SLA Policy
             </h5>
-            <form action="">
+            <form action="" className="sla-form">
               <div className="form-group mt-3">
                 <label htmlFor="slaName" className="f-14 mb-1">
-                  Title
+                  SLA Name
                 </label>
                 <input
                   type="text"
@@ -317,6 +336,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
                 <div className="input-group w-50 me-2 mb-3">
                   <input 
                     type="number" 
+                    min={0}
                     className="form-control" 
                     name="durationDays"
                     value={automationBody?.durationDays}
@@ -325,6 +345,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
                   <span className="input-group-text acx-fs-8">Days</span>
                   <input 
                     type="number" 
+                    min={0}
                     className="form-control" 
                     name="durationHours"
                     onkeydown="return false"
@@ -343,7 +364,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
               </div>
 
               <div id="resolution-wrapper mt-4">
-                <label htmlFor="ticket" className="d-flex p-2 acx-bg-blue-light-30">
+                <label htmlFor="ticket" className="d-flex p-2 ps-0">
                   Actions
                 </label>
                 
@@ -392,8 +413,9 @@ const mapStateToProps = state => {
     agents: state.agent.agents,
     isAgentsLoaded: state.agent.isAgentsLoaded,
     groups: state.group.groups,
-    isGroupsLoaded: state.group.isGroupsLoaded
+    isGroupsLoaded: state.group.isGroupsLoaded,
+    isUserAuthenticated: state.userAuth.isUserAuthenticated
   }
 }
 
-export default connect(mapStateToProps)(NewAutomationPolicy)
+export default connect(mapStateToProps, {getAgents})(NewAutomationPolicy)

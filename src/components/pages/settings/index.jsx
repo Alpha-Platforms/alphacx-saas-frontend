@@ -38,10 +38,20 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
+
+
 function SettingsHome({signedUser}) {
+
+  const [accessControl, setAccessControl] = useState(false)
+
+  useEffect(() => {
+    setAccessControl(signedUser.role === "Administrator");
+  }, [])
+  
   return (
     <Container fluid>
       <Row className="g-3">
+        
         <Col sm={6} md={4} className="settings-menu-item">
           <div className="border rounded bg-light">
             <Link
@@ -61,7 +71,8 @@ function SettingsHome({signedUser}) {
               </div>
             </Link>
           </div>
-        </Col>
+        </Col>        
+
         <Col sm={6} md={4} className="settings-menu-item">
           <div className="border rounded bg-light">
             <Link to={`/settings/profile/${signedUser.id}`} className="d-block cursor text-decoration-none">
@@ -79,6 +90,7 @@ function SettingsHome({signedUser}) {
             </Link>
           </div>
         </Col>
+
         <Col sm={6} md={4} className="settings-menu-item">   
           <div className="border rounded bg-light">
             <Link
@@ -99,176 +111,183 @@ function SettingsHome({signedUser}) {
             </Link>
           </div>
         </Col>
-        <Col sm={6} md={4} className="settings-menu-item">   
-          <div className="border rounded bg-light">
-            <Link
-              to="/settings/account"
-              className="d-block cursor text-decoration-none"
-            >
-              <div className="d-flex p-md-4">
-                <div className="">
-                  <img src={ShieldIcon} alt="" />
+
+        { accessControl &&
+          <Col sm={6} md={4} className="settings-menu-item">   
+            <div className="border rounded bg-light">
+              <Link
+                to="/settings/account"
+                className="d-block cursor text-decoration-none"
+              >
+                <div className="d-flex p-md-4">
+                  <div className="">
+                    <img src={ShieldIcon} alt="" />
+                  </div>
+                  <div className="ms-3">
+                    <h6 className="text-dark mb-0">Account</h6>
+                    <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Access and edit your organization's profile.
+                    </p>
+                  </div>
                 </div>
-                <div className="ms-3">
-                  <h6 className="text-dark mb-0">Account</h6>
-                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                  Access and edit your organization's profile.
-                  </p>
-                </div>
-              </div>
-            </Link>
-          </div>
-        </Col>
-        <Col sm={6} md={4} className="settings-menu-item">   
-          <div className="border rounded bg-light">
-            <Link
-              to="settings/automations"
-              className="d-block cursor text-decoration-none"
-            >
-              <div className="d-flex p-md-4">
-                <div className="">
-                  <img src={AutomationIcon} alt="" />
-                </div>
-                <div className="ms-3">
-                  <h6 className="text-dark mb-0">Automation</h6>
-                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                  Set notifications, responses, and their durations.
-                  </p>
-                </div>
-              </div>
-            </Link>
-          </div>
-        </Col>
-        
-        {/*   ROLES */}
-        {/*<Col sm={6} md={4} className="settings-menu-item">    <div className="border rounded bg-light">
-          <Link
-            to="/settings/roles"
-            className="d-block cursor text-decoration-none"
-          >
-            <div className="d-flex p-md-4">
-              <div className="">
-                <img src={FolderBlueIcon} alt="" />
-              </div>
-              <div className="ms-3">
-                <h6 className="text-dark mb-0">Roles</h6>
-                <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                  Define access levels and permission for user types
-                </p>
-              </div>
+              </Link>
             </div>
-          </Link>
-          </div></Col> */}
-        <Col sm={6} md={4} className="settings-menu-item">   
-          <div className="border rounded bg-light">
-            <Link
-              to="/settings/tickets"
-              className="d-block cursor text-decoration-none">
-              <div className="d-flex p-md-4">
-                <div className="">
-                  <img src={AccountLightIcon} alt="" />
+          </Col>
+        }
+
+      
+        { accessControl &&
+          <Col sm={6} md={4} className="settings-menu-item">   
+            <div className="border rounded bg-light">
+              <Link
+                to="settings/automations"
+                className="d-block cursor text-decoration-none"
+              >
+                <div className="d-flex p-md-4">
+                  <div className="">
+                    <img src={AutomationIcon} alt="" />
+                  </div>
+                  <div className="ms-3">
+                    <h6 className="text-dark mb-0">Automation</h6>
+                    <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Set notifications, responses, and their durations.
+                    </p>
+                  </div>
                 </div>
-                <div className="ms-3">
-                  <h6 className="text-dark mb-0">Ticket Settings</h6>
-                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                  Manage ticket types and distribution.
-                  </p>
+              </Link>
+            </div>
+          </Col>
+        }
+
+        { accessControl &&
+          <Col sm={6} md={4} className="settings-menu-item">   
+            <div className="border rounded bg-light">
+              <Link
+                to="/settings/tickets"
+                className="d-block cursor text-decoration-none">
+                <div className="d-flex p-md-4">
+                  <div className="">
+                    <img src={AccountLightIcon} alt="" />
+                  </div>
+                  <div className="ms-3">
+                    <h6 className="text-dark mb-0">Ticket Settings</h6>
+                    <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Manage ticket types and distribution.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          </div>
-        </Col>
-        <Col sm={6} md={4} className="settings-menu-item">   
-          <div className="border rounded bg-light">
-            <Link to="/settings/integrations" className="d-block cursor text-decoration-none">
-              <div className="d-flex p-md-4">
-                <div className="">
-                  <img src={SocialBlurbIcon} alt="" />
+              </Link>
+            </div>
+          </Col>
+        }
+
+        { accessControl &&
+          <Col sm={6} md={4} className="settings-menu-item">   
+            <div className="border rounded bg-light">
+              <Link to="/settings/integrations" className="d-block cursor text-decoration-none">
+                <div className="d-flex p-md-4">
+                  <div className="">
+                    <img src={SocialBlurbIcon} alt="" />
+                  </div>
+                  <div className="ms-3">
+                    <h6 className="text-dark mb-0">Integrations</h6>
+                    <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                      Connect social channels to your app.
+                    </p>
+                  </div>
                 </div>
-                <div className="ms-3">
-                  <h6 className="text-dark mb-0">Integrations</h6>
-                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                    Connect social channels to your app.
-                  </p>
+              </Link>
+            </div>
+          </Col>
+        }
+                
+        { accessControl &&
+
+          <Col sm={6} md={4} className="settings-menu-item">   
+            <div className="border rounded bg-light">
+              <Link
+                to="/settings/notifications"
+                className="d-block cursor text-decoration-none"
+              >
+                <div className="d-flex p-md-4">
+                  <div className="">
+                    <img src={SendBlueIcon} alt="" />
+                  </div>
+                  <div className="ms-3">
+                    <h6 className="text-dark mb-0">Notifications</h6>
+                    <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                      Assign notifications roles to users.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          </div>
-        </Col>
-        <Col sm={6} md={4} className="settings-menu-item">   
-          <div className="border rounded bg-light">
-            <Link
-              to="/settings/notifications"
-              className="d-block cursor text-decoration-none"
-            >
-              <div className="d-flex p-md-4">
-                <div className="">
-                  <img src={SendBlueIcon} alt="" />
+              </Link>
+            </div>
+          </Col>
+        }
+
+        { accessControl &&
+          <Col sm={6} md={4} className="settings-menu-item">   
+            <div className="border rounded bg-light">
+              <Link
+                to="/settings/knowledge-base"
+                className="d-block cursor text-decoration-none"
+              >
+                <div className="d-flex p-md-4">
+                  <div className="">
+                    <img src={SearchBlueIcon} alt="" />
+                  </div>
+                  <div className="ms-3">
+                    <h6 className="text-dark mb-0">Knowledge Base</h6>
+                    <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Create and manage information on your knowledge base.
+                    </p>
+                  </div>
                 </div>
-                <div className="ms-3">
-                  <h6 className="text-dark mb-0">Notifications</h6>
-                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                    Assign notifications roles to users.
-                  </p>
+              </Link>
+            </div>
+          </Col>
+        }
+        
+        { accessControl &&
+          <Col sm={6} md={4} className="settings-menu-item">   
+            <div className="border rounded bg-light">
+              <Link to="settings/ratings" className="d-block cursor text-decoration-none">
+                <div className="d-flex p-md-4">
+                  <div className="">
+                    <img src={ChartBlueIcon} alt="" />
+                  </div>
+                  <div className="ms-3">
+                    <h6 className="text-dark mb-0">Ratings and Review</h6>
+                    <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                      Setup ratings for customer feedback.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          </div>
-        </Col>
-        <Col sm={6} md={4} className="settings-menu-item">   
-          <div className="border rounded bg-light">
-            <Link
-              to="/settings/knowledge-base"
-              className="d-block cursor text-decoration-none"
-            >
-              <div className="d-flex p-md-4">
-                <div className="">
-                  <img src={SearchBlueIcon} alt="" />
+              </Link>
+            </div>
+          </Col>
+        }
+      
+        { accessControl &&
+          <Col sm={6} md={4} className="settings-menu-item">   
+            <div className="border rounded bg-light">
+              <Link to="settings/fields" className="d-block cursor text-decoration-none">
+                <div className="d-flex p-md-4">
+                  <div className="">
+                    <img src={FieldsLightIcon} alt="" />
+                  </div>
+                  <div className="ms-3">
+                    <h6 className="text-dark mb-0">Fields</h6>
+                    <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                      Setup fields for users, tickets and customers forms.
+                    </p>
+                  </div>
                 </div>
-                <div className="ms-3">
-                  <h6 className="text-dark mb-0">Knowledge Base</h6>
-                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                  Create and manage information on your knowledge base.
-                  </p>
-                </div>
-              </div>
-            </Link>
-          </div>
-        </Col>
-        <Col sm={6} md={4} className="settings-menu-item">   
-          <div className="border rounded bg-light">
-            <Link to="settings/ratings" className="d-block cursor text-decoration-none">
-              <div className="d-flex p-md-4">
-                <div className="">
-                  <img src={ChartBlueIcon} alt="" />
-                </div>
-                <div className="ms-3">
-                  <h6 className="text-dark mb-0">Ratings and Review</h6>
-                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                    Setup ratings for customer feedback.
-                  </p>
-                </div>
-              </div>
-            </Link>
-          </div>
-        </Col>
-        <Col sm={6} md={4} className="settings-menu-item">   
-          <div className="border rounded bg-light">
-            <Link to="settings/fields" className="d-block cursor text-decoration-none">
-              <div className="d-flex p-md-4">
-                <div className="">
-                  <img src={FieldsLightIcon} alt="" />
-                </div>
-                <div className="ms-3">
-                  <h6 className="text-dark mb-0">Fields</h6>
-                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                    Setup fields for users, tickets and customers forms.
-                  </p>
-                </div>
-              </div>
-            </Link>
-          </div>
-        </Col>
+              </Link>
+            </div>
+          </Col>
+        }
+
         {/* <Col sm={6} md={4} className="settings-menu-item">   
           <div className="border rounded bg-light">
             <Link to="settings/livechat" className="d-block cursor text-decoration-none">

@@ -4,6 +4,9 @@ import {config} from '../../config/keys';
 import {returnErrors} from './errorActions';
 import {userTokenConfig} from '../../helper';
 import {NotificationManager} from 'react-notifications';
+import {
+    httpPostMain
+} from "../../helpers/httpMethods";
 
 export const getTickets = () => (dispatch, getState) => {
     if (!navigator.onLine) {
@@ -34,19 +37,22 @@ export const getTickets = () => (dispatch, getState) => {
         });
 }
 
-export const getPaginatedTickets = (itemsPerPage, currentPage) => (dispatch, getState) => {
+export const getPaginatedTickets = (itemsPerPage, currentPage, success, failed) => (dispatch, getState) => {
     if (!navigator.onLine) {
         return console.error("Network error!");
     }
     dispatch(setTicketsLoading());
     axios
         .get(`${config.stagingBaseUrl}/tickets?per_page=${itemsPerPage}&page=${currentPage}`, userTokenConfig(getState))
-        .then(res => dispatch({
-            type: types.GET_TICKETS,
-            payload: (res.data && res.data.status === "success")
-                ? res.data?.data
-                : {}
-        }))
+        .then(res => {
+            dispatch({
+                type: types.GET_TICKETS,
+                payload: (res.data && res.data.status === "success")
+                    ? res.data?.data
+                    : {}
+            });
+            success && success();
+        })
         .catch(err => {
             dispatch({
                 type: types.GET_CUSTOMERS,
@@ -59,6 +65,7 @@ export const getPaginatedTickets = (itemsPerPage, currentPage) => (dispatch, get
                     }
                 }
             });
+            failed && failed();
             dispatch(returnErrors(err.response?.data, err.response?.status))});
 }
 
@@ -144,15 +151,29 @@ export const getCurrentTicket = (id) => (dispatch, getState) => {
     } */
 }
 
-export const addTicket = (newTicket) => (dispatch, getState) => {
+export const addTicket = (newTicket, success) => (dispatch, getState) => {
     
     //Request body
     const body = JSON.stringify(newTicket);
 
     axios
         .post(`${config.stagingBaseUrl}/tickets`, body, userTokenConfig(getState))
-        .then(res => {
-            dispatch({type: types.ADD_TICKET, payload: res.data})
+        .then(async res => {
+            if (res.data?.status === "success") {
+                const replyData = {
+                    type: 'reply',
+                    attachment: null,
+                    response: res.data?.data?.description,
+                    plainResponse: res.data?.data?.plain_description
+                };
+                const replyRes = await httpPostMain(
+                    `tickets/${res.data?.data?.id}/replies`,
+                    replyData
+                );
+                dispatch({type: types.ADD_TICKET, payload: res.data})
+                success && success(res.data);
+            }
+            
         })
         .catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }

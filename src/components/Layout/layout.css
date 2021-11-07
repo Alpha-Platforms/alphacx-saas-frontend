@@ -53,6 +53,12 @@
   padding: 40px 20px 10px 0;
 }
 
+
+/*  */
+.ticket-status-dropdown .dropdown-menu{
+  transform : translate3d(0px, 31px, 0px) !important;
+}
+
 .sidebar-wrap {
   height: calc(100vh);
   bottom: 0;
@@ -270,7 +276,7 @@
 }
 
 .navbar-content .navbar-right-content span {
-  padding-right: 20px;
+  /* padding-right: 20px; */
 }
 
 .navbar-content .navbar-right-content span:last-child {
@@ -282,6 +288,47 @@
   height: 32px;
   border-radius: 50%;
 }
+/* navbar dropdown */
+.acx-notification-nav-dropdown .dropdown-menu{
+  left: 50% !important;
+  padding-bottom: 0px !important;
+  box-shadow: 0px 3px 20px 3px rgb(0 0 0 / 10%);
+  transform: translateX(-50%) translateY(50px)  translateZ(0px) !important;
+  width: fit-content;
+  min-width: 320px;
+  max-width: 320px;
+}
+.acx-notification-nav-dropdown .dropdown-menu::before{
+  position: absolute;
+  content: "";
+  top: -10px;
+  width: 0; 
+  height: 0; 
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid white;
+  left: 50% !important;
+  transform: translateX(-50%);
+}
+
+.acx-notification-nav-dropdown .dropdown-menu a.dropdown-item{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  transition: 0.25s ease-in;
+}
+.acx-notification-nav-dropdown .dropdown-menu a.dropdown-item:not(:last-child){
+  border-bottom: 0.8px solid rgba(0, 0, 0, 0.1);
+}
+
+.acx-notification-nav-dropdown .dropdown-menu a.dropdown-item:hover{
+  background-color: rgba(0, 98, 152, 0.04);
+}
+
+.acx-notification-nav-dropdown .dropdown-menu a.dropdown-item.active, 
+.acx-notification-nav-dropdown .dropdown-menu a.dropdown-item:active {
+  color: inherit;
+}
+
 .app-logo-wrap-layout-page {
   margin-right: auto;
   width: 60%;

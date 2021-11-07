@@ -25,13 +25,16 @@ import { httpGetMain } from "../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import { wordCapitalize } from "helper";
 
-const GroupList = ({ groups, categories, isGroupsLoaded }) => {
+const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser }) => {
+
+
   const [addGroupModalShow, setAddGroupModalShow] = useState(false);
   const [addMemberModalShow, setAddMemberModalShow] = useState(false);
   const [ticketCategories, setTicketCategories] = useState([]);
   const [groupId, setGroupId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [groupsLoading, setGroupsLoading] = useState(false);
+  const [accessControl, setAccessControl] = useState(false)
 
   const [tagColors] = useState([
     "acx-bg-green-30", 
@@ -40,6 +43,10 @@ const GroupList = ({ groups, categories, isGroupsLoaded }) => {
     "acx-bg-blue-30"
   ])
 
+
+  useEffect(() => {
+    setAccessControl(authenticatedUser.role === "Administrator");
+  }, [])
 
   useEffect(() => {
     setGroupsLoading(!isGroupsLoaded);
@@ -188,13 +195,16 @@ const GroupList = ({ groups, categories, isGroupsLoaded }) => {
               &nbsp;Add Member
             </button> */}
 
-            <button
-              onClick={handleGroupAdd}
-              type="button"
-              className="btn btn-sm bg-at-blue-light px-md-3 mx-1"
-            >
-              &nbsp;Add Team
-            </button>
+            { accessControl &&
+              <button
+                onClick={handleGroupAdd}
+                type="button"
+                className="btn btn-sm bg-at-blue-light px-md-3 mx-1"
+              >
+                &nbsp;Add Team
+              </button>
+            }
+
           </div>
         </div>
 
@@ -324,7 +334,8 @@ const mapStateToProps = (state, ownProps) => ({
   meta: state.user.meta,
   isUsersLoaded: state.user.isUsersLoaded,
   categories: state.category.categories,
-  isGroupsLoaded: state.group.isGroupsLoaded
+  isGroupsLoaded: state.group.isGroupsLoaded,
+  authenticatedUser: state.userAuth.user
 });
 
 export default connect(mapStateToProps, null)(GroupList);

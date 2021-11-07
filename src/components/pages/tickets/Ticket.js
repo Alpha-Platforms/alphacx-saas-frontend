@@ -269,13 +269,15 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       element.scrollIntoView({behavior: 'smooth'});
     }
     const replyTicket = async (reply, attachment) => {
+      
       const data = {
         type: replyType,
         response: reply.richText,
         plainResponse: reply.plainText,
         phoneNumber: currentTicket.customer.phone_number,
         // attachment: "",
-      };
+      }; 
+
       const replyData = {
         attachment: null,
         created_at: new Date(),

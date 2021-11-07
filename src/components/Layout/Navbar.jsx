@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, Fragment } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
 import { LayoutContext } from "../../context/layoutContext";
@@ -11,11 +11,17 @@ import searchIcon from "../../assets/imgF/Search.png";
 import {HelpIcon} from '../../assets/SvgIconsSet.jsx';
 import CreateTicketModal from '../pages/tickets/CreateTicketModal';
 import CreateCustomerModal from '../pages/customers/CreateCustomerModal';
-import dummyavatar from '../../assets/images/dummyavatar.jpeg';
+import DummyAvatar from '../../assets/images/dummyavatar.jpeg';
 import '../../styles/Navbar.css';
 import {connect} from 'react-redux';
-import {DowncaretIcon, PlusIcon} from "../../assets/SvgIconsSet.jsx";
-import { Dropdown } from "react-bootstrap";
+import { DowncaretIcon, PlusIcon} from "../../assets/SvgIconsSet.jsx";
+import { httpGetMain } from "../../helpers/httpMethods";
+// 
+import { NotificationManager } from "react-notifications";
+import ScaleLoader from "react-spinners/ScaleLoader";
+// 
+import Dropdown from "react-bootstrap/Dropdown";
+import NavDropdown from "react-bootstrap/NavDropdown";
 
 
 function DropDown() {
@@ -24,10 +30,12 @@ function DropDown() {
   return (
     <>
       <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown global-create-dropdown">
-        <Dropdown.Toggle variant="" size="" >
-          <button className="btn acx-btn-primary" style={{borderRadius: ".15rem", padding: ".25rem .5rem"}}>
-          <PlusIcon /> <span className="px-2">Create</span> <DowncaretIcon />
-          </button>
+        <Dropdown.Toggle variant="" size="" className="btn acx-btn-primary" style={{"borderRadius": ".15rem"}}>
+          <div style={{"padding": ".25rem .5rem"}}>
+            <PlusIcon /> 
+            <span className="px-2">Create</span> 
+            <DowncaretIcon />
+          </div>
         </Dropdown.Toggle>
         <Dropdown.Menu>
           <Dropdown.Item eventKey="1">
@@ -56,7 +64,106 @@ function DropDown() {
   )
 }
 
+function Notification(props){
+  const [notifications, setNotifications] = useState([]);
+  const [notificationsLoaded, setNotificationsLoaded] = useState(false);
 
+  useEffect(() => {
+    getNotifications();
+  }, [props.userId]);
+
+  const getNotifications = async() => {
+    const res = await httpGetMain(`notifications/${props.userId}`);
+    if (res.status === "success") {
+      setNotificationsLoaded(true);
+      setNotifications(res?.data);
+    } else {
+      setNotificationsLoaded(true);
+      return NotificationManager.error(res.er.message, "Error", 4000);
+    }
+  }
+
+  return (
+    <NavDropdown title={<>
+        <div className="d-flex justify-items-start align-items-center">
+          <BellIconNavbar />
+        </div>
+      </>} className="acx-dropdown-hidden acx-notification-nav-dropdown" id="navbarScrollingDropdown">
+      <Dropdown.Header className="d-flex justify-content-between align-items-center border-bottom">
+        <div className="flex-grow-1">
+          <p className="acx-text-gray-800 mb-0 text-center">
+            Notifications
+          </p>
+        </div>
+        {notifications.length == 0 || notifications == null || notifications == undefined?
+          ""
+          :
+          <div className="">
+            <a href="#read-notification" className="acx-link-primary">mark all as read</a>
+          </div>
+        }
+      </Dropdown.Header>
+      {notificationsLoaded == false? 
+        <NavDropdown.Item as="div">
+            <div className="d-flex justify-content-center align-items-center py-5 ps-1 notification-loader-indicator">
+              <ScaleLoader
+                  color="#0d4166"
+                  loading={notificationsLoaded == false}
+                  size={5}
+                />
+            </div>
+        </NavDropdown.Item>
+      : 
+        notifications.length == 0 || notifications == null || notifications == undefined?
+        <NavDropdown.Item as="div">
+            <div className="d-flex flex-column justify-content-center align-items-center py-3">
+              <h2 className="text-muted mb-2"><i className="bi-stars"></i> </h2>
+              <p className="text-muted mb-0">No notifications</p>
+            </div>
+        </NavDropdown.Item>
+        :
+        <Fragment>
+          {
+            notifications.map((data, index) => {
+              return (
+                <NavDropdown.Item href="#action3">
+                    <div className="d-flex justify-content-start align-items-start">
+                      <div className="me-3 flex-shrink-0">
+                        <img
+                          src={DummyAvatar}
+                          alt=""
+                          width="40"
+                          heigth="40"
+                          className="rounded-circle border"
+                        />
+                      </div>
+                      <div className="media-body flex-grow-1">
+                        <div className="media-header d-flex justify-content-between align-items-center mb-1">
+                          <p className="mb-0 me-3">{data.title}</p>
+                          <span className="text-muted">5 min ago</span>
+                        </div>
+                        <div className="acx-text-gray-500 media-content">
+                          <p className="mb-0 text-wrap">
+                            {data.content}
+                            {/* <span className="acx-text-primary">I need a refund for my order</span>. */}
+                            {/* <span className="acx-bg-alpha-blue-100 px-3 py-1 mt-2 acx-rounded-5 d-block text-nowrap text-truncate" 
+                                  style={{"maxWidth":"230px"}}>
+                              <span className="acx-text-primary">@hammeddaudu {" "}</span> 
+                              Please make sure that
+                            </span> */}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                </NavDropdown.Item>
+              )
+            }
+          )}
+        </Fragment>
+      }
+  </NavDropdown>
+  );
+}
 
 function Navbar({
   browserRouter,
@@ -166,9 +273,10 @@ function Navbar({
 
                 <DropDown />
 
-                <div style={{ width: "1.5" }}>
+                {/* <div style={{ width: "1.5" }}>
                   <BellIconNavbar />
-                </div>
+                </div> */}
+                <Notification userId={user?.id} />
 
                 <Link to="/knowledge-base" target="_blank">
                   <HelpIcon />
@@ -177,7 +285,7 @@ function Navbar({
                 <div>
                   <Link to={`/settings/profile/${localUser?.id}`}>
                     {localUser?.avatar ? <img
-                      src={localUser?.avatar || dummyavatar}
+                      src={localUser?.avatar || DummyAvatar}
                       alt=""
                       style={{
                         width: 30,

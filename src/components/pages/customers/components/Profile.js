@@ -25,12 +25,17 @@ import {ExpandChat} from "../../../../assets/images/svgs";
 
 
 const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
+    const [errors, setErrors] = useState({});
+    // 
     const [editProfile, setEditProfile] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
+    // 
     const [customFieldConfig, setCustomFieldConfig] = useState([]);
     // 
     const [customFieldIsSet, setCustomFieldIsSet] = useState(false);
     const [mergedCustomUserFields, setMergedCustomUserFields] = useState([]);
+    const [customFieldsGroup, setCustomFieldsGroup] = useState([]);
+    
     // profile update info
     const [processing, setProcessing] = useState(false);
     const [profileData, setProfileData] = useState({
@@ -38,7 +43,6 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
         lastName: '', 
         phone_number: '',
         avatar: '',
-        customField: {} 
     });
     // avatar upload
     const [uploadInfo, setUploadInfo] = useState({
@@ -53,6 +57,11 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
     useEffect(() => {
         getCustomFieldConfig();
     },[]);
+
+    // group custom field when custom field config is set
+    useEffect(() => {
+        groupCustomFields();
+    },[mergedCustomUserFields]);
 
     // if customers is mounted
     useEffect(() => {
@@ -71,7 +80,6 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
                 }
             }
         });
-        setCustomFieldIsSet(true);
         setMergedCustomUserFields(merged_custom_user_fields);
     }, [currentCustomer, customFieldConfig]);
 
@@ -86,8 +94,34 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
         }
     }
 
+    // group custom field by field_section
+    const groupCustomFields = () =>{
+        const groupedCustomFields = Object.entries(
+            // 
+            mergedCustomUserFields.reduce((acc, { 
+                id, field_name, field_type, field_section, field_options, 
+                required, multiple_options, belongs_to, value
+            }) => {
+                // Group initialization
+                if (!acc[field_section]) {
+                    acc[field_section] = [];
+                }
+                // Grouping
+                // only pushing the object in a field section
+                acc[field_section].push({ id, field_name, field_type, 
+                    field_section, required,multiple_options, belongs_to, field_options, value });
+                return acc;
+            }, {})
+        ).map(([section, fields]) => ({ section, fields }));
+        // 
+        setCustomFieldIsSet(true);
+        setCustomFieldsGroup([...groupedCustomFields]);
+    }
+
+
     // 
     const handleEditProfile = () =>{
+        // console.log(idObjectFromArray);
         setProfileData((prevState) => ({
             ...prevState,
             firstName: currentCustomer?.firstname,
@@ -107,7 +141,6 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
             ...prevState,
             [name] : value
         }));
-
     }
 
     // handle custom field input change
@@ -117,28 +150,48 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
             ...prevState,
             customField: {
                 ...prevState.customField,
+                ...currentCustomer.custom_fields,
                 [name] : value
             }
         }));
     }
 
     // update profile function
-    const updateProfile = async(e) => {
+    const updateProfile = async(event) => {
+        event.preventDefault();
         setProcessing(true);
-        // updateCustomer(customerId, profileData);
-        const res = await httpPatchMain(`customer/${customerId}`, profileData);
-        if (res.status === "success") {
-            setProcessing(false);
-            return NotificationManager.success("Profile successfully updated", "Success");
+        const form = event.target
+        const isValid = form.checkValidity() // returns true or false
+        const formData = new FormData(form)
+        const validationMessages = Array.from(formData.keys()).reduce((acc, key) => {
+            acc[key] = form.elements[key].validationMessage
+            return acc
+            }, {});
+        setErrors(validationMessages);
+
+        if(isValid){
+            // updateCustomer(customerId, profileData);
+            const res = await httpPatchMain(`customer/${customerId}`, profileData);
+            if (res.status === "success") {
+                setEditProfile(false);
+                setProcessing(false);
+                return NotificationManager.success("Profile successfully updated", "Success");
+            }else{
+                setProcessing(false);
+                return NotificationManager.error(res.er.message, "Error", 4000);
+            }
         }else{
             setProcessing(false);
-            return NotificationManager.error(res.er.message, "Error", 4000);
+            return NotificationManager.error("Please fill in all required fields", "error", 4000);
         }
     }
 
+    const hasError = (field) => !!errors[field];
+    const getError = (field) => errors[field];
+
     return (
         <Fragment>
-            <Form className="" onSubmit={(e) => e.preventDefault()}>
+            <Form className="" onSubmit={(event) => {updateProfile(event)}} noValidate>
                 <Container fluid className="px-5">
                     <div className="d-flex justify-content-between align-items-center mb-4">
                         <h6 className="text-muted acx-ls-30 acx-fs-12">CONTACT INFORMATION</h6>
@@ -181,48 +234,67 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
                                         defaultValue={currentCustomer.phoneNumber ? currentCustomer.phoneNumber 
                                                     : currentCustomer.phone_number ? currentCustomer.phone_number : ''} 
                                         onChange={handleChange}/>
+                                        <span className="text-danger d-block small">{getError("phoneNumber")}</span>
                                 </Form.Group>
                             </div>
-                            <h6 className="text-muted mb-4 acx-ls-30 acx-fs-12">CUSTOM FIELDS</h6>
-                            <Row className="justify-content-between mb-3">
-                                {customFieldIsSet? 
-                                    mergedCustomUserFields.map((data) => {
-                                        if(data?.field_type == "select"){
-                                            return (
-                                                <Col md={4} key={data.id}>
-                                                    <Form.Group className={`d-flex flex-column flex-grow-1 ${editProfile? "" : "border-bottom"} pb-2 mb-3 form-group acx-form-group`}>
-                                                        <Form.Label className="text-muted small mb-1">{data?.field_name}</Form.Label>
-                                                        <Form.Select className={`text-dark ${editProfile? "" : "ps-0 py-0 border-0 bg-white"}`} 
-                                                                    plaintext={`${!editProfile}`} readOnly={!editProfile} disabled={!editProfile} 
-                                                                    onChange={handleCustomFieldChange} required={data?.required}>
-                                                            <option>Select</option>
-                                                        </Form.Select>
-                                                    </Form.Group>
-                                                </Col>
-                                            )
-                                        }else{
-                                            return (
-                                                <Col md={4} key={data.id}>
-                                                    <Form.Group className={`d-inline-flex flex-column flex-grow-0 ${editProfile? "" : "border-bottom"} pb-2 mb-3 form-group acx-form-group`}>
-                                                        <Form.Label className="text-muted small mb-1">{data?.field_name}</Form.Label>
-                                                        <Form.Control name={data?.id} type={data?.field_type} 
-                                                                    className={`text-dark ${editProfile? "" : "py-0"}`} 
-                                                                    plaintext={!editProfile} readOnly={!editProfile} 
-                                                                    defaultValue={data?.value || "N/A"} required={data?.required}
-                                                                    onChange={handleCustomFieldChange}/>
-                                                    </Form.Group>
-                                                </Col>
-                                            )
-                                        }
-                                    })
-                                    :
-                                    <Col md={12}>
-                                        <div className="text-center">
-                                            <p className="">Custom field not found</p>
-                                        </div>
-                                    </Col>
-                                }
-                            </Row>
+                            {customFieldIsSet? 
+                                customFieldsGroup.map((mergedCustomUserFields) => {
+                                    return(
+                                        <Fragment key={mergedCustomUserFields.section}> 
+                                            <h6 className="text-muted mb-4 acx-ls-30 acx-fs-12">{mergedCustomUserFields.section != 'null' || mergedCustomUserFields.section == null || mergedCustomUserFields.section == undefined ? mergedCustomUserFields.section.toUpperCase() : "OTHERS"}</h6>
+                                            <Row className="mb-4 border-bottom">
+                                                {mergedCustomUserFields.fields.map((data) => {
+                                                    if(data?.field_type == "select"){
+                                                        return (
+                                                            <Col md={4} key={data.id}>
+                                                                <Form.Group className={`d-flex flex-column flex-grow-1 ${editProfile? "" : "border-bottom"} pb-2 mb-3 form-group acx-form-group`}>
+                                                                    <Form.Label className="text-muted small mb-1">{data?.field_name}{" "}{data?.required ? <span className="text-danger">*</span> : ""}</Form.Label>
+                                                                    <Form.Select name={data.id} className={`text-dark ${editProfile? "" : "ps-0 py-0 border-0 bg-white"} mb-1`} 
+                                                                                plaintext={`${!editProfile}`} readOnly={!editProfile} disabled={!editProfile} 
+                                                                                onChange={handleCustomFieldChange} required={data?.required} 
+                                                                                defaultValue={data?.value}>
+                                                                        <option value="" disabled>Select Type</option>
+                                                                        {data.field_options? 
+                                                                            data.field_options.replace(/{|"|}/g, "").split(",").map((options) => {
+                                                                                return(
+                                                                                    <option key={options} value={options}>{options}</option>
+                                                                                )
+                                                                            })
+                                                                        :
+                                                                            null
+                                                                        }
+                                                                    </Form.Select>
+                                                                    <span className="text-danger d-block small">{getError(data?.id)}</span>
+                                                                </Form.Group>
+                                                            </Col>
+                                                        )
+                                                    }else{
+                                                        return (
+                                                            <Col md={4} key={data.id}>
+                                                                <Form.Group className={`d-inline-flex flex-column flex-grow-0 ${editProfile? "" : "border-bottom"} pb-2 mb-3 form-group acx-form-group`}>
+                                                                    <Form.Label className="text-muted small mb-1">{data?.field_name}{" "}{data?.required ? <span className="text-danger">*</span> : ""}</Form.Label>
+                                                                    <Form.Control name={data?.id} type={data?.field_type} 
+                                                                                className={`text-dark ${editProfile? "" : "py-0"} mb-1`} 
+                                                                                plaintext={!editProfile} readOnly={!editProfile} 
+                                                                                defaultValue={data?.value || ""} required={data?.required}
+                                                                                onChange={handleCustomFieldChange}/>
+                                                                    <span className="text-danger d-block small">{getError(data?.id)}</span>
+                                                                </Form.Group>
+                                                            </Col>
+                                                        )
+                                                    }
+                                                }) } 
+                                            </Row>
+                                        </Fragment>
+                                    )
+                                })
+                                :
+                                <Col md={12}>
+                                    <div className="text-center">
+                                        <p className="">Custom field not found</p>
+                                    </div>
+                                </Col>
+                            }
                         </Col>
                         <Col md={4}>
                             <div className="text-center">
@@ -239,7 +311,7 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
                     </Row>
                     <div className="py-3 text-end">
                         {(editProfile)? (
-                            <Button type="submit" disabled={processing} onClick={updateProfile} className="acx-btn-primary px-3">
+                            <Button type="submit" disabled={processing} className="acx-btn-primary px-3">
                                 {processing? 
                                     <span className="text-light d-flex justify-content-center align-items-center">
                                         <Spinner as="span" size="sm"

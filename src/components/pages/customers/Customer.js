@@ -217,11 +217,11 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                 activeKey={tabKey}
                                 onSelect={(k) => setTabKey(k)}
                                 className="mb-3">
-                                <Tab eventKey="profile" className="">
+                                <Tab eventKey="profile" className="" title={""}>
                                     <Profile isCustomerLoaded={isCustomerLoaded} currentCustomer={currentCustomer} customerId={id}/>
                                 </Tab>
 
-                                <Tab eventKey="ticket-history" className="">
+                                <Tab eventKey="ticket-history" className="" title={""}>
                                     <TicketHistory currentCustomerId={id} />
                                 </Tab>
 
@@ -231,7 +231,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                 </Tab> */}
 
                                 {/* Timeline tab */}
-                                <Tab eventKey="timeline" className="px-2">
+                                <Tab eventKey="timeline" className="px-2" title={""}>
                                     <Timeline />
                                 </Tab>
                             </Tabs>
@@ -250,7 +250,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                 onClick={() => setShowUpdate(false)}></div>
             <div
                 className="offcanvas offcanvas-end show"
-                tabindex="-1"
+                tabIndex="-1"
                 id="uploadSidebar"
                 aria-labelledby="offcanvasRightLabel"
                 style={{

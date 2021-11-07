@@ -1,5 +1,6 @@
 
 /* eslint-disable */
+// @ts-nocheck
 
 import React, { useEffect, useState } from "react";
 import "./login.css";
@@ -25,6 +26,7 @@ const Login = ({match: {params}}) => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [domain, setDomain] = useState("")
+  const [tenantId, setTenantId] = useState("");
   let [loading, setLoading] = useState(false);
   let [color, setColor] = useState("#ffffff");
   const [hostName] = useState(() => {
@@ -33,10 +35,17 @@ const Login = ({match: {params}}) => {
   const [environment, setEnvironment] = useState(process.env.NODE_ENV)
 
 
-  useEffect(() => {         
+  useEffect(async () => {         
     if(hostName[0] !== "app" && hostName[0] !== "qustomar" && hostName[0] !== "localhost" && hostName[1] !== "netlify"){ // CHANGE TO 3 ON LIVE SERVER 
       window.localStorage.setItem("domain", domain)
+      
       setDomain(hostName[0]) // if sub-domain is available it is correct else you'd get a 404
+      
+      const res = await httpPost(`auth/login`, {domain: hostName[0]});
+      if (res?.status === "success") {
+        window.localStorage.setItem("tenantId", res?.data?.id || "");
+      }
+
     }
   }, [])
 
@@ -67,7 +76,10 @@ const Login = ({match: {params}}) => {
     if(domain){
       window.localStorage.setItem("domain", domain)
     }
-  }, [domain])
+    if(tenantId) {
+      window.localStorage.setItem("tenantId", tenantId);
+    }
+  }, [domain, tenantId])
   
 
   const handleChange = (e) => {
@@ -148,6 +160,7 @@ const Login = ({match: {params}}) => {
         } else {
           // window.location.href = "/";
           setDomain(domain)
+          setTenantId(res?.data?.id)
         }
         
       } else {

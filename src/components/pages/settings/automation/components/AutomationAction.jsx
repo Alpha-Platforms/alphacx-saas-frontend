@@ -124,7 +124,7 @@ const AutomationAction = ({
             <label htmlFor="channel">Send</label>
             
             <RSelect 
-              className=""
+              className="select-light-blue"
               id="channel"
               name="action"
               openMenuOnFocus={true}
@@ -142,9 +142,9 @@ const AutomationAction = ({
           <div className="mt-4 d-flex align-items-center">
             
             <div className="input-group w-50 me-2">
-              <input type="number" name="days"  className="form-control" value={action.days} onChange={handleMinorInput} />
+              <input type="number" name="days" min={0}  className="form-control" value={action.days} onChange={handleMinorInput} />
               <span className="input-group-text acx-fs-8">Days</span>
-              <input type="number" name="hours" className="form-control" value={action.hours} onChange={handleMinorInput} />
+              <input type="number" name="hours" min={0} className="form-control" value={action.hours} onChange={handleMinorInput} />
               <span className="input-group-text acx-fs-8">Hours</span>
             </div>
 
@@ -195,7 +195,7 @@ const AutomationAction = ({
 
             <div className="form-group">
               <RSelect 
-                className=""
+                className="select-light-blue"
                 isClearable={false}
                 name="recipient"
                 isMulti
@@ -226,6 +226,7 @@ const AutomationAction = ({
 
             <EditorBox
               text={action.body || ""}
+              editorClassName="automation-editor"
               // textParent={newPolicy}
               textFormat={"plain"}
               updateText={val => setActionState({
@@ -240,10 +241,10 @@ const AutomationAction = ({
 
           </div>
         </div>
-        <div className="card-footer bg-light" id="customer-choice">
+        <div className="card-footer bg-light px-3 py-3" id="customer-choice">
           <button className="addNewResolution" onClick={addAction}>
             <img src={AddIcon} alt="" className="img-fluid me-1 mt-n5 " />
-            Add New Action
+            New Action
           </button>
           
           {actions.length > 1 && (

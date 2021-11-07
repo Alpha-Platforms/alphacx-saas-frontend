@@ -19,6 +19,8 @@
       padding-right: 25px;
       font-size: 12px;
       position: relative;
+      width: -webkit-fit-content;
+      width: -moz-fit-content;
       width: fit-content;
       p {
         margin: 0;
@@ -96,4 +98,85 @@
     width: 100px!important;
     text-align: center;
   }
+}
+
+.sla-form {
+  padding: 10px 30px;
+  background: #F6FAFD;
+  border-radius: 5px;
+  margin-bottom: 30px;
+}
+
+.select-light-blue > div:nth-of-type(1) {
+  background: #F6FAFD !important;
+  border: 1px solid rgba(45, 50, 80, 0.07) !important;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+}
+
+.input-light-blue {
+  background: #F6FAFD !important;
+  border: 1px solid rgba(45, 50, 80, 0.07) !important;
+}
+
+.automation-editor.rdw-editor-main{
+  overflow: auto !important;
+  padding-top: 10px !important;
+}
+
+.automation-editor.rdw-editor-main::-webkit-scrollbar {
+  display: none;
+}
+
+.automation-editor.rdw-editor-main {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.automation-editor.rdw-editor-main > div {
+  height: 100%;
+}
+
+.automation-editor.rdw-editor-main .rdw-suggestion-dropdown{
+  min-width: 200px;
+  max-height: 250px;
+  bottom: 110%;
+  left: 0% !important;
+  box-shadow: 0px 0px 4px rgba(0, 98, 152, 0.1);
+  border-radius: 10px;
+  transition: 0.25s ease-in;
+}
+.automation-editor.rdw-editor-main .rdw-suggestion-dropdown::before{
+  content: "Suggested contacts";
+  color: var(--color-primary);
+  background-color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  width: 100%;
+  height: 40px;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  padding: 10px;
+}
+
+.automation-editor.rdw-editor-main 
+.rdw-suggestion-dropdown 
+.rdw-suggestion-option{
+  white-space: nowrap;
+  border-width: 0px !important;
+  text-transform: capitalize!important;
+  display: inline-flex;
+  align-items: center;
+  transition: 0.25s ease-in;
+}
+
+.automation-editor.rdw-editor-main 
+.rdw-suggestion-dropdown 
+.rdw-suggestion-option:hover{
+  cursor: pointer;
+  background-color: rgba(0, 98, 152, 0.05);
 }

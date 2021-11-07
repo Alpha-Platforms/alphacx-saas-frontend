@@ -55,7 +55,7 @@ export const exportTable = (exportColumns, exportData, exportType, fileName) => 
     const exportDataFields = exportData.map(rowData => exportColumns.map(column => {
         switch (column.field) {
             case 'contact':
-                return `${wordCapitalize(rowData.contact.firstname)} ${wordCapitalize(rowData.contact.lastname)}`
+                return `${wordCapitalize(rowData?.contact?.firstname || '')} ${wordCapitalize(rowData?.contact?.lastname) || ''}`.trim()
             default:
                 return rowData[column.field]
         }
@@ -92,7 +92,6 @@ export const getUserInitials = (name) => {
             : ''}`;
     return <span>{result}</span>;
 }
-
 
 export const uuid =() => {
     var dt = new Date().getTime();

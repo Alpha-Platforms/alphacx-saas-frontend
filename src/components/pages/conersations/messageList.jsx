@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import truncateWithEllipses from "../../helpers/truncate";
-import ClipLoader from "react-spinners/ClipLoader";
+import ScaleLoader from "react-spinners/ScaleLoader";
 import { timeFormater } from "../../helpers/dateFormater";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
-
+import InitialsFromString from "../../helpers/InitialsFromString";
 
 export default function MessageList({
   tickets,
   LoadingTick,
+  setLoadingTicks,
   loadSingleMessage,
   setTingleTicketFullInfo,
   setTicketId,
@@ -17,11 +18,25 @@ export default function MessageList({
   setActiveChat,
   scollPosSendMsgList,
 }) {
+
   const [renderTicket, setRenderTicket] = useState([]);
+  const [loadingTickets, setLoadingTickets] = useState(true);
 
   useEffect(() => {
+    setLoadingTicks(true);
     checkRender();//, [filterChat, tickets, filterTicketsState]
-  });
+  }, [filterChat, tickets, filterTicketsState]);
+
+  useEffect(() =>{
+    setLoadingTicks(false);
+  }, [renderTicket]);
+
+  useEffect(() =>{
+    if(LoadingTick == false){
+      setLoadingTickets(false);
+    }
+  }, [LoadingTick]);
+
   const checkRender = () => {
     if (filterChat === "system") {
       setRenderTicket(tickets);
@@ -51,24 +66,20 @@ export default function MessageList({
   }
   return (
     <div className="message-list-container">
-      {LoadingTick ? (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+      {loadingTickets?
+        <div className="d-flex justify-content-center align-items-center pt-5 away">
           {" "}
-          <ClipLoader color="#0d4166" loading={LoadingTick} size={35} />
+          <ScaleLoader color="#0d4166" loading={loadingTickets} size={35} />
         </div>
-      ) : renderTicket.length === 0 ? (
-        <p
-          style={{ textAlign: "center", paddingTop: "20px", fontSize: "15px" }}
-        >
-          No ticket found
-        </p>
-      ) : (
+          : Array.isArray(renderTicket) ? (renderTicket.length == 0 ? (
+          <div className="d-flex justify-content-center align-items-center pt-5 away">
+            {/* <p className="text-center pt-5 lead h4">
+              No ticket found
+            </p> */}
+            {" "}
+            <ScaleLoader color="#0d4166" loading={true} size={35} />
+          </div>
+        ) : (
         renderTicket.map((data, index) => {
           return (
             <div
@@ -88,8 +99,7 @@ export default function MessageList({
               <div className="message-user-img">
                 {data.customer.avatar == null ? (
                   <div className="message-user-noimg">
-                    <span>{`${capitalizeFirstLetter(data?.customer?.firstname?.slice(0, 1))}${data?.customer?.lastname == "default"? "" : capitalizeFirstLetter(data?.customer?.lastname?.slice(0, 1))}`}
-                    </span>
+                    <span>{InitialsFromString(`${data?.customer?.firstname == "default" || !data?.customer?.firstname? "" : data?.customer?.firstname}`, `${data?.customer?.lastname == "default" || !data?.customer?.lastname ? "" : data?.customer?.lastname}`)}</span>
                   </div>
                 ) : (
                   <img src={data?.customer?.avatar} alt="" />
@@ -97,18 +107,16 @@ export default function MessageList({
                 <div className="user-status-online"></div>
               </div>
               <div className="message-user-body">
-                <p className="senderName">{`${capitalizeFirstLetter(
-                  data?.customer?.firstname
-                )} ${data?.customer?.lastname == "default"? "" : capitalizeFirstLetter(data?.customer?.lastname)}`}</p>
+                <p className="senderName">
+                  {`${!data?.customer?.firstname || data?.customer?.firstname == "default"? "" : capitalizeFirstLetter(data?.customer?.firstname )} 
+                  ${!data?.customer?.lastname || data?.customer?.lastname == "default"? "" : capitalizeFirstLetter(data?.customer?.lastname)}`}
+                </p>
                 <p className="senderMSG text-truncate" style={{ "maxWidth": "160px" }}>
-                  {/* {truncateWithEllipses(data?.plain_description, 20)} */}
-                  {/* {(Array.isArray(data.history)) ? data.history.length :  ""} */}
                   {(!Array.isArray(data.history)) ? ""
                     : (data.history.length == 0)? "" 
                     : (data.history[0].plain_response === null || data.history[0].plain_response === undefined ) ? "" 
                     : data.history[0].plain_response
                   }
-                    {/* truncateWithEllipses(data.history.at(-1), 20) */}
                 </p>
                 <div className="msg-badges">
                   <div
@@ -138,7 +146,10 @@ export default function MessageList({
             </div>
           );
         })
-      )}
+      )) : 
+        <p className="text-center pt-5 lead h4">
+          No ticket found
+        </p> }
     </div>
   );
 }

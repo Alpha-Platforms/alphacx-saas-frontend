@@ -1,15 +1,17 @@
 // @ts-nocheck
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, Fragment } from "react";
 import {connect} from 'react-redux';
 
 import { UserDataContext } from "../../../context/userContext";
-import "./conversation.css";
 import { Modal } from "react-responsive-modal";
 import Spinner from 'react-bootstrap/Spinner';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 import PinIcon from '../../../assets/icons/pin.svg';
 import MessageList from "./messageList";
 import searchIcon from "../../../assets/imgF/Search.png";
 import NoChatFound from "./noChatFound";
+import "./conversation.css";
 // import SingleChatOpen from "./sigleChat";
 import {
   getSubdomain,
@@ -18,6 +20,7 @@ import {
   httpPostMain,
   httpPatchMain,
 } from "../../../helpers/httpMethods";
+import InitialsFromString from "../../helpers/InitialsFromString";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -79,7 +82,7 @@ function Conversation({user, ...props}) {
   const [tickets, setTickets] = useState([]);
   const [filterTicketsState, setFilterTicketsState] = useState([]);
   const [ticket, setTicket] = useState([]);
-  const [LoadingTick, setLoadingTicks] = useState(true);
+  const [loadingTicks, setLoadingTicks] = useState(true);
   const [loadSingleTicket, setLoadSingleTicket] = useState(false);
   const [SenderInfo, setSenderInfo] = useState(false);
   const [singleTicketFullInfo, setTingleTicketFullInfo] = useState(false);
@@ -97,6 +100,7 @@ function Conversation({user, ...props}) {
     richText: "",
   });
   const [replyType, setReplyType] = useState("reply");
+  const [mentions, setMentions] = useState([]);
   // 
   const [Agents, setAgents] = useState([]);
   const [Statuses, setStatuses] = useState([]);
@@ -260,10 +264,14 @@ function Conversation({user, ...props}) {
     setTimeStampsMsg(resultTimestamps);
   };
   useEffect(() => {
-    setLoadingTicks(true);
+    // setLoadingTicks(true);
     setTickets(wsTickets);
     setLoadingTicks(false);
   }, [wsTickets]);
+
+  const changeLoadingTickets = (value) =>{
+    setLoadingTicks(value);
+  }
 
   const onEditorStateChange = (editorState) => {
     // handleDescriptionValidation(editorState);
@@ -280,17 +288,17 @@ function Conversation({user, ...props}) {
     setReplyType(event.target.value);
   }
 
-  const getTickets = async () => {
-    const res = await httpGetMain("tickets?channel=whatsapp");
-    if (res?.status === "success") {
-      setLoadingTicks(true);
-      setTickets(res?.data?.tickets);
-      setLoadingTicks(false);
-    } else {
-      setLoadingTicks(false);
-      return NotificationManager.error(res?.er?.message, "Error", 4000);
-    }
-  };
+  // const getTickets = async () => {
+  //   const res = await httpGetMain("tickets?channel=whatsapp");
+  //   if (res?.status === "success") {
+  //     setLoadingTicks(true);
+  //     setTickets(res?.data?.tickets);
+  //     setLoadingTicks(false);
+  //   } else {
+  //     setLoadingTicks(false);
+  //     return NotificationManager.error(res?.er?.message, "Error", 4000);
+  //   }
+  // };
 
   const filterTicket = (value, type) => {
     if (type === "channel") {
@@ -325,11 +333,25 @@ function Conversation({user, ...props}) {
     filterSentTick[0]["updated_at"] = new Date();
     const newTicket = [...filterSentTick, ...filterSentTickAll];
     setTickets(newTicket);
+    let agentMentions = [];
+    if(replyType === "note"){
+      // reply.richText
+      agentMentions = Agents.reduce(function(result, object) {
+          if (reply.richText.includes(object?.id)) {
+            result.push(object.id);
+          }
+          return result;
+      }, []);
+      
+      setMentions(()=>[ ...agentMentions]);
+    }
+
     const data = {
       type: replyType,
       response: reply.richText,
       plainResponse: reply.plainText,
       phoneNumber: singleTicketFullInfo.customer.phone_number,
+      "mentions": agentMentions
       // attachment: "",
     };
     const replyData = {
@@ -339,6 +361,7 @@ function Conversation({user, ...props}) {
       plain_response: reply.plainText,
       response: reply.richText,
       user: user,
+      "mentions": agentMentions
     };
     const res = await httpPostMain(
       `tickets/${singleTicketFullInfo.id}/replies`,
@@ -691,18 +714,19 @@ function Conversation({user, ...props}) {
                 </div>
               </form>
             </div>
-            <MessageList
-              tickets={tickets}
-              LoadingTick={LoadingTick}
-              loadSingleMessage={loadSingleMessage}
-              setTingleTicketFullInfo={setTingleTicketFullInfo}
-              filterChat={filterChat}
-              filterTicketsState={filterTicketsState}
-              activeChat={activeChat}
-              setActiveChat={setActiveChat}
-              scollPosSendMsgList={scollPosSendMsgList}
-              setTicketId={setTicketId}
-            />
+              <MessageList
+                tickets={tickets}
+                LoadingTick={loadingTicks}
+                setLoadingTicks={setLoadingTicks}
+                loadSingleMessage={loadSingleMessage}
+                setTingleTicketFullInfo={setTingleTicketFullInfo}
+                filterChat={filterChat}
+                filterTicketsState={filterTicketsState}
+                activeChat={activeChat}
+                setActiveChat={setActiveChat}
+                scollPosSendMsgList={scollPosSendMsgList}
+                setTicketId={setTicketId}
+              />
           </div>
 
           {/* CHAT COL ONE END*/}
@@ -742,9 +766,9 @@ function Conversation({user, ...props}) {
                         <div className="custormChatHeaderInfoData">
                           <h1>{ticket[0]?.subject}</h1>
                           <p>
-                            {`${capitalize(SenderInfo?.customer?.firstname)} 
-                              ${capitalize(SenderInfo?.customer?.lastname == "default"? "":SenderInfo?.customer?.lastname)} 
-                              ${capitalize(SenderInfo?.customer?.email)}`}
+                            {`${!SenderInfo?.customer?.firstname? "" : capitalize(SenderInfo?.customer?.firstname)} 
+                              ${!SenderInfo?.customer?.lastname? "" : capitalize(SenderInfo?.customer?.lastname == "default"? "": SenderInfo?.customer?.lastname)} 
+                              ${!SenderInfo?.customer?.email? "N/A" : capitalize(SenderInfo?.customer?.email)}`}
                             <span className="custormChatHeaderDot d-block"></span>{" "}
                             <span>{dateFormater(ticket[0]?.updated_at)}</span>
                           </p>
@@ -988,7 +1012,7 @@ function Conversation({user, ...props}) {
                         >
                         <img src={BackArrow} alt="" />
                       </div>
-                      <div className="position-absolute ps-1 pt-1 bg-white rounded-top border w-100" style={{"zIndex": "2"}}>
+                      <div className="ps-1 pt-1 bg-white acx-rounded-top-10 border border-bottom-0 w-100">
                         <Form.Check
                           inline
                           label="Reply"
@@ -1009,6 +1033,10 @@ function Conversation({user, ...props}) {
                           type="radio"
                           id={`inline-response_type-2`}
                         />
+                        {/* <Tabs defaultActiveKey="reply" id="replyTypeToggle" className="mb-0 text-dark">
+                          <Tab className="text-dark" eventKey="reply" title="Reply"/>
+                          <Tab className="text-dark" eventKey="comment" title="Comment"/>
+                        </Tabs> */}
                       </div>
                       <Editor
                         disabled={(ticket[0].status.status === "Closed")? true : false}
@@ -1073,6 +1101,21 @@ function Conversation({user, ...props}) {
                         onEditorStateChange={(editor) =>
                           onEditorStateChange(editor)
                         }
+                        
+                        mention={{
+                          separator: ' ',
+                          trigger: '@',
+                          suggestions: (replyType === "note")? Agents.map((data) => {
+                              return { 
+                                text:  <Fragment>
+                                    <span className="rdw-suggestion-option-avatar">{InitialsFromString(`${data.firstname}`, `${data.lastname}`)}</span> 
+                                    <span> {` ${data.firstname}  ${data.lastname}`}</span>
+                                  </Fragment>, 
+                                value: `${data.firstname}  ${data.lastname}`, 
+                                url: `settings/profile/${data.id}`
+                              }
+                            }) : []
+                        }}
                       />
 
                       <div className="sendMsg">
