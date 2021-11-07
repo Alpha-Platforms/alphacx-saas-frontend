@@ -167,7 +167,6 @@ const AutomationSettings = () => {
     const res = await httpGetMain("sla?per_page=100");
     setPolicyLoading(false);
     if (res?.status === "success") {
-      console.log('AUTOMATIONS => ', res?.data);
 
       // console.clear();
       // console.log(res?.data?.agreement);
