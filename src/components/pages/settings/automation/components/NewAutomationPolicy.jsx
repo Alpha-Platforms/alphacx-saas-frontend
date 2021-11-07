@@ -65,6 +65,8 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
 
   const [actions, setActions] = useState([generateActionTemplate(uuid())]);
 
+  // console.log('ACTIONS => ', actions);
+
   const mapRSelectNonPersonOptions = (entity, cb) => {
     const mappedItems = [];    
     entity.map(item => {
@@ -86,7 +88,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
 
   // FUNCTION TO CREATE AN AUTOMATION
   const createAutomation = async () => {
-    const dueDate = Number(automationBody.durationDays) * 24 + Number(automationBody.durationHours);
+    const dueDate = (Number(automationBody.durationDays) || 0) * 24 + Number(automationBody.durationHours);
     const requestBody = {
       name: automationBody.title,
       dueDate: Math.ceil(dueDate * 60),
@@ -107,6 +109,8 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
       )
       }
     };
+
+    console.log('AUTOMATION REQUEST BODY => ', requestBody);
 
     setPolicyLoading(true);
     const res = await httpPostMain("sla", requestBody);
@@ -131,6 +135,8 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
     setPolicyLoading(false);
     if (res?.status === "success") {
       const data = res?.data;
+
+      console.log('AUTOMATION DATA => ', data)
 
       if (data) {
         // console.log('AUTOMATION DATA => ', data);
@@ -330,6 +336,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
                 <div className="input-group w-50 me-2 mb-3">
                   <input 
                     type="number" 
+                    min={0}
                     className="form-control" 
                     name="durationDays"
                     value={automationBody?.durationDays}
@@ -338,6 +345,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
                   <span className="input-group-text acx-fs-8">Days</span>
                   <input 
                     type="number" 
+                    min={0}
                     className="form-control" 
                     name="durationHours"
                     onkeydown="return false"

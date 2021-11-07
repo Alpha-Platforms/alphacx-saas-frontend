@@ -143,9 +143,11 @@ const AutomationSettings = () => {
     const res = await httpDelete(`sla/${deleteUrl}`);
 
     setPolicyLoading(false);
+
+    console.log('SLA DELETION RESPONSE => ', res);
     
-    if (res?.status === 200 && res?.data?.status === "success") {
-      NotificationManager.success(res?.data?.message, "Success");
+    if (res?.status === "success") {
+      NotificationManager.success(res?.message, "Success");
       
       setAutomationPolicies( prev => {
         return automationPolicies.filter(i => i.id !== deleteUrl)
