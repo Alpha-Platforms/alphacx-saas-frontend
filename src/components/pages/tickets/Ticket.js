@@ -1,9 +1,11 @@
 import {useState, Fragment, useEffect, useContext} from 'react';
 // bootstrap components
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 // 
 import TicketIcon from '../../../assets/svgicons/Ticket.svg';
@@ -23,6 +25,7 @@ import {
   SendMsgIcon,
   ExpandChat,
 } from "../../../assets/images/svgs";
+import InitialsFromString from "../../helpers/InitialsFromString";
 import moment from 'moment';
 import { capitalize } from '@material-ui/core';
 import ClipLoader from "react-spinners/ClipLoader";
@@ -894,102 +897,97 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                           <div id="ticketConvoEditorBox" className="conversationCommentBox">
                             <div className="single-chat-ckeditor position-relative">
                               <div className="showBackArrowOnMobile"
-                                    onClick={() =>
-                                      setChatCol({ col1: "showColOne", col2: "hideColTwo" })
-                                    }
+                                  onClick={() =>
+                                    setChatCol({ col1: "showColOne", col2: "hideColTwo" })
+                                  }
                                 >
                                 <img src={BackArrow} alt="" />
                               </div>
-                              <div className="ticket-convo-editor">
-                                <div className="position-absolute ps-1 pt-1 bg-white rounded-top border w-100" style={{"zIndex": "2"}}>
-                                  <Form.Check
-                                    inline
-                                    label="Reply"
-                                    value="reply"
-                                    name="reply_type"
-                                    checked={replyType === "reply"}
-                                    onChange={onReplyTypeChange}
-                                    type="radio"
-                                    id={`inline-response_type-1`}
-                                  />
-                                  <Form.Check
-                                    inline
-                                    label="Comment"
-                                    value="note"
-                                    name="reply_type"
-                                    checked={replyType === "note"}
-                                    onChange={onReplyTypeChange}
-                                    type="radio"
-                                    id={`inline-response_type-2`}
-                                  />
-                                </div>
-                                <Editor
-                                  disabled={(ticket[0].status.status === "Closed")? true : false}
-                                  readOnly={(ticket[0].status.status === "Closed")? true : false}
-                                  editorState={editorState}
-                                  toolbar={{
-                                    options: ["emoji", "inline", "image"],
-
-                                    inline: {
-                                      inDropdown: false,
-                                      className: undefined,
-                                      component: undefined,
-                                      dropdownClassName: undefined,
-                                      options: ["bold", "italic", "underline"],
-                                      bold: { icon: boldB, className: undefined },
-                                      italic: { icon: TextItalic, className: undefined },
-                                      underline: {
-                                        icon: TextUnderline,
-                                        className: undefined,
-                                      },
-                                    },
-
-                                    image: {
-                                      icon: editorImg,
-                                      className: undefined,
-                                      component: undefined,
-                                      popupClassName: undefined,
-                                      urlEnabled: true,
-                                      uploadEnabled: true,
-                                      alignmentEnabled: true,
-                                      uploadCallback: _uploadImageCallBack,
-                                      previewImage: true,
-                                      inputAccept:
-                                        "image/gif,image/jpeg,image/jpg,image/png,image/svg",
-                                      alt: { present: false, mandatory: false },
-                                      defaultSize: {
-                                        height: "auto",
-                                        width: "auto",
-                                      },
-                                    },
-                                    emoji: {
-                                      icon: Smiley,
-                                    },
-                                    blockType: {
-                                      inDropdown: true,
-                                    },
-
-                                    list: {
-                                      inDropdown: true,
-                                    },
-
-                                    link: {
-                                      inDropdown: true,
-                                    },
-
-                                    history: {
-                                      inDropdown: true,
-                                    },
-                                  }}
-                                  toolbarClassName="toolbarClassName"
-                                  wrapperClassName="wrapperClassName"
-                                  editorClassName="editorClassName"
-                                  onEditorStateChange={(editor) =>
-                                    onEditorStateChange(editor)
-                                  }
-                                />
+                              <div className="pb-1 pt-0 bg-white border border-bottom-0 acx-rounded-top-10 w-100 overflow-hidden">
+                                <Tabs activeKey={replyType} onSelect={(k) => setReplyType(k)} id="replyTypeToggle" className="mb-0 border-top-0">
+                                  <Tab className="text-dark" eventKey="reply" title="Reply"/>
+                                  <Tab className="text-dark" eventKey="note" title="Comment"/>
+                                </Tabs> 
                               </div>
+                              <Editor
+                                disabled={(ticket[0].status.status === "Closed")? true : false}
+                                readOnly={(ticket[0].status.status === "Closed")? true : false}
+                                editorState={editorState}
+                                toolbar={{
+                                  options: ["emoji", "inline", "image"],
 
+                                  inline: {
+                                    inDropdown: false,
+                                    className: undefined,
+                                    component: undefined,
+                                    dropdownClassName: undefined,
+                                    options: ["bold", "italic", "underline"],
+                                    bold: { icon: boldB, className: undefined },
+                                    italic: { icon: TextItalic, className: undefined },
+                                    underline: {
+                                      icon: TextUnderline,
+                                      className: undefined,
+                                    },
+                                  },
+
+                                  image: {
+                                    icon: editorImg,
+                                    className: undefined,
+                                    component: undefined,
+                                    popupClassName: undefined,
+                                    urlEnabled: true,
+                                    uploadEnabled: true,
+                                    alignmentEnabled: true,
+                                    uploadCallback: _uploadImageCallBack,
+                                    previewImage: true,
+                                    inputAccept:
+                                      "image/gif,image/jpeg,image/jpg,image/png,image/svg",
+                                    alt: { present: false, mandatory: false },
+                                    defaultSize: {
+                                      height: "auto",
+                                      width: "auto",
+                                    },
+                                  },
+                                  emoji: {
+                                    icon: Smiley,
+                                  },
+                                  blockType: {
+                                    inDropdown: true,
+                                  },
+
+                                  list: {
+                                    inDropdown: true,
+                                  },
+                                  link: {
+                                    inDropdown: true,
+                                  },
+
+                                  history: {
+                                    inDropdown: true,
+                                  },
+                                }}
+                                toolbarClassName="toolbarClassName"
+                                wrapperClassName="wrapperClassName"
+                                editorClassName="editorClassName"
+                                onEditorStateChange={(editor) =>
+                                  onEditorStateChange(editor)
+                                }
+                                
+                                mention={{
+                                  separator: '',
+                                  trigger: '@',
+                                  suggestions: (replyType === "note")? Agents.map((data) => {
+                                      return { 
+                                        text:  <Fragment>
+                                            <span className="rdw-suggestion-option-avatar">{InitialsFromString(`${data.firstname}`, `${data.lastname}`)}</span> 
+                                            <span> {` ${data.firstname}  ${data.lastname}`}</span>
+                                          </Fragment>, 
+                                        value: `${data.firstname}  ${data.lastname}`, 
+                                        url: `settings/profile/${data.id}`
+                                      }
+                                    }) : []
+                                }}
+                              />
                               <div className="sendMsg">
                                 <button
                                   disabled={(sendingReply)? true : (ticket[0].status.status === "Closed")? true : false}
@@ -1001,7 +999,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                             </div>
                           </div>
                         }
-                        {/*  */}
                       </div>
                     )}
                   </div>

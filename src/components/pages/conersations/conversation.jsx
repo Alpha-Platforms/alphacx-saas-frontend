@@ -1000,9 +1000,7 @@ function Conversation({user, ...props}) {
                   </div>
                 </React.Fragment>
                 {/* CHAT COMMENT BOX SECTION */}
-                {(ticket[0].status.status === "Closed")?
-                  ""
-                :
+                {(ticket[0].status.status === "Closed")? "" :
                   <div className={`conversationCommentBox`}>
                     <div className="single-chat-ckeditor position-relative">
                       <div className="showBackArrowOnMobile"
@@ -1012,31 +1010,11 @@ function Conversation({user, ...props}) {
                         >
                         <img src={BackArrow} alt="" />
                       </div>
-                      <div className="ps-1 pt-1 bg-white acx-rounded-top-10 border border-bottom-0 w-100">
-                        <Form.Check
-                          inline
-                          label="Reply"
-                          value="reply"
-                          name="reply_type"
-                          checked={replyType === "reply"}
-                          onChange={onReplyTypeChange}
-                          type="radio"
-                          id={`inline-response_type-1`}
-                        />
-                        <Form.Check
-                          inline
-                          label="Comment"
-                          value="note"
-                          name="reply_type"
-                          checked={replyType === "note"}
-                          onChange={onReplyTypeChange}
-                          type="radio"
-                          id={`inline-response_type-2`}
-                        />
-                        {/* <Tabs defaultActiveKey="reply" id="replyTypeToggle" className="mb-0 text-dark">
+                      <div className="pb-1 pt-0 bg-white border border-bottom-0 acx-rounded-top-10 w-100 overflow-hidden">
+                        <Tabs activeKey={replyType} onSelect={(k) => setReplyType(k)} id="replyTypeToggle" className="mb-0 border-top-0">
                           <Tab className="text-dark" eventKey="reply" title="Reply"/>
-                          <Tab className="text-dark" eventKey="comment" title="Comment"/>
-                        </Tabs> */}
+                          <Tab className="text-dark" eventKey="note" title="Comment"/>
+                        </Tabs> 
                       </div>
                       <Editor
                         disabled={(ticket[0].status.status === "Closed")? true : false}
@@ -1103,7 +1081,7 @@ function Conversation({user, ...props}) {
                         }
                         
                         mention={{
-                          separator: ' ',
+                          separator: '',
                           trigger: '@',
                           suggestions: (replyType === "note")? Agents.map((data) => {
                               return { 
