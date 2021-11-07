@@ -88,15 +88,15 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
 
   // FUNCTION TO CREATE AN AUTOMATION
   const createAutomation = async () => {
-    const dueDate = (Number(automationBody.durationDays) || 0) * 24 + Number(automationBody.durationHours);
+    const dueDate = Math.floor((Number(automationBody.durationDays) || 0)) * 24 + Math.floor(Number(automationBody.durationHours));
     const requestBody = {
       name: automationBody.title,
-      dueDate: Math.ceil(dueDate * 60),
+      dueDate: dueDate * 60,
       reminder: {
         categories: automationBody.categories.map(cat => cat.value),
         agreements: actions.map(act => ({
-          days: Number(act.days),
-          hours: Math.ceil(act.hours * 60),
+          days: Math.floor(Number(act.days) || 0),
+          hours: Math.floor((Number(act.hours) || 0) * 60),
           action: act.channel.value,
           subject: act.subject,
           body: act.body,
@@ -144,15 +144,15 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
         setAutomationBody(prev => ({
           ...prev,
           title: data?.name,
-          durationDays: Math.floor(Number(data?.due_date) / 24) || '',
-          durationHours: Math.floor(Number(data?.due_date) % 24) || '',
+          durationDays: Math.floor((Number(data?.due_date) || 0) / 1440) || 0,
+          durationHours: Math.floor((Number(data?.due_date) % 1440) / 60) || 0,
           categories: data?.reminder?.categories?.map(catId => ({value: catId, label: categoriz.find(x => x.id === catId)?.name}))
         }));
 
         setActions(data?.reminder?.agreements?.map(act => ({
           id: uuid(),
           channel: act?.action?.toLowerCase() === 'email' ? {value: wordCapitalize(act?.action || '').trim(), label: wordCapitalize(act?.action || '').trim()} : {value: act?.action?.toUpperCase(), label: act?.action?.toUpperCase()},
-          days: act?.days || '',
+          days: act?.days || 0,
           hours: Math.floor(Number(act?.hours) / 60) || 0,
           subject: act?.subject || '',
           body: act.body,
@@ -191,16 +191,16 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
   // FUNCTION TO UPDATE AN AUTOMATION IF IN EDIT MODE
   const updateAutomationPolicy = async () => {
     setPolicyLoading(true);
-    const dueDate = Number(automationBody.durationDays) * 24 + Number(automationBody.durationHours);
+    const dueDate = Math.floor((Number(automationBody.durationDays) || 0)) * 24 + Math.floor(Number(automationBody.durationHours));
 
     const requestBody = {
       name: automationBody.title,
-      dueDate,
+      dueDate: dueDate * 60,
       reminder: {
         categories: automationBody.categories.map(cat => cat.value),
         agreements: actions.map(act => ({
-          days: act.days,
-          hours: act.hours,
+          days: Math.floor(Number(act.days) || 0),
+          hours: Math.floor((Number(act.hours) || 0) * 60),
           action: act.channel.value,
           subject: act.subject,
           body: act.body,
