@@ -220,7 +220,7 @@
 }
 
 #ticketConvoEditorBox {
-    height: 10rem;
+    /* height: 10rem; */
     min-height: 24% !important;
     /* position: fixed;
     bottom: 1.2rem; */
