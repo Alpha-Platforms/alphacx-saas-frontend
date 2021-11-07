@@ -156,7 +156,7 @@ const AutomationAction = ({
             <label htmlFor="subject">Subject</label>
             <input
               type="text"
-              className="form-control mt-2 input-light-blue"
+              className="form-control mt-2"
               id="subject"
               name="subject"
               value={action.subject}
