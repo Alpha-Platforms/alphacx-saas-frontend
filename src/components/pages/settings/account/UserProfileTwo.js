@@ -50,10 +50,13 @@ const UserProfileTwo = ({
 
     const [RSTeams, setRSTeams] = useState([]);
     const [selectedTeams, setSelectedTeams] = useState([]);
+    const [accessControl, setAccessControl] = useState(false)
 
-    console.log('selected teams => ', selectedTeams);
-    console.log('mapped selected teams', selectedTeams.map(team => team.value));
+    useEffect(() => {
+        setAccessControl(authenticatedUser.role === "Administrator");
+    }, [])
 
+    
     const loadRSTeams = () => {
 
         const mappedItems = teamsData.map(item => {
@@ -401,7 +404,8 @@ const UserProfileTwo = ({
                                         <div className="w-100">
                                             <label className="form-label" for="last-name">Team(s)</label>
                                             <RSelect
-                                                className=""
+                                            isDisabled={!accessControl}                                                
+                                            className=""
                                                 isClearable={false}
                                                 isMulti
                                                 name="teams"

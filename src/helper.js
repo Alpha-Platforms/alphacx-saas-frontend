@@ -93,7 +93,6 @@ export const getUserInitials = (name) => {
     return <span>{result}</span>;
 }
 
-
 export const uuid =() => {
     var dt = new Date().getTime();
     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
