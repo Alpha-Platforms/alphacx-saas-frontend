@@ -83,7 +83,7 @@ const EditorBox = ({
     }
   }, [placeholder, updateVal]);
   return (
-    <div className="editor-Container">
+    <div id={editorClassName} className={editorClassName ? `${editorClassName}-container editor-Container` : "editor-Container"}>
       <Editor
         editorState={editorState}
         toolbar={{
