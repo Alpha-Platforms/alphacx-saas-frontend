@@ -63,6 +63,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
   });
 
   const [actions, setActions] = useState([generateActionTemplate(uuid())]);
+  console.log('ACTIONS => ', actions);
 
   // console.log('ACTIONS => ', actions);
 
@@ -235,6 +236,15 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
   },[])
 
 
+  const handleMinorKeydown = e => {
+    const unwanted = ["-", "+", "e", "." ];
+
+    if (unwanted.includes(e.key)) {
+      e.preventDefault();
+    }
+  }
+
+
 
 
   return (
@@ -340,6 +350,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
                     name="durationDays"
                     value={automationBody?.durationDays}
                     onChange={handleInputChange}
+                    onKeyDown={handleMinorKeydown}
                   />
                   <span className="input-group-text acx-fs-8">Days</span>
                   <input 
@@ -350,6 +361,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
                     onkeydown="return false"
                     value={automationBody?.durationHours}
                     onChange={handleInputChange}
+                    onKeyDown={handleMinorKeydown}
                   />
                   <span className="input-group-text acx-fs-8">Hours</span>
                 </div>

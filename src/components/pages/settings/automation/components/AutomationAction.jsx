@@ -104,6 +104,15 @@ const AutomationAction = ({
     setActionState({
       [name]: value
     });
+    
+  }
+
+  const handleMinorKeydown = e => {
+    const unwanted = ["-", "+", "e", "." ];
+
+    if (unwanted.includes(e.key)) {
+      e.preventDefault();
+    }
   }
 
   const handleRecipientTypeChange = e => {
@@ -142,9 +151,9 @@ const AutomationAction = ({
           <div className="mt-4 d-flex align-items-center">
             
             <div className="input-group w-50 me-2">
-              <input type="number" name="days" min={0}  className="form-control" value={action.days} onChange={handleMinorInput} />
+              <input type="number" name="days" min={0}  className="form-control" value={action.days} onKeyDown={handleMinorKeydown} onChange={handleMinorInput} />
               <span className="input-group-text acx-fs-8">Days</span>
-              <input type="number" name="hours" min={0} className="form-control" value={action.hours} onChange={handleMinorInput} />
+              <input type="number" name="hours" min={0} className="form-control" value={action.hours} onKeyDown={handleMinorKeydown} onChange={handleMinorInput} />
               <span className="input-group-text acx-fs-8">Hours</span>
             </div>
 
