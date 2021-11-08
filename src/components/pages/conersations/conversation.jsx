@@ -317,7 +317,7 @@ function Conversation({user, ...props}) {
     setFilterTicketsState(value);
   };
 
-  const replyTicket = async (reply, attachment) => {
+  const replyTicket = async (reply, attachment, type = replyType) => {
     scollPosSendMsg();
     // console.log(reply);
     let filterSentTick = tickets.filter((tic) => {
@@ -347,7 +347,7 @@ function Conversation({user, ...props}) {
     }
 
     const data = {
-      type: replyType,
+      type: type,
       response: reply.richText,
       plainResponse: reply.plainText,
       phoneNumber: singleTicketFullInfo.customer.phone_number,
@@ -355,7 +355,7 @@ function Conversation({user, ...props}) {
       // attachment: "",
     };
     const replyData = {
-      type: replyType,
+      type: type,
       attachment: null,
       created_at: new Date(),
       plain_response: reply.plainText,
@@ -449,7 +449,7 @@ function Conversation({user, ...props}) {
         richText : rich_text,
         plainText : `Your ticket has been marked as closed, Please click on the link to rate this conversation ${complete_url}`
       }
-      replyTicket(ReplyTicket, "attachment");
+      replyTicket(ReplyTicket, "attachment", "reply");
     }
     const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, {"statusId": RSTicketStage.value});
     if (statusRes.status === "success") {
@@ -858,29 +858,31 @@ function Conversation({user, ...props}) {
                               </div>
                             )
                           : (
-                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
-                                <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
-                                  {data?.user?.avatar ? ( 
-                                    <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
-                                    : ( <div className="">
-                                        <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                      </div>
-                                    )}
-                                </div>
-                                <div className="message-inner">
-                                    <div className="message-body">
-                                        <div className="message-content">
-                                            <div className="message-text">
-                                                <p className="text-dark message-title mb-1">
-                                                  {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
-                                                </p>
-                                                <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
-                                            </div>
+                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"} ${data?.type == "note"? "message-note" : ""}`}>
+                                <div className="message-container">
+                                  <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                    {data?.user?.avatar ? ( 
+                                      <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                      : ( <div className="">
+                                          <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
                                         </div>
-                                    </div>
-                                    <div className="message-footer">
-                                        <span className="text-muted">{dateFormater(data.created_at)}</span>
-                                    </div>
+                                      )}
+                                  </div>
+                                  <div className="message-inner">
+                                      <div className="message-body">
+                                          <div className="message-content">
+                                              <div className="message-text">
+                                                  <p className="text-dark message-title mb-1">
+                                                    {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                                  </p>
+                                                  <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div className="message-footer">
+                                          <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                      </div>
+                                  </div>
                                 </div>
                               </div>
                             )}
@@ -913,29 +915,31 @@ function Conversation({user, ...props}) {
                               </div>
                             )
                           : (
-                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
-                                <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
-                                  {data?.user?.avatar ? ( 
-                                    <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
-                                    : ( <div className="">
-                                        <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                      </div>
-                                    )}
-                                </div>
-                                <div className="message-inner">
-                                    <div className="message-body">
-                                        <div className="message-content">
-                                            <div className="message-text">
-                                                <p className="text-dark message-title mb-1">
-                                                  {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
-                                                </p>
-                                                <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
-                                            </div>
+                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"} ${data?.type == "note"? "message-note" : ""}`}>
+                                <div className="message-container">
+                                  <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                    {data?.user?.avatar ? ( 
+                                      <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                      : ( <div className="">
+                                          <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
                                         </div>
-                                    </div>
-                                    <div className="message-footer">
-                                        <span className="text-muted">{dateFormater(data.created_at)}</span>
-                                    </div>
+                                      )}
+                                  </div>
+                                  <div className="message-inner">
+                                      <div className="message-body">
+                                          <div className="message-content">
+                                              <div className="message-text">
+                                                  <p className="text-dark message-title mb-1">
+                                                    {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                                  </p>
+                                                  <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div className="message-footer">
+                                          <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                      </div>
+                                  </div>
                                 </div>
                               </div>
                             )}
@@ -967,29 +971,31 @@ function Conversation({user, ...props}) {
                               </div>
                             )
                           : (
-                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
-                                <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
-                                  {data?.user?.avatar ? ( 
-                                    <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
-                                    : ( <div className="">
-                                        <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                      </div>
-                                    )}
-                                </div>
-                                <div className="message-inner">
-                                    <div className="message-body">
-                                        <div className="message-content">
-                                            <div className="message-text">
-                                                <p className="text-dark message-title mb-1">
-                                                  {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
-                                                </p>
-                                                <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
-                                            </div>
+                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"} ${data?.type == "note"? "message-note" : ""}`}>
+                                <div className="message-container">
+                                  <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                    {data?.user?.avatar ? ( 
+                                      <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                      : ( <div className="">
+                                          <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
                                         </div>
-                                    </div>
-                                    <div className="message-footer">
-                                        <span className="text-muted">{dateFormater(data.created_at)}</span>
-                                    </div>
+                                      )}
+                                  </div>
+                                  <div className="message-inner">
+                                      <div className="message-body">
+                                          <div className="message-content">
+                                              <div className="message-text">
+                                                  <p className="text-dark message-title mb-1">
+                                                    {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                                  </p>
+                                                  <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div className="message-footer">
+                                          <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                      </div>
+                                  </div>
                                 </div>
                               </div>
                             )}
@@ -1081,7 +1087,7 @@ function Conversation({user, ...props}) {
                         }
                         
                         mention={{
-                          separator: '',
+                          separator: ' ',
                           trigger: '@',
                           suggestions: (replyType === "note")? Agents.map((data) => {
                               return { 
