@@ -56,7 +56,7 @@ const AutomationAction = ({
   };
 
   const insertPlaceholder = (i) => {
-    const shortCode = `{${availablePlaceholders[i]}}`;
+    const shortCode = `{${availablePlaceholders[i]?.value}}`;
 
     setActionState({
       body: action.body + " " + shortCode + " ",
@@ -215,7 +215,7 @@ const AutomationAction = ({
             <div className="available-placeholders">
               {availablePlaceholders.map((item, i) => (
                 <p key={i} onClick={() => insertPlaceholder(i)}>
-                  {item}
+                  {item?.name}
                 </p>
               ))}
             </div>

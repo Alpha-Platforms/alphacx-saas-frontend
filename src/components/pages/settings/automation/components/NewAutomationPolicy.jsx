@@ -28,11 +28,10 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
   let {automationId} = useParams();
 
   const availablePlaceholders = [
-    "name",
-    "ticket",
-    "category",
-    "open",
-    "closed",
+    {name: "Ticket", value: "ticketId"},
+    {name: "Customer", value: "customerName"},
+    {name: "Status", value: "status"},
+    {name: "Category", value: "categoryName"}
   ];
 
   const [policyLoading, setPolicyLoading] = useState(false);
