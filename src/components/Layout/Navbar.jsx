@@ -78,7 +78,6 @@ function Notification(props){
     if (res.status === "success") {
       setNotificationsLoaded(true);
       setNotifications(res?.data);
-      console.log(res?.data)
     } else {
       setNotificationsLoaded(true);
       return NotificationManager.error(res.er.message, "Error", 4000);
@@ -86,7 +85,6 @@ function Notification(props){
   } 
 
   const goToTicket = ({...data}) =>{
-    // alert(data?.ticketId)
     if(data?.ticketId){
       history.push({
           pathname:  `tickets/${data?.ticketId}`,
