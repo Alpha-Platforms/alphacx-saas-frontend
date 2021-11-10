@@ -1322,7 +1322,7 @@ function Conversation({user, ...props}) {
 
               <Form.Group  className="form-group acx-form-group mb-3">
                 <Form.Label className="mb-0">Remarks</Form.Label>
-                <Form.Control as="textarea" rows={5} defaultValue={ticket[0]?.description} onChange={(e) => setRSTicketRemarks(e.target.value)}/>
+                <Form.Control as="textarea" rows={5} defaultValue={ticket[0]?.plain_description} onChange={(e) => setRSTicketRemarks(e.target.value)}/>
               </Form.Group>
 
               <p
