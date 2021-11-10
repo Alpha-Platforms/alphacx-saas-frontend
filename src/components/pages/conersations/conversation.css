@@ -824,6 +824,7 @@ select {
 .single-chat-ckeditor .nav-tabs {
   margin-top: -1px !important;
   margin-left: -1px !important;
+  border-bottom: 1px solid #dee2e6 !important;
 }
 .single-chat-ckeditor .nav-tabs .nav-link{
   color: var(--color-gray-500) !important;
@@ -1249,9 +1250,11 @@ select {
 .message.message-note{
   background-color: rgba(241, 233, 244, 0.5);
 }
+.message.message-note .message-container,
 .message.message-note.message-out .message-container{
   background-color: transparent !important;
 }
+
 .message .message-container{
   display: flex;
   align-items: flex-start;
