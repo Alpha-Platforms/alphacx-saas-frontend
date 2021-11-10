@@ -109,7 +109,7 @@ export default function MessageList({
               id="msgListTop"
             >
               <div className="message-user-img">
-                {data.customer.avatar == null ? (
+                {data?.customer?.avatar == null ? (
                   <div className="message-user-noimg">
                     <span>{InitialsFromString(`${data?.customer?.firstname == "default" || !data?.customer?.firstname? "" : data?.customer?.firstname}`, `${data?.customer?.lastname == "default" || !data?.customer?.lastname ? "" : data?.customer?.lastname}`)}</span>
                   </div>

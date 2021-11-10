@@ -66,7 +66,7 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
     // if customers is mounted
     useEffect(() => {
         // get
-        let user_custom_fields = currentCustomer.custom_fields || {};
+        let user_custom_fields = currentCustomer?.custom_fields || {};
         let merged_custom_user_fields = customFieldConfig.map((element) =>{ 
             if(user_custom_fields.hasOwnProperty(element.id)){
                 return {
@@ -291,7 +291,6 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
                                 :
                                 <Col md={12}>
                                     <div className="text-center">
-                                        <p className="">Custom field not found</p>
                                     </div>
                                 </Col>
                             }
