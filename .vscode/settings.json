@@ -11,5 +11,5 @@
     ],
     "editor.fontFamily": "'SF Mono Bold', monolisa, Monolisa, monaco, Monaco, Consolas, 'Courier New', monospace",
     "editor.fontWeight": "600",
-    "cSpell.enabled": true
+    "cSpell.enabled": false
 }
