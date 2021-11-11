@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import truncateWithEllipses from "../../helpers/truncate";
 import ScaleLoader from "react-spinners/ScaleLoader";
+import moment from "moment";
 import { timeFormater } from "../../helpers/dateFormater";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 import InitialsFromString from "../../helpers/InitialsFromString";
@@ -45,25 +46,36 @@ export default function MessageList({
     }
   };
 
-    const getChannelColor = (channel, placement = "foreground") => {
-      channel = channel.toLowerCase();
-      let obj = {
-          "facebook": "#1877F2", 
-          "email": "#2B304D", 
-          "whatsapp": "#075e54",
-          "sms": "#F22F46",
-          "helpdesk": "#4A154B",
-          "livechat": "#1A1D33",
-          "system": "#F00073"
-      };
-      if(Object.keys(obj).some(function(k){ return ~k.indexOf(channel) })){
-          if((placement === "foreground")) { 
-              return Object.entries(obj).find(([k, v]) => k.startsWith(channel))[1];
-          }
-          return `${Object.entries(obj).find(([k, v]) => k.startsWith(channel))[1]}16`
-      }
-      return "#2e2e2e";
+  const getChannelColor = (channel, placement = "foreground") => {
+    channel = channel.toLowerCase();
+    let obj = {
+        "facebook": "#1877F2", 
+        "email": "#2B304D", 
+        "whatsapp": "#075e54",
+        "sms": "#F22F46",
+        "helpdesk": "#4A154B",
+        "livechat": "#1A1D33",
+        "system": "#F00073"
+    };
+    if(Object.keys(obj).some(function(k){ return ~k.indexOf(channel) })){
+        if((placement === "foreground")) { 
+            return Object.entries(obj).find(([k, v]) => k.startsWith(channel))[1];
+        }
+        return `${Object.entries(obj).find(([k, v]) => k.startsWith(channel))[1]}16`
+    }
+    return "#2e2e2e";
   }
+
+  const formatDate = (date) =>{
+    let formatedDate = "";
+    if(moment(`${date}`).format("DD/MM/YYYY") == moment(new Date()).format("DD/MM/YYYY")){
+      formatedDate = moment(`${date}`).format('LT'); 
+    } else{
+      formatedDate = moment(`${date}`).format('Do MMM, yyyy')
+    }
+    return( formatedDate );
+  }
+
   return (
     <div className="message-list-container">
       {loadingTickets?
@@ -97,7 +109,7 @@ export default function MessageList({
               id="msgListTop"
             >
               <div className="message-user-img">
-                {data.customer.avatar == null ? (
+                {data?.customer?.avatar == null ? (
                   <div className="message-user-noimg">
                     <span>{InitialsFromString(`${data?.customer?.firstname == "default" || !data?.customer?.firstname? "" : data?.customer?.firstname}`, `${data?.customer?.lastname == "default" || !data?.customer?.lastname ? "" : data?.customer?.lastname}`)}</span>
                   </div>
@@ -141,7 +153,7 @@ export default function MessageList({
               <div className="message-user-time">
                 {(data?.__meta__?.unRead == 0 || data.id === activeChat) ? ("") 
                 : ( <p className="msgCountCon">{data?.__meta__?.unRead}</p>)}
-                <p className="msGtime">{timeFormater(data.updated_at)}</p>
+                <p className="msGtime">{formatDate(data.updated_at)}</p>
               </div>
             </div>
           );

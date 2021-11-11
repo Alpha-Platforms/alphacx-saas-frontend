@@ -3,7 +3,8 @@ import React, { useState, useEffect, useContext, Fragment } from "react";
 import {connect} from 'react-redux';
 
 import { UserDataContext } from "../../../context/userContext";
-import { Modal } from "react-responsive-modal";
+// import { Modal } from "react-responsive-modal";
+import Modal from "react-bootstrap/Modal";
 import Spinner from 'react-bootstrap/Spinner';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
@@ -142,11 +143,15 @@ function Conversation({user, ...props}) {
   const [RSTicketStage, setRSTicketStage] = useState({});
   const [RSTicketPriority, setRSTicketPriority] = useState("");
   const [RSTicketRemarks, setRSTicketRemarks] = useState("");
-  const [RSTicketAssignedAgent, setRSTicketAssignedAgent] = useState("");
+  const [RSTicketCustomFields, setRSTicketCustomFields] = useState(null);
+  // const [RSTicketAssignedAgent, setRSTicketAssignedAgent] = useState("");
 
-  const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(
-    false
-  );
+  // ticket custom fields
+  const [customFieldConfig, setCustomFieldConfig] = useState([]);
+  const [customFieldsGroup, setCustomFieldsGroup] = useState([]);
+  const [customFieldIsSet, setCustomFieldIsSet] = useState(false);
+  // 
+  const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(false);
   const [addHist, setAddHist] = useState(false);
 
   useEffect(() => {
@@ -169,8 +174,10 @@ function Conversation({user, ...props}) {
     getPriorities();
     getTags();
     getAgents();
+    getCustomFieldConfig();
   }, []);
 
+  // 
   useEffect(() => {
     AppSocket.createConnection();
     AppSocket.io.on(`ws_tickets`, (data) => {
@@ -184,6 +191,7 @@ function Conversation({user, ...props}) {
     // return () => { AppSocket.io.disconnect()};
   },[]);
 
+  // 
   useEffect(() => {
     AppSocket.io.on(`message`, (data) => {
       if(data?.channel === "livechat" || data.id === ticketId){
@@ -215,7 +223,58 @@ function Conversation({user, ...props}) {
     // return () => { AppSocket.io.disconnect()};
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[ticketId]);
+  // 
+  useEffect(() => {
+    // setLoadingTicks(true);
+    setTickets(wsTickets);
+    setLoadingTicks(false);
+  }, [wsTickets]);
 
+  useEffect(() => {
+    setCustomFieldIsSet(false); 
+    setRSTicketCustomFields(null);
+    let ticket_custom_fields = ticket[0]?.custom_fields || {};
+    let merged_custom_user_fields = customFieldConfig.map((element) =>{ 
+      if(ticket_custom_fields.hasOwnProperty(element.id)){
+        setRSTicketCustomFields((prevState) => ({
+          ...prevState,
+          [element.id] : ticket_custom_fields[element.id]
+        }));
+        return {
+          ...element,
+          value: ticket_custom_fields[element.id]
+        }
+      }else{
+        return {
+          ...element,
+          value: ""
+        }
+      }
+    });
+    const groupedCustomFields = Object.entries(
+        // 
+        merged_custom_user_fields.reduce((acc, { 
+            id, field_name, field_type, field_section, field_options, 
+            required, multiple_options, belongs_to, value
+        }) => {
+            // Group initialization
+            if (!acc[field_section]) {
+                acc[field_section] = [];
+            }
+            // Grouping
+            // only pushing the object in a field section
+            acc[field_section].push({ id, field_name, field_type, field_section, 
+                required, multiple_options, belongs_to, field_options, value });
+            return acc;
+        }, {})
+    ).map(([section, fields]) => ({ section, fields }));
+    //
+    setCustomFieldIsSet(true); 
+    setCustomFieldsGroup([...groupedCustomFields]);
+    // console.log([...groupedCustomFields]);
+    // console.log(ticket[0]);
+  }, [ticket]);
+  // 
   useEffect(() => {
     // causes livechat incoming replies to show twices as it component renders on ticketId change
     // ticket id is needed on change to call the message socket event else no reply from customers comes in,
@@ -225,7 +284,6 @@ function Conversation({user, ...props}) {
   },[]);
 
   // const getSocketItems = () =>{
-
   // }
 
   const sortMsges = (msgs) => {
@@ -263,15 +321,10 @@ function Conversation({user, ...props}) {
     setAchiveMsges(resultAchive);
     setTimeStampsMsg(resultTimestamps);
   };
-  useEffect(() => {
-    // setLoadingTicks(true);
-    setTickets(wsTickets);
-    setLoadingTicks(false);
-  }, [wsTickets]);
-
-  const changeLoadingTickets = (value) =>{
-    setLoadingTicks(value);
-  }
+  
+  // const changeLoadingTickets = (value) =>{
+  //   setLoadingTicks(value);
+  // }
 
   const onEditorStateChange = (editorState) => {
     // handleDescriptionValidation(editorState);
@@ -289,15 +342,15 @@ function Conversation({user, ...props}) {
   }
 
   // const getTickets = async () => {
-  //   const res = await httpGetMain("tickets?channel=whatsapp");
-  //   if (res?.status === "success") {
-  //     setLoadingTicks(true);
-  //     setTickets(res?.data?.tickets);
-  //     setLoadingTicks(false);
-  //   } else {
-  //     setLoadingTicks(false);
-  //     return NotificationManager.error(res?.er?.message, "Error", 4000);
-  //   }
+    //   const res = await httpGetMain("tickets?channel=whatsapp");
+    //   if (res?.status === "success") {
+    //     setLoadingTicks(true);
+    //     setTickets(res?.data?.tickets);
+    //     setLoadingTicks(false);
+    //   } else {
+    //     setLoadingTicks(false);
+    //     return NotificationManager.error(res?.er?.message, "Error", 4000);
+    //   }
   // };
 
   const filterTicket = (value, type) => {
@@ -317,7 +370,7 @@ function Conversation({user, ...props}) {
     setFilterTicketsState(value);
   };
 
-  const replyTicket = async (reply, attachment) => {
+  const replyTicket = async (reply, attachment, type = replyType) => {
     scollPosSendMsg();
     // console.log(reply);
     let filterSentTick = tickets.filter((tic) => {
@@ -347,7 +400,7 @@ function Conversation({user, ...props}) {
     }
 
     const data = {
-      type: replyType,
+      type: type,
       response: reply.richText,
       plainResponse: reply.plainText,
       phoneNumber: singleTicketFullInfo.customer.phone_number,
@@ -355,7 +408,7 @@ function Conversation({user, ...props}) {
       // attachment: "",
     };
     const replyData = {
-      type: replyType,
+      type: type,
       attachment: null,
       created_at: new Date(),
       plain_response: reply.plainText,
@@ -395,6 +448,16 @@ function Conversation({user, ...props}) {
       return NotificationManager.error(res.er.message, "Error", 4000);
     }
   };
+
+  // get custom field config 
+  const getCustomFieldConfig = async() =>{
+    const res = await httpGetMain(`custom-field?belongsTo=ticket`);
+    if (res.status === "success") {
+      setCustomFieldConfig(res?.data);
+      return;
+    }
+    return;
+  }
 
   const getStatuses = async () => {
     const res = await httpGetMain(`statuses`);
@@ -449,7 +512,7 @@ function Conversation({user, ...props}) {
         richText : rich_text,
         plainText : `Your ticket has been marked as closed, Please click on the link to rate this conversation ${complete_url}`
       }
-      replyTicket(ReplyTicket, "attachment");
+      replyTicket(ReplyTicket, "attachment", "reply");
     }
     const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, {"statusId": RSTicketStage.value});
     if (statusRes.status === "success") {
@@ -526,11 +589,21 @@ function Conversation({user, ...props}) {
     }
   };
 
+  // 
+  const handleCustomFieldChange = (e) => {
+    const {name, value} = e.target;
+    setRSTicketCustomFields((prevState) => ({
+      ...prevState,
+      [name] : value
+    }));
+  }
+
   const updateTicket = async (status) => {
     setProcessing(true);
     if (status === "") {
       return;
     }
+    // console.log(RSTicketCustomFields);
     let data = {
       priorityId: RSTicketPriority,
       categoryId: RSTicketCategory,
@@ -538,6 +611,7 @@ function Conversation({user, ...props}) {
       description: RSTicketRemarks,
       assigneeId: RSTicketAssignee,
       tags: (!Array.isArray(RSTicketTags) || !RSTicketTags.length) ? null : RSTicketTags,
+      customField: RSTicketCustomFields
     };
     if(Object.keys(RSTicketStage).length > 0){
       updateTicketStatus();
@@ -595,29 +669,29 @@ function Conversation({user, ...props}) {
   };
 
   // const _uploadImageCallBack = (file) => {
-  //   // long story short, every time we upload an image, we
-  //   // need to save it to the state so we can get it's data
-  //   // later when we decide what to do with it.
+    //   // long story short, every time we upload an image, we
+    //   // need to save it to the state so we can get it's data
+    //   // later when we decide what to do with it.
 
-  //   // Make sure you have a uploadImages: [] as your default state
-  //   let uploadedImages = uploadImgS;
+    //   // Make sure you have a uploadImages: [] as your default state
+    //   let uploadedImages = uploadImgS;
 
-  //   const imageObject = {
-  //     file: file,
-  //     localSrc: URL.createObjectURL(file),
-  //   };
+    //   const imageObject = {
+    //     file: file,
+    //     localSrc: URL.createObjectURL(file),
+    //   };
 
-  //   setUploadIMGs(imageObject);
+    //   setUploadIMGs(imageObject);
 
-  //   uploadImgS(uploadedImages);
+    //   uploadImgS(uploadedImages);
 
-  //   // We need to return a promise with the image src
-  //   // the img src we will use here will be what's needed
-  //   // to preview it in the browser. This will be different than what
-  //   // we will see in the index.md file we generate.
-  //   return new Promise((resolve, reject) => {
-  //     resolve({ data: { link: imageObject.localSrc } });
-  //   });
+    //   // We need to return a promise with the image src
+    //   // the img src we will use here will be what's needed
+    //   // to preview it in the browser. This will be different than what
+    //   // we will see in the index.md file we generate.
+    //   return new Promise((resolve, reject) => {
+    //     resolve({ data: { link: imageObject.localSrc } });
+    //   });
   // };
 
   const _uploadImageCallBack = (file) => {
@@ -858,29 +932,31 @@ function Conversation({user, ...props}) {
                               </div>
                             )
                           : (
-                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
-                                <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
-                                  {data?.user?.avatar ? ( 
-                                    <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
-                                    : ( <div className="">
-                                        <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                      </div>
-                                    )}
-                                </div>
-                                <div className="message-inner">
-                                    <div className="message-body">
-                                        <div className="message-content">
-                                            <div className="message-text">
-                                                <p className="text-dark message-title mb-1">
-                                                  {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
-                                                </p>
-                                                <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
-                                            </div>
+                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"} ${data?.type == "note"? "message-note" : ""}`}>
+                                <div className="message-container">
+                                  <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                    {data?.user?.avatar ? ( 
+                                      <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                      : ( <div className="">
+                                          <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
                                         </div>
-                                    </div>
-                                    <div className="message-footer">
-                                        <span className="text-muted">{dateFormater(data.created_at)}</span>
-                                    </div>
+                                      )}
+                                  </div>
+                                  <div className="message-inner">
+                                      <div className="message-body">
+                                          <div className="message-content">
+                                              <div className="message-text">
+                                                  <p className="text-dark message-title mb-1">
+                                                    {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                                  </p>
+                                                  <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div className="message-footer">
+                                          <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                      </div>
+                                  </div>
                                 </div>
                               </div>
                             )}
@@ -913,29 +989,31 @@ function Conversation({user, ...props}) {
                               </div>
                             )
                           : (
-                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
-                                <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
-                                  {data?.user?.avatar ? ( 
-                                    <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
-                                    : ( <div className="">
-                                        <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                      </div>
-                                    )}
-                                </div>
-                                <div className="message-inner">
-                                    <div className="message-body">
-                                        <div className="message-content">
-                                            <div className="message-text">
-                                                <p className="text-dark message-title mb-1">
-                                                  {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
-                                                </p>
-                                                <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
-                                            </div>
+                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"} ${data?.type == "note"? "message-note" : ""}`}>
+                                <div className="message-container">
+                                  <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                    {data?.user?.avatar ? ( 
+                                      <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                      : ( <div className="">
+                                          <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
                                         </div>
-                                    </div>
-                                    <div className="message-footer">
-                                        <span className="text-muted">{dateFormater(data.created_at)}</span>
-                                    </div>
+                                      )}
+                                  </div>
+                                  <div className="message-inner">
+                                      <div className="message-body">
+                                          <div className="message-content">
+                                              <div className="message-text">
+                                                  <p className="text-dark message-title mb-1">
+                                                    {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                                  </p>
+                                                  <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div className="message-footer">
+                                          <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                      </div>
+                                  </div>
                                 </div>
                               </div>
                             )}
@@ -967,29 +1045,31 @@ function Conversation({user, ...props}) {
                               </div>
                             )
                           : (
-                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
-                                <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
-                                  {data?.user?.avatar ? ( 
-                                    <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
-                                    : ( <div className="">
-                                        <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                      </div>
-                                    )}
-                                </div>
-                                <div className="message-inner">
-                                    <div className="message-body">
-                                        <div className="message-content">
-                                            <div className="message-text">
-                                                <p className="text-dark message-title mb-1">
-                                                  {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
-                                                </p>
-                                                <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
-                                            </div>
+                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"} ${data?.type == "note"? "message-note" : ""}`}>
+                                <div className="message-container">
+                                  <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                    {data?.user?.avatar ? ( 
+                                      <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                      : ( <div className="">
+                                          <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
                                         </div>
-                                    </div>
-                                    <div className="message-footer">
-                                        <span className="text-muted">{dateFormater(data.created_at)}</span>
-                                    </div>
+                                      )}
+                                  </div>
+                                  <div className="message-inner">
+                                      <div className="message-body">
+                                          <div className="message-content">
+                                              <div className="message-text">
+                                                  <p className="text-dark message-title mb-1">
+                                                    {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                                  </p>
+                                                  <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div className="message-footer">
+                                          <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                      </div>
+                                  </div>
                                 </div>
                               </div>
                             )}
@@ -1081,7 +1161,7 @@ function Conversation({user, ...props}) {
                         }
                         
                         mention={{
-                          separator: '',
+                          separator: ' ',
                           trigger: '@',
                           suggestions: (replyType === "note")? Agents.map((data) => {
                               return { 
@@ -1143,189 +1223,259 @@ function Conversation({user, ...props}) {
         </div>
       </div>
       {/* Modal area starts here */}
-      <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal} center>
-        <Form className="saveTicketWrapModal" onSubmit={(e) => e.preventDefault()}>
-          <p className="fs-5">
-            Kindly update ticket before closing the chat
-          </p>
+      {/* <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal} center> */}
+      <Modal show={openSaveTicketModal} onHide={closeSaveTicketModal} centered scrollable>
+        <Modal.Body className="p-0">
+          <Form className="p-3 bg-white" onSubmit={(e) => e.preventDefault()}>
+            <h5 className="acx-text-gray-800 mb-3">
+              Kindly update ticket before closing the chat
+            </h5>
 
-          <div className="">
-            <Row  md={6} className="mb-3">
-              <Form.Group as={Col} md={6} className="form-group acx-form-group mb-3">
-                <Form.Label className="mb-0">Customer</Form.Label>
-                <Form.Control
-                  value={`${capitalizeFirstLetter(ticket[0]?.customer?.firstname)} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
-                  type="text"
-                  disabled
+            <div className="">
+              <Row  md={6} className="mb-3">
+                <Form.Group as={Col} md={6} className="form-group acx-form-group mb-3">
+                  <Form.Label className="mb-0">Customer</Form.Label>
+                  <Form.Control
+                    value={`${capitalizeFirstLetter(ticket[0]?.customer?.firstname)} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
+                    type="text"
+                    disabled
+                  />
+                </Form.Group>
+
+                <Col md={6} className="">
+                  <label className="mb-0">Category</label>
+                  <RSelect
+                    className="rselectfield"
+                    style={{ fontSize: "12px" }}
+                    isClearable={false}
+                    onChange={(newValue, actionMeta) => {
+                      setRSTicketCategory(newValue.value);
+                    }}
+                    defaultValue={{
+                      value: ticket[0]?.category?.id , 
+                      label: ticket[0]?.category?.name
+                    }}
+                    options={
+                      // populate 'options' prop from $Category, with names remapped
+                      Category.map((data) => {
+                        return { value: data.id, label: data.name };
+                      })
+                    }
+                  />
+                </Col>
+                <Col md={6}>
+                  <label htmlFor="">Stage</label>
+                  <RSelect
+                    className="rselectfield"
+                    style={{ fontSize: "12px" }}
+                    onChange={(newValue, actionMeta) => {
+                      setRSTicketStage(prevState => ({
+                        ...prevState,
+                        value: newValue.value,
+                        label: newValue.label
+                      }));
+                    }}
+                    isClearable={false}
+                    defaultValue={{
+                      value: ticket[0]?.status?.id , 
+                      label: ticket[0]?.status?.status
+                    }}
+                    options={
+                      // populate 'options' prop from $Category, with names remapped
+                      Statuses.map((data) => {
+                        return { value: data.id, label: data.status };
+                      })
+                    }
+                  />
+                </Col>
+
+                <Col md={6}>
+                  <label htmlFor="">Priority</label>
+                  <RSelect
+                    className="rselectfield"
+                    style={{ fontSize: "12px" }}
+                    onChange={(newValue, actionMeta) => {
+                      setRSTicketPriority(newValue.value);
+                    }}
+                    isClearable={false}
+                    defaultValue={{
+                      value: ticket[0]?.priority?.id, 
+                      label: ticket[0]?.priority?.name
+                    }}
+                    options={
+                      // populate 'options' prop from $Statuses, with names remapped
+                      Priority.map((data) => {
+                        return { value: data.id, label: data.name };
+                      })
+                    }
+                  />
+                </Col>
+              </Row>
+
+              <Form.Group  className="form-group acx-form-group mb-3">
+                <Form.Label className="mb-0">Subject</Form.Label>
+                <Form.Control type="text"
+                  defaultValue={`${ticket[0]?.subject}`}
+                  onChange={(e) => setRSTicketSubject(e.target.value)}
                 />
               </Form.Group>
 
-              <Col md={6} className="">
-                <label className="mb-0">Category</label>
-                <RSelect
-                  className="rselectfield"
-                  style={{ fontSize: "12px" }}
-                  isClearable={false}
-                  onChange={(newValue, actionMeta) => {
-                    setRSTicketCategory(newValue.value);
-                  }}
-                  defaultValue={{
-                    value: ticket[0]?.category?.id , 
-                    label: ticket[0]?.category?.name
-                  }}
-                  options={
-                    // populate 'options' prop from $Category, with names remapped
-                    Category.map((data) => {
-                      return { value: data.id, label: data.name };
-                    })
-                  }
-                />
-              </Col>
-              <Col md={6}>
-                <label htmlFor="">Stage</label>
-                <RSelect
-                  className="rselectfield"
-                  style={{ fontSize: "12px" }}
-                  onChange={(newValue, actionMeta) => {
-                    setRSTicketStage(prevState => ({
-                      ...prevState,
-                      value: newValue.value,
-                      label: newValue.label
-                    }));
-                  }}
-                  isClearable={false}
-                  defaultValue={{
-                    value: ticket[0]?.status?.id , 
-                    label: ticket[0]?.status?.status
-                  }}
-                  options={
-                    // populate 'options' prop from $Category, with names remapped
-                    Statuses.map((data) => {
-                      return { value: data.id, label: data.status };
-                    })
-                  }
-                />
-              </Col>
+              <Form.Group  className="form-group acx-form-group mb-3">
+                <Form.Label className="mb-0">Remarks</Form.Label>
+                <Form.Control as="textarea" rows={5} defaultValue={ticket[0]?.plain_description} onChange={(e) => setRSTicketRemarks(e.target.value)}/>
+              </Form.Group>
 
-              <Col md={6}>
-                <label htmlFor="">Priority</label>
-                <RSelect
-                  className="rselectfield"
-                  style={{ fontSize: "12px" }}
-                  onChange={(newValue, actionMeta) => {
-                    setRSTicketPriority(newValue.value);
-                  }}
-                  isClearable={false}
-                  defaultValue={{
-                    value: ticket[0]?.priority?.id, 
-                    label: ticket[0]?.priority?.name
-                  }}
-                  options={
-                    // populate 'options' prop from $Statuses, with names remapped
-                    Priority.map((data) => {
-                      return { value: data.id, label: data.name };
-                    })
-                  }
-                />
-              </Col>
-            </Row>
+              <p
+                className="btn mt-2 mb-0 p-0 text-start"
+                role="button"
+                onClick={() => setIsAdditionalOptionVisible((v) => !v)}
+              >
+                Additional Options
+              </p>
 
-            <Form.Group  className="form-group acx-form-group mb-3">
-              <Form.Label className="mb-0">Subject</Form.Label>
-              <Form.Control type="text"
-                defaultValue={`${ticket[0]?.subject}`}
-                onChange={(e) => setRSTicketSubject(e.target.value)}
-              />
-            </Form.Group>
-
-            <Form.Group  className="form-group acx-form-group mb-3">
-              <Form.Label className="mb-0">Remarks</Form.Label>
-              <Form.Control as="textarea" rows={5} defaultValue={ticket[0]?.description} onChange={(e) => setRSTicketRemarks(e.target.value)}/>
-            </Form.Group>
-
-            <p
-              className="btn mt-2 mb-0 p-0 text-start"
-              role="button"
-              onClick={() => setIsAdditionalOptionVisible((v) => !v)}
-            >
-              Additional Options
-            </p>
-
-            {isAdditionalOptionVisible && (
-              <div className="additional-options">
-                <div className="ticketmodalInput-OneCol">
-                  <div className="ticketmodalInputWrapMainOne">
-                    <label htmlFor="">Assigned To</label>
+              {isAdditionalOptionVisible && (
+                <div className="additional-options">
+                  <div className="ticketmodalInput-OneCol">
+                    <div className="ticketmodalInputWrapMainOne">
+                      <label htmlFor="">Assigned To</label>
+                      <RSelect
+                        className="rselectfield"
+                        closeMenuOnSelect={true}
+                        menuPlacement={"top"}
+                        onChange={(newValue, actionMeta) => {
+                          setRSTicketAssignee(newValue.value);
+                        }}
+                        defaultValue={{
+                          value: ticket[0]?.assignee?.id , 
+                          label: `${ticket[0]?.assignee?.firstname}  ${ticket[0]?.assignee?.lastname}`
+                        }}
+                        options={
+                          // populate 'options' prop from $Category, with names remapped
+                          Agents.map((data) => {
+                            return { value: data.id, label: `${data.firstname}  ${data.lastname}` };
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-4 mb-3">
+                    <label htmlFor="">Tags</label>
                     <RSelect
                       className="rselectfield"
-                      closeMenuOnSelect={true}
+                      closeMenuOnSelect={false}
                       menuPlacement={"top"}
-                      onChange={(newValue, actionMeta) => {
-                        setRSTicketAssignee(newValue.value);
+                      onChange={selectedOptions => {
+                        setRSTicketTags(selectedOptions.map((item) => { return item.value} ))
                       }}
-                      defaultValue={{
-                        value: ticket[0]?.assignee?.id , 
-                        label: `${ticket[0]?.assignee?.firstname}  ${ticket[0]?.assignee?.lastname}`
-                      }}
+                      defaultValue={
+                        ticket[0]?.tags ? ticket[0]?.tags.map((data) => {
+                          return { value: data, label: data};
+                        }) :  null
+                        
+                      }
                       options={
-                        // populate 'options' prop from $Category, with names remapped
-                        Agents.map((data) => {
-                          return { value: data.id, label: `${data.firstname}  ${data.lastname}` };
+                        // populate 'options' prop from $Tags remapped
+                        Tags.map((data) => {
+                          return { value: data, label: data};
                         })
                       }
+                      isMulti
                     />
                   </div>
-                </div>
-                <div className="mt-4">
-                  <label htmlFor="">Tags</label>
-                  <RSelect
-                    className="rselectfield"
-                    closeMenuOnSelect={false}
-                    menuPlacement={"top"}
-                    onChange={selectedOptions => {
-                      setRSTicketTags(selectedOptions.map((item) => { return item.value} ))
-                    }}
-                    defaultValue={
-                      ticket[0]?.tags ? ticket[0]?.tags.map((data) => {
-                        return { value: data, label: data};
-                      }) :  null
-                      
-                    }
-                    options={
-                      // populate 'options' prop from $Tags remapped
-                      Tags.map((data) => {
-                        return { value: data, label: data};
-                      })
-                    }
-                    isMulti
-                  />
-                </div>
-                <div className="col-12 mt-3">
-                  <label htmlFor="title" className="form-label">Attachment (If Any)</label>
-                  <div
-                      id="ticket-ath-box"
-                      className="border border-1 d-block text-center f-14 p-3 position-relative">
-                      <img src={PinIcon} alt=""/>
-                      <span className="text-at-blue-light">Add file</span>&nbsp;
-                      <span>or drag file here</span>
-                      <input type="file" 
-                        className="position-absolute top-0 bottom-0 end-0 start-0 w-100 h-100" 
-                        style={{ "zIndex": 1200 }}
-                        // onChange={} 
-                        />
+                  {customFieldIsSet? 
+                    customFieldsGroup.map((sections) => {
+                      return(
+                        <Fragment key={sections.section}> 
+                          <h6 className="text-muted mb-4 acx-ls-30 acx-fs-12">{sections.section != 'null' || sections.section == null || sections.section == undefined ? sections.section.toUpperCase() : "OTHERS"}</h6>
+                          <Row className="mb-3">
+                            {sections.fields.map((data) => {
+                                if(data?.field_type == "select"){
+                                  return (
+                                    <Col md={6} key={data.id}>
+                                        <Form.Group className="mb-3 form-group acx-form-group">
+                                          <Form.Label className="text-muted small mb-1">{data?.field_name}{" "}{data?.required ? <span className="text-danger">*</span> : ""}</Form.Label>
+                                          <RSelect name={data.id} className="rselectfield mb-1" 
+                                            onChange={selectedOptions => {
+                                                setRSTicketCustomFields((prevState) => ({
+                                                  ...prevState,
+                                                  [data.id] : selectedOptions.value
+                                                }));
+                                              }
+                                            }
+                                            closeMenuOnSelect={false}
+                                            menuPlacement={"top"}
+                                            required={data?.required} 
+                                            defaultValue={
+                                              data?.value? 
+                                              {
+                                                value: data?.value, 
+                                                label: `${data?.value}`
+                                              }
+                                              :
+                                              null
+                                            }
+                                            options={data.field_options? 
+                                              data?.field_options.replace(/{|"|}/g, "").split(",").map((options) => {
+                                                return{ value: options, label: options};
+                                              })
+                                            :
+                                              null
+                                            }
+                                            multiple={data?.multiple_options}>                                              
+                                          </RSelect>
+                                          {/* <span className="text-danger d-block small">{getError(data?.id)}</span> */}
+                                      </Form.Group>
+                                    </Col>
+                                  )
+                                }else{
+                                  return (
+                                    <Col md={6} key={data.id}>
+                                      <Form.Group className="mb-3 form-group acx-form-group">
+                                        <Form.Label className="text-muted small mb-1">{data?.field_name}{" "}{data?.required ? <span className="text-danger">*</span> : ""}</Form.Label>
+                                        <Form.Control name={data?.id} type={data?.field_type} 
+                                                    className="text-dark mb-1" 
+                                                    onChange={handleCustomFieldChange}
+                                                    defaultValue={data?.value || ""} required={data?.required}
+                                                  />
+                                        {/* <span className="text-danger d-block small">{getError(data?.id)}</span> */}
+                                      </Form.Group>
+                                    </Col>
+                                  )
+                                }
+                              }
+                            )}
+                          </Row>
+                        </Fragment> 
+                      );
+                    })
+                    : "" }
+                  <div className="col-12 mt-3">
+                    <label htmlFor="title" className="form-label">Attachment (If Any)</label>
+                    <div
+                        id="ticket-ath-box"
+                        className="border border-1 d-block text-center f-14 p-3 position-relative">
+                        <img src={PinIcon} alt=""/>
+                        <span className="text-at-blue-light">Add file</span>&nbsp;
+                        <span>or drag file here</span>
+                        <input type="file" 
+                          className="position-absolute top-0 bottom-0 end-0 start-0 w-100 h-100" 
+                          style={{ "zIndex": 1200 }}
+                          // onChange={} 
+                          />
+                    </div>
                   </div>
                 </div>
+              )}
+              <div className="text-end mt-3">
+                <Button className="btn acx-btn-primary px-3 py-2" disabled={processing} type="submit" onClick={updateTicket}>
+                  { processing ? 
+                  (<React.Fragment><Spinner as="span" size="sm" animation="border" variant="light" /> Processing...</React.Fragment>  ) 
+                    : `Update`}
+                </Button>
               </div>
-            )}
-            <div className="text-end mt-3">
-              <Button className="btn acx-btn-primary px-3 py-2" disabled={processing} type="submit" onClick={updateTicket}>
-                { processing ? 
-                (<React.Fragment><Spinner as="span" size="sm" animation="border" variant="light" /> Processing...</React.Fragment>  ) 
-                  : `Update`}
-              </Button>
             </div>
-          </div>
-        </Form>
+          </Form>
+        </Modal.Body>
       </Modal>
     </React.Fragment>
   );

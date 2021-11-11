@@ -271,10 +271,10 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       let element = document.getElementById("lastMsg");
       element.scrollIntoView({behavior: 'smooth'});
     }
-    const replyTicket = async (reply, attachment) => {
+    const replyTicket = async (reply, attachment, type = replyType) => {
       
       const data = {
-        type: replyType,
+        type: type,
         response: reply.richText,
         plainResponse: reply.plainText,
         phoneNumber: currentTicket.customer.phone_number,
@@ -381,7 +381,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
           richText : rich_text,
           plainText : `Your ticket has been marked as closed, Please click on the link to rate this conversation ${complete_url}`
         }
-        replyTicket(ReplyTicket, "attachment");
+        replyTicket(ReplyTicket, "attachment", "reply");
       }
       const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, {"statusId": RSTicketStage.value});
       if (statusRes.status === "success") {
@@ -728,29 +728,31 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                       </span>
                                     </div>
                                     ) : (
-                                    <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
-                                      <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
-                                        {data?.user?.avatar ? ( 
-                                          <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
-                                          : ( <div className="">
-                                              <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                            </div>
-                                          )}
-                                      </div>
-                                      <div className="message-inner">
-                                          <div className="message-body">
-                                              <div className="message-content">
-                                                  <div className="message-text">
-                                                      <p className="text-dark message-title mb-1">
-                                                        {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
-                                                      </p>
-                                                      <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
-                                                  </div>
+                                     <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"} ${data?.type == "note"? "message-note" : ""}`}>
+                                      <div className="message-container">
+                                        <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                          {data?.user?.avatar ? ( 
+                                            <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                            : ( <div className="">
+                                                <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
                                               </div>
-                                          </div>
-                                          <div className="message-footer">
-                                              <span className="text-muted">{dateFormater(data.created_at)}</span>
-                                          </div>
+                                            )}
+                                        </div>
+                                        <div className="message-inner">
+                                            <div className="message-body">
+                                                <div className="message-content">
+                                                    <div className="message-text">
+                                                        <p className="text-dark message-title mb-1">
+                                                          {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                                        </p>
+                                                        <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="message-footer">
+                                                <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                            </div>
+                                        </div>
                                       </div>
                                     </div>
                                   )}
@@ -781,29 +783,31 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                       </span>
                                     </div>
                                     ) : (
-                                    <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
-                                      <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
-                                        {data?.user?.avatar ? ( 
-                                          <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
-                                          : ( <div className="">
-                                              <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                            </div>
-                                          )}
-                                      </div>
-                                      <div className="message-inner">
-                                          <div className="message-body">
-                                              <div className="message-content">
-                                                  <div className="message-text">
-                                                      <p className="text-dark message-title mb-1">
-                                                        {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
-                                                      </p>
-                                                      <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
-                                                  </div>
+                                    <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"} ${data?.type == "note"? "message-note" : ""}`}>
+                                      <div className="message-container">
+                                        <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                          {data?.user?.avatar ? ( 
+                                            <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                            : ( <div className="">
+                                                <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
                                               </div>
-                                          </div>
-                                          <div className="message-footer">
-                                              <span className="text-muted">{dateFormater(data.created_at)}</span>
-                                          </div>
+                                            )}
+                                        </div>
+                                        <div className="message-inner">
+                                            <div className="message-body">
+                                                <div className="message-content">
+                                                    <div className="message-text">
+                                                        <p className="text-dark message-title mb-1">
+                                                          {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                                        </p>
+                                                        <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="message-footer">
+                                                <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                            </div>
+                                        </div>
                                       </div>
                                     </div>
                                   )}
@@ -833,29 +837,31 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                       </span>
                                     </div>
                                     ) : (
-                                    <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"}`}>
-                                      <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
-                                        {data?.user?.avatar ? ( 
-                                          <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
-                                          : ( <div className="">
-                                              <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
-                                            </div>
-                                          )}
-                                      </div>
-                                      <div className="message-inner">
-                                          <div className="message-body">
-                                              <div className="message-content">
-                                                  <div className="message-text">
-                                                      <p className="text-dark message-title mb-1">
-                                                        {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
-                                                      </p>
-                                                      <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
-                                                  </div>
+                                    <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"} ${data?.type == "note"? "message-note" : ""}`}>
+                                      <div className="message-container">
+                                        <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                          {data?.user?.avatar ? ( 
+                                            <img className="avatar-img" src={data?.user.avatar} width="100%" alt=""/> ) 
+                                            : ( <div className="">
+                                                <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(0,1)}${data?.user?.lastname == "default" ? "" : data?.user?.lastname?.slice(0, 1)}`}</p>
                                               </div>
-                                          </div>
-                                          <div className="message-footer">
-                                              <span className="text-muted">{dateFormater(data.created_at)}</span>
-                                          </div>
+                                            )}
+                                        </div>
+                                        <div className="message-inner">
+                                            <div className="message-body">
+                                                <div className="message-content">
+                                                    <div className="message-text">
+                                                        <p className="text-dark message-title mb-1">
+                                                          {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
+                                                        </p>
+                                                        <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="message-footer">
+                                                <span className="text-muted">{dateFormater(data.created_at)}</span>
+                                            </div>
+                                        </div>
                                       </div>
                                     </div>
                                   )}
@@ -974,7 +980,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                 }
                                 
                                 mention={{
-                                  separator: '',
+                                  separator: ' ',
                                   trigger: '@',
                                   suggestions: (replyType === "note")? Agents.map((data) => {
                                       return { 
@@ -1109,7 +1115,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
 
             <Form.Group  className="form-group acx-form-group mb-3">
               <Form.Label className="mb-0">Remarks</Form.Label>
-              <Form.Control as="textarea" rows={5} defaultValue={ticket[0]?.description} onChange={(e) => setRSTicketRemarks(e.target.value)}/>
+              <Form.Control as="textarea" rows={5} defaultValue={ticket[0]?.plain_description} onChange={(e) => setRSTicketRemarks(e.target.value)}/>
             </Form.Group>
 
             <p

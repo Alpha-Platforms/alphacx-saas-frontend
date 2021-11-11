@@ -147,6 +147,12 @@ const Fields = () => {
                 "selected": true,
                 "options": customField.field_options? customField.field_options.replace(/{|"|}/g, "").split(",") : []
             }))
+        } else{
+            setCustomFieldOptions((prevState) => ({
+                ...prevState,
+                "selected": false,
+                "options": [""]
+            }))
         }
 
         // 

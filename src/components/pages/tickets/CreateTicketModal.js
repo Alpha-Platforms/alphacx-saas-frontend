@@ -403,9 +403,7 @@ const CreateTicketModal = ({
         newTag = newTag.toLowerCase();
         setTagSelectLoading(true);
         const newTags = [...tags, newTag];
-
         createTags(newTags, tagCreated, tagNotCreated, newTag);
-
     }
 
     function DowncaretIcon() {
