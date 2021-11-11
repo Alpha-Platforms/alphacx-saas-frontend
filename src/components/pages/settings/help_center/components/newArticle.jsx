@@ -83,10 +83,9 @@ const NewArticle = () => {
       cancelButtonText: "No",
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log("Publish");
         setNewPost({ ...newPost, publishGlobal: !publishGlobal });
       } else {
-        console.log("Do nothing");
+        // console.log("Do nothing");
       }
     });
   };
@@ -114,7 +113,7 @@ const NewArticle = () => {
     setNewPost({ ...newPost, richText });
     // setReplyTicket({ plainText, richText });
     // console.log(">>>>", richText, plainText);
-    console.log(richText);
+    // console.log(richText);
   };
   const _uploadImageCallBack = (file) => {
     console.log('upload image callback')
@@ -162,7 +161,6 @@ const NewArticle = () => {
     const res = await httpGetMain("articles/categories");
     if (res?.status == "success") {
       let categories = res?.data;
-      console.log('CATEGORI ES => ', categories);
       if (!categories || categories?.length === 0) {
         setCatState(prev => ({
           ...prev,
@@ -202,7 +200,6 @@ const NewArticle = () => {
     const res = await httpPatchMain(`articles/${id}/publish`);
     setPolicyLoading(false);
     if (res?.status == "success") {
-      console.log("res", res);
       NotificationManager.success(res.message, "Success", 5000);
 
       window.location.href = `/settings/knowledge-base`;
@@ -267,12 +264,10 @@ const NewArticle = () => {
       folderId: newPost.folderId,
     };
     console.clear();
-    console.log("article", data);
 
     const res = await httpPostMain("articles", data);
 
     if (res?.status == "success") {
-      console.log("res", res);
       if (newPost?.publishGlobal) {
         publishPost(res?.data?.id);
       }
@@ -297,7 +292,6 @@ const NewArticle = () => {
       // categoryId: newPost.categoryId,
       folderId: newPost.folderId
     };
-    console.log('Data for patch => ', data);
     // return
     console.clear();
 
@@ -370,7 +364,7 @@ const NewArticle = () => {
                 }
               />
             </div>
-            <div className="editorContainer">
+            <div id="editorContainer" className="editorContainer">
               <Editor
                 editorState={editorState}
                 toolbar={{
@@ -470,7 +464,7 @@ const NewArticle = () => {
                 }}
                 toolbarClassName="toolbarClassName"
                 wrapperClassName="wrapperClassName"
-                editorClassName="editorClassName"
+                editorClassName="editorClassName automation-editor kb-editor"
                 onEditorStateChange={(editor) => onEditorStateChange(editor)}
               />
             </div>
