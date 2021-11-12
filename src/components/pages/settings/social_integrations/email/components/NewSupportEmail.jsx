@@ -29,7 +29,9 @@ const NewSupportEmail = ({configs, getConfigs}) => {
       tls: false,
       from: '', // sender email
       host: '',
-      port: ''
+      port: '',
+      api: '',
+      type: 'smtp'
     }
   });
 
@@ -52,23 +54,18 @@ const NewSupportEmail = ({configs, getConfigs}) => {
   
   const handleSubmit = async () => {
     if (emailState.mailServer === "incoming-only") {
-      console.log('Executing incoming only');
+      // console.log('Executing incoming only');
       const { email, port, tls, host, password } = emailState.emailConfig;
 
       if (email && port && host && password) {
         const data = {
-          email_config: passwordChanged ? {
+          email_config: {
             email,
             password,
             host,
             port: Number(port),
             tls,
-          } : {
-            email,
-            host,
-            port: Number(port),
-            tls,
-          }
+          } 
         };
   
         const res = await httpPatchMain("settings/email-config", JSON.stringify(data));
@@ -83,25 +80,21 @@ const NewSupportEmail = ({configs, getConfigs}) => {
         NotificationManager.error('Fill up required fields', 'Error', 4000);
       }
     } else {
-      console.log('executing outgoing only');
-      const { email, password } = emailState.emailConfig;
-      const {port, tls, host, from} = emailState.outgoingEmailConfig;
+      // console.log('executing outgoing only');
+      const {email, password, port, tls, host, from, api, type} = emailState.outgoingEmailConfig;
+
 
       if (email && password && port && host) {
         const data = {
-          outgoingEmailConfig: passwordChanged ? {
+          outgoingEmailConfig: {
             email,
             password,
             from,
             host,
             port: Number(port),
             tls,
-          } : {
-            email,
-            from,
-            host,
-            port: Number(port),
-            tls,
+            api: api || null,
+            type
           }
         };
   
@@ -123,20 +116,20 @@ const NewSupportEmail = ({configs, getConfigs}) => {
   };
 
 
-  const handleConfigChange = (e) => {
-    let {name, value, type, checked} = e.target;
-    value = type === "checkbox" ? checked : value;
-    if(type === "password"){setPasswordChanged(true)}
+  // const handleConfigChange = (e) => {
+  //   let {name, value, type, checked} = e.target;
+  //   value = type === "checkbox" ? checked : value;
+  //   if(type === "password"){setPasswordChanged(true)}
     
-    setEmailState({
-        ...emailState,
-        emailConfig: {
-            ...emailState.emailConfig,
-            [name]: value
-        }
-    });
+  //   setEmailState({
+  //       ...emailState,
+  //       emailConfig: {
+  //           ...emailState.emailConfig,
+  //           [name]: value
+  //       }
+  //   });
     
-  };
+  // };
 
   useEffect(() => {
     if (configs) {
@@ -155,7 +148,10 @@ const NewSupportEmail = ({configs, getConfigs}) => {
           tls: configs?.outgoing_email_config?.tls || false,
           host: configs?.outgoing_email_config?.host || '',
           port: configs?.outgoing_email_config?.port || '',
-          from: configs?.outgoing_email_config?.from || ''
+          email: configs?.outgoing_email_config?.email || '',
+          password: configs?.outgoing_email_config?.password || '',
+          type: configs?.outgoing_email_config?.type || '',
+          api: configs?.outgoing_email_config?.api || ''
         }
       }));
     }

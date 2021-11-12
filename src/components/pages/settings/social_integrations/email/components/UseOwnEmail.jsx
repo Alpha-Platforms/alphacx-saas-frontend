@@ -246,111 +246,197 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                 {/* OUTGOING EMAIL */}
                 {(emailState.mailServer === "both" || emailState.mailServer === "outgoing-only") && (
                     <div className="outgoing-mail mt-2">
-                        {/* <h5 className="fs-6 fw-bold mt-5 mb-3">Outgoing Mail Settings</h5> */}
-                        <div className="alert-danger text-dark mt-3 mb-2">
-                            <p className="p-2">
-                                Gmail limits the number of emails sent per day{" "}
-                                <span>
-                                    <a href="#" className="text-custom ms-2">
-                                        Click here to learn more
-                                    </a>
-                                </span>
-                            </p>
+
+                        <div className="row my-3">
+                            <div className="col-md-3">
+                                <div className="form-check">
+                                    <input
+                                        className="form-check-input"
+                                        type="radio"
+                                        id="incoming-only"
+                                        name="mail-server"
+                                        value="incoming-only"
+                                        checked={emailState.outgoingEmailConfig?.type === "smtp"}
+                                        onChange={() => setEmailState({
+                                            ...emailState,
+                                            outgoingEmailConfig: {
+                                                ...emailState.outgoingEmailConfig,
+                                                type: 'smtp'
+                                            }
+                                        })} 
+                                        />
+                                    <label className="form-check-label f-14" htmlFor="incoming-only">
+                                        Use SMTP
+                                    </label>
+                                </div>
+                            </div>
+                            <div className="col-md-3">
+                                <div className="form-check">
+                                    <input
+                                        className="form-check-input"
+                                        type="radio"
+                                        id="outgoing-only"
+                                        name="mail-server"
+                                        value="outgoing-only"
+                                        checked={emailState.outgoingEmailConfig?.type === "api"}
+                                        onChange={() => setEmailState({
+                                            ...emailState,
+                                            outgoingEmailConfig: {
+                                                ...emailState.outgoingEmailConfig,
+                                                type: 'api'
+                                            }
+                                        })}
+                                    />
+                                    <label className="form-check-label f-14" htmlFor="outgoing-only">
+                                        use SendGrid API
+                                    </label>
+                                </div>
+                            </div>
                         </div>
+                        
 
 
-                        <div className="row">
-                            <div className="form-group mt-2 col-6">
-                                <label className="form-label">
-                                    Your Support Email <span className="text-danger">
-                                        *</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    name="email"
-                                    autoComplete="off"
-                                    value={emailState.emailConfig.email || ""}
-                                    onChange={handleOutgoingConfig}/>
-                                <p className="description-text f-12 text-muted mt-1">
-                                <small>This serves as your Return-to address e.g bayo@yourcompany.com</small>
+                        {emailState.outgoingEmailConfig.type === "smtp" ? <div>
+                            <div className="alert-danger text-dark mt-3 mb-2">
+                                <p className="p-2">
+                                    Gmail limits the number of emails sent per day{" "}
+                                    <span>
+                                        <a href="#" className="text-custom ms-2">
+                                            Click here to learn more
+                                        </a>
+                                    </span>
                                 </p>
                             </div>
-                            <div className="form-group mt-2 col-6">
-                                <label className="form-label">
-                                    Password <span className="text-danger">
-                                        *</span>
-                                </label>
-                                <input
-                                    type="password"
-                                    className="form-control"
-                                    name="password"
-                                    autoComplete="new-password"
-                                    value={emailState.emailConfig.password || ""}
-                                    onChange={handleOutgoingConfig}/>
-                            </div>
-                        </div>
-                        <div className="row mt-2">
-                            <div className="col-md-6">
-                                <div className="form-group">
-                                    <label htmlFor="outgoing-mail" className="form-label">
-                                        Outgoing Mail Server
-                                        <span className="text-danger"> *</span>
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="smtp.gmail.com"
-                                        name="host"
-                                        value={emailState.outgoingEmailConfig.host || ""}
-                                        onChange={handleOutgoingConfig}
-                                        id="outgoing-host"/>
-                                    <p className="description-text f-12 text-muted mt-1">
-                                        SMTP server name to fetch the details
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="col-md-6">
-                                <div className="form-group">
-                                    <label htmlFor="port" className="form-label">
-                                        SMTP Port<span className="text-danger"> *</span>
-                                    </label>
-                                    <input type="text" className="form-control" name="port" value={emailState.outgoingEmailConfig.port || ""}
-                                        onChange={handleOutgoingConfig} placeholder="997"/>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div className="row mt-2">
-                            <div className="col-md-6">
-                                <div className="form-group">
-                                    <label htmlFor="outgoing-mail" className="form-label">
-                                        Sender Name
-                                        <span className="text-danger"> *</span>
+
+                            <div className="row">
+                                <div className="form-group mt-2 col-6">
+                                    <label className="form-label">
+                                        Your Support Email <span className="text-danger">
+                                            *</span>
                                     </label>
                                     <input
                                         type="text"
                                         className="form-control"
-                                        placeholder="John Doe"
-                                        name="from"
-                                        value={emailState.outgoingEmailConfig.from || ""}
-                                        onChange={handleOutgoingConfig}
-                                        id="outgoing-from"/>
+                                        name="email"
+                                        autoComplete="off"
+                                        value={emailState.outgoingEmailConfig.email || ""}
+                                        onChange={handleOutgoingConfig}/>
                                     <p className="description-text f-12 text-muted mt-1">
-                                        {/* SMTP server name to fetch the details */}
+                                    <small>This serves as your Return-to address e.g bayo@yourcompany.com</small>
                                     </p>
                                 </div>
-                            </div>
-                            <div className="col-md-6 pt-4">
-                                <div className="form-check mt-2">
-                                    <input className="form-check-input" type="checkbox" name="tls" checked={emailState.outgoingEmailConfig.tls || false}
-                                            onChange={handleOutgoingConfig} id="outgoing-ssl"/>
-                                    <label className="form-check-label" htmlFor="ssl">
-                                        Use SSL
+                                <div className="form-group mt-2 col-6">
+                                    <label className="form-label">
+                                        Password <span className="text-danger">
+                                            *</span>
                                     </label>
+                                    <input
+                                        type="password"
+                                        className="form-control"
+                                        name="password"
+                                        autoComplete="new-password"
+                                        value={emailState.outgoingEmailConfig.password || ""}
+                                        onChange={handleOutgoingConfig}/>
                                 </div>
                             </div>
-                        </div>
+                            <div className="row mt-2">
+                                <div className="col-md-6">
+                                    <div className="form-group">
+                                        <label htmlFor="outgoing-mail" className="form-label">
+                                            Outgoing Mail Server
+                                            <span className="text-danger"> *</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="smtp.gmail.com"
+                                            name="host"
+                                            value={emailState.outgoingEmailConfig.host || ""}
+                                            onChange={handleOutgoingConfig}
+                                            id="outgoing-host"/>
+                                        <p className="description-text f-12 text-muted mt-1">
+                                            SMTP server name to fetch the details
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="col-md-6">
+                                    <div className="form-group">
+                                        <label htmlFor="port" className="form-label">
+                                            SMTP Port<span className="text-danger"> *</span>
+                                        </label>
+                                        <input type="text" className="form-control" name="port" value={emailState.outgoingEmailConfig.port || ""}
+                                            onChange={handleOutgoingConfig} placeholder="997"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="row mt-2">
+                                <div className="col-md-6">
+                                    <div className="form-group">
+                                        <label htmlFor="outgoing-mail" className="form-label">
+                                            Sender Name
+                                            <span className="text-danger"> *</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="John Doe"
+                                            name="from"
+                                            value={emailState.outgoingEmailConfig.from || ""}
+                                            onChange={handleOutgoingConfig}
+                                            id="outgoing-from"/>
+                                        <p className="description-text f-12 text-muted mt-1">
+                                            {/* SMTP server name to fetch the details */}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="col-md-6 pt-4">
+                                    <div className="form-check mt-2">
+                                        <input className="form-check-input" type="checkbox" name="tls" checked={emailState.outgoingEmailConfig.tls || false}
+                                                onChange={handleOutgoingConfig} id="outgoing-ssl"/>
+                                        <label className="form-check-label" htmlFor="ssl">
+                                            Use SSL
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> : <div>
+
+                            {/* SendGrid API */}
+                            <div className="row">
+                                <div className="form-group mt-2 col-6">
+                                    <label className="form-label">
+                                        SendGrid API Key <span className="text-danger">
+                                            *</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name="api"
+                                        value={emailState.outgoingEmailConfig.api || ""}
+                                        onChange={handleOutgoingConfig}/>
+                                </div>
+                                <div className="form-group mt-2 col-6">
+                                    <label className="form-label">
+                                        Sender Email <span className="text-danger">
+                                            *</span>
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name="email"
+                                        autoComplete="off"
+                                        value={emailState.outgoingEmailConfig.email || ""}
+                                        onChange={handleOutgoingConfig}/>
+                                    <p className="description-text f-12 text-muted mt-1">
+                                    <small>This serves as your Return-to address e.g bayo@yourcompany.com</small>
+                                    </p>
+                                </div>
+                                
+                            </div>
+                        
+                        </div>}
 
                     </div>
                 )}
