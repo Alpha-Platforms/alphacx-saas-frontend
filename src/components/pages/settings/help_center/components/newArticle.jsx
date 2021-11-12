@@ -31,6 +31,8 @@ import { Link, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import axios from 'axios';
+import {allowedFiles, getAcceptValue} from '../../../../../helper';
+import {config} from '../../../../../config/keys';
 
 // 67796966-e0c2-44db-b184-cc4a7e19bee0
 const NewArticle = () => {
@@ -83,10 +85,9 @@ const NewArticle = () => {
       cancelButtonText: "No",
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log("Publish");
         setNewPost({ ...newPost, publishGlobal: !publishGlobal });
       } else {
-        console.log("Do nothing");
+        // console.log("Do nothing");
       }
     });
   };
@@ -114,7 +115,7 @@ const NewArticle = () => {
     setNewPost({ ...newPost, richText });
     // setReplyTicket({ plainText, richText });
     // console.log(">>>>", richText, plainText);
-    console.log(richText);
+    // console.log(richText);
   };
   const _uploadImageCallBack = (file) => {
     console.log('upload image callback')
@@ -131,7 +132,8 @@ const NewArticle = () => {
     };
 
     uploadedImages.push(imageObject);
-    console.log(imageObject);
+
+    console.log('IMAGE OBJECT => ', imageObject);
 
     //this.setState(uploadedImages: uploadedImages)
 
@@ -142,10 +144,11 @@ const NewArticle = () => {
     return new Promise(async (resolve, reject) => {
         const data = new FormData();
         data.append('file', imageObject.file);
-        data.append('upload_preset', 'i5bn3icr');
-        data.append('cloud_name', 'alphacx-co');
+        data.append('upload_preset', config.cloudinaryUploadPreset);
+        data.append('cloud_name', config.cloudinaryCloudName);
         try {
-          const res = await axios.post(`https://api.cloudinary.com/v1_1/alphacx-co/image/upload`, data)
+          const res = await axios.post(`${config.cloudinaryBaseUrl}/image/upload`, data)
+          console.log('UPLOAD RESPONSE', res)
           resolve({ data: {link: res.data?.url }});
         } catch(err) {
           console.log(err);
@@ -162,7 +165,6 @@ const NewArticle = () => {
     const res = await httpGetMain("articles/categories");
     if (res?.status == "success") {
       let categories = res?.data;
-      console.log('CATEGORI ES => ', categories);
       if (!categories || categories?.length === 0) {
         setCatState(prev => ({
           ...prev,
@@ -202,7 +204,6 @@ const NewArticle = () => {
     const res = await httpPatchMain(`articles/${id}/publish`);
     setPolicyLoading(false);
     if (res?.status == "success") {
-      console.log("res", res);
       NotificationManager.success(res.message, "Success", 5000);
 
       window.location.href = `/settings/knowledge-base`;
@@ -217,7 +218,11 @@ const NewArticle = () => {
     const res = await httpGetMain(`article/${articleId}`);
     if (res?.status == "success") {
       let { title, body, folders } = res?.data;
-      console.clear();
+      // console.clear();
+
+
+
+      
       // get category id
       // let folder = folders[0];
       // let categoryId;
@@ -267,12 +272,10 @@ const NewArticle = () => {
       folderId: newPost.folderId,
     };
     console.clear();
-    console.log("article", data);
 
     const res = await httpPostMain("articles", data);
 
     if (res?.status == "success") {
-      console.log("res", res);
       if (newPost?.publishGlobal) {
         publishPost(res?.data?.id);
       }
@@ -297,7 +300,6 @@ const NewArticle = () => {
       // categoryId: newPost.categoryId,
       folderId: newPost.folderId
     };
-    console.log('Data for patch => ', data);
     // return
     console.clear();
 
@@ -325,6 +327,53 @@ const NewArticle = () => {
   useEffect(() => {
     getFolders();
   }, [newPost?.categoryId]);
+
+  const embedCallbackFunc = () => {
+    console.log('This is an embed callback');
+  }
+
+  const linkCallbackFunc = (arg) => {
+    console.log('This is a link callback', arg);
+  }
+
+  useEffect(() => {
+    const linkBtn = window.document.querySelector('.kb-art-link.rdw-link-wrapper > div:nth-child(1)');
+    console.log('Link button => ', linkBtn);
+    linkBtn.addEventListener('click', () => {
+      setTimeout(() => {
+        const linkPopup = window.document.querySelector('.kb-art-link.rdw-link-wrapper > div:nth-child(2)');
+        // const linkPopupLastLabel = window.document.querySelector('.kb-art-link.rdw-link-wrapper > div:nth-child(2) > label:last-of-type');
+
+        if (linkPopup) {
+          const uploadContainer = window.document.createElement('div');
+          const label = window.document.createElement('label');
+          const input = window.document.createElement('input');
+
+          uploadContainer.setAttribute('id', 'doc-upload-container')
+          
+          label.setAttribute('for', 'doc-file-upload-input');
+          input.setAttribute('type', 'file');
+          input.setAttribute('name', 'doc-file-upload-input');
+          input.setAttribute('id', 'doc-file-upload-input');
+          label.append(window.document.createTextNode('Insert Doc File'));
+
+          input.addEventListener('change', e => {
+            console.log('file => ', e.target);
+          })
+
+          uploadContainer.appendChild(label);
+          uploadContainer.appendChild(input);
+
+          linkPopup.insertBefore(uploadContainer, linkPopup.childNodes[4]);
+          
+          // console.log('Link Popup => ', linkPopup);
+          // console.log('last label => ', linkPopup?.childNodes);
+        }
+      }, 500)
+
+    })
+
+  }, [])
 
   return (
     <div className=" settings-email help-center-settings">
@@ -370,7 +419,7 @@ const NewArticle = () => {
                 }
               />
             </div>
-            <div className="editorContainer">
+            <div id="editorContainer" className="editorContainer">
               <Editor
                 editorState={editorState}
                 toolbar={{
@@ -379,12 +428,12 @@ const NewArticle = () => {
                     "emoji",
                     "inline",
                     "link",
+                    "image",
 
                     // "list",
                     "textAlign",
                     // "colorPicker",
                     // "embedded",
-                    "image",
                   ],
                   // inline: {
                   //   inDropdown: false,
@@ -416,9 +465,9 @@ const NewArticle = () => {
                     alignmentEnabled: true,
                     uploadCallback: _uploadImageCallBack,
                     previewImage: true,
-                    inputAccept:
-                      "image/gif,image/jpeg,image/jpg,image/png,image/svg",
-                    alt: { present: false, mandatory: false },
+                    // inputAccept: "image/gif,imag e/jpeg,image/jpg,image/png,image/svg",
+                    inputAccept: getAcceptValue(allowedFiles.ext, allowedFiles.types),
+                    alt: { present: true, mandatory: true },
                     defaultSize: {
                       height: "auto",
                       width: "auto",
@@ -449,10 +498,21 @@ const NewArticle = () => {
                     right: { icon: TextAlignRight, className: undefined },
                     // justify: { icon: TextAlignCenter, className: undefined },
                   },
+                  embedded: {
+                    // icon: embedded,
+                    className: undefined,
+                    component: undefined,
+                    popupClassName: undefined,
+                    embedCallback: embedCallbackFunc,
+                    defaultSize: {
+                      height: 'auto',
+                      width: 'auto',
+                    },
+                  },
 
                   link: {
                     inDropdown: false,
-                    className: "art-link",
+                    className: "kb-art-link",
                     component: undefined,
                     popupClassName: "art-link-popup",
                     dropdownClassName: undefined,
@@ -461,16 +521,15 @@ const NewArticle = () => {
                     options: ['link'],
                     link: { icon: insertLink, className: undefined },
                     unlink: { className: "unlink-icon" },
-                    linkCallback: undefined
+                    linkCallback: linkCallbackFunc
                   },
-
                   history: {
                     inDropdown: true,
                   },
                 }}
                 toolbarClassName="toolbarClassName"
                 wrapperClassName="wrapperClassName"
-                editorClassName="editorClassName"
+                editorClassName="editorClassName automation-editor kb-editor"
                 onEditorStateChange={(editor) => onEditorStateChange(editor)}
               />
             </div>

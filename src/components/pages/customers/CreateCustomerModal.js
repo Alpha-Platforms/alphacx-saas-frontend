@@ -10,6 +10,7 @@ import {countrycodes} from '../../shared/countrycodes';
 import ImageDefault from '../../../assets/svgicons/image-default.svg';
 import axios from 'axios';
 import {createTags} from '../../../reduxstore/actions/tagActions';
+import {config} from '../../../config/keys';
 
 const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers, tags, isEditing, customerId, customers, updateCustomer, createTags, fromCustDetails, custId, getCurrentCustomer}) => {
 
@@ -77,10 +78,10 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
             if (uploadInfo.image) {
                 const data = new FormData();
                 data.append('file', uploadInfo.image);
-                data.append('upload_preset', 'i5bn3icr');
-                data.append('cloud_name', 'alphacx-co');
+                data.append('upload_preset', config.cloudinaryUploadPreset);
+                data.append('cloud_name', config.cloudinaryCloudName);
                 axios
-                    .post(`https://api.cloudinary.com/v1_1/alphacx-co/image/upload`, data)
+                    .post(`${config.cloudinaryBaseUrl}/image/upload`, data)
                     .then(async res => {
                         const addRes = await addCustomer({firstName: firstname, lastName: lastname, email: emailaddress, phoneNumber: workphone, organisation, tags: selectedTags.map(tag => tag.value), avatar: res.data?.url });
                         if (addRes.status === "success") {
@@ -151,10 +152,10 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
             if (uploadInfo.image) {
                 const data = new FormData();
                 data.append('file', uploadInfo.image);
-                data.append('upload_preset', 'i5bn3icr');
-                data.append('cloud_name', 'alphacx-co');
+                data.append('upload_preset', config.cloudinaryUploadPreset);
+                data.append('cloud_name', config.cloudinaryCloudName);
                 axios
-                    .post(`https://api.cloudinary.com/v1_1/alphacx-co/image/upload`, data)
+                    .post(`${config.cloudinaryBaseUrl}/image/upload`, data)
                     .then(async res => {
                         const newCustomer = {firstName: firstname, lastName: lastname, email: emailaddress, phoneNumber: `${workphone}`, organisation, tags: selectedTags.map(tag => tag.value.toLowerCase()), avatar: res.data?.url};
 
