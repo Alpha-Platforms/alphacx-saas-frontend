@@ -12,6 +12,7 @@ import { updateUser, updateUserPassword } from './../../../../reduxstore/actions
 import ImageDefault from '../../../../assets/svgicons/image-default.svg';
 import axios from 'axios';
 import RSelect from "react-select";
+import {config} from '../../../../config/keys';
 
 const UserProfileTwo = ({
     getCurrentAgent, 
@@ -90,12 +91,11 @@ const UserProfileTwo = ({
                 if (uploadInfo.image) {
                     const data = new FormData();
                     data.append('file', uploadInfo.image);
-                    data.append('upload_preset', 'i5bn3icr');
-                    data.append('cloud_name', 'alphacx-co');
+                    data.append('upload_preset', config.cloudinaryUploadPreset);
+                    data.append('cloud_name', config.cloudinaryCloudName);
                     axios
-                        .post(`https://api.cloudinary.com/v1_1/alphacx-co/image/upload`, data)
+                        .post(`${config.cloudinaryBaseUrl}/image/upload`, data)
                         .then(async res => {
-
                             const userRes = await updateUser({...updatedInfo, avatar: res.data?.url});
                             if (userRes?.status === 'success') {
                                 NotificationManager.success('Info has been updated', 'Success');
@@ -136,10 +136,10 @@ const UserProfileTwo = ({
             if (uploadInfo.image) {
                 const data = new FormData();
                 data.append('file', uploadInfo.image);
-                data.append('upload_preset', 'i5bn3icr');
-                data.append('cloud_name', 'alphacx-co');
+                data.append('upload_preset', config.cloudinaryUploadPreset);
+                data.append('cloud_name', config.cloudinaryCloudName);
                 axios
-                    .post(`https://api.cloudinary.com/v1_1/alphacx-co/image/upload`, data)
+                    .post(`${config.cloudinaryBaseUrl}/image/upload`, data)
                     .then(async res => {
 
                         const userRes = await updateUser({...updatedInfo, avatar: res.data?.url});

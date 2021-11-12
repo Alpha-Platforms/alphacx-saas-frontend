@@ -12,3 +12,16 @@
     border-color: #006298;
   }
 }
+
+.email-settings-card {
+  border-radius: 10px 10px 0px 0px !important;
+  -webkit-border-radius: 10px 10px 0px 0px !important;
+  -moz-border-radius: 10px 10px 0px 0px !important;
+  -ms-border-radius: 10px 10px 0px 0px !important;
+  -o-border-radius: 10px 10px 0px 0px !important;
+
+  .card-header {
+    background: #f0f0f0 !important;
+    border-bottom: none !important;
+  }
+}

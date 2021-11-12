@@ -21,6 +21,9 @@ import {
 } from "../../../helpers/httpMethods";
 import {createTags} from '../../../reduxstore/actions/tagActions';
 import axios from 'axios';
+import {getAcceptValue, allowedFiles} from '../../../helper';
+import {config} from '../../../config/keys';
+
 
 
 const CreateTicketModal = ({
@@ -63,8 +66,10 @@ const CreateTicketModal = ({
         ownAvatar: ''
     });
 
+    // console.log('UPLOAD INFO => ', uploadInfo);
+
     // ref to customer input
-    const custInputRef = useRef(null);
+    const custInputRef = useRef(null); 
 
     const [modalInputs,
         setModalInputs] = useState({
@@ -177,10 +182,10 @@ const CreateTicketModal = ({
             if (uploadInfo.image) {
                 const data = new FormData();
                 data.append('file', uploadInfo.image);
-                data.append('upload_preset', 'i5bn3icr');
-                data.append('cloud_name', 'alphacx-co');
+                data.append('upload_preset', config.cloudinaryUploadPreset);
+                data.append('cloud_name', config.cloudinaryCloudName);
                 axios
-                    .post(`https://api.cloudinary.com/v1_1/alphacx-co/image/upload`, data)
+                    .post(`${config.cloudinaryBaseUrl}/${allowedFiles.types.slice(0,3).includes(uploadInfo.image?.type) ?  'image' : 'raw'}/upload`, data)
                     .then(async res => {
                         // add res
 
@@ -490,6 +495,83 @@ const CreateTicketModal = ({
         }
     }
 
+    const handleFileSelect = function (e) {
+        // store current input
+        const fileInput = e.target
+
+        // create a store for the current dimension and default info
+        let maxReqDimensions = {
+                width: 1500,
+                height: 1500
+            };
+
+        if (!fileInput.files.length) {
+            // No file is selected
+            setUploadInfo(prev => ({...prev, msg: 'No file is selected', error: true, blob: null, image: null, ownAvatar: ''}));
+            
+        } else {
+            // file selected
+            
+            // // check if selected file is an image
+            // if (fileInput.files[0].type.indexOf("image/") === -1) {
+            //     // Selected file is not an image
+            //     setUploadInfo(prev => ({...prev, msg: 'Selected file is not an image', error: true, blob: null, image: null, ownAvatar: ''}));
+            // } 
+            
+            if (fileInput.files[0].type.indexOf("image/") !== -1) {
+                // Selected file is an image
+                /* 
+                * read the selected image to get the file width and height
+                */
+                // create a new file reader object
+                const reader = new FileReader();
+                reader.readAsDataURL(fileInput.files[0]);
+                reader.onload = function (e) {
+                    // when reader has loaded
+
+                    //create a new image object
+                    const currentImage = new Image();
+                    // set the source of the image to the base64 string from the file reader
+                    currentImage.src = this.result;
+
+                    currentImage.onload = function () {
+                        const [currentImageHeight, currentImageWidth] = [this.height, this
+                            .width
+                        ];
+
+                        if (currentImageWidth > maxReqDimensions.width ||
+                            currentImageHeight > maxReqDimensions.height) {
+                            // current selected image dimesions are not acceptable
+                            setUploadInfo(prev => ({...prev, msg: `Selected image should have max dimension of ${maxReqDimensions.width}x${maxReqDimensions.height}`, error: true, blog: null, image: null}));
+                        } else {
+                            // current selected image dimensions are acceptable
+                            const fileName = fileInput.files[0].name;
+                            const fileBlob = URL.createObjectURL(fileInput.files[0]);
+
+                            setUploadInfo(prev => ({...prev, blob: fileBlob, msg: fileName, error: false, image: fileInput.files[0], ownAvatar: ''}));
+                            /* 
+                            when the image with the blob loads call the below method
+                            URL.revokeObjectURL(this.src);  where this.src is the blob created
+                            */
+                        }
+                    }
+                }
+            } else if (allowedFiles.types.includes(fileInput.files[0].type)) {
+                // selected file is a doc
+                if (fileInput.files[0].size > allowedFiles.maxSize) {
+                    setUploadInfo(prev => ({...prev, msg: `File exceeds maximum upload size of ${allowedFiles.maxSize}`, error: true, blob: null, image: null, ownAvatar: ''}));
+                } else {
+                    const fileName = fileInput.files[0].name;
+                    const fileBlob = URL.createObjectURL(fileInput.files[0]);
+
+                    setUploadInfo(prev => ({...prev, blob: fileBlob, msg: fileName, error: false, image: fileInput.files[0], ownAvatar: ''}));
+                }
+            } else {
+                setUploadInfo(prev => ({...prev, msg: 'Selected file is not an image or document', error: true, blob: null, image: null, ownAvatar: ''}));
+            }
+        }
+    }
+
     return (
         <Modal
             // show={createModalShow}
@@ -780,7 +862,7 @@ const CreateTicketModal = ({
                                         <p className="mb-0 text-at-red"></p>
                                         </label>
                                     </div>
-                                    <input type="file" name="ticketUploadFile" id="ticketUploadFile" onChange={handleImgSelect}/>
+                                    <input type="file" name="ticketUploadFile" id="ticketUploadFile" accept={getAcceptValue(allowedFiles.ext, allowedFiles.types)} onChange={handleFileSelect}/>
             
                                 </div>
                             </div>
