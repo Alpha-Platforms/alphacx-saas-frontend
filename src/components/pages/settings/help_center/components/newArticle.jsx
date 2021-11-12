@@ -340,8 +340,34 @@ const NewArticle = () => {
     console.log('Link button => ', linkBtn);
     linkBtn.addEventListener('click', () => {
       setTimeout(() => {
-        const linkBtnPopup = window.document.querySelector('.kb-art-link.rdw-link-wrapper > div:nth-child(2)');
-        console.log('Link Popup => ', linkBtnPopup);
+        const linkPopup = window.document.querySelector('.kb-art-link.rdw-link-wrapper > div:nth-child(2)');
+        // const linkPopupLastLabel = window.document.querySelector('.kb-art-link.rdw-link-wrapper > div:nth-child(2) > label:last-of-type');
+
+        if (linkPopup) {
+          const uploadContainer = window.document.createElement('div');
+          const label = window.document.createElement('label');
+          const input = window.document.createElement('input');
+
+          uploadContainer.setAttribute('id', 'doc-upload-container')
+          
+          label.setAttribute('for', 'doc-file-upload-input');
+          input.setAttribute('type', 'file');
+          input.setAttribute('name', 'doc-file-upload-input');
+          input.setAttribute('id', 'doc-file-upload-input');
+          label.append(window.document.createTextNode('Insert Doc File'));
+
+          input.addEventListener('change', e => {
+            console.log('file => ', e.target);
+          })
+
+          uploadContainer.appendChild(label);
+          uploadContainer.appendChild(input);
+
+          linkPopup.insertBefore(uploadContainer, linkPopup.childNodes[4]);
+          
+          // console.log('Link Popup => ', linkPopup);
+          // console.log('last label => ', linkPopup?.childNodes);
+        }
       }, 500)
 
     })
