@@ -278,12 +278,12 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                                         id="outgoing-only"
                                         name="mail-server"
                                         value="outgoing-only"
-                                        checked={emailState.outgoingEmailConfig?.type === "api"}
+                                        checked={emailState.outgoingEmailConfig?.type === "apiKey"}
                                         onChange={() => setEmailState({
                                             ...emailState,
                                             outgoingEmailConfig: {
                                                 ...emailState.outgoingEmailConfig,
-                                                type: 'api'
+                                                type: 'apiKey'
                                             }
                                         })}
                                     />
@@ -413,8 +413,8 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                                     <input
                                         type="text"
                                         className="form-control"
-                                        name="api"
-                                        value={emailState.outgoingEmailConfig.api || ""}
+                                        name="apiKey"
+                                        value={emailState.outgoingEmailConfig.apiKey || ""}
                                         onChange={handleOutgoingConfig}/>
                                 </div>
                                 <div className="form-group mt-2 col-6">

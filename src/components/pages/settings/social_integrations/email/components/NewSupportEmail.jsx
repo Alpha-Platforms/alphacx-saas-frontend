@@ -30,7 +30,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
       from: '', // sender email
       host: '',
       port: '',
-      api: '',
+      apiKey: '',
       type: 'smtp'
     }
   });
@@ -97,7 +97,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
       }
     } else {
       // console.log('executing outgoing only');
-      const {email, password, port, tls, host, from, api, type} = emailState.outgoingEmailConfig;
+      const {email, password, port, tls, host, from, apiKey, type} = emailState.outgoingEmailConfig;
 
 
       if (email && password && port && host) {
@@ -109,7 +109,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
             host,
             port: Number(port),
             tls,
-            api: api || null,
+            apiKey: apiKey || null,
             type
           }
         };
@@ -167,7 +167,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
           email: configs?.outgoing_email_config?.email || '',
           password: configs?.outgoing_email_config?.password || '',
           type: configs?.outgoing_email_config?.type || '',
-          api: configs?.outgoing_email_config?.api || ''
+          apiKey: configs?.outgoing_email_config?.apiKey || ''
         }
       }));
     }
@@ -271,7 +271,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
             )}
 
 
-            <div className="d-flex justify-content-end my-4 mx-3 text-end">
+            {(emailState.activeRadio === "own-server" && emailState.emailSystem === "imap") && <div className="d-flex justify-content-end my-4 mx-3 text-end">
               <Link
                 to="/settings/integrations/email"
                 className="btn btn-sm px-4 bg-outline-custom cancel"
@@ -287,7 +287,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
               >
                 Save
               </button>
-            </div>
+            </div>}
 
 
 
