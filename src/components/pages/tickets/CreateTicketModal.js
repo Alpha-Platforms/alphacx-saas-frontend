@@ -22,6 +22,7 @@ import {
 import {createTags} from '../../../reduxstore/actions/tagActions';
 import axios from 'axios';
 import {getAcceptValue, allowedFiles} from '../../../helper';
+import {config} from '../../../config/keys';
 
 
 
@@ -181,10 +182,10 @@ const CreateTicketModal = ({
             if (uploadInfo.image) {
                 const data = new FormData();
                 data.append('file', uploadInfo.image);
-                data.append('upload_preset', 'i5bn3icr');
-                data.append('cloud_name', 'alphacx-co');
+                data.append('upload_preset', config.cloudinaryUploadPreset);
+                data.append('cloud_name', config.cloudinaryCloudName);
                 axios
-                    .post(`https://api.cloudinary.com/v1_1/alphacx-co/${allowedFiles.types.slice(0,3).includes(uploadInfo.image?.type) ?  'image' : 'raw'}/upload`, data)
+                    .post(`${config.cloudinaryBaseUrl}/${allowedFiles.types.slice(0,3).includes(uploadInfo.image?.type) ?  'image' : 'raw'}/upload`, data)
                     .then(async res => {
                         // add res
 
