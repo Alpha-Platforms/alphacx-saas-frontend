@@ -31,6 +31,7 @@ import { Link, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import axios from 'axios';
+import {allowedFiles, getAcceptValue} from '../../../../../helper';
 
 // 67796966-e0c2-44db-b184-cc4a7e19bee0
 const NewArticle = () => {
@@ -130,7 +131,8 @@ const NewArticle = () => {
     };
 
     uploadedImages.push(imageObject);
-    console.log(imageObject);
+
+    console.log('IMAGE OBJECT => ', imageObject);
 
     //this.setState(uploadedImages: uploadedImages)
 
@@ -145,6 +147,7 @@ const NewArticle = () => {
         data.append('cloud_name', 'alphacx-co');
         try {
           const res = await axios.post(`https://api.cloudinary.com/v1_1/alphacx-co/image/upload`, data)
+          console.log('UPLOAD RESPONSE', res)
           resolve({ data: {link: res.data?.url }});
         } catch(err) {
           console.log(err);
@@ -214,7 +217,11 @@ const NewArticle = () => {
     const res = await httpGetMain(`article/${articleId}`);
     if (res?.status == "success") {
       let { title, body, folders } = res?.data;
-      console.clear();
+      // console.clear();
+
+
+
+      
       // get category id
       // let folder = folders[0];
       // let categoryId;
@@ -320,6 +327,27 @@ const NewArticle = () => {
     getFolders();
   }, [newPost?.categoryId]);
 
+  const embedCallbackFunc = () => {
+    console.log('This is an embed callback');
+  }
+
+  const linkCallbackFunc = (arg) => {
+    console.log('This is a link callback', arg);
+  }
+
+  useEffect(() => {
+    const linkBtn = window.document.querySelector('.kb-art-link.rdw-link-wrapper > div:nth-child(1)');
+    console.log('Link button => ', linkBtn);
+    linkBtn.addEventListener('click', () => {
+      setTimeout(() => {
+        const linkBtnPopup = window.document.querySelector('.kb-art-link.rdw-link-wrapper > div:nth-child(2)');
+        console.log('Link Popup => ', linkBtnPopup);
+      }, 500)
+
+    })
+
+  }, [])
+
   return (
     <div className=" settings-email help-center-settings">
       {policyLoading && (
@@ -373,12 +401,12 @@ const NewArticle = () => {
                     "emoji",
                     "inline",
                     "link",
+                    "image",
 
                     // "list",
                     "textAlign",
                     // "colorPicker",
                     // "embedded",
-                    "image",
                   ],
                   // inline: {
                   //   inDropdown: false,
@@ -410,9 +438,9 @@ const NewArticle = () => {
                     alignmentEnabled: true,
                     uploadCallback: _uploadImageCallBack,
                     previewImage: true,
-                    inputAccept:
-                      "image/gif,image/jpeg,image/jpg,image/png,image/svg",
-                    alt: { present: false, mandatory: false },
+                    // inputAccept: "image/gif,imag e/jpeg,image/jpg,image/png,image/svg",
+                    inputAccept: getAcceptValue(allowedFiles.ext, allowedFiles.types),
+                    alt: { present: true, mandatory: true },
                     defaultSize: {
                       height: "auto",
                       width: "auto",
@@ -443,10 +471,21 @@ const NewArticle = () => {
                     right: { icon: TextAlignRight, className: undefined },
                     // justify: { icon: TextAlignCenter, className: undefined },
                   },
+                  embedded: {
+                    // icon: embedded,
+                    className: undefined,
+                    component: undefined,
+                    popupClassName: undefined,
+                    embedCallback: embedCallbackFunc,
+                    defaultSize: {
+                      height: 'auto',
+                      width: 'auto',
+                    },
+                  },
 
                   link: {
                     inDropdown: false,
-                    className: "art-link",
+                    className: "kb-art-link",
                     component: undefined,
                     popupClassName: "art-link-popup",
                     dropdownClassName: undefined,
@@ -455,9 +494,8 @@ const NewArticle = () => {
                     options: ['link'],
                     link: { icon: insertLink, className: undefined },
                     unlink: { className: "unlink-icon" },
-                    linkCallback: undefined
+                    linkCallback: linkCallbackFunc
                   },
-
                   history: {
                     inDropdown: true,
                   },
