@@ -32,6 +32,7 @@ import Swal from "sweetalert2";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import axios from 'axios';
 import {allowedFiles, getAcceptValue} from '../../../../../helper';
+import {config} from '../../../../../config/keys';
 
 // 67796966-e0c2-44db-b184-cc4a7e19bee0
 const NewArticle = () => {
@@ -143,10 +144,10 @@ const NewArticle = () => {
     return new Promise(async (resolve, reject) => {
         const data = new FormData();
         data.append('file', imageObject.file);
-        data.append('upload_preset', 'i5bn3icr');
-        data.append('cloud_name', 'alphacx-co');
+        data.append('upload_preset', config.cloudinaryUploadPreset);
+        data.append('cloud_name', config.cloudinaryCloudName);
         try {
-          const res = await axios.post(`https://api.cloudinary.com/v1_1/alphacx-co/image/upload`, data)
+          const res = await axios.post(`${config.cloudinaryBaseUrl}/image/upload`, data)
           console.log('UPLOAD RESPONSE', res)
           resolve({ data: {link: res.data?.url }});
         } catch(err) {
