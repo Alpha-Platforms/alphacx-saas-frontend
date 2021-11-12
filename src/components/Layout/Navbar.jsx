@@ -92,7 +92,7 @@ function Notification(props){
       });
     }else{
       history.push({
-          pathname:  "conversation",
+          pathname:  "/conversation",
           from: "notifications"
       });
     }
@@ -138,19 +138,18 @@ function Notification(props){
         </NavDropdown.Item>
         :
         <Fragment>
-          {
-            notifications.map((data, index) => {
+          { notifications.map((data, index) => {
               if(data.type == "tickets" || data.type == "mention"){
                 return (
                   <NavDropdown.Item key={index} as="div" onClick={() => goToTicket({ticketId: data?.others?.ticketId, ticketHistoryId: data?.others?.ticketHistoryId})}>
                       <div className="d-flex justify-content-start align-items-start">
-                        <div className="me-3 flex-shrink-0 avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center acx-bg-affair-800">
+                        <div className="me-3 flex-shrink-0 avatar avatar-sm rounded-circle overflow-hidden d-flex justify-content-center align-items-center acx-bg-affair-800">
                           {data?.sender?.avatar == null ? (
                             <h3 className="text-white">
                               <span>{InitialsFromString(`${data?.sender?.firstname == "default" || !data?.sender?.firstname? "" : data?.sender?.firstname}`, `${data?.sender?.lastname == "default" || !data?.sender?.lastname ? "" : data?.sender?.lastname}`)}</span>
                             </h3>
                             ) : (
-                            <img width="40" height="auto" src={data?.sender?.avatar} alt="" />
+                            <img width="30" height="auto" src={data?.sender?.avatar} alt="" />
                           )}
                         </div>
                         <div className="media-body flex-grow-1">
@@ -176,6 +175,11 @@ function Notification(props){
               }
             }
           )}
+          <NavDropdown.Item as={NavLink} to="/conversation" className="acx-link-primary">
+            <div className="text-center">
+              <p className="text-muted mb-0">View all notifications</p>
+            </div>
+          </NavDropdown.Item>
         </Fragment>
       }
   </NavDropdown>
