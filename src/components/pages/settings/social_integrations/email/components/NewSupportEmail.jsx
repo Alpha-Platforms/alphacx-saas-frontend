@@ -6,7 +6,7 @@ import RightArrow from "../../../../../../assets/imgF/arrow_right.png";
 import { httpPatchMain } from "../../../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import { Modal } from "react-responsive-modal";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {connect} from 'react-redux';
 import { getConfigs } from '../../../../../../reduxstore/actions/configActions';
 
@@ -34,8 +34,24 @@ const NewSupportEmail = ({configs, getConfigs}) => {
       type: 'smtp'
     }
   });
+  const {search} = useLocation();
+  const type = new URLSearchParams(search).get('type');
 
-  console.log('EMAIL STATE => ', emailState);
+  useEffect(() => {
+    if (type === 'outgoing') {
+      setEmailState(prev => ({
+        ...prev,
+        activeRadio: 'own-server',
+        mailServer: 'outgoing-only'
+      }));
+    }
+  }, [type]);
+
+
+
+  console.log('type => ', type);
+
+  // console.log('EMAIL STATE => ', emailState);
   
   const [show, setShow] = useState(false);
   const [passwordChanged, setPasswordChanged] = useState(false)
