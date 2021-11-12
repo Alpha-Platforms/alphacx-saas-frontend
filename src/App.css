@@ -1165,7 +1165,7 @@ a object {
 
 .save-btn {
   display: block;
-  float: right;
+  /* float: right; */
   width: 100%;
 }
 

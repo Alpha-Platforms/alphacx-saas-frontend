@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState } from "react";
 import { Tabs, Tab } from "react-bootstrap";
 import TicketCategoriesTab from "./components/TicketCategoriesTab";
