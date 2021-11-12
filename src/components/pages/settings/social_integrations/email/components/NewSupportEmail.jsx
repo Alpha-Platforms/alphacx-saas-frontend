@@ -24,6 +24,8 @@ const NewSupportEmail = ({configs, getConfigs}) => {
       password: ''
     },
     outgoingEmailConfig: {
+      email: '',
+      password: '',
       tls: false,
       from: '', // sender email
       host: '',
@@ -31,7 +33,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
     }
   });
 
-  // console.log('EMAIL STATE => ', emailState);
+  console.log('EMAIL STATE => ', emailState);
   
   const [show, setShow] = useState(false);
   const [passwordChanged, setPasswordChanged] = useState(false)

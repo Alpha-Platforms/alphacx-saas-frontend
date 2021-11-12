@@ -271,7 +271,7 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                                     name="email"
                                     autoComplete="off"
                                     value={emailState.emailConfig.email || ""}
-                                    onChange={handleConfigChange}/>
+                                    onChange={handleOutgoingConfig}/>
                                 <p className="description-text f-12 text-muted mt-1">
                                 <small>This serves as your Return-to address e.g bayo@yourcompany.com</small>
                                 </p>
@@ -287,7 +287,7 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                                     name="password"
                                     autoComplete="new-password"
                                     value={emailState.emailConfig.password || ""}
-                                    onChange={handleConfigChange}/>
+                                    onChange={handleOutgoingConfig}/>
                             </div>
                         </div>
                         <div className="row mt-2">
@@ -295,7 +295,7 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                                 <div className="form-group">
                                     <label htmlFor="outgoing-mail" className="form-label">
                                         Outgoing Mail Server
-                                        <span className="text-danger">*</span>
+                                        <span className="text-danger"> *</span>
                                     </label>
                                     <input
                                         type="text"
@@ -313,7 +313,7 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                             <div className="col-md-6">
                                 <div className="form-group">
                                     <label htmlFor="port" className="form-label">
-                                        SMTP Port<span className="text-danger">*</span>
+                                        SMTP Port<span className="text-danger"> *</span>
                                     </label>
                                     <input type="text" className="form-control" name="port" value={emailState.outgoingEmailConfig.port || ""}
                                         onChange={handleOutgoingConfig} placeholder="997"/>
@@ -326,7 +326,7 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                                 <div className="form-group">
                                     <label htmlFor="outgoing-mail" className="form-label">
                                         Sender Name
-                                        <span className="text-danger">*</span>
+                                        <span className="text-danger"> *</span>
                                     </label>
                                     <input
                                         type="text"
