@@ -6,7 +6,7 @@ import RightArrow from "../../../../../../assets/imgF/arrow_right.png";
 import { httpPatchMain } from "../../../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import { Modal } from "react-responsive-modal";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {connect} from 'react-redux';
 import { getConfigs } from '../../../../../../reduxstore/actions/configActions';
 
@@ -24,14 +24,34 @@ const NewSupportEmail = ({configs, getConfigs}) => {
       password: ''
     },
     outgoingEmailConfig: {
+      email: '',
+      password: '',
       tls: false,
       from: '', // sender email
       host: '',
-      port: ''
+      port: '',
+      api: '',
+      type: 'smtp'
     }
   });
+  const {search} = useLocation();
+  const type = new URLSearchParams(search).get('type');
 
-  console.log('EMAIL STATE => ', emailState);
+  useEffect(() => {
+    if (type === 'outgoing') {
+      setEmailState(prev => ({
+        ...prev,
+        activeRadio: 'own-server',
+        mailServer: 'outgoing-only'
+      }));
+    }
+  }, [type]);
+
+
+
+  console.log('type => ', type);
+
+  // console.log('EMAIL STATE => ', emailState);
   
   const [show, setShow] = useState(false);
   const [passwordChanged, setPasswordChanged] = useState(false)
@@ -50,23 +70,18 @@ const NewSupportEmail = ({configs, getConfigs}) => {
   
   const handleSubmit = async () => {
     if (emailState.mailServer === "incoming-only") {
-      console.log('Executing incoming only');
+      // console.log('Executing incoming only');
       const { email, port, tls, host, password } = emailState.emailConfig;
 
       if (email && port && host && password) {
         const data = {
-          email_config: passwordChanged ? {
+          email_config: {
             email,
             password,
             host,
             port: Number(port),
             tls,
-          } : {
-            email,
-            host,
-            port: Number(port),
-            tls,
-          }
+          } 
         };
   
         const res = await httpPatchMain("settings/email-config", JSON.stringify(data));
@@ -81,25 +96,21 @@ const NewSupportEmail = ({configs, getConfigs}) => {
         NotificationManager.error('Fill up required fields', 'Error', 4000);
       }
     } else {
-      console.log('executing outgoing only');
-      const { email, password } = emailState.emailConfig;
-      const {port, tls, host, from} = emailState.outgoingEmailConfig;
+      // console.log('executing outgoing only');
+      const {email, password, port, tls, host, from, api, type} = emailState.outgoingEmailConfig;
+
 
       if (email && password && port && host) {
         const data = {
-          outgoingEmailConfig: passwordChanged ? {
+          outgoingEmailConfig: {
             email,
             password,
             from,
             host,
             port: Number(port),
             tls,
-          } : {
-            email,
-            from,
-            host,
-            port: Number(port),
-            tls,
+            api: api || null,
+            type
           }
         };
   
@@ -121,20 +132,20 @@ const NewSupportEmail = ({configs, getConfigs}) => {
   };
 
 
-  const handleConfigChange = (e) => {
-    let {name, value, type, checked} = e.target;
-    value = type === "checkbox" ? checked : value;
-    if(type === "password"){setPasswordChanged(true)}
+  // const handleConfigChange = (e) => {
+  //   let {name, value, type, checked} = e.target;
+  //   value = type === "checkbox" ? checked : value;
+  //   if(type === "password"){setPasswordChanged(true)}
     
-    setEmailState({
-        ...emailState,
-        emailConfig: {
-            ...emailState.emailConfig,
-            [name]: value
-        }
-    });
+  //   setEmailState({
+  //       ...emailState,
+  //       emailConfig: {
+  //           ...emailState.emailConfig,
+  //           [name]: value
+  //       }
+  //   });
     
-  };
+  // };
 
   useEffect(() => {
     if (configs) {
@@ -153,7 +164,10 @@ const NewSupportEmail = ({configs, getConfigs}) => {
           tls: configs?.outgoing_email_config?.tls || false,
           host: configs?.outgoing_email_config?.host || '',
           port: configs?.outgoing_email_config?.port || '',
-          from: configs?.outgoing_email_config?.from || ''
+          email: configs?.outgoing_email_config?.email || '',
+          password: configs?.outgoing_email_config?.password || '',
+          type: configs?.outgoing_email_config?.type || '',
+          api: configs?.outgoing_email_config?.api || ''
         }
       }));
     }
@@ -183,124 +197,34 @@ const NewSupportEmail = ({configs, getConfigs}) => {
 
         <div className="col-md-8">
           <h5 className="mt-3 mb-2 f-16 fw-bold">Email Settings</h5>
-          <div className="form-group">
-            <label htmlFor="name" className="form-label f-14">
-              Name
-            </label>
-            <input
-              type="tdiv.colext"
-              className="form-control form-control-sm"
-              id="name"
-              disabled={true}
-            />
-            <p className="description-text f-12 text-muted mt-1">
-              Name of the email to be used in the the ticket replies
-            </p>
-          </div>
-          {/* <div className="form-group mt-2">
-            <label htmlFor="email" className="form-label f-14">
-              Your Support email <span className="text-danger">*</span>
-            </label>
-            <input
-              type="text"
-              className="form-control form-control-sm "
-              id="email"
-              disabled={true}
-            />
-            <p className="description-text f-12 text-muted mt-1">
-              This serves as your Return-to address e.g bayo@yourcompany.com
-            </p>
-          </div> */}
 
 
-          <div className="row">
-            <div className="form-group mt-2 col-6">
-                <label className="form-label">
-                    Your Support Email <span className="text-danger">
-                        *</span>
-                </label>
-                <input
-                    type="text"
-                    className="form-control form-control-sm"
-                    name="email"
-                    autoComplete="off"
-                    value={emailState.emailConfig.email || ""}
-                    onChange={handleConfigChange}/>
-                <p className="description-text f-12 text-muted mt-1">
-                  This serves as your Return-to address e.g bayo@yourcompany.com
-                </p>
-            </div>
-            <div className="form-group mt-2 col-6">
-                <label className="form-label">
-                    Password <span className="text-danger">
-                        *</span>
-                </label>
-                <input
-                    type="password"
-                    className="form-control form-control-sm"
-                    name="password"
-                    autoComplete="new-password"
-                    value={emailState.emailConfig.password || ""}
-                    onChange={handleConfigChange}/>
-            </div>
-          </div>
 
-          {/* <div className="form-group mt-2">
-            <label htmlFor="group" className="form-label f-14">
-              Assign to Group
-            </label>
-            <select id="group" className="form-select">
-              <option>--</option>
-              <option>--</option>
-              <option>--</option>
-            </select>
-            <p className="description-text f-12 text-muted mt-1">
-              New tickets in this email will be automaically assigned to a group
-            </p>
-          </div> */}
-          {/* <div className="form-group mt-2">
-            <label htmlFor="support" className="form-labedl f-14">
-              Link support email with a product
-            </label>
-            <select id="support" className="form-select">
-              <option>--</option>
-              <option>--</option>
-              <option>--</option>
-            </select>
-            <p className="description-text f-12 text-muted mt-1">
-              if you want to link this email to a product first{" "}
-              <span>
-                <a href="#" className="text-custom">
-                  add product
-                </a>
-              </span>
-            </p>
-          </div> */}
-          <div className="card mt-4">
-            <div className="card-header p-3">
-              <p className="f-16 fw-bold mb-3">Mail Server</p>
+
+          <div className="card email-settings-card my-4">
+            <div className="card-header p-3 py-4">
+              {/* <p className="f-16 fw-bold mb-3">Mail Server</p> */}
               <div className="row">
-                {/* <div className="col-md-5">
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="radio"
-                        id="radio-1"
-                        name="mail-radio"
-                        value="default-server"
-                        checked={emailState.activeRadio === "default-server"}
-                        onChange={handleServerChange}
-                      />
-                      <label className="form-check-label f-14" htmlFor="radio-1">
-                        Default (Alphatickets)
-                      </label>
-                    </div>
-                  </div> */}
-                <div className="col-md-7">
-                  <div className="form-check">
+
+                <div className="col-md-12 d-flex my-1">
+                <div className="form-check">
                     <input
                       className="form-check-input"
-                      name="mail-radio"
+                      name="mail-radio-1"
+                      type="radio"
+                      id="radio-1"
+                      value="acx-server"
+                      checked={emailState.activeRadio === "acx-server"}
+                      onChange={handleServerChange}
+                    />
+                    <label className="form-check-label f-14" htmlFor="radio-1">
+                      Use AlphaCX Mail Server
+                    </label>
+                  </div>
+                  <div className="form-check ms-5">
+                    <input
+                      className="form-check-input"
+                      name="mail-radio-1"
                       type="radio"
                       id="radio-2"
                       value="own-server"
@@ -335,31 +259,41 @@ const NewSupportEmail = ({configs, getConfigs}) => {
                   </a>
                 </div>
               </div>
-            ) : (
+            ) : emailState.activeRadio === "acx-server" ? (<div>
+            
+
+            </div>) : (
               // Use own server form start
               // ...
               // ...
               // ...
               <UseOwnEmail emailState={emailState} setEmailState={setEmailState} />
             )}
+
+
+            <div className="d-flex justify-content-end my-4 mx-3 text-end">
+              <Link
+                to="/settings/integrations/email"
+                className="btn btn-sm px-4 bg-outline-custom cancel"
+              >
+                Cancel
+              </Link>
+              <button
+                className="btn btn-sm px-4 bg-custom ms-3"
+                id="save-changes"
+                data-bs-toggle="modal"
+                data-bs-target="#successModal"
+                onClick={handleSubmit}
+              >
+                Save
+              </button>
+            </div>
+
+
+
+
           </div>
-          <div className="d-flex justify-content-end mb-1 mt-4 save-btn">
-            <Link
-              to="/settings/integrations/email"
-              className="btn btn-sm px-4 bg-outline-custom cancel"
-            >
-              Cancel
-            </Link>
-            <button
-              className="btn btn-sm px-4 bg-custom ms-3"
-              id="save-changes"
-              data-bs-toggle="modal"
-              data-bs-target="#successModal"
-              onClick={handleSubmit}
-            >
-              Save
-            </button>
-          </div>
+          
         </div>
       </div>
 
