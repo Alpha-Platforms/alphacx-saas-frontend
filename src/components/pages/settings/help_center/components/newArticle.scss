@@ -188,3 +188,9 @@
 #editorContainer > div:nth-child(1) {
   border-width: 1px !important;
 }
+
+.kb-art-link > .art-link-popup > label.rdw-link-modal-target-option {
+  display: grid;
+  grid-template-columns: auto auto;
+  margin-top: 1rem;
+}
