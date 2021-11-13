@@ -4,10 +4,10 @@ import {connect} from 'react-redux';
 
 import { UserDataContext } from "../../../context/userContext";
 // import { Modal } from "react-responsive-modal";
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
 import Modal from "react-bootstrap/Modal";
 import Spinner from 'react-bootstrap/Spinner';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 import PinIcon from '../../../assets/icons/pin.svg';
 import MessageList from "./messageList";
 import searchIcon from "../../../assets/imgF/Search.png";
@@ -271,6 +271,8 @@ function Conversation({user, ...props}) {
     //
     setCustomFieldIsSet(true); 
     setCustomFieldsGroup([...groupedCustomFields]);
+    // console.log([...groupedCustomFields]);
+    // console.log(ticket[0]);
   }, [ticket]);
   // 
   useEffect(() => {
@@ -601,6 +603,7 @@ function Conversation({user, ...props}) {
     if (status === "") {
       return;
     }
+    // console.log(RSTicketCustomFields);
     let data = {
       priorityId: RSTicketPriority,
       categoryId: RSTicketCategory,
@@ -898,7 +901,10 @@ function Conversation({user, ...props}) {
                       </span>
                     </div>
 
-                    <div className="msgAssingedToee3" style={{ paddingTop: "8px", marginBottom: "-6px" }}>
+                    <div
+                      className="msgAssingedToee3"
+                      style={{ paddingTop: "8px", marginBottom: "-6px" }}
+                    >
                       <span>
                         {" "}
                         {`${capitalize(
@@ -1389,33 +1395,22 @@ function Conversation({user, ...props}) {
                                         <Form.Group className="mb-3 form-group acx-form-group">
                                           <Form.Label className="text-muted small mb-1">{data?.field_name}{" "}{data?.required ? <span className="text-danger">*</span> : ""}</Form.Label>
                                           <RSelect name={data.id} className="rselectfield mb-1" 
-                                            onChange={(selectedOptions) => {
-                                                data?.multiple_options?
-                                                setRSTicketCustomFields((prevState) => ({
-                                                  ...prevState,
-                                                  [data.id] : selectedOptions.map((item) => { return item.value }).join(',')
-                                                }))
-                                                :
+                                            onChange={selectedOptions => {
                                                 setRSTicketCustomFields((prevState) => ({
                                                   ...prevState,
                                                   [data.id] : selectedOptions.value
-                                                }))
+                                                }));
                                               }
                                             }
                                             closeMenuOnSelect={false}
                                             menuPlacement={"top"}
                                             required={data?.required} 
                                             defaultValue={
-                                              data?.value && !data?.multiple_options? 
+                                              data?.value? 
                                               {
                                                 value: data?.value, 
                                                 label: `${data?.value}`
                                               }
-                                              : 
-                                                data?.value && data?.multiple_options ? 
-                                                  data?.value.split(",").map((data) => {
-                                                    return { value: data, label: data};
-                                                  }) 
                                               :
                                               null
                                             }
@@ -1426,7 +1421,7 @@ function Conversation({user, ...props}) {
                                             :
                                               null
                                             }
-                                            isMulti={data?.multiple_options}>                                              
+                                            multiple={data?.multiple_options}>                                              
                                           </RSelect>
                                           {/* <span className="text-danger d-block small">{getError(data?.id)}</span> */}
                                       </Form.Group>
@@ -1453,8 +1448,7 @@ function Conversation({user, ...props}) {
                         </Fragment> 
                       );
                     })
-                    : "" 
-                  }
+                    : "" }
                   <div className="col-12 mt-3">
                     <label htmlFor="title" className="form-label">Attachment (If Any)</label>
                     <div
