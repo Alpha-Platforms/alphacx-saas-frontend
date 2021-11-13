@@ -87,12 +87,12 @@ function Notification(props){
   const goToTicket = ({...data}) =>{
     if(data?.ticketId){
       history.push({
-          pathname:  `tickets/${data?.ticketId}`,
+          pathname:  `/tickets/${data?.ticketId}`,
           from: "notifications"
       });
     }else{
       history.push({
-          pathname:  "conversation",
+          pathname:  "/conversation",
           from: "notifications"
       });
     }
@@ -138,44 +138,47 @@ function Notification(props){
         </NavDropdown.Item>
         :
         <Fragment>
-          {
-            notifications.map((data, index) => {
-              if(data.type == "tickets" || data.type == "mention"){
-                return (
-                  <NavDropdown.Item key={index} as="div" onClick={() => goToTicket({ticketId: data?.others?.ticketId, ticketHistoryId: data?.others?.ticketHistoryId})}>
-                      <div className="d-flex justify-content-start align-items-start">
-                        <div className="me-3 flex-shrink-0 avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center acx-bg-affair-800">
-                          {data?.sender?.avatar == null ? (
-                            <h3 className="text-white">
-                              <span>{InitialsFromString(`${data?.sender?.firstname == "default" || !data?.sender?.firstname? "" : data?.sender?.firstname}`, `${data?.sender?.lastname == "default" || !data?.sender?.lastname ? "" : data?.sender?.lastname}`)}</span>
-                            </h3>
-                            ) : (
-                            <img width="40" height="auto" src={data?.sender?.avatar} alt="" />
-                          )}
+          { notifications.map((data, index) => {
+            if(data.type == "tickets" || data.type == "mention"){
+              return (
+                <NavDropdown.Item key={index} as="div" onClick={() => goToTicket({ticketId: data?.others?.ticketId, ticketHistoryId: data?.others?.ticketHistoryId})}>
+                    <div className="d-flex justify-content-start align-items-start">
+                      <div className="me-3 flex-shrink-0 avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center acx-bg-affair-800">
+                        {data?.sender?.avatar == null ? (
+                          <h3 className="text-white">
+                            <span>{InitialsFromString(`${data?.sender?.firstname == "default" || !data?.sender?.firstname? "" : data?.sender?.firstname}`, `${data?.sender?.lastname == "default" || !data?.sender?.lastname ? "" : data?.sender?.lastname}`)}</span>
+                          </h3>
+                          ) : (
+                          <img width="30" height="auto" src={data?.sender?.avatar} alt="" />
+                        )}
+                      </div>
+                      <div className="media-body flex-grow-1">
+                        <div className="media-header d-flex justify-content-between align-items-center mb-1">
+                          <p className="mb-0 me-3">{data.title}</p>
+                          <span className="text-muted">{moment(`${data.created_at}`).fromNow()}</span>
                         </div>
-                        <div className="media-body flex-grow-1">
-                          <div className="media-header d-flex justify-content-between align-items-center mb-1">
-                            <p className="mb-0 me-3">{data.title}</p>
-                            <span className="text-muted">{moment(`${data.created_at}`).fromNow()}</span>
-                          </div>
-                          <div className="acx-text-gray-500 media-content">
-                            <p className="mb-0 text-wrap">
-                              {data.content}
-                              {/* <span className="acx-text-primary">I need a refund for my order</span>. */}
-                              {/* <span className="acx-bg-alpha-blue-100 px-3 py-1 mt-2 acx-rounded-5 d-block text-nowrap text-truncate" 
-                                    style={{"maxWidth":"230px"}}>
-                                <span className="acx-text-primary">@hammeddaudu {" "}</span> 
-                                Please make sure that
-                              </span> */}
-                            </p>
-                          </div>
+                        <div className="acx-text-gray-500 media-content">
+                          <p className="mb-0 text-wrap">
+                            {data.content}
+                            {/* <span className="acx-text-primary">I need a refund for my order</span>. */}
+                            {/* <span className="acx-bg-alpha-blue-100 px-3 py-1 mt-2 acx-rounded-5 d-block text-nowrap text-truncate" 
+                                  style={{"maxWidth":"230px"}}>
+                              <span className="acx-text-primary">@hammeddaudu {" "}</span> 
+                              Please make sure that
+                            </span> */}
+                          </p>
                         </div>
                       </div>
-                  </NavDropdown.Item>
-                )
-              }
+                    </div>
+                </NavDropdown.Item>
+              )
             }
-          )}
+          })}
+          <NavDropdown.Item as={NavLink} to="/conversation" className="acx-link-primary">
+            <div className="text-center">
+              <p className="text-muted mb-0">View all notifications</p>
+            </div>
+          </NavDropdown.Item>
         </Fragment>
       }
   </NavDropdown>
