@@ -32,7 +32,7 @@ const Login = ({match: {params}}) => {
   const [hostName] = useState(() => {
     return window.location.hostname.split(".") 
   })
-  const [environment, setEnvironment] = useState(process.env.NODE_ENV)
+  const [environment] = useState(process.env.NODE_ENV)
 
 
   useEffect(async () => {         
@@ -157,7 +157,8 @@ const Login = ({match: {params}}) => {
 
           <label htmlFor="" className="form-label">Domain</label>
           <div className="input-group">
-              <input type="text" className="form-control" 
+              <input type="text" 
+                  className="form-control" 
                   name="domain"
                   autoComplete="off"
                   onChange={handleChange}
