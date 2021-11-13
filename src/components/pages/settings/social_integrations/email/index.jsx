@@ -27,7 +27,7 @@ const EmailSettings = ({configs, isConfigsLoaded}) => {
     useEffect(() => {
         setPageAction(action);
         console.clear();
-        console.log(action);
+        // console.log(action);
     }, [action]);
 
     const tableTheme = createTheme({
@@ -42,6 +42,10 @@ const EmailSettings = ({configs, isConfigsLoaded}) => {
       });
 
       const tableColumns = [
+        {
+          title: "Name",
+          field: "name"
+        },
         {
           title: "Email",
           field: "email"
@@ -65,7 +69,7 @@ const EmailSettings = ({configs, isConfigsLoaded}) => {
                 </span>
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item to eventKey="1" onClick={() => history.push('/settings/integrations/email/email-form')}>
+                <Dropdown.Item to eventKey="1" onClick={() => history.push(`/settings/integrations/email/email-form${rowData?.idx === 1 ? '?type=outgoing' : '' }`)}>
                   {/* <Link to="/settings/integrations/email/email-form"> */}
                     <span className="black-text">Edit</span>
                   {/* </Link> */}
@@ -149,7 +153,7 @@ const EmailSettings = ({configs, isConfigsLoaded}) => {
                             columns={tableColumns}
                             title=""
                             icons={tableIcons}
-                            data={configs?.email_config ? [configs?.email_config].map(({email, host, port}) => ({email, host, port})) : []}
+                            data={configs?.email_config ? [configs?.email_config, configs?.outgoing_email_config].map((emailConfig, idx) => ({name: idx === 0 ? 'Incoming Mail Server' : idx === 1 ? 'Outgoing Mail Server' : '', email: emailConfig?.email, host: emailConfig?.host, port: emailConfig?.port, idx})) : []}
                             options={{
                             search: true,
                             selection: false,

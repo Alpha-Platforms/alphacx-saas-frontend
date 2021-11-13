@@ -32,7 +32,7 @@ const Login = ({match: {params}}) => {
   const [hostName] = useState(() => {
     return window.location.hostname.split(".") 
   })
-  const [environment, setEnvironment] = useState(process.env.NODE_ENV)
+  const [environment] = useState(process.env.NODE_ENV)
 
 
   useEffect(async () => {         
@@ -48,28 +48,6 @@ const Login = ({match: {params}}) => {
 
     }
   }, [])
-
-
-/**  
- * 3 
- * app.acx --> redirect
- * or netlify --> no redirect
- * 
- * 
- * 2
- * qus.com --> redirect
- * 
- * 
- * 1
- * localhost --> redirect
- * 
- * 
- * or tenant. ---> no redirect
- * 
- */
-
-
-
 
 
   useEffect(() => {
@@ -89,20 +67,6 @@ const Login = ({match: {params}}) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     submit()
-  }
-
-  // ONBLUR VALIDATION
-  const handleBlur = (e) => {   
-    if (e.target.name === "email") {
-        Validate.email(e, userInput, setUserInput)
-
-    } else if (e.target.name === "password") {
-        Validate.password(e, userInput, setUserInput)
-
-    } else if (e.target.name === "firstName" || e.target.name === "lastName") {
-        Validate.length(e, userInput, setUserInput)
-    }
-      
   }
 
   const submit = async () => {
@@ -193,7 +157,8 @@ const Login = ({match: {params}}) => {
 
           <label htmlFor="" className="form-label">Domain</label>
           <div className="input-group">
-              <input type="text" className="form-control" 
+              <input type="text" 
+                  className="form-control" 
                   name="domain"
                   autoComplete="off"
                   onChange={handleChange}
@@ -240,8 +205,7 @@ const Login = ({match: {params}}) => {
               <label htmlFor="">Email Address</label>
               <input
                 type="text"
-                onChange={handleChange}
-                onBlur={handleBlur}
+                onChange={handleChange}                
                 name="email"
                 value={userInput.email}
               />
@@ -252,8 +216,7 @@ const Login = ({match: {params}}) => {
             <label htmlFor="">Password</label>
             <input
               type={`${showPassword ? "text" : "password"}`}
-              onChange={handleChange}
-              onBlur={handleBlur}
+              onChange={handleChange}              
               name="password"
               value={userInput.password}
             />
