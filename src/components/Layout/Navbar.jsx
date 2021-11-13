@@ -92,7 +92,7 @@ function Notification(props){
       });
     }else{
       history.push({
-          pathname:  "/conversation",
+          pathname:  "conversation",
           from: "notifications"
       });
     }
@@ -138,7 +138,8 @@ function Notification(props){
         </NavDropdown.Item>
         :
         <Fragment>
-          { notifications.map((data, index) => {
+          {
+            notifications.map((data, index) => {
               if(data.type == "tickets" || data.type == "mention"){
                 return (
                   <NavDropdown.Item key={index} as="div" onClick={() => goToTicket({ticketId: data?.others?.ticketId, ticketHistoryId: data?.others?.ticketHistoryId})}>
@@ -175,11 +176,6 @@ function Notification(props){
               }
             }
           )}
-          <NavDropdown.Item as={NavLink} to="/conversation" className="acx-link-primary">
-            <div className="text-center">
-              <p className="text-muted mb-0">View all notifications</p>
-            </div>
-          </NavDropdown.Item>
         </Fragment>
       }
   </NavDropdown>
