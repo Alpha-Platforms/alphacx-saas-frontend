@@ -124,7 +124,6 @@ const Login = ({match: {params}}) => {
           window.location.href = `${window.location.protocol}//${res?.data?.domain}.${window.location.hostname}:${window.location.port}`;
 
         } else {
-          // window.location.href = "/";
           setDomain(domain)
           setTenantId(res?.data?.id)
         }
