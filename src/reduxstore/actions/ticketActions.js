@@ -107,7 +107,7 @@ export const getCurrentTicket = (id) => (dispatch, getState) => {
     axios
         .get(`${config.stagingBaseUrl}/tickets/${id}`, userTokenConfig(getState))
         .then(res => {
-			// console.log("Single ticket data from ticket action: ", res?.data);
+			console.log("Single ticket data from ticket action: ", res?.data);
 			dispatch({
             type: types.GET_CURRENT_TICKET,
             payload: res.data && res.data
