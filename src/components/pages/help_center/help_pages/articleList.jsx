@@ -12,6 +12,8 @@ import { faqs, navigation } from "../faq";
 import "./articleList.scss";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import {slugify, textCapitalize} from '../../../../helper';
+import { ReactComponent as Paper } from "../../../../assets/icons/Paper.svg";
+import { ReactComponent as Folder } from "../../../../assets/icons/Folder.svg";
 
 const ArticleList = () => {
   let query = useQuery();
@@ -87,7 +89,7 @@ const ArticleList = () => {
           </div>
         )} */}
         <div className="article-list">
-        <h2 className="nav-info">{catName}</h2>
+        <h3 className="nav-info mb-0 pb-3" style={{ marginLeft: '-5px' }}><Folder/> <span className="ms-2 pt-1">{catName}</span></h3>
           <div className="articles">
             {articles.map((item, i) => (
               <Link
@@ -95,7 +97,7 @@ const ArticleList = () => {
                 to={`${pageUrl}/${slugify(item?.title?.toLowerCase())}`}
               >
                 <div className="article-link">
-                  <h4 className="title">{item?.title}</h4>
+                  <p className="title"><Paper /> <span className="d-inline-block ms-2">{item?.title}</span></p>
                   {/* <p className="description">{item.solution}</p> */}
                 </div>
               </Link>
@@ -104,7 +106,7 @@ const ArticleList = () => {
               //   .replaceAll(" ", "-")}?id=${item.id}
             ))}
             {
-              (!policyLoading && articles.length === 0) && <h1>No Articles Found.</h1>
+              (!policyLoading && articles.length === 0) && <h4>No Articles Found.</h4>
             }
           </div>
           {/* <div className="sidebar">
