@@ -1,17 +1,16 @@
 import React, { useEffect, useState, useContext, Fragment } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink, useRouteMatch, useHistory, useLocation} from 'react-router-dom';
 import { AuthContext } from "../../context/authContext";
 import { LayoutContext } from "../../context/layoutContext";
 import { SearchIconNavbr, BellIconNavbar } from "../../assets/images/svgs";
-import { useHistory } from "react-router-dom";
 import userIcon from "../../assets/images/user.png";
-import { useLocation } from "react-router-dom";
 //import GoBack from './../helpers/GoBack';
 import searchIcon from "../../assets/imgF/Search.png";
 import {HelpIcon} from '../../assets/SvgIconsSet.jsx';
 import CreateTicketModal from '../pages/tickets/CreateTicketModal';
 import CreateCustomerModal from '../pages/customers/CreateCustomerModal';
 import DummyAvatar from '../../assets/images/dummyavatar.jpeg';
+import InitialsFromString from "../helpers/InitialsFromString";
 import '../../styles/Navbar.css';
 import {connect} from 'react-redux';
 import { DowncaretIcon, PlusIcon} from "../../assets/SvgIconsSet.jsx";
@@ -67,6 +66,7 @@ function DropDown() {
 function Notification(props){
   const [notifications, setNotifications] = useState([]);
   const [notificationsLoaded, setNotificationsLoaded] = useState(false);
+  const history = useHistory();
 
   useEffect(() => {
     getNotifications();
@@ -80,6 +80,20 @@ function Notification(props){
     } else {
       setNotificationsLoaded(true);
       return NotificationManager.error(res.er.message, "Error", 4000);
+    }
+  } 
+
+  const goToTicket = ({...data}) =>{
+    if(data?.ticketId){
+      history.push({
+          pathname:  `/tickets/${data?.ticketId}`,
+          from: "notifications"
+      });
+    }else{
+      history.push({
+          pathname:  "/conversation",
+          from: "notifications"
+      });
     }
   }
 
@@ -123,45 +137,45 @@ function Notification(props){
         </NavDropdown.Item>
         :
         <Fragment>
-          {
-            notifications.map((data, index) => {
-              return (
-                <NavDropdown.Item key={index} href="#action3">
+          { notifications.map((data, index) => {
+              if(data.type == "tickets" || data.type == "mention"){
+                return (
+                  <NavDropdown.Item key={index} as="div" onClick={() => goToTicket({ticketId: data?.others?.ticketId, ticketHistoryId: data?.others?.ticketHistoryId})}>
                     <div className="d-flex justify-content-start align-items-start">
-                      <div className="me-3 flex-shrink-0">
-                        <img
-                          src={DummyAvatar}
-                          alt=""
-                          width="40"
-                          heigth="40"
-                          className="rounded-circle border"
-                        />
+                      <div className="me-3 flex-shrink-0 avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center acx-bg-affair-800">
+                        {data?.sender?.avatar == null ? (
+                          <h3 className="text-white">
+                            <span>{InitialsFromString(`${data?.sender?.firstname == "default" || !data?.sender?.firstname? "" : data?.sender?.firstname}`, `${data?.sender?.lastname == "default" || !data?.sender?.lastname ? "" : data?.sender?.lastname}`)}</span>
+                          </h3>
+                          ) : (
+                          <img width="40" height="auto" src={data?.sender?.avatar} alt="" />
+                        )}
                       </div>
-                      <div className="media-body flex-grow-1">
-                        <div className="media-header d-flex justify-content-between align-items-center mb-1">
-                          <p className="mb-0 me-3">{data.title}</p>
-                          <span className="text-muted">5 min ago</span>
-                        </div>
-                        <div className="acx-text-gray-500 media-content">
-                          <p className="mb-0 text-wrap">
-                            {data.content}
-                            {/* <span className="acx-text-primary">I need a refund for my order</span>. */}
-                            {/* <span className="acx-bg-alpha-blue-100 px-3 py-1 mt-2 acx-rounded-5 d-block text-nowrap text-truncate" 
-                                  style={{"maxWidth":"230px"}}>
-                              <span className="acx-text-primary">@hammeddaudu {" "}</span> 
-                              Please make sure that
-                            </span> */}
-                          </p>
-                        </div>
+                      <div className="acx-text-gray-500 media-content">
+                        <p className="mb-0 text-wrap">
+                          {data.content}
+                          {/* <span className="acx-text-primary">I need a refund for my order</span>. */}
+                          {/* <span className="acx-bg-alpha-blue-100 px-3 py-1 mt-2 acx-rounded-5 d-block text-nowrap text-truncate" 
+                                style={{"maxWidth":"230px"}}>
+                            <span className="acx-text-primary">@hammeddaudu {" "}</span> 
+                            Please make sure that
+                          </span> */}
+                        </p>
                       </div>
                     </div>
-                </NavDropdown.Item>
-              )
+                  </NavDropdown.Item>
+                )
+              }
             }
           )}
+          <NavDropdown.Item as={NavLink} to="/conversation" className="acx-link-primary">
+            <div className="text-center">
+              <p className="text-muted mb-0">View all notifications</p>
+            </div>
+          </NavDropdown.Item>
         </Fragment>
       }
-  </NavDropdown>
+    </NavDropdown>
   );
 }
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, Fragment } from "react";
 import RightArrow from "../../../../../assets/imgF/arrow_right.png";
 import EmptyArticle from "../../../../../assets/images/empty_article.png";
@@ -31,7 +32,7 @@ import { Link, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import axios from 'axios';
-import {allowedFiles, getAcceptValue} from '../../../../../helper';
+import {allowedFiles, getAcceptValue, allowDocs} from '../../../../../helper';
 import {config} from '../../../../../config/keys';
 
 // 67796966-e0c2-44db-b184-cc4a7e19bee0
@@ -65,6 +66,17 @@ const NewArticle = () => {
   });
   const [folders, setFolders] = useState([]);
   const [editorState, setEditorState] = useState(initialState);
+
+  // File upload state
+  const [uploadInfo, setUploadInfo] = useState({
+    blob: null,
+    msg: 'Add doc file here',
+    error: false,
+    image: null,
+    ownAvatar: '',
+    uploadedFileLink: '',
+    uploadedFileName: ''
+});
 
   const handleChange = (e) => {
     const { value, name } = e.target;
@@ -118,7 +130,6 @@ const NewArticle = () => {
     // console.log(richText);
   };
   const _uploadImageCallBack = (file) => {
-    console.log('upload image callback')
     // long story short, every time we upload an image, we
     // need to save it to the state so we can get it's data
     // later when we decide what to do with it.
@@ -148,7 +159,6 @@ const NewArticle = () => {
         data.append('cloud_name', config.cloudinaryCloudName);
         try {
           const res = await axios.post(`${config.cloudinaryBaseUrl}/image/upload`, data)
-          console.log('UPLOAD RESPONSE', res)
           resolve({ data: {link: res.data?.url }});
         } catch(err) {
           console.log(err);
@@ -329,16 +339,127 @@ const NewArticle = () => {
   }, [newPost?.categoryId]);
 
   const embedCallbackFunc = () => {
-    console.log('This is an embed callback');
   }
 
-  const linkCallbackFunc = (arg) => {
-    console.log('This is a link callback', arg);
+  const handleFileSelect = function (e) {
+    // store current input
+    const fileInput = e.target
+
+    if (!fileInput.files.length) {
+        // No file is selected
+        setUploadInfo(prev => ({...prev, msg: 'No file is selected', error: true, blob: null, image: null, ownAvatar: '', uploadedFileName: '', uploadedFileLink: ''}));
+        
+    } else {
+        
+        if (fileInput.files[0].type.indexOf("image/") !== -1) {
+            // Selected file is an image
+            setUploadInfo(prev => ({...prev, msg: 'Add doc file here', error: true, blob: null, image: null, ownAvatar: '', uploadedFileName: '', uploadedFileLink: ''}));
+            
+        } else if (allowDocs.types.includes(fileInput.files[0].type)) {
+            // selected file is a doc
+            if (fileInput.files[0].size > allowDocs.maxSize) {
+                setUploadInfo(prev => ({...prev, msg: `File exceeds maximum upload size of ${allowDocs.maxSize}`, error: true, blob: null, image: null, ownAvatar: '',  uploadedFileName: '', uploadedFileLink: ''}));
+            } else {
+                const fileName = fileInput.files[0].name;
+                const fileBlob = URL.createObjectURL(fileInput.files[0]);
+
+                setUploadInfo(prev => ({...prev, blob: fileBlob, msg: fileName, error: false, image: fileInput.files[0], ownAvatar: '',  uploadedFileName: '', uploadedFileLink: ''}));
+            }
+        } else {
+            setUploadInfo(prev => ({...prev, msg: 'Selected file is not an image or document', error: true, blob: null, image: null, ownAvatar: '',  uploadedFileName: '', uploadedFileLink: ''}));
+        }
+    }
+}
+
+  const handleFileUpload = () => {
+    const fileInput = window.document.querySelector('#doc-file-upload-input');
+    if (fileInput) {
+      if (fileInput.files[0]) {
+        const uploadBtn = window.document.querySelector('.link-file-upload-btn');
+        if (uploadBtn) {
+          uploadBtn.textContent = 'Uploading...';
+          uploadBtn.disabled = true;
+        }
+        const data = new FormData();
+          data.append('file', fileInput.files[0]);
+          data.append('upload_preset', config.cloudinaryUploadPreset);
+          data.append('cloud_name', config.cloudinaryCloudName);
+          axios
+              .post(`${config.cloudinaryBaseUrl}/${allowedFiles.types.slice(0,3).includes(uploadInfo.image?.type) ?  'image' : 'raw'}/upload`, data)
+              .then(async res => {
+                  // add res
+                  const target = window.document.querySelector('.art-link-popup.rdw-link-modal > input#linkTarget');
+                  const title = window.document.querySelector('.art-link-popup.rdw-link-modal > input#linkTitle');
+                  if (title) {
+                    title.value = fileInput.files[0]?.name;
+                    title.addEventListener('input', e => {
+                      title.value = e.target.value;
+                      target.value = res?.data?.url;
+                    });
+                    title.addEventListener('change', e => {
+                      title.value = e.target.value;
+                      target.value = res?.data?.url;
+                    });
+                    title.addEventListener('click', e => {
+                      title.value = fileInput.files[0]?.name;
+                      target.value = res?.data?.url;
+                    });
+                  }
+                  if (target) {
+                    target.value = res?.data?.url;
+                    // target.addEventListener('keydown', e => e.preventDefault());
+                    target.addEventListener('input', e => target.value = res?.data?.url);
+                    target.addEventListener('change', e => target.value = res?.data?.url);
+                    target.addEventListener('click', e => target.value = res?.data?.url);
+                  }
+
+                  if (uploadBtn) {
+                    uploadBtn.textContent = 'Upload';
+                    uploadBtn.disabled = false;
+                  }
+
+                  const uploadLabel = window.document.querySelector('#doc-upload-container > label');
+                  if (uploadLabel) {
+                    uploadLabel.textContent = 'Add doc file here';
+                    window.document.querySelector('#doc-upload-container > button')?.classList.add('d-none');
+                  }
+
+                  const addBtn = window.document.querySelector('.art-link-popup.rdw-link-modal > span:last-of-type > button:nth-child(1)');
+                  if (addBtn) {
+                    // addBtn.disabled = false;
+                  } 
+
+                  
+
+              })
+              .catch(err => {
+                  console.log(err);
+                  NotificationManager.error("Photo could not be uploaded", "Error");
+                  if (uploadBtn) {
+                    uploadBtn.textContent = 'Upload';
+                    uploadBtn.disabled = false;
+                  }
+              });
+      }
+    }
   }
+
+useEffect(() => {
+  const uploadLabel = window.document.querySelector('#doc-upload-container > label');
+  if (uploadLabel) {
+    uploadLabel.textContent = uploadInfo.msg;
+  }
+  if (uploadInfo.image) {
+    window.document.querySelector('#doc-upload-container > button')?.classList.remove('d-none');
+  } else {
+    window.document.querySelector('#doc-upload-container > button')?.classList.add('d-none');
+  }
+
+}, [uploadInfo]);
 
   useEffect(() => {
     const linkBtn = window.document.querySelector('.kb-art-link.rdw-link-wrapper > div:nth-child(1)');
-    console.log('Link button => ', linkBtn);
+  
     linkBtn.addEventListener('click', () => {
       setTimeout(() => {
         const linkPopup = window.document.querySelector('.kb-art-link.rdw-link-wrapper > div:nth-child(2)');
@@ -348,6 +469,7 @@ const NewArticle = () => {
           const uploadContainer = window.document.createElement('div');
           const label = window.document.createElement('label');
           const input = window.document.createElement('input');
+          const btn = window.document.createElement('button');
 
           uploadContainer.setAttribute('id', 'doc-upload-container')
           
@@ -355,21 +477,25 @@ const NewArticle = () => {
           input.setAttribute('type', 'file');
           input.setAttribute('name', 'doc-file-upload-input');
           input.setAttribute('id', 'doc-file-upload-input');
-          label.append(window.document.createTextNode('Insert Doc File'));
+          input.setAttribute('accept', getAcceptValue(allowDocs.ext, allowDocs.types));
+          label.append(window.document.createTextNode('Add doc file here'));
+          btn.append(window.document.createTextNode('Upload'));
+          btn.setAttribute('class', 'link-file-upload-btn bg-at-blue-light bg-white px-3 py-1 mt-1 d-block d-none');
 
-          input.addEventListener('change', e => {
-            console.log('file => ', e.target);
-          })
+          input.addEventListener('change', handleFileSelect)
+          btn.addEventListener('click', handleFileUpload);
 
           uploadContainer.appendChild(label);
           uploadContainer.appendChild(input);
+          uploadContainer.append(btn);
+
 
           linkPopup.insertBefore(uploadContainer, linkPopup.childNodes[4]);
           
           // console.log('Link Popup => ', linkPopup);
           // console.log('last label => ', linkPopup?.childNodes);
         }
-      }, 500)
+      }, 200)
 
     })
 
@@ -520,8 +646,7 @@ const NewArticle = () => {
                     defaultTargetOption: '_self',
                     options: ['link'],
                     link: { icon: insertLink, className: undefined },
-                    unlink: { className: "unlink-icon" },
-                    linkCallback: linkCallbackFunc
+                    unlink: { className: "unlink-icon" }
                   },
                   history: {
                     inDropdown: true,

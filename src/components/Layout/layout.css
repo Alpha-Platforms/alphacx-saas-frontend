@@ -8,7 +8,7 @@
   background-color: #fff;
   position: relative;
   left: 0px;
-  top: 66px;
+  top: 66px !important;
   left: 0px;
   width: calc(100vw - 40px);
   height: calc(100vh - 75px);
@@ -297,6 +297,9 @@
   width: fit-content;
   min-width: 320px;
   max-width: 320px;
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .acx-notification-nav-dropdown .dropdown-menu::before{
   position: absolute;
@@ -312,8 +315,8 @@
 }
 
 .acx-notification-nav-dropdown .dropdown-menu a.dropdown-item{
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 14px;
+  padding-bottom: 14px;
   transition: 0.25s ease-in;
 }
 .acx-notification-nav-dropdown .dropdown-menu a.dropdown-item:not(:last-child){
