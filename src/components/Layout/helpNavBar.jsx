@@ -15,14 +15,14 @@ const HelpNavBar = ({ activeBG }) => {
         <img src={Logo} alt="" />
       </div>
       <div className="nav-links">
-        <p className="link">FAQ</p>
-        <Link to="/knowledge-base/tickets">
+        {/* <p className="link">FAQ</p> */}
+        {/* <Link to="/knowledge-base/tickets">
           <p className="link">Submit a ticket</p>
-        </Link>
+        </Link> */}
         <Link to="/register">
           <p className="link">Sign in</p>
         </Link>
-          <Link to={`#`}>
+          {/* <Link to={`#`}>
             <img
               src={ManImg}
               alt=""
@@ -33,7 +33,7 @@ const HelpNavBar = ({ activeBG }) => {
                 transform: 'translateY(-0.3rem)'
               }}
             />
-          </Link>
+          </Link> */}
       </div>
     </div>
   );

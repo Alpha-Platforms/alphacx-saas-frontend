@@ -155,6 +155,28 @@ export const allowedFiles = {
     maxSize: 50 * ONE_MB
 }
 
+export const allowDocs = {
+    types: [
+        'application/pdf',
+        'text/plain',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/rtf',
+        'application/vnd.ms-powerpoint',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+    ],
+    ext: [
+        '.pdf',
+        '.txt',
+        '.doc',
+        '.docx',
+        '.rtf',
+        '.ppt',
+        '.pptx'
+    ],
+    maxSize: 50 * ONE_MB
+}
+
 export const getAcceptValue = (extArray, typesArray) => {
     const acceptValue = extArray.join(',') + ',' + typesArray.join(',');
     return acceptValue;

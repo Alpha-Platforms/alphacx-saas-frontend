@@ -42,10 +42,20 @@
         }
       }
     }
+
+    .category-link {
+      font-size: 18px;
+
+      svg {
+        width: 30px;
+      }
+    }
+
     .article-link {
       width: 100%;
-      padding: 20px 0;
+      padding: 10px 0;
       cursor: pointer;
+      font-size: 18px;
 
       .title {
         // margin-bottom: 20px !important;
