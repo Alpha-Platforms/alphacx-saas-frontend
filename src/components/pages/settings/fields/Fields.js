@@ -475,7 +475,7 @@ const Fields = () => {
                                                 type="switch"
                                                 id="required"
                                                 name="required"
-                                                label="Make field optional"
+                                                label="Make field required"
                                             />
                                         </Form.Group>
                                         {customFields.required}
