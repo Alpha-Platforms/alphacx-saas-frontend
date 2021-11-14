@@ -12,6 +12,7 @@ import {faqs, navigation} from "../faq";
 import "./articleList.scss";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import {slugify, textCapitalize} from '../../../../helper';
+import { ReactComponent as Folder } from "../../../../assets/icons/Folder.svg";
 
 const ArticleCategoryList = () => {
     let query = useQuery();
@@ -65,7 +66,7 @@ const ArticleCategoryList = () => {
                             <TopBar/>
 
                             <div className="article-list">
-                                <h2 className="nav-info">Categories</h2>
+                                <h3 className="nav-info mb-0 pb-3">Categories</h3>
                                 <div className="articles">
                                     {categories.map((item, i) => (
                                         <Link
@@ -73,22 +74,22 @@ const ArticleCategoryList = () => {
                                             to={`/knowledge-base/${slugify(item
                                             ?.name
                                                 ?.toLowerCase())}`}>
-                                            <div className="article-link">
-                                                <h4 className="title">{textCapitalize(item
-                                                        ?.name)}</h4>
+                                            <div className="article-link category-link">
+                                                <p className="title"><Folder/> <span className="d-inline-block ms-2">{textCapitalize(item
+                                                        ?.name)}</span></p>
                                                 {/* <p className="description">{item.solution}</p> */}
                                             </div>
                                         </Link>
                                     // /${item.title   .toLowerCase()   .replaceAll(" ", "-")}?id=${item.id}
                                     ))}
-                                    {(!policyLoading && categories.length === 0) && <h1>No Articles Found.</h1>
+                                    {(!policyLoading && categories.length === 0) && <h4>No Articles Found.</h4>
 }
                                 </div>
-                                <div className="sidebar">
+                                {/* <div className="sidebar">
                                     <p className="header">Need Support?</p>
                                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                                     <button>Contact Support</button>
-                                </div>
+                                </div> */}
                             </div>
                         </Fragment>
                     : <div
