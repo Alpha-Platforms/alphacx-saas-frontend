@@ -309,7 +309,7 @@ const UserList = ({
                   })
                 )}
                 options={{
-                  search: false,
+                  search: true,
                   selection: false,
                   // exportButton: true,
                   tableLayout: "auto",
