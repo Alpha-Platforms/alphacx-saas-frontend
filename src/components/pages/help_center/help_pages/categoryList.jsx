@@ -84,11 +84,11 @@ const ArticleCategoryList = () => {
                                     {(!policyLoading && categories.length === 0) && <h1>No Articles Found.</h1>
 }
                                 </div>
-                                <div className="sidebar">
+                                {/* <div className="sidebar">
                                     <p className="header">Need Support?</p>
                                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                                     <button>Contact Support</button>
-                                </div>
+                                </div> */}
                             </div>
                         </Fragment>
                     : <div

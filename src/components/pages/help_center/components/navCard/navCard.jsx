@@ -18,14 +18,16 @@ const NavCard = ({ title, icon, folders, id }) => {
         <div className="nav-icon">
           <Folder/>
         </div>
-        <p className="title">{textCapitalize(title)}</p>
-        <div className="description">
-            <p>{folders[0]?.name}</p>
-          {/* {folders.map((item, i) => {
-            return ( 
-            <p key={i}>dd{item.name}dd</p>
-          )
-          })} */}
+        <div>
+          <p className="title">{textCapitalize(title)}</p>
+          <div className="description">
+              <p>{folders[0]?.name}</p>
+            {/* {folders.map((item, i) => {
+              return ( 
+              <p key={i}>dd{item.name}dd</p>
+            )
+            })} */}
+          </div>
         </div>
       </Link>
     </div>
