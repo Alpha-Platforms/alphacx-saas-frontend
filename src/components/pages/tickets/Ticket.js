@@ -1200,7 +1200,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                         />
                       </div>
                     </div>
-                    <div className="mt-4">
+                    <div className="mt-4 mb-3">
                       <label htmlFor="">Tags</label>
                       <RSelect
                         className="rselectfield"
@@ -1224,12 +1224,12 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                         isMulti
                       />
                     </div>
+                    <h6 className="text-dark my-3">Custom Fields</h6>
                     {customFieldIsSet? 
-                        customFieldsGroup.map((sections) => {
+                      <Row className="mb-3">
+                        {customFieldsGroup.map((sections) => {
                           return(
                             <Fragment key={sections.section}> 
-                              <h6 className="text-muted mb-4 acx-ls-30 acx-fs-12">{sections.section != 'null' || sections.section == null || sections.section == undefined ? sections.section.toUpperCase() : "OTHERS"}</h6>
-                              <Row className="mb-3">
                                 {sections.fields.map((data) => {
                                     if(data?.field_type == "select"){
                                       return (
@@ -1250,7 +1250,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                                     }))
                                                   }
                                                 }
-                                                closeMenuOnSelect={false}
+                                                closeMenuOnSelect={!data?.multiple_options}
                                                 menuPlacement={"top"}
                                                 required={data?.required} 
                                                 defaultValue={
@@ -1297,12 +1297,12 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                     }
                                   }
                                 )}
-                              </Row>
                             </Fragment> 
                           );
-                        })
-                        : "" 
-                      }
+                        })}
+                      </Row>
+                      : "" 
+                    }
                     <div className="col-12 mt-3">
                       <label htmlFor="title" className="form-label">Attachment (If Any)</label>
                       <div

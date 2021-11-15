@@ -1402,7 +1402,7 @@ function Conversation({user, ...props}) {
                                                   }))
                                                 }
                                               }
-                                              closeMenuOnSelect={false}
+                                              closeMenuOnSelect={!data?.multiple_options}
                                               menuPlacement={"top"}
                                               required={data?.required} 
                                               defaultValue={
