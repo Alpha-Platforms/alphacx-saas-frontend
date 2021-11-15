@@ -411,7 +411,7 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                                             *</span>
                                     </label>
                                     <input
-                                        type="text"
+                                        type="password"
                                         className="form-control"
                                         name="apiKey"
                                         value={emailState.outgoingEmailConfig.apiKey || ""}
