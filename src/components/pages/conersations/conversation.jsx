@@ -1352,7 +1352,7 @@ function Conversation({user, ...props}) {
                       />
                     </div>
                   </div>
-                  <div className="mt-4 mb-3">
+                  <div className="mt-4 mb-4">
                     <label htmlFor="">Tags</label>
                     <RSelect
                       className="rselectfield"
@@ -1376,83 +1376,83 @@ function Conversation({user, ...props}) {
                       isMulti
                     />
                   </div>
+                  <h6 className="text-dark my-3">Custom Fields</h6>
                   {customFieldIsSet? 
-                    customFieldsGroup.map((sections) => {
-                      return(
-                        <Fragment key={sections.section}> 
-                          <h6 className="text-muted mb-4 acx-ls-30 acx-fs-12">{sections.section != 'null' || sections.section == null || sections.section == undefined ? sections.section.toUpperCase() : "OTHERS"}</h6>
-                          <Row className="mb-3">
-                            {sections.fields.map((data) => {
-                                if(data?.field_type == "select"){
-                                  return (
-                                    <Col md={6} key={data.id}>
+                    <Row className="mb-3">
+                      {customFieldsGroup.map((sections) => {
+                        return(
+                          <Fragment key={sections.section}> 
+                              {sections.fields.map((data) => {
+                                  if(data?.field_type == "select"){
+                                    return (
+                                      <Col md={6} key={data.id}>
+                                          <Form.Group className="mb-3 form-group acx-form-group">
+                                            <Form.Label className="text-muted small mb-1">{data?.field_name}{" "}{data?.required ? <span className="text-danger">*</span> : ""}</Form.Label>
+                                            <RSelect name={data.id} className="rselectfield mb-1" 
+                                              onChange={(selectedOptions) => {
+                                                  data?.multiple_options?
+                                                  setRSTicketCustomFields((prevState) => ({
+                                                    ...prevState,
+                                                    [data.id] : selectedOptions.map((item) => { return item.value }).join(',')
+                                                  }))
+                                                  :
+                                                  setRSTicketCustomFields((prevState) => ({
+                                                    ...prevState,
+                                                    [data.id] : selectedOptions.value
+                                                  }))
+                                                }
+                                              }
+                                              closeMenuOnSelect={false}
+                                              menuPlacement={"top"}
+                                              required={data?.required} 
+                                              defaultValue={
+                                                data?.value && !data?.multiple_options? 
+                                                {
+                                                  value: data?.value, 
+                                                  label: `${data?.value}`
+                                                }
+                                                : 
+                                                  data?.value && data?.multiple_options ? 
+                                                    data?.value.split(",").map((data) => {
+                                                      return { value: data, label: data};
+                                                    }) 
+                                                :
+                                                null
+                                              }
+                                              options={data.field_options? 
+                                                data?.field_options.replace(/{|"|}/g, "").split(",").map((options) => {
+                                                  return{ value: options, label: options};
+                                                })
+                                              :
+                                                null
+                                              }
+                                              isMulti={data?.multiple_options}>                                              
+                                            </RSelect>
+                                            {/* <span className="text-danger d-block small">{getError(data?.id)}</span> */}
+                                        </Form.Group>
+                                      </Col>
+                                    )
+                                  }else{
+                                    return (
+                                      <Col md={6} key={data.id}>
                                         <Form.Group className="mb-3 form-group acx-form-group">
                                           <Form.Label className="text-muted small mb-1">{data?.field_name}{" "}{data?.required ? <span className="text-danger">*</span> : ""}</Form.Label>
-                                          <RSelect name={data.id} className="rselectfield mb-1" 
-                                            onChange={(selectedOptions) => {
-                                                data?.multiple_options?
-                                                setRSTicketCustomFields((prevState) => ({
-                                                  ...prevState,
-                                                  [data.id] : selectedOptions.map((item) => { return item.value }).join(',')
-                                                }))
-                                                :
-                                                setRSTicketCustomFields((prevState) => ({
-                                                  ...prevState,
-                                                  [data.id] : selectedOptions.value
-                                                }))
-                                              }
-                                            }
-                                            closeMenuOnSelect={false}
-                                            menuPlacement={"top"}
-                                            required={data?.required} 
-                                            defaultValue={
-                                              data?.value && !data?.multiple_options? 
-                                              {
-                                                value: data?.value, 
-                                                label: `${data?.value}`
-                                              }
-                                              : 
-                                                data?.value && data?.multiple_options ? 
-                                                  data?.value.split(",").map((data) => {
-                                                    return { value: data, label: data};
-                                                  }) 
-                                              :
-                                              null
-                                            }
-                                            options={data.field_options? 
-                                              data?.field_options.replace(/{|"|}/g, "").split(",").map((options) => {
-                                                return{ value: options, label: options};
-                                              })
-                                            :
-                                              null
-                                            }
-                                            isMulti={data?.multiple_options}>                                              
-                                          </RSelect>
+                                          <Form.Control name={data?.id} type={data?.field_type} 
+                                                      className="text-dark mb-1" 
+                                                      onChange={handleCustomFieldChange}
+                                                      defaultValue={data?.value || ""} required={data?.required}
+                                                    />
                                           {/* <span className="text-danger d-block small">{getError(data?.id)}</span> */}
-                                      </Form.Group>
-                                    </Col>
-                                  )
-                                }else{
-                                  return (
-                                    <Col md={6} key={data.id}>
-                                      <Form.Group className="mb-3 form-group acx-form-group">
-                                        <Form.Label className="text-muted small mb-1">{data?.field_name}{" "}{data?.required ? <span className="text-danger">*</span> : ""}</Form.Label>
-                                        <Form.Control name={data?.id} type={data?.field_type} 
-                                                    className="text-dark mb-1" 
-                                                    onChange={handleCustomFieldChange}
-                                                    defaultValue={data?.value || ""} required={data?.required}
-                                                  />
-                                        {/* <span className="text-danger d-block small">{getError(data?.id)}</span> */}
-                                      </Form.Group>
-                                    </Col>
-                                  )
+                                        </Form.Group>
+                                      </Col>
+                                    )
+                                  }
                                 }
-                              }
-                            )}
-                          </Row>
-                        </Fragment> 
-                      );
-                    })
+                              )}
+                          </Fragment> 
+                        );
+                      })}
+                    </Row>
                     : "" 
                   }
                   <div className="col-12 mt-3">
