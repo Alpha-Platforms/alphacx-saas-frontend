@@ -52,6 +52,7 @@ const AutomationSettings = () => {
       title: "Automation Policy",
       field: "name",
       width: "5%",
+      render: rowData => (<span className="cursor-pointer" style={{ color: '#0a58ca' }} onClick={() => history.push(`/settings/automation/${automationPolicies[rowData.tableData.id].id}`)}>{rowData.name}</span>)
     },
     {
       title: "",
