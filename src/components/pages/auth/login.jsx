@@ -41,7 +41,7 @@ const Login = ({match: {params}}) => {
 
     if(
       hostName[hostLength-2] === "alphacx" && hostName[0] !== "app" ||
-      hostName[hostLength-2] === "qustomar" || 
+      hostName[hostLength-2] === "qustomar" &&  hostLength === 3  || 
       hostName[hostLength-1] === "localhost" &&  hostLength !== 1 
     ){
       
