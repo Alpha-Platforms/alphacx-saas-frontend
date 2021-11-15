@@ -62,28 +62,39 @@ const AddGroupModal = ({
 
     setCreating(true);
     const res = await httpPostMain("groups", newTeam);
+    
     setCreating(false);
     if (res.status === "success" || res.status === "Success") {
       setAddGroupModalShow(false);
       getGroups();
       NotificationManager.success('Team created successfully', "Success", 4000);
     } else {
-      console.error(res);
+      // console.error(res);
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
 
   // update a team
   const updateTeam = () => {
-    const {name, description, categoryIds} = newTeam;
+    const {name, categoryIds} = newTeam;
 
     if (!name || categoryIds.length === 0) {
       return NotificationManager.error('All fields are required', 'Opps!');
     }
 
+    const newCategoryIds = newTeam.categoryIds.reduce(function(result, object) {
+      result.push(object.value);
+      return result;
+    }, []);
+    let alteredNewTeam = {
+      ...newTeam,
+      categoryIds: newCategoryIds
+    };
+
+    // console.log(alteredNewTeam, newTeam)
 
     setEditing(true);
-    updateGroup(groupId, newTeam, () => {
+    updateGroup(groupId, alteredNewTeam, () => {
       NotificationManager.success('Team updated successfully', 'Success');
       setEditing(false);
       setAddGroupModalShow(false);
