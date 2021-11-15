@@ -82,19 +82,23 @@ const AddGroupModal = ({
       return NotificationManager.error('All fields are required', 'Opps!');
     }
 
-    const newCategoryIds = newTeam.categoryIds.reduce(function(result, object) {
-      result.push(object.value);
-      return result;
-    }, []);
-    let alteredNewTeam = {
+    let newCategoryIds = [];
+    if(newTeam.categoryIds.some( value => { return typeof value == "object" } )){
+      newCategoryIds = newTeam.categoryIds.reduce(function(result, object) {
+        result.push(object.value);
+        return result;
+      }, []);
+    } else{
+      newCategoryIds = [...newTeam.categoryIds];
+    }
+
+    let alteredTeam = {
       ...newTeam,
       categoryIds: newCategoryIds
     };
 
-    // console.log(alteredNewTeam, newTeam)
-
     setEditing(true);
-    updateGroup(groupId, alteredNewTeam, () => {
+    updateGroup(groupId, alteredTeam, () => {
       NotificationManager.success('Team updated successfully', 'Success');
       setEditing(false);
       setAddGroupModalShow(false);
