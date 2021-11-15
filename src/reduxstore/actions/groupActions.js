@@ -51,7 +51,7 @@ export const updateGroup = (groupId, teamInfo, success, failed) => (dispatch, ge
 
     //Request body
     const body = JSON.stringify(teamInfo);
-    // console.log(body, teamInfo)
+    
     axios
         .patch(`${config.stagingBaseUrl}/groups/${groupId}`, body, userTokenConfig(getState))
         .then(res => {

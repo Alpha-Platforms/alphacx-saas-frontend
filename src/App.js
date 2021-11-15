@@ -9,7 +9,7 @@ import {UserDataProvider} from "./context/userContext";
 import {AuthProvider} from "./context/authContext";
 import Login from "./components/pages/auth/login.jsx";
 import signUp from "./components/pages/auth/signUp.jsx";
-import ForgotPassword from "./components/pages/auth/forgotPassword";
+import ForgotPassword from "./components/pages/auth/forgotPassword.jsx";
 import "react-responsive-modal/styles.css";
 
 import HelpCenter from "./components/pages/help_center/helpCenter";
