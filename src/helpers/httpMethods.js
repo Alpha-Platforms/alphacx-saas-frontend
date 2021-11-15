@@ -152,6 +152,47 @@ export const httpPost = async (url, postBody) => {
   }
 };
 
+export const httpPostTenantAuth = async (url, postBody) => {
+  if (!navigator.onLine) {
+    return NotificationManager.error(
+      "Please check your internet",
+      "Opps!",
+      3000
+    );
+  }
+  try {
+    const res = await axios.post(`${baseUrlMain}/${url}`, postBody, {
+      headers: { 
+        Authorization: `Bearer ${window.localStorage.getItem("tenantToken")}`,
+        'domain': localStorage.getItem("domain"),
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json' 
+      },
+    });
+    return res.data;
+  } catch (error) {
+    // hideLoader();
+
+    if (
+      error.response.data.message ===
+      "Unauthorized, Your token is invalid or expired"
+    ) {
+      NotificationManager.error(
+        "Your token is invalid or expired, please login",
+        "Opps!",
+        5000
+      );
+    }
+    if (error.response.data.message === "Validation Error!") {
+      NotificationManager.error(
+        Object.values(error.response.data.data).join("  ")
+      );
+      return;
+    }
+    return { er: error.response.data };
+  }
+};
+
 export const httpPostData = async (url, postBody) => {
   if (!navigator.onLine) {
     return NotificationManager.error(

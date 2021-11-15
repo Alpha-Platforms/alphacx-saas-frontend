@@ -59,7 +59,7 @@ export default function SocialIntegrations() {
               </div>
               <div className="ms-3 d-flex justify-content-between align-items-start">
                 <div className="me-2">
-                  <h6 className="text-dark mb-0">WhatsApp</h6>
+                  <h6 className="text-dark mb-0">WhatsApp by Twilio</h6>
                   <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
                     Connect your to users, via Whatsapp permissions
                   </p>
@@ -103,7 +103,7 @@ export default function SocialIntegrations() {
               </div>
               <div className="ms-3 d-flex justify-content-between align-items-start">
                 <div className="me-2">
-                  <h6 className="text-dark mb-0"> SMS by Twilio</h6>
+                  <h6 className="text-dark mb-0"> SMS by Termii</h6>
                   <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
                     Connect your to users, via SMS permissions
                   </p>

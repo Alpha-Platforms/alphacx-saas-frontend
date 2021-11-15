@@ -167,7 +167,8 @@ const NewSupportEmail = ({configs, getConfigs}) => {
           email: configs?.outgoing_email_config?.email || '',
           password: configs?.outgoing_email_config?.password || '',
           type: configs?.outgoing_email_config?.type || '',
-          apiKey: configs?.outgoing_email_config?.apiKey || ''
+          apiKey: configs?.outgoing_email_config?.apiKey || '',
+          from: configs?.outgoing_email_config?.from || ''
         }
       }));
     }

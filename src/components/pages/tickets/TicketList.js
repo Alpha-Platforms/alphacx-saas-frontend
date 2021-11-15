@@ -42,7 +42,7 @@ const TicketList = ({
   useEffect(() => {
     if (isUserAuthenticated) {
         // get first set of tickets
-        getPaginatedTickets(10, 1);
+        getPaginatedTickets(50, 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [isUserAuthenticated]);
@@ -87,7 +87,7 @@ const TicketList = ({
     return (
       <TablePagination
         {...tablePaginationProps}
-        rowsPerPageOptions={[10, 20, 30]}
+        rowsPerPageOptions={[10, 20, 30, 50, 100, 150, 200]}
         rowsPerPage={meta?.itemsPerPage || 5}
         count={Number(meta?.totalItems || 20)}
         page={(meta?.currentPage || 1) - 1}
@@ -362,7 +362,7 @@ const TicketList = ({
 
         if (res?.status === "success") {
           NotificationManager.success('Ticket Deleted', 'Success', 4000);
-          getPaginatedTickets(10, 1, () => {
+          getPaginatedTickets(50, 1, () => {
             setTicketLoading(false);
           }, () => {
             setTicketLoading(false);
@@ -384,7 +384,7 @@ const TicketList = ({
 
         if (res?.status === "success") {
           NotificationManager.success('Ticket Deleted', 'Success', 4000);
-          getPaginatedTickets(10, 1, () => {
+          getPaginatedTickets(50, 1, () => {
             setTicketLoading(false);
           }, () => {
             setTicketLoading(false);
@@ -510,7 +510,7 @@ const TicketList = ({
                   // exportButton: true,
                   tableLayout: "auto",
                   paging: true,
-                  pageSize: meta?.itemsPerPage || 10,
+                  pageSize: meta?.itemsPerPage || 50,
                   headerStyle: {
                     // backgroundColor: '#f8f9fa'
                     backgroundColor: "#fefdfd",
