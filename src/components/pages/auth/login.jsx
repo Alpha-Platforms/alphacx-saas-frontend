@@ -15,6 +15,7 @@ import { httpPost, httpPostMain } from "../../../helpers/httpMethods";
 import { css } from "@emotion/react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { wordCapitalize } from "helper";
+import {Link} from 'react-router-dom';
 const override = css``;
 
 const Login = ({match: {params}}) => {
@@ -44,6 +45,7 @@ const Login = ({match: {params}}) => {
       const res = await httpPost(`auth/login`, {domain: hostName[0]});
       if (res?.status === "success") {
         window.localStorage.setItem("tenantId", res?.data?.id || "");
+        window.localStorage.setItem("tenantToken", res?.data?.token);
       }
 
     }
@@ -229,7 +231,21 @@ const Login = ({match: {params}}) => {
             </div>
           </div>
           <div className="text-end forgetPassword">
-          <a href="https://qustomar.com/sign-up">Forgot Password?</a>
+          {/* <a href="https://qustomar.com/forgot-password">Forgot password?</a> */}
+
+          {
+              (hostName[0] === "dev" || hostName[0] === "app" || hostName[1] === "netlify" || hostName.includes("localhost")) ?
+               <Link to="/forgot-password">Forgot password?</Link>
+
+              :
+              
+              hostName[1] === "qustomar"?
+              <a href="https://qustomar.com/forgot-password">Forgot password?</a>
+              :
+              <a href="https://app.alphacx.co/forgot-password">Forgot password?</a>
+              
+            }   
+            
           </div>
 
           

@@ -216,10 +216,6 @@
   font-size: 13px;
 }
 
-.forgetPassword {
-  
-}
-
 .forgetPassword a {
   display: inline-block;
   font-size: 13px;
@@ -389,4 +385,10 @@
   border-radius: 50%;
   margin-left: 8px;
   margin-right: 8px;
+}
+
+
+.forgot-info {
+  font-size: 12px !important;
+  text-align: center;
 }
