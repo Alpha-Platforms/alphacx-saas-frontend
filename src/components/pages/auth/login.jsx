@@ -170,7 +170,7 @@ const Login = ({match: {params}}) => {
                 </span>
           </div>          
 
-          <div className="haveAnAccou">
+          <div className="haveAnAcco">
             <a href="/sign-up">First time user? Sign up</a>
           </div>
 
@@ -228,21 +228,11 @@ const Login = ({match: {params}}) => {
               />
             </div>
           </div>
-
-          <div className="haveAnAccou">
-            {
-              (hostName[0] === "dev" || hostName[0] === "app" || hostName[1] === "netlify" || hostName.includes("localhost")) ?
-               <a href="/sign-up">First time user? Sign up</a>
-
-              :
-              
-              hostName[1] === "qustomar"?
-              <a href="https://qustomar.com/sign-up">First time user? Sign up</a>
-              :
-              <a href="https://app.alphacx.co/sign-up">First time user? Sign up</a>
-              
-            }            
+          <div className="text-end forgetPassword">
+          <a href="https://qustomar.com/sign-up">Forgot Password?</a>
           </div>
+
+          
 
           <div className="submit-auth-btn">
             <button  disabled={loading || (userInput.email === "" || userInput.password === "")} onClick={handleSubmit}>
@@ -258,6 +248,22 @@ const Login = ({match: {params}}) => {
                 "Login"
               )}
             </button>
+          </div>
+
+          <div className="haveAnAccou">
+            <span className="f-11 d-block text-center mb-1"><small>Not yet registered?</small></span>
+            {
+              (hostName[0] === "dev" || hostName[0] === "app" || hostName[1] === "netlify" || hostName.includes("localhost")) ?
+               <a href="/sign-up">Sign up</a>
+
+              :
+              
+              hostName[1] === "qustomar"?
+              <a href="https://qustomar.com/sign-up">Sign up</a>
+              :
+              <a href="https://app.alphacx.co/sign-up">Sign up</a>
+              
+            }            
           </div>
         </form>
         }

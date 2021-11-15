@@ -186,6 +186,21 @@
   margin-top: 6px;
   padding-top: 10px;
   font-size: 19px;
+  flex-direction: column;
+}
+
+.haveAnAcco {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+  padding-top: 10px;
+  font-size: 19px;
+}
+
+.haveAnAcco a {
+  color: #0067dd;
+  font-size: 13px;
 }
 
 .haveAnAccou a {
@@ -193,8 +208,22 @@
   font-size: 13px;
 }
 
+.haveAnAccou span {
+  font-size: 14px;
+}
+
 .haveAnAccou button {
   font-size: 13px;
+}
+
+.forgetPassword {
+  
+}
+
+.forgetPassword a {
+  display: inline-block;
+  font-size: 13px;
+  margin-top: 8px;
 }
 
 .submit-auth-btn {
@@ -212,6 +241,10 @@
   margin-top: 40px;
   cursor: pointer;
   border: none;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
 }
 
 .submit-auth-btn button:hover,
