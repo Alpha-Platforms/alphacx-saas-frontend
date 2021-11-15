@@ -24,9 +24,9 @@ export const getGroups = () => (dispatch, getState) => {
 
 export const addGroup = (newGroup, success, failed) => (dispatch, getState) => {
 
-    console.clear()
-    console.log(newGroup)
-    return null;
+    if (!navigator.onLine) {
+        return null;
+    }
 
     //Request body
     const body = JSON.stringify(newGroup);
@@ -47,17 +47,19 @@ export const addGroup = (newGroup, success, failed) => (dispatch, getState) => {
 }
 
 // valid redux action
-export const updateGroup = (groupId, newGroup, success, failed) => (dispatch, getState) => {
+export const updateGroup = (groupId, teamInfo, success, failed) => (dispatch, getState) => {
 
     //Request body
-    const body = JSON.stringify(newGroup);
-
+    const body = JSON.stringify(teamInfo);
+    // console.log(body, teamInfo)
     axios
         .patch(`${config.stagingBaseUrl}/groups/${groupId}`, body, userTokenConfig(getState))
         .then(res => {
+            // console.log(res)
             success && success();
         })
         .catch(err => {
+            // console.log(err)
             dispatch(returnErrors(err.response
                 ?.data, err.response
                 ?.status))

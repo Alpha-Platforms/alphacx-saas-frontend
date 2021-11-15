@@ -31,24 +31,31 @@ const Login = ({match: {params}}) => {
   let [loading, setLoading] = useState(false);
   let [color, setColor] = useState("#ffffff");
   const [hostName] = useState(() => {
-    return window.location.hostname.split(".") 
+    return window.location.hostname.split(".")
   })
   const [environment] = useState(process.env.NODE_ENV)
 
 
-  useEffect(async () => {         
-    if(hostName[0] !== "app" && hostName[0] !== "qustomar" && hostName[0] !== "localhost" && hostName[1] !== "netlify"){ // CHANGE TO 3 ON LIVE SERVER 
-      window.localStorage.setItem("domain", domain)
+  useEffect(async () => {
+    const hostLength = hostName.length;
+
+    if(
+      hostName[hostLength-2] === "alphacx" && hostName[0] !== "app" ||
+      hostName[hostLength-2] === "qustomar" || 
+      hostName[hostLength-1] === "localhost" &&  hostLength !== 1 
+    ){
       
-      setDomain(hostName[0]) // if sub-domain is available it is correct else you'd get a 404
+      // if sub-domain is available it is correct else you'd get a 404
+      setDomain(hostName[0]) 
       
       const res = await httpPost(`auth/login`, {domain: hostName[0]});
+
       if (res?.status === "success") {
         window.localStorage.setItem("tenantId", res?.data?.id || "");
         window.localStorage.setItem("tenantToken", res?.data?.token);
       }
-
     }
+
   }, [])
 
 
@@ -56,6 +63,7 @@ const Login = ({match: {params}}) => {
     if(domain){
       window.localStorage.setItem("domain", domain)
     }
+
     if(tenantId) {
       window.localStorage.setItem("tenantId", tenantId);
     }
@@ -124,7 +132,6 @@ const Login = ({match: {params}}) => {
           window.location.href = `${window.location.protocol}//${res?.data?.domain}.${window.location.hostname}:${window.location.port}`;
 
         } else {
-          // window.location.href = "/";
           setDomain(domain)
           setTenantId(res?.data?.id)
         }
