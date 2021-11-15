@@ -86,6 +86,7 @@ const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser }) =>
       <TablePagination
         {...tablePaginationProps}
         // @ts-expect-error onChangePage was renamed to onPageChange
+        rowsPerPageOptions={[10, 20, 30, 50, 100, 150, 200]}
         onPageChange={onChangePage}
         onRowsPerPageChange={onChangeRowsPerPage}
         ActionsComponent={(subprops) => {
@@ -280,7 +281,7 @@ const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser }) =>
                   // exportButton: true,
                   tableLayout: "auto",
                   paging: true,
-                  pageSize: 10,
+                  pageSize: 50,
                   rowStyle: {
                     backgroundColor: "#fff",
                   },

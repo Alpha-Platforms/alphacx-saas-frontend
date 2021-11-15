@@ -33,7 +33,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
 
     useEffect(() => {
         if (isUserAuthenticated) {
-            getPaginatedCustomers(10, 1);
+            getPaginatedCustomers(50, 1);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
@@ -77,8 +77,8 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
             return (
             <TablePagination
                 {...tablePaginationProps}
-                rowsPerPageOptions={[10, 20, 30]}
-                rowsPerPage={meta?.itemsPerPage || 10}
+                rowsPerPageOptions={[10, 20, 30, 50, 100, 150, 200]}
+                rowsPerPage={meta?.itemsPerPage || 50}
                 count={Number(meta?.totalItems || 20)}
                 page={(meta?.currentPage || 1) - 1}
                 onPageChange={onChangePage}
@@ -279,7 +279,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                                 exportButton: false,
                                 tableLayout: 'auto',
                                 paging: true,
-                                pageSize: (isCustomersLoaded && meta?.itemsPerPage) ? meta?.itemsPerPage : 10,
+                                pageSize: (isCustomersLoaded && meta?.itemsPerPage) ? meta?.itemsPerPage : 50,
                                 headerStyle: {
                                     backgroundColor: '#fefdfd'
                                 },

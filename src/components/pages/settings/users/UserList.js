@@ -91,6 +91,7 @@ const UserList = ({
       <TablePagination
         {...tablePaginationProps}
         // @ts-expect-error onChangePage was renamed to onPageChange
+        rowsPerPageOptions={[10, 20, 30, 50, 100, 150, 200]}
         onPageChange={onChangePage}
         onRowsPerPageChange={onChangeRowsPerPage}
         ActionsComponent={(subprops) => {
@@ -308,12 +309,12 @@ const UserList = ({
                   })
                 )}
                 options={{
-                  search: false,
+                  search: true,
                   selection: false,
                   // exportButton: true,
                   tableLayout: "auto",
                   paging: true,
-                  pageSize: meta?.itemsPerPage || 10,
+                  pageSize: 50 || meta?.itemsPerPage,
                   headerStyle: {
                     backgroundColor: "#f8f9fa",
                   },

@@ -15,6 +15,7 @@ import { httpPost, httpPostMain } from "../../../helpers/httpMethods";
 import { css } from "@emotion/react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { wordCapitalize } from "helper";
+import {Link} from 'react-router-dom';
 const override = css``;
 
 const Login = ({match: {params}}) => {
@@ -44,6 +45,7 @@ const Login = ({match: {params}}) => {
       const res = await httpPost(`auth/login`, {domain: hostName[0]});
       if (res?.status === "success") {
         window.localStorage.setItem("tenantId", res?.data?.id || "");
+        window.localStorage.setItem("tenantToken", res?.data?.token);
       }
 
     }
@@ -170,7 +172,7 @@ const Login = ({match: {params}}) => {
                 </span>
           </div>          
 
-          <div className="haveAnAccou">
+          <div className="haveAnAcco">
             <a href="/sign-up">First time user? Sign up</a>
           </div>
 
@@ -228,21 +230,25 @@ const Login = ({match: {params}}) => {
               />
             </div>
           </div>
+          <div className="text-end forgetPassword">
+          {/* <a href="https://qustomar.com/forgot-password">Forgot password?</a> */}
 
-          <div className="haveAnAccou">
-            {
+          {
               (hostName[0] === "dev" || hostName[0] === "app" || hostName[1] === "netlify" || hostName.includes("localhost")) ?
-               <a href="/sign-up">First time user? Sign up</a>
+               <Link to="/forgot-password">Forgot password?</Link>
 
               :
               
               hostName[1] === "qustomar"?
-              <a href="https://qustomar.com/sign-up">First time user? Sign up</a>
+              <a href="https://qustomar.com/forgot-password">Forgot password?</a>
               :
-              <a href="https://app.alphacx.co/sign-up">First time user? Sign up</a>
+              <a href="https://app.alphacx.co/forgot-password">Forgot password?</a>
               
-            }            
+            }   
+            
           </div>
+
+          
 
           <div className="submit-auth-btn">
             <button  disabled={loading || (userInput.email === "" || userInput.password === "")} onClick={handleSubmit}>
@@ -258,6 +264,22 @@ const Login = ({match: {params}}) => {
                 "Login"
               )}
             </button>
+          </div>
+
+          <div className="haveAnAccou">
+            <span className="f-11 d-block text-center mb-1"><small>Not yet registered?</small></span>
+            {
+              (hostName[0] === "dev" || hostName[0] === "app" || hostName[1] === "netlify" || hostName.includes("localhost")) ?
+               <a href="/sign-up">Sign up</a>
+
+              :
+              
+              hostName[1] === "qustomar"?
+              <a href="https://qustomar.com/sign-up">Sign up</a>
+              :
+              <a href="https://app.alphacx.co/sign-up">Sign up</a>
+              
+            }            
           </div>
         </form>
         }
