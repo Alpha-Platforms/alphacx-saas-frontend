@@ -116,6 +116,12 @@ const CreateTicketModal = ({
         }));
     };
 
+    // useEffect(() => {
+    //     console.clear()
+    //     console.log(tags)
+    // }, [tags])
+    
+
     // FIND AND REMOVE - getSubCategory, setSubCatLoading, 
 
     // function handleTagSelection() {
