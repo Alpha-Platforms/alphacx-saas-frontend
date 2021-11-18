@@ -1,16 +1,27 @@
 // @ts-nocheck
-import { useState } from "react";
+import { useState, useEffect } from "react";
+// 
 import { Tabs, Tab } from "react-bootstrap";
-import TicketCategoriesTab from "./components/TicketCategoriesTab";
-import TicketSettingsTab from "./components/TicketSettingsTab";
-import TicketStatusTab from './components/TicketStatusTab';
+import { Link, useLocation } from "react-router-dom";
+// 
 import NewCategoryTab from './components/NewCategoryTab';
-import { Link } from "react-router-dom";
+import TicketStatusTab from './components/TicketStatusTab';
+import TicketSettingsTab from "./components/TicketSettingsTab";
+import TicketCategoriesTab from "./components/TicketCategoriesTab";
+// 
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
 
-const TicketSettings = () => {
+const TicketSettings = (props) => {
+  const location = useLocation();
+  // 
   const [tabKey, setTabKey] = useState("ticket-categories");
-
+  // 
+  useEffect(() => {
+    if (location.state && location.state.hasOwnProperty('historyTabKey')) {
+      setTabKey(location.state.historyTabKey)
+    }
+  }, [location]);
+  // 
   return (
     <div>
       <div className="card card-body bg-white border-0 p-0 mb-4">
