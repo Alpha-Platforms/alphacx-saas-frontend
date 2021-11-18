@@ -86,6 +86,9 @@ import Dashboard from "./components/pages/dashboard/Dashboard";
 import AccountVerified from "components/pages/auth/verified";
 import LiveChatSettings from './components/pages/settings/livechatsettings/LiveChatSettings';
 
+import SmsSettings from "components/pages/settings/smssettings/smsSettings";
+
+
 const mapStateToProps = (state, ownProps) => ({isUserAuthenticated: state.userAuth.isUserAuthenticated});
 
 const SiteRouter = connect(mapStateToProps, {
@@ -154,8 +157,8 @@ const SiteRouter = connect(mapStateToProps, {
             getGroups();
 
             // JUST TO SUPPRESS ERROR. FIX PLEASE
-            // getTags();
-            // getConfigs();
+            getTags();
+            getConfigs();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
@@ -317,7 +320,12 @@ const SiteRouter = connect(mapStateToProps, {
                                 exact
                                 path="/settings/integrations/livechat"
                                 pageName="Settings"
-                                component={LiveChatSettings}/>
+                                component={LiveChatSettings}/>                            
+                            <SettingsLayoutRoute
+                                exact
+                                path="/settings/integrations/sms"
+                                pageName="SMS Settings"
+                                component={SmsSettings}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/integrations/email"

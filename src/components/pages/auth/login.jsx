@@ -67,8 +67,6 @@ const Login = ({match: {params}}) => {
       window.localStorage.setItem("tenantId", tenantId);
     }
 
-    localStorage.setItem("onboardingSplash", "hide")
-
   }, [domain, tenantId])
   
 
