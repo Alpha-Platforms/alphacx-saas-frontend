@@ -7,6 +7,7 @@ import Badge from "react-bootstrap/Badge";
 import "./../settings.css";
 import whatsappImg from "../../../../assets/imgF/WhatsApp.png";
 import facebookImg from "../../../../assets/imgF/Facebook.png";
+import termiiImg from "../../../../assets/imgF/termii.png";
 import smsImg from "../../../../assets/imgF/TwilioSms.svg";
 import { httpPatchMain, httpPostMain, httpGetMain, httpGet} from "../../../../helpers/httpMethods";
 import { hideLoader, showLoader } from "../../../helpers/loader";
@@ -15,28 +16,40 @@ import AccountLightIcon from "../../../../assets/icons/Social-blurb.svg";
 import MailLightIcon from "../../../../assets/icons/mail_light.svg";
 
 import { NotificationManager } from "react-notifications";
+import { connect } from "react-redux";
 
-export default function SocialIntegrations() {
+function SocialIntegrations({configs}) {
+
   const [configData, setConfigData] = useState([]);
   const [loadingConfig, setLoadingConfig] = useState(true);
+  const [smsConnected, setSmsConnected] = useState(false)
+  const [emailConnected, setEmailConnected] = useState(false)
+
+
   // 
   useEffect(() => {
-    setLoadingConfig(true);
-    getConfig();
-    setLoadingConfig(true);
+    // getConfig();
   }, []);
-  // 
+
+  useEffect(() => {
+    if(configs){
+      setSmsConnected(Boolean(configs.sms_config))
+      // setEmailConnected()
+    }
+  }, [configs])
+
   const getConfig = async () => {
     const res = await httpGetMain(`settings/config`);
     if (res.status === "success") {
       setLoadingConfig(true);
-      setConfigData(res?.data?.statuses);
+      setConfigData(res?.data);
       setLoadingConfig(false);
     } else {
       setLoadingConfig(false);
       return NotificationManager.error(res.er.message, "Error", 4000);
     }
   };
+
   return (
     <div className="social-integration-page">
       <div id="mainContentHeader" className="breadcrumb">
@@ -49,6 +62,7 @@ export default function SocialIntegrations() {
         </h6>
       </div>
       <div className="row g-3 mt-4 mb-5">
+
       {/* integration columns starts */}
       <div className="col-md-4 col-sm-6 col-12">
         <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
@@ -96,20 +110,20 @@ export default function SocialIntegrations() {
       </div>
       <div className="col-md-4 col-sm-6 col-12">
         <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
-          <Link to="/settings/integrations" className="d-block cursor text-decoration-none">
+          <Link to="/settings/integrations/sms" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-start p-md-4 p-3">
               <div className="w">
-                <img src={smsImg} alt="" width="38"/>
+                <img src={termiiImg} alt="" width="38" />
               </div>
               <div className="ms-3 d-flex justify-content-between align-items-start">
                 <div className="me-2">
-                  <h6 className="text-dark mb-0"> SMS by Termii</h6>
+                  <h6 className="text-dark mb-0">SMS by Termii</h6>
                   <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
-                    Connect your to users, via SMS permissions
+                    Connect your to users via SMS
                   </p>
                 </div>
                 <div className="">
-                  <Badge className="acx-bg-gray-100 text-muted px-3 py-2">Connect</Badge>
+                  <Badge className={`${!smsConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>{!smsConnected? "Connect" : "Connected"}</Badge>
                 </div>
               </div>
             </div>
@@ -121,7 +135,7 @@ export default function SocialIntegrations() {
           <Link to="/settings/integrations/email" className="d-block cursor text-decoration-none">
             <div className="d-flex align-items-start p-md-4 p-3">
               <div className="w">
-                <img src={MailLightIcon} alt="" width="38"/>
+                <img src={MailLightIcon} alt="" width="38" />
               </div>
               <div className="ms-3 d-flex justify-content-between align-items-start">
                 <div className="me-2">
@@ -165,3 +179,12 @@ export default function SocialIntegrations() {
     </div>
   );
 }
+
+
+
+
+const mapStateToProps = (state, ownProps) => ({
+  configs: state.config.configs, // general config
+});
+
+export default connect(mapStateToProps)(SocialIntegrations);
