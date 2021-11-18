@@ -45,7 +45,6 @@ const Login = ({match: {params}}) => {
       hostName[hostLength-1] === "localhost" &&  hostLength !== 1 
     ){
       
-      // if sub-domain is available it is correct else you'd get a 404
       setDomain(hostName[0]) 
       
       const res = await httpPost(`auth/login`, {domain: hostName[0]});
@@ -67,6 +66,9 @@ const Login = ({match: {params}}) => {
     if(tenantId) {
       window.localStorage.setItem("tenantId", tenantId);
     }
+
+    localStorage.setItem("onboardingSplash", "hide")
+
   }, [domain, tenantId])
   
 
