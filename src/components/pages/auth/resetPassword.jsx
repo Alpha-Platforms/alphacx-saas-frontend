@@ -6,10 +6,10 @@ import React, { useEffect, useState } from "react";
 import "./login.css";
 import AlphaLogo from "../../../assets/imgF/alpha.png";
 import Logo from "../../../assets/imgF/logo.png";
+import showPasswordImg from "../../../assets/imgF/Show.png";
 import ThankYou from "../../../assets/imgF/thank-you.png";
 import Symbol1 from "../../../assets/imgF/symbolAuth.png";
 import Symbol2 from "../../../assets/imgF/symbolAuth2.png";
-import {ReactComponent as MessageIcon} from '../../../assets/icons/Message.svg';
 import { NotificationManager } from "react-notifications";
 import {Validate} from "../../../helpers/validateInput";
 import { httpPost, httpPostMain, httpPostTenantAuth } from "../../../helpers/httpMethods";
@@ -17,36 +17,55 @@ import { css } from "@emotion/react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useHistory } from 'react-router-dom';
 
-const ForgotPassword = ({match: {params}}) => {
+const ResetPassword = ({match: {params}}) => {
 
-  const [userInput, setUserInput] = useState({email: ""});
-  const [isSuccessful, setIsSuccessful] = useState(false)
+  const [userInput, setUserInput] = useState({
+    password: ""
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
   let [loading, setLoading] = useState(false);
   let [color, setColor] = useState("#ffffff");
   const history = useHistory();
-  
+  const [isSuccessful, setIsSuccessful] = useState(false)
+  const [message, setMessage] = useState()
+
 
   const handleChange = (e) => {
     setUserInput({ ...userInput, [e.target.name]: e.target.value });
+
   };
+
+    
+  const login = (e) => {
+    e.preventDefault()
+
+    if(isSuccessful){
+        window.location.href = `/`
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if(userInput.email){
+    if(userInput.password && userInput.password.length >= 8){
     
       const data = {
-        email: userInput.email
+        ...params,
+        newPassword: userInput.password
       };
+
   
       setLoading(true);
 
-      const res = await httpPostTenantAuth("auth/forget-password", data);
+      const res = await httpPostTenantAuth("auth/reset-password", data);     
+
       setLoading(false);
 
       if (res.status === "success") {
-        NotificationManager.success(res.message, "Password Recovery", 4000);
+        NotificationManager.success(res.message, "New Password", 4000);
         setIsSuccessful(true)
+        setMessage(res.message)
   
       } else {
         // Password recovery fails
@@ -67,46 +86,54 @@ const ForgotPassword = ({match: {params}}) => {
 
       <div className="login-container">
         
-        {isSuccessful ?
-        <>
-          <div className="d-flex justify-content-center">
-            <MessageIcon />
-          </div>
-          <div className="Auth-header mb-2">
-            <h3>Check your email</h3>
-            <p className="text-center">We have sent a password recovery instrustion <br /> to your email</p>
-          </div>
-
-          <div className="haveAnAccou">
-            <span className="f-11 d-block text-center mb-1"><small>Not registered yet?</small></span>
-              <a href="https://app.alphacx.co/sign-up">Create an account</a>
-          </div>
-        </>
-
-        :
-
+      
 
         <form>
+          {isSuccessful ?
+            <>
+            <div className="d-flex justify-content-center my-4">
+              <img src={ThankYou} alt="" />
+            </div>
+            <div className="Auth-header mb-2">
+              <h3>Thank you!</h3>
+              <p>{message}<br />Click the button below to log in.</p>
+            </div>
+
+            <div className="submit-auth-btn">
+              <button onClick={login}>
+                  Continue to Login
+              </button>
+            </div>
+            </>
+
+
+          :
+
+          <>
           <div className="Auth-header" style={{ marginBottom: "30px" }}>
-            <h3>Forgot Password</h3>
-            <p className="forgot-info">Please enter the email address associated with your account</p>
+            <h3>New Password</h3>
+            <p className="forgot-info">Please enter a new password for your account</p>
           </div>
 
-          <div className="input-main-wrap">
-            <div className="input-wrap">
-              <label htmlFor="">Your work email</label>
-              <input
-                type="email"
-                onChange={handleChange}                
-                name="email"
-                value={userInput.email}
-                required={true}
+          <div className="input-wrap">
+            <label htmlFor="">Password</label>
+            <input
+              type={`${showPassword ? "text" : "password"}`}
+              onChange={handleChange}              
+              name="password"
+              value={userInput.password}
+            />
+            <div className="passworEye">
+              <img
+                src={showPasswordImg}
+                alt=""
+                onClick={() => setShowPassword(!showPassword)}
               />
             </div>
-          </div>          
+          </div>         
 
           <div className="submit-auth-btn">
-            <button  disabled={loading || (userInput.email === "")} onClick={handleSubmit}>
+            <button  disabled={loading || (userInput.password === "")} onClick={handleSubmit}>
               {" "}
               {loading ? (
                 <ClipLoader
@@ -120,16 +147,13 @@ const ForgotPassword = ({match: {params}}) => {
               )}
             </button>
           </div>
+          </>
+          
+          }
 
-          <div className="haveAnAccou">
-            <span className="f-11 d-block text-center mb-1"><small>Not registered yet?</small></span>
-              <a href="https://app.alphacx.co/sign-up">Create an account</a>
-          </div>
-
+     
         </form>
-
-
-        }
+        
       </div>
       
       <div className="symbol-wrap">
@@ -139,4 +163,4 @@ const ForgotPassword = ({match: {params}}) => {
   );
 };
 
-export default ForgotPassword;
+export default ResetPassword;
