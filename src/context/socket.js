@@ -11,7 +11,7 @@ export const SocketDataProvider = (props) => {
   const [msgHistory, setMsgHistory] = useState([]);
   // let baseUrl ="https://d3437b953f42.ngrok.io";
   //  let baseUrl ="https://kustormar-staging.herokuapp.com";
-  let baseUrl = process.env.REACT_APP_SOCKET_BASE_URL;
+  let baseUrl = process.env.REACT_APP_BASE_URL;
   // useEffect(() => {getUserFromStorage()}, [wsTickets]);
 
   const getUserFromStorage = () => {

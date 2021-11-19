@@ -19,16 +19,15 @@ import ShowIcon from "../../../../assets/icons/Show.svg";
 import ProfileIcon from "../../../../assets/svgicons/Profile-Light.svg";
 import AddGroupModal from "./components/AddGroupModal";
 import AddMemberModal from "./components/AddMemberModal";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ReactComponent as DotSvg } from "../../../../assets/icons/dots.svg";
 import { httpGetMain } from "../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import { wordCapitalize } from "helper";
 
 const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser }) => {
-  // 
-  const location = useLocation();
-  // 
+
+
   const [addGroupModalShow, setAddGroupModalShow] = useState(false);
   const [addMemberModalShow, setAddMemberModalShow] = useState(false);
   const [ticketCategories, setTicketCategories] = useState([]);
@@ -44,19 +43,15 @@ const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser }) =>
     "acx-bg-blue-30"
   ])
 
+
   useEffect(() => {
     setAccessControl(authenticatedUser.role === "Administrator");
   }, [])
 
   useEffect(() => {
     setGroupsLoading(!isGroupsLoaded);
-  }, [isGroupsLoaded]);
+}, [isGroupsLoaded]);
 
-  useEffect(() => {
-    if (location.state && location.state.hasOwnProperty('historyAddGroupModalShow')) {
-      setAddGroupModalShow(location.state.historyAddGroupModalShow)
-    }
-  }, [location]);
 
   /* useEffect(() => {
             setUserLoading(!isUsersLoaded);
