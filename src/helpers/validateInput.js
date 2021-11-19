@@ -46,7 +46,7 @@ export const validatePassword = (pw) => {
   // }
 }
 
-
+// validation should just check value and return true/false - isValidated
 export const Validate  = {
 
   email: (e, state, setState) => {
@@ -64,13 +64,13 @@ export const Validate  = {
 
   ,
 
-  password: (e, state, setState) => {
-    const error = validatePassword(e.target.value)
+  password: (value, state, setState) => {
+    const error = validatePassword(value)
     if(error){
       NotificationManager.warning(error, "Validation Error", 4000);
       return setState({
         ...state,
-        [e.target.name]: ""
+        password: ""
       })
     }
     
