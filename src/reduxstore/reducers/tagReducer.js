@@ -15,7 +15,7 @@ const tagReducer = (state = initialState, action) => {
 				tags: action.payload,
 				isTagsLoading: false,
 				isTagsLoaded: true
-				}
+			}
 		case types.TAGS_LOADING:
 			return {
 				...state,
