@@ -140,7 +140,11 @@ export default function Sidebar({ browserRouter, currentRoute }) {
             className="btn btn-sm ms-2 f-12 bg-custom px-4"
             onClick={(e) => {
               e.preventDefault()
-              localStorage.clear();
+              // retain onboardingSplash value
+              const onboardingSplash = localStorage.getItem("onboardingSplash")
+              localStorage.clear()
+              localStorage.setItem("onboardingSplash", onboardingSplash)
+            
               NotificationManager.success("Logout Successfully.");
               window.location.href = "/login";
             }}
