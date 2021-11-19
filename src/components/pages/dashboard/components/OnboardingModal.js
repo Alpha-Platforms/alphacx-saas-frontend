@@ -72,17 +72,18 @@ const OnboardingModal = ({
     }, [isUserAuthenticated]);
     // 
     useEffect(() => {
-        if(categoriesLoaded && groupsLoaded && agentsLoaded && slasLoaded && configsLoaded){
-            if(categories?.length > 0 && groups?.length > 0 && slas?.length > 0 && !objectIsEmpty(configs)){
-                // agents?.length > 0 &&
-                localStorage.setItem("onboardingSplash", "hide");
-                hide();
-            }else{
-                localStorage.removeItem("onboardingSplash");
-                setOpen();
+        setTimeout(()=>{
+            if(categoriesLoaded && groupsLoaded && agentsLoaded && slasLoaded && configsLoaded){
+                if(categories?.length > 0 && groups?.length > 0 && slas?.length > 0 && !objectIsEmpty(configs)){
+                    localStorage.setItem("onboardingSplash", "hide");
+                    hide();
+                }else{
+                        localStorage.removeItem("onboardingSplash");
+                        setOpen();
+                }
             }
-        }
-    }, [categoriesLoaded, groupsLoaded, agentsLoaded, slasLoaded, configsLoaded]);
+        }, 8000)
+    }, [categories, groups, slas, agents, configs]);
     // 
     const gotToPage = (page, state={}) =>{
         history.push({

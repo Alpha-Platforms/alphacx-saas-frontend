@@ -26,7 +26,7 @@ const DashboardTwo = ({isAnalyticsLoaded, analytics, user, getAnalytics, isUserA
         if (isUserAuthenticated) {
             getAnalytics();
             // /*  */
-            // setOpen(true);
+            setOpen(false);
             // /*  */
             let onboardingSplash = localStorage.getItem("onboardingSplash")
             if(!onboardingSplash || onboardingSplash != "hide"){
