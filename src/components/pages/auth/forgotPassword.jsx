@@ -6,16 +6,14 @@ import React, { useEffect, useState } from "react";
 import "./login.css";
 import AlphaLogo from "../../../assets/imgF/alpha.png";
 import Logo from "../../../assets/imgF/logo.png";
-import ThankYou from "../../../assets/imgF/thank-you.png";
 import Symbol1 from "../../../assets/imgF/symbolAuth.png";
 import Symbol2 from "../../../assets/imgF/symbolAuth2.png";
 import {ReactComponent as MessageIcon} from '../../../assets/icons/Message.svg';
 import { NotificationManager } from "react-notifications";
-import {Validate} from "../../../helpers/validateInput";
-import { httpPost, httpPostMain, httpPostTenantAuth } from "../../../helpers/httpMethods";
+import { httpPostTenantAuth } from "../../../helpers/httpMethods";
 import { css } from "@emotion/react";
 import ClipLoader from "react-spinners/ClipLoader";
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 const ForgotPassword = ({match: {params}}) => {
 
@@ -105,6 +103,12 @@ const ForgotPassword = ({match: {params}}) => {
             </div>
           </div>          
 
+
+          <div className="text-end forgetPassword">    
+              <Link to="/login">Back to Login</Link>
+          </div>
+
+
           <div className="submit-auth-btn">
             <button  disabled={loading || (userInput.email === "")} onClick={handleSubmit}>
               {" "}
@@ -122,8 +126,8 @@ const ForgotPassword = ({match: {params}}) => {
           </div>
 
           <div className="haveAnAccou">
-            <span className="f-11 d-block text-center mb-1"><small>Not registered yet?</small></span>
-              <a href="https://app.alphacx.co/sign-up">Create an account</a>
+            <span className="f-11 d-block text-center mb-1"><small>Not yet registered?</small></span>
+              <Link to="/sign-up">Create an account</Link>
           </div>
 
         </form>
