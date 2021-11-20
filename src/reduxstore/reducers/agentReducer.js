@@ -21,7 +21,7 @@ const agentReducer = (state = initialState, action) => {
                 meta: action.payload?.meta || null,
 				isAgentsLoading: false,
 				isAgentsLoaded: true
-				}
+			}
 		case types.AGENTS_LOADING:
 			return {
 				...state,
