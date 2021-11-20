@@ -36,13 +36,13 @@ const SmsSettings = ({smsConfig, isConfigLoaded, isConfigLoading, getSmsConfig, 
     useEffect(() => {    
     // eslint-disable-next-line react-hooks/exhaustive-deps
     
-        // getSmsConfig((data) => {
-        //     setSettings({
-        //         apiKey: data.api_key,
-        //         senderId: data.sender_id
-        //     });
+        getSmsConfig((data) => {
+            setSettings({
+                apiKey: data.api_key,
+                senderId: data.sender_id
+            });
 
-        // })
+        })
 
         if (smsConfig) {
             setSettings({
@@ -71,6 +71,7 @@ const SmsSettings = ({smsConfig, isConfigLoaded, isConfigLoading, getSmsConfig, 
         updateSmsConfig(newConfig, 
             () => {
                 NotificationManager.success('Updated successfully', 'Success', 4000);
+
                 setLoading(false);
             }, 
             msg => {
