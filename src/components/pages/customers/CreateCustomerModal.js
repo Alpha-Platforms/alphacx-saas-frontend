@@ -95,7 +95,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                 image: null,
                                 ownAvatar: ''
                             });
-                            getPaginatedCustomers(10, 1);
+                            getPaginatedCustomers(50, 1);
                             setCreatingCust(false);
                         } else {
                             setCreatingCust(false);
@@ -113,7 +113,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                     NotificationManager.success(res?.message, 'Success');
                     setCreateModalShow(false);
                     setModalInputs({firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: '', ccode: '+234'});
-                    getPaginatedCustomers(10, 1);
+                    getPaginatedCustomers(50, 1);
                     setCreatingCust(false);
                 } else {
                     setCreatingCust(false);
@@ -125,7 +125,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
 
     const custEditSuccess = () => {
         NotificationManager.success('Customer updated successfully', 'Success');
-        getPaginatedCustomers(10, 1);
+        getPaginatedCustomers(50, 1);
         setEditingCust(false);
         setModalInputs(prev => ({...prev, firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: '', ccode: "+234"}));
         setCreateModalShow(false);
