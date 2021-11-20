@@ -496,8 +496,22 @@ useEffect(() => {
 
           linkPopup.insertBefore(uploadContainer, linkPopup.childNodes[4]);
         }
-      }, 200)
+      }, 10)
 
+    })
+
+    const imageBtn = window.document.querySelector('.kb-art-link.rdw-link-wrapper + div');
+
+    imageBtn.addEventListener('click', () => {
+      console.log('click');
+      setTimeout(() => {
+        const imagePopup = window.document.querySelector('.kb-art-link.rdw-link-wrapper + div > div:nth-child(2)');
+
+        if (imagePopup) {
+          imagePopup.firstChild.firstChild.textContent = "Image Upload";
+        }
+        
+      }, 10);
     })
 
   }, [])
@@ -584,9 +598,9 @@ useEffect(() => {
 
                   image: {
                     icon: editorImg,
-                    className: undefined,
+                    className: "kb-art-image",
                     component: undefined,
-                    popupClassName: undefined,
+                    popupClassName: "art-image-popup",
                     urlEnabled: true,
                     uploadEnabled: true,
                     alignmentEnabled: true,
