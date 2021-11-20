@@ -177,6 +177,15 @@
 }
 
 .art-link-popup input {
+  display: inline-block;
+}
+
+.art-link-popup input#openLinkInNewWindow {
+  display: inline-block;
+  width: 100%;
+}
+
+.art-link-popup input:not(input[type="checkbox"]) {
   width: 100%;
   display: inline-block;
 }
