@@ -238,20 +238,7 @@ const Login = ({match: {params}}) => {
             </div>
           </div>
           <div className="text-end forgetPassword">
-          {/* <a href="https://qustomar.com/forgot-password">Forgot password?</a> */}
-
-          {
-              (hostName[0] === "dev" || hostName[0] === "app" || hostName[1] === "netlify" || hostName.includes("localhost")) ?
-               <Link to="/forgot-password">Forgot password?</Link>
-
-              :
-              
-              hostName[1] === "qustomar"?
-              <a href="https://qustomar.com/forgot-password">Forgot password?</a>
-              :
-              <a href="https://app.alphacx.co/forgot-password">Forgot password?</a>
-              
-            }   
+          <Link to="/forgot-password">Forgot password?</Link> 
             
           </div>
 
@@ -274,19 +261,8 @@ const Login = ({match: {params}}) => {
           </div>
 
           <div className="haveAnAccou">
-            <span className="f-11 d-block text-center mb-1"><small>Not yet registered?</small></span>
-            {
-              (hostName[0] === "dev" || hostName[0] === "app" || hostName[1] === "netlify" || hostName.includes("localhost")) ?
-               <a href="/sign-up">Sign up</a>
-
-              :
-              
-              hostName[1] === "qustomar"?
-              <a href="https://qustomar.com/sign-up">Sign up</a>
-              :
-              <a href="https://app.alphacx.co/sign-up">Sign up</a>
-              
-            }            
+            <span className="f-11 d-block text-center mb-1"><small>Not yet registered?</small></span>           
+              <Link to="/sign-up">Create an account</Link>
           </div>
         </form>
         }
