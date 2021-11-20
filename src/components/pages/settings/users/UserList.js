@@ -18,7 +18,7 @@ import { ReactComponent as DotSvg } from "../../../../assets/icons/dots.svg";
 import { ReactComponent as DeleteSvg } from "../../../../assets/icons/Delete.svg";
 import { ReactComponent as DeleteGreySvg } from "../../../../assets/icons/Delete-grey.svg";
 import { ReactComponent as ArrowDownSvg } from "../../../../assets/icons/arrow-down.svg";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import moment from 'moment';
 // import {ReactComponent as CardDesignSvg} from '../../../../assets/icons/Card-Design.svg';
 import Swal from "sweetalert2";
@@ -49,7 +49,9 @@ const UserList = ({
   getAdmins,
   getSupervisors
 }) => {
-
+  // 
+  const location = useLocation();
+  // 
   const [createModalShow, setCreateModalShow] = useState(false);
   const [inviteModalShow, setInviteModalShow] = useState(false);
   const [importModalShow, setImportModalShow] = useState(false);
@@ -69,9 +71,13 @@ const UserList = ({
         getAdmins();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [isUserAuthenticated]);
+  }, [isUserAuthenticated]);
 
-  
+  useEffect(() => {
+    if (location.state && location.state.hasOwnProperty('historyCreateModalShow')) {
+      setCreateModalShow(location?.state?.historyCreateModalShow)
+    }
+  }, [location])
   // useEffect(() => {
   //   setUserLoading(!agents);
   //   if (isAgentsLoaded) {
@@ -128,7 +134,7 @@ const UserList = ({
       role: "Agent",
       isActivated: !isActivated ? true : "false"
     });
-    console.log('userRes: ', userRes);
+    // console.log('userRes: ', userRes);
     if (userRes?.status === 'success') {
       NotificationManager.success('Info has been updated', 'Success');
       // getAgents()
