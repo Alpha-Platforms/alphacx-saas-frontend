@@ -18,13 +18,21 @@ import subCategoryReducer from './subCategoryReducer';
 import configReducer from './configReducer';
 import analyticsReducer from './analyticsReducer';
 import livechatReducer from './livechatReducer';
+<<<<<<< HEAD
 import smsReducer from './smsReducer';
+
+const persistConfig = {
+    key: 'alphacx_platform',
+    storage,
+    whitelist: ['error', 'tenantAuth', 'userAuth', 'priority', 'category', 'status', 'group', 'tag', 'subCategory', 'config', 'livechat', 'sms']
+=======
 import slaReducer from './slaReducer';
 // , 
 const persistConfig = {
     key: 'alphacx_platform',
     storage,
-    whitelist: ['error', 'tenantAuth', 'userAuth', 'priority', 'category', 'status', 'group', 'tag', 'subCategory', 'config', 'livechat', 'sms', 'sla']
+    whitelist: ['error', 'tenantAuth', 'userAuth', 'priority', 'category', 'status', 'group', 'tag', 'subCategory', 'config', 'livechat', 'sla']
+>>>>>>> 1a5f022bf540da08e09309e8a6159985031255af
 }
 
 const rootReducer = combineReducers({
@@ -45,8 +53,11 @@ const rootReducer = combineReducers({
     config: configReducer,
     analytics: analyticsReducer,
     livechat: livechatReducer,
+<<<<<<< HEAD
     sms: smsReducer
+=======
     sla: slaReducer
+>>>>>>> 1a5f022bf540da08e09309e8a6159985031255af
 });
 
 export default persistReducer(persistConfig, rootReducer);

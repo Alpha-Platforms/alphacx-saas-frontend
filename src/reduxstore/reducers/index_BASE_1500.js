@@ -17,14 +17,12 @@ import tagReducer from './tagReducer';
 import subCategoryReducer from './subCategoryReducer';
 import configReducer from './configReducer';
 import analyticsReducer from './analyticsReducer';
-import livechatReducer from './livechatReducer';
-import smsReducer from './smsReducer';
-import slaReducer from './slaReducer';
-// , 
+import livechatReducer from './livechatReducer'
+
 const persistConfig = {
     key: 'alphacx_platform',
     storage,
-    whitelist: ['error', 'tenantAuth', 'userAuth', 'priority', 'category', 'status', 'group', 'tag', 'subCategory', 'config', 'livechat', 'sms', 'sla']
+    whitelist: ['error', 'tenantAuth', 'userAuth', 'priority', 'category', 'status', 'group', 'tag', 'subCategory', 'config', 'livechat']
 }
 
 const rootReducer = combineReducers({
@@ -44,9 +42,7 @@ const rootReducer = combineReducers({
     subCategory: subCategoryReducer,
     config: configReducer,
     analytics: analyticsReducer,
-    livechat: livechatReducer,
-    sms: smsReducer
-    sla: slaReducer
+    livechat: livechatReducer
 });
 
 export default persistReducer(persistConfig, rootReducer);

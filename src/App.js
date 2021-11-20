@@ -175,7 +175,7 @@ const SiteRouter = connect(mapStateToProps, {
                             <Route exact path="/login" component={Login}/> {/* <Route exact path="/login/:domain" component={Login}/> */}
                             <Route exact path="/sign-up" component={signUp}/> {/* help pages */}
                             <Route exact path="/forgot-password" component={ForgotPassword}/> {/* forgot password */}
-                            <Route exact path="/support/reset-password/:resetToken" component={ResetPassword}/> {/* reset password */}
+                            <Route exact path="/reset-password/:resetToken" component={ResetPassword}/> {/* reset password */}
                             <Route exact path="/knowledge-base" component={HelpCenter}/>
                             <Route exact path="/knowledge-base/categories" component={ArticleCategoryList}/>
                             <Route exact path="/knowledge-base/:category" component={ArticleList}/>

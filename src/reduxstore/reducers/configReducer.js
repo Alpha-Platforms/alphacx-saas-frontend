@@ -15,7 +15,7 @@ const configReducer = (state = initialState, action) => {
 				configs: action.payload,
 				isConfigsLoading: false,
 				isConfigsLoaded: true
-				}
+			}
 		case types.CONFIGS_LOADING:
 			return {
 				...state,
