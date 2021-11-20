@@ -11,15 +11,8 @@ import ListGroup from 'react-bootstrap/ListGroup';
 // 
 import {getAgents} from '../../../../reduxstore/actions/agentActions';
 import {getSlas} from '../../../../reduxstore/actions/slaActions';
-import {getConfigs} from '../../../../reduxstore/actions/configActions';
+// import {getConfigs} from '../../../../reduxstore/actions/configActions';
 // 
-/* 
-    ticket categories
-    team/group
-    users
-    connect ticket channels
-    sla escalations
-*/
 
 import {
     CreateTicketIcon, 
@@ -35,51 +28,30 @@ const OnboardingModal = ({
     user, isUserAuthenticated, 
     categories, isCategoriesLoaded, 
     groups, isGroupsLoaded, 
-    slas, isSlasLoaded, getSlas, 
+    slas, isSlasLoaded, getSlas,
     agents, isAgentsLoaded, getAgents,
-    configs, isConfigsLoaded, getConfigs
+    configs, isConfigsLoaded
+    // getConfigs, 
 }) => {
     // 
     const history = useHistory();
     // 
-    const [categoriesLoaded, setCategoriesLoaded] = useState(false)
-    const [groupsLoaded, setGroupsLoaded] = useState(false)
-    const [agentsLoaded, setAgentsLoaded] = useState(false)
-    const [slasLoaded, setSlasLoaded] = useState(false)
-    const [configsLoaded, setConfigsLoaded] = useState(false)
-    // 
-    useEffect(() => {
-        setCategoriesLoaded(true);
-    }, [isCategoriesLoaded]);
-    useEffect(() => {
-        setGroupsLoaded(true);
-    }, [isGroupsLoaded]);
-    useEffect(() => {
-        setAgentsLoaded(true);
-    }, [isAgentsLoaded]);
-    useEffect(() => {
-        setSlasLoaded(true);
-    }, [isSlasLoaded]);
-    useEffect(() => {
-        setConfigsLoaded(true);
-    }, [isConfigsLoaded]);
     useEffect(() => {
         if (isUserAuthenticated) {
             getAgents();
             getSlas();
-            getConfigs()
         }
     }, [isUserAuthenticated]);
     // 
     useEffect(() => {
         setTimeout(()=>{
-            if(categoriesLoaded && groupsLoaded && agentsLoaded && slasLoaded && configsLoaded){
+            if(isCategoriesLoaded && isGroupsLoaded && isSlasLoaded && isAgentsLoaded && isConfigsLoaded){
                 if(categories?.length > 0 && groups?.length > 0 && slas?.length > 0 && !objectIsEmpty(configs)){
                     localStorage.setItem("onboardingSplash", "hide");
                     hide();
                 }else{
-                        localStorage.removeItem("onboardingSplash");
-                        setOpen();
+                    localStorage.removeItem("onboardingSplash");
+                    setOpen();
                 }
             }
         }, 8000)
@@ -121,51 +93,51 @@ const OnboardingModal = ({
             <Row className="">
                 <Col className="mx-auto" sm={8} md={6} lg={4}>
                     <ListGroup defaultActiveKey="#link1" className="acx-list-group acx-list-group-gapped">
-                        <ListGroup.Item action onClick={()=> gotToPage("/settings/tickets", {historyTabKey: "new-category"})} disabled={categoriesLoaded? categories?.length > 0 : false}>
+                        <ListGroup.Item action onClick={()=> gotToPage("/settings/tickets", {historyTabKey: "new-category"})} disabled={isCategoriesLoaded? categories?.length > 0 : false}>
                             <div className="d-flex justify-content-between align-items-center">
                                 <div className="d-flex justify-content-start align-items-center list-item-icon">
                                     <CreateTicketIcon/>
                                     <h6 className="mb-0 ms-3 text-secondary">Create ticket categories</h6>
                                 </div>
                                 <div className=""> 
-                                    {!categoriesLoaded? <ArrowRightCircleIcon/> : categories?.length > 0? <CheckCircleFilledIcon/> : <ArrowRightCircleIcon/>}
+                                    {!isCategoriesLoaded ? <ArrowRightCircleIcon/> : categories?.length > 0? <CheckCircleFilledIcon/> : <ArrowRightCircleIcon/>}
                                 </div>
                             </div>
                         </ListGroup.Item>
-                        <ListGroup.Item action onClick={()=> gotToPage("/settings/teams", {historyAddGroupModalShow: true})}  disabled={groupsLoaded? groups?.length > 0 : false}>
+                        <ListGroup.Item action onClick={()=> gotToPage("/settings/teams", {historyAddGroupModalShow: true})}  disabled={isGroupsLoaded? groups?.length > 0 : false}>
                             <div className="d-flex justify-content-between align-items-center">
                                 <div className="d-flex justify-content-start align-items-center list-item-icon">
                                     <CreateTeamIcon/>
                                     <h6 className="mb-0 ms-3 text-secondary">Create a Team</h6>
                                 </div>
                                 <div className=""> 
-                                    {!groupsLoaded? <ArrowRightCircleIcon/> : groups?.length > 0? <CheckCircleFilledIcon/> : <ArrowRightCircleIcon/>}
+                                    {!isGroupsLoaded? <ArrowRightCircleIcon/> : groups?.length > 0? <CheckCircleFilledIcon/> : <ArrowRightCircleIcon/>}
                                 </div>
                             </div>
                         </ListGroup.Item>
-                        <ListGroup.Item action onClick={()=> gotToPage("/settings/users", {historyCreateModalShow: true})} disabled={agentsLoaded? agents?.length > 0 : false}>
+                        <ListGroup.Item action onClick={()=> gotToPage("/settings/users", {historyCreateModalShow: true})} disabled={isAgentsLoaded? agents?.length > 0 : false}>
                             <div className="d-flex justify-content-between align-items-center">
                                 <div className="d-flex justify-content-start align-items-center list-item-icon">
                                     <CreateUsersIcon/>
                                     <h6 className="mb-0 ms-3 text-secondary">Create Users</h6>
                                 </div>
                                 <div className=""> 
-                                    {!agentsLoaded? <ArrowRightCircleIcon/> : agents?.length > 0 ? <CheckCircleFilledIcon/> : <ArrowRightCircleIcon/>}
+                                    {!isAgentsLoaded? <ArrowRightCircleIcon/> : agents?.length > 0 ? <CheckCircleFilledIcon/> : <ArrowRightCircleIcon/>}
                                 </div>
                             </div>
                         </ListGroup.Item>
-                        <ListGroup.Item action onClick={()=> gotToPage("/settings/integrations")} disabled={!objectIsEmpty(configs)}>
+                        <ListGroup.Item action onClick={()=> gotToPage("/settings/integrations")} disabled={!objectIsEmpty(isConfigsLoaded)}>
                             <div className="d-flex justify-content-between align-items-center">
                                 <div className="d-flex justify-content-start align-items-center list-item-icon">
                                     <TicketChannelIcon/>
                                     <h6 className="mb-0 ms-3 text-secondary">Connect Ticket Channels</h6>
                                 </div>
                                 <div className=""> 
-                                    {!configsLoaded? <ArrowRightCircleIcon/> : !objectIsEmpty(configs) ? <CheckCircleFilledIcon/> : <ArrowRightCircleIcon/>}
+                                    {!isConfigsLoaded? <ArrowRightCircleIcon/> : !objectIsEmpty(configs) ? <CheckCircleFilledIcon/> : <ArrowRightCircleIcon/>}
                                 </div>
                             </div>
                         </ListGroup.Item>
-                        <ListGroup.Item action onClick={()=> gotToPage("/settings/automation")} disabled={slasLoaded? slas?.length > 0 : false}>
+                        <ListGroup.Item action onClick={()=> gotToPage("/settings/automation")} disabled={isSlasLoaded? slas?.length > 0 : false}>
                             {/* disabled */}
                             <div className="d-flex justify-content-between align-items-center">
                                 <div className="d-flex justify-content-start align-items-center list-item-icon">
@@ -173,7 +145,7 @@ const OnboardingModal = ({
                                     <h6 className="mb-0 ms-3 text-secondary">Automate SLAs and escalations</h6>
                                 </div>
                                 <div className="text-success"> 
-                                    {!slasLoaded? <ArrowRightCircleIcon/> : slas?.length > 0 ? <CheckCircleFilledIcon/> : <ArrowRightCircleIcon/>}
+                                    {!isSlasLoaded? <ArrowRightCircleIcon/> : slas?.length > 0 ? <CheckCircleFilledIcon/> : <ArrowRightCircleIcon/>}
                                 </div>
                             </div>
                         </ListGroup.Item>
@@ -205,4 +177,5 @@ const mapStateToProps = (state, ownProps) => ({
     isConfigsLoaded: state.config.isConfigsLoaded
 });
 
-export default connect(mapStateToProps, {getAgents, getSlas, getConfigs})(OnboardingModal);
+export default connect(mapStateToProps, { getAgents, getSlas })(OnboardingModal);
+// getConfigs
