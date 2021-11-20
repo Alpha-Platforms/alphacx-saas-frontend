@@ -141,9 +141,9 @@ const SiteRouter = connect(mapStateToProps, {
             // getCustomers();
             // getTickets();
 
-            // getPaginatedCustomers(10, 1);
-            // getPaginatedTickets(10, 1);
-            // getPaginatedUsers(10, 1);
+            // getPaginatedCustomers(50, 1);
+            // getPaginatedTickets(50, 1);
+            // getPaginatedUsers(50, 1);
 
             // getAgents();
             // getAdmins();

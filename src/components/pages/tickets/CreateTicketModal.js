@@ -225,7 +225,7 @@ const CreateTicketModal = ({
             setCreatingTicket(false);
             setSubCatLoading(false);
             // setChangingRow(true);
-            getPaginatedTickets(10, 1);
+            getPaginatedTickets(50, 1);
             setUploadInfo({
                 blob: null,
                 msg: 'Add file or drag file here.',
