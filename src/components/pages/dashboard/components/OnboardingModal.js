@@ -126,7 +126,7 @@ const OnboardingModal = ({
                                 </div>
                             </div>
                         </ListGroup.Item>
-                        <ListGroup.Item action onClick={()=> gotToPage("/settings/integrations")} disabled={!objectIsEmpty(isConfigsLoaded)}>
+                        <ListGroup.Item action onClick={()=> gotToPage("/settings/integrations")} disabled={objectIsEmpty(isConfigsLoaded)}>
                             <div className="d-flex justify-content-between align-items-center">
                                 <div className="d-flex justify-content-start align-items-center list-item-icon">
                                     <TicketChannelIcon/>
