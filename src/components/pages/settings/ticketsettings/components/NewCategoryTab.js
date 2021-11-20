@@ -89,20 +89,20 @@ const NewCategoryTab = ({categories, meta, getCategories, getSubCategories, isCa
             <div className="w-75">
                 <form className="tl-form" onSubmit={handleSubmit}>
                     <div>
-                        <div className="form-group mt-3 tl-col align-items-center">
-                            <label className="f-14 d-inline" htmlFor="form-description">
+                        <div class="form-group mt-3 tl-col align-items-center">
+                            <label class="f-14 d-inline" htmlFor="form-description">
                                 Category:
                             </label>
                             <input
                                 type="text"
-                                className="form-control form-control"
+                                class="form-control form-control"
                                 id="category"
                                 name="name"
                                 value={newCategory.name || ""}
                                 onChange={handleChange}/>
                         </div>
-                        {/* <div className="form-group mt-4 tl-col align-items-center">
-                            <label className="f-14 d-inline" htmlFor="form-description">
+                        {/* <div class="form-group mt-4 tl-col align-items-center">
+                            <label class="f-14 d-inline" htmlFor="form-description">
                                 Parent Category:
                             </label>
                             <select
@@ -119,8 +119,8 @@ const NewCategoryTab = ({categories, meta, getCategories, getSubCategories, isCa
                                 ))}
                             </select>
                         </div> */}
-                        <div className="form-group mt-4 tl-col">
-                            <label className="f-14 d-inline" htmlFor="form-description">
+                        <div class="form-group mt-4 tl-col">
+                            <label class="f-14 d-inline" htmlFor="form-description">
                                 Description:
                             </label>
                             <textarea

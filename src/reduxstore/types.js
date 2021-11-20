@@ -136,13 +136,7 @@ export const GET_CONFIGS = "GET_CONFIGS";
 export const ADD_CONFIG = "ADD_CONFIG";
 export const CONFIGS_LOADING = "CONFIGS_LOADING";
 
-// SLA
-export const GET_SLAS = "GET_SLAS";
-export const ADD_SLA = "ADD_SLA";
-export const UPDATE_SLA = "UPDATE_SLA";
-export const SLAS_LOADING = "SLAS_LOADING";
-
-// ANALYTICS
+// ANALYTICSS
 export const GET_ANALYTICS = "GET_ANALYTICS";
 export const ADD_ANALYTICS = "ADD_ANALYTICS";
 export const ANALYTICS_LOADING = "ANALYTICS_LOADING";

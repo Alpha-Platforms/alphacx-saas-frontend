@@ -48,7 +48,6 @@ export default function WhatsappIntegration() {
             setLoadingConfig(false);
         } else {
             setLoadingConfig(false);
-            return NotificationManager.error(res.er.message, "Error", 4000);
         }
     };
     const handleWhatsappChange = (e) => {

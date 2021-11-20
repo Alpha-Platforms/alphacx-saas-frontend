@@ -13,7 +13,6 @@ import DummyAvatar from '../../assets/images/dummyavatar.jpeg';
 import InitialsFromString from "../helpers/InitialsFromString";
 import '../../styles/Navbar.css';
 import {connect} from 'react-redux';
-import moment from "moment";
 import { DowncaretIcon, PlusIcon} from "../../assets/SvgIconsSet.jsx";
 import { httpGetMain } from "../../helpers/httpMethods";
 // 
@@ -73,11 +72,6 @@ function Notification(props){
     getNotifications();
   }, [props.userId]);
 
-  // 
-  function createMarkup(data) {
-    return {__html: data}
-  }
-
   const getNotifications = async() => {
     const res = await httpGetMain(`notifications/${props.userId}`);
     if (res.status === "success") {
@@ -111,7 +105,7 @@ function Notification(props){
       </>} className="acx-dropdown-hidden acx-notification-nav-dropdown" id="navbarScrollingDropdown">
       <Dropdown.Header className="d-flex justify-content-between align-items-center border-bottom">
         <div className="flex-grow-1">
-          <p className={`acx-text-gray-800 mb-0 ${notifications.length == 0 || notifications == null || notifications == undefined? "text-center" : ""}`}>
+          <p className="acx-text-gray-800 mb-0 text-center">
             Notifications
           </p>
         </div>
@@ -157,22 +151,16 @@ function Notification(props){
                           <img width="40" height="auto" src={data?.sender?.avatar} alt="" />
                         )}
                       </div>
-                      <div className="media-body flex-grow-1">
-                        <div className="media-header d-flex justify-content-between align-items-center mb-1">
-                          <p className="mb-0 me-3">{data.title}</p>
-                          <span className="text-muted small">{moment(`${data.created_at}`).fromNow()}</span>
-                        </div>
-                        <div className="acx-text-gray-500 media-content">
-                          <div className="mb-0 text-wrap" dangerouslySetInnerHTML={data?.others?.response ? createMarkup(data?.others?.response) : createMarkup(data?.content)}>
-                            {/* {data.content} */}
-                            {/* <span className="acx-text-primary">I need a refund for my order</span>. */}
-                            {/* <span className="acx-bg-alpha-blue-100 px-3 py-1 mt-2 acx-rounded-5 d-block text-nowrap text-truncate" 
-                                  style={{"maxWidth":"230px"}}>
-                              <span className="acx-text-primary">@hammeddaudu {" "}</span> 
-                              Please make sure that
-                            </span> */}
-                          </div>
-                        </div>
+                      <div className="acx-text-gray-500 media-content">
+                        <p className="mb-0 text-wrap">
+                          {data.content}
+                          {/* <span className="acx-text-primary">I need a refund for my order</span>. */}
+                          {/* <span className="acx-bg-alpha-blue-100 px-3 py-1 mt-2 acx-rounded-5 d-block text-nowrap text-truncate" 
+                                style={{"maxWidth":"230px"}}>
+                            <span className="acx-text-primary">@hammeddaudu {" "}</span> 
+                            Please make sure that
+                          </span> */}
+                        </p>
                       </div>
                     </div>
                   </NavDropdown.Item>
