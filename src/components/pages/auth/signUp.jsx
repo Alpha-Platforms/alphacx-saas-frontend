@@ -283,11 +283,6 @@ const Registration = () => {
                                             <p className="text-center">Your account has been created successfully. <br />An activation mail has been sent to <strong>{userInput?.email}</strong></p>
                                         </div>
                             
-                                        <div className="submit-auth-btn text-center mt-4">
-                                            <a className="fs-6" href="https://app.alphacx.co/knowledge-base">
-                                                See Quick Setup Steps
-                                            </a>
-                                        </div>
                                     </div>
                                 }
                                 <div className="text-center mb-3 pb-3">
