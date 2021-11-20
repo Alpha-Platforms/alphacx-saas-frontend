@@ -50,7 +50,7 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
     useEffect(() => {
         if (isUserAuthenticated) {
             // get the first set of users
-            // getPaginatedUsers(10, 1);
+            // getPaginatedUsers(50, 1);
             setLoading(true);
             getAgents(data => {
                 if (data?.users && data?.users?.length > 0) {
@@ -71,6 +71,9 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
                 } else {
                     setLoading(false);
                 }
+            }, () => {
+                console.log('No agents found')
+                setLoading(false);
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

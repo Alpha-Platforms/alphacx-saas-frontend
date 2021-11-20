@@ -65,7 +65,7 @@ const UserList = ({
   useEffect(() => {
     if (isUserAuthenticated) {
         // get the first set of users
-        // getPaginatedUsers(10, 1);
+        // getPaginatedUsers(50, 1);
         getAgents();
         getSupervisors();
         getAdmins();
