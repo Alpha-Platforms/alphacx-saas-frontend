@@ -45,7 +45,7 @@ const rootReducer = combineReducers({
     config: configReducer,
     analytics: analyticsReducer,
     livechat: livechatReducer,
-    sms: smsReducer
+    sms: smsReducer,
     sla: slaReducer
 });
 
