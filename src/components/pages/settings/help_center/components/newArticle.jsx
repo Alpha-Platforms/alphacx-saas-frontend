@@ -9,8 +9,10 @@ import {
   convertToRaw,
   ContentState,
   convertFromHTML,
+  Modifier
 } from "draft-js";
 import draftToHtml from "draftjs-to-html";
+import htmlToDraft from "html-to-draftjs";
 import AddCategory from "../../../../../assets/imgF/addCategory.png";
 import boldB from "../../../../../assets/imgF/boldB.png";
 import insertLink from "../../../../../assets/imgF/insertLink.png"
@@ -66,6 +68,7 @@ const NewArticle = () => {
   });
   const [folders, setFolders] = useState([]);
   const [editorState, setEditorState] = useState(initialState);
+  const [flInfo, setFlInfo] = useState({title: '', link: '', newWindow: false});
 
   // File upload state
   const [uploadInfo, setUploadInfo] = useState({
@@ -99,7 +102,6 @@ const NewArticle = () => {
       if (result.isConfirmed) {
         setNewPost({ ...newPost, publishGlobal: !publishGlobal });
       } else {
-        // console.log("Do nothing");
       }
     });
   };
@@ -118,6 +120,24 @@ const NewArticle = () => {
   //   setCategories([...categories, value]);
   // };
 
+  const CustomOption = props => {
+
+    const addText = () => {
+
+      let { contentBlocks, entityMap } = htmlToDraft(`<a href='${flInfo.link}' target="${flInfo.newWindow ? '_blank' : '_self'}">${flInfo.title}</a>`);
+
+      // const {editorState, onChange} = props;
+      const contentState = Modifier.replaceWithFragment(editorState.getCurrentContent(), editorState.getSelection(), ContentState.createFromBlockArray(contentBlocks, entityMap).getBlockMap());
+      const newEditorState = EditorState.push(editorState, contentState, 'insert-fragment');
+      setEditorState(EditorState.forceSelection(newEditorState, contentState.getSelectionAfter()));
+    }
+
+    return (
+        <div onClick={addText} id="addTextComponent" className="d-none">ACX</div>
+    )
+}
+
+
   const onEditorStateChange = (editorState) => {
     // handleDescriptionValidation(editorState);
 
@@ -126,9 +146,9 @@ const NewArticle = () => {
     setEditorState(editorState);
     setNewPost({ ...newPost, richText });
     // setReplyTicket({ plainText, richText });
-    // console.log(">>>>", richText, plainText);
-    // console.log(richText);
   };
+
+
   const _uploadImageCallBack = (file) => {
     // long story short, every time we upload an image, we
     // need to save it to the state so we can get it's data
@@ -143,8 +163,6 @@ const NewArticle = () => {
     };
 
     uploadedImages.push(imageObject);
-
-    console.log('IMAGE OBJECT => ', imageObject);
 
     //this.setState(uploadedImages: uploadedImages)
 
@@ -228,25 +246,6 @@ const NewArticle = () => {
     const res = await httpGetMain(`article/${articleId}`);
     if (res?.status == "success") {
       let { title, body, folders } = res?.data;
-      // console.clear();
-
-
-
-      
-      // get category id
-      // let folder = folders[0];
-      // let categoryId;
-
-      // for (var i = 0; i < categories.length; i++) {
-      //   for (var j = 0; j < categories[i].folders.length; j++) {
-      //     console.log("[" + i + "]" + "[" + j + "]");
-      //     if (categories[i].folders[j].id == folder.id) {
-      //       categoryId = categories[i].id;
-      //       console.log("found");
-      //       break;
-      //     }
-      //   }
-      // }
 
       setNewPost({
         ...newPost,
@@ -257,7 +256,8 @@ const NewArticle = () => {
       });
 
       // convert rich text to plain text in editor
-      const blocksFromHTML = convertFromHTML(body);
+      // const blocksFromHTML = convertFromHTML(body);
+      const blocksFromHTML = htmlToDraft(body);
       const initialState = EditorState.createWithContent(
         ContentState.createFromBlockArray(
           blocksFromHTML.contentBlocks,
@@ -298,8 +298,6 @@ const NewArticle = () => {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
-
-  // console.log('NEW POST => ', newPost);
 
   // function to edit/patch existing articles
   const handlePatchArticle = async () => {
@@ -387,32 +385,9 @@ const NewArticle = () => {
           axios
               .post(`${config.cloudinaryBaseUrl}/${allowedFiles.types.slice(0,3).includes(uploadInfo.image?.type) ?  'image' : 'raw'}/upload`, data)
               .then(async res => {
-                  // add res
-                  const target = window.document.querySelector('.art-link-popup.rdw-link-modal > input#linkTarget');
-                  const title = window.document.querySelector('.art-link-popup.rdw-link-modal > input#linkTitle');
-                  if (title) {
-                    title.value = fileInput.files[0]?.name;
-                    title.addEventListener('input', e => {
-                      title.value = e.target.value;
-                      target.value = res?.data?.url;
-                    });
-                    title.addEventListener('change', e => {
-                      title.value = e.target.value;
-                      target.value = res?.data?.url;
-                    });
-                    title.addEventListener('click', e => {
-                      title.value = fileInput.files[0]?.name;
-                      target.value = res?.data?.url;
-                    });
-                  }
-                  if (target) {
-                    target.value = res?.data?.url;
-                    // target.addEventListener('keydown', e => e.preventDefault());
-                    target.addEventListener('input', e => target.value = res?.data?.url);
-                    target.addEventListener('change', e => target.value = res?.data?.url);
-                    target.addEventListener('click', e => target.value = res?.data?.url);
-                  }
 
+                  // add res
+                  
                   if (uploadBtn) {
                     uploadBtn.textContent = 'Upload';
                     uploadBtn.disabled = false;
@@ -422,19 +397,48 @@ const NewArticle = () => {
                   if (uploadLabel) {
                     uploadLabel.textContent = 'Add doc file here';
                     window.document.querySelector('#doc-upload-container > button')?.classList.add('d-none');
-                  }
-
-                  const addBtn = window.document.querySelector('.art-link-popup.rdw-link-modal > span:last-of-type > button:nth-child(1)');
-                  if (addBtn) {
-                    // addBtn.disabled = false;
                   } 
 
-                  
+                  const linkPopup = window.document.querySelector('.kb-art-link.rdw-link-wrapper > div:nth-child(2)');
+                  const fileName = fileInput.files[0]?.name;
 
+                  linkPopup.innerHTML = `
+                  <div>
+                    <div class="form-group mb-3">
+                      <label for="fl-link-title">Link Title</label>
+                      <input type="text" class="form-control" id="fl-link-title" value="${fileName}" placeholder="Enter link title">
+                    </div>
+                    <div class="form-check mb-3">
+                      <input type="checkbox" class="form-check-input" id="fl-new-window">
+                      <label class="form-check-label" for="fl-new-window">Open link in new window</label>
+                    </div>
+                    <button type="button" id="fl-add-btn" class="btn btn-primary">Add</button>
+                    <button type="button" id="fl-cancel-btn" class="btn btn-light">Cancel</button>
+                  </div>
+                  `;
+
+                  window.document.querySelector("#fl-add-btn")?.addEventListener('click', () => {
+                    const linkTitle = window.document.querySelector('#fl-link-title');
+                    const newWindow = window.document.querySelector('#fl-new-window');
+
+
+                    setFlInfo(prev => ({
+                      ...prev,
+                      title: linkTitle?.value || fileName,
+                      link: res?.data?.secure_url,
+                      newWindow: newWindow?.checked
+                    }));
+
+                    window.document.querySelector('#addTextComponent')?.click();
+
+                  });
+                  window.document.querySelector("#fl-cancel-btn")?.addEventListener('click', () => {
+                    window.document.querySelector(".kb-art-link > .rdw-option-wrapper")?.click();
+                  });
               })
               .catch(err => {
                   console.log(err);
-                  NotificationManager.error("Photo could not be uploaded", "Error");
+                  NotificationManager.error("File could not be uploaded", "Error");
                   if (uploadBtn) {
                     uploadBtn.textContent = 'Upload';
                     uploadBtn.disabled = false;
@@ -491,9 +495,6 @@ useEffect(() => {
 
 
           linkPopup.insertBefore(uploadContainer, linkPopup.childNodes[4]);
-          
-          // console.log('Link Popup => ', linkPopup);
-          // console.log('last label => ', linkPopup?.childNodes);
         }
       }, 200)
 
@@ -655,7 +656,9 @@ useEffect(() => {
                 toolbarClassName="toolbarClassName"
                 wrapperClassName="wrapperClassName"
                 editorClassName="editorClassName automation-editor kb-editor"
+                placeholder={"Start typing..."}
                 onEditorStateChange={(editor) => onEditorStateChange(editor)}
+                toolbarCustomButtons={[<CustomOption />]}
               />
             </div>
           </div>
@@ -669,7 +672,7 @@ useEffect(() => {
               >
                 <p>Preview</p>
               </Link> */}
-              <button
+              <button 
                 className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
                 onClick={
                   articleId ? handlePatchArticle : handleSubmitNewArticle
