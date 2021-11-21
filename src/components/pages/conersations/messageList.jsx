@@ -59,11 +59,11 @@ export default function MessageList({
     };
     if(Object.keys(obj).some(function(k){ return ~k.indexOf(channel) })){
         if((placement === "foreground")) { 
-            return Object.entries(obj).find(([k, v]) => k.startsWith(channel))[1];
+            return Object.entries(obj).find(([k, v]) => k.startsWith(channel))[1]
         }
         return `${Object.entries(obj).find(([k, v]) => k.startsWith(channel))[1]}16`
     }
-    return "#2e2e2e";
+    return "#2e2e2e"
   }
 
   const formatDate = (date) =>{
