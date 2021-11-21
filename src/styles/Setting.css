@@ -38,9 +38,37 @@
     -o-border-radius: 8px;
 }
 
+
+
 #alphacxMTable.acx-user-table tbody tr:empty,
 #alphacxMTable.fit-content tbody tr:empty {
     display: none !important;
+}
+
+#alphacxMTable.acx-user-table-3 {
+    margin-top: 3rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+}
+
+#alphacxMTable.acx-user-table-3 tbody tr:empty {
+    display: none !important;
+}
+
+#alphacxMTable.acx-user-table-3 > div:nth-child(1) > div:nth-child(1) {
+    padding: 0 !important;
+}
+
+#alphacxMTable.acx-user-table-3 > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) {
+    display: none;
+}
+
+#alphacxMTable.acx-user-table-3 > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) {
+    padding-left: 0 !important;
 }
 
 #alphacxMTable.acx-user-table-2 {
