@@ -158,56 +158,56 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
                                 <div>
                                     <div className="form-group mt-3">
                                         <label className="f-14 mb-1">
-                                            Title <br/><small>({`Main title of the widget & displays at the top of the widget. E.g. "Hello, we’re AlphaCX!"`})</small>
+                                            Title <br/><small>({`E.g. "Hello, we’re AlphaCX!"`})</small>
                                         </label>
                                         <input
                                             type="text"
                                             className="form-control form-control"
                                             name="title"
                                             value={settings.title}
-                                            placeholder="Hello, we’re AlphaCX!"
+                                            // placeholder="Hello, we’re AlphaCX!"
                                             required
                                             onChange={handleInputChange}/>
                                     </div>
 
                                     <div className="form-group mt-4">
                                         <label className="f-14 mb-1">
-                                            Short Description <br/><small>({`Displays at the top of the widget. E.g. "Here’ s a few quick ways you can connect with us"`})</small>
+                                            Short Description <br/><small>({`E.g. "Here’ s a few quick ways you can connect with us"`})</small>
                                         </label>
                                         <input
                                             type="text"
                                             className="form-control form-control"
                                             name="description"
                                             value={settings.description}
-                                            placeholder="Here’ s a few quick ways you can connect with us."
+                                            // placeholder="Here’ s a few quick ways you can connect with us."
                                             required
                                             onChange={handleInputChange}/>
                                     </div>
 
                                     <div className="form-group mt-4">
                                         <label className="f-14 mb-1">
-                                            Initial chat <br/><small>({`NB: {{customer}} is replaced with customer's name. E.g. "Hello {{customer}}, how can we serve you today?"`})</small>
+                                            Initial chat <br/><small>({`E.g. "Hello {{customer}}, how can we serve you today?"`})</small>
                                         </label>
                                         <input
                                             type="text"
                                             className="form-control form-control"
                                             name="initialText"
                                             value={settings.initialText}
-                                            placeholder="Hello {{customer}}, how can we serve you today?"
+                                            // placeholder="Hello {{customer}}, how can we serve you today?"
                                             required
                                             onChange={handleInputChange}/>
                                     </div>
 
                                     <div className="form-group mt-4">
                                         <label className="f-14 mb-1">
-                                            Widget's Host Name <br/><small>({`Hostname of sites where widget will be embedded (Semi-colon seperated list). E.g. "alphacx.co;sub.site.com;google.com"`})</small>
+                                            Widget's Host Name <br/><small>({`E.g. "alphacx.co;sub.site.com;google.com"`})</small>
                                         </label>
                                         <input
                                             type="text"
                                             className="form-control form-control"
                                             name="domains"
                                             value={settings.domains}
-                                            placeholder="alphacx.co;sub.site.com;google.com"
+                                            // placeholder="alphacx.co;sub.site.com;google.com"
                                             style={{ fontFamily: 'monospace' }}
                                             required
                                             onChange={handleInputChange}/>
