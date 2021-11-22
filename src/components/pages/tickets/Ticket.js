@@ -324,7 +324,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         created_at: new Date(),
         plain_response: reply.plainText,
         response: reply.richText,
-        // user: SenderInfo?.customer,
+        type: type,
         user: user,
         "mentions": agentMentions
       };
