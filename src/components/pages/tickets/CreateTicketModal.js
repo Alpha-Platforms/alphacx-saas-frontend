@@ -39,6 +39,9 @@ const CreateTicketModal = ({
     getPaginatedTickets,
     resetTicketCreated,
     customers,
+    customerId,
+    customer,
+    isEditing = false,
     // setChangingRow,
     subCategories,
     tags,
@@ -88,6 +91,16 @@ const CreateTicketModal = ({
     });
     // const [cancelExec, setCancelExec] = useState(false);
 
+    // 
+    useEffect(() => {
+        if(isEditing){
+            setModalInputs(prevState => ({
+                ...prevState,
+                customer: customerId
+            }));
+        }
+    }, [createModalShow])
+    // 
     const handleRSInput = async ({value}, {name}) => {
         // {value}, {name} destructured - react-select onChange event takes inputValue and meta
 
@@ -197,11 +210,9 @@ const CreateTicketModal = ({
 
                         // add attachment to ticket body
                         newTicket.attachment = res?.data?.url || ''
-
-                        
-
                         addTicket(newTicket, () => {
                             NotificationManager.success("Ticket created successfully", 'Successful')
+                            setCreatingTicket(false);
                         });
                     })
                     .catch(err => {
@@ -210,8 +221,9 @@ const CreateTicketModal = ({
                         setCreatingTicket(false);
                     });
             } else {
-                addTicket(newTicket, () => {
+                await addTicket(newTicket, () => {
                     NotificationManager.success("Ticket created successfully", 'Successful')
+                    setCreatingTicket(false);
                 });
             }
             
@@ -597,10 +609,16 @@ const CreateTicketModal = ({
                             <div className="col-6 mt-2 position-relative">
                                 <label htmlFor="customer" className="form-label">Customer</label>
                                 <AsyncSelect 
+                                    isDisabled={isEditing}
                                     loadOptions={getSearchedCustomers}
                                     name="customer"
                                     placeholder="Lastname, Email or Phone"
                                     onChange={handleRSInput}
+                                    defaultValue={isEditing? {
+                                        value: customerId, 
+                                        label: `${customer?.firstname} ${customer?.lastname}`
+                                    }: null }
+
                                     defaultOptions={true}
                                 />                                
                             </div>
