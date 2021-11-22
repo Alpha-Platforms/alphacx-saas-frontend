@@ -231,7 +231,7 @@ const UserList = ({
         </div>
 
           {(isAgentsLoaded && isAdminsLoaded && isSupervisorLoaded) ? (
-        <div id="alphacxMTable" className="mb-3 acx-user-table acx-user-table-2">
+        <div id="alphacxMTable" className="mb-3 acx-user-table-3 acx-user-table-2">
             <MuiThemeProvider theme={tableTheme}>
               <MaterialTable
                 title=""
@@ -306,7 +306,7 @@ const UserList = ({
                     name: `${firstname} ${lastname}`,
                     emailAddress: email,
                     role,
-                    group: groups.map( (item, index) => <span>{`${item.group.name}${groups.length-1 > index? ", ":" "}`}</span>),
+                    group: groups.map( (item, index) => `${item.group.name}${groups.length-1 > index? ", ":" "}`).join(' '),
                     created: moment(created_at).format('DD MMM, YYYY'),
                     // created: "13 Apr 2021",
                     contact: { firstname, lastname, id, avatar },
