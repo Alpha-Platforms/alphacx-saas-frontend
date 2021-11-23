@@ -1,6 +1,7 @@
 import {useState, Fragment, useEffect} from 'react';
 import MessageIcon from '../../../assets/svgicons/Message.svg';
 import TicketIcon from '../../../assets/svgicons/Ticket.svg';
+import TicketStar from '../../../assets/svgicons/Ticket-Star.svg';
 import ShowIcon from '../../../assets/svgicons/Show.svg';
 import WorkIcon from '../../../assets/svgicons/Work.svg';
 import CallIcon from '../../../assets/svgicons/Call.svg';
@@ -23,6 +24,7 @@ import Profile from './components/Profile';
 import Notes from './components/Notes';
 import Timeline from './components/Timeline';
 import CreateCustomerModal from './CreateCustomerModal';
+import CreateTicketModal from '../tickets/CreateTicketModal';
 
 const CircleIcon = (props) => <span style={{ backgroundColor: props.color }} className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
 
@@ -32,6 +34,11 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
     const {id} = useParams();
     const [tabKey, setTabKey] = useState('ticket-history');
     const [showUpdate, setShowUpdate] = useState(false);
+    const [changingRow, setChangingRow] = useState(false);
+    // 
+    const [createTicketModalShow, setCreateTicketModalShow] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [customerId, setCustomerId] = useState('');
 
     useEffect(() => {
         getCurrentCustomer(id);
@@ -65,11 +72,15 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
         { item: ['q', 'r', 's'], color: "#F40D0D", background: "#FFEAEA" },
         { item: ['t', 'u', 'v'], color: "#662D91", background: "#F8EEFF" },
         { item: ['x', 'y', 'z'], color: "#1E90FF", background: "#E3F1FF" },
-      ];
-
+    ];
+    
     function handleEditClick () {
         setCreateModalShow(true);
     }
+
+    const createNewCustomerTicket = () =>{
+        alert("yes")
+    } 
 
     return (
         <Fragment>
@@ -154,12 +165,12 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
 
                         <hr className="op-1 mt-0"/>
 
-                        <div className="text-center my-4">
+                        {/* <div className="text-center my-4">
                             <Button
                                 className="bg-at-blue-light px-3"
                                 size="sm"
                                 onClick={handleEditClick}>Update Profile</Button>
-                        </div>
+                        </div> */}
                     </div>
 
                     <div
@@ -197,15 +208,21 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                             </div>
                             <div className="d-flex align-items-md-center">
                                 <div>
+                                    <button type="button" onClick={() => {
+                                            setCreateTicketModalShow(true);
+                                            setIsEditing(true);
+                                            setCustomerId(id);
+                                        }}
+                                        className="btn btn-sm acx-btn-primary px-md-3 py-1">
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            <img src={TicketStar} className="" alt="" height="16" width="auto"/>
+                                            <span className="">&nbsp; New Ticket</span>
+                                        </div>
+                                    </button>
                                     {/* <button
                                         type="button"
-                                        className="btn btn-sm btn-outline-secondary px-md-3 mx-md-2 me-1">
-                                        <img src={TicketIcon} className="pe-none" alt=""/>&nbsp; New Ticket
-                                    </button> */}
-                                    <button
-                                        type="button"
                                         className="reset-btn-outline btn btn-sm border btn-outline-secondary px-md-2 mx-md-2"><img src={MessageIcon} className="pe-none" alt=""/>&nbsp; Activation Email
-                                    </button>
+                                    </button> */}
                                 </div>
                             </div>
                         </div>
@@ -325,12 +342,19 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
             </div>
             {/* <!-- end of profile update canvas --> */}
 
+            <CreateTicketModal createModalShow={createTicketModalShow} setCreateModalShow={setCreateTicketModalShow} isEditing={isEditing} customerId={customerId} customer={currentCustomer}/>
+            
             <CreateCustomerModal createModalShow={createModalShow} setCreateModalShow={setCreateModalShow} isEditing={true} customerId={id} fromCustDetails={true} custId={id} />
 
         </Fragment>
     )
 }
 
-const mapStateToProps = (state, ownProps) => ({customers: state.customer.customers, isCustomerLoaded: state.customer.isCustomerLoaded, isCurrentCustomerLoaded: state.customer.isCurrentCustomerLoaded, currentCustomer: state.customer.currentCustomer});
+const mapStateToProps = (state, ownProps) => ({
+        customers: state.customer.customers, 
+        isCustomerLoaded: state.customer.isCustomerLoaded, 
+        isCurrentCustomerLoaded: state.customer.isCurrentCustomerLoaded, 
+        currentCustomer: state.customer.currentCustomer
+    });
 
 export default connect(mapStateToProps, {getCurrentCustomer})(Customer);
