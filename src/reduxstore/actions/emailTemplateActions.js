@@ -38,12 +38,12 @@ export const addEmailTemplate = (newEmailTemplate, successCallback, failureCallb
     axios
         .post(`${config.stagingBaseUrl}/settings/email-template`, body, userTokenConfig(getState))
         .then(res => {
-            console.log(res)
+            // console.log(res)
             dispatch({type: types.ADD_EMAIL_TEMPLATE, payload: res.data});
 			successCallback && successCallback();
         })
         .catch(err => {
-            console.log(err.response)
+            // console.log(err.response)
 			dispatch(returnErrors(
                 err.response?.data, 
                 err.response?.status
