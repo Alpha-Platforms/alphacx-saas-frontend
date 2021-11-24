@@ -366,7 +366,7 @@ const UserProfileTwo = ({
                                 <div className="mb-3 mt-4">
                                     <div className="d-flex mb-3">
                                         <div className="me-2 w-100">
-                                            <label for="first-name" className="form-label">
+                                            <label htmlFor="first-name" className="form-label">
                                                 First Name
                                             </label>
                                             <input
@@ -378,7 +378,7 @@ const UserProfileTwo = ({
                                                 onChange={handleInputChange}/>
                                         </div>
                                         <div className="w-100">
-                                            <label className="form-label" for="last-name">
+                                            <label className="form-label" htmlFor="last-name">
                                                 Last Name
                                             </label>
                                             <input
@@ -391,7 +391,7 @@ const UserProfileTwo = ({
                                         </div>
                                     </div>
                                     <div className="mb-3">
-                                        <label className="form-label" for="first-name">
+                                        <label className="form-label" htmlFor="first-name">
                                             Email
                                         </label>
                                         <input
@@ -405,7 +405,7 @@ const UserProfileTwo = ({
 
                                     <div className="d-flex mb-3">
                                         <div className="me-2 w-100">
-                                            <label for="first-name" className="form-label">Role</label>
+                                            <label htmlFor="first-name" className="form-label">Role</label>
                                             {/* <input
                                                 type="text"
                                                 id="role"
@@ -430,7 +430,7 @@ const UserProfileTwo = ({
                                             />
                                         </div>
                                         <div className="w-100">
-                                            <label className="form-label" for="last-name">Team(s)</label>
+                                            <label className="form-label" htmlFor="last-name">Team(s)</label>
                                             <RSelect
                                             isDisabled={!accessControl}                                                
                                             className=""
@@ -456,7 +456,7 @@ const UserProfileTwo = ({
                                 {authenticatedUser?.email === currentAgent?.email && 
                                     <div className="d-flex">
                                         <div className="mb-4 me-2 w-100">
-                                            <label className="form-label" for="change-password">
+                                            <label className="form-label" htmlFor="change-password">
                                                 Change Password
                                             </label>
                                             <input
@@ -475,7 +475,7 @@ const UserProfileTwo = ({
                                             </button> */}
                                         </div>
                                         <div className="mb-4 w-100">
-                                            <label className="form-label" for="change-password" style={{ visibility: "hidden" }}>
+                                            <label className="form-label" htmlFor="change-password" style={{ visibility: "hidden" }}>
                                                 Change Password
                                             </label>
                                             <input
