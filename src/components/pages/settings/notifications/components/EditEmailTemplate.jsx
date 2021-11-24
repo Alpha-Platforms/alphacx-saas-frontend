@@ -1,8 +1,7 @@
 import {useEffect, useState} from 'react';
 // 
 import {connect} from 'react-redux';
-import {Link} from "react-router-dom";
-import {useHistory} from 'react-router-dom';
+import {useHistory, Link, useParams} from 'react-router-dom';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import {NotificationManager} from 'react-notifications';
 // 
@@ -19,6 +18,9 @@ import "./newEmailTemplate.scss";
 import "../NotificationSettings.scss";
 
 const EditEmailTemplate = ({isConfigsLoaded, configs, getConfigs, updateEmailConfig}) => {
+    // 
+    const {id} = useParams();
+    // 
     // const availablePlaceholders = ["name", "ticket", "category", "open", "closed"];
     const availablePlaceholders = ["ticket", "customer", "status", "category"];
     const [placeholder, setPlaceholder] = useState("");

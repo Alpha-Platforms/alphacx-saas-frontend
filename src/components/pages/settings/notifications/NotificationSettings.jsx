@@ -92,7 +92,7 @@ useEffect(() => {
     //   width: "20%",
     // },
     {
-      title: "",
+      title: "Action",
       field: "dropdownAction",
       render: (rowData) => (
         <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
@@ -103,7 +103,7 @@ useEffect(() => {
           </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item eventKey="1">
-              <Link to={`/settings/notifications/email-template/${rowData.id}`}>
+              <Link to={`/settings/notifications/email-template/${rowData?.dropdownAction}`}>
                 <span className="black-text">Edit</span>
               </Link>
             </Dropdown.Item>
@@ -196,7 +196,7 @@ useEffect(() => {
                 columns={tableColumns}
                 title=""
                 icons={tableIcons}
-                data={emailTemplates ? emailTemplates.map(({id, subject, title}) => ({name: title, subject})) : []}
+                data={emailTemplates ? emailTemplates.map(({title, subject, id}) => ({name: title, subject, dropdownAction: id})) : []}
                 options={{
                   search: true,
                   selection: false,

@@ -59,7 +59,7 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
 
     const createFailed = () => {
         setCustLoading(false);
-        NotificationManager.error('An error occured', 'Opps');
+        NotificationManager.error(`Email template with type ${newTemplate.type} already exist`, 'Opps');
     }
 
     const handleSubmit = () => {
