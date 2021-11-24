@@ -20,8 +20,10 @@ import axios from 'axios';
 import {config} from '../../../../config/keys';
 import {connect} from 'react-redux';
 import {useHistory} from 'react-router-dom';
+import {getEmailTemplates} from '../../../../reduxstore/actions/emailTemplateActions';
 
-const NotificationSettings = ({isConfigsLoaded, configs}) => {
+
+const NotificationSettings = ({getEmailTemplates, isEmailTemplatesLoaded, emailTemplates}) => {
   const history = useHistory();
   const tableTheme = createTheme({
     palette: {
@@ -40,33 +42,20 @@ const NotificationSettings = ({isConfigsLoaded, configs}) => {
   const [custLoading, setCustLoading] = useState(false);
 
   const [notifications, setNotifications] = useState(null);
-
-//   useEffect(() => {
-//     setCustLoading(!isConfigsLoaded);
-//     if (isConfigsLoaded) {
-//       setCustLoading(false);
-//     }
-// }, [isConfigsLoaded]);
-
+  
 useEffect(() => {
-  if(isConfigsLoaded){
-    if (Object.keys(configs).length === 0 || !configs?.email_config?.template) {
-      history.push('/settings/notifications/email-template');
-    }
-    setCustLoading(!isConfigsLoaded);
-    if (isConfigsLoaded) {
-      setCustLoading(false);
-    }
+  if(isEmailTemplatesLoaded){
+    setCustLoading(false);
   } else {    
-      setCustLoading(false);
+      setCustLoading(true);
   }
-}, [isConfigsLoaded]);
+}, [isEmailTemplatesLoaded]);
 
-
-  /* useEffect(() => {
+  // 
+  useEffect(() => {
     setCustLoading(true);
-    getEmailTemplate();
-  }, []); */
+    getEmailTemplates();
+  }, []);
 
   const tableColumns = [
     {
@@ -114,7 +103,7 @@ useEffect(() => {
           </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item eventKey="1">
-              <Link to="/settings/notifications/email-template">
+              <Link to={`/settings/notifications/email-template/${rowData.id}`}>
                 <span className="black-text">Edit</span>
               </Link>
             </Dropdown.Item>
@@ -134,8 +123,8 @@ useEffect(() => {
   const AlphacxMTPagination = (props) => {
     const {
       ActionsComponent,
-      onChangePage,
-      onChangeRowsPerPage,
+      onPageChange,
+      onRowsPerPageChange,
       ...tablePaginationProps
     } = props;
 
@@ -146,7 +135,7 @@ useEffect(() => {
         rowsPerPage={5}
         count={20}
         page={1 - 1}
-        onPageChange={onChangePage}
+        onPageChange={onPageChange}
         // when the number of rows per page changes
         onRowsPerPageChange={(event) => {
           setChangingRow(true);
@@ -157,7 +146,7 @@ useEffect(() => {
           return (
             <ActionsComponent
               {...actionsComponentProps}
-              onChangePage={(event, newPage) => {
+              onPageChange={(event, newPage) => {
                 // fetch tickets with new current page
                 // getPaginatedTickets(meta.itemsPerPage, newPage + 1);
               }}
@@ -189,13 +178,12 @@ useEffect(() => {
         <div className="d-flex justify-content-between align-baseline">
           <h5 className="mt-3 mb-4 f-16 fw-bold">Notification Management</h5>
           <div>
-            <button
-              className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
+            <Link
+              className="btn btn-sm acx-btn-primary px-4"
               to="/settings/notifications/email-template"
-              disabled={true}
             >
               Add Notification
-            </button>
+            </Link>
           </div>
         </div>
         <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
@@ -204,11 +192,11 @@ useEffect(() => {
             className="pb-5 acx-ticket-cust-table acx-ticket-table acx-user-table-2 p-4 fit-content"
           >
             <MuiThemeProvider theme={tableTheme}>
-              {configs && <MaterialTable
+              {emailTemplates && <MaterialTable
                 columns={tableColumns}
                 title=""
                 icons={tableIcons}
-                data={configs?.email_config?.template ? [configs?.email_config?.template].map(({subject, title}) => ({name: title, subject})) : []}
+                data={emailTemplates ? emailTemplates.map(({id, subject, title}) => ({name: title, subject})) : []}
                 options={{
                   search: true,
                   selection: false,
@@ -245,8 +233,8 @@ useEffect(() => {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  isConfigsLoaded: state.config.isConfigsLoaded,
-  configs: state.config.configs
+  isEmailTemplatesLoaded: state.emailTemplate.isEmailTemplatesLoaded,
+  emailTemplates: state.emailTemplate.emailTemplates
 });
 
-export default connect(mapStateToProps, null)(NotificationSettings);
+export default connect(mapStateToProps, {getEmailTemplates})(NotificationSettings);

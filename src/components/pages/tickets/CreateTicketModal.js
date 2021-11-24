@@ -210,10 +210,13 @@ const CreateTicketModal = ({
 
                         // add attachment to ticket body
                         newTicket.attachment = res?.data?.url || ''
-                        addTicket(newTicket, () => {
+                        addTicket(newTicket, (() => {
                             NotificationManager.success("Ticket created successfully", 'Successful')
                             setCreatingTicket(false);
-                        });
+                        }), (() => {
+                            NotificationManager.error('Something', 'Opps!');
+                            setCreatingTicket(false);
+                        }));
                     })
                     .catch(err => {
                         console.log(err);
@@ -221,8 +224,11 @@ const CreateTicketModal = ({
                         setCreatingTicket(false);
                     });
             } else {
-                await addTicket(newTicket, () => {
+                 addTicket(newTicket, () => {
                     NotificationManager.success("Ticket created successfully", 'Successful')
+                    setCreatingTicket(false);
+                }, () => {
+                    NotificationManager.error('Something', 'Opps!');
                     setCreatingTicket(false);
                 });
             }

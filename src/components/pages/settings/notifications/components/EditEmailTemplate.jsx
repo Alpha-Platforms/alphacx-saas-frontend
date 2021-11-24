@@ -13,17 +13,37 @@ import AddIcon from "../../../../../assets/icons/add.svg";
 import DeleteIcon from "../../../../../assets/icons/Delete.svg";
 import RightArrow from "../../../../../assets/imgF/arrow_right.png";
 // 
-import {addEmailTemplate} from './../../../../../reduxstore/actions/emailTemplateActions';
+import {getConfigs, updateEmailConfig} from './../../../../../reduxstore/actions/configActions';
 // 
 import "./newEmailTemplate.scss";
 import "../NotificationSettings.scss";
 
-const NewEmailTemplate = ({addEmailTemplate}) => {
+const EditEmailTemplate = ({isConfigsLoaded, configs, getConfigs, updateEmailConfig}) => {
     // const availablePlaceholders = ["name", "ticket", "category", "open", "closed"];
     const availablePlaceholders = ["ticket", "customer", "status", "category"];
     const [placeholder, setPlaceholder] = useState("");
     const [custLoading, setCustLoading] = useState(false);
-    const [newTemplate, setNewTemplate] = useState({text: "", subject: "", name: "", type: ""});
+    const [newTemplate, setNewTemplate] = useState({text: "", subject: "", name: ""});
+
+    useEffect(() => {
+        setCustLoading(!isConfigsLoaded)
+        if (isConfigsLoaded) {
+            const emailTemplate = configs
+                ?.email_config
+                    ?.template;
+            setNewTemplate(prev => ({
+                ...prev,
+                name: emailTemplate
+                ?.title || '',
+                subject: emailTemplate
+                    ?.subject || '',
+                text: emailTemplate
+                    ?.ticket_template || ''
+            }))
+            setPlaceholder('Start typing...');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isConfigsLoaded]);
 
     const insertPlaceholder = (i) => {
         const shortCode = `{${availablePlaceholders[i]}}`;
@@ -42,7 +62,7 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
         });
     };
 
-    const submitEmailTemplate = async() => {
+    const submitNotificationTemplate = async() => {
         console.clear();
     };
 
@@ -52,25 +72,25 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
       history.push('/settings/notifications');
     }
 
-    const createSuccess = () => {
-        setCustLoading(false);
-        NotificationManager.success('Email Template created successfully', 'Success');
+    const updateSuccess = () => {
+        getConfigs(redirectUser);
+        NotificationManager.success('Template updated successfully', 'Success');
     }
 
-    const createFailed = () => {
-        setCustLoading(false);
+    const updateFailed = () => {
         NotificationManager.error('An error occured', 'Opps');
     }
 
     const handleSubmit = () => {
         setCustLoading(true);
         const newEmailTemplate = {
-            title: newTemplate.name,
-            subject: newTemplate.subject,
-            body: newTemplate.text,
-            "type": newTemplate.type
+            template: {
+                title: newTemplate.name,
+                subject: newTemplate.subject,
+                ticket_template: newTemplate.text
+            }
         };
-        addEmailTemplate(newEmailTemplate, createSuccess, createFailed);
+        updateEmailConfig(newEmailTemplate, updateSuccess, updateFailed);
     }
 
     return (
@@ -95,18 +115,23 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                     <div id="setting-form">
                         <h5 className="mt-3 mb-4 f-16 fw-bold">Edit Notification Template</h5>
                         <Form onSubmit={(e) => e.preventDefault()}>
-                            <div className="form-group mt-3">
-                                <label htmlFor="slaName" className="f-14 mb-1">
-                                    Title
+                            {/* <div className="form-group mt-3">
+                                <label htmlFor="ticket" className="f-14 mb-1">
+                                    Notification Category
                                 </label>
-                                <input
-                                    type="text"
-                                    className="form-control form-control-sm"
-                                    id="slaName"
-                                    name="name"
-                                    value={newTemplate.name || ""}
-                                    onChange={handleChange}/>
-                            </div>
+                                <select
+                                    className="form-select form-select-sm f-14"
+                                    id="ticket"
+                                    name="category"
+                                    value={newTemplate.category || ""}
+                                    onChange={handleChange}
+                                >
+                                    <option value="">Select category</option>
+                                    <option value="email">Email</option>
+                                    <option value="whatsapp">WhatsApp</option>
+                                    <option value="sms">SMS</option>
+                                </select>
+                            </div> */}
                             <div className="form-group mt-3">
                                 <label htmlFor="slaName" className="f-14 mb-1">
                                     Subject
@@ -121,22 +146,18 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                             </div>
 
                             <div className="form-group mt-3">
-                                <label htmlFor="ticket" className="f-14 mb-1">
-                                    Notification Type
+                                <label htmlFor="slaName" className="f-14 mb-1">
+                                    Title
                                 </label>
-                                <select
-                                    className="form-select form-select-sm f-14"
-                                    id="type"
-                                    name="type"
-                                    value={newTemplate.type || ""}
-                                    onChange={handleChange}
-                                >
-                                    <option value="">Select category</option>
-                                    <option value="emailAutoRespond">Email Auto Respond</option>
-                                    <option value="agentActivation">Agent Activation</option>
-                                    <option value="customerActivation">Customer Activation</option>
-                                </select>
+                                <input
+                                    type="text"
+                                    className="form-control form-control-sm"
+                                    id="slaName"
+                                    name="name"
+                                    value={newTemplate.name || ""}
+                                    onChange={handleChange}/>
                             </div>
+
                             <div className="form-group mt-3 mb-4">
                                 <label className="f-14 mb-1">Available Placeholders</label>
                                 <div className="available-placeholders">
@@ -177,6 +198,6 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
     );
 };
 
-const mapStateToProps = (state, ownProps) => ({configs: state.config.configs});
+const mapStateToProps = (state, ownProps) => ({isConfigsLoaded: state.config.isConfigsLoaded, configs: state.config.configs});
 
-export default connect(mapStateToProps, {addEmailTemplate})(NewEmailTemplate);
+export default connect(mapStateToProps, {getConfigs, updateEmailConfig})(EditEmailTemplate);

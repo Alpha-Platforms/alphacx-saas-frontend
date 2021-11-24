@@ -151,7 +151,7 @@ export const getCurrentTicket = (id) => (dispatch, getState) => {
     } */
 }
 
-export const addTicket = (newTicket, success) => (dispatch, getState) => {
+export const addTicket = (newTicket, success, failed) => (dispatch, getState) => {
     
     //Request body
     const body = JSON.stringify(newTicket);
@@ -174,8 +174,10 @@ export const addTicket = (newTicket, success) => (dispatch, getState) => {
                 success && success(res.data);
             }
             
-        })
-        .catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
+        }).catch(err => {
+            dispatch(returnErrors(err.response?.data, err.response?.status));
+            failed && failed();
+        });
 }
 
 export const resetTicketCreated = () => ({type: types.RESET_TICKET_CREATED});
