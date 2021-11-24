@@ -43,6 +43,7 @@ export const addEmailTemplate = (newEmailTemplate, successCallback, failureCallb
 			successCallback && successCallback();
         })
         .catch(err => {
+            console.log(err.response)
 			dispatch(returnErrors(
                 err.response?.data, 
                 err.response?.status
