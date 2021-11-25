@@ -115,7 +115,6 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                     NotificationManager.success(res?.message, 'Success');
                     setCreateModalShow(false);
                     setModalInputs({firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: '', ccode: '+234'});
-                    console.log('CUSTOMER RESPONSE => ', res);
                     const data = res?.data || [];
                     addNewCustomer(data, custMeta?.itemsPerPage);
                     // getPaginatedCustomers(50, 1);
