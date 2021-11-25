@@ -414,7 +414,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                 />
                             </div>
 
-                            <div>
+                            {/* <div>
                                 <div className="d-flex mb-4 mt-3">
                                     <div
                                         id="uploadPersonalPhotoInputImgPreview"
@@ -474,7 +474,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                         </p>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
                         </div>}
 
