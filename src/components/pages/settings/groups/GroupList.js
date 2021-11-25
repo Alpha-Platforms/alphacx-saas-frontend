@@ -24,6 +24,7 @@ import { ReactComponent as DotSvg } from "../../../../assets/icons/dots.svg";
 import { httpGetMain } from "../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import { wordCapitalize } from "helper";
+import AccessControl from "components/pages/auth/accessControl";
 
 const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser }) => {
   // 
@@ -35,7 +36,6 @@ const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser }) =>
   const [groupId, setGroupId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [groupsLoading, setGroupsLoading] = useState(false);
-  const [accessControl, setAccessControl] = useState(false)
 
   const [tagColors] = useState([
     "acx-bg-green-30", 
@@ -43,10 +43,6 @@ const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser }) =>
     "acx-bg-blue-light-30",
     "acx-bg-blue-30"
   ])
-
-  useEffect(() => {
-    setAccessControl(authenticatedUser.role === "Administrator");
-  }, [])
 
   useEffect(() => {
     setGroupsLoading(!isGroupsLoaded);
@@ -201,7 +197,7 @@ const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser }) =>
               &nbsp;Add Member
             </button> */}
 
-            { accessControl &&
+            <AccessControl>
               <button
                 onClick={handleGroupAdd}
                 type="button"
@@ -209,7 +205,7 @@ const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser }) =>
               >
                 &nbsp;Add Team
               </button>
-            }
+            </AccessControl>
 
           </div>
         </div>
