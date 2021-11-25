@@ -13,6 +13,7 @@ import ImageDefault from '../../../../assets/svgicons/image-default.svg';
 import axios from 'axios';
 import RSelect from "react-select";
 import {config} from '../../../../config/keys';
+// import {isAdminRole} from "components/pages/auth/accessControl";
 
 const UserProfileTwo = ({
     getCurrentAgent, 
@@ -406,34 +407,24 @@ const UserProfileTwo = ({
                                     <div className="d-flex mb-3">
                                         <div className="me-2 w-100">
                                             <label htmlFor="first-name" className="form-label">Role</label>
-                                            {/* <input
-                                                type="text"
-                                                id="role"
-                                                name="role"
-                                                className="form-control"
-                                                disabled={false}
-                                                value={personalInfoInputs.role}
-                                                onChange={handleInputChange}
-                                            /> */}
-
                                             <RSelect                                                                                          
                                             className=""
                                                 isClearable={false}
                                                 isMulti={false}
+                                                isDisabled={!accessControl}  
                                                 name="role"
                                                 defaultValue={RSRoles.filter(option => option.value === currentAgent.role) }
                                                 options={RSRoles}
-
                                                 onChange={options => {
                                                     setSelectedRole(options)
                                                 }}
                                             />
                                         </div>
+                                        
                                         <div className="w-100">
                                             <label className="form-label" htmlFor="last-name">Team(s)</label>
                                             <RSelect
-                                            isDisabled={!accessControl}                                                
-                                            className=""
+                                                isDisabled={!accessControl}  
                                                 isClearable={false}
                                                 isMulti
                                                 name="teams"
