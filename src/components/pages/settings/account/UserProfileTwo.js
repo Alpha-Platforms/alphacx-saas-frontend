@@ -82,6 +82,26 @@ const UserProfileTwo = ({
         setRSTeams(mappedItems);
     }
 
+    const updateUserLocalData = (newData) => {
+        // to update current logged in user data in local storage
+
+        // get existing data
+        const lUser = localStorage.getItem("user");
+
+        if (lUser) {
+            const oldUserDetails = JSON.parse(lUser);
+
+            const newUserDetails = {
+                ...oldUserDetails,
+                user: {
+                    ...oldUserDetails?.user,
+                    ...newData
+                }
+            }
+            window.localStorage.setItem("user", JSON.stringify(newUserDetails));
+        }
+    }
+
 
     const updateUserInfo = async () => {
         const {firstname, lastname, email, role, teams, oldPassword, newPassword} = personalInfoInputs;
@@ -115,6 +135,9 @@ const UserProfileTwo = ({
                             const userRes = await updateUser({...updatedInfo, avatar: res.data?.url});
                             if (userRes?.status === 'success') {
                                 NotificationManager.success('Info has been updated', 'Success');
+                                if (authenticatedUser?.email === currentAgent?.email) {
+                                    userRes?.data && updateUserLocalData(userRes?.data);
+                                }
                                 getAgents()
                                 window.history.back();
                             } else {
@@ -131,6 +154,9 @@ const UserProfileTwo = ({
                     const userRes = await updateUser(updatedInfo);
                     if (userRes?.status === 'success') {
                         NotificationManager.success('Info has been updated', 'Success');
+                        if (authenticatedUser?.email === currentAgent?.email) {
+                            userRes?.data && updateUserLocalData(userRes?.data);
+                        }
                         getAgents();
                         window.history.back();
                     } else {
@@ -159,8 +185,13 @@ const UserProfileTwo = ({
                     .then(async res => {
 
                         const userRes = await updateUser({...updatedInfo, avatar: res.data?.url});
+
                         if (userRes?.status === 'success') {
+                            // user update successful
                             NotificationManager.success('Info has been updated', 'Success');
+                            if (authenticatedUser?.email === currentAgent?.email) {
+                                userRes?.data && updateUserLocalData(userRes?.data);
+                            }
                             getAgents();
                             window.history.back();
                         } else {
@@ -177,6 +208,9 @@ const UserProfileTwo = ({
                 const userRes = await updateUser(updatedInfo);
                 if (userRes?.status === 'success') {
                     NotificationManager.success('Info has been updated', 'Success');
+                    if (authenticatedUser?.email === currentAgent?.email) {
+                        userRes?.data && updateUserLocalData(userRes?.data);
+                    }
                     getAgents();
                     window.history.back();
                 } else {
