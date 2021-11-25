@@ -72,8 +72,6 @@ const AccountSettings = () => {
 
     if (res?.status === "success") {
       setOrganisation(prev => ({...prev, ...res?.data}))
-    } else {
-      return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
   };
 
