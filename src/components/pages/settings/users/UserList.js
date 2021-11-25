@@ -61,7 +61,7 @@ const UserList = ({
 
 
   useEffect(() => {
-    if (false) {
+    if (authenticatedUserRole === "Administrator" || authenticatedUserRole === "Supervisor" ) {
       setCombinedUsers([...admins, ...supervisors, ...agents])
     } else {
       setCombinedUsers([...agents])
@@ -380,7 +380,9 @@ const mapStateToProps = (state, ownProps) => ({
   isSupervisorLoaded: state.supervisor.isSupervisorsLoaded,
   groups: state.group.groups,
   isUserAuthenticated: state.userAuth.isUserAuthenticated,
-  signedUser: state.userAuth.user
+  signedUser: state.userAuth.user,
+  authenticatedUserRole: state.userAuth.user.role
+
 });
 
 export default connect(mapStateToProps, { getPaginatedUsers, getAgents, getSupervisors, getAdmins, negateActiveState })(UserList);
