@@ -37,21 +37,16 @@ import {connect} from 'react-redux';
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-
+import AccessControl from "../auth/accessControl.jsx"
 
 
 function SettingsHome({signedUser}) {
 
-  const [accessControl, setAccessControl] = useState(false)
-
-  useEffect(() => {
-    setAccessControl(signedUser.role === "Administrator");
-  }, [])
   
   return (
     <Container fluid>
       <Row className="g-3">
-        
+
         <Col sm={6} md={4} className="settings-menu-item">
           <div className="border rounded bg-light">
             <Link
@@ -71,7 +66,8 @@ function SettingsHome({signedUser}) {
               </div>
             </Link>
           </div>
-        </Col>        
+        </Col>
+
 
         <Col sm={6} md={4} className="settings-menu-item">
           <div className="border rounded bg-light">
@@ -90,6 +86,7 @@ function SettingsHome({signedUser}) {
             </Link>
           </div>
         </Col>
+          
 
         <Col sm={6} md={4} className="settings-menu-item">   
           <div className="border rounded bg-light">
@@ -112,7 +109,7 @@ function SettingsHome({signedUser}) {
           </div>
         </Col>
 
-        { accessControl &&
+        <AccessControl>
           <Col sm={6} md={4} className="settings-menu-item">   
             <div className="border rounded bg-light">
               <Link
@@ -133,10 +130,9 @@ function SettingsHome({signedUser}) {
               </Link>
             </div>
           </Col>
-        }
+        </AccessControl>
 
-      
-        { accessControl &&
+        <AccessControl>
           <Col sm={6} md={4} className="settings-menu-item">   
             <div className="border rounded bg-light">
               <Link
@@ -157,9 +153,9 @@ function SettingsHome({signedUser}) {
               </Link>
             </div>
           </Col>
-        }
+        </AccessControl>
 
-        { accessControl &&
+        <AccessControl>
           <Col sm={6} md={4} className="settings-menu-item">   
             <div className="border rounded bg-light">
               <Link
@@ -179,9 +175,9 @@ function SettingsHome({signedUser}) {
               </Link>
             </div>
           </Col>
-        }
+        </AccessControl>
 
-        { accessControl &&
+        <AccessControl>
           <Col sm={6} md={4} className="settings-menu-item">   
             <div className="border rounded bg-light">
               <Link to="/settings/integrations" className="d-block cursor text-decoration-none">
@@ -199,10 +195,9 @@ function SettingsHome({signedUser}) {
               </Link>
             </div>
           </Col>
-        }
-                
-        { accessControl &&
-
+        </AccessControl>    
+        
+        <AccessControl>
           <Col sm={6} md={4} className="settings-menu-item">   
             <div className="border rounded bg-light">
               <Link
@@ -223,9 +218,9 @@ function SettingsHome({signedUser}) {
               </Link>
             </div>
           </Col>
-        }
+        </AccessControl>
 
-        { accessControl &&
+        <AccessControl>
           <Col sm={6} md={4} className="settings-menu-item">   
             <div className="border rounded bg-light">
               <Link
@@ -246,47 +241,47 @@ function SettingsHome({signedUser}) {
               </Link>
             </div>
           </Col>
-        }
+        </AccessControl>
         
-        { accessControl &&
-          <Col sm={6} md={4} className="settings-menu-item">   
-            <div className="border rounded bg-light">
-              <Link to="settings/ratings" className="d-block cursor text-decoration-none">
-                <div className="d-flex p-md-4">
-                  <div className="">
-                    <img src={ChartBlueIcon} alt="" />
-                  </div>
-                  <div className="ms-3">
-                    <h6 className="text-dark mb-0">Ratings and Review</h6>
-                    <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                      Setup ratings for customer feedback.
-                    </p>
-                  </div>
+        <AccessControl>
+        <Col sm={6} md={4} className="settings-menu-item">   
+          <div className="border rounded bg-light">
+            <Link to="settings/ratings" className="d-block cursor text-decoration-none">
+              <div className="d-flex p-md-4">
+                <div className="">
+                  <img src={ChartBlueIcon} alt="" />
                 </div>
-              </Link>
-            </div>
-          </Col>
-        }
+                <div className="ms-3">
+                  <h6 className="text-dark mb-0">Ratings and Review</h6>
+                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Setup ratings for customer feedback.
+                  </p>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </Col>
+      </AccessControl>
       
-        { accessControl &&
-          <Col sm={6} md={4} className="settings-menu-item">   
-            <div className="border rounded bg-light">
-              <Link to="settings/fields" className="d-block cursor text-decoration-none">
-                <div className="d-flex p-md-4">
-                  <div className="">
-                    <img src={FieldsLightIcon} alt="" />
-                  </div>
-                  <div className="ms-3">
-                    <h6 className="text-dark mb-0">Fields</h6>
-                    <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                      Setup fields for users, tickets and customers forms.
-                    </p>
-                  </div>
+      <AccessControl>
+        <Col sm={6} md={4} className="settings-menu-item">   
+          <div className="border rounded bg-light">
+            <Link to="settings/fields" className="d-block cursor text-decoration-none">
+              <div className="d-flex p-md-4">
+                <div className="">
+                  <img src={FieldsLightIcon} alt="" />
                 </div>
-              </Link>
-            </div>
-          </Col>
-        }
+                <div className="ms-3">
+                  <h6 className="text-dark mb-0">Fields</h6>
+                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                    Setup fields for users, tickets and customers forms.
+                  </p>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </Col>
+      </AccessControl>
 
         {/* <Col sm={6} md={4} className="settings-menu-item">   
           <div className="border rounded bg-light">
@@ -379,6 +374,7 @@ function SettingsHome({signedUser}) {
           </Link>
         </div> </Col>*/}
       </Row>
+
     </Container>
   );
 }

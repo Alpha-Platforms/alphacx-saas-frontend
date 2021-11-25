@@ -29,6 +29,7 @@ import {getAdmins} from '../../../../reduxstore/actions/adminActions';
 import {getSupervisors} from '../../../../reduxstore/actions/supervisorActions';
 import "../../../../styles/Setting.css";
 import {NotificationManager} from 'react-notifications';
+import AccessControl from "../../auth/accessControl.jsx"
 
 const UserList = ({
   users,
@@ -56,11 +57,7 @@ const UserList = ({
   const [inviteModalShow, setInviteModalShow] = useState(false);
   const [importModalShow, setImportModalShow] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
-  const [accessControl, setAccessControl] = useState(false)
 
-  useEffect(() => {
-    setAccessControl(signedUser.role === "Administrator");
-  }, [])
 
   useEffect(() => {
     if (isUserAuthenticated) {
@@ -193,9 +190,9 @@ const UserList = ({
           </div>
           <div className="mt-3">
             
-            { accessControl &&
+            <AccessControl>
               <button className="btn btn-custom btn-sm px-4 bg-at-blue-light py-2" onClick={() => setCreateModalShow(true)}>New User</button>
-            }
+            </AccessControl>
 
             {/* <Dropdown className="new-user-dropdown" id="new-user-dropdown">
               <Dropdown.Toggle
