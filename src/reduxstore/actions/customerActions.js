@@ -53,6 +53,19 @@ export const getInstantSearchedCustomers = async(term) => {
     }
 }
 
+export const addNewCustomer = (newCust, pageSize = 50) => (dispatch, getState) => {
+    console.log('Calling from addNewCustomer');
+    const existingCust = JSON.parse(JSON.stringify(getState()?.customer?.customers || []));
+
+    if (existingCust.length >= pageSize) existingCust.pop();
+    existingCust.unshift(newCust)
+
+    newCust && dispatch({
+        type: types.ADD_CUSTOMER,
+        payload: existingCust
+    });
+}
+
 // valid redux action
 export const getPaginatedCustomers = (itemsPerPage, currentPage) => (dispatch, getState) => {
     if (!navigator.onLine) {
@@ -74,7 +87,7 @@ export const getPaginatedCustomers = (itemsPerPage, currentPage) => (dispatch, g
                 payload: {
                     meta: {
                         totalItems:"0",
-                        itemsPerPage: 10,
+                        itemsPerPage: 50,
                         currentPage: 1,
                         totalPages: 0
                     }
