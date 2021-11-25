@@ -18,6 +18,9 @@ import {
   AppFullLogo
 } from "../../assets/images/svgs";
 import Modal from "react-responsive-modal";
+import AccessControl from "components/pages/auth/accessControl";
+
+
 export default function Sidebar({ browserRouter, currentRoute }) {
   const {
     // setreduceSidebarWidth,
@@ -90,15 +93,17 @@ export default function Sidebar({ browserRouter, currentRoute }) {
           </span>
         </li>
 
-        <li onClick={() => browserRouter(`/reports`)}
-            className={`sidebar-list--item ${currentRoute === "/reports" ? "active" : ""}`}>
-          <span className="sidebar-list--icon">
-            { <Graph activeRoute={false}/> }
-          </span>
-          <span className="sidebar-list--text">
-            Reports
-          </span>
-        </li>
+        <AccessControl>
+          <li onClick={() => browserRouter(`/reports`)}
+              className={`sidebar-list--item ${currentRoute === "/reports" ? "active" : ""}`}>
+            <span className="sidebar-list--icon">
+              { <Graph activeRoute={false}/> }
+            </span>
+            <span className="sidebar-list--text">
+              Reports
+            </span>
+          </li>
+        </AccessControl>
 
         <li onClick={() => browserRouter(`/settings`)}
             className={`sidebar-list--item ${currentRoute === "/settings" ? "active" : ""}`}>

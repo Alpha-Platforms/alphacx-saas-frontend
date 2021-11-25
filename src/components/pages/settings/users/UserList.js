@@ -57,6 +57,17 @@ const UserList = ({
   const [inviteModalShow, setInviteModalShow] = useState(false);
   const [importModalShow, setImportModalShow] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
+  const [combinedUsers, setCombinedUsers] = useState([])
+
+
+  useEffect(() => {
+    if (false) {
+      setCombinedUsers([...admins, ...supervisors, ...agents])
+    } else {
+      setCombinedUsers([...agents])
+    }
+
+  }, [admins, supervisors, agents])
 
 
   useEffect(() => {
@@ -75,6 +86,8 @@ const UserList = ({
       setCreateModalShow(location?.state?.historyCreateModalShow)
     }
   }, [location])
+
+
   // useEffect(() => {
   //   setUserLoading(!agents);
   //   if (isAgentsLoaded) {
@@ -286,7 +299,7 @@ const UserList = ({
                     ),
                   },
                 ]}
-                data={[...admins,...supervisors, ...agents].map(
+                data={combinedUsers.map(
                   ({
                     firstname,
                     lastname,
