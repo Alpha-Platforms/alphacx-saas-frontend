@@ -48,7 +48,8 @@ const UserList = ({
   signedUser,
   getAgents,
   getAdmins,
-  getSupervisors
+  getSupervisors,
+  authenticatedUserRole
 }) => {
   // 
   const location = useLocation();
