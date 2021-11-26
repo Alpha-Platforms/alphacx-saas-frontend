@@ -193,7 +193,7 @@ const CreateTicketModal = ({
                 subject,
                 categoryId: category,
                 channel: channel || "helpdesk",
-                tags: selectedTags,
+                tags: Array.isArray(selectedTags) ? selectedTags.map(tag => tag?.value) : [],
                 groupId: group || null,
                 dueDate: (dueDays * 24) + dueHours
             };
@@ -418,7 +418,6 @@ const CreateTicketModal = ({
 
 
     const handleTagCreation = newTag => {
-        console.log('TAGS => ', tags, 'NEW TAG => ', newTag);
         const realTags = Array.isArray(tags) ? tags : [];
         newTag = newTag.toLowerCase();
         setTagSelectLoading(true);
