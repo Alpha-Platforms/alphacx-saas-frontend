@@ -55,15 +55,21 @@ export default function MessageList({
         "sms": "#F22F46",
         "helpdesk": "#4A154B",
         "livechat": "#1A1D33",
-        "system": "#F00073"
+        "system": "#F00073",
+        "others": "#2E2E2E"
     };
     if(Object.keys(obj).some(function(k){ return ~k.indexOf(channel) })){
         if((placement === "foreground")) { 
             return Object.entries(obj).find(([k, v]) => k.startsWith(channel))[1]
         }
         return `${Object.entries(obj).find(([k, v]) => k.startsWith(channel))[1]}16`
+    }else{ 
+      if(placement === "foreground"){
+        return obj.others
+      }else{
+        return `${obj.others}16`
+      }
     }
-    return "#2e2e2e"
   }
 
   const formatDate = (date) =>{
