@@ -692,7 +692,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                             <p>
                               {`${capitalize(
                                 SenderInfo?.customer?.firstname)} ${capitalize(SenderInfo?.customer?.lastname == "default"? "" : SenderInfo?.customer?.lastname)} 
-                                ${capitalize(SenderInfo?.customer?.email)}`}
+                                ${capitalize(SenderInfo?.customer?.email || "")}`}
                               <span className="custormChatHeaderDot"></span>{" "}
                               <span>{dateFormater(ticket[0]?.updated_at)}</span>
                             </p>

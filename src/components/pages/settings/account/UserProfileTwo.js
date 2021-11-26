@@ -13,6 +13,7 @@ import ImageDefault from '../../../../assets/svgicons/image-default.svg';
 import axios from 'axios';
 import RSelect from "react-select";
 import {config} from '../../../../config/keys';
+// import {isAdminRole} from "components/pages/auth/accessControl";
 
 const UserProfileTwo = ({
     getCurrentAgent, 
@@ -51,11 +52,27 @@ const UserProfileTwo = ({
 
     const [RSTeams, setRSTeams] = useState([]);
     const [selectedTeams, setSelectedTeams] = useState([]);
+
+    const [RSRoles, setRSRoles] = useState([
+        {value: "Agent", label: "Agent"},
+        {value: "Supervisor", label: "Supervisor"},
+        {value: "Administrator", label: "Administrator"}
+    ]);
+
+    const [selectedRole, setSelectedRole] = useState([])
+
     const [accessControl, setAccessControl] = useState(false)
 
     useEffect(() => {
         setAccessControl(authenticatedUser.role === "Administrator");
     }, [])
+
+    useEffect(() => {
+        setSelectedRole(
+            {value: currentAgent?.role, label: currentAgent?.role}
+        )
+
+    }, [currentAgent])
 
     
     const loadRSTeams = () => {
@@ -66,6 +83,26 @@ const UserProfileTwo = ({
         setRSTeams(mappedItems);
     }
 
+    const updateUserLocalData = (newData) => {
+        // to update current logged in user data in local storage
+
+        // get existing data
+        const lUser = localStorage.getItem("user");
+
+        if (lUser) {
+            const oldUserDetails = JSON.parse(lUser);
+
+            const newUserDetails = {
+                ...oldUserDetails,
+                user: {
+                    ...oldUserDetails?.user,
+                    ...newData
+                }
+            }
+            window.localStorage.setItem("user", JSON.stringify(newUserDetails));
+        }
+    }
+
 
     const updateUserInfo = async () => {
         const {firstname, lastname, email, role, teams, oldPassword, newPassword} = personalInfoInputs;
@@ -74,7 +111,7 @@ const UserProfileTwo = ({
             firstname,
             lastname,
             email,
-            role,
+            role: selectedRole.value,
             groupIds: selectedTeams.map(team => team.value)
         };
 
@@ -99,6 +136,9 @@ const UserProfileTwo = ({
                             const userRes = await updateUser({...updatedInfo, avatar: res.data?.url});
                             if (userRes?.status === 'success') {
                                 NotificationManager.success('Info has been updated', 'Success');
+                                if (authenticatedUser?.email === currentAgent?.email) {
+                                    userRes?.data && updateUserLocalData(userRes?.data);
+                                }
                                 getAgents()
                                 window.history.back();
                             } else {
@@ -115,6 +155,9 @@ const UserProfileTwo = ({
                     const userRes = await updateUser(updatedInfo);
                     if (userRes?.status === 'success') {
                         NotificationManager.success('Info has been updated', 'Success');
+                        if (authenticatedUser?.email === currentAgent?.email) {
+                            userRes?.data && updateUserLocalData(userRes?.data);
+                        }
                         getAgents();
                         window.history.back();
                     } else {
@@ -143,8 +186,13 @@ const UserProfileTwo = ({
                     .then(async res => {
 
                         const userRes = await updateUser({...updatedInfo, avatar: res.data?.url});
+
                         if (userRes?.status === 'success') {
+                            // user update successful
                             NotificationManager.success('Info has been updated', 'Success');
+                            if (authenticatedUser?.email === currentAgent?.email) {
+                                userRes?.data && updateUserLocalData(userRes?.data);
+                            }
                             getAgents();
                             window.history.back();
                         } else {
@@ -161,6 +209,9 @@ const UserProfileTwo = ({
                 const userRes = await updateUser(updatedInfo);
                 if (userRes?.status === 'success') {
                     NotificationManager.success('Info has been updated', 'Success');
+                    if (authenticatedUser?.email === currentAgent?.email) {
+                        userRes?.data && updateUserLocalData(userRes?.data);
+                    }
                     getAgents();
                     window.history.back();
                 } else {
@@ -350,7 +401,7 @@ const UserProfileTwo = ({
                                 <div className="mb-3 mt-4">
                                     <div className="d-flex mb-3">
                                         <div className="me-2 w-100">
-                                            <label for="first-name" className="form-label">
+                                            <label htmlFor="first-name" className="form-label">
                                                 First Name
                                             </label>
                                             <input
@@ -362,7 +413,7 @@ const UserProfileTwo = ({
                                                 onChange={handleInputChange}/>
                                         </div>
                                         <div className="w-100">
-                                            <label className="form-label" for="last-name">
+                                            <label className="form-label" htmlFor="last-name">
                                                 Last Name
                                             </label>
                                             <input
@@ -375,7 +426,7 @@ const UserProfileTwo = ({
                                         </div>
                                     </div>
                                     <div className="mb-3">
-                                        <label className="form-label" for="first-name">
+                                        <label className="form-label" htmlFor="first-name">
                                             Email
                                         </label>
                                         <input
@@ -389,23 +440,25 @@ const UserProfileTwo = ({
 
                                     <div className="d-flex mb-3">
                                         <div className="me-2 w-100">
-                                            <label for="first-name" className="form-label">
-                                                Role
-                                            </label>
-                                            <input
-                                                type="text"
-                                                id="role"
-                                                name="role"
-                                                className="form-control"
-                                                disabled={true}
-                                                value={personalInfoInputs.role}
-                                                onChange={handleInputChange}/>
-                                        </div>
-                                        <div className="w-100">
-                                            <label className="form-label" for="last-name">Team(s)</label>
-                                            <RSelect
-                                            isDisabled={!accessControl}                                                
+                                            <label htmlFor="first-name" className="form-label">Role</label>
+                                            <RSelect                                                                                          
                                             className=""
+                                                isClearable={false}
+                                                isMulti={false}
+                                                isDisabled={!accessControl}  
+                                                name="role"
+                                                defaultValue={RSRoles.filter(option => option.value === currentAgent.role) }
+                                                options={RSRoles}
+                                                onChange={options => {
+                                                    setSelectedRole(options)
+                                                }}
+                                            />
+                                        </div>
+                                        
+                                        <div className="w-100">
+                                            <label className="form-label" htmlFor="last-name">Team(s)</label>
+                                            <RSelect
+                                                isDisabled={!accessControl}  
                                                 isClearable={false}
                                                 isMulti
                                                 name="teams"
@@ -428,7 +481,7 @@ const UserProfileTwo = ({
                                 {authenticatedUser?.email === currentAgent?.email && 
                                     <div className="d-flex">
                                         <div className="mb-4 me-2 w-100">
-                                            <label className="form-label" for="change-password">
+                                            <label className="form-label" htmlFor="change-password">
                                                 Change Password
                                             </label>
                                             <input
@@ -447,7 +500,7 @@ const UserProfileTwo = ({
                                             </button> */}
                                         </div>
                                         <div className="mb-4 w-100">
-                                            <label className="form-label" for="change-password" style={{ visibility: "hidden" }}>
+                                            <label className="form-label" htmlFor="change-password" style={{ visibility: "hidden" }}>
                                                 Change Password
                                             </label>
                                             <input

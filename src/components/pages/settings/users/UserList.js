@@ -29,6 +29,7 @@ import {getAdmins} from '../../../../reduxstore/actions/adminActions';
 import {getSupervisors} from '../../../../reduxstore/actions/supervisorActions';
 import "../../../../styles/Setting.css";
 import {NotificationManager} from 'react-notifications';
+import AccessControl from "../../auth/accessControl.jsx"
 
 const UserList = ({
   users,
@@ -47,7 +48,8 @@ const UserList = ({
   signedUser,
   getAgents,
   getAdmins,
-  getSupervisors
+  getSupervisors,
+  authenticatedUserRole
 }) => {
   // 
   const location = useLocation();
@@ -56,11 +58,21 @@ const UserList = ({
   const [inviteModalShow, setInviteModalShow] = useState(false);
   const [importModalShow, setImportModalShow] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
-  const [accessControl, setAccessControl] = useState(false)
+  const [combinedUsers, setCombinedUsers] = useState([])
+
 
   useEffect(() => {
-    setAccessControl(signedUser.role === "Administrator");
-  }, [])
+    if (authenticatedUserRole === "Administrator" || authenticatedUserRole === "Supervisor" ) {
+      const realAdmins = Array.isArray(admins) ? admins : [];
+      const realSupervisors = Array.isArray(supervisors) ? supervisors : [];
+      const realAgents = Array.isArray(agents) ? agents : [];
+      setCombinedUsers([...realAdmins, ...realSupervisors, ...realAgents]);
+    } else {
+      setCombinedUsers([...agents])
+    }
+
+  }, [admins, supervisors, agents])
+
 
   useEffect(() => {
     if (isUserAuthenticated) {
@@ -78,6 +90,8 @@ const UserList = ({
       setCreateModalShow(location?.state?.historyCreateModalShow)
     }
   }, [location])
+
+
   // useEffect(() => {
   //   setUserLoading(!agents);
   //   if (isAgentsLoaded) {
@@ -193,9 +207,9 @@ const UserList = ({
           </div>
           <div className="mt-3">
             
-            { accessControl &&
+            <AccessControl>
               <button className="btn btn-custom btn-sm px-4 bg-at-blue-light py-2" onClick={() => setCreateModalShow(true)}>New User</button>
-            }
+            </AccessControl>
 
             {/* <Dropdown className="new-user-dropdown" id="new-user-dropdown">
               <Dropdown.Toggle
@@ -289,7 +303,7 @@ const UserList = ({
                     ),
                   },
                 ]}
-                data={[...admins,...supervisors, ...agents].map(
+                data={combinedUsers.map(
                   ({
                     firstname,
                     lastname,
@@ -370,7 +384,9 @@ const mapStateToProps = (state, ownProps) => ({
   isSupervisorLoaded: state.supervisor.isSupervisorsLoaded,
   groups: state.group.groups,
   isUserAuthenticated: state.userAuth.isUserAuthenticated,
-  signedUser: state.userAuth.user
+  signedUser: state.userAuth.user,
+  authenticatedUserRole: state.userAuth.user.role
+
 });
 
 export default connect(mapStateToProps, { getPaginatedUsers, getAgents, getSupervisors, getAdmins, negateActiveState })(UserList);

@@ -33,7 +33,8 @@ const customerReducer = (state = initialState, action) => {
 			}
 		case types.ADD_CUSTOMER:
 			return {
-				...state
+				...state,
+				customers: action.payload
 			}
 		case types.CURRENT_CUSTOMER_LOADING:
 			return {

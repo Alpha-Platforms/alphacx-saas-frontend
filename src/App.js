@@ -135,7 +135,7 @@ const SiteRouter = connect(mapStateToProps, {
     useEffect(() => {
         siteUser && loadUser(siteUser);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [siteUser]);
+    }, [JSON.parse(localStorage.getItem('user'))]);
 
     useEffect(() => {
         if (isUserAuthenticated) {
