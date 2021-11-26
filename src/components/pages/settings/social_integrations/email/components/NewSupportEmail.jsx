@@ -166,7 +166,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
           port: configs?.outgoing_email_config?.port || '',
           email: configs?.outgoing_email_config?.email || '',
           password: configs?.outgoing_email_config?.password || '',
-          type: configs?.outgoing_email_config?.type || '',
+          type: configs?.outgoing_email_config?.type || 'smtp',
           apiKey: configs?.outgoing_email_config?.apiKey || '',
           from: configs?.outgoing_email_config?.from || ''
         }

@@ -196,27 +196,20 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
     }
 
 
-    const tagCreated = (newTags, newTag) => {
-        // new tag created successfully
-        
-        setSelectedTags(prev => ([...selectedTags, {value: newTag, label: newTag}]));
-        setTagSelectLoading(false);
-    }
-
-    const tagNotCreated = () => {
-        // tag creation failed
-        NotificationManager.error("Tag could not be created, pls try again", "Error");
-        setTagSelectLoading(false);
-    }
-
     const handleTagCreation = newTag => {
+        const realTags = Array.isArray(tags) ? tags : [];
         newTag = newTag.toLowerCase();
         setTagSelectLoading(true);
-        const newTags = Array.isArray(tags) ? [...tags, newTag] : [newTag];
-
-        createTags(newTags, tagCreated, tagNotCreated, newTag);
+        const newTags = [...realTags, newTag];
+        createTags(newTags, (newTags, newTag) => {
+            // new tag created successfully
+            setSelectedTags(prev => ([...selectedTags, {value: newTag, label: newTag}]));
+            setTagSelectLoading(false);
+        }, () => {
+            // tag creation failed
+            setTagSelectLoading(false);
+        }, newTag);
     }
-
     function DownCaretIcon() {
         return (
             <svg
