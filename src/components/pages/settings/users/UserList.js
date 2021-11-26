@@ -63,7 +63,10 @@ const UserList = ({
 
   useEffect(() => {
     if (authenticatedUserRole === "Administrator" || authenticatedUserRole === "Supervisor" ) {
-      setCombinedUsers([...admins, ...supervisors, ...agents])
+      const realAdmins = Array.isArray(admins) ? admins : [];
+      const realSupervisors = Array.isArray(supervisors) ? supervisors : [];
+      const realAgents = Array.isArray(agents) ? agents : [];
+      setCombinedUsers([...realAdmins, ...realSupervisors, ...realAgents]);
     } else {
       setCombinedUsers([...agents])
     }

@@ -206,12 +206,17 @@ const CreateTicketModal = ({
                 axios
                     .post(`${config.cloudinaryBaseUrl}/${allowedFiles.types.slice(0,3).includes(uploadInfo.image?.type) ?  'image' : 'raw'}/upload`, data)
                     .then(async res => {
+
+                        console.log('TICKET IMAGE UPLOAD RESPONSE => ', res);
                         // add res
 
                         // add attachment to ticket body
                         newTicket.attachment = res?.data?.url || ''
                         addTicket(newTicket, () => {
-                            NotificationManager.success("Ticket created successfully", 'Successful')
+                            NotificationManager.success("Ticket created successfully", 'Successful');
+                            setCreatingTicket(false);
+                        }, errMsg => {
+                            NotificationManager.error(errMsg, "Ticket creation failed", 4000);
                             setCreatingTicket(false);
                         });
                     })
@@ -221,8 +226,11 @@ const CreateTicketModal = ({
                         setCreatingTicket(false);
                     });
             } else {
-                await addTicket(newTicket, () => {
-                    NotificationManager.success("Ticket created successfully", 'Successful')
+                addTicket(newTicket, () => {
+                    NotificationManager.success("Ticket created successfully", 'Successful');
+                    setCreatingTicket(false);
+                }, errMsg => {
+                    NotificationManager.error(errMsg, "Ticket creation failed", 4000);
                     setCreatingTicket(false);
                 });
             }
@@ -409,24 +417,20 @@ const CreateTicketModal = ({
     };
 
 
-    const tagCreated = (newTags, newTag) => {
-        // new tag created successfully
-        setSelectedTags(prev => ([...selectedTags, {value: newTag, label: newTag}]));
-        setTagSelectLoading(false);
-    }
-
-    const tagNotCreated = () => {
-        // tag creation failed
-        NotificationManager.error("Tag could not be created, pls try again", "Error");
-        setTagSelectLoading(false);
-    }
-
-
     const handleTagCreation = newTag => {
+        console.log('TAGS => ', tags, 'NEW TAG => ', newTag);
+        const realTags = Array.isArray(tags) ? tags : [];
         newTag = newTag.toLowerCase();
         setTagSelectLoading(true);
-        const newTags = [...tags, newTag];
-        createTags(newTags, tagCreated, tagNotCreated, newTag);
+        const newTags = [...realTags, newTag];
+        createTags(newTags, (newTags, newTag) => {
+            // new tag created successfully
+            setSelectedTags(prev => ([...selectedTags, {value: newTag, label: newTag}]));
+            setTagSelectLoading(false);
+        }, () => {
+            // tag creation failed
+            setTagSelectLoading(false);
+        }, newTag);
     }
 
     function DowncaretIcon() {
