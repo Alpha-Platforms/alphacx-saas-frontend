@@ -59,7 +59,7 @@ export const getPaginatedTickets = (itemsPerPage, currentPage, success, failed) 
                 payload: {
                     meta: {
                         totalItems:"0",
-                        itemsPerPage: 10,
+                        itemsPerPage: 50,
                         currentPage: 1,
                         totalPages: 0
                     }

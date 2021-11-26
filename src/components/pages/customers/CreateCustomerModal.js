@@ -2,7 +2,7 @@
 import {useState, useEffect} from 'react';
 import {Modal} from 'react-responsive-modal';
 import {NotificationManager} from 'react-notifications';
-import {addCustomer, getPaginatedCustomers, updateCustomer, getCurrentCustomer} from '../../../reduxstore/actions/customerActions';
+import {addCustomer, getPaginatedCustomers, updateCustomer, getCurrentCustomer, addNewCustomer} from '../../../reduxstore/actions/customerActions';
 import {connect} from 'react-redux';
 import RSelect from 'react-select/creatable';
 import PinIcon from '../../../assets/icons/pin.svg';
@@ -12,7 +12,7 @@ import axios from 'axios';
 import {createTags} from '../../../reduxstore/actions/tagActions';
 import {config} from '../../../config/keys';
 
-const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers, tags, isEditing, customerId, customers, updateCustomer, createTags, fromCustDetails, custId, getCurrentCustomer}) => {
+const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers, tags, isEditing, customerId, customers, updateCustomer, createTags, fromCustDetails, custId, getCurrentCustomer, addNewCustomer, custMeta}) => {
 
     const [selectedTags, setSelectedTags] = useState([]);
     const [modalInputs, setModalInputs] = useState({
@@ -95,7 +95,9 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                 image: null,
                                 ownAvatar: ''
                             });
-                            getPaginatedCustomers(50, 1);
+                            const data = res?.data || [];
+                            addNewCustomer(data, custMeta?.itemsPerPage);
+                            // getPaginatedCustomers(50, 1);
                             setCreatingCust(false);
                         } else {
                             setCreatingCust(false);
@@ -113,11 +115,13 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                     NotificationManager.success(res?.message, 'Success');
                     setCreateModalShow(false);
                     setModalInputs({firstname: '', lastname: '', workphone: '', emailaddress: '', organisation: '', ccode: '+234'});
-                    getPaginatedCustomers(50, 1);
+                    const data = res?.data || [];
+                    addNewCustomer(data, custMeta?.itemsPerPage);
+                    // getPaginatedCustomers(50, 1);
                     setCreatingCust(false);
                 } else {
                     setCreatingCust(false);
-                    NotificationManager.error('An error occured', 'Error');
+                    // NotificationManager.error('An error occured', 'Error');
                 }
             }
         }
@@ -414,7 +418,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                 />
                             </div>
 
-                            <div>
+                            {/* <div>
                                 <div className="d-flex mb-4 mt-3">
                                     <div
                                         id="uploadPersonalPhotoInputImgPreview"
@@ -474,7 +478,7 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                         </p>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
                         </div>}
 
@@ -501,6 +505,6 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
 
 
 
-const mapStateToProps = (state, ownProps) => ({tags: state.tag.tags?.tags_names?.tags, customers: state.customer.customers});
+const mapStateToProps = (state, ownProps) => ({tags: state.tag.tags?.tags_names?.tags, customers: state.customer.customers, custMeta: state.customer?.meta || {}});
 
-export default connect(mapStateToProps, {getPaginatedCustomers, updateCustomer, createTags, getCurrentCustomer})(CreateCustomerModal);
+export default connect(mapStateToProps, {getPaginatedCustomers, updateCustomer, createTags, getCurrentCustomer, addNewCustomer})(CreateCustomerModal);
