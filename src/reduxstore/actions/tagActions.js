@@ -39,12 +39,10 @@ export const createTags = (newTags, success, failed, newTag) => (dispatch, getSt
 				type: types.ADD_TAGS,
 				payload: newTag
 			});
-        } else {
-            failed();
         }
     }).catch(err => {
         dispatch(returnErrors(err.response?.data, err.response?.status));
-        failed();
+        failed(err?.response?.data?.message);
     });
 }
 

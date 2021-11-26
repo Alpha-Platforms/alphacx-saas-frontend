@@ -48,10 +48,13 @@ export const addAgent = (newAgent) => (dispatch, getState) => {
 	const body = JSON.stringify(newAgent);
 
 	axios.post(`${config.stagingBaseUrl}/agent`, body, userTokenConfig(getState))
-		.then(res => dispatch({
-			type: types.ADD_AGENT,
-			payload: res.data
-		}))
+		.then(res => {
+            // console.log('AGENT RESPONSE => ', res);
+            dispatch({
+                type: types.ADD_AGENT,
+                payload: res.data
+            });
+        })
 		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
 }
 
