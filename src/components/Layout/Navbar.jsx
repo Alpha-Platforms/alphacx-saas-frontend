@@ -229,7 +229,7 @@ function Navbar({
   const [localUser, setlocalUser] = useState({});
   useEffect(() => {
     getUserFromStorage();
-  }, []);
+  }, [window.localStorage.getItem("user")]);
 
   const getUserFromStorage = () => {
     let lUser = localStorage.getItem("user");
