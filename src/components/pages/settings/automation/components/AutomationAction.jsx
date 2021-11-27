@@ -70,7 +70,7 @@ const AutomationAction = ({
     const mappedItems = []; 
 
     if(action.recipientType === "agent"){   
-      agents.forEach(item => {
+      agents.filter(agent => agent?.isActivated).forEach(item => {
         mappedItems.push({value: item.id, label: item.firstname +" "+ item.lastname})
       })
     } else {  
