@@ -171,12 +171,10 @@ export const addTicket = (newTicket, success, failed) => (dispatch, getState) =>
                     replyData
                 );
                 dispatch({type: types.ADD_TICKET, payload: res.data})
-                success && success(res.data);
+                success && success();
             }
-            
         })
         .catch(err => {
-            console.log('TICKET CREATION ERROR => ', err);
             dispatch(returnErrors(err.response?.data, err.response?.status));
             failed && failed(err?.response?.data?.message);
         });

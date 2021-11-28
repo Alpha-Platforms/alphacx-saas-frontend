@@ -1,8 +1,7 @@
 import {useEffect, useState} from 'react';
 // 
 import {connect} from 'react-redux';
-import {Link} from "react-router-dom";
-import {useHistory} from 'react-router-dom';
+import {useHistory, Link, useParams} from 'react-router-dom';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import {NotificationManager} from 'react-notifications';
 // 
@@ -13,12 +12,14 @@ import AddIcon from "../../../../../assets/icons/add.svg";
 import DeleteIcon from "../../../../../assets/icons/Delete.svg";
 import RightArrow from "../../../../../assets/imgF/arrow_right.png";
 // 
-import {addEmailTemplate} from './../../../../../reduxstore/actions/emailTemplateActions';
+import {getCurrentEmailTemplate, updateEmailTemplate} from './../../../../../reduxstore/actions/emailTemplateActions';
 // 
 import "./newEmailTemplate.scss";
 import "../NotificationSettings.scss";
 
-const NewEmailTemplate = ({addEmailTemplate}) => {
+const EditEmailTemplate = ({isCurrentEmailTemplateLoaded, getCurrentEmailTemplate, currentEmailTemplate, updateEmailTemplate}) => {
+    // 
+    const {id} = useParams();
     // 
     const availablePlaceholders = [
         {
@@ -50,6 +51,29 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
     const [placeholder, setPlaceholder] = useState("");
     const [custLoading, setCustLoading] = useState(false);
     const [newTemplate, setNewTemplate] = useState({title: "", subject: "", text: "", type: ""});
+    // 
+    useEffect(() => {
+        setCustLoading(!isCurrentEmailTemplateLoaded)
+        if (isCurrentEmailTemplateLoaded) {
+            setNewTemplate(prev => ({
+                ...prev,
+                title: currentEmailTemplate?.title || '',
+                subject: currentEmailTemplate?.subject || '',
+                text: currentEmailTemplate?.body || '',
+                type: currentEmailTemplate?.type || ''
+            }))
+            // console.log(currentEmailTemplate);
+            setPlaceholder('Start typing...');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isCurrentEmailTemplateLoaded]);
+
+    // 
+    useEffect(() => {
+        if(id){
+            getCurrentEmailTemplate(id)
+        }
+    }, [id])
 
     const insertPlaceholder = (i) => {
         const shortCode = `{${availablePlaceholders[i].placeHolder}}`;
@@ -68,7 +92,7 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
         });
     };
 
-    const submitEmailTemplate = async() => {
+    const submitNotificationTemplate = async() => {
         console.clear();
     };
 
@@ -80,21 +104,22 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
 
     const handleSubmit = () => {
         setCustLoading(true);
-        const newEmailTemplate = {
+        const emailTemplateEdit = {
             title: newTemplate.title,
             subject: newTemplate.subject,
             body: newTemplate.text,
             "type": newTemplate.type
         };
-        addEmailTemplate(newEmailTemplate, 
+        updateEmailTemplate(id, emailTemplateEdit, 
             () => {
                 setCustLoading(false);
-                NotificationManager.success('Template created successfully', 'Success');
+                NotificationManager.success('Template updated successfully', 'Success');
             }, 
             (errMsg) => {
                 setCustLoading(false);
-                NotificationManager.error(errMsg, 'An error occured', 4000)
-            });
+                NotificationManager.error(errMsg, 'An error occured', 'Opps')
+            }
+        );
     }
 
     return (
@@ -126,7 +151,7 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                                 <input
                                     type="text"
                                     className="form-control form-control-sm"
-                                    id="slaName"
+                                    id="title"
                                     name="title"
                                     value={newTemplate.title || ""}
                                     onChange={handleChange}/>
@@ -138,7 +163,7 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                                 <input
                                     type="text"
                                     className="form-control form-control-sm"
-                                    id="slaName"
+                                    id="subject"
                                     name="subject"
                                     value={newTemplate.subject || ""}
                                     onChange={handleChange}/>
@@ -153,7 +178,8 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                                     id="type"
                                     name="type"
                                     value={newTemplate.type || ""}
-                                    onChange={handleChange}
+                                    // onChange={handleChange}
+                                    disabled
                                 >
                                     <option value="">Select category</option>
                                     <option value="emailAutoRespond">Email Auto Respond</option>
@@ -177,22 +203,11 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                                     text={newTemplate.text}
                                     editorClassName="automation-editor"
                                     textFormat={"plain"}
+                                    updateText={setNewTemplate}
                                     placeholder={placeholder}
                                     textParent={newTemplate}
                                     setPlaceholder={setPlaceholder}
-                                    updateText={setNewTemplate}
                                 />
-                                   {/*  // updateText={setNewTemplate}
-                                   updateText={val => setNewTemplate((prevState) =>({
-                                            ...prevState,
-                                            body: val
-                                        }))
-                                    }
-                                    // placeholder={action.placeholder}
-                                    // setPlaceholder={val => setActionState({
-                                    //     placeholder: val
-                                    // })}
-                                    // updateVal={actions.length} */}
                             </div>
                             <div className="text-end">
                                 <Link
@@ -201,7 +216,7 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                                     Cancel
                                 </Link>
                                 <button className="btn btn-sm acx-btn-primary ms-2 px-4" onClick={handleSubmit}>
-                                    Submit
+                                    Update
                                 </button>
                             </div>
                         </Form>
@@ -212,6 +227,9 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
     );
 };
 
-const mapStateToProps = (state, ownProps) => ({configs: state.config.configs});
+const mapStateToProps = (state, ownProps) => ({
+    isCurrentEmailTemplateLoaded: state.emailTemplate.isCurrentEmailTemplateLoaded,
+    currentEmailTemplate: state.emailTemplate.currentEmailTemplate,
+});
 
-export default connect(mapStateToProps, {addEmailTemplate})(NewEmailTemplate);
+export default connect(mapStateToProps, {getCurrentEmailTemplate, updateEmailTemplate})(EditEmailTemplate);
