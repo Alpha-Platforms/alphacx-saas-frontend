@@ -11,7 +11,7 @@ export default function MessageList({
   LoadingTick,
   setLoadingTicks,
   loadSingleMessage,
-  setTingleTicketFullInfo,
+  setSingleTicketFullInfo,
   setTicketId,
   filterChat,
   filterTicketsState,
@@ -108,7 +108,7 @@ export default function MessageList({
               onClick={() => {
                 scollPosSendMsgList();
                 loadSingleMessage(data);
-                setTingleTicketFullInfo(data);
+                setSingleTicketFullInfo(data);
                 setTicketId(data.id);
                 setActiveChat(data.id);
               }}

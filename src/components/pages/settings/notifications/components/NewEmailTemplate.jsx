@@ -23,13 +23,13 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
     const availablePlaceholders = ["ticket", "customer", "status", "category"];
     const [placeholder, setPlaceholder] = useState("");
     const [custLoading, setCustLoading] = useState(false);
-    const [newTemplate, setNewTemplate] = useState({text: "", subject: "", name: "", type: ""});
+    const [newTemplate, setNewTemplate] = useState({title: "", subject: "", body: "", type: ""});
 
     const insertPlaceholder = (i) => {
         const shortCode = `{${availablePlaceholders[i]}}`;
         setNewTemplate({
             ...newTemplate,
-            text: newTemplate.text + " " + shortCode + " "
+            body: newTemplate.body + " " + shortCode + " "
         });
         setPlaceholder(" " + shortCode + " ");
     };
@@ -65,9 +65,9 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
     const handleSubmit = () => {
         setCustLoading(true);
         const newEmailTemplate = {
-            title: newTemplate.name,
+            title: newTemplate.title,
             subject: newTemplate.subject,
-            body: newTemplate.text,
+            body: newTemplate.body,
             "type": newTemplate.type
         };
         addEmailTemplate(newEmailTemplate, createSuccess, createFailed);
@@ -103,8 +103,8 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                                     type="text"
                                     className="form-control form-control-sm"
                                     id="slaName"
-                                    name="name"
-                                    value={newTemplate.name || ""}
+                                    name="title"
+                                    value={newTemplate.title || ""}
                                     onChange={handleChange}/>
                             </div>
                             <div className="form-group mt-3">
@@ -150,7 +150,7 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                             <div className="form-group mt-3 mb-5">
                                 <label className="f-14 mb-1">Body</label>
                                 <EditorBox
-                                    text={newTemplate.text}
+                                    text={newTemplate.body}
                                     editorClassName="automation-editor"
                                     textFormat={"plain"}
                                     updateText={setNewTemplate}

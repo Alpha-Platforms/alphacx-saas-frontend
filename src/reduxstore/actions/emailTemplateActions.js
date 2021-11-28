@@ -3,6 +3,7 @@ import * as types from '../types';
 import { config } from '../../config/keys';
 import { returnErrors } from './errorActions';
 import {userTokenConfig} from '../../helper';
+import { NotificationManager } from 'react-notifications';
 
 export const getEmailTemplates = (successCallback) => (dispatch, getState) => {
 	if (!navigator.onLine) {
@@ -53,23 +54,56 @@ export const addEmailTemplate = (newEmailTemplate, successCallback, failureCallb
 }
 
 //
-export const updateEmailTemplates = (emailTemplateId, emailTemplate, successCallback, failureCallback) => (dispatch, getState) => {
+export const updateEmailTemplate = (emailTemplateId, emailTemplate, successCallback, failureCallback) => (dispatch, getState) => {
 	// Request body
 	const body = JSON.stringify(emailTemplate);
-	axios.patch(`${config.stagingBaseUrl}/settings/email-templates/${emailTemplateId}`, body, userTokenConfig(getState))
+	axios.patch(`${config.stagingBaseUrl}/settings/email-template/${emailTemplateId}`, body, userTokenConfig(getState))
 		.then(res => {
 			successCallback && successCallback();
 		})
 		.catch(err => {
 			dispatch(returnErrors(err.response?.data, err.response?.status))
-			failureCallback && failureCallback();
+			failureCallback && failureCallback(err.response?.data?.message);
 		});
 }
 
-
+export const getCurrentEmailTemplate = (emailTemplateId, successCallback, failureCallback) => (dispatch, getState) => {
+    if (!navigator.onLine) {
+        return NotificationManager.error('Please check your internet', 'Opps!', 3000);
+    }
+    setCurrentEmailTemplateLoading();
+    // alert("emailTemplateId");
+    if(emailTemplateId){
+        dispatch(setCurrentEmailTemplateLoading());
+        axios
+            .get(`${config.stagingBaseUrl}/settings/email-template/${emailTemplateId}`, userTokenConfig(getState))
+            .then(res => {
+                // console.log(res);
+                dispatch({
+                    type: types.GET_CURRENT_EMAIL_TEMPLATE,
+                    payload: res.data && res.data?.status == "Success"
+                        ? res?.data?.data[0]
+                        : null
+                }) 
+            })
+            .catch(err => {
+                dispatch(returnErrors(err?.response?.data, err?.response?.status))
+                dispatch({
+                    type: types.GET_CURRENT_EMAIL_TEMPLATE,
+                    payload: null
+                })
+            });
+    }
+}
 
 export const setEmailTemplatesLoading = () => {
 	return {
 		type: types.EMAIL_TEMPLATES_LOADING
+	}
+}
+
+export const setCurrentEmailTemplateLoading = () => {
+	return {
+		type: types.CURRENT_EMAIL_TEMPLATE_LOADING
 	}
 }

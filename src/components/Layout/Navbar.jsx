@@ -93,13 +93,15 @@ function Notification(props){
     if(e.target.type == 'a') {
       return;
     }
+    // ${data?.ticketId}
     if(data?.ticketId){
       history.push({
-          pathname:  `/tickets/${data?.ticketId}`,
+          pathname:  `/conversation`,
           from: "notifications",
           state: {
             "ticketId": data?.ticketId,
-            "ticketHistoryId": data?.ticketHistoryId
+            "ticketHistoryId": data?.ticketHistoryId,
+            "ticketData": data
           }
       });
     }else{
