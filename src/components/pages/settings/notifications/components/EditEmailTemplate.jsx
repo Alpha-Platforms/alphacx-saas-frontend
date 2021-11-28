@@ -54,7 +54,7 @@ const EditEmailTemplate = ({isCurrentEmailTemplateLoaded, getCurrentEmailTemplat
         const shortCode = `{${availablePlaceholders[i]}}`;
         setNewTemplate({
             ...newTemplate,
-            text: newTemplate.body + " " + shortCode + " "
+            body: newTemplate.body + " " + shortCode + " "
         });
         setPlaceholder(" " + shortCode + " ");
     };
