@@ -63,7 +63,6 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
   });
 
   const [actions, setActions] = useState([generateActionTemplate(uuid())]);
-  console.log('ACTIONS => ', actions);
 
   // console.log('ACTIONS => ', actions);
 
@@ -157,7 +156,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
           subject: act?.subject || '',
           body: act.body,
           recipientType: act?.recipient?.type || 'agent',
-          recipientOptions: act?.recipient?.type === 'agent' ? agents.map(agent => ({value: agent.id, label: wordCapitalize(`${agent?.firstname || ''} ${agent?.lastname || ''}`.trim())})) : groups.map(group => ({value: group?.id, label: wordCapitalize(group?.name || '')})),
+          recipientOptions: act?.recipient?.type === 'agent' ? agents.filter(agent => agent?.isActivated).map(agent => ({value: agent.id, label: wordCapitalize(`${agent?.firstname || ''} ${agent?.lastname || ''}`.trim())})) : groups.map(group => ({value: group?.id, label: wordCapitalize(group?.name || '')})),
           recipientValue: act?.recipient?.ids?.map(x => ({value: x, label: act?.recipient?.type === 'agent' ? wordCapitalize(`${agents.find(agent => agent.id === x)?.firstname || ''} ${agents.find(agent => agent.id === x)?.lastname || ''}`.trim()) : act?.recipient?.type === 'group' ? wordCapitalize(`${groups.find(group => group.id === x)?.name || ''}`.trim()) : []})),
           // placeholder: ''
         })));
