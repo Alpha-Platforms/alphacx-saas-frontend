@@ -92,7 +92,6 @@ const EditEmailTemplate = ({isCurrentEmailTemplateLoaded, getCurrentEmailTemplat
             }, 
             (errMsg) => {
                 setCustLoading(false);
-                console.log(errMsg);
                 NotificationManager.error(errMsg, 'An error occured', 'Opps')
             }
         );

@@ -70,7 +70,15 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
             body: newTemplate.body,
             "type": newTemplate.type
         };
-        addEmailTemplate(newEmailTemplate, createSuccess, createFailed);
+        addEmailTemplate(newEmailTemplate, 
+            () => {
+                setCustLoading(false);
+                NotificationManager.success('Template created successfully', 'Success');
+            }, 
+            (errMsg) => {
+                setCustLoading(false);
+                NotificationManager.error(errMsg, 'An error occured', 4000)
+            });
     }
 
     return (

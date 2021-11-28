@@ -49,7 +49,7 @@ export const addEmailTemplate = (newEmailTemplate, successCallback, failureCallb
                 err.response?.data, 
                 err.response?.status
             ));
-			failureCallback && failureCallback();
+			failureCallback && failureCallback(err?.response?.data?.message);
 		});
 }
 
@@ -87,7 +87,7 @@ export const getCurrentEmailTemplate = (emailTemplateId, successCallback, failur
                 }) 
             })
             .catch(err => {
-                dispatch(returnErrors(err?.response?.data, err?.response?.status))
+                dispatch(returnErrors(err?.response?.data?.message, err?.response?.status))
                 dispatch({
                     type: types.GET_CURRENT_EMAIL_TEMPLATE,
                     payload: null
