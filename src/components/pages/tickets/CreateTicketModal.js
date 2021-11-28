@@ -207,11 +207,12 @@ const CreateTicketModal = ({
                     .post(`${config.cloudinaryBaseUrl}/${allowedFiles.types.slice(0,3).includes(uploadInfo.image?.type) ?  'image' : 'raw'}/upload`, data)
                     .then(async res => {
 
-                        console.log('TICKET IMAGE UPLOAD RESPONSE => ', res);
+                        // console.log('TICKET IMAGE UPLOAD RESPONSE => ', res);
                         // add res
 
                         // add attachment to ticket body
                         newTicket.attachment = res?.data?.url || ''
+
                         addTicket(newTicket, () => {
                             NotificationManager.success("Ticket created successfully", 'Successful');
                             setCreatingTicket(false);
@@ -221,7 +222,7 @@ const CreateTicketModal = ({
                         });
                     })
                     .catch(err => {
-                        console.log(err);
+                        // console.log(err);
                         NotificationManager.error("Photo could not be uploaded", "Error");
                         setCreatingTicket(false);
                     });
@@ -231,6 +232,9 @@ const CreateTicketModal = ({
                     setCreatingTicket(false);
                 }, errMsg => {
                     NotificationManager.error(errMsg, "Ticket creation failed", 4000);
+                    setCreatingTicket(false);
+                }, () => {
+                    NotificationManager.error('Something', 'Opps!');
                     setCreatingTicket(false);
                 });
             }

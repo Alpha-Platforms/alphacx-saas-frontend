@@ -457,7 +457,7 @@ const TicketList = ({
 
               <div id="delete-btn-wrapper" className="delete-btn-wrapper d-none">
                 <div>
-                  <button onClick={handleDeleteTicket} id="ticket-delete-btn" className="btn" type="button"><i class="bi bi-trash"></i></button>
+                  <button onClick={handleDeleteTicket} id="ticket-delete-btn" className="btn" type="button"><i className="bi bi-trash"></i></button>
                 </div>
                 <div>
                   <span><span id="selected-row-count">0</span> ticket(s) selected</span>
