@@ -23,13 +23,13 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
     const availablePlaceholders = ["ticket", "customer", "status", "category"];
     const [placeholder, setPlaceholder] = useState("");
     const [custLoading, setCustLoading] = useState(false);
-    const [newTemplate, setNewTemplate] = useState({title: "", subject: "", body: "", type: ""});
+    const [newTemplate, setNewTemplate] = useState({title: "", subject: "", text: "", type: ""});
 
     const insertPlaceholder = (i) => {
         const shortCode = `{${availablePlaceholders[i]}}`;
         setNewTemplate({
             ...newTemplate,
-            body: newTemplate.body + " " + shortCode + " "
+            text: newTemplate.text + " " + shortCode + " "
         });
         setPlaceholder(" " + shortCode + " ");
     };
@@ -52,22 +52,12 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
       history.push('/settings/notifications');
     }
 
-    const createSuccess = () => {
-        setCustLoading(false);
-        NotificationManager.success('Email Template created successfully', 'Success');
-    }
-
-    const createFailed = () => {
-        setCustLoading(false);
-        NotificationManager.error(`Email template with type ${newTemplate.type} already exist`, 'Opps');
-    }
-
     const handleSubmit = () => {
         setCustLoading(true);
         const newEmailTemplate = {
             title: newTemplate.title,
             subject: newTemplate.subject,
-            body: newTemplate.body,
+            body: newTemplate.text,
             "type": newTemplate.type
         };
         addEmailTemplate(newEmailTemplate, 
@@ -158,14 +148,25 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                             <div className="form-group mt-3 mb-5">
                                 <label className="f-14 mb-1">Body</label>
                                 <EditorBox
-                                    text={newTemplate.body}
+                                    text={newTemplate.text}
                                     editorClassName="automation-editor"
                                     textFormat={"plain"}
-                                    updateText={setNewTemplate}
                                     placeholder={placeholder}
                                     textParent={newTemplate}
                                     setPlaceholder={setPlaceholder}
+                                    updateText={setNewTemplate}
                                 />
+                                   {/*  // updateText={setNewTemplate}
+                                   updateText={val => setNewTemplate((prevState) =>({
+                                            ...prevState,
+                                            body: val
+                                        }))
+                                    }
+                                    // placeholder={action.placeholder}
+                                    // setPlaceholder={val => setActionState({
+                                    //     placeholder: val
+                                    // })}
+                                    // updateVal={actions.length} */}
                             </div>
                             <div className="text-end">
                                 <Link

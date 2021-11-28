@@ -25,7 +25,7 @@ const EditEmailTemplate = ({isCurrentEmailTemplateLoaded, getCurrentEmailTemplat
     const availablePlaceholders = ["ticket", "customer", "status", "category"];
     const [placeholder, setPlaceholder] = useState("");
     const [custLoading, setCustLoading] = useState(false);
-    const [newTemplate, setNewTemplate] = useState({title: "", subject: "", body: "", type: ""});
+    const [newTemplate, setNewTemplate] = useState({title: "", subject: "", text: "", type: ""});
     // 
     useEffect(() => {
         setCustLoading(!isCurrentEmailTemplateLoaded)
@@ -34,7 +34,7 @@ const EditEmailTemplate = ({isCurrentEmailTemplateLoaded, getCurrentEmailTemplat
                 ...prev,
                 title: currentEmailTemplate?.title || '',
                 subject: currentEmailTemplate?.subject || '',
-                body: currentEmailTemplate?.body || '',
+                text: currentEmailTemplate?.body || '',
                 type: currentEmailTemplate?.type || ''
             }))
             // console.log(currentEmailTemplate);
@@ -54,7 +54,7 @@ const EditEmailTemplate = ({isCurrentEmailTemplateLoaded, getCurrentEmailTemplat
         const shortCode = `{${availablePlaceholders[i]}}`;
         setNewTemplate({
             ...newTemplate,
-            body: newTemplate.body + " " + shortCode + " "
+            text: newTemplate.text + " " + shortCode + " "
         });
         setPlaceholder(" " + shortCode + " ");
     };
@@ -82,7 +82,7 @@ const EditEmailTemplate = ({isCurrentEmailTemplateLoaded, getCurrentEmailTemplat
         const emailTemplateEdit = {
             title: newTemplate.title,
             subject: newTemplate.subject,
-            body: newTemplate.body,
+            body: newTemplate.text,
             "type": newTemplate.type
         };
         updateEmailTemplate(id, emailTemplateEdit, 
@@ -175,7 +175,7 @@ const EditEmailTemplate = ({isCurrentEmailTemplateLoaded, getCurrentEmailTemplat
                             <div className="form-group mt-3 mb-5">
                                 <label className="f-14 mb-1">Body</label>
                                 <EditorBox
-                                    text={newTemplate.body}
+                                    text={newTemplate.text}
                                     editorClassName="automation-editor"
                                     textFormat={"plain"}
                                     updateText={setNewTemplate}
