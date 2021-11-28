@@ -19,14 +19,40 @@ import "./newEmailTemplate.scss";
 import "../NotificationSettings.scss";
 
 const NewEmailTemplate = ({addEmailTemplate}) => {
-    // const availablePlaceholders = ["name", "ticket", "category", "open", "closed"];
-    const availablePlaceholders = ["ticket", "customer", "status", "category"];
+    // 
+    const availablePlaceholders = [
+        {
+            title: "Ticket",
+            placeHolder: "ticketId"
+        },
+        {
+            title: "Customer",
+            placeHolder: "customerName"
+        },
+        {
+            title: "Status",
+            placeHolder: "status"
+        },
+        {
+            title: "Ticket",
+            placeHolder: "ticketId"
+        },
+        {
+            title: "Category",
+            placeHolder: "categoryName"
+        },
+        {
+            title: "Agent",
+            placeHolder: "agentName"
+        },
+    ]
+    // const availablePlaceholders = ["ticket", "customer", "status", "category"];
     const [placeholder, setPlaceholder] = useState("");
     const [custLoading, setCustLoading] = useState(false);
     const [newTemplate, setNewTemplate] = useState({title: "", subject: "", text: "", type: ""});
 
     const insertPlaceholder = (i) => {
-        const shortCode = `{${availablePlaceholders[i]}}`;
+        const shortCode = `{${availablePlaceholders[i].placeHolder}}`;
         setNewTemplate({
             ...newTemplate,
             text: newTemplate.text + " " + shortCode + " "
@@ -140,7 +166,7 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                                 <div className="available-placeholders">
                                     {availablePlaceholders.map((item, i) => (
                                         <p key={i} onClick={() => insertPlaceholder(i)}>
-                                            {item}
+                                            {item.title}
                                         </p>
                                     ))}
                                 </div>
