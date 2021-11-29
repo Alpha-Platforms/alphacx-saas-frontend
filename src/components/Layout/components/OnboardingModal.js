@@ -9,8 +9,8 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 // 
-import {getAgents} from '../../../../reduxstore/actions/agentActions';
-import {getSlas} from '../../../../reduxstore/actions/slaActions';
+import {getAgents} from '../../../reduxstore/actions/agentActions';
+import {getSlas} from '../../../reduxstore/actions/slaActions';
 // import {getConfigs} from '../../../../reduxstore/actions/configActions';
 // 
 
@@ -21,7 +21,7 @@ import {
     TicketChannelIcon, 
     AutoSlaIcon, 
     ArrowRightCircleIcon,
-    CheckCircleFilledIcon } from "../../../../assets/OnboardingIcons";
+    CheckCircleFilledIcon } from "../../../assets/OnboardingIcons";
 
 const OnboardingModal = ({ 
     open, hide, setOpen,
@@ -48,7 +48,8 @@ const OnboardingModal = ({
             if(isCategoriesLoaded && isGroupsLoaded && isSlasLoaded && isAgentsLoaded && isConfigsLoaded){
                 if(categories?.length > 0 && groups?.length > 0 && slas?.length > 0 && !objectIsEmpty(configs)){
                     localStorage.setItem("onboardingSplash", "hide");
-                    hide();
+                    // hide();
+                    setOpen();
                 }else{
                     localStorage.removeItem("onboardingSplash");
                     setOpen();
