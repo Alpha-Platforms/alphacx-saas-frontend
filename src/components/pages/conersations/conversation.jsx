@@ -167,7 +167,7 @@ function Conversation({user, ...props}) {
       loadSingleMessage(currentTicket);
       setTicketId(location.state.ticketId);
       setActiveChat(location.state.ticketId);
-     scollPosSendMsgList(`#${location.state.ticketHistoryId}`);
+     scrollPosSendMsgList(`#${location.state.ticketHistoryId}`);
     }
   }, [tickets, location]);
   // 
@@ -205,7 +205,7 @@ function Conversation({user, ...props}) {
       let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, ticketsData);
     });
-    // return () => { AppSocket.io.disconnect()};
+    return () => { AppSocket.io.disconnect()};
   },[]);
 
   // 
@@ -234,7 +234,7 @@ function Conversation({user, ...props}) {
       }
       let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, ticketsData);
-      scollPosSendMsgList();
+      scrollPosSendMsgList();
     });
 
     // return () => { AppSocket.io.disconnect()};
@@ -438,7 +438,7 @@ function Conversation({user, ...props}) {
 
     if (res?.status === "success") {
       ticket[0]?.channel !== "livechat" && setMsgHistory((item) => [...item, replyData]);
-      scollPosSendMsgList();
+      scrollPosSendMsgList();
       setEditorState(initialState);
       setReplyTicket({ plainText: "", richText: "" });
       // emit ws_tickets event on reply
@@ -586,7 +586,7 @@ function Conversation({user, ...props}) {
 
       setLoadSingleTicket(false);
       checkRes();
-      scollPosSendMsgList();
+      scrollPosSendMsgList();
     } else {
       setLoadSingleTicket(false);
       return NotificationManager.error(res.er.message, "Error", 4000);
@@ -739,7 +739,7 @@ function Conversation({user, ...props}) {
     window.location.href = "#msgListTop";
   }
 
-  function scollPosSendMsgList(e = "#lastMsg") {
+  function scrollPosSendMsgList(e = "#lastMsg") {
     window.location.href = e;
   }
 
@@ -812,7 +812,7 @@ function Conversation({user, ...props}) {
                 filterTicketsState={filterTicketsState}
                 activeChat={activeChat}
                 setActiveChat={setActiveChat}
-                scollPosSendMsgList={scollPosSendMsgList}
+                scrollPosSendMsgList={scrollPosSendMsgList}
                 setTicketId={setTicketId}
               />
           </div>
