@@ -18,9 +18,9 @@ const Index = ({user, isUserAuthenticated, ...props}) => {
   // 
   useEffect(() => {
         if (isUserAuthenticated) {
-          setOpen(true);
+          setOpen(false);
           let onboardingSplash = localStorage.getItem("onboardingSplash")
-          if(!onboardingSplash || onboardingSplash == "hide"){
+          if(!onboardingSplash || onboardingSplash != "hide"){
               setOnboardingSplashScreen(true);
           }else{
               setOnboardingSplashScreen(false);
