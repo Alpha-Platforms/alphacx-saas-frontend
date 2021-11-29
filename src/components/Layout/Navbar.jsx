@@ -89,11 +89,20 @@ function Notification(props){
     }
   } 
 
-  const goToTicket = ({...data}) =>{
+  const goToTicket = (e, {...data}) =>{
+    if(e.target.type == 'a') {
+      return;
+    }
+    // ${data?.ticketId}
     if(data?.ticketId){
       history.push({
-          pathname:  `/tickets/${data?.ticketId}`,
-          from: "notifications"
+          pathname:  `/conversation`,
+          from: "notifications",
+          state: {
+            "ticketId": data?.ticketId,
+            "ticketHistoryId": data?.ticketHistoryId,
+            "ticketData": data
+          }
       });
     }else{
       history.push({
@@ -109,7 +118,7 @@ function Notification(props){
           <BellIconNavbar />
         </div>
       </>} className="acx-dropdown-hidden acx-notification-nav-dropdown" id="navbarScrollingDropdown">
-      <Dropdown.Header className="d-flex justify-content-between align-items-center border-bottom">
+      <Dropdown.Header className="d-flex justify-content-between align-items-center border-bottom position-sticky bg-white py-2" style={{"top": "-10px", "zIndex": 20}}>
         <div className="flex-grow-1">
           <p className={`acx-text-gray-800 mb-0 ${notifications.length == 0 || notifications == null || notifications == undefined? "text-center" : ""}`}>
             Notifications
@@ -143,10 +152,10 @@ function Notification(props){
         </NavDropdown.Item>
         :
         <Fragment>
-          { notifications.map((data, index) => {
+          { notifications.slice(0).reverse().map((data, index) => {
               if(data.type == "tickets" || data.type == "mention"){
                 return (
-                  <NavDropdown.Item key={index} as="div" onClick={() => goToTicket({ticketId: data?.others?.ticketId, ticketHistoryId: data?.others?.ticketHistoryId})}>
+                  <NavDropdown.Item key={index} as="div" onClick={(e) => goToTicket(e, {ticketId: data?.others?.ticketId, ticketHistoryId: data?.others?.ticketHistoryId})}>
                     <div className="d-flex justify-content-start align-items-start">
                       <div className="me-3 flex-shrink-0 avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center acx-bg-affair-800">
                         {data?.sender?.avatar == null ? (
@@ -180,7 +189,7 @@ function Notification(props){
               }
             }
           )}
-          <NavDropdown.Item as={NavLink} to="/conversation" className="acx-link-primary">
+          <NavDropdown.Item as={NavLink} to="/conversation" className="acx-link-primary position-sticky d-block bottom-0 bg-white border-top">
             <div className="text-center">
               <p className="text-muted mb-0">View all notifications</p>
             </div>

@@ -1038,7 +1038,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                       <span> {` ${data.firstname}  ${data.lastname}`}</span>
                                     </Fragment>, 
                                   value: `${data.firstname}  ${data.lastname}`, 
-                                  url: `settings/profile/${data.id}`
+                                  url: `/settings/profile/${data.id}`
                                 }
                               }) : []
                           }}
