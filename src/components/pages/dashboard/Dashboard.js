@@ -9,31 +9,15 @@ import {CircularProgressbar, buildStyles} from "react-circular-progressbar";
 import TicketCount from './components/TicketCount';
 import TicketStatusPie from './components/TicketStatusPie';
 import TicketLineGraph from './components/TicketLineGraph';
-import OnboardingModal from './components/OnboardingModal';
 import TicketCategoryBar from './components/TicketCategoryBar';
 import { getAnalytics } from './../../../reduxstore/actions/analyticsActions';
 // 
 import '../../../styles/Dashboard.css';
 
 const DashboardTwo = ({isAnalyticsLoaded, analytics, user, getAnalytics, isUserAuthenticated}) => {
-    const [open, setOpen] = useState(false);
-    const [onboardingSplashScreen, setOnboardingSplashScreen] = useState(false)
-
-    const hideOnboardingModal = () => setOpen(false);
-    const openOnboardingModal = () => setOpen(true);
-
     useEffect(() => {
         if (isUserAuthenticated) {
             getAnalytics();
-            // /*  */
-            setOpen(false);
-            // /*  */
-            let onboardingSplash = localStorage.getItem("onboardingSplash")
-            if(!onboardingSplash || onboardingSplash != "hide"){
-                setOnboardingSplashScreen(true);
-            }else{
-                setOnboardingSplashScreen(false);
-            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
@@ -95,10 +79,6 @@ const DashboardTwo = ({isAnalyticsLoaded, analytics, user, getAnalytics, isUserA
                     </div>}
                 </Fragment>
             </Container>
-            {onboardingSplashScreen ? 
-                <OnboardingModal open={open} hide={hideOnboardingModal} setOpen={openOnboardingModal} />
-                : null
-            }
         </Fragment>
     )
 }
