@@ -55,7 +55,7 @@ const AccountSettings = () => {
   const handleRSChange = ({value}, {name}) => {
     setOrganisation(prev => ({...prev, [name]: value}));
   };
-  
+
 
   const getUserInfo = async () => {
     setAccountLoading(true);
@@ -92,7 +92,7 @@ const AccountSettings = () => {
 
     if (res?.status === "success") {
       setOrganisation(prev => ({...prev, ...res?.data}))
-      return NotificationManager.error(res?.success, "Success", 4000);
+      return NotificationManager.success(res?.success, "Success", 4000);
     } else {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
