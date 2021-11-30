@@ -17,7 +17,7 @@ export default function MessageList({
   filterTicketsState,
   activeChat,
   setActiveChat,
-  scollPosSendMsgList,
+  scrollPosSendMsgList,
 }) {
 
   const [renderTicket, setRenderTicket] = useState([]);
@@ -106,7 +106,7 @@ export default function MessageList({
                 data.id === activeChat ? "message-listmain-active" : ""
               }`}
               onClick={() => {
-                scollPosSendMsgList();
+                scrollPosSendMsgList("#lastMsg");
                 loadSingleMessage(data);
                 setSingleTicketFullInfo(data);
                 setTicketId(data.id);

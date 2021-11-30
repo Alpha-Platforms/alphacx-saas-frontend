@@ -155,6 +155,8 @@ function Conversation({user, ...props}) {
   // 
   const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(false);
   const [addHist, setAddHist] = useState(false);
+  // scroll position
+  const [scrollPosition, setScrollPosition] = useState("#lastMsg");
   // 
   const location = useLocation();
   // 
@@ -167,9 +169,15 @@ function Conversation({user, ...props}) {
       loadSingleMessage(currentTicket);
       setTicketId(location.state.ticketId);
       setActiveChat(location.state.ticketId);
-     scollPosSendMsgList(`#${location.state.ticketHistoryId}`);
+      setScrollPosition(`#${location.state.ticketHistoryId}`);
+      scrollPosSendMsgList(`#${location.state.ticketHistoryId}`);
     }
   }, [tickets, location]);
+  // 
+  // useEffect(() => {
+  //   scrollPosSendMsgList(scrollPosition);
+  // }, [scrollPosition]);
+
   // 
   useEffect(() => {
     if (addHist) {
@@ -205,7 +213,7 @@ function Conversation({user, ...props}) {
       let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, ticketsData);
     });
-    // return () => { AppSocket.io.disconnect()};
+    return () => { AppSocket.io.disconnect()};
   },[]);
 
   // 
@@ -234,7 +242,7 @@ function Conversation({user, ...props}) {
       }
       let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, ticketsData);
-      scollPosSendMsgList();
+      scrollPosSendMsgList();
     });
 
     // return () => { AppSocket.io.disconnect()};
@@ -438,7 +446,7 @@ function Conversation({user, ...props}) {
 
     if (res?.status === "success") {
       ticket[0]?.channel !== "livechat" && setMsgHistory((item) => [...item, replyData]);
-      scollPosSendMsgList();
+      scrollPosSendMsgList();
       setEditorState(initialState);
       setReplyTicket({ plainText: "", richText: "" });
       // emit ws_tickets event on reply
@@ -520,9 +528,9 @@ function Conversation({user, ...props}) {
   const updateTicketStatus = async () => {
     if(RSTicketStage.label === "Closed"){
       // get url and replace domain
-      let base_url = window.location.origin.replace(`${localStorage.domain}.`, "");
+      let base_url = window.location.origin;
       let complete_url = `${base_url}/feedback/${localStorage.domain}/${ticket[0].id}/${ticket[0].customer.id}`;
-      let rich_text = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation : <a href='${complete_url}'>rate us here</a></p>`;
+      let rich_text = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation : <a target='_blank' href='${complete_url}'>Click here to rate us</a></p>`;
       let ReplyTicket = {
         richText : rich_text,
         plainText : `Your ticket has been marked as closed, Please click on the link to rate this conversation ${complete_url}`
@@ -586,7 +594,7 @@ function Conversation({user, ...props}) {
 
       setLoadSingleTicket(false);
       checkRes();
-      scollPosSendMsgList();
+      scrollPosSendMsgList(scrollPosition);
     } else {
       setLoadSingleTicket(false);
       return NotificationManager.error(res.er.message, "Error", 4000);
@@ -739,7 +747,7 @@ function Conversation({user, ...props}) {
     window.location.href = "#msgListTop";
   }
 
-  function scollPosSendMsgList(e = "#lastMsg") {
+  function scrollPosSendMsgList(e = scrollPosition) {
     window.location.href = e;
   }
 
@@ -812,7 +820,7 @@ function Conversation({user, ...props}) {
                 filterTicketsState={filterTicketsState}
                 activeChat={activeChat}
                 setActiveChat={setActiveChat}
-                scollPosSendMsgList={scollPosSendMsgList}
+                scrollPosSendMsgList={scrollPosSendMsgList}
                 setTicketId={setTicketId}
               />
           </div>
