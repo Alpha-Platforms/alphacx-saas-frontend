@@ -89,8 +89,9 @@ function Notification(props){
     }
   } 
 
-  const goToTicket = (e, {...data}) =>{
-    if(e.target.type == 'a') {
+  const goToTicket = (e, data) =>{
+    // console.log(e.target.localName)
+    if(e.target.localName == 'a') {
       return;
     }
     // ${data?.ticketId}
