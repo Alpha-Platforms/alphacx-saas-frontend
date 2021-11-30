@@ -87,5 +87,17 @@ export const Validate  = {
       })
     }
   }
+
+  ,
+
+  ngPhone: (e, state, setState) => {
+    if (e.target.value.length < 9 || !(/[0-9]/g.test(e.target.value))) {
+      NotificationManager.warning("Enter a valid phone number", "Validation Error", 4000);
+      return setState({
+        ...state,
+        [e.target.name]: ""
+      })
+    }
+  }
   
 }
