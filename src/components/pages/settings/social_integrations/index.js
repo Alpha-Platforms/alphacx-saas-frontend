@@ -22,8 +22,12 @@ function SocialIntegrations({configs}) {
 
   const [configData, setConfigData] = useState([]);
   const [loadingConfig, setLoadingConfig] = useState(true);
+
   const [smsConnected, setSmsConnected] = useState(false)
   const [emailConnected, setEmailConnected] = useState(false)
+  const [facebookConnected, setFacebookConnected] = useState(false)
+  const [whatsappConnected, setWhatsappConnected] = useState(false)
+  const [livechatConnected, setLivechatConnected] = useState(false)
 
 
   // 
@@ -32,10 +36,16 @@ function SocialIntegrations({configs}) {
   }, []);
 
   useEffect(() => {
-    if(configs){
-      setSmsConnected(Boolean(configs.sms_config))
-      // setEmailConnected()
-    }
+    
+    if(configs.sms_config){setSmsConnected(true)}    
+    if(configs.email_config){setEmailConnected(true)}
+    if(configs.facebook_config){setFacebookConnected(true)}
+    if(configs.livechat_config){setLivechatConnected(true)}
+    if(configs.whatsapp_config){setWhatsappConnected(true)}
+
+    console.clear()
+    // console.log(configs)
+
   }, [configs])
 
   const getConfig = async () => {
@@ -75,11 +85,11 @@ function SocialIntegrations({configs}) {
                 <div className="me-2">
                   <h6 className="text-dark mb-0">WhatsApp by Twilio</h6>
                   <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
-                    Connect your to users, via Whatsapp permissions
+                    Connect your users via WhatsApp
                   </p>
                 </div>
                 <div className="">
-                  <Badge className="acx-bg-primary px-3 py-2">Connected</Badge>
+                <Badge className={`${!whatsappConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>{!whatsappConnected? "Connect" : "Connected"}</Badge>
                 </div>
               </div>
             </div>
@@ -97,11 +107,11 @@ function SocialIntegrations({configs}) {
                 <div className="me-2">
                   <h6 className="text-dark mb-0">Facebook</h6>
                   <p className="acx-fs-8 lh-base mt-1 mb-2  text-muted">
-                    Connect your to users, via Facebook permissions
+                    Connect your users via Facebook
                   </p>
                 </div>
                 <div className="">
-                  <Badge className="acx-bg-primary text-white px-3 py-2">Connected</Badge>
+                  <Badge className={`${!facebookConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>{!facebookConnected? "Connect" : "Connected"}</Badge>
                 </div>
               </div>
             </div>
@@ -119,7 +129,7 @@ function SocialIntegrations({configs}) {
                 <div className="me-2">
                   <h6 className="text-dark mb-0">SMS by Termii</h6>
                   <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
-                    Connect your to users via SMS
+                    Connect your users via SMS
                   </p>
                 </div>
                 <div className="">
@@ -141,11 +151,11 @@ function SocialIntegrations({configs}) {
                 <div className="me-2">
                   <h6 className="text-dark mb-0">Email to Ticket</h6>
                   <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
-                    Set up email server parameters to receive mails as tickets
+                    Set up email to receive mails as tickets
                   </p>
                 </div>
                 <div className="">
-                  <Badge className="acx-bg-gray-100 text-muted px-3 py-2">Connect</Badge>
+                <Badge className={`${!emailConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>{!emailConnected? "Connect" : "Connected"}</Badge>
                 </div>
               </div>
             </div>
@@ -162,12 +172,10 @@ function SocialIntegrations({configs}) {
               <div className="ms-3 d-flex justify-content-between align-items-start">
                 <div className="me-2">
                   <h6 className="text-dark mb-0"> Live Chat</h6>
-                  <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
-                    Setup configurations for your live chat widget.
-                  </p>
+                  <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">Configure livechat widget for your website and app</p>
                 </div>
                 <div className="">
-                  <Badge className="acx-bg-gray-100 text-muted px-3 py-2">Connect</Badge>
+                <Badge className={`${!livechatConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>{!livechatConnected? "Connect" : "Connected"}</Badge>
                 </div>
               </div>
             </div>
