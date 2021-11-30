@@ -6,6 +6,7 @@ import {NotificationManager} from 'react-notifications';
 import {addAgent, getAgents, resetAgentCreated} from '../../../../../reduxstore/actions/agentActions';
 import {countrycodes} from '../../../../shared/countrycodes';
 import RSelect from "react-select";
+import {Validate} from "../../../../../helpers/validateInput";
 
 const CreateUserModal = ({
     createModalShow,
@@ -32,12 +33,36 @@ const CreateUserModal = ({
     const [creatingUser, setCreatingUser] = useState(false);
     const [RSTeams, setRSTeams] = useState([])
 
+    useEffect(() => {
+        
+        console.clear()
+        console.log(modalInputs)
+
+    }, [modalInputs])
+
     // F U N C T I O N S
     const loadRSTeams = () => {
         const mappedTeams = groups.map(item => {
             return {label: item.name, value: item.id}            
         })
         setRSTeams(mappedTeams)
+    }
+
+    // ONBLUR VALIDATION
+    const handleBlur = (e) => {   
+        if (e.target.name === "email") {
+            Validate.email(e, modalInputs, setModalInputs)
+
+        } else if (e.target.name === "password") {
+            Validate.password(e, modalInputs, setModalInputs)
+
+        } else if (e.target.name === "firstName" || e.target.name === "lastName") {
+            Validate.length(e, modalInputs, setModalInputs)
+
+        } else if (e.target.name === "phoneNumber") {
+            Validate.ngPhone(e, modalInputs, setModalInputs)
+        }
+        
     }
 
     const handleModalInput = e => {
@@ -122,7 +147,9 @@ const CreateUserModal = ({
                                         className="form-control form-control w-100"
                                         id="fullName"
                                         value={modalInputs.firstName}
-                                        onChange={handleModalInput}/>
+                                        onChange={handleModalInput}
+                                        onBlur={(e) => handleBlur(e)}
+                                    />
 
                                 </div>
                                 <div className="form-group w-100 ms-2">
@@ -133,7 +160,9 @@ const CreateUserModal = ({
                                         id="fullName"
                                         name="lastName"
                                         value={modalInputs.lastName}
-                                        onChange={handleModalInput}/>
+                                        onChange={handleModalInput}
+                                        onBlur={(e) => handleBlur(e)}
+                                    />
                                 </div>
                             </div>
                             <div className="form-group mt-3">
@@ -144,7 +173,9 @@ const CreateUserModal = ({
                                     id="email"
                                     name="email"
                                     value={modalInputs.email}
-                                    onChange={handleModalInput}/>
+                                    onChange={handleModalInput}
+                                    onBlur={(e) => handleBlur(e)}
+                                />
                             </div>
                             <div className="mt-3">
                                 <label htmlFor="workphone" className="form-label">Work Phone</label>
@@ -154,7 +185,17 @@ const CreateUserModal = ({
                                             {countrycodes.sort((a, b) => Number(a.dial_code.slice(1)) - Number(b.dial_code.slice(1))).map(cc => <option value={cc.dial_code}>{cc.dial_code}</option>)}
                                         </select>
                                     </div>
-                                    <input type="tel" className="form-control" name="phoneNumber" id="workphone" value={modalInputs.phoneNumber} aria-label="work phone" aria-describedby="workphone" onChange={handleModalInput}/>
+                                    <input 
+                                        type="tel" 
+                                        className="form-control" 
+                                        name="phoneNumber" 
+                                        id="workphone" 
+                                        value={modalInputs.phoneNumber} 
+                                        ariaLabel="work phone" 
+                                        ariaDescribedby="workphone" 
+                                        onChange={handleModalInput}
+                                        onBlur={(e) => handleBlur(e)}
+                                    />
                                 </div>
                             </div>
 

@@ -14,8 +14,9 @@ const AccountSettings = () => {
 
   const [accountLoading, setAccountLoading] = useState(false);
   const [RSCountries, setRSCountries] = useState([])
-  const [RSLanguage, setRSLanguage] = useState([])
+  const [RSLanguages, setRSLanguages] = useState([])
   const [defaultCountry, setDefaultCountry] = useState([])
+  const [defaultLanguage, setDefaultLanguage] = useState([])
   const [organisation, setOrganisation] = useState({
     company_name: "",
     email: "",
@@ -35,13 +36,14 @@ const AccountSettings = () => {
   useEffect(() => {
     getUserInfo();
     setRSCountries(() => countries.map(item => ({value: item.name, label: item.name})))
-    setRSLanguage(() => languages.map(item => ({value: item.name, label: item.name})))
+    setRSLanguages(() => languages.map(item => ({value: item.name, label: item.name})))
     setDomain(window.localStorage.getItem("domain"))
   }, []);
 
   useEffect(() => {
     setDefaultCountry(() => RSCountries.filter(item => item.value === organisation.region))
-  }, [RSCountries, organisation])
+    setDefaultLanguage(() => RSLanguages.filter(item => item.value === organisation.language))
+  }, [RSCountries, RSLanguages, organisation])
 
 
   const handleChange = (e) => {
@@ -53,16 +55,7 @@ const AccountSettings = () => {
   const handleRSChange = ({value}, {name}) => {
     setOrganisation(prev => ({...prev, [name]: value}));
   };
-
-  // const handleAvatar = (e) => {
-  //   e.preventDefault();
-  //   const files = e.target.files;
-  //   let avatarImage = URL.createObjectURL(files[0]);
-  //   setPersonalInformation({
-  //     ...personalInformation,
-  //     avatar: { file: files[0], blob: avatarImage },
-  //   });
-  // };
+  
 
   const getUserInfo = async () => {
     setAccountLoading(true);
@@ -98,9 +91,8 @@ const AccountSettings = () => {
     setAccountLoading(false);
 
     if (res?.status === "success") {
-      console.clear();
-      console.log(res);
       setOrganisation(prev => ({...prev, ...res?.data}))
+      return NotificationManager.error(res?.success, "Success", 4000);
     } else {
       return NotificationManager.error(res?.er?.message, "Error", 4000);
     }
@@ -265,11 +257,10 @@ const AccountSettings = () => {
                 </label>
                 <RSelect 
                   name="language"
-                  id="language"
-                  options={RSLanguage}
+                  options={RSLanguages}
                   onChange={handleRSChange}
-                  defaultValue={RSLanguage[9]}
-                />                
+                  value={defaultLanguage}
+                  />                
               </div>
             </div>
 
@@ -279,10 +270,9 @@ const AccountSettings = () => {
               </label>
               <RSelect 
                 name="region"
-                id="region"
                 options={RSCountries}
                 onChange={handleRSChange}
-                defaultValue={defaultCountry}
+                value={defaultCountry}
               />
             </div>
             

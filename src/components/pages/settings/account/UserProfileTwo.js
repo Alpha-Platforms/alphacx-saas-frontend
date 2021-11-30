@@ -1,5 +1,5 @@
 //@ts-nocheck
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import "./AccountSettings.scss";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
 import {useState} from "react";
@@ -435,7 +435,8 @@ const UserProfileTwo = ({
                                             id="email"
                                             name="email"
                                             value={personalInfoInputs.email}
-                                            disabled/>
+                                            disabled
+                                        />
                                     </div>
 
                                     <div className="d-flex mb-3">

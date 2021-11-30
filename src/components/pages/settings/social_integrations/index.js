@@ -30,11 +30,6 @@ function SocialIntegrations({configs}) {
   const [livechatConnected, setLivechatConnected] = useState(false)
 
 
-  // 
-  useEffect(() => {
-    // getConfig();
-  }, []);
-
   useEffect(() => {
     
     if(configs.sms_config){setSmsConnected(true)}    
@@ -42,9 +37,6 @@ function SocialIntegrations({configs}) {
     if(configs.facebook_config){setFacebookConnected(true)}
     if(configs.livechat_config){setLivechatConnected(true)}
     if(configs.whatsapp_config){setWhatsappConnected(true)}
-
-    console.clear()
-    // console.log(configs)
 
   }, [configs])
 
