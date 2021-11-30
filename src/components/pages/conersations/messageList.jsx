@@ -106,7 +106,7 @@ export default function MessageList({
                 data.id === activeChat ? "message-listmain-active" : ""
               }`}
               onClick={() => {
-                scrollPosSendMsgList();
+                scrollPosSendMsgList("#lastMsg");
                 loadSingleMessage(data);
                 setSingleTicketFullInfo(data);
                 setTicketId(data.id);
