@@ -74,7 +74,8 @@ const Login = ({history}) => {
             email: userInput.email,
             password: userInput.password,
             country: userInput.country,
-            currency: "Naira"
+            currency: "Naira",
+            language: "English"
         };
 
         setLoading(true);
