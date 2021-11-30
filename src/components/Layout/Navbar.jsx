@@ -169,7 +169,7 @@ function Notification(props){
                       </div>
                       <div className="media-body flex-grow-1">
                         <div className="media-header d-flex justify-content-between align-items-center mb-1">
-                          <p className="mb-0 me-3">{data.title}</p>
+                          <p className="mb-0 me-2 text-truncate" title={data.title} style={{"maxWidth": "130px"}}>{data.title}</p>
                           <span className="text-muted small">{moment(`${data.created_at}`).fromNow()}</span>
                         </div>
                         <div className="acx-text-gray-500 media-content">
