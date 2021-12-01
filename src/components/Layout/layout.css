@@ -295,8 +295,8 @@
   box-shadow: 0px 3px 20px 3px rgb(0 0 0 / 10%);
   transform: translateX(-50%) translateY(50px)  translateZ(0px) !important;
   width: fit-content;
-  min-width: 320px;
-  max-width: 320px;
+  min-width: 300px;
+  max-width: 300px;
   max-height: 500px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -363,10 +363,20 @@
 .acx-notification-nav-dropdown .dropdown-menu .dropdown-item:active {
   color: inherit;
 }
-.acx-notification-nav-dropdown .dropdown-menu .dropdown-item a{
-  z-index: 21;
+.acx-notification-nav-dropdown .dropdown-menu .dropdown-item .media-body .media-content p{
+  margin-bottom: 0px !important;
 }
+.acx-notification-nav-dropdown .dropdown-menu .dropdown-item .media-body .media-content{
+  max-height: 64px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;  
+}
+
+
 /*  */
+
 .app-logo-wrap-layout-page {
   margin-right: auto;
   width: 60%;
