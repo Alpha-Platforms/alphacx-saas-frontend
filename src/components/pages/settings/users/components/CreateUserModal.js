@@ -65,12 +65,31 @@ const CreateUserModal = ({
             NotificationManager.error('All fields are required', 'Error');
         } else {
             setCreatingUser(true);
+
+            const body = {firstName, lastName, email, groupIds: teams, role, phoneNumber};
             
             // The request function
-            addAgent({firstName, lastName, email, groupIds: teams, role, phoneNumber});
+            addAgent(body, () => {
+                setModalInputs({
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    avater: '',
+                    phoneNumber: '',
+                    description: '',
+                    teams: [],
+                    role: 'Agent'
+                });
+                setCreateModalShow(false);
+                setCreatingUser(false);
+                NotificationManager.success(`${body?.role} created successfully`, "Success", 4000);
+            }, () => {
+                setCreatingUser(false);
+                NotificationManager.error(`${body?.role} could not be created`, "Error", 4000);
+            });
         }
     }
-
+/* 
     useEffect(() => {
         if (isAgentCreated) {
             resetAgentCreated();
@@ -92,7 +111,7 @@ const CreateUserModal = ({
             setCreatingUser(false);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isAgentCreated]);
+    }, [isAgentCreated]); */
 
     //create user modal
     return (

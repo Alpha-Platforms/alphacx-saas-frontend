@@ -39,6 +39,11 @@ const agentReducer = (state = initialState, action) => {
 				...state,
 				isAgentCreated: true
 			}
+		case types.ADD_SINGLE_AGENT:
+			return {
+				...state,
+				agents: [action.payload, ...state.agents]
+			}
 		case types.RESET_AGENT_CREATED:
 			return {
 				...state,

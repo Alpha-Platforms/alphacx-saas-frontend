@@ -21,6 +21,11 @@ const supervisorReducer = (state = initialState, action) => {
 				isSupervisorsLoading: false,
 				isSupervisorsLoaded: true
 				}
+		case types.ADD_SINGLE_SUPERVISOR:
+			return {
+				...state,
+				supervisors: [action.payload, ...state.supervisors]
+			}
 		case types.SUPERVISORS_LOADING:
 			return {
 				...state,
