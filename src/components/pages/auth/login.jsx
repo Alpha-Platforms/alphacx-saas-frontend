@@ -44,7 +44,7 @@ const Login = ({match: {params}}) => {
       hostName[hostLength-2] === "qustomar" &&  hostLength === 3  || 
       hostName[hostLength-1] === "localhost" &&  hostLength !== 1 
     ){
-      hostn = hostName[0].toLowerCase();
+      const hostn = hostName[0].toLowerCase();
       setDomain(hostn) 
       
       const res = await httpPost(`auth/login`, {domain: hostn});
