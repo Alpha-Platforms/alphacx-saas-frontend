@@ -67,11 +67,11 @@ const Login = ({history}) => {
         const validateEmail = ValidateEmail (userInput.email);
 
         const data = {
-            domain: userInput.domain,
+            domain: userInput.domain.toLowerCase(),
             firstname: userInput.firstName,
             lastname: userInput.lastName,
             companyName: userInput.companyName,
-            email: userInput.email,
+            email: userInput.email.toLowerCase(),
             password: userInput.password,
             country: userInput.country,
             currency: "Naira",
