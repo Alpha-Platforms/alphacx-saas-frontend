@@ -44,10 +44,10 @@ const Login = ({match: {params}}) => {
       hostName[hostLength-2] === "qustomar" &&  hostLength === 3  || 
       hostName[hostLength-1] === "localhost" &&  hostLength !== 1 
     ){
+      const hostn = hostName[0].toLowerCase();
+      setDomain(hostn) 
       
-      setDomain(hostName[0]) 
-      
-      const res = await httpPost(`auth/login`, {domain: hostName[0]});
+      const res = await httpPost(`auth/login`, {domain: hostn});
 
       if (res?.status === "success") {
         window.localStorage.setItem("tenantId", res?.data?.id || "");
@@ -86,7 +86,7 @@ const Login = ({match: {params}}) => {
       if(userInput.email && userInput.password){
     
         const data = {
-          email: userInput.email,
+          email: userInput.email.toLowerCase(),
           password: userInput.password,
         };
     
@@ -117,7 +117,7 @@ const Login = ({match: {params}}) => {
 
     } else {// DOMAIN LOGIN
 
-      const domain = userInput.domain;
+      const domain = userInput.domain.toLowerCase();
 
       setLoading(true);
       const res = await httpPost(`auth/login`, {domain});

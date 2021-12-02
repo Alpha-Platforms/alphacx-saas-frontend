@@ -38,12 +38,12 @@ export const validatePassword = (pw) => {
   if (pw.length < 8 || pw.length > 20) {
     return (error = "Password must be between 8 and 20 characters.");
   }
-  if (pw.search(/[a-z]/i) < 0) {
-    return error = "Your password must contain at least one letter.";
-  }
-  // if (pw.search(/[0-9]/) < 0) {
-  //  return  error="Your password must contain at least one digit."; 
+  // if (pw.search(/[a-z]/i) < 0) {
+  //   return error = "Your password must contain at least one letter.";
   // }
+  if (pw.search(/[0-9]/) < 0) {
+   return  error="Your password must contain at least one digit."; 
+  }
 }
 
 // validation should just check value and return true/false - isValidated
@@ -53,10 +53,10 @@ export const Validate  = {
 
     if (!/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(e.target.value)){
       NotificationManager.warning("Enter a valid email", "Validation Error", 4000);
-      return setState({
-      ...state,
+      return setState(prev => ({
+      ...prev,
       [e.target.name]: ""
-    });
+    }));
     } 
     
 
@@ -64,8 +64,8 @@ export const Validate  = {
 
   ,
 
-  password: (value, state, setState) => {
-    const error = validatePassword(value)
+  password: (e, state, setState) => {
+    const error = validatePassword(e.target.value)
     if(error){
       NotificationManager.warning(error, "Validation Error", 4000);
       return setState({
@@ -81,7 +81,8 @@ export const Validate  = {
   length: (e, state, setState) => {
     if (e.target.value.length < 2 || e.target.value.search(/[a-z]/i) < 0) {
       NotificationManager.warning("Enter a proper name", "Validation Error", 4000);
-      return setState({
+
+      setState({
         ...state,
         [e.target.name]: ""
       })
@@ -98,6 +99,19 @@ export const Validate  = {
         [e.target.name]: ""
       })
     }
+  }  
+
+  ,
+
+  noSpecialChars: (e, state, setState) => {
+    if (!(/^[A-Za-z0-9]{3,}$/.test(e.target.value))) {
+      NotificationManager.warning("3 or more letters or numbers only", "Special Character Detected", 4000);
+      setState({
+        ...state,
+        [e.target.name]: ""
+      })
+      return false;
+    } 
+    return true;
   }
-  
 }

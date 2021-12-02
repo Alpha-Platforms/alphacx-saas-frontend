@@ -43,20 +43,53 @@ export const getPaginatedAgents = (itemsPerPage, currentPage) => (dispatch, getS
 }
 
 
-export const addAgent = (newAgent) => (dispatch, getState) => {
+/* export const addAgent = (newAgent) => (dispatch, getState) => {
 	//Request body
 	const body = JSON.stringify(newAgent);
 
 	axios.post(`${config.stagingBaseUrl}/agent`, body, userTokenConfig(getState))
 		.then(res => {
-            // console.log('AGENT RESPONSE => ', res);
+            console.log('AGENT RESPONSE => ', res);
             dispatch({
                 type: types.ADD_AGENT,
                 payload: res.data
             });
         })
 		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
+} */
+
+export const addAgent = (newAgent, success, failed) => (dispatch, getState) => {
+	//Request body
+	const body = JSON.stringify(newAgent);
+
+	axios.post(`${config.stagingBaseUrl}/agent`, body, userTokenConfig(getState))
+		.then(res => {
+            console.log('AGENT RESPONSE => ', res.data);
+            
+            if (res.data?.status === "success") {
+                success && success(res.data);
+                const data = res.data?.data;
+                dispatch({
+                    type: data?.role === "Administrator" ? types.ADD_SINGLE_ADMIN : data?.role === "Supervisor" ? types.ADD_SINGLE_SUPERVISOR : types.ADD_SINGLE_AGENT,
+                    payload: (data => {
+                        switch(data.role) {
+                            default:
+                                const newData = {...data, id: data?.userId, firstname: data?.firstName, lastname: data?.lastName}
+                                return newData;
+                        }
+                    })(data)
+                });
+            } else {
+                failed && failed(res.data);
+            }
+        })
+		.catch(err => {
+            dispatch(returnErrors(err.response?.data, err.response?.status));
+            failed && failed(err);
+        });
 }
+
+
 
 // valid redux action
 export const getCurrentAgent = (id) => (dispatch, getState) => {
