@@ -67,6 +67,8 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
                         }));
                         setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
             <script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(JSON.stringify(settings))}'});</script>`);
+                    }, () => {
+                        setLoading(false);
                     });
                 } else {
                     setLoading(false);
