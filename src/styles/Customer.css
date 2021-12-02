@@ -238,3 +238,26 @@
   display: block;
   border: 1px solid rgba(0, 0, 0, 0.2);
 }
+/* onprem */
+.filter-flyout-body::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-flyout-body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.border-control button:first-child {
+  border-top-right-radius: 0%;
+  border-bottom-right-radius: 0%;
+}
+
+.border-control button:last-child {
+  border-top-left-radius: 0%;
+  border-bottom-left-radius: 0%;
+}
+
+.filter-flyout-body label.form-label {
+  margin-bottom: 0.1rem !important;
+}

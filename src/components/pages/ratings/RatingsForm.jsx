@@ -53,7 +53,7 @@ export default function RatingsForm() {
                 commentLabel: res?.data.commentLabel,
             });
         } else {
-            return NotificationManager.error(res?.er?.message, "Error", 4000);
+            return;
         }
     };
 

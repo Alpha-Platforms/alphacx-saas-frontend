@@ -1,7 +1,9 @@
 // @ts-nocheck
 import React, { useState, useEffect, useContext, Fragment } from "react";
 import {connect} from 'react-redux';
-
+//
+import { useLocation } from "react-router";
+//
 import { UserDataContext } from "../../../context/userContext";
 // import { Modal } from "react-responsive-modal";
 import Tab from 'react-bootstrap/Tab';
@@ -86,7 +88,7 @@ function Conversation({user, ...props}) {
   const [loadingTicks, setLoadingTicks] = useState(true);
   const [loadSingleTicket, setLoadSingleTicket] = useState(false);
   const [SenderInfo, setSenderInfo] = useState(false);
-  const [singleTicketFullInfo, setTingleTicketFullInfo] = useState(false);
+  const [singleTicketFullInfo, setSingleTicketFullInfo] = useState(false);
   const [Category, setCategory] = useState([]);
   const [Priority, setPriority] = useState([]);
   const [Tags, setTags] = useState([]);
@@ -153,7 +155,30 @@ function Conversation({user, ...props}) {
   // 
   const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(false);
   const [addHist, setAddHist] = useState(false);
+  // scroll position
+  const [scrollPosition, setScrollPosition] = useState("#lastMsg");
+  // 
+  const location = useLocation();
+  // 
+  // 
+  useEffect(() => {
+    // ticketHistoryId
+    if (tickets.length > 0 && location.state && location.state.hasOwnProperty('ticketId')) {
+      let currentTicket = tickets.find(ticket => ticket.id == location.state.ticketId);
+      setSingleTicketFullInfo(currentTicket);
+      loadSingleMessage(currentTicket);
+      setTicketId(location.state.ticketId);
+      setActiveChat(location.state.ticketId);
+      setScrollPosition(`#${location.state.ticketHistoryId}`);
+      scrollPosSendMsgList(`#${location.state.ticketHistoryId}`);
+    }
+  }, [tickets, location]);
+  // 
+  // useEffect(() => {
+  //   scrollPosSendMsgList(scrollPosition);
+  // }, [scrollPosition]);
 
+  // 
   useEffect(() => {
     if (addHist) {
       setTimeout(() => {
@@ -188,7 +213,7 @@ function Conversation({user, ...props}) {
       let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, ticketsData);
     });
-    // return () => { AppSocket.io.disconnect()};
+    return () => { AppSocket.io.disconnect()};
   },[]);
 
   // 
@@ -217,7 +242,7 @@ function Conversation({user, ...props}) {
       }
       let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
       AppSocket.io.emit(`ws_tickets`, ticketsData);
-      scollPosSendMsgList();
+      scrollPosSendMsgList();
     });
 
     // return () => { AppSocket.io.disconnect()};
@@ -370,7 +395,7 @@ function Conversation({user, ...props}) {
 
   const replyTicket = async (reply, attachment, type = replyType) => {
     scollPosSendMsg();
-    // console.log(reply);
+    // console.log(singleTicketFullInfo);
     let filterSentTick = tickets.filter((tic) => {
       return tic.id == singleTicketFullInfo.id;
     });
@@ -421,7 +446,7 @@ function Conversation({user, ...props}) {
 
     if (res?.status === "success") {
       ticket[0]?.channel !== "livechat" && setMsgHistory((item) => [...item, replyData]);
-      scollPosSendMsgList();
+      scrollPosSendMsgList();
       setEditorState(initialState);
       setReplyTicket({ plainText: "", richText: "" });
       // emit ws_tickets event on reply
@@ -503,9 +528,9 @@ function Conversation({user, ...props}) {
   const updateTicketStatus = async () => {
     if(RSTicketStage.label === "Closed"){
       // get url and replace domain
-      let base_url = window.location.origin.replace(`${localStorage.domain}.`, "");
+      let base_url = window.location.origin;
       let complete_url = `${base_url}/feedback/${localStorage.domain}/${ticket[0].id}/${ticket[0].customer.id}`;
-      let rich_text = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation : <a href='${complete_url}'>rate us here</a></p>`;
+      let rich_text = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation : <a target='_blank' href='${complete_url}'>Click here to rate us</a></p>`;
       let ReplyTicket = {
         richText : rich_text,
         plainText : `Your ticket has been marked as closed, Please click on the link to rate this conversation ${complete_url}`
@@ -544,7 +569,7 @@ function Conversation({user, ...props}) {
     setSenderInfo({ customer, subject });
     setMessageSenderId(id);
     setLoadSingleTicket(true);
-    setTingleTicketFullInfo();
+    // setSingleTicketFullInfo();
     setTicket([]);
     let swData = { assigneeId: assignee?.id || "", userId: customer?.id || "" };
     // customer.id && AppSocket.io.leave(`${customer.id}${assignee.id}`);
@@ -569,7 +594,7 @@ function Conversation({user, ...props}) {
 
       setLoadSingleTicket(false);
       checkRes();
-      scollPosSendMsgList();
+      scrollPosSendMsgList(scrollPosition);
     } else {
       setLoadSingleTicket(false);
       return NotificationManager.error(res.er.message, "Error", 4000);
@@ -722,8 +747,8 @@ function Conversation({user, ...props}) {
     window.location.href = "#msgListTop";
   }
 
-  function scollPosSendMsgList(e) {
-    window.location.href = "#lastMsg";
+  function scrollPosSendMsgList(e = scrollPosition) {
+    window.location.href = e;
   }
 
   return (
@@ -790,12 +815,12 @@ function Conversation({user, ...props}) {
                 LoadingTick={loadingTicks}
                 setLoadingTicks={setLoadingTicks}
                 loadSingleMessage={loadSingleMessage}
-                setTingleTicketFullInfo={setTingleTicketFullInfo}
+                setSingleTicketFullInfo={setSingleTicketFullInfo}
                 filterChat={filterChat}
                 filterTicketsState={filterTicketsState}
                 activeChat={activeChat}
                 setActiveChat={setActiveChat}
-                scollPosSendMsgList={scollPosSendMsgList}
+                scrollPosSendMsgList={scrollPosSendMsgList}
                 setTicketId={setTicketId}
               />
           </div>
@@ -926,7 +951,7 @@ function Conversation({user, ...props}) {
                               </div>
                             )
                           : (
-                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"} ${data?.type == "note"? "message-note" : ""}`}>
+                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"} ${data?.type == "note"? "message-note" : ""}`} id={`${data?.id}`}>
                                 <div className="message-container">
                                   <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
                                     {data?.user?.avatar ? ( 
@@ -983,7 +1008,7 @@ function Conversation({user, ...props}) {
                               </div>
                             )
                           : (
-                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"} ${data?.type == "note"? "message-note" : ""}`}>
+                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"} ${data?.type == "note"? "message-note" : ""}`} id={`${data?.id}`}>
                                 <div className="message-container">
                                   <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
                                     {data?.user?.avatar ? ( 
@@ -1039,7 +1064,7 @@ function Conversation({user, ...props}) {
                               </div>
                             )
                           : (
-                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"} ${data?.type == "note"? "message-note" : ""}`}>
+                              <div className={`message ${data?.user?.role == "Customer" ? "" : "message-out"} ${data?.type == "note"? "message-note" : ""}`} id={`${data?.id}`}>
                                 <div className="message-container">
                                   <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
                                     {data?.user?.avatar ? ( 
@@ -1164,7 +1189,7 @@ function Conversation({user, ...props}) {
                                     <span> {` ${data.firstname}  ${data.lastname}`}</span>
                                   </Fragment>, 
                                 value: `${data.firstname}  ${data.lastname}`, 
-                                url: `settings/profile/${data.id}`
+                                url: `/settings/profile/${data.id}`
                               }
                             }) : []
                         }}

@@ -229,7 +229,7 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
                             <div className="mb-3 border-bottom">
                                 <Form.Group className={`d-inline-flex flex-column flex-grow-0 pb-2 form-group acx-form-group`}>
                                     <Form.Label className="text-muted small mb-1">Phone</Form.Label>
-                                    <Form.Control type="tel" className={`text-dark ${editProfile? "" : "py-0"}`} 
+                                    <Form.Control type="tel" name="phoneNumber" className={`text-dark ${editProfile? "" : "py-0"}`} 
                                         plaintext={!editProfile} readOnly={!editProfile} required
                                         defaultValue={currentCustomer.phoneNumber ? currentCustomer.phoneNumber 
                                                     : currentCustomer.phone_number ? currentCustomer.phone_number : ''} 

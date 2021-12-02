@@ -80,6 +80,7 @@ import UserProfile from "./components/pages/settings/account/UserProfile";
 import UserProfileTwo from "./components/pages/settings/account/UserProfileTwo";
 import NotificationSettings from "./components/pages/settings/notifications/NotificationSettings";
 import NewEmailTemplate from "./components/pages/settings/notifications/components/NewEmailTemplate";
+import EditEmailTemplate from "./components/pages/settings/notifications/components/EditEmailTemplate";
 import CannedResponsesSettings from "./components/pages/settings/canned_responses/CannedResponsesSettings";
 import NewCannedResponse from "./components/pages/settings/canned_responses/components/NewCannedResponse";
 import CustomerPortal from "./components/pages/help_center/customer_portal/CustomerPortal";
@@ -349,6 +350,11 @@ const SiteRouter = connect(mapStateToProps, {
                                 path="/settings/notifications/email-template"
                                 pageName="Settings"
                                 component={NewEmailTemplate}/>
+                            <SettingsLayoutRoute
+                                exact
+                                path="/settings/notifications/email-template/:id"
+                                pageName="Settings"
+                                component={EditEmailTemplate}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/canned-responses"

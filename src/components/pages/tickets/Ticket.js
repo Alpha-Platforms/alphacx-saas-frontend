@@ -433,9 +433,9 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     const updateTicketStatus = async () => {
       if(RSTicketStage.label === "Closed"){
         // get url and replace domain
-        let base_url = window.location.origin.replace(`${localStorage.domain}.`, "");
+        let base_url = window.location.origin;
         let complete_url = `${base_url}/feedback/${localStorage.domain}/${ticket[0].id}/${ticket[0].customer.id}`;
-        let rich_text = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation : <a href='${complete_url}'>rate us here</a></p>`;
+        let rich_text = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation : <a target='_blank' href='${complete_url}'>Click here to rate us</a></p>`;
         let ReplyTicket = {
           richText : rich_text,
           plainText : `Your ticket has been marked as closed, Please click on the link to rate this conversation ${complete_url}`
@@ -1038,7 +1038,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                       <span> {` ${data.firstname}  ${data.lastname}`}</span>
                                     </Fragment>, 
                                   value: `${data.firstname}  ${data.lastname}`, 
-                                  url: `settings/profile/${data.id}`
+                                  url: `/settings/profile/${data.id}`
                                 }
                               }) : []
                           }}

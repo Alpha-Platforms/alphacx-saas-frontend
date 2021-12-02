@@ -11,6 +11,7 @@ import ImageDefault from '../../../assets/svgicons/image-default.svg';
 import axios from 'axios';
 import {createTags} from '../../../reduxstore/actions/tagActions';
 import {config} from '../../../config/keys';
+import {Validate} from "../../../helpers/validateInput";
 
 const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedCustomers, tags, isEditing, customerId, customers, updateCustomer, createTags, fromCustDetails, custId, getCurrentCustomer, addNewCustomer, custMeta}) => {
 
@@ -49,6 +50,23 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
             [name]: value
         }));
     }
+
+        // ONBLUR VALIDATION
+        const handleBlur = (e) => {   
+            if (e.target.name === "emailaddress") {
+                Validate.email(e, modalInputs, setModalInputs)
+    
+            } else if (e.target.name === "password") {
+                Validate.password(e, modalInputs, setModalInputs)
+    
+            } else if (e.target.name === "firstname" || e.target.name === "lastname") {
+                Validate.length(e, modalInputs, setModalInputs)
+    
+            } else if (e.target.name === "workphone") {
+                Validate.ngPhone(e, modalInputs, setModalInputs)
+            }
+            
+        }
 
     
     useEffect(() => {
@@ -321,7 +339,9 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                     id="firstname"
                                     className="form-control"
                                     value={modalInputs.firstname}
-                                    onChange={handleModalInput}/>
+                                    onChange={handleModalInput}
+                                    onBlur={(e) => handleBlur(e)}
+                                />
                             </div>
                             <div className="col-6 mt-2">
                                 <label htmlFor="lastname" className="form-label">Last Name</label>
@@ -331,7 +351,9 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                     id="lastname"
                                     className="form-control"
                                     value={modalInputs.lastname}
-                                    onChange={handleModalInput}/>
+                                    onChange={handleModalInput}
+                                    onBlur={(e) => handleBlur(e)}
+                                />
                             </div>
                         </div>
                         <div className="row">
@@ -352,7 +374,17 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                                 <span><img src={`https://www.countryflags.io/be/flat/64.png`} alt="" /></span> {cc.dial_code}</li>)}
                                         </ul> */}
                                     </div>
-                                    <input type="tel" className="form-control" name="workphone" id="workphone" value={modalInputs.workphone} aria-label="work phone" aria-describedby="workphone" onChange={handleModalInput}/>
+                                    <input 
+                                        type="tel" 
+                                        className="form-control" 
+                                        name="workphone" 
+                                        id="workphone" 
+                                        value={modalInputs.workphone} 
+                                        ariaLabel="work phone" 
+                                        ariaDescribedby="workphone" 
+                                        onChange={handleModalInput}
+                                        onBlur={(e) => handleBlur(e)}
+                                    />
                                 </div>
                             </div>
                             <div className="col-6 mt-3">
@@ -363,7 +395,9 @@ const CreateCustomerModal = ({createModalShow, setCreateModalShow, getPaginatedC
                                     id="emailaddress"
                                     className="form-control"
                                     value={modalInputs.emailaddress}
-                                    onChange={handleModalInput}/>
+                                    onChange={handleModalInput}
+                                    onBlur={(e) => handleBlur(e)}
+                                />
                             </div>
                         </div>
                         <p className="btn mt-3 mb-2 p-0 text-start"
