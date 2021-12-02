@@ -27,6 +27,11 @@ const adminReducer = (state = initialState, action) => {
 				isAdminsLoading: true,
 				isAdminsLoaded: false
 			}
+		case types.ADD_SINGLE_ADMIN:
+			return {
+				...state,
+				admins: [action.payload, ...state.admins]
+			}
 		case types.CURRENT_ADMIN_LOADING:
 			return {
 				...state,
