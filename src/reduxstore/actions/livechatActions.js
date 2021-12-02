@@ -4,7 +4,7 @@ import {config} from '../../config/keys';
 import {returnErrors} from './errorActions';
 import {userTokenConfig} from '../../helper';
 
-export const getLivechatConfig = (updateStateConfig) => (dispatch, getState) => {
+export const getLivechatConfig = (updateStateConfig, failed) => (dispatch, getState) => {
     if (!navigator.onLine) {
         return;
     }
@@ -21,6 +21,8 @@ export const getLivechatConfig = (updateStateConfig) => (dispatch, getState) => 
             });
             if (res.data?.status === "success") {
                 updateStateConfig && updateStateConfig(res.data?.data);
+            } else {
+                failed && failed();
             }
         })
         .catch(err => {
@@ -28,6 +30,7 @@ export const getLivechatConfig = (updateStateConfig) => (dispatch, getState) => 
                 type: types.GET_LIVECHAT_CONFIG,
                 payload: {}
             });
+            failed && failed();
             dispatch(returnErrors(err.response?.data, err.response?.status))
         });
 }
