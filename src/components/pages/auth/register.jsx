@@ -67,15 +67,14 @@ const Login = ({history}) => {
         const validateEmail = ValidateEmail (userInput.email);
 
         const data = {
-            domain: userInput.domain.toLowerCase(),
+            domain: userInput.domain,
             firstname: userInput.firstName,
             lastname: userInput.lastName,
             companyName: userInput.companyName,
-            email: userInput.email.toLowerCase(),
+            email: userInput.email,
             password: userInput.password,
             country: userInput.country,
-            currency: "Naira",
-            language: "English"
+            currency: "Naira"
         };
 
         setLoading(true);

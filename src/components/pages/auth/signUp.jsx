@@ -38,7 +38,7 @@ const Registration = () => {
         password: "",
         companyName: "",
         domain: "",
-        country: ""
+        country: "Nigeria"
     });
     // 
     const [passwordShown, setPasswordShown] = useState(false);
@@ -47,35 +47,53 @@ const Registration = () => {
     const [isVerified, setIsVerified] = useState(false)
     const [domainChecking, setDomainChecking] = useState(false)
     const [lockDomain, setLockDomain] = useState(false)
-    // 
+    const [defaultCountry, setDefaultCountry] = useState({})
+    const [RSCountries, setRSCountries] = useState([])
+    
+
+    useEffect(() => {
+        setRSCountries(() => countries?.map(item => {
+            return {value: item.name, label: item.name}
+        }))    
+    }, [countries])
+
+
+    useEffect(() => {
+        setDefaultCountry(() => RSCountries.filter(item => item.value === userInput.country))
+    }, [RSCountries, userInput.country])
+
+      
     const togglePasswordVisibility = () => {
         setPasswordShown(!passwordShown);
     };
-    // 
-    const verifyDomain = async (e) => {
-        if(e.target.value == "") return;
+    
+    
+    const verifyDomain = async (e) => {        
 
-        const domain = userInput.domain;
-        setDomainChecking(true);
-        const res = await httpPost(`auth/login`, {domain});
-        if (res.status === "success") {
-            setDomainChecking(false)
-            setUserInput({
-                ...userInput,
-                [e.target.name]: ""
-            });
-            NotificationManager.error(res?.er?.message, "This domain already exists", 4000);
-        } else {
-            setDomainChecking(false);
-            setLockDomain(true)
+        if(Validate.noSpecialChars(e, userInput, setUserInput)){
+            const domain = userInput.domain.toLowerCase();
+            setDomainChecking(true);
+            const res = await httpPost(`auth/login`, {domain});
+            if (res.status === "success") {
+                setDomainChecking(false)
+                setUserInput({
+                    ...userInput,
+                    [e.target.name]: ""
+                });
+                NotificationManager.error(res?.er?.message, "This domain already exists", 4000);
+            } else {
+                setDomainChecking(false);
+                setLockDomain(true)
+            }
         }
     }
     // 
     const handleChange = (e) => {
-        setUserInput({
-            ...userInput,
+        setUserInput( prev => ({
+            ...prev,
             [e.target.name]: e.target.value
-        });
+        }));
+
         if(e.target.name === "email"){
             localStorage.setItem("tenantEmail", e.target.value)
         }
@@ -87,6 +105,8 @@ const Registration = () => {
             [name]: value
         });
     }
+
+
     // ONBLUR VALIDATION
     const handleBlur = (e) => {   
         if (e.target.name === "email") {
@@ -95,9 +115,12 @@ const Registration = () => {
         } else if (e.target.name === "password") {
             Validate.password(e, userInput, setUserInput)
 
-        } else if (e.target.name === "firstName" || e.target.name === "lastName") {
+        } else if (e.target.name === "firstName" || e.target.name === "lastName" || e.target.name === "companyName") {
             Validate.length(e, userInput, setUserInput)
         }
+        else if (e.target.name === "domain") {
+           Validate.noSpecialChars(e, userInput, setUserInput)
+       }
         
     }
     // 
@@ -107,15 +130,16 @@ const Registration = () => {
         event.stopPropagation();
         setValidated(true);
         const data = {
-            domain: userInput.domain,
+            domain: userInput.domain.toLowerCase(),
             firstname: userInput.firstName,
             lastname: userInput.lastName,
             companyName: userInput.companyName,
-            email: userInput.email,
+            email: userInput.email.toLowerCase(),
             password: userInput.password,
             country: userInput.country,
             currency: "Naira"
         };
+
         const requiredData = {
             ...data
         }
@@ -218,6 +242,7 @@ const Registration = () => {
                                                     placeholder="Company Name"  
                                                     name="companyName"
                                                     onChange={(e) => handleChange(e)}
+                                                    onBlur={(e) => handleBlur(e)}
                                                     value={userInput.companyName} 
                                                     className="bg-light acx-form-control"/> 
                                             </Form.Group>
@@ -256,11 +281,8 @@ const Registration = () => {
                                                     onChange={handleRSChange}
                                                     isClearable={false}
                                                     isMulti={false}
-                                                    options={
-                                                        countries?.map(item => {
-                                                            return {value: item.name, label: item.name}
-                                                        })
-                                                    }
+                                                    options={RSCountries}
+                                                    value={defaultCountry}
                                                 />
                                             </Form.Group>
                                             <div className="mb-2 submit-auth-btn">
@@ -269,7 +291,8 @@ const Registration = () => {
                                                     {loading ?
                                                         <span>
                                                             <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...
-                                                        </span> : "Sign Up" } 
+                                                        </span> : "Sign Up"
+                                                    } 
                                                 </Button>
                                             </div>
                                         </Form>
