@@ -224,7 +224,7 @@
     min-height: 24% !important;
     /* position: fixed;
     bottom: 1.2rem; */
-    width: calc(100vw - 421px);
+    width: calc(100vw - 702px);
     background-color: #fafafa;
     flex-shrink: 0;
     padding-bottom: 20px;
@@ -233,7 +233,7 @@
 #ticketConvoEditorBox > div {
     /* position: fixed; */
     bottom: 0;
-    width: calc(100vw - 480px);
+    width: calc(100vw - 760px);
     /* width: 100%; */
     padding-bottom: 0;
     margin-bottom: 0;
