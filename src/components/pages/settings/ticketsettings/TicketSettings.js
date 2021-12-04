@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Tabs, Tab } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 // 
+import ChannelsTab from './components/ChannelsTab';
 import NewCategoryTab from './components/NewCategoryTab';
 import TicketStatusTab from './components/TicketStatusTab';
 import TicketSettingsTab from "./components/TicketSettingsTab";
@@ -85,7 +86,7 @@ const TicketSettings = (props) => {
             </li>
             <li className="nav-item" role="presentation">
               <button
-                className={`nav-link px-0 ${
+                className={`nav-link px-0 me-5 ${
                   tabKey === "new-category" && "active"
                 } text-muted`}
                 id="pills-ticket-tab"
@@ -96,6 +97,21 @@ const TicketSettings = (props) => {
                 aria-selected="false"
               >
                 Add Category
+              </button>
+            </li>
+            <li className="nav-item" role="presentation">
+              <button
+                className={`nav-link px-0 ${
+                  tabKey === "channels" && "active"
+                } text-muted`}
+                id="pills-channels-tab"
+                onClick={() => setTabKey("channels")}
+                type="button"
+                role="tab"
+                aria-controls="ticket-channels-view"
+                aria-selected="false"
+              >
+                Channels
               </button>
             </li>
           </ul>
@@ -124,6 +140,9 @@ const TicketSettings = (props) => {
 
             <Tab eventKey="new-category" className="">
               <NewCategoryTab />
+            </Tab>
+            <Tab eventKey="channels" className="">
+              <ChannelsTab />
             </Tab>
 
           </Tabs>
