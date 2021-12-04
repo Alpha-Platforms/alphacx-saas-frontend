@@ -21,11 +21,12 @@ import livechatReducer from './livechatReducer';
 import smsReducer from './smsReducer';
 import slaReducer from './slaReducer';
 import emailTemplateReducer from './emailTemplateReducer';
+import channelReducer from './channelReducer';
 // , 
 const persistConfig = {
     key: 'alphacx_platform',
     storage,
-    whitelist: ['error', 'tenantAuth', 'userAuth', 'priority', 'category', 'status', 'group', 'tag', 'subCategory', 'config', 'livechat', 'sms', 'sla', 'emailTemplate']
+    whitelist: ['error', 'tenantAuth', 'userAuth', 'priority', 'category', 'status', 'group', 'tag', 'subCategory', 'config', 'livechat', 'sms', 'sla', 'emailTemplate', 'channel']
 }
 
 const rootReducer = combineReducers({
@@ -48,7 +49,8 @@ const rootReducer = combineReducers({
     livechat: livechatReducer,
     sms: smsReducer,
     sla: slaReducer,
-    emailTemplate: emailTemplateReducer
+    emailTemplate: emailTemplateReducer,
+    channel: channelReducer
 });
 
 export default persistReducer(persistConfig, rootReducer);
