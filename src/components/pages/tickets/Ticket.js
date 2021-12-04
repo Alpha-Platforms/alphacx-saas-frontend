@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {useState, Fragment, useEffect, useContext} from 'react';
 // bootstrap components
 import Row from 'react-bootstrap/Row';
@@ -32,6 +33,7 @@ import editorImg from "../../../assets/imgF/editorImg.png";
 // 
 import {getUserInitials} from '../../../helper';
 import UserProfile from '../conersations/userProfile';
+import TicketTimeline from '../conersations/TicketTimeline';
 import { dateFormater } from "../../helpers/dateFormater";
 import {getCurrentTicket} from '../../../reduxstore/actions/ticketActions';
 import { StarIconTicket, SendMsgIcon, ExpandChat } from "../../../assets/images/svgs";
@@ -644,7 +646,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
             <ScaleLoader loading={true} color={"#006298"}/>
           </div>
           : !currentTicket ? <div>No Ticket Found.</div> 
-          : <div id="ticketDetailsWrapper" style={{ gridTemplateColumns: "280px 1fr", border: '1px solid #f1f1f1'}}  className="d-grid mb-0">
+          : <div id="ticketDetailsWrapper" style={{ gridTemplateColumns: "280px 1fr 280px", border: '1px solid #f1f1f1'}}  className="d-grid mb-0">
             <div className="pt-2" style={{ backgroundColor: "#fafafa", borderRight: '1px solid #f1f1f1' }}>
               <UserProfile UserInfo={UserInfo} ticket={[currentTicket]} isTicketDetails={true} timeLine={false}  />
             </div>
@@ -691,7 +693,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                             <h1>{ticket[0]?.subject}</h1>
                             <p>
                               {`${capitalize(
-                                SenderInfo?.customer?.firstname)} ${capitalize(SenderInfo?.customer?.lastname == "default"? "" : SenderInfo?.customer?.lastname)} 
+                                SenderInfo?.customer?.firstname || "")} ${capitalize(SenderInfo?.customer?.lastname == "default"? "" : (SenderInfo?.customer?.lastname || ""))} 
                                 ${capitalize(SenderInfo?.customer?.email || "")}`}
                               <span className="custormChatHeaderDot"></span>{" "}
                               <span>{dateFormater(ticket[0]?.updated_at)}</span>
@@ -1057,9 +1059,18 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                 </div>
               )}
               {/* <div className={`conversation-layout-col-two h-100`}>
+              conversationo layout two
               </div> */}
               {/* CHAT COL TWO END */}
             </div>
+
+              {/* THIRD COLUMN */}
+            <div>
+              <TicketTimeline UserInfo={UserInfo} ticket={[currentTicket]} isTicketDetails={true} timeLine={true}  />
+            </div> {/* END OF THIRD COLUMN */}
+
+
+
           </div>}
         <Modal show={openSaveTicketModal} onHide={closeSaveTicketModal} centered scrollable>
           <Modal.Body className="p-0">
