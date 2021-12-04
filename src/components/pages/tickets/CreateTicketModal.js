@@ -1,5 +1,6 @@
 // @ts-nocheck
 import {useState, useEffect, useRef} from 'react';
+import axios from 'axios';
 // import {Modal} from 'react-bootstrap';
 import {Modal} from 'react-responsive-modal';
 import PinIcon from '../../../assets/icons/pin.svg';
@@ -20,7 +21,7 @@ import {
     httpPatchMain,
 } from "../../../helpers/httpMethods";
 import {createTags} from '../../../reduxstore/actions/tagActions';
-import axios from 'axios';
+import {getChannels, addChannel} from '../../../reduxstore/actions/channelActions';
 import {getAcceptValue, allowedFiles} from '../../../helper';
 import {config} from '../../../config/keys';
 
@@ -45,7 +46,8 @@ const CreateTicketModal = ({
     // setChangingRow,
     subCategories,
     tags,
-    createTags
+    createTags,
+    channels, getChannels, addChannel
 }) => {
     const [selectedTags,
         setSelectedTags] = useState([]);
@@ -55,12 +57,12 @@ const CreateTicketModal = ({
     const [subCatLoading, setSubCatLoading] = useState(false);
     const [subCat, setSubCat] = useState(null);
     const [creatingTicket, setCreatingTicket] = useState(false);
-    const [channels, setChannels] = useState([
-        'Email',
-        'Facebook',
-        'Helpdesk',
-        'WhatsApp'
-    ]);
+    // const [channels, setChannels] = useState([
+    //     'Email',
+    //     'Facebook',
+    //     'Helpdesk',
+    //     'WhatsApp'
+    // ]);
     const [uploadInfo, setUploadInfo] = useState({
         blob: null,
         msg: 'Add file or drag file here',
@@ -91,7 +93,11 @@ const CreateTicketModal = ({
     });
     // const [cancelExec, setCancelExec] = useState(false);
 
-    // 
+    //
+    useEffect(() => {
+        getChannels();
+    }, [])
+    //  
     useEffect(() => {
         if(isEditing){
             setModalInputs(prevState => ({
@@ -708,8 +714,9 @@ const CreateTicketModal = ({
                             <textarea
                                 name="description"
                                 id="description"
-                                className="form-control ct-description"
+                                className="form-control"
                                 onChange={handleModalInput}
+                                rows={2}
                             ></textarea>
                         </div>
 
@@ -833,11 +840,11 @@ const CreateTicketModal = ({
                                             onChange={handleRSInput}
                                             name="channel"
                                             isClearable={false}
-                                            placeholder="helpdesk"
+                                            placeholder="Channel"
                                             isMulti={false}
                                             options={
-                                                channels?.map(item => {
-                                                return {value: item,label: item}
+                                                channels?.map(({name}) => {
+                                                    return {value: name,label: name}
                                                 })
                                             }
                                         />
@@ -921,7 +928,8 @@ const mapStateToProps = (state, ownProps) => ({
     groups: state.group.groups,
     isTicketCreated: state.ticket.isTicketCreated,
     customers: state.customer.customers,
-    tags: state.tag.tags?.tags_names?.tags
+    tags: state.tag.tags?.tags_names?.tags,
+    channels: state.channel.channels,
 })
 
-export default connect(mapStateToProps, {addTicket, getPaginatedTickets, resetTicketCreated, createTags})(CreateTicketModal);
+export default connect(mapStateToProps, {addTicket, getPaginatedTickets, resetTicketCreated, createTags, getChannels, addChannel})(CreateTicketModal);
