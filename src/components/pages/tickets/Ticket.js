@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {useState, Fragment, useEffect, useContext} from 'react';
 // bootstrap components
 import Row from 'react-bootstrap/Row';
@@ -691,7 +692,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                             <h1>{ticket[0]?.subject}</h1>
                             <p>
                               {`${capitalize(
-                                SenderInfo?.customer?.firstname)} ${capitalize(SenderInfo?.customer?.lastname == "default"? "" : SenderInfo?.customer?.lastname)} 
+                                SenderInfo?.customer?.firstname || "")} ${capitalize(SenderInfo?.customer?.lastname == "default"? "" : (SenderInfo?.customer?.lastname || ""))} 
                                 ${capitalize(SenderInfo?.customer?.email || "")}`}
                               <span className="custormChatHeaderDot"></span>{" "}
                               <span>{dateFormater(ticket[0]?.updated_at)}</span>
