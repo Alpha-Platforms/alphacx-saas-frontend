@@ -7,80 +7,84 @@ import {ReactComponent as HamburgerSvg} from '../../../../../assets/icons/hambur
 // import {ReactComponent as EditGreySvg} from '../../../../../assets/icons/Edit-grey.svg';
 import {ReactComponent as FormMinusSvg} from '../../../../../assets/icons/form-minus.svg';
 import {uuid} from '../../../../../helper';
-import { updateStatus, addStatus } from './../../../../../reduxstore/actions/statusActions';
+import { getChannels, updateChannel, addChannel} from '../../../../../reduxstore/actions/channelActions';
 import {NotificationManager} from 'react-notifications';
 import { setCurrentAgentLoading } from './../../../../../reduxstore/actions/agentActions';
 import { httpPostMain } from 'helpers/httpMethods';
 
-const AddChannelModal = ({createModalShow, setCreateModalShow, isEditing, editInfo, updateStatus, addStatus, setStatuses}) => {
+const AddChannelModal = ({createModalShow, setCreateModalShow, isEditing, editInfo, getChannels, updateChannel, addChannel, setChannels}) => {
     
-    const [modalStatus, setModalStatus] = useState({id: '', status: ''});
+    const [modalChannel, setModalChannel] = useState({
+        id: '',
+        name: '',
+        status: ''
+    });
     const [editing, setEditing] = useState(false);
+    // 
+    useEffect(() => {
+        if (isEditing) {
+            setModalChannel(prev => ({
+                ...prev,
+                id: editInfo.id,
+                name: editInfo.name,
+                status: editInfo.status
+            }));
+        }
+    }, [createModalShow])
 
     const handleInputChange = e => {
-        setModalStatus(prev => ({
+        const {name, value} = e.target;
+        setModalChannel(prev => ({
             ...prev,
-            status: e.target.value
+            [name]: value 
         }));
     }
 
     const handleCancelClick = () => {
-        setModalStatus(prev => ({
+        setModalChannel(prev => ({
             ...prev,
             id: '',
+            name: '',
             status: ''
         }));
         setCreateModalShow(false);
     }
 
-    useEffect(() => {
-        if (isEditing) {
-            setModalStatus(prev => ({
-                ...prev,
-                id: editInfo.id,
-                status: editInfo.status
-            }));
-        }
-    }, [isEditing, createModalShow])
-
     const handleModalHide = () => {
         setCreateModalShow(false);
-        setModalStatus(prev => ({...prev, id: '', status: ''}));
+        setModalChannel(prev => ({
+            ...prev, 
+            id: '', 
+            name: '', 
+            status: ''
+        }));
     }
 
-    const updateSuccess = () => {
-        setEditing(false);
-        setCreateModalShow(false);
-        setModalStatus(prev => ({...prev, id: '', status: ''}));
-        NotificationManager.success('Status updated successfully', 'Success');
-    }
-    
-    const updateFailed = () => {
-        setEditing(false);
-        NotificationManager.error('An error occurred', 'Error');
-    }
-
-    const handleStatusUpdate = async () => {
+    const handleChannelUpdate = async () => {
         setEditing(true);
-        const {id, status} = modalStatus;
+        const {id, status, name} = modalChannel;
+        const data = {status, name}
 
         if (id) {
-            updateStatus(id, {status}, updateSuccess, updateFailed);
-
+            updateChannel(id, data, () => {
+                setEditing(false);
+                setCreateModalShow(false);
+                setModalChannel(prev => ({...prev, id: '', name: '', status: ''}));
+                NotificationManager.success('Channel updated successfully', 'Success');
+            }, (error) => {
+                setEditing(false);
+                NotificationManager.error('An error occurred', 'Error');
+            });
         } else {
-            const data = {status}
-            const res = await httpPostMain("statuses", JSON.stringify(data));
+            const res = await httpPostMain("channel", JSON.stringify(data));
             setEditing(false);
             setCreateModalShow(false);
             
             if (res?.status === "success") {                
-                setStatuses(prev => [...prev, res.data])
+                setChannels(prev => [...prev, res.data.channels])
             } else {
                 return NotificationManager.error(res?.er?.message, "Error Adding Status", 4000);
             }
-
-            // addStatus({status})
-            // get back to 👆🏽 later. Status change must be instantanous!
         }
 
 
@@ -98,14 +102,25 @@ const AddChannelModal = ({createModalShow, setCreateModalShow, isEditing, editIn
                     <h3 className="f-16 text-black">{isEditing ? 'Edit' : 'Add New'} Ticket Stage</h3>
                     <form action="">
                         <div className="" id="ticketFieldWrapper">
-
                             <div className="d-flex my-4">
                                 <div className="w-100 d-flex align-items-center">
                                     <input
                                         type="text"
-                                        name="field-option"
+                                        name="name"
                                         className="form-control form-control-sm"
-                                        value={modalStatus?.status}
+                                        placeholder="Channel status"
+                                        defaultValue={modalChannel?.name}
+                                        onChange={handleInputChange}/>
+                                </div>
+                            </div>
+                            <div className="d-flex my-4">
+                                <div className="w-100 d-flex align-items-center">
+                                    <input
+                                        type="text"
+                                        name="status"
+                                        className="form-control form-control-sm"
+                                        placeholder="status"
+                                        defaultValue={modalChannel?.status}
                                         onChange={handleInputChange}/>
                                 </div>
                             </div>
@@ -122,18 +137,18 @@ const AddChannelModal = ({createModalShow, setCreateModalShow, isEditing, editIn
 
                             {!isEditing ? 
                                 <button 
-                                    onClick={handleStatusUpdate} 
+                                    onClick={handleChannelUpdate} 
                                     type="button" 
                                     className="btn btn-custom btn-sm  px-3 d-inline-block">
-                                    Add Stage
+                                    Add Channel
                                 </button> 
                             :
                                 <button 
-                                    onClick={handleStatusUpdate} 
+                                    onClick={handleChannelUpdate} 
                                     type="button" 
                                     disabled={editing} 
                                     className="btn btn-custom btn-sm  px-3 d-inline-block">
-                                    {editing ? 'Editing...' : 'Edit'} Stage
+                                    {editing ? 'Editing...' : 'Edit'} Channel
                                 </button>
                             }
 
@@ -148,4 +163,4 @@ const AddChannelModal = ({createModalShow, setCreateModalShow, isEditing, editIn
 
 const mapStateToProps = (state, ownProps) => ({});
 
-export default connect(mapStateToProps, {updateStatus, addStatus})(AddChannelModal);
+export default connect(mapStateToProps, {getChannels, updateChannel, addChannel})(AddChannelModal);

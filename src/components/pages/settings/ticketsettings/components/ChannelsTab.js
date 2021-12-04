@@ -18,22 +18,19 @@ const ChannelsTab = ({channels, isChannelsLoaded, getChannels, updateChannel, ad
     const [isEditing, setIsEditing] = useState(false);
     const [editInfo, setEditInfo] = useState(null);
     // 
-    const [channelsLoading, setChannelsLoading] = useState(false)
-    // 
-    // const [newChannels, addNewChannels] = useState(channels)
+    const [newChannels, addNewChannels] = useState(channels)
     // 
     useEffect(() => {
         getChannels();
     }, []);
     // 
-    const openAddStage = () => {
+    const openAddChannel = () => {
+        setIsEditing(false);
         setAddModalShow(true)
-        isEditing && setIsEditing(false);
     }
 
-    function openEditStage() {
-        const {id, status} = this;
-        setEditInfo({id, status});
+    function openEditStage(name, status, id) {
+        setEditInfo({name, status, id});
         setIsEditing(true);
         setAddModalShow(true);
     }
@@ -63,7 +60,7 @@ const ChannelsTab = ({channels, isChannelsLoaded, getChannels, updateChannel, ad
                                 <div className="d-flex">
                                     <button
                                         type="button"
-                                        onClick={openEditStage.bind({status, id})}
+                                        onClick={()=> openEditStage(name, status, id)}
                                         className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0">
                                         <EditGreySvg />
                                     </button>
@@ -79,11 +76,11 @@ const ChannelsTab = ({channels, isChannelsLoaded, getChannels, updateChannel, ad
 
                         <div className="text-start mt-2">
                             {/* <button
-                                className="btn btn-link text-decoration-none text-at-blue-light" disabled={true} onClick={openAddStage}>+ Add Stage</button> */}
+                                className="btn btn-link text-decoration-none text-at-blue-light" disabled={true} onClick={openAddChannel}>+ Add Stage</button> */}
                             <button
                                 className="btn btn-link text-decoration-none btn-sm border" 
                                 disabled={false} 
-                                onClick={openAddStage}>+ Add Stage</button>
+                                onClick={openAddChannel}>+ Add Channel</button>
                         </div>
                     </div>
                 </Col>
@@ -94,7 +91,7 @@ const ChannelsTab = ({channels, isChannelsLoaded, getChannels, updateChannel, ad
                 setCreateModalShow={setAddModalShow} 
                 isEditing={isEditing} 
                 editInfo={editInfo} 
-                setStatuses={addNewChannels}
+                setChannels={addNewChannels}
             />
         </div>
     )

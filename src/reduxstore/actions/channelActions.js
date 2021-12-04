@@ -56,8 +56,8 @@ export const addChannel = (newChannel, successCallback, failureCallback) => (dis
 //
 export const updateChannel = (channelId, channel, successCallback, failureCallback) => (dispatch, getState) => {
 	// Request body
-	const body = JSON.stringify(channelId);
-	axios.patch(`${config.stagingBaseUrl}/channel/${channel}`, body, userTokenConfig(getState))
+	const body = JSON.stringify(channel);
+	axios.patch(`${config.stagingBaseUrl}/channel/${channelId}`, body, userTokenConfig(getState))
 		.then(res => {
 			successCallback && successCallback();
 		})
