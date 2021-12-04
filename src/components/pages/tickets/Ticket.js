@@ -647,7 +647,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
           : !currentTicket ? <div>No Ticket Found.</div> 
           : <div id="ticketDetailsWrapper" style={{ gridTemplateColumns: "280px 1fr", border: '1px solid #f1f1f1'}}  className="d-grid mb-0">
             <div className="pt-2" style={{ backgroundColor: "#fafafa", borderRight: '1px solid #f1f1f1' }}>
-              <UserProfile UserInfo={UserInfo} ticket={[currentTicket]} isTicketDetails={true} timeLine={false}  />
+              <UserProfile UserInfo={UserInfo} ticket={[currentTicket]} isTicketDetails={true} timeLine={true}  />
             </div>
             <div id="ticketDetailsRightPane"
                 style={{overflowX: "hidden"}}
