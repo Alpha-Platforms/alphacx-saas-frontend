@@ -308,3 +308,8 @@ background: transparent;
     grid-template-columns: auto 1fr;
     gap: 1rem;
 }
+
+.tktimeline-wrapper {
+    /* border: 1px solid red; */
+    height: calc(100vh - 95px) !important;
+}
