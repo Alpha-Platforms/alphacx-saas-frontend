@@ -71,7 +71,18 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       if (currentTicket) {
         const {customer, subject} = currentTicket;
         setSenderInfo(currentTicket);
+        AppSocket.io.emit("join_private", ({ assigneeId: currentTicket?.assignee_id || "", userId: user.id || "" }));
+        setTimeout(() => {
+          /* const ticketConvoBox = window.document.querySelector('#ticketConvoBox');
+
+          if (ticketConvoBox) {
+            console.log('ticket box is avaialable');
+            ticketConvoBox.scrollTop = ticketConvoBox.scrollHeight;
+          } */
+          scrollPosSendMsgList();
+        }, 1000)
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentTicket]);
 
     /** >>>>> FROM CODE-UI-ANDY */
@@ -185,14 +196,25 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       setTickets(wsTickets);
       setLoadingTicks(false);
     }, [wsTickets]);
-  
+
     useEffect(() => {
       AppSocket.createConnection();
       AppSocket.io.on(`ws_tickets`, (data) => {
         setwsTickets(data?.data?.tickets);
       });
+
+
+      AppSocket.io.on(`join_private`, (data) => {
+          // console.log("something came up and this is the data => ", data);
+      });
+      return () => { AppSocket.io.disconnect()};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+  
+    useEffect(() => {
       AppSocket.io.on(`message`, (data) => {
-        if(data.id == id){
+        /* if(data.id == id){
+          console.log('SAME');
           let msg = {
             created_at: data.created_at,
             id: data?.history?.id || data?.id,
@@ -202,6 +224,30 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
             user: data.user,
           };
           setMsgHistory((item) => [...item, msg]);
+        } else {
+          console.log('NOT SAME');
+        } */
+
+        if(data?.channel === "livechat" || data.id === id){
+          let msg = {
+            created_at: data.created_at,
+            id: data?.history?.id || data?.id,
+            plain_response: data?.history?.plain_response || data?.plain_response,
+            response: data?.history?.response || data?.response,
+            type: "reply",
+            user: data.user,
+          };
+          if (data?.channel === "livechat") {
+            setMsgHistory((item) => {
+              if (item[item.length - 1]?.id === msg?.id) {
+                return item;
+              } else {
+                return [...item, msg];
+              }
+            });
+          } else {
+            setMsgHistory((item) => [...item, msg]);
+          }
         }
         scrollPosSendMsgList();
       });
@@ -209,6 +255,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       //   AppSocket.io.disconnect();
       // };
     }, [id]);
+
   
     // 
     useEffect(() => {
