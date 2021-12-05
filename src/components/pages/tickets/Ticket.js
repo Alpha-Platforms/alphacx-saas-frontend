@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {useState, Fragment, useEffect, useContext} from 'react';
 // bootstrap components
 import Row from 'react-bootstrap/Row';
@@ -32,6 +33,7 @@ import editorImg from "../../../assets/imgF/editorImg.png";
 // 
 import {getUserInitials} from '../../../helper';
 import UserProfile from '../conersations/userProfile';
+import TicketTimeline from '../conersations/TicketTimeline';
 import { dateFormater } from "../../helpers/dateFormater";
 import {getCurrentTicket} from '../../../reduxstore/actions/ticketActions';
 import { StarIconTicket, SendMsgIcon, ExpandChat } from "../../../assets/images/svgs";
@@ -69,7 +71,18 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       if (currentTicket) {
         const {customer, subject} = currentTicket;
         setSenderInfo(currentTicket);
+        AppSocket.io.emit("join_private", ({ assigneeId: currentTicket?.assignee_id || "", userId: user.id || "" }));
+        setTimeout(() => {
+          /* const ticketConvoBox = window.document.querySelector('#ticketConvoBox');
+
+          if (ticketConvoBox) {
+            console.log('ticket box is avaialable');
+            ticketConvoBox.scrollTop = ticketConvoBox.scrollHeight;
+          } */
+          scrollPosSendMsgList();
+        }, 1000)
       }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentTicket]);
 
     /** >>>>> FROM CODE-UI-ANDY */
@@ -183,14 +196,25 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       setTickets(wsTickets);
       setLoadingTicks(false);
     }, [wsTickets]);
-  
+
     useEffect(() => {
       AppSocket.createConnection();
       AppSocket.io.on(`ws_tickets`, (data) => {
         setwsTickets(data?.data?.tickets);
       });
+
+
+      AppSocket.io.on(`join_private`, (data) => {
+          // console.log("something came up and this is the data => ", data);
+      });
+      return () => { AppSocket.io.disconnect()};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+  
+    useEffect(() => {
       AppSocket.io.on(`message`, (data) => {
-        if(data.id == id){
+        /* if(data.id == id){
+          console.log('SAME');
           let msg = {
             created_at: data.created_at,
             id: data?.history?.id || data?.id,
@@ -200,6 +224,30 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
             user: data.user,
           };
           setMsgHistory((item) => [...item, msg]);
+        } else {
+          console.log('NOT SAME');
+        } */
+
+        if(data?.channel === "livechat" || data.id === id){
+          let msg = {
+            created_at: data.created_at,
+            id: data?.history?.id || data?.id,
+            plain_response: data?.history?.plain_response || data?.plain_response,
+            response: data?.history?.response || data?.response,
+            type: "reply",
+            user: data.user,
+          };
+          if (data?.channel === "livechat") {
+            setMsgHistory((item) => {
+              if (item[item.length - 1]?.id === msg?.id) {
+                return item;
+              } else {
+                return [...item, msg];
+              }
+            });
+          } else {
+            setMsgHistory((item) => [...item, msg]);
+          }
         }
         scrollPosSendMsgList();
       });
@@ -207,6 +255,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       //   AppSocket.io.disconnect();
       // };
     }, [id]);
+
   
     // 
     useEffect(() => {
@@ -644,7 +693,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
             <ScaleLoader loading={true} color={"#006298"}/>
           </div>
           : !currentTicket ? <div>No Ticket Found.</div> 
-          : <div id="ticketDetailsWrapper" style={{ gridTemplateColumns: "280px 1fr", border: '1px solid #f1f1f1'}}  className="d-grid mb-0">
+          : <div id="ticketDetailsWrapper" style={{ gridTemplateColumns: "280px 1fr 280px", border: '1px solid #f1f1f1'}}  className="d-grid mb-0">
             <div className="pt-2" style={{ backgroundColor: "#fafafa", borderRight: '1px solid #f1f1f1' }}>
               <UserProfile UserInfo={UserInfo} ticket={[currentTicket]} isTicketDetails={true} timeLine={false}  />
             </div>
@@ -691,7 +740,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                             <h1>{ticket[0]?.subject}</h1>
                             <p>
                               {`${capitalize(
-                                SenderInfo?.customer?.firstname)} ${capitalize(SenderInfo?.customer?.lastname == "default"? "" : SenderInfo?.customer?.lastname)} 
+                                SenderInfo?.customer?.firstname || "")} ${capitalize(SenderInfo?.customer?.lastname == "default"? "" : (SenderInfo?.customer?.lastname || ""))} 
                                 ${capitalize(SenderInfo?.customer?.email || "")}`}
                               <span className="custormChatHeaderDot"></span>{" "}
                               <span>{dateFormater(ticket[0]?.updated_at)}</span>
@@ -1057,9 +1106,18 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                 </div>
               )}
               {/* <div className={`conversation-layout-col-two h-100`}>
+              conversationo layout two
               </div> */}
               {/* CHAT COL TWO END */}
             </div>
+
+              {/* THIRD COLUMN */}
+            <div>
+              <TicketTimeline UserInfo={UserInfo} ticket={[currentTicket]} isTicketDetails={true} timeLine={true}  />
+            </div> {/* END OF THIRD COLUMN */}
+
+
+
           </div>}
         <Modal show={openSaveTicketModal} onHide={closeSaveTicketModal} centered scrollable>
           <Modal.Body className="p-0">
