@@ -34,6 +34,7 @@ const ChannelsTab = ({channels, isChannelsLoaded, getChannels, updateChannel, ad
         setIsEditing(true);
         setAddModalShow(true);
     }
+    
 
     return (
         <div className="my-3 mt-4">
