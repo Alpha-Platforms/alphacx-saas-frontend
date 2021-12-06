@@ -139,13 +139,6 @@ const AddChannelModal = ({createModalShow, setCreateModalShow, isEditing, editIn
                                             <option value="">Not Active</option>
                                         </Form.Select>
                                     </Form.Group>
-                                    {/* <input
-                                        type="text"
-                                        name="status"
-                                        className="form-control form-control-sm"
-                                        placeholder="status"
-                                        defaultValue={modalChannel?.status}
-                                        onChange={handleInputChange}/> */}
                                 </div>
                             </div>
 
