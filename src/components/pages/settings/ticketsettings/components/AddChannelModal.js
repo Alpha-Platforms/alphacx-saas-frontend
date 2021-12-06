@@ -1,16 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
-import {Modal} from 'react-bootstrap';
+// 
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
+// 
 import {connect} from 'react-redux';
-import {ReactComponent as HamburgerSvg} from '../../../../../assets/icons/hamburger.svg';
-// import {ReactComponent as DeleteGreySvg} from '../../../../../assets/icons/Delete-grey.svg';
-// import {ReactComponent as EditGreySvg} from '../../../../../assets/icons/Edit-grey.svg';
-import {ReactComponent as FormMinusSvg} from '../../../../../assets/icons/form-minus.svg';
-import {uuid} from '../../../../../helper';
-import { getChannels, updateChannel, addChannel} from '../../../../../reduxstore/actions/channelActions';
 import {NotificationManager} from 'react-notifications';
-import { setCurrentAgentLoading } from './../../../../../reduxstore/actions/agentActions';
+// 
+import {ReactComponent as HamburgerSvg} from '../../../../../assets/icons/hamburger.svg';
+import {ReactComponent as FormMinusSvg} from '../../../../../assets/icons/form-minus.svg';
+// import {ReactComponent as EditGreySvg} from '../../../../../assets/icons/Edit-grey.svg';
+// import {ReactComponent as DeleteGreySvg} from '../../../../../assets/icons/Delete-grey.svg';
+// 
+import {uuid} from '../../../../../helper';
 import { httpPostMain } from 'helpers/httpMethods';
+import { setCurrentAgentLoading } from './../../../../../reduxstore/actions/agentActions';
+import { getChannels, updateChannel, addChannel} from '../../../../../reduxstore/actions/channelActions';
 
 const AddChannelModal = ({createModalShow, setCreateModalShow, isEditing, editInfo, getChannels, updateChannel, addChannel, setChannels}) => {
     
@@ -25,13 +30,20 @@ const AddChannelModal = ({createModalShow, setCreateModalShow, isEditing, editIn
         if (isEditing) {
             setModalChannel(prev => ({
                 ...prev,
-                id: editInfo.id,
-                name: editInfo.name,
-                status: editInfo.status
+                ...editInfo
             }));
         }
     }, [createModalShow])
 
+    // 
+    // 
+    const handleSwitch = (e) => {
+        setModalChannel((prevState) => ({
+            ...prevState,
+            "status": `${e.target.value? "active" : ""}`
+        }));
+    }
+    // 
     const handleInputChange = e => {
         const {name, value} = e.target;
         setModalChannel(prev => ({
@@ -70,6 +82,7 @@ const AddChannelModal = ({createModalShow, setCreateModalShow, isEditing, editIn
                 setEditing(false);
                 setCreateModalShow(false);
                 setModalChannel(prev => ({...prev, id: '', name: '', status: ''}));
+                getChannels();
                 NotificationManager.success('Channel updated successfully', 'Success');
             }, (error) => {
                 setEditing(false);
@@ -80,7 +93,8 @@ const AddChannelModal = ({createModalShow, setCreateModalShow, isEditing, editIn
             setEditing(false);
             setCreateModalShow(false);
             
-            if (res?.status === "success") {                
+            if (res?.status === "success") {             
+                getChannels();   
                 setChannels(prev => [...prev, res.data.channels])
             } else {
                 return NotificationManager.error(res?.er?.message, "Error Adding Status", 4000);
@@ -99,29 +113,32 @@ const AddChannelModal = ({createModalShow, setCreateModalShow, isEditing, editIn
             centered>
             <Modal.Body>
                 <div className="modal-body ">
-                    <h3 className="f-16 text-black">{isEditing ? 'Edit' : 'Add New'} Ticket Stage</h3>
+                    <h3 className="f-16 text-black">{isEditing ? 'Edit' : 'Add New'} Channel</h3>
                     <form action="">
                         <div className="" id="ticketFieldWrapper">
-                            <div className="d-flex my-4">
-                                <div className="w-100 d-flex align-items-center">
-                                    <input
+                            <div className="w-100 d-flex align-items-center my-4">
+                                <Form.Group  className="form-group acx-form-group flex-grow-1">
+                                    <Form.Label className="f-14" htmlFor="name">Channel Name</Form.Label>
+                                    <Form.Control
                                         type="text"
+                                        id="name"
                                         name="name"
-                                        className="form-control form-control-sm"
-                                        placeholder="Channel status"
+                                        placeholder="Channel name"
                                         defaultValue={modalChannel?.name}
                                         onChange={handleInputChange}/>
-                                </div>
+                                </Form.Group>
                             </div>
                             <div className="d-flex my-4">
                                 <div className="w-100 d-flex align-items-center">
-                                    <input
-                                        type="text"
-                                        name="status"
-                                        className="form-control form-control-sm"
-                                        placeholder="status"
-                                        defaultValue={modalChannel?.status}
-                                        onChange={handleInputChange}/>
+                                    <Form.Group className="form-group acx-form-group flex-grow-1">
+                                        <Form.Label className="f-14" htmlFor="fieldType">Channel Status</Form.Label>
+                                        <Form.Select className="form-control" defaultValue={modalChannel?.status} onChange={handleInputChange} 
+                                            name="status" id="status" required>
+                                            <option value="" disabled>Set channel active</option>
+                                            <option value="active">Active</option>
+                                            <option value="">Not Active</option>
+                                        </Form.Select>
+                                    </Form.Group>
                                 </div>
                             </div>
 
