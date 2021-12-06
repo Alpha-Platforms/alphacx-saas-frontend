@@ -94,7 +94,7 @@ const AddChannelModal = ({createModalShow, setCreateModalShow, isEditing, editIn
             setCreateModalShow(false);
             
             if (res?.status === "success") {             
-                getChannels();   
+                // getChannels();   
                 setChannels(prev => [...prev, res.data.channels])
             } else {
                 return NotificationManager.error(res?.er?.message, "Error Adding Status", 4000);

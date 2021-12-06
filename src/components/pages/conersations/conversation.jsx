@@ -106,6 +106,7 @@ function Conversation({user, ...props}) {
   const [mentions, setMentions] = useState([]);
   // 
   const [Agents, setAgents] = useState([]);
+  const [channels, setChannels] = useState([]);
   const [Statuses, setStatuses] = useState([]);
   const [UserInfo, setUserInfo] = useState({});
   const [ChatCol, setChatCol] = useState({
@@ -200,6 +201,7 @@ function Conversation({user, ...props}) {
     getTags();
     getAgents();
     getCustomFieldConfig();
+    getChannels();
   }, []);
 
   // 
@@ -524,6 +526,14 @@ function Conversation({user, ...props}) {
       return NotificationManager.error(res.er.message, "Error", 4000);
     }
   };
+  const getChannels = async () => {
+    const res = await httpGetMain(`channel`);
+    if (res.status === "success") {
+      setChannels(res?.data?.channels);
+    } else {
+      return NotificationManager.error(res.er.message, "Error", 4000);
+    }
+  };
 
   const updateTicketStatus = async () => {
     if(RSTicketStage.label === "Closed"){
@@ -773,11 +783,9 @@ function Conversation({user, ...props}) {
                     <MenuItem value="All" label="All">
                       Channels
                     </MenuItem>
-                    <MenuItem value="facebook">Facebook</MenuItem>
-                    <MenuItem value="whatsapp">Whatsapp</MenuItem>
-                    <MenuItem value="system">System</MenuItem>
-                    <MenuItem value="email">Email</MenuItem>
-                    <MenuItem value="liveChat">Live Chat</MenuItem>
+                    {channels?.map((data) => {
+                      return <MenuItem key={data?.id} value={data?.name}>{data?.name.trim().replace(/^\w/, (c) => c.toUpperCase())}</MenuItem>
+                    })}
                   </Select>
                 </FormControl>
               </div>
@@ -793,7 +801,7 @@ function Conversation({user, ...props}) {
                   >
                     <MenuItem value="All">Stages</MenuItem>
                     {Statuses?.map((data) => {
-                      return <MenuItem value={data.id}>{data.status}</MenuItem>;
+                      return <MenuItem key={data.id} value={data.id}>{data.status}</MenuItem>;
                     })}
                   </Select>
                 </FormControl>
@@ -941,7 +949,7 @@ function Conversation({user, ...props}) {
                     <div className="">
                       {AchiveMsges.map((data) => {
                         return (
-                          <React.Fragment>
+                          <React.Fragment key={data?.id}>
                           {(data?.response.includes("Ticket Stage has been marked") || data?.statusAction)? 
                             (
                               <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
@@ -998,7 +1006,7 @@ function Conversation({user, ...props}) {
 
                     {YesterdayMsges.map((data) => {
                       return (
-                        <React.Fragment>
+                        <React.Fragment key={data?.id}>
                           {(data?.response.includes("Ticket Stage has been marked") || data?.statusAction)? 
                             (
                               <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
@@ -1054,7 +1062,7 @@ function Conversation({user, ...props}) {
 
                     {TodayMsges.map((data) => {
                       return (
-                        <React.Fragment>
+                        <React.Fragment key={data?.id}>
                           {(data?.response.includes("Ticket Stage has been marked") || data?.statusAction)? 
                             (
                               <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
@@ -1512,5 +1520,7 @@ function Conversation({user, ...props}) {
   );
 }
 
-const mapStateToProps = (state, ownProps) => ({user: state.userAuth.user});
+const mapStateToProps = (state, ownProps) => ({
+  user: state.userAuth.user
+});
 export default connect(mapStateToProps)(Conversation);
