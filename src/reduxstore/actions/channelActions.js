@@ -10,7 +10,7 @@ export const getChannels = (successCallback) => (dispatch, getState) => {
 		return;
 	}
 	dispatch(setChannelsLoading());
-	axios.get(`${config.stagingBaseUrl}/channel`, userTokenConfig(getState))
+	axios.get(`${config.stagingBaseUrl}/channel?per_page=20`, userTokenConfig(getState))
 		.then(res => {
 			dispatch({
 				type: types.GET_CHANNELS,
@@ -39,7 +39,6 @@ export const addChannel = (newChannel, successCallback, failureCallback) => (dis
     axios
         .post(`${config.stagingBaseUrl}/channel`, body, userTokenConfig(getState))
         .then(res => {
-            console.log(res?.data?.data);
             dispatch({type: types.ADD_CHANNEL, payload: res?.data?.data});
 			successCallback && successCallback();
         })
