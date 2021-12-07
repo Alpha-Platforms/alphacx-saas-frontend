@@ -15,35 +15,11 @@ import {ReactComponent as FormMinusSvg} from '../../../../../assets/icons/form-m
 import {uuid} from '../../../../../helper';
 import { httpPostMain } from 'helpers/httpMethods';
 import { setCurrentAgentLoading } from './../../../../../reduxstore/actions/agentActions';
-import { getChannels, updateChannel, addChannel} from '../../../../../reduxstore/actions/channelActions';
+import { updateChannel, addChannel} from '../../../../../reduxstore/actions/channelActions';
 
-const AddChannelModal = ({createModalShow, setCreateModalShow, isEditing, editInfo, getChannels, updateChannel, addChannel, setChannels}) => {
-    
-    const [modalChannel, setModalChannel] = useState({
-        id: '',
-        name: '',
-        status: ''
-    });
+const AddChannelModal = ({createModalShow, setCreateModalShow, isEditing, editInfo, updateChannel, addChannel, setChannels, modalChannel, setModalChannel}) => {
     const [editing, setEditing] = useState(false);
-    // 
-    useEffect(() => {
-        if (isEditing) {
-            setModalChannel(prev => ({
-                ...prev,
-                ...editInfo
-            }));
-        }
-    }, [createModalShow])
-
-    // 
-    // 
-    const handleSwitch = (e) => {
-        setModalChannel((prevState) => ({
-            ...prevState,
-            "status": `${e.target.value? "active" : ""}`
-        }));
-    }
-    // 
+ 
     const handleInputChange = e => {
         const {name, value} = e.target;
         setModalChannel(prev => ({
@@ -57,7 +33,6 @@ const AddChannelModal = ({createModalShow, setCreateModalShow, isEditing, editIn
             ...prev,
             id: '',
             name: '',
-            status: ''
         }));
         setCreateModalShow(false);
     }
@@ -67,41 +42,35 @@ const AddChannelModal = ({createModalShow, setCreateModalShow, isEditing, editIn
         setModalChannel(prev => ({
             ...prev, 
             id: '', 
-            name: '', 
-            status: ''
+            name: ''
         }));
     }
 
     const handleChannelUpdate = async () => {
         setEditing(true);
-        const {id, status, name} = modalChannel;
-        const data = {status, name}
-
+        const {id, name} = modalChannel;
+        const data = { name };
         if (id) {
             updateChannel(id, data, () => {
                 setEditing(false);
                 setCreateModalShow(false);
-                setModalChannel(prev => ({...prev, id: '', name: '', status: ''}));
-                getChannels();
+                setModalChannel(prev => ({...prev, id: '', name: ''}));
                 NotificationManager.success('Channel updated successfully', 'Success');
             }, (error) => {
                 setEditing(false);
-                NotificationManager.error('An error occurred', 'Error');
+                NotificationManager.error(error, 'Error');
             });
         } else {
-            const res = await httpPostMain("channel", JSON.stringify(data));
-            setEditing(false);
-            setCreateModalShow(false);
-            
-            if (res?.status === "success") {             
-                // getChannels();   
-                setChannels(prev => [...prev, res.data.channels])
-            } else {
-                return NotificationManager.error(res?.er?.message, "Error Adding Status", 4000);
-            }
+            addChannel(data, () => {
+                setEditing(false);
+                setCreateModalShow(false);
+                setModalChannel(prev => ({...prev, id: '', name: ''}));
+                NotificationManager.success('Channel created successfully', 'Success');
+            }, (error) => {
+                setEditing(false);
+                NotificationManager.error(error, 'Error');
+            });
         }
-
-
     }
 
     //create user modal
@@ -128,20 +97,6 @@ const AddChannelModal = ({createModalShow, setCreateModalShow, isEditing, editIn
                                         onChange={handleInputChange}/>
                                 </Form.Group>
                             </div>
-                            <div className="d-flex my-4">
-                                <div className="w-100 d-flex align-items-center">
-                                    <Form.Group className="form-group acx-form-group flex-grow-1">
-                                        <Form.Label className="f-14" htmlFor="fieldType">Channel Status</Form.Label>
-                                        <Form.Select className="form-control" defaultValue={modalChannel?.status} onChange={handleInputChange} 
-                                            name="status" id="status" required>
-                                            <option value="" disabled>Set channel active</option>
-                                            <option value="active">Active</option>
-                                            <option value="">Not Active</option>
-                                        </Form.Select>
-                                    </Form.Group>
-                                </div>
-                            </div>
-
                         </div>
 
                         <div className="text-end">
@@ -180,4 +135,4 @@ const AddChannelModal = ({createModalShow, setCreateModalShow, isEditing, editIn
 
 const mapStateToProps = (state, ownProps) => ({});
 
-export default connect(mapStateToProps, {getChannels, updateChannel, addChannel})(AddChannelModal);
+export default connect(mapStateToProps, { updateChannel, addChannel})(AddChannelModal);

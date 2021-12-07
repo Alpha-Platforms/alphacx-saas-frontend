@@ -17,7 +17,22 @@ const channelReducer = (state = initialState, action) => {
 				isChannelsLoaded: true
 				}
 		case types.ADD_CHANNEL:
-			return state;
+			return {
+				...state,
+				channels: [
+					...state.channels,
+					action.payload
+				]
+			};
+		case types.UPDATE_CHANNEL:
+			let updatedArray = state.channels.filter( el => el.id !== action.payload.id ); 
+			return {
+				...state,
+				channels: [
+					...updatedArray,
+					action.payload
+				]
+			};	
 		case types.CHANNELS_LOADING:
 			return {
 				...state,
