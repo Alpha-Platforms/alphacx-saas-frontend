@@ -60,9 +60,9 @@ const ChannelsTab = ({channels, isChannelsLoaded, getChannels, updateChannel, ad
                                 <div className="d-flex flex-grow-1 align-items-center justify-content-between">
                                     <span className="text-capitalize">{name.trim().replace(/^\w/, (c) => c.toUpperCase())}</span>
                                 </div>
-                                <div className="d-flex align-items-center justify-content-between me-5">
+                                {/* <div className="d-flex align-items-center justify-content-between me-5">
                                     <span>{status}</span>
-                                </div>
+                                </div> */}
                                 <div className="d-flex">
                                     <button
                                         type="button"
