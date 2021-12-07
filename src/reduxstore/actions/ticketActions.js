@@ -159,20 +159,8 @@ export const addTicket = (newTicket, success, failed) => (dispatch, getState) =>
     axios
         .post(`${config.stagingBaseUrl}/tickets`, body, userTokenConfig(getState))
         .then(async res => {
-            if (res.data?.status === "success") {
-                const replyData = {
-                    type: 'reply',
-                    attachment: null,
-                    response: res.data?.data?.description,
-                    plainResponse: res.data?.data?.plain_description
-                };
-                const replyRes = await httpPostMain(
-                    `tickets/${res.data?.data?.id}/replies`,
-                    replyData
-                );
-                dispatch({type: types.ADD_TICKET, payload: res.data})
-                success && success();
-            }
+            dispatch({type: types.ADD_TICKET, payload: res.data})
+            success && success();
         })
         .catch(err => {
             dispatch(returnErrors(err.response?.data, err.response?.status));
