@@ -277,6 +277,7 @@ const Fields = () => {
         }else{
             data = {...customFields};
         }
+        // console.log(data, actionId);
         setProcessing(true);
         const res = await httpPatchMain(`custom-field/${actionId}`, data);
         if (res.status === "success") {
@@ -324,7 +325,7 @@ const Fields = () => {
                                 type="button"
                                 role="tab"
                                 aria-controls="user-field-view"
-                                aria-selected="false">User Field</button>
+                                aria-selected="false">Customer Fields</button>
                         </li>
                         <li className="nav-item" role="presentation">
                             <button
@@ -334,7 +335,7 @@ const Fields = () => {
                                 type="button"
                                 role="tab"
                                 aria-controls="ticket-field-view"
-                                aria-selected="false">Ticket Field</button>
+                                aria-selected="false">Ticket Fields</button>
                         </li>
                     </ul>
                 </div>
