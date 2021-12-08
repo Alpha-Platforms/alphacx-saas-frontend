@@ -159,6 +159,7 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                                     <option value="emailAutoRespond">Email Auto Respond</option>
                                     <option value="agentActivation">Agent Activation</option>
                                     <option value="customerActivation">Customer Activation</option>
+                                    <option value="agentEmailAutoRespond">Agent Ticket Assignment</option>
                                 </select>
                             </div>
                             <div className="form-group mt-3 mb-4">
