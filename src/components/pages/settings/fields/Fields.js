@@ -428,7 +428,7 @@ const Fields = () => {
                                 <Form.Group className="form-group acx-form-group mt-3">
                                     <Form.Label className="f-12" htmlFor="fieldType">Field Type</Form.Label>
                                     <Form.Select defaultValue={customFields.fieldType} onChange={handleChange} name="fieldType" className="form-control" id="fieldType" required>
-                                        <option value="" disabled></option>
+                                        <option value="" disabled>Select Type</option>
                                         <option value="text">Single line text</option>
                                         <option value="number">Number</option>
                                         <option value="select">Dropdown</option>
