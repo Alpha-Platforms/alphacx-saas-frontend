@@ -21,6 +21,9 @@ import ClipLoader from "react-spinners/ClipLoader";
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { EditorState, convertToRaw, ContentState } from "draft-js";
 // 
+import remarkGfm from "remark-gfm";
+import ReactMarkdown from "react-markdown";
+// 
 import PinIcon from '../../../assets/icons/pin.svg';
 import WorkIcon from '../../../assets/svgicons/Work.svg';
 import TicketIcon from '../../../assets/svgicons/Ticket.svg';
@@ -843,7 +846,13 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                                   <p className="text-dark message-title mb-1">
                                                     {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
                                                   </p>
-                                                  <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                                  { ticket[0]?.channel == "email" && data?.user?.role == "Customer"? 
+                                                      <div className="message-text-content">
+                                                        <ReactMarkdown children={data?.response.replace("<p>", "").replace("</p>", "")} remarkPlugins={[remarkGfm]} />
+                                                      </div>
+                                                    :
+                                                      <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                                  }
                                               </div>
                                           </div>
                                       </div>
@@ -898,7 +907,13 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                                   <p className="text-dark message-title mb-1">
                                                     {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
                                                   </p>
-                                                  <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                                  { ticket[0]?.channel == "email" && data?.user?.role == "Customer"? 
+                                                      <div className="message-text-content">
+                                                        <ReactMarkdown children={data?.response.replace("<p>", "").replace("</p>", "")} remarkPlugins={[remarkGfm]} />
+                                                      </div>
+                                                    :
+                                                      <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                                  }
                                               </div>
                                           </div>
                                       </div>
@@ -952,7 +967,13 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                                   <p className="text-dark message-title mb-1">
                                                     {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
                                                   </p>
-                                                  <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                                  { ticket[0]?.channel == "email" && data?.user?.role == "Customer"? 
+                                                      <div className="message-text-content">
+                                                        <ReactMarkdown children={data?.response.replace("<p>", "").replace("</p>", "")} remarkPlugins={[remarkGfm]} />
+                                                      </div>
+                                                    :
+                                                      <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                                  }
                                               </div>
                                           </div>
                                       </div>

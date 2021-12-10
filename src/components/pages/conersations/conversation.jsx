@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useContext, Fragment } from "react";
 import {connect} from 'react-redux';
 //
+import remarkGfm from "remark-gfm";
+import ReactMarkdown from "react-markdown";
 import { useLocation } from "react-router";
 //
 import { UserDataContext } from "../../../context/userContext";
@@ -976,7 +978,13 @@ function Conversation({user, ...props}) {
                                                   <p className="text-dark message-title mb-1">
                                                     {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
                                                   </p>
-                                                  <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                                  { ticket[0]?.channel == "email" && data?.user?.role == "Customer"? 
+                                                      <div className="message-text-content">
+                                                        <ReactMarkdown children={data?.response.replace("<p>", "").replace("</p>", "")} remarkPlugins={[remarkGfm]} />
+                                                      </div>
+                                                    :
+                                                      <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                                  }
                                               </div>
                                           </div>
                                       </div>
@@ -1033,7 +1041,13 @@ function Conversation({user, ...props}) {
                                                   <p className="text-dark message-title mb-1">
                                                     {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
                                                   </p>
-                                                  <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                                  { ticket[0]?.channel == "email" && data?.user?.role == "Customer"? 
+                                                      <div className="message-text-content">
+                                                        <ReactMarkdown children={data?.response.replace("<p>", "").replace("</p>", "")} remarkPlugins={[remarkGfm]} />
+                                                      </div>
+                                                    :
+                                                      <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                                  }
                                               </div>
                                           </div>
                                       </div>
@@ -1089,7 +1103,13 @@ function Conversation({user, ...props}) {
                                                   <p className="text-dark message-title mb-1">
                                                     {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
                                                   </p>
-                                                  <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                                  { ticket[0]?.channel == "email" && data?.user?.role == "Customer"? 
+                                                      <div className="message-text-content">
+                                                        <ReactMarkdown children={data?.response.replace("<p>", "").replace("</p>", "")} remarkPlugins={[remarkGfm]} />
+                                                      </div>
+                                                    :
+                                                      <div className="message-text-content" dangerouslySetInnerHTML={createMarkup(data?.response)}></div>
+                                                  }
                                               </div>
                                           </div>
                                       </div>
