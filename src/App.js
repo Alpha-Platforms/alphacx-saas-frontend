@@ -52,7 +52,6 @@ import Article from "./components/pages/help_center/help_pages/article";
 // import EmailSettings from "./components/pages/settings/social_integrations/email";
 import SettingsEmail from "./components/pages/settings/social_integrations/email";
 import UserList from "./components/pages/settings/users/UserList";
-import UserPersonal from "./components/pages/settings/users/UserPersonal";
 import Fields from "./components/pages/settings/fields/Fields";
 //
 import SocialIntegrations from "./components/pages/settings/social_integrations/index";
@@ -157,13 +156,13 @@ const SiteRouter = connect(mapStateToProps, {
             getCategories();
             getStatuses();
             getGroups();
-
-            // JUST TO SUPPRESS ERROR. FIX PLEASE
             getTags();
             getConfigs();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
+
+    // PLEASE, IF YOU UPDATE any 'pageName' reflect it in src/config/accessControlList.js
 
     return (
         <BrowserRouter>
@@ -185,6 +184,8 @@ const SiteRouter = connect(mapStateToProps, {
                             <Route exact path="/account-verified" component={AccountVerified}/> {/* Customer Portal */}
                             <Route exact path="/customer-portal/tickets" component={CustomerPortal}/>
 
+                            <Route exact path="/no-customers" component={CustomersNull}/>
+
                             <DefaultLayoutRoute exact path="/" pageName="Dashboard" component={Dashboard}/>
 
                             <DefaultLayoutRoute
@@ -192,7 +193,6 @@ const SiteRouter = connect(mapStateToProps, {
                                 path="/conversation"
                                 component={Conversation}
                                 pageName="Conversations"/>
-                            <Route exact path="/customers-null" component={CustomersNull}/>
                             <DefaultLayoutRoute
                                 exact
                                 path="/customers"
@@ -213,11 +213,6 @@ const SiteRouter = connect(mapStateToProps, {
                                 path="/tickets"
                                 pageName="Tickets"
                                 component={TicketList}/>
-                            <SettingsLayoutRoute
-                                exact
-                                path="/reports"
-                                pageName="Reports"
-                                component={Reports}/>
                             <DefaultLayoutRoute
                                 exact
                                 path="/tickets/:id"
@@ -226,53 +221,58 @@ const SiteRouter = connect(mapStateToProps, {
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings"
-                                pageName="Settings"
+                                pageName="Settings Menu"
                                 component={SettingsHome}/>
                             <SettingsLayoutRoute
                                 exact
+                                path="/reports"
+                                pageName="Reports"
+                                component={Reports}/>
+                            {/* <SettingsLayoutRoute
+                                exact
                                 path="/settings/profile"
-                                pageName="User"
-                                component={UserProfile}/>
+                                pageName="User Settings"
+                                component={UserProfile}/> */}
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/profile/:id"
-                                pageName="User"
+                                pageName="Personal Information"
                                 component={UserProfileTwo}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/account"
                                 pageName="Account"
-                                component={AccountSettingsMain}/>
+                                component={AccountSettingsMain} />
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/automations"
-                                pageName="Settings"
+                                pageName="Automation Settings"
                                 component={AutomationSettings}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/automation"
-                                pageName="Settings"
+                                pageName="Automation Settings"
                                 component={NewAutomationPolicy}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/automation/:automationId"
-                                pageName="Settings"
+                                pageName="Automation Settings"
                                 component={NewAutomationPolicy}/>
 
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/users"
-                                pageName="Settings"
+                                pageName="User Settings"
                                 component={UserList}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/teams"
-                                pageName="Settings"
+                                pageName="Team Settings"
                                 component={GroupList}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/roles"
-                                pageName="Settings"
+                                pageName="Role Settings"
                                 component={RoleList}/>
                             <SettingsLayoutRoute
                                 exact
@@ -286,74 +286,49 @@ const SiteRouter = connect(mapStateToProps, {
                                 component={Form}/>
                             <SettingsLayoutRoute
                                 exact
-                                path="/settings/users/personal-info-settings"
-                                pageName="Settings"
-                                component={UserPersonal}/>
-                            <SettingsLayoutRoute
-                                exact
                                 path="/settings/fields"
-                                pageName="Settings"
+                                pageName="Fields Settings"
                                 component={Fields}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/knowledge-base"
-                                pageName="Settings"
+                                pageName="Knowledge Base"
                                 component={HelpCenterSettings}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/knowledge-base/categories"
-                                pageName="Settings"
+                                pageName="Knowledge Base"
                                 component={ArticleCategories}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/knowledge-base/article"
-                                pageName="Settings"
+                                pageName="Knowledge Base"
                                 component={NewArticle}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/knowledge-base/edit/:articleId"
-                                pageName="Settings"
+                                pageName="Knowledge Base"
                                 component={NewArticle}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/tickets"
-                                pageName="Settings"
+                                pageName="Ticket Settings"
                                 component={TicketSettings}/>
-                            <SettingsLayoutRoute
-                                exact
-                                path="/settings/integrations/livechat"
-                                pageName="Settings"
-                                component={LiveChatSettings}/>                            
-                            <SettingsLayoutRoute
-                                exact
-                                path="/settings/integrations/sms"
-                                pageName="SMS Settings"
-                                component={SmsSettings}/>
-                            <SettingsLayoutRoute
-                                exact
-                                path="/settings/integrations/email"
-                                pageName="Settings"
-                                component={SettingsEmail}/>
-                            <SettingsLayoutRoute
-                                exact
-                                path="/settings/integrations/email/:action"
-                                pageName="Settings"
-                                component={SettingsEmail}/>
 
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/notifications"
-                                pageName="Settings"
+                                pageName="Notification Management"
                                 component={NotificationSettings}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/notifications/email-template"
-                                pageName="Settings"
+                                pageName="Notification Management"
                                 component={NewEmailTemplate}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/notifications/email-template/:id"
-                                pageName="Settings"
+                                pageName="Email Template"
                                 component={EditEmailTemplate}/>
                             <SettingsLayoutRoute
                                 exact
@@ -372,18 +347,38 @@ const SiteRouter = connect(mapStateToProps, {
                                 component={SocialIntegrations}/>
                             <SettingsLayoutRoute
                                 exact
+                                path="/settings/integrations/livechat"
+                                pageName="Livechat Settings"
+                                component={LiveChatSettings}/>                            
+                            <SettingsLayoutRoute
+                                exact
+                                path="/settings/integrations/sms"
+                                pageName="SMS Integration"
+                                component={SmsSettings}/>
+                            <SettingsLayoutRoute
+                                exact
+                                path="/settings/integrations/email"
+                                pageName="Email Integration"
+                                component={SettingsEmail}/>
+                            <SettingsLayoutRoute
+                                exact
+                                path="/settings/integrations/email/:action"
+                                pageName="Email Settings"
+                                component={SettingsEmail}/>
+                            <SettingsLayoutRoute
+                                exact
                                 path="/settings/integrations/facebook"
-                                pageName="Integration Settings"
+                                pageName="Facebook Integration"
                                 component={FacebookIntegration}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/integrations/whatsapp"
-                                pageName="Integration Settings"
+                                pageName="Whatsapp Integration"
                                 component={WhatsappIntegration}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/ratings"
-                                pageName="Ratings and Customer Feedback"
+                                pageName="Ratings and Feedback"
                                 component={RatingsSettings}/> {/*......settings pages end */}
 
                             <Route>

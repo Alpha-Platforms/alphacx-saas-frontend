@@ -1,16 +1,24 @@
 // @ts-nocheck
-import {useState} from "react";
+import {useState, useEffect} from "react";
+import { connect } from "react-redux";
 import {Tabs, Tab} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import RightArrow from "../../../../assets/imgF/arrow_right.png"
 import Subscription from './subscription/Subscription';
 import AccountSettings from './AccountSettings';
 
-const AccountSettingsMain = () => {
-    const [tabKey,
-        setTabKey] = useState("acct-settings");
+
+const AccountSettingsMain = ({userRole}) => {
+
+    const [tabKey, setTabKey] = useState("acct-settings");
+
     // const [tabKey,
     //     setTabKey] = useState("sub-payment");
+
+    // useEffect(() => {
+    //     console.clear()
+    //     console.log(userRole)
+    // }, [])
 
     return (
         <div>
@@ -77,4 +85,7 @@ const AccountSettingsMain = () => {
     );
 };
 
-export default AccountSettingsMain;
+const mapStateToProps = state => ({
+    userRole: state.userAuth.user.role
+})
+export default connect(mapStateToProps)(AccountSettingsMain)
