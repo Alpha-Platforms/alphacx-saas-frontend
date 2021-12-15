@@ -253,7 +253,7 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
                                                                                 plaintext={`${!editProfile}`} readOnly={!editProfile} disabled={!editProfile} 
                                                                                 onChange={handleCustomFieldChange} required={data?.required} 
                                                                                 defaultValue={data?.value}>
-                                                                        <option value="" disabled>Select Type</option>
+                                                                        <option value="" disabled></option>
                                                                         {data.field_options? 
                                                                             data.field_options.replace(/{|"|}/g, "").split(",").map((options) => {
                                                                                 return(
