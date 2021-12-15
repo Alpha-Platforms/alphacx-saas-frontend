@@ -376,8 +376,10 @@ const TicketList = ({
         const ticketIds = selectedRows.map(row => row.ticketUid);
         // console.log('Ticket ids => ', ticketIds);
 
+        const reqBody = { ids: ticketIds }
+
         setTicketLoading(true);
-        const res = await httpDeleteMain(`tickets`, JSON.stringify(ticketIds));
+        const res = await httpDeleteMain(`tickets`, JSON.stringify(reqBody));
         selectedRows = [];
         // deleteBtnWrapper.classList.add('d-none');
         selectedRowCount.innerHTML = 0;
