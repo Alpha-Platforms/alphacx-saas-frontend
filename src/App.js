@@ -41,6 +41,7 @@ import OrganisationList from "./components/pages/customers/OrganisationList";
 import TicketList from "./components/pages/tickets/TicketList";
 import Ticket from "./components/pages/tickets/Ticket";
 import Reports from "./components/pages/reports/index";
+import Search from "./components/pages/search/index";
 import SettingsHome from "./components/pages/settings";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -217,7 +218,12 @@ const SiteRouter = connect(mapStateToProps, {
                                 exact
                                 path="/tickets/:id"
                                 pageName="Ticket"
-                                component={Ticket}/> {/* settings route start */}
+                                component={Ticket}/> {/* Ticket route */}
+                            <DefaultLayoutRoute
+                                exact
+                                path="/search"
+                                pageName="Search"
+                                component={Search}/> {/* Search page route start */}
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings"

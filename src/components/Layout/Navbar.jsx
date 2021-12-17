@@ -22,6 +22,8 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 // 
 import Dropdown from "react-bootstrap/Dropdown";
 import NavDropdown from "react-bootstrap/NavDropdown";
+// 
+import NavbarSearch from "../pages/search/NavbarSearch";
 
 
 function DropDown() {
@@ -275,37 +277,8 @@ function Navbar({
               <div className="pageTitle">
                 <span style={{ textTransform: "capitalize" }}>{pageName}</span>
               </div>
-              <div className="navbar-right-content align-items-center d-flex gap-3">
-                <form>
-                  <div>
-                    <input
-                      placeholder="Search"
-                      type="text"
-                      style={{
-                        width: "100%",
-                        borderRadius: 3,
-                        border: "solid 0.5px #ddd",
-                        padding: "0.35rem 2rem",
-                        backgroundImage: `url(${searchIcon})`,
-                        backgroundRepeat: "no-repeat",
-                        backgroundSize: "14px",
-                        backgroundPosition: "10px 50%",
-                      }}
-                    />
-
-                    <div>
-                      <img
-                        src={searchIcon}
-                        alt=""
-                        style={{
-                          height: "10px",
-                          width: "10px",
-                          display: "none",
-                        }}
-                      />
-                    </div>
-                  </div>
-                </form>
+              <div className="navbar-right-content justify-content-end align-items-center d-flex gap-3 flex-grow-1">
+                <NavbarSearch/>
 
                 <DropDown />
 
