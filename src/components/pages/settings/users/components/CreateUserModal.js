@@ -1,6 +1,7 @@
 // @ts-nocheck
 import {useState, useEffect} from 'react';
-import {Modal} from 'react-bootstrap';
+// import {Modal} from 'react-bootstrap';
+import {Modal} from 'react-responsive-modal';
 import {connect} from 'react-redux';
 import {NotificationManager} from 'react-notifications';
 import {addAgent, getAgents, resetAgentCreated} from '../../../../../reduxstore/actions/agentActions';
@@ -141,12 +142,13 @@ const CreateUserModal = ({
     //create user modal
     return (
         <Modal
-            show={createModalShow}
-            onHide={() => setCreateModalShow(false)}
+            // show={createModalShow}
+            // onHide={() => setCreateModalShow(false)}
+            open={createModalShow} onClose={() => setCreateModalShow(false)}
             aria-labelledby="contained-modal-title-vcenter"
             centered>
-            <Modal.Body>
-                <div className="col-12 p-3">
+            {/* <Modal.Body> */}
+                <div className="col-12 p-4 pb-5 mb-3 border">
                     <div className="d-flex justify-content-between align-items-center">
                         <h3 className="f-16">Create User Record</h3>
                         <div>
@@ -251,7 +253,7 @@ const CreateUserModal = ({
                             <div className="text-end">
                                 <button
                                     type="button"
-                                    className="btn btn-custom float-end w-25 mt-4 mb-2"
+                                    className="btn btn-custom float-end w-25 mt-4 mb-4"
                                     onClick={handleUserCreation}
                                     disabled={creatingUser}
                                     id="createUser">{creatingUser ? 'Creating...' : 'Create'}</button>
@@ -260,7 +262,7 @@ const CreateUserModal = ({
                     </div>
 
                 </div>
-            </Modal.Body>
+            {/* </Modal.Body> */}
         </Modal>
     )
 };
