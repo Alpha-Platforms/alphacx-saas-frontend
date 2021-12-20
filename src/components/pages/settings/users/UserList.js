@@ -146,7 +146,8 @@ const UserList = ({
     const userRes = await updateUser({
       id,
       role: "Agent",
-      isActivated: !isActivated ? true : "false"
+      isActivated: !isActivated
+      // isActivated: !isActivated ? true : "false"
     });
     // console.log('userRes: ', userRes);
     if (userRes?.status === 'success') {
