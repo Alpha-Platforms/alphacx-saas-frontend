@@ -288,7 +288,7 @@ const UseOwnEmail = ({emailState, setEmailState}) => {
                                         })}
                                     />
                                     <label className="form-check-label f-14" htmlFor="outgoing-only">
-                                        use SendGrid API
+                                        Use SendGrid API
                                     </label>
                                 </div>
                             </div>

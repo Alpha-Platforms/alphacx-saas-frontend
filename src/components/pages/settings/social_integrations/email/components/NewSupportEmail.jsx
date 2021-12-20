@@ -99,7 +99,11 @@ const NewSupportEmail = ({configs, getConfigs}) => {
 
       if (email && password && port && host) {
         const data = {
-          outgoingEmailConfig: {
+          outgoingEmailConfig: type === "api" ? {
+            email,
+            apiKey: apiKey || null,
+            type
+          } : {
             email,
             password,
             from,
@@ -110,6 +114,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
             type
           }
         };
+
   
         const res = await httpPatchMain("settings/outgoing-email-config", JSON.stringify(data));
   
