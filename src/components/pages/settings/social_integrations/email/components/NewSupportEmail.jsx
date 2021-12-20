@@ -48,10 +48,7 @@ const NewSupportEmail = ({configs, getConfigs}) => {
   }, [type]);
 
 
-
-  console.log('type => ', type);
-
-  // console.log('EMAIL STATE => ', emailState);
+  console.log('EMAIL STATE => ', emailState);
   
   const [show, setShow] = useState(false);
   const [passwordChanged, setPasswordChanged] = useState(false)
