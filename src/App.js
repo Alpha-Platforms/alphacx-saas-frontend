@@ -328,17 +328,17 @@ const SiteRouter = connect(mapStateToProps, {
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/notifications/email-template/:id"
-                                pageName="Email Template"
+                                pageName="Notification Management"
                                 component={EditEmailTemplate}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/canned-responses"
-                                pageName="Settings"
+                                pageName="Canned Responses"
                                 component={CannedResponsesSettings}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/canned-response/new-response"
-                                pageName="Settings"
+                                pageName="Canned Responses"
                                 component={NewCannedResponse}/> {/* Social integration routes starts */}
                             <SettingsLayoutRoute
                                 exact
@@ -363,7 +363,7 @@ const SiteRouter = connect(mapStateToProps, {
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/integrations/email/:action"
-                                pageName="Email Settings"
+                                pageName="Email Integration"
                                 component={SettingsEmail}/>
                             <SettingsLayoutRoute
                                 exact
