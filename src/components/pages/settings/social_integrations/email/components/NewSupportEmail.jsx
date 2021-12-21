@@ -96,34 +96,39 @@ const NewSupportEmail = ({configs, getConfigs}) => {
       // console.log('executing outgoing only');
       const {email, password, port, tls, host, from, apiKey, type} = emailState.outgoingEmailConfig;
 
-
-      if (email && password && port && host) {
-        const data = {
-          outgoingEmailConfig: {
-            email,
-            password,
-            from,
-            host,
-            port: Number(port),
-            tls,
-            apiKey: apiKey || null,
-            type
-          }
-        };
-  
-        const res = await httpPatchMain("settings/outgoing-email-config", JSON.stringify(data));
-  
-        if (res?.status === "success") {
-          handleShow();
-          getConfigs();
-        } else {
-          return NotificationManager.error(res?.er?.message, "Error", 4000);
-        }
-
+      if (type === "api") {
+        if (!email || !apiKey) return NotificationManager.error('Fill up required fields', 'Error', 4000);
       } else {
-        NotificationManager.error('Fill up required fields', 'Error', 4000);
+        if (!email && !password && !port && !host) return NotificationManager.error('Fill up required fields', 'Error', 4000);
       }
-      
+
+      const data = {
+        outgoingEmailConfig: type === "api" ? {
+          email,
+          apiKey: apiKey || null,
+          type
+        } : {
+          email,
+          password,
+          from,
+          host,
+          port: Number(port),
+          tls,
+          apiKey: apiKey || null,
+          type
+        }
+      };
+
+
+      const res = await httpPatchMain("settings/outgoing-email-config", JSON.stringify(data));
+
+      if (res?.status === "success") {
+        handleShow();
+        getConfigs();
+      } else {
+        return NotificationManager.error(res?.er?.message, "Error", 4000);
+      }
+    
     }
 
   };

@@ -1508,7 +1508,7 @@ function Conversation({user, ...props}) {
                     </Row>
                     : "" 
                   }
-                  <div className="col-12 mt-3">
+                  {/* <div className="col-12 mt-3">
                     <label htmlFor="title" className="form-label">Attachment (If Any)</label>
                     <div
                         id="ticket-ath-box"
@@ -1522,7 +1522,7 @@ function Conversation({user, ...props}) {
                           // onChange={} 
                           />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               )}
               <div className="text-end mt-3">
