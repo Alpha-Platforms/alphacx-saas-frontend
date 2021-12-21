@@ -1382,7 +1382,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                       </Row>
                       : "" 
                     }
-                    <div className="col-12 mt-3">
+                    {/* <div className="col-12 mt-3">
                       <label htmlFor="title" className="form-label">Attachment (If Any)</label>
                       <div
                           id="ticket-ath-box"
@@ -1396,7 +1396,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                             // onChange={} 
                             />
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 )}
                 <div className="text-end mt-3">
