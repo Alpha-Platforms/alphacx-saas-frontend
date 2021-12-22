@@ -1271,8 +1271,8 @@ function Conversation({user, ...props}) {
       </div>
       {/* Modal area starts here */}
       {/* <Modal open={openSaveTicketModal} onClose={closeSaveTicketModal} center> */}
-      <Modal show={openSaveTicketModal} onHide={closeSaveTicketModal} centered scrollable>
-        <Modal.Body className="p-0">
+      <Modal show={openSaveTicketModal} onHide={closeSaveTicketModal} centered scrollable dialogClassName="modal-mw-520">
+        <Modal.Body className="p-2">
           <Form className="p-3 bg-white" onSubmit={(e) => e.preventDefault()}>
             <h5 className="acx-text-gray-800 mb-3">
               Kindly update ticket before closing the chat

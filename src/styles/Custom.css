@@ -1141,3 +1141,8 @@ input.search-input-right {
 }
 
 /*  */
+.modal-mw-520{
+    min-width: 520px !important;
+}
+
+/*  */
