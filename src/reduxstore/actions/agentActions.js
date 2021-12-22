@@ -60,33 +60,32 @@ export const getPaginatedAgents = (itemsPerPage, currentPage) => (dispatch, getS
 
 export const addAgent = (newAgent, success, failed) => (dispatch, getState) => {
 	//Request body
-	const body = JSON.stringify(newAgent);
-
-	axios.post(`${config.stagingBaseUrl}/agent`, body, userTokenConfig(getState))
-		.then(res => {
-            console.log('AGENT RESPONSE => ', res.data);
-            
-            if (res.data?.status === "success") {
-                success && success(res.data);
-                const data = res.data?.data;
-                dispatch({
-                    type: data?.role === "Administrator" ? types.ADD_SINGLE_ADMIN : data?.role === "Supervisor" ? types.ADD_SINGLE_SUPERVISOR : types.ADD_SINGLE_AGENT,
-                    payload: (data => {
-                        switch(data.role) {
-                            default:
-                                const newData = {...data, id: data?.userId, firstname: data?.firstName, lastname: data?.lastName}
-                                return newData;
-                        }
-                    })(data)
-                });
-            } else {
-                failed && failed(res.data);
-            }
-        })
-		.catch(err => {
-            dispatch(returnErrors(err.response?.data, err.response?.status));
-            failed && failed(err);
-        });
+    const body = JSON.stringify(newAgent);
+    
+    axios.post(`${config.stagingBaseUrl}/agent`, body, userTokenConfig(getState))
+    .then(res => {
+        // console.log('AGENT RESPONSE => ', res.data);            
+        if (res.data?.status === "success") {
+            success && success(res.data);
+            const data = res.data?.data;
+            dispatch({
+                type: data?.role === "Administrator" ? types.ADD_SINGLE_ADMIN : data?.role === "Supervisor" ? types.ADD_SINGLE_SUPERVISOR : types.ADD_SINGLE_AGENT,
+                payload: (data => {
+                    switch(data.role) {
+                        default:
+                            const newData = {...data, id: data?.userId, firstname: data?.firstName, lastname: data?.lastName}
+                            return newData;
+                    }
+                })(data)
+            });
+        } else {
+            failed && failed(res.data?.message);
+        }
+    })
+    .catch(err => {
+        dispatch(returnErrors(err.response?.data, err.response?.status));
+        failed && failed(err.response?.data?.message);
+    });
 }
 
 
