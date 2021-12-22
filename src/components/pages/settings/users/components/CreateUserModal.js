@@ -37,7 +37,6 @@ const CreateUserModal = ({
     useEffect(() => {
         
         console.clear()
-        console.log(modalInputs)
 
     }, [modalInputs])
 
@@ -109,9 +108,9 @@ const CreateUserModal = ({
                 setCreateModalShow(false);
                 setCreatingUser(false);
                 NotificationManager.success(`${body?.role} created successfully`, "Success", 4000);
-            }, () => {
+            }, (err) => {
                 setCreatingUser(false);
-                NotificationManager.error(`${body?.role} could not be created`, "Error", 4000);
+                NotificationManager.error(`${err}`, "Error", 4000);
             });
         }
     }
