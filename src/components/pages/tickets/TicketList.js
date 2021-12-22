@@ -290,10 +290,7 @@ const TicketList = ({
             );
       exportTable(tableColumns, data, "csv", "TicketExport");
     }
-  };
-
-  console.log('SELECTED ROWS => ', selectedRows);
-
+  }
 
   const handlePDFExport = () => {
     if (tickets) {
