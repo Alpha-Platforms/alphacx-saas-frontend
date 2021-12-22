@@ -1140,8 +1140,8 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
 
 
           </div>}
-        <Modal show={openSaveTicketModal} onHide={closeSaveTicketModal} centered scrollable>
-          <Modal.Body className="p-0">
+        <Modal show={openSaveTicketModal} onHide={closeSaveTicketModal} centered scrollable dialogClassName="modal-mw-520">
+          <Modal.Body className="p-2">
             <Form className="bg-white p-3" onSubmit={(e) => e.preventDefault()}>
               <p className="fs-5">
                 Kindly update ticket before closing the chat
