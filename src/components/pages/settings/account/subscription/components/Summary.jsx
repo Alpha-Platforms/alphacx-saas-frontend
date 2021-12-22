@@ -19,6 +19,8 @@ const FlutterWaveAction = ({config, isVerifying, setIsVerifying, setPlanState}) 
                 callback: async (response) => {
                     closePaymentModal() // this will close the modal programmatically
 
+                    console.log('FLUTTEWAVE RESPONSE => ', response);
+
                     if (response?.status === "successful") {
                         setIsVerifying(true);
                         const verifyPaymentRes = await httpPost(`subscriptions/verify-payment`, response);

@@ -292,6 +292,9 @@ const TicketList = ({
     }
   };
 
+  console.log('SELECTED ROWS => ', selectedRows);
+
+
   const handlePDFExport = () => {
     if (tickets) {
       const data =
@@ -299,7 +302,7 @@ const TicketList = ({
           ? selectedRows
           : tickets.map(
               ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id  }) => ({
-                name: textCapitalize(`${customer.firstname} ${customer.lastname == "default"? "" : customer.lastname || ""}`),
+                name: `${textCapitalize(customer?.firstname || 'Firstname')} ${textCapitalize(customer.lastname === "default"? "" : customer.lastname ? customer?.lastname : '')}`,
                 email: customer.email,
                 subject: `${subject.substr(0, 25)}...`,
                 // ticketId: id.slice(-8),
@@ -490,7 +493,7 @@ const TicketList = ({
                     ticket_id
                   }) => ({
                     key: ticket_id,
-                    name: `${customer?.firstname} ${customer?.lastname == "default"? "" : customer?.lastname || ""}`,
+                    name: `${customer?.firstname} ${customer?.lastname === "default"? "" : customer?.lastname || ""}`,
                     customerId: customer?.id,
                     ticketId: ticket_id,
                     ticketUid: id,
