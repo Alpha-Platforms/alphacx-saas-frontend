@@ -23,7 +23,7 @@ import SaveAlt from "@material-ui/icons/SaveAlt";
 import { ReactComponent as StarUnactiveSvg } from "../../../assets/icons/Star-unactive.svg";
 import { ReactComponent as StarYellowSvg } from "../../../assets/icons/Star-yellow.svg";
 import { NotificationManager } from 'react-notifications';
-import { httpDeleteMain, httpDelete } from './../../../helpers/httpMethods';
+import { httpDeleteMain, httpDelete, httpGetMain } from './../../../helpers/httpMethods';
 
 const TicketList = ({
   isTicketsLoaded,
@@ -36,6 +36,7 @@ const TicketList = ({
   const [createModalShow, setCreateModalShow] = useState(false);
   const [changingRow, setChangingRow] = useState(false);
   const [rowsSelected, setRowsSelected] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   let selectedRows = [];
 
@@ -269,49 +270,68 @@ const TicketList = ({
     },
   ];
 
-  const handleCSVExport = () => {
+  const handleCSVExport = async () => {
     if (tickets) {
-      const data =
-        selectedRows.length !== 0
-          ? selectedRows
-          : tickets.map(
-              ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id }) => ({
-                name: `${customer.firstname} ${customer.lastname == "default" ? "" : customer.lastname || "" }`,
-                email: customer.email,
-                subject: `${subject.substr(0, 25)}...`,
-                ticketUid: id,
-                ticketId: ticket_id,
-                category: category.name,
-                created: moment(created_at).format("DD MMM, YYYY"),
-                state: status,
-                assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-                rating: rating || 0
-              })
-            );
-      exportTable(tableColumns, data, "csv", "TicketExport");
+      if (selectedRows.length === 0) {
+        setLoading(true);
+        const res = await httpGetMain(`tickets?per_page=${meta?.totalItems}&page=${1}`);
+        setLoading(false);
+        if (res?.status === 'success') {
+          const data = res?.data?.tickets?.map(
+            ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id  }) => ({
+              name: `${textCapitalize(customer?.firstname || 'Firstname')} ${textCapitalize(customer.lastname === "default"? "" : customer.lastname ? customer?.lastname : '')}`,
+              email: customer.email,
+              subject: `${subject.substr(0, 25)}...`,
+              // ticketId: id.slice(-8),
+              ticketId: ticket_id,
+              category: category.name,
+              created: moment(created_at).format("DD MMM, YYYY"),
+              state: status,
+              assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
+              rating: rating || 0
+            })
+          );
+          exportTable(tableColumns, data, "csv", "TicketExport");
+        } else {
+          NotificationManager.error('Tickets could not be retrieved', 'Error');
+        }
+      } else {
+        const data = selectedRows;
+        exportTable(tableColumns, data, "csv", "TicketExport");
+      }
+      
     }
   }
 
-  const handlePDFExport = () => {
+  const handlePDFExport = async () => {
     if (tickets) {
-      const data =
-        selectedRows.length !== 0
-          ? selectedRows
-          : tickets.map(
-              ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id  }) => ({
-                name: `${textCapitalize(customer?.firstname || 'Firstname')} ${textCapitalize(customer.lastname === "default"? "" : customer.lastname ? customer?.lastname : '')}`,
-                email: customer.email,
-                subject: `${subject.substr(0, 25)}...`,
-                // ticketId: id.slice(-8),
-                ticketId: ticket_id,
-                category: category.name,
-                created: moment(created_at).format("DD MMM, YYYY"),
-                state: status,
-                assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-                rating: rating || 0
-              })
-            );
-      exportTable(tableColumns, data, "pdf", "TicketExport");
+      if (selectedRows.length === 0) {
+        setLoading(true);
+        const res = await httpGetMain(`tickets?per_page=${meta?.totalItems}&page=${1}`);
+        setLoading(false);
+        if (res?.status === 'success') {
+          const data = res?.data?.tickets?.map(
+            ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id  }) => ({
+              name: `${textCapitalize(customer?.firstname || 'Firstname')} ${textCapitalize(customer.lastname === "default"? "" : customer.lastname ? customer?.lastname : '')}`,
+              email: customer.email,
+              subject: `${subject.substr(0, 25)}...`,
+              // ticketId: id.slice(-8),
+              ticketId: ticket_id,
+              category: category.name,
+              created: moment(created_at).format("DD MMM, YYYY"),
+              state: status,
+              assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
+              rating: rating || 0
+            })
+          );
+          exportTable(tableColumns, data, "pdf", "TicketExport");
+        } else {
+          NotificationManager.error('Tickets could not be retrieved', 'Error');
+        }
+      } else {
+        const data = selectedRows;
+        exportTable(tableColumns, data, "pdf", "TicketExport");
+      }
     }
   };
 
@@ -402,13 +422,13 @@ const TicketList = ({
 
   return (
     <div>
-      {ticketLoading && (
+      {(ticketLoading || loading) && (
         <div
           className={`cust-table-loader ${
             ticketLoading && "add-loader-opacity"
           }`}
         >
-          <ScaleLoader loading={ticketLoading} color={"#006298"} />
+          <ScaleLoader loading={true} color={"#006298"} />
         </div>
       )}
       <div className="ticket-table-wrapper">
