@@ -143,6 +143,12 @@
 
 #export-dropdown-main {
     margin-left: 18.25rem;
+    background: transparent;
+}
+
+#export-dropdown-main:focus {
+    outline: none;
+    box-shadow: none;
 }
 
 .ticket-export-btn {

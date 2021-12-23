@@ -17,13 +17,14 @@ import {
 } from "@material-ui/core/styles";
 import { getPaginatedTickets } from "../../../reduxstore/actions/ticketActions";
 import CreateTicketModal from "./CreateTicketModal";
-import { Dropdown } from "react-bootstrap";
+// import { Dropdown } from "react-bootstrap";
 import { exportTable, textCapitalize } from "../../../helper";
 import SaveAlt from "@material-ui/icons/SaveAlt";
 import { ReactComponent as StarUnactiveSvg } from "../../../assets/icons/Star-unactive.svg";
 import { ReactComponent as StarYellowSvg } from "../../../assets/icons/Star-yellow.svg";
 import { NotificationManager } from 'react-notifications';
 import { httpDeleteMain, httpDelete, httpGetMain } from './../../../helpers/httpMethods';
+import Dropdown from 'react-multilevel-dropdown';
 
 const TicketList = ({
   isTicketsLoaded,
@@ -270,16 +271,35 @@ const TicketList = ({
     },
   ];
 
-  const handleCSVExport = async () => {
+  const handleCSVExport = async (type) => {
     if (tickets) {
-      if (selectedRows.length === 0) {
+      if (type === "selected") {
+        const data =
+        selectedRows.length !== 0
+          ? selectedRows
+          : tickets.map(
+              ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id }) => ({
+                name: `${customer.firstname} ${customer.lastname == "default" ? "" : customer.lastname || "" }`,
+                email: customer.email,
+                subject: `${subject.substr(0, 25)}...`,
+                ticketUid: id,
+                ticketId: ticket_id,
+                category: category.name,
+                created: moment(created_at).format("DD MMM, YYYY"),
+                state: status,
+                assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
+                rating: rating || 0
+              })
+            );
+        exportTable(tableColumns, data, "csv", "TicketExport");
+      } else if (type === "all") {
         setLoading(true);
         const res = await httpGetMain(`tickets?per_page=${meta?.totalItems}&page=${1}`);
         setLoading(false);
         if (res?.status === 'success') {
           const data = res?.data?.tickets?.map(
             ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id  }) => ({
-              name: `${textCapitalize(customer?.firstname || 'Firstname')} ${textCapitalize(customer.lastname === "default"? "" : customer.lastname ? customer?.lastname : '')}`,
+              name: `${textCapitalize(customer?.firstname || '')} ${textCapitalize(customer.lastname === "default"? "" : customer.lastname ? customer?.lastname : '')}`,
               email: customer.email,
               subject: `${subject.substr(0, 25)}...`,
               // ticketId: id.slice(-8),
@@ -295,17 +315,32 @@ const TicketList = ({
         } else {
           NotificationManager.error('Tickets could not be retrieved', 'Error');
         }
-      } else {
-        const data = selectedRows;
-        exportTable(tableColumns, data, "csv", "TicketExport");
       }
-      
     }
   }
 
-  const handlePDFExport = async () => {
+  const handlePDFExport = async (type) => {
     if (tickets) {
-      if (selectedRows.length === 0) {
+      if (type === "selected") {
+        const data =
+          selectedRows.length !== 0
+            ? selectedRows
+            : tickets.map(
+                ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id  }) => ({
+                  name: textCapitalize(`${customer.firstname} ${customer.lastname == "default"? "" : customer.lastname || ""}`),
+                  email: customer.email,
+                  subject: `${subject.substr(0, 25)}...`,
+                  // ticketId: id.slice(-8),
+                  ticketId: ticket_id,
+                  category: category.name,
+                  created: moment(created_at).format("DD MMM, YYYY"),
+                  state: status,
+                  assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
+                  rating: rating || 0
+                })
+              );
+        exportTable(tableColumns, data, "pdf", "TicketExport");
+      } else if (type === "all") {
         setLoading(true);
         const res = await httpGetMain(`tickets?per_page=${meta?.totalItems}&page=${1}`);
         setLoading(false);
@@ -328,9 +363,6 @@ const TicketList = ({
         } else {
           NotificationManager.error('Tickets could not be retrieved', 'Error');
         }
-      } else {
-        const data = selectedRows;
-        exportTable(tableColumns, data, "pdf", "TicketExport");
       }
     }
   };
@@ -438,31 +470,13 @@ const TicketList = ({
             ticketLoading && "rounded-bottom-04"
           }`}
         >
-          {/*                     <div>
-                        
-                    </div> */}
 
           <div className="btn-toolbar mb-md-0">
-            {/* <button
-                            type="button"
-                            className="btn btn-sm bg-at-blue-light px-md-3 mx-1"
-                            onClick={() => setCreateModalShow(true)}>
-                            <img src={TicketStarIcon} style={{ transform: 'scale(0.8)', display: 'inline-block' }} alt=""/>&nbsp;New Ticket
-                        </button>
-
-                        <button
-                            onClick={handleExportBtn}
-                            type="button"
-                            className="btn btn-sm btn-outline-secondary ps-md-3 mx-md-3 reset-btn-outline">
-                            <UploadSvg/>&nbsp;Import
-                        </button> */}
-
-            <Dropdown id="export-dropdown-main">
+            {/* <Dropdown id="export-dropdown-main">
               <Dropdown.Toggle
                 id="export-dropdown"
                 className="reset-btn-outline btn ticket-export-btn"
               >
-                {/* <ImportSvg/>&nbsp;Export */}
                 <SaveAlt />
               </Dropdown.Toggle>
 
@@ -474,6 +488,34 @@ const TicketList = ({
                   As CSV
                 </Dropdown.Item>
               </Dropdown.Menu>
+            </Dropdown> */}
+
+            <Dropdown
+              title={<SaveAlt />}
+              id="export-dropdown-main"
+            >
+              <Dropdown.Item>
+                Export Selected Tickets
+                <Dropdown.Submenu position="right">
+                  <Dropdown.Item onClick={() => handlePDFExport('selected')}>
+                    As PDF
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleCSVExport('selected')}>
+                    As CSV
+                  </Dropdown.Item>
+                </Dropdown.Submenu>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                Export All Tickets
+                <Dropdown.Submenu position="right">
+                  <Dropdown.Item onClick={() => handlePDFExport('all')}>
+                    As PDF
+                  </Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleCSVExport('all')}>
+                    As CSV
+                  </Dropdown.Item>
+                </Dropdown.Submenu>
+              </Dropdown.Item>
             </Dropdown>
           </div>
 
