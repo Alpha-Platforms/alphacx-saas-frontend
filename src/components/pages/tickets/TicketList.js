@@ -396,6 +396,8 @@ const TicketList = ({
     deleteBtnWrapper.classList.add('d-none');
   })
 
+  console.log('SESELECTED ROW => ', selectedRows);
+
   const handleDeleteTicket = async () => {
     // const deleteBtnWrapper = window.document.querySelector('#delete-btn-wrapper');
     const selectedRowCount = window.document.querySelector('#selected-row-count');
