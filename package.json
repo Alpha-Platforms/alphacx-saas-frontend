@@ -44,6 +44,7 @@
     "react-image-lightbox": "^5.1.4",
     "react-loader-spinner": "^4.0.0",
     "react-markdown": "^7.1.1",
+    "react-multilevel-dropdown": "^3.0.3",
     "react-notifications": "^1.7.2",
     "react-redux": "^7.2.4",
     "react-responsive-modal": "^6.1.0",
