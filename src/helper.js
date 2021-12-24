@@ -55,7 +55,9 @@ export const exportTable = (exportColumns, exportData, exportType, fileName) => 
     const exportDataFields = exportData.map(rowData => exportColumns.map(column => {
         switch (column.field) {
             case 'contact':
-                return `${rowData.name}`.trim()
+                return `${rowData.name}`.trim();
+            case 'createdTime':
+                return `${rowData.created}`.trim();
             default:
                 return rowData[column.field]
         }
