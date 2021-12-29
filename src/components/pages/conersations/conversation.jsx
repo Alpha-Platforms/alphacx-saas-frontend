@@ -50,6 +50,7 @@ import Smiley from "../../../assets/imgF/Smiley.png";
 import boldB from "../../../assets/imgF/boldB.png";
 import TextItalic from "../../../assets/imgF/TextItalic.png";
 import TextUnderline from "../../../assets/imgF/TextUnderline.png";
+import LinkImg from "../../../assets/imgF/insertLink.png";
 import TextAlignLeft from "../../../assets/imgF/TextAlignLeft.png";
 import TextAlignCenter from "../../../assets/imgF/TextAlignCenter.png";
 import TextAlignRight from "../../../assets/imgF/TextAlignRight.png";
@@ -1000,10 +1001,10 @@ function Conversation({user, ...props}) {
                                   <div className="message-inner">
                                       <div className="message-body">
                                           <div className="message-content">
-                                              {(new RegExp(youtubeRegex)).test(data?.plain_response)? 
+                                              {(new RegExp(youtubeRegex)).test(data?.plain)? 
                                                 <div className="message-gallery px-3 rounded-3 overflow-hidden">
                                                   {/* onReady={}  */}
-                                                  <YouTube videoId={YouTubeGetID(data?.plain_response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
+                                                  <YouTube videoId={YouTubeGetID(data?.plain.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
                                                 </div>
                                                 : null
                                               }
@@ -1070,10 +1071,10 @@ function Conversation({user, ...props}) {
                                   <div className="message-inner">
                                       <div className="message-body">
                                           <div className="message-content">
-                                              {(new RegExp(youtubeRegex)).test(data?.plain_response)? 
+                                              {(new RegExp(youtubeRegex)).test(data?.plain)? 
                                                 <div className="message-gallery px-3 rounded-3 overflow-hidden">
                                                   {/* onReady={}  */}
-                                                  <YouTube videoId={YouTubeGetID(data?.plain_response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
+                                                  <YouTube videoId={YouTubeGetID(data?.plain.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
                                                 </div>
                                                 : null
                                               }
@@ -1140,10 +1141,10 @@ function Conversation({user, ...props}) {
                                       <div className="message-body">
                                           <div className="message-content">
                                               
-                                              {(new RegExp(youtubeRegex)).test(data?.plain_response)? 
+                                              {(new RegExp(youtubeRegex)).test(data?.response)? 
                                                 <div className="message-gallery px-3 rounded-3 overflow-hidden">
                                                   {/* onReady={}  */}
-                                                  <YouTube videoId={YouTubeGetID(data?.plain_response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
+                                                  <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
                                                 </div>
                                                 : null
                                               }
@@ -1196,7 +1197,7 @@ function Conversation({user, ...props}) {
                         readOnly={(ticket[0].status.status === "Closed")? true : false}
                         editorState={editorState}
                         toolbar={{
-                          options: ["emoji", "inline", "image"],
+                          options: ["emoji", "inline", "image", "link"],
 
                           inline: {
                             inDropdown: false,
@@ -1233,14 +1234,19 @@ function Conversation({user, ...props}) {
                           emoji: {
                             icon: Smiley,
                           },
+                          link: {
+                            inDropdown: false,
+                            showOpenOptionOnHover: true,
+                            defaultTargetOption: '_blank',
+                            options: ['link', 'unlink'],
+                            link: { icon: LinkImg, className: undefined },
+                            unlink: { className: undefined },
+                          },
                           blockType: {
                             inDropdown: true,
                           },
 
                           list: {
-                            inDropdown: true,
-                          },
-                          link: {
                             inDropdown: true,
                           },
 
