@@ -73,7 +73,7 @@ function YouTubeGetID(url){
   var ID = '';
   url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
   if(url[2] !== undefined) {
-    ID = url[2].split(/[^0-9a-z_\-]/i);
+    ID = url[2].split(/[^0-9a-z_-]/i);
     ID = ID[0];
   }
   else {
@@ -1002,7 +1002,7 @@ function Conversation({user, ...props}) {
                                       <div className="message-body">
                                           <div className="message-content">
                                               {(new RegExp(youtubeRegex)).test(data?.plain)? 
-                                                <div className="message-gallery px-3 rounded-3 overflow-hidden">
+                                                <div className="message-gallery mx-2 rounded-3 overflow-hidden">
                                                   {/* onReady={}  */}
                                                   <YouTube videoId={YouTubeGetID(data?.plain.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
                                                 </div>
@@ -1072,7 +1072,7 @@ function Conversation({user, ...props}) {
                                       <div className="message-body">
                                           <div className="message-content">
                                               {(new RegExp(youtubeRegex)).test(data?.plain)? 
-                                                <div className="message-gallery px-3 rounded-3 overflow-hidden">
+                                                <div className="message-gallery mx-2  rounded-3 overflow-hidden">
                                                   {/* onReady={}  */}
                                                   <YouTube videoId={YouTubeGetID(data?.plain.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
                                                 </div>
@@ -1140,9 +1140,8 @@ function Conversation({user, ...props}) {
                                   <div className="message-inner">
                                       <div className="message-body">
                                           <div className="message-content">
-                                              
                                               {(new RegExp(youtubeRegex)).test(data?.response)? 
-                                                <div className="message-gallery px-3 rounded-3 overflow-hidden">
+                                                <div className="message-gallery mx-2 rounded-3 overflow-hidden">
                                                   {/* onReady={}  */}
                                                   <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
                                                 </div>
