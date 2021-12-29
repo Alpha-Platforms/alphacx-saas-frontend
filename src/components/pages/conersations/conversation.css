@@ -1305,13 +1305,16 @@ select {
 }
 .message-content {
   display: flex;
-  align-items: center;
+  align-items: start;
+  flex-direction: column;
 }
 .message-content + .message-content {
   margin-top: 0.75rem;
 }
 .message-out .message-content {
-  flex-direction: row-reverse;
+  flex-direction: column;
+  align-items: start;
+  /* flex-direction: row-reverse; */
 }
 .message-gallery,
 .message-text {

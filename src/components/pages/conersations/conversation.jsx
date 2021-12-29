@@ -65,6 +65,24 @@ import { dateFormater } from "../../helpers/dateFormater";
 import { capitalize } from "@material-ui/core";
 import moment from "moment";
 import RSelect from "react-select/creatable";
+// 
+import YouTube from 'react-youtube';
+// 
+function YouTubeGetID(url){
+  var ID = '';
+  url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+  if(url[2] !== undefined) {
+    ID = url[2].split(/[^0-9a-z_\-]/i);
+    ID = ID[0];
+  }
+  else {
+    ID = url;
+  }
+    return ID;
+}
+
+
+const youtubeRegex = /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/;
 
 function Conversation({user, ...props}) {
   const initialState = EditorState.createWithContent(
@@ -162,7 +180,15 @@ function Conversation({user, ...props}) {
   const [scrollPosition, setScrollPosition] = useState("#lastMsg");
   // 
   const location = useLocation();
-  // 
+  // youtube player options
+  const youtubePlayerOptions = {
+      height: '180',
+      width: '320',
+      playerVars: {
+        // https://developers.google.com/youtube/player_parameters
+        autoplay: 0,
+      },
+    };
   // 
   useEffect(() => {
     // ticketHistoryId
@@ -974,6 +1000,13 @@ function Conversation({user, ...props}) {
                                   <div className="message-inner">
                                       <div className="message-body">
                                           <div className="message-content">
+                                              {(new RegExp(youtubeRegex)).test(data?.plain_response)? 
+                                                <div className="message-gallery px-3 rounded-3 overflow-hidden">
+                                                  {/* onReady={}  */}
+                                                  <YouTube videoId={YouTubeGetID(data?.plain_response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
+                                                </div>
+                                                : null
+                                              }
                                               <div className="message-text">
                                                   <p className="text-dark message-title mb-1">
                                                     {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
@@ -1037,6 +1070,13 @@ function Conversation({user, ...props}) {
                                   <div className="message-inner">
                                       <div className="message-body">
                                           <div className="message-content">
+                                              {(new RegExp(youtubeRegex)).test(data?.plain_response)? 
+                                                <div className="message-gallery px-3 rounded-3 overflow-hidden">
+                                                  {/* onReady={}  */}
+                                                  <YouTube videoId={YouTubeGetID(data?.plain_response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
+                                                </div>
+                                                : null
+                                              }
                                               <div className="message-text">
                                                   <p className="text-dark message-title mb-1">
                                                     {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
@@ -1099,6 +1139,14 @@ function Conversation({user, ...props}) {
                                   <div className="message-inner">
                                       <div className="message-body">
                                           <div className="message-content">
+                                              
+                                              {(new RegExp(youtubeRegex)).test(data?.plain_response)? 
+                                                <div className="message-gallery px-3 rounded-3 overflow-hidden">
+                                                  {/* onReady={}  */}
+                                                  <YouTube videoId={YouTubeGetID(data?.plain_response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
+                                                </div>
+                                                : null
+                                              }
                                               <div className="message-text">
                                                   <p className="text-dark message-title mb-1">
                                                     {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
