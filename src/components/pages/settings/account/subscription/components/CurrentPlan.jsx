@@ -1,10 +1,16 @@
 // @ts-nocheck
-// import Select from "react-select";
+import Select from "react-select";
+import {useEffect} from 'react';
 
 const CurrentPlan = ({plan, planState, setPlanState}) => {
-    // const handlePlanChange = option => {
-    //     console.log('plan was changed');
-    // }
+
+    const handlePlanChange = option => {
+        console.log('Selected option => ', option);
+        setPlanState(prev => ({
+            ...prev,
+            selectedPlan: option
+        }));
+    }
 
     /*
     plan options
@@ -21,24 +27,60 @@ const CurrentPlan = ({plan, planState, setPlanState}) => {
         setPlanState(prev => ({...prev, isUpdatingPlan: true}))
     }
 
+    const handleBillingChange = option => {
+        setPlanState(prev => ({
+            ...prev,
+            billingCycle: option
+        }));
+    }
+
     return (
         <div className="currentplan-box">
             <div className="cp-top">
                 <div>
                     <div>
                         <label>Plan</label>
-                        {/* <Select
+                        <Select
                             name="plan"
                             className="cptop-plan"
+                            value={planState?.selectedPlan}
                             options={[
-                                {value: 'free', label: 'Free'},
-                                {value: 'alpha', label: 'Alpha'},
-                                {value: 'enterprise', label: 'Enterprise'}
+                                {value: 'Alpha Plan', label: 'Alpha Plan'},
                                 ]}
-                            onChange={handlePlanChange}/> */}
-                        <input type="text" className="form-control" value={plan?.name || ''} defaultValue={plan?.name || ''} disabled={true} name="agentsNo"/>
+                            onChange={handlePlanChange}/>
                     </div>
                 </div>
+
+                <div className="sbox-1">
+                    <div>
+                        <label>Billing Cycle</label>
+                    </div>
+                    <div>
+                        <Select
+                            name="plan"
+                            className="billing-time-select"
+                            value={planState.billingCycle}
+                            options={[
+                            {
+                                value: 'monthly_amount',
+                                label: 'Billing Monthly'
+                            }, {
+                                value: 'yearly_amount',
+                                label: 'Billing Yearly'
+                            }
+                        ]}
+                            onChange={handleBillingChange}/>
+                    </div>
+                </div>
+                
+                
+            </div>
+
+            <p>
+                {plan?.monthly_amount} {plan?.currency || 'NGN'} per agent / month
+            </p>
+
+            <div className="agent-count-select">
                 <div>
                     <label htmlFor="numOfAgents">Agents</label>
                     <div><input type="number" className="form-control" value={planState.numOfAgents} name="numOfAgents" id="numOfAgents" min={0} onChange={e => setPlanState(prev => ({...prev, numOfAgents: e.target.value }))} disabled={planState.isUpdatingPlan} /></div>
@@ -47,10 +89,7 @@ const CurrentPlan = ({plan, planState, setPlanState}) => {
                     <span>{`${planState.numOfAgents * plan?.monthly_amount} ${plan?.currency || 'NGN'} / month`}</span>
                 </div>
             </div>
-            <p>
-                <small>{plan?.monthly_amount} {plan?.currency || 'NGN'} per agent / month</small>
-            </p>
-
+            
             <div className="updateplan-btn-wrapper">
                 <button onClick={handleUpdatePlanBtn} type="button">Update Plan</button>
                 {planState.isUpdatingPlan && <button onClick={() => setPlanState(prev => ({...prev, isUpdatingPlan: false}))} type="button">Cancel</button>}

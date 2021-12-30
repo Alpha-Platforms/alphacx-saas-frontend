@@ -18,7 +18,11 @@ const Subscription = () => {
     const [domain] = useState(window.localStorage.getItem('domain'));
     const [tenantInfo, setTenantInfo] = useState(null);
     const [planState,
-        setPlanState] = useState({numOfAgents: 0, billingCycle: {label: 'Billing Monthly', value: 'monthly_amount'}, isUpdatingPlan: false});
+        setPlanState] = useState({
+            numOfAgents: 0, 
+            billingCycle: {label: 'Billing Monthly', value: 'monthly_amount'},
+            selectedPlan: {label: '', value: ''},
+            isUpdatingPlan: false});
 
     const getPlan = async () => {
         const res = await httpGet(`subscriptions/plans/${tenantId}`);
@@ -48,16 +52,24 @@ const Subscription = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // console.log('plan => ', plan);
-    console.log('PLAN => ', plan)
+    console.log('PLAN STATE => ', planState);
 
-    // console.log('planState => ', planState);
+    useEffect(() => {
+        if (plan && Object.keys(plan || {}).length !== 0) {
+            setPlanState(prev => ({
+                ...prev,
+                selectedPlan: {label: plan?.name, value: plan?.name}
+            }));
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [plan]);
+
+    console.log('PLAN => ', plan)
 
     return (
         <Fragment>
-            {(!plan && !tenantInfo)
-                ? <div className="cust-table-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
-                : <div>
+            {(plan && tenantInfo)
+                ?  <div>
                     <div className="d-flex justify-content-between col-md-8 mb-4">
                         <h3 className="fs-6 text-black">Subscription Details</h3>
                     </div>
@@ -85,7 +97,8 @@ const Subscription = () => {
                             <PaymentForm/>
                         </Fragment>}
 
-                </div>}
+                </div> : <div className="cust-table-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
+                }
         </Fragment>
     )
 }

@@ -49,12 +49,7 @@ const Summary = ({planState, setPlanState, plan}) => {
     const [isVerifying, setIsVerifying] = useState(false);
 
 
-    const handleBillingChange = option => {
-        setPlanState(prev => ({
-            ...prev,
-            billingCycle: option
-        }));
-    }
+    
 
     const handleInitiatePayment = async() => {
 
@@ -133,29 +128,8 @@ const Summary = ({planState, setPlanState, plan}) => {
         <div className="summary-box">
             {isVerifying && <div className="cust-table-loader"><ScaleLoader loading={true} color={"#006298"}/></div>} 
             <h5>Summary</h5>
-            <div className="sbox-1">
-                <div>
-                    <span>Billing Cycle</span>
-                </div>
-                <div>
-                    <Select
-                        name="plan"
-                        className="billing-time-select"
-                        value={planState.billingCycle}
-                        options={[
-                        {
-                            value: 'monthly_amount',
-                            label: 'Billing Monthly'
-                        }, {
-                            value: 'yearly_amount',
-                            label: 'Billing Yearly'
-                        }
-                    ]}
-                        onChange={handleBillingChange}/>
-                </div>
-            </div>
 
-            <div className="summary-divider"/>
+            {/* <div className="summary-divider"/> */}
 
             <div className="sbox-2">
                 <div>

@@ -41,7 +41,7 @@ const SubTop = ({plan, tenantInfo}) => {
                 <div><CurrentPlanIcon/></div>
                 <div>
                     <span>Current Plan</span>
-                    <span>{Object.keys(plan).length === 0 ? 'Free Plan' : plan?.name} {getRealCurrency(tenantInfo?.currency) ? `(${getRealCurrency(tenantInfo?.currency)})` : ""}</span>
+                    <span>{Object.keys(plan).length === 0 ? 'Free Plan' : plan?.name} {getRealCurrency((tenantInfo?.currency || "")) ? `(${getRealCurrency((tenantInfo?.currency || ""))})` : ""}</span>
                 </div>
             </div>
 
