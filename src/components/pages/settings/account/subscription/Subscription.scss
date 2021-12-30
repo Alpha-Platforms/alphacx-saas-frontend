@@ -252,7 +252,6 @@
 }
     }
 }
-S
 
 .summary-divider {
     border-top: 1px solid rgba(45, 50, 80, 0.1);
@@ -440,4 +439,20 @@ S
 
         }
     }
+}
+
+
+.stripe-payment-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: var(--at-blue-light);
+    color: white;
+    font-size: 16px;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    margin: 2rem 0 0;
 }

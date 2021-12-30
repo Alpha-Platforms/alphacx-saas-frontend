@@ -1,11 +1,66 @@
 // @ts-nocheck
-import Select from 'react-select';
 import {httpPost} from '../../../../../../helpers/httpMethods';
-import AcxLogo from '../../../../../../assets/images/acxsquarelogo.png';
+// import AcxLogo from '../../../../../../assets/images/acxsquarelogo.png';
 import {useFlutterwave, closePaymentModal} from 'flutterwave-react-v3';
 import {Fragment, useState} from 'react';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { NotificationManager } from 'react-notifications';
+import {loadStripe} from '@stripe/stripe-js';
+import {
+    CardElement,
+    Elements,
+    useStripe,
+    useElements,
+} from '@stripe/react-stripe-js';
+import {getRealCurrency} from './SubTop';
+
+const CheckoutForm = ({setIsVerifying, setPlanState}) => {
+    const stripe = useStripe();
+    const elements = useElements();
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        if (!stripe || !elements) {
+            return;
+        }
+
+        /* const {error, paymentMethod, token} = await stripe.createPaymentMethod({
+        type: 'card',
+        card: elements.getElement(CardElement),
+        }); */
+
+        const { error, token } = await stripe.createToken(CardElement);
+
+        /* console.log('STRIPE Error => ', error);
+        console.log('STRIPE paymentMethod => ', paymentMethod);
+        console.log('STRIPE token => ', token) */
+        if (!error) {
+            
+            setIsVerifying(true);
+            const verifyPaymentRes = await httpPost(`subscriptions/verify-payment`, token);
+            setIsVerifying(false);
+
+            if (verifyPaymentRes?.status === "success") {
+                NotificationManager.success('', 'Transaction successful', 4000);
+                setPlanState(prev => ({...prev, isUpdatingPlan: false,
+                stripeConfig: null}));
+            }
+            
+            } else {
+            console.log(error);
+            }
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <CardElement />
+            <button type="submit" className="stripe-payment-btn" disabled={!stripe || !elements}>
+                Make Payment
+            </button>
+        </form>
+    );
+};
 
 const FlutterWaveAction = ({config, isVerifying, setIsVerifying, setPlanState}) => {
 
@@ -28,14 +83,15 @@ const FlutterWaveAction = ({config, isVerifying, setIsVerifying, setPlanState}) 
 
                         if (verifyPaymentRes?.status === "success") {
                             NotificationManager.success('', 'Transaction successful', 4000);
-                            setPlanState(prev => ({...prev, isUpdatingPlan: false}));
+                            setPlanState(prev => ({...prev, isUpdatingPlan: false,
+                            flutterwaveConfig: null}));
                         }
                     } else {
                         NotificationManager.error('', 'Transaction failed', 4000);
                     }
                 },
                 onClose: () => {
-                    setPlanState(prev => ({...prev, isUpdatingPlan: false}));
+                    setPlanState(prev => ({...prev, isUpdatingPlan: false, flutterwaveConfig: null}));
                 }
             });
         }}>Make Payment</button>
@@ -43,86 +99,7 @@ const FlutterWaveAction = ({config, isVerifying, setIsVerifying, setPlanState}) 
 }
 
 const Summary = ({planState, setPlanState, plan}) => {
-    const [flutterwaveConfig,
-        setFlutterwaveConfig] = useState(null);
-    const [isContinuing, setIsContinuing] = useState(false);
     const [isVerifying, setIsVerifying] = useState(false);
-
-
-    
-
-    const handleInitiatePayment = async() => {
-
-        // body data to initiate payment
-        const initPaymentBody = {
-            tenantId: window
-                .localStorage
-                .getItem('tenantId'),
-            subscriptionCategory: planState.billingCycle
-                ?.value === 'yearly_amount'
-                    ? 'yearly'
-                    : 'amount',
-            subscriptionTypeId: plan
-                ?.id,
-            numOfUsers: planState
-                ?.numOfAgents
-        }
-
-        setIsContinuing(true);
-
-        const initPaymentRes = await httpPost(`subscriptions/initialize-payment`, initPaymentBody);
-
-        setIsContinuing(false);
-
-        if (initPaymentRes
-            ?.status === "success") {
-
-            // get current user from localStorage
-            const currentUser = JSON.parse(window.localStorage.getItem('user'));
-            const config = {
-                public_key: initPaymentRes
-                    ?.data
-                        ?.FLW_PUBLIC_KEY,
-                tx_ref: initPaymentRes
-                    ?.data
-                        ?.reference,
-                amount: planState.billingCycle
-                    ?.value === 'yearly_amount'
-                        ? planState.numOfAgents * plan
-                            ?.yearly_amount
-                            : planState.numOfAgents * plan
-                                ?.monthly_amount,
-                currency: plan
-                    ?.currency || 'NGN',
-                // payment_options: 'card,mobilemoney,ussd',
-                payment_options: 'card',
-                customer: {
-                    email: currentUser
-                        ?.user
-                            ?.email,
-                    phonenumber: currentUser
-                        ?.user
-                            ?.phone_number,
-                    name: `${currentUser
-                        ?.user
-                            ?.firstname || ''} ${currentUser
-                                ?.user
-                                    ?.lastname || ''}`.trim()
-                },
-                customizations: { 
-                    title: 'AlphaCX',
-                    description: `Payment for ${planState.numOfAgents} agents`,
-                    logo: 'https://alphacx.co/wp-content/uploads/2021/08/AlphaCX-Logo-Full-768x212.png'
-                }
-            };
-
-            setFlutterwaveConfig(config);
-
-            // eslint-disable-next-line react-hooks/rules-of-hooks
-
-        }
-
-    }
 
     return (
         <div className="summary-box">
@@ -199,8 +176,13 @@ const Summary = ({planState, setPlanState, plan}) => {
             </div>
 
             <div className="sbox-7">
-                {!flutterwaveConfig && <button onClick={handleInitiatePayment}>{ !isContinuing ? 'Continue' : <ScaleLoader color={"#ffffff"} height={14} width={2} margin={1} />}</button>}
-                {flutterwaveConfig && <FlutterWaveAction isVerifying={isVerifying} setIsVerifying={setIsVerifying} config={flutterwaveConfig} setPlanState={setPlanState} />}
+                {/* {!flutterwaveConfig && <button onClick={handleInitiatePayment}>{ !isContinuing ? 'Continue' : <ScaleLoader color={"#ffffff"} height={14} width={2} margin={1} />}</button>} */}
+                {planState.flutterwaveConfig && <FlutterWaveAction isVerifying={isVerifying} setIsVerifying={setIsVerifying} config={planState.flutterwaveConfig} setPlanState={setPlanState} />}
+            </div>
+            <div>
+                {planState.stripeConfig && <Elements stripe={loadStripe(planState.stripeConfig?.STRIPE_PUBLIC_KEY)}>
+                    <CheckoutForm setIsVerifying={setIsVerifying} setPlanState={setPlanState} />
+                </Elements>}
             </div>
 
         </div>

@@ -22,7 +22,9 @@ const Subscription = () => {
             numOfAgents: 0, 
             billingCycle: {label: 'Billing Monthly', value: 'monthly_amount'},
             selectedPlan: {label: '', value: ''},
-            isUpdatingPlan: false});
+            isUpdatingPlan: false,
+            flutterwaveConfig: null,
+            stripeConfig: null});
 
     const getPlan = async () => {
         const res = await httpGet(`subscriptions/plans/${tenantId}`);
@@ -80,18 +82,20 @@ const Subscription = () => {
 
                     {true
                         ? <Fragment>
-                                <div>
-                                    <p className="current-plan-text">
-                                        <small>Your current plan</small>
-                                    </p>
+                                {Object.keys(plan).length !== 0 && <Fragment>
+                                    <div>
+                                        <p className="current-plan-text">
+                                            <small>Your current plan</small>
+                                        </p>
 
-                                    <div className="payment-sect-2">
-                                        <div><CurrentPlan plan={plan} planState={planState} tenantInfo={tenantInfo} setPlanState={setPlanState}/></div>
-                                        {planState.isUpdatingPlan && <div><Summary planState={planState} setPlanState={setPlanState} plan={plan} /></div>}
-                                        {false && <div><BillingDetails/></div>}
+                                        <div className="payment-sect-2">
+                                            <div><CurrentPlan plan={plan} planState={planState} tenantInfo={tenantInfo} setPlanState={setPlanState}/></div>
+                                            {(planState.isUpdatingPlan && (planState.flutterwaveConfig || planState.stripeConfig)) && <div><Summary planState={planState} setPlanState={setPlanState} plan={plan} /></div>}
+                                            {false && <div><BillingDetails/></div>}
+                                        </div>
                                     </div>
-                                </div>
-                                {false && <div><PaymentHistory/></div>}
+                                    {false && <div><PaymentHistory/></div>}
+                                </Fragment>}
                             </Fragment>
                         : <Fragment>
                             <PaymentForm/>
