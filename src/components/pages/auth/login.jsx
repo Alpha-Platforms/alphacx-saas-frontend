@@ -86,7 +86,7 @@ const Login = ({match: {params}}) => {
       if(userInput.email && userInput.password){
     
         const data = {
-          email: userInput.email.toLowerCase(),
+          email: userInput.email.trim().toLowerCase(),
           password: userInput.password,
         };
     
@@ -99,9 +99,6 @@ const Login = ({match: {params}}) => {
           window.localStorage.setItem("user", JSON.stringify(res.data));
           window.localStorage.setItem("token", res.data.token);
           window.localStorage.setItem("refreshToken", res.data.refreshToken);
-    
-          NotificationManager.success(res.data.message, "Success", 4000);
-
           window.location.href = `/`;
     
         } else {
