@@ -57,14 +57,8 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
                     tx_ref: initPaymentRes
                         ?.data
                             ?.reference,
-                    amount: planState.billingCycle
-                        ?.value === 'yearly_amount'
-                            ? planState.numOfAgents * plan
-                                ?.yearly_amount
-                                : planState.numOfAgents * plan
-                                    ?.monthly_amount,
-                    currency: plan
-                        ?.currency || 'NGN',
+                    amount: planState.numOfAgents * (plan[planState?.billingCycle?.value]),
+                    currency: "NGN",
                     // payment_options: 'card,mobilemoney,ussd',
                     payment_options: 'card',
                     customer: {
@@ -171,7 +165,7 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
                     <div><input type="number" className="form-control" value={planState.numOfAgents} name="numOfAgents" id="numOfAgents" min={0} onChange={e => setPlanState(prev => ({...prev, numOfAgents: e.target.value }))} disabled={planState.isUpdatingPlan} /></div>
                 </div>
                 <div>
-                    <span>{`${planState.numOfAgents * (plan[planState?.billingCycle?.value])} ${getRealCurrency(tenantInfo?.currency || '')} / month`}</span>
+                    <span>{`${planState.numOfAgents * (plan[planState?.billingCycle?.value])} ${getRealCurrency(tenantInfo?.currency || '')} / ${planState?.billingCycle?.value === "monthly_amount" ? "month" : "year"}`}</span>
                 </div>
             </div>
             

@@ -90,7 +90,7 @@ const Subscription = () => {
 
                                         <div className="payment-sect-2">
                                             <div><CurrentPlan plan={plan} planState={planState} tenantInfo={tenantInfo} setPlanState={setPlanState}/></div>
-                                            {(planState.isUpdatingPlan && (planState.flutterwaveConfig || planState.stripeConfig)) && <div><Summary planState={planState} setPlanState={setPlanState} plan={plan} /></div>}
+                                            {(planState.isUpdatingPlan && (planState.flutterwaveConfig || planState.stripeConfig)) && <div><Summary planState={planState} setPlanState={setPlanState} tenantInfo={tenantInfo} plan={plan} /></div>}
                                             {false && <div><BillingDetails/></div>}
                                         </div>
                                     </div>

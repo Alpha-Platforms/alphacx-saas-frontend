@@ -98,7 +98,7 @@ const FlutterWaveAction = ({config, isVerifying, setIsVerifying, setPlanState}) 
     </Fragment>
 }
 
-const Summary = ({planState, setPlanState, plan}) => {
+const Summary = ({planState, setPlanState, plan, tenantInfo}) => {
     const [isVerifying, setIsVerifying] = useState(false);
 
     return (
@@ -111,15 +111,13 @@ const Summary = ({planState, setPlanState, plan}) => {
             <div className="sbox-2">
                 <div>
                     <span>Alpha</span>
-                    <span>{planState.numOfAgents}
+                    <span>{planState.numOfAgents}{' '}
                         Agent{planState.numOfAgents > 1
                             ? 's'
                             : ''}</span>
                 </div>
                 <div>
-                    <span>{`${planState.numOfAgents * plan
-                            ?.monthly_amount} ${plan
-                                ?.currency || 'NGN'}`}</span>
+                    <span>{`${planState.numOfAgents * (plan[planState?.billingCycle?.value])} ${getRealCurrency(tenantInfo?.currency || '') }`}</span>
                 </div>
             </div>
 
@@ -130,9 +128,7 @@ const Summary = ({planState, setPlanState, plan}) => {
                     <span>Subtotal</span>
                 </div>
                 <div>
-                    <span>{`${planState.numOfAgents * plan
-                            ?.monthly_amount} ${plan
-                                ?.currency || 'NGN'}`}</span>
+                    <span>{`${planState.numOfAgents * (plan[planState?.billingCycle?.value])} ${getRealCurrency(tenantInfo?.currency || '') }`}</span>
                 </div>
             </div>
 
@@ -157,8 +153,7 @@ const Summary = ({planState, setPlanState, plan}) => {
                     <span>0%</span>
                 </div>
                 <div>
-                    <span>0 {plan
-                            ?.currency || 'NGN'}</span>
+                    <span>0 {getRealCurrency(tenantInfo?.currency || '') }</span>
                 </div>
             </div>
 
@@ -169,9 +164,7 @@ const Summary = ({planState, setPlanState, plan}) => {
                     <span>Total</span>
                 </div>
                 <div>
-                    <span>{`${planState.numOfAgents * plan
-                            ?.monthly_amount} ${plan
-                                ?.currency || 'NGN'}`}</span>
+                    <span>{`${planState.numOfAgents * (plan[planState?.billingCycle?.value])} ${getRealCurrency(tenantInfo?.currency || '') }`}</span>
                 </div>
             </div>
 
