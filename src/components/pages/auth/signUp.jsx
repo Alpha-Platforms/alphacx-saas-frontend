@@ -286,8 +286,9 @@ const Registration = () => {
                                                 />
                                             </Form.Group>
                                             <div className="mb-2 submit-auth-btn">
+                                                <p className="mt-4">By creating an account, you agree to our <a href="https://alphacx.co/privacy-policy/">Terms of Service</a> and have read and understood the <a href="https://alphacx.co/privacy-policy/">Privacy Policy</a>.</p>
                                                 <Button type="submit" onClick={handleSubmit}   disabled={loading || domainChecking}
-                                                        className="w-100 mt-3">
+                                                        className="w-100 mt-0">
                                                     {loading ?
                                                         <span>
                                                             <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...
