@@ -24,7 +24,7 @@ import { ReactComponent as StarUnactiveSvg } from "../../../assets/icons/Star-un
 import { ReactComponent as StarYellowSvg } from "../../../assets/icons/Star-yellow.svg";
 import { NotificationManager } from 'react-notifications';
 import { httpDeleteMain, httpDelete, httpGetMain } from './../../../helpers/httpMethods';
-import Dropdown from 'react-multilevel-dropdown';
+// import Dropdown from 'react-multilevel-dropdown';
 
 const TicketList = ({
   isTicketsLoaded,
@@ -492,7 +492,7 @@ const TicketList = ({
               </Dropdown.Menu>
             </Dropdown> */}
 
-            <Dropdown
+            {/* <Dropdown ----------   COMMENTED DUE TO react-multilevel-dropdown PEER DEP ISSUES / FIND A REPLACEMENT   --------------
               title={<SaveAlt />}
               id="export-dropdown-main"
             >
@@ -518,7 +518,7 @@ const TicketList = ({
                   </Dropdown.Item>
                 </Dropdown.Submenu>
               </Dropdown.Item>
-            </Dropdown>
+            </Dropdown> */}
           </div>
 
               <div id="delete-btn-wrapper" className="delete-btn-wrapper d-none">

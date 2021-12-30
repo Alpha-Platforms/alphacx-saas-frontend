@@ -11078,13 +11078,6 @@ react-modal@^3.11.1:
     react-lifecycles-compat "^3.0.0"
     warning "^4.0.3"
 
-react-multilevel-dropdown@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/react-multilevel-dropdown/-/react-multilevel-dropdown-3.0.3.tgz#9084652bda5fe1a54b0b7b08ddb2568fabb2df72"
-  integrity sha512-ldtoBqJxntqCkJMa2vEHZ3anRkTClfaCalQ9UK7Gv+VkLktkf3pl5vCIC+LjdvgX5tcvws9uENTwPn5jLuNSAQ==
-  dependencies:
-    react-style-classes "^2.0.2"
-
 react-notifications@^1.7.2:
   version "1.7.2"
   resolved "https://registry.npmjs.org/react-notifications/-/react-notifications-1.7.2.tgz"
@@ -11263,11 +11256,6 @@ react-star-ratings@^2.3.0:
     classnames "^2.2.1"
     prop-types "^15.6.0"
     react "^16.1.0"
-
-react-style-classes@^2.0.2:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/react-style-classes/-/react-style-classes-2.0.3.tgz#4af25b75048fd8b1b10a41c2d50b5d3d857c260e"
-  integrity sha512-GVkst4dq8n5bckKDcucTQvIuS5gzGX0BGE3OqaWZsN6eeesrvmyqLW+qyTSCYizWw8xpQ5+18Yxeqnm8iID13A==
 
 react-transition-group@2.9.0:
   version "2.9.0"
