@@ -1001,10 +1001,10 @@ function Conversation({user, ...props}) {
                                   <div className="message-inner">
                                       <div className="message-body">
                                           <div className="message-content">
-                                              {(new RegExp(youtubeRegex)).test(data?.plain)? 
+                                              {(new RegExp(youtubeRegex)).test(data?.response)? 
                                                 <div className="message-gallery mx-2 rounded-3 overflow-hidden">
                                                   {/* onReady={}  */}
-                                                  <YouTube videoId={YouTubeGetID(data?.plain.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
+                                                  <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
                                                 </div>
                                                 : null
                                               }
@@ -1071,10 +1071,10 @@ function Conversation({user, ...props}) {
                                   <div className="message-inner">
                                       <div className="message-body">
                                           <div className="message-content">
-                                              {(new RegExp(youtubeRegex)).test(data?.plain)? 
+                                              {(new RegExp(youtubeRegex)).test(data?.response)? 
                                                 <div className="message-gallery mx-2  rounded-3 overflow-hidden">
                                                   {/* onReady={}  */}
-                                                  <YouTube videoId={YouTubeGetID(data?.plain.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
+                                                  <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
                                                 </div>
                                                 : null
                                               }
