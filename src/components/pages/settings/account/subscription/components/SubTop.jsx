@@ -4,23 +4,28 @@ import {ReactComponent as OrgNameIcon} from '../../../../../../assets/icons/orgn
 import {ReactComponent as OrgDomainIcon} from '../../../../../../assets/icons/orgdomain.svg';
 import {ReactComponent as CurrentPlanIcon} from '../../../../../../assets/icons/currentplan.svg';
 
-const SubTop = ({plan}) => {
+export const getRealCurrency = currency => {
+    switch (currency.toLowerCase()) {
+        case "naira":
+        case "ngn":
+            return "NGN";
+        case "usd":
+        case "dollar":
+            return "USD"
+        default:
+            return ""
+    }
+}
+const SubTop = ({plan, tenantInfo}) => {
+
 
     return (
         <div className="subtop">
             <div>
-                <div><AccountIdIcon/></div>
-                <div>
-                    <span>Account ID</span>
-                    <span>01375933</span>
-                </div>
-            </div>
-
-            <div>
                 <div><OrgNameIcon/></div>
                 <div>
                     <span>Organisation Name</span>
-                    <span>Gillete Group International</span>
+                    <span>{!tenantInfo ? '...' : (tenantInfo?.company_name || '')}</span>
                 </div>
             </div>
 
@@ -28,7 +33,7 @@ const SubTop = ({plan}) => {
                 <div><OrgDomainIcon/></div>
                 <div>
                     <span>Organisation Domain</span>
-                    <span>gilletegroup.alphacx.co</span>
+                    <span>{!tenantInfo ? '...' : (tenantInfo?.company_name || '')}</span>
                 </div>
             </div>
 
@@ -36,7 +41,15 @@ const SubTop = ({plan}) => {
                 <div><CurrentPlanIcon/></div>
                 <div>
                     <span>Current Plan</span>
-                    <span>{plan?.name || ''} ({plan?.currency || "" })</span>
+                    <span>{Object.keys(plan).length === 0 ? 'Free Plan' : plan?.name} {getRealCurrency(tenantInfo?.currency) ? `(${getRealCurrency(tenantInfo?.currency)})` : ""}</span>
+                </div>
+            </div>
+
+            <div>
+                <div><AccountIdIcon/></div>
+                <div>
+                    <span>No of Users</span>
+                    <span>{Object.keys(plan)?.length === 0 ? '0' : ''}</span>
                 </div>
             </div>
 

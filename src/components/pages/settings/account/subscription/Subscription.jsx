@@ -10,32 +10,52 @@ import PaymentForm from './components/PaymentForm';
 import {httpGet} from '../../../../../helpers/httpMethods';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 
+
 const Subscription = () => {
     const [plan,
         setPlan] = useState(null);
     const [tenantId] = useState(window.localStorage.getItem('tenantId'));
+    const [domain] = useState(window.localStorage.getItem('domain'));
+    const [tenantInfo, setTenantInfo] = useState(null);
     const [planState,
         setPlanState] = useState({numOfAgents: 0, billingCycle: {label: 'Billing Monthly', value: 'monthly_amount'}, isUpdatingPlan: false});
 
+    const getPlan = async () => {
+        const res = await httpGet(`subscriptions/plans/${tenantId}`);
+        if (res
+            ?.status === "success") {
+            setPlan(res
+                ?.data);
+        } else {
+            setPlan({})
+        }
+    }
+
+    const getTenantInfo = async () => {
+        const res = await httpGet(`auth/tenant-info/${domain}`);
+        if (res
+            ?.status === "success") {
+            console.log('TENANT INFO => ', res);
+            setTenantInfo(res?.data);
+        } else {
+            setTenantInfo({})
+        }
+    }
+
     useEffect(() => {
-        (async() => {
-            const res = await httpGet(`subscriptions/plans/${tenantId}`);
-            if (res
-                ?.status === "success") {
-                setPlan(res
-                    ?.data);
-            }
-        })()
+        getPlan();
+        getTenantInfo();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // console.log('plan => ', plan);
+    console.log('PLAN => ', plan)
 
     // console.log('planState => ', planState);
 
     return (
         <Fragment>
-            {!plan
+            {(!plan && !tenantInfo)
                 ? <div className="cust-table-loader"><ScaleLoader loading={true} color={"#006298"}/></div>
                 : <div>
                     <div className="d-flex justify-content-between col-md-8 mb-4">
@@ -43,7 +63,7 @@ const Subscription = () => {
                     </div>
 
                     <div>
-                        <SubTop plan={plan}/>
+                        <SubTop plan={plan} tenantInfo={tenantInfo} />
                     </div>
 
                     {true
