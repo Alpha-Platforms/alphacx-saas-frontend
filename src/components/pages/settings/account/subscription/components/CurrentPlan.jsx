@@ -1,8 +1,8 @@
 // @ts-nocheck
 import Select from "react-select";
-import {useEffect} from 'react';
+import {getRealCurrency} from './SubTop';
 
-const CurrentPlan = ({plan, planState, setPlanState}) => {
+const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
 
     const handlePlanChange = option => {
         console.log('Selected option => ', option);
@@ -77,7 +77,7 @@ const CurrentPlan = ({plan, planState, setPlanState}) => {
             </div>
 
             <p>
-                {plan?.monthly_amount} {plan?.currency || 'NGN'} per agent / month
+                {plan?.monthly_amount || '1000'} {getRealCurrency(tenantInfo?.currency || '')} per agent / month
             </p>
 
             <div className="agent-count-select">
@@ -86,7 +86,7 @@ const CurrentPlan = ({plan, planState, setPlanState}) => {
                     <div><input type="number" className="form-control" value={planState.numOfAgents} name="numOfAgents" id="numOfAgents" min={0} onChange={e => setPlanState(prev => ({...prev, numOfAgents: e.target.value }))} disabled={planState.isUpdatingPlan} /></div>
                 </div>
                 <div>
-                    <span>{`${planState.numOfAgents * plan?.monthly_amount} ${plan?.currency || 'NGN'} / month`}</span>
+                    <span>{`${planState.numOfAgents * (plan?.monthly_amount || 1000)} ${plan?.currency || 'NGN'} / month`}</span>
                 </div>
             </div>
             

@@ -86,7 +86,7 @@ const Subscription = () => {
                                     </p>
 
                                     <div className="payment-sect-2">
-                                        <div><CurrentPlan plan={plan} planState={planState} setPlanState={setPlanState}/></div>
+                                        <div><CurrentPlan plan={plan} planState={planState} tenantInfo={tenantInfo} setPlanState={setPlanState}/></div>
                                         {planState.isUpdatingPlan && <div><Summary planState={planState} setPlanState={setPlanState} plan={plan} /></div>}
                                         {false && <div><BillingDetails/></div>}
                                     </div>
