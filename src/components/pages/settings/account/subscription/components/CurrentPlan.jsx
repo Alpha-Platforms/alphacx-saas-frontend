@@ -1,7 +1,7 @@
 // @ts-nocheck
 import Select from "react-select";
 import {getRealCurrency} from './SubTop';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {httpPost} from '../../../../../../helpers/httpMethods';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 
@@ -112,9 +112,15 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
         }));
     }
 
+    useEffect(() => {
+        setPlanState(prev => ({
+            ...prev,
+            loading: initiating
+        }));
+    }, [initiating]);
+
     return (
         <div className="currentplan-box">
-            {initiating && <div className="cust-table-loader"><ScaleLoader loading={true} color={"#006298"}/></div>}
             <div className="cp-top">
                 <div>
                     <div>
@@ -123,6 +129,7 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
                             name="plan"
                             className="cptop-plan"
                             value={planState?.selectedPlan}
+                            isDisabled={initiating || planState.isUpdatingPlan}
                             options={[
                                 {value: 'Alpha Plan', label: 'Alpha Plan'},
                                 ]}
@@ -139,6 +146,7 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
                             name="plan"
                             className="billing-time-select"
                             value={planState.billingCycle}
+                            isDisabled={initiating || planState.isUpdatingPlan}
                             options={[
                             {
                                 value: 'monthly_amount',

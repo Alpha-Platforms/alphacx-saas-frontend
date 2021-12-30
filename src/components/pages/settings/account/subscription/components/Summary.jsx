@@ -30,13 +30,17 @@ const CheckoutForm = ({setIsVerifying, setPlanState}) => {
         card: elements.getElement(CardElement),
         }); */
 
-        const { error, token } = await stripe.createToken(CardElement);
+        const cardElement = elements.getElement(CardElement);
+
+        const { error, token } = await stripe.createToken(cardElement);
 
         /* console.log('STRIPE Error => ', error);
         console.log('STRIPE paymentMethod => ', paymentMethod);
         console.log('STRIPE token => ', token) */
+
         if (!error) {
-            
+
+            console.log('STRIPE TOKEN => ', token);
             setIsVerifying(true);
             const verifyPaymentRes = await httpPost(`subscriptions/verify-payment`, token);
             setIsVerifying(false);

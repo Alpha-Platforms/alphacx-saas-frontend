@@ -24,7 +24,9 @@ const Subscription = () => {
             selectedPlan: {label: '', value: ''},
             isUpdatingPlan: false,
             flutterwaveConfig: null,
-            stripeConfig: null});
+            stripeConfig: null,
+            loading: false
+        });
 
     const getPlan = async () => {
         const res = await httpGet(`subscriptions/plans/${tenantId}`);
@@ -70,6 +72,7 @@ const Subscription = () => {
 
     return (
         <Fragment>
+            {planState.loading && <div className="cust-table-loader"><ScaleLoader loading={true} color={"#006298"}/></div>}
             {(plan && tenantInfo)
                 ?  <div>
                     <div className="d-flex justify-content-between col-md-8 mb-4">
