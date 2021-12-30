@@ -33,6 +33,7 @@ import boldB from "../../../assets/imgF/boldB.png";
 import Smiley from "../../../assets/imgF/Smiley.png";
 import BackArrow from "../../../assets/imgF/back.png";
 import editorImg from "../../../assets/imgF/editorImg.png";
+import LinkImg from "../../../assets/imgF/insertLink.png";
 // 
 import {getUserInitials} from '../../../helper';
 import UserProfile from '../conersations/userProfile';
@@ -53,7 +54,24 @@ import TextUnderline from "../../../assets/imgF/TextUnderline.png";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 import { CURRENT_CUSTOMER_TICKETS_LOADING } from '../../../reduxstore/types';
 import { httpGetMain, httpPostMain, httpPatchMain } from "../../../helpers/httpMethods";
+// 
+import YouTube from 'react-youtube';
+// 
 
+function YouTubeGetID(url){
+  var ID = '';
+  url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+  if(url[2] !== undefined) {
+    ID = url[2].split(/[^0-9a-z_-]/i);
+    ID = ID[0];
+  }
+  else {
+    ID = url;
+  }
+    return ID;
+}
+
+const youtubeRegex = /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/;
 
 const CircleIcon = (props) => <span className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
 
@@ -176,6 +194,15 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     const [customFieldConfig, setCustomFieldConfig] = useState([]);
     const [customFieldsGroup, setCustomFieldsGroup] = useState([]);
     const [customFieldIsSet, setCustomFieldIsSet] = useState(false);
+    // youtube player options
+    const youtubePlayerOptions = {
+        height: '180',
+        width: '320',
+        playerVars: {
+          // https://developers.google.com/youtube/player_parameters
+          autoplay: 0,
+        },
+      };
 
     useEffect(() => {
       sortMsges(msgHistory);
@@ -842,6 +869,13 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                   <div className="message-inner">
                                       <div className="message-body">
                                           <div className="message-content">
+                                              {(new RegExp(youtubeRegex)).test(data?.response)? 
+                                                <div className="message-gallery mx-2 rounded-3 overflow-hidden">
+                                                  {/* onReady={}  */}
+                                                  <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
+                                                </div>
+                                                : null
+                                              }
                                               <div className="message-text">
                                                   <p className="text-dark message-title mb-1">
                                                     {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
@@ -903,6 +937,13 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                   <div className="message-inner">
                                       <div className="message-body">
                                           <div className="message-content">
+                                              {(new RegExp(youtubeRegex)).test(data?.response)? 
+                                                <div className="message-gallery mx-2 rounded-3 overflow-hidden">
+                                                  {/* onReady={}  */}
+                                                  <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
+                                                </div>
+                                                : null
+                                              }
                                               <div className="message-text">
                                                   <p className="text-dark message-title mb-1">
                                                     {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
@@ -963,6 +1004,13 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                   <div className="message-inner">
                                       <div className="message-body">
                                           <div className="message-content">
+                                              {(new RegExp(youtubeRegex)).test(data?.response)? 
+                                                <div className="message-gallery mx-2 rounded-3 overflow-hidden">
+                                                  {/* onReady={}  */}
+                                                  <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
+                                                </div>
+                                                : null
+                                              }
                                               <div className="message-text">
                                                   <p className="text-dark message-title mb-1">
                                                     {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
@@ -1039,7 +1087,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                           readOnly={(ticket[0].status.status === "Closed")? true : false}
                           editorState={editorState}
                           toolbar={{
-                            options: ["emoji", "inline", "image"],
+                            options: ["emoji", "inline", "image", "link"],
 
                             inline: {
                               inDropdown: false,
@@ -1073,20 +1121,24 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                 width: "auto",
                               },
                             },
+                            
                             emoji: {
                               icon: Smiley,
                             },
                             blockType: {
                               inDropdown: true,
                             },
-
+                            link: {
+                              inDropdown: false,
+                              showOpenOptionOnHover: true,
+                              defaultTargetOption: '_blank',
+                              options: ['link', 'unlink'],
+                              link: { icon: LinkImg, className: undefined },
+                              unlink: { className: undefined },
+                            },
                             list: {
                               inDropdown: true,
                             },
-                            link: {
-                              inDropdown: true,
-                            },
-
                             history: {
                               inDropdown: true,
                             },
@@ -1136,9 +1188,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
             <div>
               <TicketTimeline UserInfo={UserInfo} ticket={[currentTicket]} isTicketDetails={true} timeLine={true}  />
             </div> {/* END OF THIRD COLUMN */}
-
-
-
           </div>}
         <Modal show={openSaveTicketModal} onHide={closeSaveTicketModal} centered scrollable dialogClassName="modal-mw-520">
           <Modal.Body className="p-2">
