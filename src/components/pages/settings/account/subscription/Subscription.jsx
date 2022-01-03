@@ -18,6 +18,7 @@ const Subscription = () => {
     const [domain] = useState(window.localStorage.getItem('domain'));
     const [tenantInfo, setTenantInfo] = useState(null);
     const [subscription, setSubscription] = useState(null);
+    const [paymentHistory, setPaymentHistory] = useState(null);
 
     const [planState,
         setPlanState] = useState({
@@ -52,7 +53,17 @@ const Subscription = () => {
         }
     }
 
-    
+    const getPaymentHistory = async () => {
+        const res = await httpGet(`subscriptions/payment/history/${tenantId}`);
+        console.log('PAYMENT HISTORY RESPONSE => ', res);
+        if (res
+            ?.status === "success") {
+            setPlan(res
+                ?.data);
+        } else {
+            setPlan({})
+        }
+    }
 
     const getTenantInfo = async () => {
         const res = await httpGet(`auth/tenant-info/${domain}`);
@@ -68,6 +79,7 @@ const Subscription = () => {
         getPlan();
         getTenantInfo();
         getSubscription();
+        getPaymentHistory();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
