@@ -1,7 +1,10 @@
 // @ts-nocheck
 import {Table} from 'react-bootstrap';
+import moment from 'moment';
 
-const PaymentHistory = () => {
+const PaymentHistory = ({paymentHistory}) => {
+
+    console.log('Payment History => ', paymentHistory);
 
     return (
         <div className="paymnt-hist">
@@ -14,27 +17,17 @@ const PaymentHistory = () => {
                         <th>Plan</th>
                         <th>User</th>
                         <th>Amount</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>May 10, 2020</td>
-                        <td>Free</td>
-                        <td>15</td>
-                        <td>$700</td>
-                    </tr>
-                    <tr>
-                        <td>May 10, 2020</td>
-                        <td>Free</td>
-                        <td>15</td>
-                        <td>$700</td>
-                    </tr>
-                    <tr>
-                        <td>May 10, 2020</td>
-                        <td>Free</td>
-                        <td>15</td>
-                        <td>$700</td>
-                    </tr>
+                    {Array.isArray(paymentHistory) && paymentHistory.map(payment => <tr>
+                        <td>{moment(payment?.created_at || '').format("DD MMM, YYYY")}</td>
+                        <td>Alpha Plan</td>
+                        <td>{payment?.no_of_users}</td>
+                        <td>{payment?.amount} {payment?.currency}</td>
+                        <td>{payment?.status}</td>
+                    </tr>) }
                 </tbody>
             </Table>
         </div>
