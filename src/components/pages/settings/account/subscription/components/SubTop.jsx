@@ -16,7 +16,7 @@ export const getRealCurrency = currency => {
             return ""
     }
 }
-const SubTop = ({plan, tenantInfo}) => {
+const SubTop = ({plan, tenantInfo, subscription}) => {
 
 
     return (
@@ -49,7 +49,7 @@ const SubTop = ({plan, tenantInfo}) => {
                 <div><AccountIdIcon/></div>
                 <div>
                     <span>No of Users</span>
-                    <span>{Object.keys(plan)?.length === 0 ? '0' : ''}</span>
+                    <span>{subscription === null ? '...' : (subscription?.no_of_users || 0)}</span>
                 </div>
             </div>
 

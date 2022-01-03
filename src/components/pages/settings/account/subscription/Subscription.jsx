@@ -17,6 +17,8 @@ const Subscription = () => {
     const [tenantId] = useState(window.localStorage.getItem('tenantId'));
     const [domain] = useState(window.localStorage.getItem('domain'));
     const [tenantInfo, setTenantInfo] = useState(null);
+    const [subscription, setSubscription] = useState(null);
+
     const [planState,
         setPlanState] = useState({
             numOfAgents: 0, 
@@ -39,6 +41,19 @@ const Subscription = () => {
         }
     }
 
+    const getSubscription = async () => {
+        const res = await httpGet(`subscriptions/${tenantId}`);
+        if (res
+            ?.status === "success") {
+            setSubscription(res
+                ?.data);
+        } else {
+            setSubscription({})
+        }
+    }
+
+    
+
     const getTenantInfo = async () => {
         const res = await httpGet(`auth/tenant-info/${domain}`);
         if (res
@@ -52,6 +67,7 @@ const Subscription = () => {
     useEffect(() => {
         getPlan();
         getTenantInfo();
+        getSubscription();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -76,7 +92,7 @@ const Subscription = () => {
                     </div>
 
                     <div>
-                        <SubTop plan={plan} tenantInfo={tenantInfo} />
+                        <SubTop plan={plan} tenantInfo={tenantInfo} subscription={subscription} />
                     </div>
 
                     {true

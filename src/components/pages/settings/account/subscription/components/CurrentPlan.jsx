@@ -3,7 +3,7 @@ import Select from "react-select";
 import {getRealCurrency} from './SubTop';
 import {useState, useEffect} from 'react';
 import {httpPost} from '../../../../../../helpers/httpMethods';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+// import ScaleLoader from 'react-spinners/ScaleLoader';
 
 const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
     const [initiating, setInitiating] = useState(false);
