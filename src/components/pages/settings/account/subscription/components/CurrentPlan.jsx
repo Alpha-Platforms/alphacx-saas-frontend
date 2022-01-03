@@ -9,7 +9,6 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
     const [initiating, setInitiating] = useState(false);
 
     const handlePlanChange = option => {
-        console.log('Selected option => ', option);
         setPlanState(prev => ({
             ...prev,
             selectedPlan: option
@@ -42,7 +41,7 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
         if (initPaymentRes
             ?.status === "success") {
 
-            console.log('INITIATE PAYMENT RESPONSE => ', initPaymentRes);
+            // console.log('INITIATE PAYMENT RESPONSE => ', initPaymentRes);
 
             setPlanState(prev => ({...prev, isUpdatingPlan: true}))
 

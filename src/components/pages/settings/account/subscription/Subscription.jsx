@@ -43,7 +43,6 @@ const Subscription = () => {
         const res = await httpGet(`auth/tenant-info/${domain}`);
         if (res
             ?.status === "success") {
-            console.log('TENANT INFO => ', res);
             setTenantInfo(res?.data);
         } else {
             setTenantInfo({})
@@ -56,7 +55,6 @@ const Subscription = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    console.log('PLAN STATE => ', planState);
 
     useEffect(() => {
         if (plan && Object.keys(plan || {}).length !== 0) {
@@ -67,8 +65,6 @@ const Subscription = () => {
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [plan]);
-
-    console.log('PLAN => ', plan)
 
     return (
         <Fragment>

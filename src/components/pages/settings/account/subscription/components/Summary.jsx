@@ -25,24 +25,17 @@ const CheckoutForm = ({setIsVerifying, setPlanState}) => {
             return;
         }
 
-        /* const {error, paymentMethod, token} = await stripe.createPaymentMethod({
+        const stripeRes = await stripe.createPaymentMethod({
         type: 'card',
         card: elements.getElement(CardElement),
-        }); */
+        });
 
-        const cardElement = elements.getElement(CardElement);
+        /* const { error, token } = await stripe.createToken(elements.getElement(CardElement)); */
 
-        const { error, token } = await stripe.createToken(cardElement);
-
-        /* console.log('STRIPE Error => ', error);
-        console.log('STRIPE paymentMethod => ', paymentMethod);
-        console.log('STRIPE token => ', token) */
-
-        if (!error) {
-
-            console.log('STRIPE TOKEN => ', token);
+        if (!stripeRes?.error) {
+            // console.log('STRIPE RESPONSE => ', stripeRes);
             setIsVerifying(true);
-            const verifyPaymentRes = await httpPost(`subscriptions/verify-payment`, token);
+            const verifyPaymentRes = await httpPost(`subscriptions/verify-payment`, stripeRes?.paymentMethod);
             setIsVerifying(false);
 
             if (verifyPaymentRes?.status === "success") {
@@ -50,9 +43,8 @@ const CheckoutForm = ({setIsVerifying, setPlanState}) => {
                 setPlanState(prev => ({...prev, isUpdatingPlan: false,
                 stripeConfig: null}));
             }
-            
             } else {
-            console.log(error);
+            console.log(stripeRes?.error);
             }
     };
 
@@ -70,7 +62,6 @@ const FlutterWaveAction = ({config, isVerifying, setIsVerifying, setPlanState}) 
 
     // use flutterwave react hook
     const handleFlutterPayment = useFlutterwave(config);
-    // console.log('From flutterwave action');
 
     return <Fragment>
         <button onClick={() => {
@@ -78,7 +69,6 @@ const FlutterWaveAction = ({config, isVerifying, setIsVerifying, setPlanState}) 
                 callback: async (response) => {
                     closePaymentModal() // this will close the modal programmatically
 
-                    console.log('FLUTTEWAVE RESPONSE => ', response);
 
                     if (response?.status === "successful") {
                         setIsVerifying(true);
@@ -177,7 +167,7 @@ const Summary = ({planState, setPlanState, plan, tenantInfo}) => {
                 {planState.flutterwaveConfig && <FlutterWaveAction isVerifying={isVerifying} setIsVerifying={setIsVerifying} config={planState.flutterwaveConfig} setPlanState={setPlanState} />}
             </div>
             <div>
-                {planState.stripeConfig && <Elements stripe={loadStripe(planState.stripeConfig?.STRIPE_PUBLIC_KEY)}>
+                {planState.stripeConfig && <Elements stripe={loadStripe(planState.stripeConfig?.STRIPE_PUBLIC_KEY)} options={{ clientSecret: planState.stripeConfig?.clientSecret }}>
                     <CheckoutForm setIsVerifying={setIsVerifying} setPlanState={setPlanState} />
                 </Elements>}
             </div>
