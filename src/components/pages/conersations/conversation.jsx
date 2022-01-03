@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React, { useState, useEffect, useContext, Fragment } from "react";
 import {connect} from 'react-redux';
+import axios from 'axios';
 //
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
@@ -62,6 +63,7 @@ import {
   SendMsgIcon,
   ExpandChat,
 } from "../../../assets/images/svgs";
+import {config} from '../../../config/keys';
 import { dateFormater } from "../../helpers/dateFormater";
 import { capitalize } from "@material-ui/core";
 import moment from "moment";
@@ -762,6 +764,7 @@ function Conversation({user, ...props}) {
 
     // Make sure you have a uploadImages: [] as your default state
     let uploadedImages = [];
+    let imgUrl = "";
 
     const imageObject = {
       file: file,
@@ -769,17 +772,27 @@ function Conversation({user, ...props}) {
     };
 
     uploadedImages.push(imageObject);
-    // console.log(imageObject);
 
     //this.setState(uploadedImages: uploadedImages)
-
     // We need to return a promise with the image src
     // the img src we will use here will be what's needed
     // to preview it in the browser. This will be different than what
     // we will see in the index.md file we generate.
     return new Promise((resolve, reject) => {
-      resolve({ data: { link: imageObject.localSrc } });
-    });
+      const data = new FormData();
+      data.append('file', file);
+      data.append('upload_preset', config.cloudinaryUploadPreset);
+      data.append('cloud_name', config.cloudinaryCloudName);
+      axios.post(`${config.cloudinaryBaseUrl}/image/upload`, data)
+        .then(async res => {
+          // console.log(res.data?.url);
+          imageObject.src = res.data?.url;
+          resolve({ data: { link: res.data?.url } });
+        })
+        .catch(err => {
+            NotificationManager.error("Photo could not be uploaded", "Error");
+        });
+      });
   };
 
   function scollPosSendMsg(e) {
@@ -1219,7 +1232,7 @@ function Conversation({user, ...props}) {
                             popupClassName: undefined,
                             urlEnabled: true,
                             uploadEnabled: true,
-                            alignmentEnabled: true,
+                            alignmentEnabled: "LEFT",
                             uploadCallback: _uploadImageCallBack,
                             previewImage: true,
                             inputAccept:
@@ -1227,7 +1240,7 @@ function Conversation({user, ...props}) {
                             alt: { present: false, mandatory: false },
                             defaultSize: {
                               height: "auto",
-                              width: "auto",
+                              width: "100%",
                             },
                           },
                           emoji: {
