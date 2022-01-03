@@ -181,6 +181,7 @@ function Conversation({user, ...props}) {
   const [addHist, setAddHist] = useState(false);
   // scroll position
   const [scrollPosition, setScrollPosition] = useState("#lastMsg");
+  const [editorUploadImg, setEditorUploadImg] = useState("");
   // 
   const location = useLocation();
   // youtube player options
@@ -455,10 +456,15 @@ function Conversation({user, ...props}) {
       setMentions(()=>[ ...agentMentions]);
     }
 
+    let plainTextContent = reply.plainText;
+    if(reply.plainText == '\n \n') {
+      plainTextContent =  editorUploadImg;
+    }
+
     const data = {
       type: type,
       response: reply.richText,
-      plainResponse: reply.plainText,
+      plainResponse: plainTextContent,
       phoneNumber: singleTicketFullInfo.customer.phone_number,
       "mentions": agentMentions
       // attachment: "",
@@ -467,11 +473,12 @@ function Conversation({user, ...props}) {
       type: type,
       attachment: null,
       created_at: new Date(),
-      plain_response: reply.plainText,
+      plain_response: plainTextContent,
       response: reply.richText,
       user: user,
       "mentions": agentMentions
     };
+
     const res = await httpPostMain(
       `tickets/${singleTicketFullInfo.id}/replies`,
       data
@@ -481,6 +488,7 @@ function Conversation({user, ...props}) {
       ticket[0]?.channel !== "livechat" && setMsgHistory((item) => [...item, replyData]);
       scrollPosSendMsgList();
       setEditorState(initialState);
+      setEditorUploadImg("");
       setReplyTicket({ plainText: "", richText: "" });
       // emit ws_tickets event on reply
       let channelData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
@@ -780,13 +788,15 @@ function Conversation({user, ...props}) {
     // we will see in the index.md file we generate.
     return new Promise((resolve, reject) => {
       const data = new FormData();
+
       data.append('file', file);
-      data.append('upload_preset', config.cloudinaryUploadPreset);
-      data.append('cloud_name', config.cloudinaryCloudName);
-      axios.post(`${config.cloudinaryBaseUrl}/image/upload`, data)
+      data.append('upload_preset', process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET);
+      data.append('cloud_name', process.env.REACT_APP_CLOUDINARY_CLOUD_NAME);
+      axios.post(`${process.env.REACT_APP_CLOUDINARY_BASE_URL}/image/upload`, data)
         .then(async res => {
           // console.log(res.data?.url);
           imageObject.src = res.data?.url;
+          setEditorUploadImg(ReplyTicket.plainText + editorUploadImg + res.data?.url);
           resolve({ data: { link: res.data?.url } });
         })
         .catch(err => {
