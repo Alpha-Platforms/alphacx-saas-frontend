@@ -139,8 +139,8 @@ export default function MessageList({
                 <div className="msg-badges">
                   <div
                     style={{
-                      background: getChannelColor(data.channel, "background"),
-                      color: getChannelColor(data.channel),
+                      "background": `"${getChannelColor(data.channel, "background")}"`,
+                      "color": `"${getChannelColor(data.channel)}"`,
                     }}
                   >
                     {data.channel}
@@ -148,8 +148,8 @@ export default function MessageList({
 
                   <div
                     style={{
-                      background: data.status.background_color,
-                      color: data.status.forecolor,
+                      "background": `"${data.status.background_color}"`,
+                      "color": `"${data.status.forecolor}"`,
                     }}
                   >
                     {data.status.status}

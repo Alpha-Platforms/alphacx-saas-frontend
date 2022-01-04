@@ -1,6 +1,7 @@
 // @ts-nocheck
 import React, { useState, useEffect, useContext, Fragment } from "react";
 import {connect} from 'react-redux';
+import axios from 'axios';
 //
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
@@ -62,6 +63,7 @@ import {
   SendMsgIcon,
   ExpandChat,
 } from "../../../assets/images/svgs";
+import {config} from '../../../config/keys';
 import { dateFormater } from "../../helpers/dateFormater";
 import { capitalize } from "@material-ui/core";
 import moment from "moment";
@@ -179,6 +181,7 @@ function Conversation({user, ...props}) {
   const [addHist, setAddHist] = useState(false);
   // scroll position
   const [scrollPosition, setScrollPosition] = useState("#lastMsg");
+  const [editorUploadImg, setEditorUploadImg] = useState("");
   // 
   const location = useLocation();
   // youtube player options
@@ -453,10 +456,15 @@ function Conversation({user, ...props}) {
       setMentions(()=>[ ...agentMentions]);
     }
 
+    let plainTextContent = reply.plainText;
+    if(reply.plainText == '\n \n') {
+      plainTextContent =  editorUploadImg;
+    }
+
     const data = {
       type: type,
       response: reply.richText,
-      plainResponse: reply.plainText,
+      plainResponse: plainTextContent,
       phoneNumber: singleTicketFullInfo.customer.phone_number,
       "mentions": agentMentions
       // attachment: "",
@@ -465,11 +473,12 @@ function Conversation({user, ...props}) {
       type: type,
       attachment: null,
       created_at: new Date(),
-      plain_response: reply.plainText,
+      plain_response: plainTextContent,
       response: reply.richText,
       user: user,
       "mentions": agentMentions
     };
+
     const res = await httpPostMain(
       `tickets/${singleTicketFullInfo.id}/replies`,
       data
@@ -479,6 +488,7 @@ function Conversation({user, ...props}) {
       ticket[0]?.channel !== "livechat" && setMsgHistory((item) => [...item, replyData]);
       scrollPosSendMsgList();
       setEditorState(initialState);
+      setEditorUploadImg("");
       setReplyTicket({ plainText: "", richText: "" });
       // emit ws_tickets event on reply
       let channelData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
@@ -762,6 +772,7 @@ function Conversation({user, ...props}) {
 
     // Make sure you have a uploadImages: [] as your default state
     let uploadedImages = [];
+    let imgUrl = "";
 
     const imageObject = {
       file: file,
@@ -769,17 +780,29 @@ function Conversation({user, ...props}) {
     };
 
     uploadedImages.push(imageObject);
-    // console.log(imageObject);
 
     //this.setState(uploadedImages: uploadedImages)
-
     // We need to return a promise with the image src
     // the img src we will use here will be what's needed
     // to preview it in the browser. This will be different than what
     // we will see in the index.md file we generate.
     return new Promise((resolve, reject) => {
-      resolve({ data: { link: imageObject.localSrc } });
-    });
+      const data = new FormData();
+
+      data.append('file', file);
+      data.append('upload_preset', process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET);
+      data.append('cloud_name', process.env.REACT_APP_CLOUDINARY_CLOUD_NAME);
+      axios.post(`${process.env.REACT_APP_CLOUDINARY_BASE_URL}/image/upload`, data)
+        .then(async res => {
+          // console.log(res.data?.url);
+          imageObject.src = res.data?.url;
+          setEditorUploadImg(ReplyTicket.plainText + editorUploadImg + res.data?.url);
+          resolve({ data: { link: res.data?.url } });
+        })
+        .catch(err => {
+            NotificationManager.error("Photo could not be uploaded", "Error");
+        });
+      });
   };
 
   function scollPosSendMsg(e) {
@@ -1001,17 +1024,17 @@ function Conversation({user, ...props}) {
                                   <div className="message-inner">
                                       <div className="message-body">
                                           <div className="message-content">
-                                              {(new RegExp(youtubeRegex)).test(data?.response)? 
-                                                <div className="message-gallery mx-2 rounded-3 overflow-hidden">
-                                                  {/* onReady={}  */}
-                                                  <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
-                                                </div>
-                                                : null
-                                              }
                                               <div className="message-text">
                                                   <p className="text-dark message-title mb-1">
                                                     {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
                                                   </p>
+                                                  {(new RegExp(youtubeRegex)).test(data?.response)? 
+                                                    <div className="message-gallery mx-2 rounded-3 overflow-hidden">
+                                                      {/* onReady={}  */}
+                                                      <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
+                                                    </div>
+                                                    : null
+                                                  }
                                                   { ticket[0]?.channel == "email" && data?.user?.role == "Customer"? 
                                                       <div className="message-text-content">
                                                         <ReactMarkdown children={data?.response.replace("<p>", "").replace("</p>", "")} remarkPlugins={[remarkGfm]} />
@@ -1071,17 +1094,17 @@ function Conversation({user, ...props}) {
                                   <div className="message-inner">
                                       <div className="message-body">
                                           <div className="message-content">
-                                              {(new RegExp(youtubeRegex)).test(data?.response)? 
-                                                <div className="message-gallery mx-2  rounded-3 overflow-hidden">
-                                                  {/* onReady={}  */}
-                                                  <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
-                                                </div>
-                                                : null
-                                              }
                                               <div className="message-text">
                                                   <p className="text-dark message-title mb-1">
                                                     {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
                                                   </p>
+                                                  {(new RegExp(youtubeRegex)).test(data?.response)? 
+                                                    <div className="message-gallery mx-2  rounded-3 overflow-hidden">
+                                                      {/* onReady={}  */}
+                                                      <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
+                                                    </div>
+                                                    : null
+                                                  }
                                                   { ticket[0]?.channel == "email" && data?.user?.role == "Customer"? 
                                                       <div className="message-text-content">
                                                         <ReactMarkdown children={data?.response.replace("<p>", "").replace("</p>", "")} remarkPlugins={[remarkGfm]} />
@@ -1140,17 +1163,17 @@ function Conversation({user, ...props}) {
                                   <div className="message-inner">
                                       <div className="message-body">
                                           <div className="message-content">
-                                              {(new RegExp(youtubeRegex)).test(data?.response)? 
-                                                <div className="message-gallery mx-2 rounded-3 overflow-hidden">
-                                                  {/* onReady={}  */}
-                                                  <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
-                                                </div>
-                                                : null
-                                              }
                                               <div className="message-text">
                                                   <p className="text-dark message-title mb-1">
                                                     {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
                                                   </p>
+                                                  {(new RegExp(youtubeRegex)).test(data?.response)? 
+                                                    <div className="message-gallery mx-2 rounded-3 overflow-hidden">
+                                                      {/* onReady={}  */}
+                                                      <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
+                                                    </div>
+                                                    : null
+                                                  }
                                                   { ticket[0]?.channel == "email" && data?.user?.role == "Customer"? 
                                                       <div className="message-text-content">
                                                         <ReactMarkdown children={data?.response.replace("<p>", "").replace("</p>", "")} remarkPlugins={[remarkGfm]} />
@@ -1219,7 +1242,7 @@ function Conversation({user, ...props}) {
                             popupClassName: undefined,
                             urlEnabled: true,
                             uploadEnabled: true,
-                            alignmentEnabled: true,
+                            alignmentEnabled: "LEFT",
                             uploadCallback: _uploadImageCallBack,
                             previewImage: true,
                             inputAccept:
@@ -1227,7 +1250,7 @@ function Conversation({user, ...props}) {
                             alt: { present: false, mandatory: false },
                             defaultSize: {
                               height: "auto",
-                              width: "auto",
+                              width: "100%",
                             },
                           },
                           emoji: {
