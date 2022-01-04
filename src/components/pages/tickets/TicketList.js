@@ -25,6 +25,47 @@ import { ReactComponent as StarYellowSvg } from "../../../assets/icons/Star-yell
 import { NotificationManager } from 'react-notifications';
 import { httpDeleteMain, httpDelete, httpGetMain } from './../../../helpers/httpMethods';
 // import Dropdown from 'react-multilevel-dropdown';
+import Dropdown, {
+  DropdownToggle,
+  DropdownMenu,
+  DropdownMenuWrapper,
+  MenuItem,
+  DropdownButton
+} from '@trendmicro/react-dropdown';
+
+// Be sure to include styles at some point, probably during your bootstraping
+import '@trendmicro/react-buttons/dist/react-buttons.css';
+import '@trendmicro/react-dropdown/dist/react-dropdown.css';
+// import { Button, ButtonGroup, ButtonToolbar } from '@trendmicro/react-buttons';
+
+const ExportDropdown = ({handlePDFExport, handleCSVExport}) => {
+  const [exportMenuOpen, setExportMenuOpen] = useState(false);
+
+
+  return <Dropdown id="export-dropdown-main" className="ticket-export-dropdown">
+  <DropdownToggle onClick={() => setExportMenuOpen(!exportMenuOpen)}><SaveAlt /></DropdownToggle>
+  <DropdownMenu className="export-dd-menu" style={{ display: exportMenuOpen ? "block" : "none" }} onMouseLeave={() => setExportMenuOpen(false) }>
+      <MenuItem className="export-dd-child">
+        Export Selected Tickets
+          <MenuItem onClick={() => handlePDFExport('selected')}>
+              As PDF
+          </MenuItem>
+          <MenuItem onClick={() => handleCSVExport('selected')}>
+            AS CSV
+          </MenuItem>
+      </MenuItem>
+      <MenuItem className="export-dd-child">
+          Export All Ticket
+          <MenuItem onClick={() => handlePDFExport('all')}>
+              As PDF
+          </MenuItem>
+          <MenuItem onClick={() => handleCSVExport('all')}>
+              AS CSV
+          </MenuItem>
+      </MenuItem>
+  </DropdownMenu>
+</Dropdown>
+}
 
 const TicketList = ({
   isTicketsLoaded,
@@ -38,6 +79,7 @@ const TicketList = ({
   const [changingRow, setChangingRow] = useState(false);
   const [rowsSelected, setRowsSelected] = useState([]);
   const [loading, setLoading] = useState(false);
+  
 
   let selectedRows = [];
 
@@ -396,13 +438,11 @@ const TicketList = ({
     deleteBtnWrapper.classList.add('d-none');
   })
 
-  console.log('SESELECTED ROW => ', selectedRows);
 
   const handleDeleteTicket = async () => {
     // const deleteBtnWrapper = window.document.querySelector('#delete-btn-wrapper');
     const selectedRowCount = window.document.querySelector('#selected-row-count');
     // const ticketDeleteBtn = window.document.querySelector('#ticket-delete-btn');
-    // console.log('SELECTED ROWS => ', selectedRows);
 
     // setRowsSelected([]);
     if (selectedRows.length > 0) {
@@ -428,7 +468,6 @@ const TicketList = ({
       } else {
 
         const ticketIds = selectedRows.map(row => row.ticketUid);
-        // console.log('Ticket ids => ', ticketIds);
 
         const reqBody = { ids: ticketIds }
 
@@ -474,6 +513,7 @@ const TicketList = ({
         >
 
           <div className="btn-toolbar mb-md-0">
+            <ExportDropdown handlePDFExport={handlePDFExport} handleCSVExport={handleCSVExport} />
             {/* <Dropdown id="export-dropdown-main">
               <Dropdown.Toggle
                 id="export-dropdown"
@@ -508,7 +548,7 @@ const TicketList = ({
                 </Dropdown.Submenu>
               </Dropdown.Item>
               <Dropdown.Item>
-                Export All Tickets
+                Export All Ticketss
                 <Dropdown.Submenu position="right">
                   <Dropdown.Item onClick={() => handlePDFExport('all')}>
                     As PDF

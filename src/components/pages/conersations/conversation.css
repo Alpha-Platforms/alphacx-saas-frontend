@@ -4,6 +4,11 @@
   margin: 0;
 }
 
+.codei-ui-andy-setDefaults img{
+  max-width: 100% !important;
+  max-height: 300px !important;
+}
+
 .codei-ui-andy-setDefaults button {
   border: 0 !important;
 }
@@ -1329,6 +1334,12 @@ select {
   align-items: start;
   /* flex-direction: row-reverse; */
 }
+
+.message.message-out .message-text img{
+  max-width: 260px !important;
+  max-height: 100% !important;
+}
+
 .message-gallery,
 .message-text {
   overflow: hidden;
