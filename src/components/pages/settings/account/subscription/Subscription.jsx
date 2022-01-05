@@ -30,9 +30,6 @@ const Subscription = () => {
             stripeConfig: null,
             loading: false
         });
-    
-    console.log("PLAN STATE => ", planState);
-    console.log('PLAN => ', plan);
 
     const getPlan = async () => {
         const res = await httpGet(`subscriptions/plans/${tenantId}`);
@@ -58,7 +55,6 @@ const Subscription = () => {
 
     const getPaymentHistory = async () => {
         const res = await httpGet(`subscriptions/payment/history/${tenantId}`);
-        console.log('PAYMENT HISTORY RESPONSE => ', res);
         if (res
             ?.status === "success") {
             setPaymentHistory(res
