@@ -36,7 +36,7 @@ const Subscription = () => {
         if (res
             ?.status === "success") {
             setPlan(res
-                ?.data);
+                ?.data[0]);
         } else {
             setPlan({})
         }

@@ -4,8 +4,6 @@ import moment from 'moment';
 
 const PaymentHistory = ({paymentHistory}) => {
 
-    console.log('Payment History => ', paymentHistory);
-
     return (
         <div className="paymnt-hist">
             <h5>Payment History</h5>
