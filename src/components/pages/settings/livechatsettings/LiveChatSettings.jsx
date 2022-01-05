@@ -74,7 +74,7 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
                     setLoading(false);
                 }
             }, () => {
-                console.log('No agents found')
+                // No agent found
                 setLoading(false);
             });
         }
@@ -86,16 +86,16 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    // console.log('Settings => ', settings);
-
     const handleScriptCopy = () => {
         const {title, description, initialText, domains, theme, tenantDomain} = settings;
 
         if (!title || !description || !initialText || !domains || !theme || !tenantDomain) {
             NotificationManager.error('Please, fill all fields', 'Opps')
         } else {
-            copy(`${embedText}`);
-            NotificationManager.success('', 'Copied', 4000);
+            const encryptedSettings = simpleCrypto.encrypt(JSON.stringify(settings));
+            copy(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
+            <script>ACX.createLiveChatWidget({payload: '${encryptedSettings}'});</script>`);
+            NotificationManager.success('', 'Copied', 3000);
         }
     }
 
