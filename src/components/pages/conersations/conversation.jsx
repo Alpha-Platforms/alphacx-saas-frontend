@@ -52,9 +52,9 @@ import boldB from "../../../assets/imgF/boldB.png";
 import TextItalic from "../../../assets/imgF/TextItalic.png";
 import TextUnderline from "../../../assets/imgF/TextUnderline.png";
 import LinkImg from "../../../assets/imgF/insertLink.png";
-import TextAlignLeft from "../../../assets/imgF/TextAlignLeft.png";
-import TextAlignCenter from "../../../assets/imgF/TextAlignCenter.png";
-import TextAlignRight from "../../../assets/imgF/TextAlignRight.png";
+// import TextAlignLeft from "../../../assets/imgF/TextAlignLeft.png";
+// import TextAlignCenter from "../../../assets/imgF/TextAlignCenter.png";
+// import TextAlignRight from "../../../assets/imgF/TextAlignRight.png";
 import UserProfile from "./userProfile";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 import { SocketDataContext } from "../../../context/socket";
@@ -63,7 +63,7 @@ import {
   SendMsgIcon,
   ExpandChat,
 } from "../../../assets/images/svgs";
-import {config} from '../../../config/keys';
+// import {config} from '../../../config/keys';
 import { dateFormater } from "../../helpers/dateFormater";
 import { capitalize } from "@material-ui/core";
 import moment from "moment";
@@ -103,8 +103,8 @@ function Conversation({user, ...props}) {
   ]);
 
   const { AppSocket } = useContext(SocketDataContext);
-  const { loading } = useContext(UserDataContext);
-  const [loadSelectedMsg, setloadSelectedMsg] = useState("");
+  // const { loading } = useContext(UserDataContext);
+  // const [loadSelectedMsg, setloadSelectedMsg] = useState("");
   const [tickets, setTickets] = useState([]);
   const [filterTicketsState, setFilterTicketsState] = useState([]);
   const [ticket, setTicket] = useState([]);
@@ -119,7 +119,7 @@ function Conversation({user, ...props}) {
   const [firstTimeLoad, setfirstTimeLoad] = useState(true);
   const [MessageSenderId, setMessageSenderId] = useState("");
   const [ticketId, setTicketId] = useState("");
-  const [showUserProfile, setshowUserProfile] = useState(false);
+  // const [showUserProfile, setshowUserProfile] = useState(false);
   // 
   const [ReplyTicket, setReplyTicket] = useState({
     plainText: "",
@@ -1250,7 +1250,7 @@ function Conversation({user, ...props}) {
                             alt: { present: false, mandatory: false },
                             defaultSize: {
                               height: "auto",
-                              width: "100%",
+                              width: "300px",
                             },
                           },
                           emoji: {
