@@ -151,6 +151,26 @@
     box-shadow: none;
 }
 
+#export-dropdown-main.ticket-export-dropdown {
+    /* border: 1px solid green !important; */
+}
+
+#export-dropdown-main.ticket-export-dropdown > button:nth-of-type(1) > span {
+    display: none;
+}
+
+#export-dropdown-main.ticket-export-dropdown > button:nth-of-type(1):hover {
+    background: transparent !important;
+}
+
+#export-dropdown-main .export-dd-menu {
+    border-width: 0 !important;
+}
+
+#export-dropdown-main .export-dd-child > div:nth-child(2) {
+    border-width: 0 !important;
+}
+
 .ticket-export-btn {
     border: none !important;
     margin-left: 0 !important;

@@ -1,5 +1,6 @@
 // @ts-nocheck
 import {useState, Fragment, useEffect, useContext} from 'react';
+import axios from 'axios';
 // bootstrap components
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -194,6 +195,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     const [customFieldConfig, setCustomFieldConfig] = useState([]);
     const [customFieldsGroup, setCustomFieldsGroup] = useState([]);
     const [customFieldIsSet, setCustomFieldIsSet] = useState(false);
+     const [editorUploadImg, setEditorUploadImg] = useState("");
     // youtube player options
     const youtubePlayerOptions = {
         height: '180',
@@ -389,10 +391,16 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         
         setMentions(()=>[ ...agentMentions]);
       }
+
+      let plainTextContent = reply.plainText;
+      if(reply.plainText == '\n \n') {
+        plainTextContent =  editorUploadImg;
+      }
+
       const data = {
         type: type,
         response: reply.richText,
-        plainResponse: reply.plainText,
+        plainResponse: plainTextContent,
         phoneNumber: currentTicket.customer.phone_number,
         // attachment: "",
         "mentions": agentMentions
@@ -401,7 +409,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       const replyData = {
         attachment: null,
         created_at: new Date(),
-        plain_response: reply.plainText,
+        plain_response: plainTextContent,
         response: reply.richText,
         type: type,
         user: user,
@@ -414,6 +422,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       );
       if (res?.status === "success") {
         setEditorState(initialState);
+        setEditorUploadImg("");
         setReplyTicket({ plainText: "", richText: "" });
         // emit ws_tickets event on reply
         AppSocket.createConnection();
@@ -690,7 +699,6 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       };
   
       uploadedImages.push(imageObject);
-      console.log(imageObject);
   
       //this.setState(uploadedImages: uploadedImages)
   
@@ -699,7 +707,21 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       // to preview it in the browser. This will be different than what
       // we will see in the index.md file we generate.
       return new Promise((resolve, reject) => {
-        resolve({ data: { link: imageObject.localSrc } });
+      const data = new FormData();
+
+      data.append('file', file);
+      data.append('upload_preset', process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET);
+      data.append('cloud_name', process.env.REACT_APP_CLOUDINARY_CLOUD_NAME);
+      axios.post(`${process.env.REACT_APP_CLOUDINARY_BASE_URL}/image/upload`, data)
+        .then(async res => {
+          // console.log(res.data?.url);
+          imageObject.src = res.data?.url;
+          setEditorUploadImg(ReplyTicket.plainText + editorUploadImg + res.data?.url);
+          resolve({ data: { link: res.data?.url } });
+        })
+        .catch(err => {
+            NotificationManager.error("Photo could not be uploaded", "Error");
+        });
       });
     };
 
@@ -869,17 +891,17 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                   <div className="message-inner">
                                       <div className="message-body">
                                           <div className="message-content">
-                                              {(new RegExp(youtubeRegex)).test(data?.response)? 
-                                                <div className="message-gallery mx-2 rounded-3 overflow-hidden">
-                                                  {/* onReady={}  */}
-                                                  <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
-                                                </div>
-                                                : null
-                                              }
                                               <div className="message-text">
                                                   <p className="text-dark message-title mb-1">
                                                     {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
                                                   </p>
+                                                  {(new RegExp(youtubeRegex)).test(data?.response)? 
+                                                    <div className="message-gallery mx-2 rounded-3 overflow-hidden">
+                                                      {/* onReady={}  */}
+                                                      <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
+                                                    </div>
+                                                    : null
+                                                  }
                                                   { ticket[0]?.channel == "email" && data?.user?.role == "Customer"? 
                                                       <div className="message-text-content">
                                                         <ReactMarkdown children={data?.response.replace("<p>", "").replace("</p>", "")} remarkPlugins={[remarkGfm]} />
@@ -937,17 +959,17 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                   <div className="message-inner">
                                       <div className="message-body">
                                           <div className="message-content">
-                                              {(new RegExp(youtubeRegex)).test(data?.response)? 
-                                                <div className="message-gallery mx-2 rounded-3 overflow-hidden">
-                                                  {/* onReady={}  */}
-                                                  <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
-                                                </div>
-                                                : null
-                                              }
                                               <div className="message-text">
                                                   <p className="text-dark message-title mb-1">
                                                     {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
                                                   </p>
+                                                  {(new RegExp(youtubeRegex)).test(data?.response)? 
+                                                    <div className="message-gallery mx-2 rounded-3 overflow-hidden">
+                                                      {/* onReady={}  */}
+                                                      <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
+                                                    </div>
+                                                    : null
+                                                  }
                                                   { ticket[0]?.channel == "email" && data?.user?.role == "Customer"? 
                                                       <div className="message-text-content">
                                                         <ReactMarkdown children={data?.response.replace("<p>", "").replace("</p>", "")} remarkPlugins={[remarkGfm]} />
@@ -1004,17 +1026,17 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                                   <div className="message-inner">
                                       <div className="message-body">
                                           <div className="message-content">
-                                              {(new RegExp(youtubeRegex)).test(data?.response)? 
-                                                <div className="message-gallery mx-2 rounded-3 overflow-hidden">
-                                                  {/* onReady={}  */}
-                                                  <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
-                                                </div>
-                                                : null
-                                              }
                                               <div className="message-text">
                                                   <p className="text-dark message-title mb-1">
                                                     {`${(data?.user?.firstname) ? capitalize(data?.user?.firstname) : ""} ${(data?.user?.lastname == "default") ? "" : data?.user?.lastname}`}
                                                   </p>
+                                                  {(new RegExp(youtubeRegex)).test(data?.response)? 
+                                                    <div className="message-gallery mx-2 rounded-3 overflow-hidden">
+                                                      {/* onReady={}  */}
+                                                      <YouTube videoId={YouTubeGetID(data?.response.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
+                                                    </div>
+                                                    : null
+                                                  }
                                                   { ticket[0]?.channel == "email" && data?.user?.role == "Customer"? 
                                                       <div className="message-text-content">
                                                         <ReactMarkdown children={data?.response.replace("<p>", "").replace("</p>", "")} remarkPlugins={[remarkGfm]} />
@@ -1118,7 +1140,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                               alt: { present: false, mandatory: false },
                               defaultSize: {
                                 height: "auto",
-                                width: "auto",
+                                width: "300px",
                               },
                             },
                             
