@@ -48,6 +48,7 @@ const Subscription = () => {
             ?.status === "success") {
             setSubscription(res
                 ?.data);
+            window.localStorage.setItem("tenantSubscription", JSON.stringify(res?.data));
         } else {
             setSubscription({})
         }
