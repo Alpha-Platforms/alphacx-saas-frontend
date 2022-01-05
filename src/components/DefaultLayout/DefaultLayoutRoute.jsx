@@ -1,8 +1,9 @@
 import React, { useContext, useState, useEffect } from "react";
 import Layout from "../Layout/index.jsx";
-import { Route } from "react-router-dom";
+import { Route, useHistory, useLocation} from "react-router-dom";
 import { LayoutContext } from "../../context/layoutContext";
 import jwtDecode from "jwt-decode";
+import { redirectToSub } from './../../helper';
 const DefaultLayout = ({ children, routeType, pageName, ...rest }) => {
   let browserRouter = children.props.history.push;
   let fullProps = children.props;
@@ -39,6 +40,15 @@ const DefaultLayoutRoute = ({
   ...rest
 }) => {
   const [valid, setValid] = useState("loading");
+  const history = useHistory();
+  const location = useLocation();
+
+  useEffect(() => {
+    redirectToSub(history, location);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.parse(window.localStorage.getItem('tenantSubscription'))]);
+
+
   useEffect(() => {
     ValidateToken();
   }, [valid]);
