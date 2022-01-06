@@ -95,6 +95,10 @@ button:focus {
 .section-wrap-nav {
   padding: 6px 30px 10px 290px;
 }
+
+.section-wrap-nav-2 {
+  padding: calc(6px + 3rem) 30px 10px 290px;
+}
 /* 
 .section-wrap-navPadding {
   padding-left: 90px !important;
