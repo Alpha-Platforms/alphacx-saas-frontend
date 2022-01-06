@@ -238,7 +238,36 @@ function Navbar({
   const [sp, setSp] = useState(window.pageYOffset);
   const [localUser, setlocalUser] = useState({});
 
-  const [notifActive, setNotifActive] = useState(true);
+  const [notif, setNotif] = useState({
+    active: false,
+    trialDaysLeft: 0
+  });
+
+  // function to get the date of a given number of days back
+  const getDayDate = (daysBack, realDate) => {
+    const date = new Date(realDate);
+    return new Date(date.getTime() - (daysBack * 24 * 60 * 60 * 1000));
+}
+
+  useEffect(() => {
+    const tenantSubscription = JSON.parse(window.localStorage.getItem("tenantSubscription"));
+
+    if (tenantSubscription) {
+      if (tenantSubscription?.is_trial) {
+        const daysLeft = moment(tenantSubscription?.end_date).diff(moment(new Date()), 'days');
+        
+        if (daysLeft <= 8) {
+          setNotif(prev => ({
+            ...prev,
+            active: true,
+            trialDaysLeft: daysLeft
+          }));
+        }
+      }
+    }
+  }, []);
+
+  
 
   useEffect(() => {
     getUserFromStorage();
@@ -262,24 +291,24 @@ function Navbar({
         id="navbar"
         className={`${
           appReduceSidebarWidth === true
-            ? (notifActive ? "section-wrap-nav section-wrap-nav-2" : "section-wrap-nav")
-            :  (notifActive ? "section-wrap-nav section-wrap-nav-2 section-wrap-navPadding" : "section-wrap-nav section-wrap-navPadding")
+            ? (notif.active ? "section-wrap-nav section-wrap-nav-2" : "section-wrap-nav")
+            :  (notif.active ? "section-wrap-nav section-wrap-nav-2 section-wrap-navPadding" : "section-wrap-nav section-wrap-navPadding")
         }`}
       >
         <div className="navbar-position">
           <div
-            style={{ height: notifActive ? `calc(90px + 3rem)` : '90px' }}
+            style={{ height: notif.active ? `calc(90px + 3rem)` : '90px' }}
             className={`${
               appReduceSidebarWidth === true
                 ? "navbar-wrap"
                 : "navbar-wrap section-wrap-navWidth"
             }`}
           >
-            {notifActive && <div className="sub-notif">
-              <span>Your Free Trial is ending in 6 days.</span> <button className="btn btn-sm bg-at-blue-light sub-notif-get">Get Alpha Plan Now</button> <button onClick={() => setNotifActive(false)} className="sub-notif-cancel btn">×</button>
+            {notif.active && <div className="sub-notif">
+              <span>Your Free Trial is ending in {notif.trialDaysLeft} days.</span> <button className="btn btn-sm bg-at-blue-light sub-notif-get">Get Alpha Plan Now</button> <button onClick={() => setNotif(prev => ({...prev, active: false}))} className="sub-notif-cancel btn">×</button>
             </div>}
 
-            <div className="navbar-content" style={{ height: notifActive ? `calc(100% - 3rem)` : '100%' }}>
+            <div className="navbar-content" style={{ height: notif.active ? `calc(100% - 3rem)` : '100%' }}>
               <div className="pageTitle">
                 <span style={{ textTransform: "capitalize" }}>{pageName}</span>
               </div>
