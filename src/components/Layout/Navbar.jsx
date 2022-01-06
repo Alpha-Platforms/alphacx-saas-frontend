@@ -237,6 +237,9 @@ function Navbar({
   const { appReduceSidebarWidth } = useContext(LayoutContext);
   const [sp, setSp] = useState(window.pageYOffset);
   const [localUser, setlocalUser] = useState({});
+
+  const [notifActive, setNotifActive] = useState(true);
+
   useEffect(() => {
     getUserFromStorage();
   }, [window.localStorage.getItem("user")]);
@@ -254,24 +257,29 @@ function Navbar({
 
   return (
     <React.Fragment>
+      
       <div
         id="navbar"
         className={`${
           appReduceSidebarWidth === true
-            ? "section-wrap-nav"
-            : "section-wrap-nav section-wrap-navPadding"
+            ? (notifActive ? "section-wrap-nav section-wrap-nav-2" : "section-wrap-nav")
+            :  (notifActive ? "section-wrap-nav section-wrap-nav-2 section-wrap-navPadding" : "section-wrap-nav section-wrap-navPadding")
         }`}
       >
         <div className="navbar-position">
           <div
+            style={{ height: notifActive ? `calc(90px + 3rem)` : '90px' }}
             className={`${
               appReduceSidebarWidth === true
                 ? "navbar-wrap"
                 : "navbar-wrap section-wrap-navWidth"
             }`}
           >
+            {notifActive && <div className="sub-notif">
+              <span>Your Free Trial is ending in 6 days.</span> <button className="btn btn-sm bg-at-blue-light sub-notif-get">Get Alpha Plan Now</button> <button onClick={() => setNotifActive(false)} className="sub-notif-cancel btn">×</button>
+            </div>}
 
-            <div className="navbar-content">
+            <div className="navbar-content" style={{ height: notifActive ? `calc(100% - 3rem)` : '100%' }}>
               <div className="pageTitle">
                 <span style={{ textTransform: "capitalize" }}>{pageName}</span>
               </div>
