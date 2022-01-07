@@ -31,15 +31,13 @@ const Subscription = () => {
             loading: false
         });
 
-    console.log("PLAN => ", plan);
-    console.log("PLAN STATE => ", planState);
-
     const getPlan = async () => {
         const res = await httpGet(`subscriptions/plans/${tenantId}`);
         if (res
             ?.status === "success") {
+            
             setPlan(res
-                ?.data[1]);
+                ?.data[0]?.name === "Alpha Plan" ? res?.data[0] : res?.data[1]);
         } else {
             setPlan({})
         }

@@ -22,6 +22,7 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 // 
 import Dropdown from "react-bootstrap/Dropdown";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import AccordionLink from "components/pages/help_center/components/accordion/AccordionLink";
 
 
 function DropDown() {
@@ -243,11 +244,6 @@ function Navbar({
     trialDaysLeft: 0
   });
 
-  // function to get the date of a given number of days back
-  const getDayDate = (daysBack, realDate) => {
-    const date = new Date(realDate);
-    return new Date(date.getTime() - (daysBack * 24 * 60 * 60 * 1000));
-}
 
   useEffect(() => {
     const tenantSubscription = JSON.parse(window.localStorage.getItem("tenantSubscription"));
@@ -256,7 +252,7 @@ function Navbar({
       if (tenantSubscription?.is_trial) {
         const daysLeft = moment(tenantSubscription?.end_date).diff(moment(new Date()), 'days');
         
-        if (daysLeft <= 8) {
+        if (daysLeft <= 8 && daysLeft >= 0) {
           setNotif(prev => ({
             ...prev,
             active: true,
@@ -305,7 +301,7 @@ function Navbar({
             }`}
           >
             {notif.active && <div className="sub-notif">
-              <span>Your Free Trial is ending in {notif.trialDaysLeft} days.</span> <button className="btn btn-sm bg-at-blue-light sub-notif-get">Get Alpha Plan Now</button> <button onClick={() => setNotif(prev => ({...prev, active: false}))} className="sub-notif-cancel btn">×</button>
+              <span>Your Free Trial is ending in {notif.trialDaysLeft} days.</span> <Link to={`/settings/account?tab=subscription`} className="btn btn-sm bg-at-blue-light sub-notif-get">Get Alpha Plan Now</Link> <button onClick={() => setNotif(prev => ({...prev, active: false}))} className="sub-notif-cancel btn">×</button>
             </div>}
 
             <div className="navbar-content" style={{ height: notif.active ? `calc(100% - 3rem)` : '100%' }}>
