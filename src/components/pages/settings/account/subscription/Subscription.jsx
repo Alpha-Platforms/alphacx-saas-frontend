@@ -35,8 +35,9 @@ const Subscription = () => {
         const res = await httpGet(`subscriptions/plans/${tenantId}`);
         if (res
             ?.status === "success") {
+            
             setPlan(res
-                ?.data[1]);
+                ?.data[0]?.name === "Alpha Plan" ? res?.data[0] : res?.data[1]);
         } else {
             setPlan({})
         }

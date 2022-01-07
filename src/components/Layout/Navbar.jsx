@@ -256,7 +256,7 @@ function Navbar({
       if (tenantSubscription?.is_trial) {
         const daysLeft = moment(tenantSubscription?.end_date).diff(moment(new Date()), 'days');
         
-        if (daysLeft <= 8) {
+        if (daysLeft <= 8 && daysLeft >= 0) {
           setNotif(prev => ({
             ...prev,
             active: true,
