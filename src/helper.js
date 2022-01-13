@@ -198,6 +198,4 @@ export const redirectToSub = (history, location) => {
     }
 }
 
-export const separateNum = (num) => {
-    return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-}
+export const separateNum = (num) => num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
