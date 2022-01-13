@@ -9,6 +9,8 @@ import PaymentHistory from './components/PaymentHistory';
 import PaymentForm from './components/PaymentForm';
 import {httpGet} from '../../../../../helpers/httpMethods';
 import ScaleLoader from 'react-spinners/ScaleLoader';
+import {ReactComponent as TickIcon} from '../../../../../assets/icons/tick.svg';
+import {getRealCurrency} from './components/SubTop';
 
 
 const Subscription = () => {
@@ -19,6 +21,7 @@ const Subscription = () => {
     const [tenantInfo, setTenantInfo] = useState(null);
     const [subscription, setSubscription] = useState(null);
     const [paymentHistory, setPaymentHistory] = useState(null);
+    const [selectingPlan, setSelectingPlan] = useState(false);
 
     const [planState,
         setPlanState] = useState({
@@ -95,6 +98,8 @@ const Subscription = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [plan]);
 
+    console.log('PLAN => ', plan);
+
     return (
         <Fragment>
             {planState.loading && <div className="cust-table-loader"><ScaleLoader loading={true} color={"#006298"}/></div>}
@@ -111,7 +116,7 @@ const Subscription = () => {
                     {true
                         ? <Fragment>
                                 {Object.keys(plan).length !== 0 && <Fragment>
-                                    <div>
+                                    {selectingPlan ? <div>
                                         <p className="current-plan-text">
                                             <small>Your current plan</small>
                                         </p>
@@ -121,7 +126,40 @@ const Subscription = () => {
                                             {(planState.isUpdatingPlan && (planState.flutterwaveConfig || planState.stripeConfig)) && <div><Summary planState={planState} setPlanState={setPlanState} tenantInfo={tenantInfo} plan={plan} /></div>}
                                             {false && <div><BillingDetails/></div>}
                                         </div>
+                                    </div> : <div className="plan-selection">
+                                    <div className="free-plan">
+                                        <p>Free Plan</p>
+                                        <h3>Free</h3>
+                                        <ul>
+                                            <li><span><TickIcon /></span> <span>Conversational Inbox</span></li>
+                                            <li><span><TickIcon /></span> <span>Embeddable Livechat Widget</span></li>
+                                            <li><span><TickIcon /></span> <span><del>Facebook Integration</del></span></li>
+                                            <li><span><TickIcon /></span> <span><del>Whatsapp Integration</del></span></li>
+                                            <li><span><TickIcon /></span> <span><del>Automation & Escalation</del></span></li>
+                                            <li><span><TickIcon /></span> <span><del>Knowledge Base System</del></span></li>
+                                        </ul>
+                                        <div>
+                                            <button className="btn btn-outline-primary">Activate</button>
+                                        </div>
                                     </div>
+
+                                    <div className="alpha-plan">
+                                        <p>Alpha Plan</p>
+                                        <h3>{getRealCurrency((tenantInfo?.currency || "")) === "NGN" ? "₦" : "$" }{plan[planState?.billingCycle?.value]} <small>per user / Month</small></h3>
+                                        <ul>
+                                            <li><span><TickIcon /></span> <span>Conversational Inbox</span></li>
+                                            <li><span><TickIcon /></span> <span>Embeddable Livechat Widget</span></li>
+                                            <li><span><TickIcon /></span> <span>Facebook Integration</span></li>
+                                            <li><span><TickIcon /></span> <span>Whatsapp Integration</span></li>
+                                            <li><span><TickIcon /></span> <span>Automation & Escalation</span></li>
+                                            <li><span><TickIcon /></span> <span>Knowledge Base System</span></li>
+                                        </ul>
+                                        <div>
+                                            <button className="btn bg-at-blue-light" onClick={() => setSelectingPlan(true)}>Select Plan</button>
+                                        </div>
+                                    </div>
+
+                                    </div>}
                                     {paymentHistory && <div><PaymentHistory paymentHistory={paymentHistory} /></div>}
                                 </Fragment>}
                             </Fragment>
