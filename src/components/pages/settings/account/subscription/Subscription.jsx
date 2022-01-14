@@ -118,7 +118,7 @@ const Subscription = () => {
                                 {Object.keys(plan).length !== 0 && <Fragment>
                                     {selectingPlan ? <div>
                                         <p className="current-plan-text">
-                                            <small>Your current plan</small>
+                                            <small>Plan selected: Alpha Plan &nbsp; <button className="btn" onClick={() => setSelectingPlan(false)}>✖</button></small>
                                         </p>
 
                                         <div className="payment-sect-2">

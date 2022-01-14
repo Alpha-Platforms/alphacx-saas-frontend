@@ -3,6 +3,7 @@ import Select from "react-select";
 import {getRealCurrency} from './SubTop';
 import {useState, useEffect} from 'react';
 import {httpPost} from '../../../../../../helpers/httpMethods';
+import {separateNum} from '../../../../../../helper';
 // import ScaleLoader from 'react-spinners/ScaleLoader';
 
 const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
@@ -116,13 +117,14 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
             ...prev,
             loading: initiating
         }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [initiating]);
 
     return (
         <div className="currentplan-box">
             <div className="cp-top">
                 <div>
-                    <div>
+                    {/* <div>
                         <label>Plan</label>
                         <Select
                             name="plan"
@@ -133,7 +135,11 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
                                 {value: 'Alpha Plan', label: 'Alpha Plan'},
                                 ]}
                             onChange={handlePlanChange}/>
-                    </div>
+                    </div> */}
+                    <div>
+                    <label htmlFor="numOfAgents">Agents</label>
+                    <div><input type="number" className="form-control" value={planState.numOfAgents} name="numOfAgents" id="numOfAgents" min={0} onChange={e => setPlanState(prev => ({...prev, numOfAgents: e.target.value }))} disabled={planState.isUpdatingPlan} /></div>
+                </div>
                 </div>
 
                 <div className="sbox-1">
@@ -163,16 +169,12 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
             </div>
 
             <p>
-                {plan[planState?.billingCycle?.value]} {getRealCurrency(tenantInfo?.currency || '')} per agent / month
+                {separateNum(plan[planState?.billingCycle?.value])} {getRealCurrency(tenantInfo?.currency || '')} per agent / month
             </p>
 
             <div className="agent-count-select">
                 <div>
-                    <label htmlFor="numOfAgents">Agents</label>
-                    <div><input type="number" className="form-control" value={planState.numOfAgents} name="numOfAgents" id="numOfAgents" min={0} onChange={e => setPlanState(prev => ({...prev, numOfAgents: e.target.value }))} disabled={planState.isUpdatingPlan} /></div>
-                </div>
-                <div>
-                    <span>{`${planState.numOfAgents * (plan[planState?.billingCycle?.value])} ${getRealCurrency(tenantInfo?.currency || '')} / ${planState?.billingCycle?.value === "monthly_amount" ? "month" : "year"}`}</span>
+                    <span>{`${separateNum(planState.numOfAgents * (plan[planState?.billingCycle?.value]))} ${getRealCurrency(tenantInfo?.currency || '')} / ${planState?.billingCycle?.value === "monthly_amount" ? "month" : "year"}`}</span>
                 </div>
             </div>
             
