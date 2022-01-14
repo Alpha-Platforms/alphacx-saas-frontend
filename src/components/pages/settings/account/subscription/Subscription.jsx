@@ -11,6 +11,7 @@ import {httpGet} from '../../../../../helpers/httpMethods';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import {ReactComponent as TickIcon} from '../../../../../assets/icons/tick.svg';
 import {getRealCurrency} from './components/SubTop';
+import {separateNum} from '../../../../../helper';
 
 
 const Subscription = () => {
@@ -150,7 +151,7 @@ const Subscription = () => {
                                     <div className="alpha-plan">
                                         <div>
                                             <p>Alpha Plan</p>
-                                            <h3>{getRealCurrency((tenantInfo?.currency || "")) === "NGN" ? "₦" : "$" }{plan[planState?.billingCycle?.value]} <small>per user / Month</small></h3>
+                                            <h3>{getRealCurrency((tenantInfo?.currency || "")) === "NGN" ? "₦" : "$" }{separateNum(plan[planState?.billingCycle?.value])} <small>per user / Month</small></h3>
                                         </div>
                                         <div>
                                             <ul>
