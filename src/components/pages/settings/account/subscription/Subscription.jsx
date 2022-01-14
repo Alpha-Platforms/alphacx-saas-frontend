@@ -22,7 +22,6 @@ const Subscription = () => {
     const [tenantInfo, setTenantInfo] = useState(null);
     const [subscription, setSubscription] = useState(null);
     const [paymentHistory, setPaymentHistory] = useState(null);
-    const [selectingPlan, setSelectingPlan] = useState(false);
 
     const [planState,
         setPlanState] = useState({
@@ -32,7 +31,10 @@ const Subscription = () => {
             isUpdatingPlan: false,
             flutterwaveConfig: null,
             stripeConfig: null,
-            loading: false
+            loading: false,
+            amount: null,
+            selectingPlan: false,
+            isVerifying: false
         });
 
     const getPlan = async () => {
@@ -103,7 +105,7 @@ const Subscription = () => {
 
     return (
         <Fragment>
-            {planState.loading && <div className="cust-table-loader"><ScaleLoader loading={true} color={"#006298"}/></div>}
+            {(planState.loading || planState.isVerifying) && <div className="cust-table-loader"><ScaleLoader loading={true} color={"#006298"}/></div>}
             {(plan && tenantInfo)
                 ?  <div>
                     <div className="d-flex justify-content-between col-md-8 mb-4">
@@ -117,9 +119,9 @@ const Subscription = () => {
                     {true
                         ? <Fragment>
                                 {Object.keys(plan).length !== 0 && <Fragment>
-                                    {selectingPlan ? <div>
+                                    {planState.selectingPlan ? <div>
                                         <p className="current-plan-text">
-                                            <small>Plan selected: Alpha Plan &nbsp; <button className="btn" onClick={() => setSelectingPlan(false)}>✖</button></small>
+                                            <small>Plan selected: Alpha Plan &nbsp; <button className="btn" onClick={() => setPlanState(prev => ({...prev, selectingPlan: false}))}>✖</button></small>
                                         </p>
 
                                         <div className="payment-sect-2">
@@ -163,7 +165,7 @@ const Subscription = () => {
                                                 <li><span><TickIcon /></span> <span>Knowledge Base System</span></li>
                                             </ul>
                                             <div>
-                                                <button className="btn bg-at-blue-light" onClick={() => setSelectingPlan(true)}>Select Plan</button>
+                                                <button className="btn bg-at-blue-light" onClick={() => setPlanState(prev => ({...prev, selectingPlan: true}))}>Select Plan</button>
                                             </div>
                                         </div>
                                     </div>

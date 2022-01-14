@@ -4,6 +4,7 @@ import {getRealCurrency} from './SubTop';
 import {useState, useEffect} from 'react';
 import {httpPost} from '../../../../../../helpers/httpMethods';
 import {separateNum} from '../../../../../../helper';
+import acxLogo from '../../../../../../assets/images/whitebg.jpg';
 // import ScaleLoader from 'react-spinners/ScaleLoader';
 
 const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
@@ -50,6 +51,7 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
             const currentUser = JSON.parse(window.localStorage.getItem('user'));
 
             if (getRealCurrency(tenantInfo?.currency || '') === "NGN") {
+                // FLUTTERWAVE PAYMENT
                 const config = {
                     public_key: initPaymentRes
                         ?.data
@@ -57,7 +59,7 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
                     tx_ref: initPaymentRes
                         ?.data
                             ?.reference,
-                    amount: planState.numOfAgents * (plan[planState?.billingCycle?.value]),
+                    amount: initPaymentRes?.data?.amount,
                     currency: "NGN",
                     // payment_options: 'card,mobilemoney,ussd',
                     payment_options: 'card',
@@ -77,17 +79,19 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
                     customizations: { 
                         title: 'AlphaCX',
                         description: `Payment for ${planState.numOfAgents} agents`,
-                        logo: 'https://alphacx.co/wp-content/uploads/2021/08/AlphaCX-Logo-Full-768x212.png'
+                        logo: acxLogo
                     }
                 };
     
                 setPlanState(prev => ({ 
                     ...prev, 
-                    flutterwaveConfig: config
+                    flutterwaveConfig: config,
+                    amount: initPaymentRes?.data?.amount
                 }));
 
 
             } else if (getRealCurrency(tenantInfo?.currency || '') === "USD") {
+                // STRIPE PAYMENT
                 setPlanState(prev => ({ 
                     ...prev, 
                     stripeConfig: initPaymentRes?.data
@@ -181,7 +185,7 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
             <div className="updateplan-btn-wrapper">
                 <button onClick={handleUpdatePlanBtn} type="button" disabled={initiating || planState.isUpdatingPlan}>{Object.keys(plan || {}).length === 0 ? 'Select Plan' : 'Update Plan'}</button>
 
-                {planState.isUpdatingPlan && <button onClick={() => setPlanState(prev => ({...prev, isUpdatingPlan: false, flutterwaveConfig: null, stripeConfig: null}))} type="button">Cancel</button>}
+                {planState.isUpdatingPlan && <button onClick={() => setPlanState(prev => ({...prev, isUpdatingPlan: false, flutterwaveConfig: null, stripeConfig: null, amount: null}))} type="button">Cancel</button>}
             </div>
 
         </div>
