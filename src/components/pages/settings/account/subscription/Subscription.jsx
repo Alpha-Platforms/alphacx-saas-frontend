@@ -128,34 +128,42 @@ const Subscription = () => {
                                         </div>
                                     </div> : <div className="plan-selection">
                                     <div className="free-plan">
-                                        <p>Free Plan</p>
-                                        <h3>Free</h3>
-                                        <ul>
-                                            <li><span><TickIcon /></span> <span>Conversational Inbox</span></li>
-                                            <li><span><TickIcon /></span> <span>Embeddable Livechat Widget</span></li>
-                                            <li><span><TickIcon /></span> <span><del>Facebook Integration</del></span></li>
-                                            <li><span><TickIcon /></span> <span><del>Whatsapp Integration</del></span></li>
-                                            <li><span><TickIcon /></span> <span><del>Automation & Escalation</del></span></li>
-                                            <li><span><TickIcon /></span> <span><del>Knowledge Base System</del></span></li>
-                                        </ul>
                                         <div>
-                                            <button className="btn btn-outline-primary">Activate</button>
+                                            <p>Free Plan</p>
+                                            <h3>Free</h3>
+                                        </div>
+                                        <div>
+                                            <ul>
+                                                <li><span><TickIcon /></span> <span>Conversational Inbox</span></li>
+                                                <li><span><TickIcon /></span> <span>Embeddable Livechat Widget</span></li>
+                                                <li><span><TickIcon /></span> <span><del>Facebook Integration</del></span></li>
+                                                <li><span><TickIcon /></span> <span><del>Whatsapp Integration</del></span></li>
+                                                <li><span><TickIcon /></span> <span><del>Automation & Escalation</del></span></li>
+                                                <li><span><TickIcon /></span> <span><del>Knowledge Base System</del></span></li>
+                                            </ul>
+                                            <div>
+                                                <button className="btn btn-outline-primary">Activate</button>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div className="alpha-plan">
-                                        <p>Alpha Plan</p>
-                                        <h3>{getRealCurrency((tenantInfo?.currency || "")) === "NGN" ? "₦" : "$" }{plan[planState?.billingCycle?.value]} <small>per user / Month</small></h3>
-                                        <ul>
-                                            <li><span><TickIcon /></span> <span>Conversational Inbox</span></li>
-                                            <li><span><TickIcon /></span> <span>Embeddable Livechat Widget</span></li>
-                                            <li><span><TickIcon /></span> <span>Facebook Integration</span></li>
-                                            <li><span><TickIcon /></span> <span>Whatsapp Integration</span></li>
-                                            <li><span><TickIcon /></span> <span>Automation & Escalation</span></li>
-                                            <li><span><TickIcon /></span> <span>Knowledge Base System</span></li>
-                                        </ul>
                                         <div>
-                                            <button className="btn bg-at-blue-light" onClick={() => setSelectingPlan(true)}>Select Plan</button>
+                                            <p>Alpha Plan</p>
+                                            <h3>{getRealCurrency((tenantInfo?.currency || "")) === "NGN" ? "₦" : "$" }{plan[planState?.billingCycle?.value]} <small>per user / Month</small></h3>
+                                        </div>
+                                        <div>
+                                            <ul>
+                                                <li><span><TickIcon /></span> <span>Conversational Inbox</span></li>
+                                                <li><span><TickIcon /></span> <span>Embeddable Livechat Widget</span></li>
+                                                <li><span><TickIcon /></span> <span>Facebook Integration</span></li>
+                                                <li><span><TickIcon /></span> <span>Whatsapp Integration</span></li>
+                                                <li><span><TickIcon /></span> <span>Automation & Escalation</span></li>
+                                                <li><span><TickIcon /></span> <span>Knowledge Base System</span></li>
+                                            </ul>
+                                            <div>
+                                                <button className="btn bg-at-blue-light" onClick={() => setSelectingPlan(true)}>Select Plan</button>
+                                            </div>
                                         </div>
                                     </div>
 
