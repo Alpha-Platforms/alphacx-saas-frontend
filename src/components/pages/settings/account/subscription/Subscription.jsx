@@ -96,12 +96,15 @@ const Subscription = () => {
             setPlanState(prev => ({
                 ...prev,
                 selectedPlan: {label: plan?.name, value: plan?.name}
-            }));
+            })); 
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [plan]);
 
     console.log('PLAN => ', plan);
+
+    console.log('SUBSCRIPTION => ', subscription);
+
 
     return (
         <Fragment>

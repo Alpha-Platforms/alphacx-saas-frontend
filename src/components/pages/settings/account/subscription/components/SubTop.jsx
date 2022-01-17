@@ -41,7 +41,7 @@ const SubTop = ({plan, tenantInfo, subscription}) => {
                 <div><CurrentPlanIcon/></div>
                 <div>
                     <span>Current Plan</span>
-                    <span>{Object.keys(plan).length === 0 ? 'Free Plan' : plan?.name} {getRealCurrency((tenantInfo?.currency || "")) ? `(${getRealCurrency((tenantInfo?.currency || ""))})` : ""}</span>
+                    <span>{subscription?.plan?.name || ""} {getRealCurrency((tenantInfo?.currency || "")) ? `(${getRealCurrency((tenantInfo?.currency || ""))})` : ""}</span>
                 </div>
             </div>
 
@@ -49,7 +49,7 @@ const SubTop = ({plan, tenantInfo, subscription}) => {
                 <div><AccountIdIcon/></div>
                 <div>
                     <span>No of Users</span>
-                    <span>{subscription === null ? '...' : (subscription?.no_of_users || 0)}</span>
+                    <span>{subscription === null ? '...' : (subscription?.subscription?.no_of_users || 'N/A')}</span>
                 </div>
             </div>
 
