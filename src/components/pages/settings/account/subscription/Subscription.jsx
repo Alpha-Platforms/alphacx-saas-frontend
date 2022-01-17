@@ -55,6 +55,7 @@ const Subscription = () => {
             ?.status === "success") {
             setSubscription(res
                 ?.data);
+            
             window.localStorage.setItem("tenantSubscription", JSON.stringify(res?.data));
         } else {
             setSubscription({})
@@ -101,6 +102,15 @@ const Subscription = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [plan]);
 
+    useEffect(() => {
+        if (subscription) {
+            setPlanState(prev => ({
+                ...prev,
+                billingCycle: subscription?.subscription?.interval === "yearly" ? {label: 'Billing Year', value: 'monthly_amount'} : {label: 'Billing Monthly', value: 'monthly_amount'}
+            }));
+        }
+    }, [subscription]);
+
     console.log('PLAN => ', plan);
 
     console.log('SUBSCRIPTION => ', subscription);
@@ -128,7 +138,7 @@ const Subscription = () => {
                                         </p>
 
                                         <div className="payment-sect-2">
-                                            <div><CurrentPlan plan={plan} planState={planState} tenantInfo={tenantInfo} setPlanState={setPlanState}/></div>
+                                            <div><CurrentPlan plan={plan} planState={planState} tenantInfo={tenantInfo} setPlanState={setPlanState} subscription={subscription} /></div>
                                             {(planState.isUpdatingPlan && (planState.flutterwaveConfig || planState.stripeConfig)) && <div><Summary planState={planState} setPlanState={setPlanState} tenantInfo={tenantInfo} plan={plan} /></div>}
                                             {false && <div><BillingDetails/></div>}
                                         </div>
@@ -148,7 +158,7 @@ const Subscription = () => {
                                                 <li><span><TickIcon /></span> <span><del>Knowledge Base System</del></span></li>
                                             </ul>
                                             <div>
-                                                <button className="btn btn-outline-primary">Activate</button>
+                                                <button className="btn btn-outline-primary" disabled={true}>Activate</button>
                                             </div>
                                         </div>
                                     </div>

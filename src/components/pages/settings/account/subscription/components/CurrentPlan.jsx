@@ -7,15 +7,8 @@ import {separateNum} from '../../../../../../helper';
 import acxLogo from '../../../../../../assets/images/whitebg.jpg';
 // import ScaleLoader from 'react-spinners/ScaleLoader';
 
-const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
+const CurrentPlan = ({plan, planState, tenantInfo, setPlanState, subscription}) => {
     const [initiating, setInitiating] = useState(false);
-
-    const handlePlanChange = option => {
-        setPlanState(prev => ({
-            ...prev,
-            selectedPlan: option
-        }));
-    }
 
     const handleInitiatePayment = async() => {
 
@@ -155,7 +148,7 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
                             name="plan"
                             className="billing-time-select"
                             value={planState.billingCycle}
-                            isDisabled={initiating || planState.isUpdatingPlan}
+                            isDisabled={initiating || planState.isUpdatingPlan || subscription?.subscription?.interval === "monthly" || subscription?.subscription?.interval === "yearly"}
                             options={[
                             {
                                 value: 'monthly_amount',
