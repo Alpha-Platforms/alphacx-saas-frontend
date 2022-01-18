@@ -32,7 +32,6 @@ function YouTubeGetID(url){
 }
 
 class RegExp1 extends RegExp {
-  // YouTubeGetID(str)
     [Symbol.replace](str) {
         return RegExp.prototype[Symbol.replace].call(this, str, `<iframe width="100%" height="500" src="https://www.youtube.com/embed/${YouTubeGetID(str)}"></iframe>`);
     }
