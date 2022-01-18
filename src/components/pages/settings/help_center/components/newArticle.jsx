@@ -613,7 +613,7 @@ useEffect(() => {
                     alt: { present: false, mandatory: false },
                     defaultSize: {
                       height: "auto",
-                      width: "300px",
+                      width: "100%",
                     },
                   },
                   emoji: {
