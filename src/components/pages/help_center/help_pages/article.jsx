@@ -31,6 +31,12 @@ function YouTubeGetID(url){
     return ID;
 }
 
+class RegExp1 extends RegExp {
+  // YouTubeGetID(str)
+    [Symbol.replace](str) {
+        return RegExp.prototype[Symbol.replace].call(this, str, `<iframe width="100%" height="500" src="https://www.youtube.com/embed/${YouTubeGetID(str)}"></iframe>`);
+    }
+}
 
 const youtubeRegex = /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/;
 
@@ -138,21 +144,29 @@ const Article = () => {
               <ScaleLoader loading={policyLoading} color={"#006298"} />
             </div>
           )} */}
+          {/* <div className="rounded-3 overflow-hidden"> */}
+                {/* onReady={}  */}
+                {/* <YouTube videoId={YouTubeGetID(articleContent?.body.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
+              </div> */}
           <div className="content">
             <h3 className="title mb-5">{articleContent?.title}</h3>
-            <div
-              id="postBody"
-              className="postBody"
-              dangerouslySetInnerHTML={{
-                __html: `<span>${articleContent?.body || ''}</span>`,
-              }}
-            />
+            
             {(new RegExp(youtubeRegex)).test(articleContent?.body)? 
-              <div className="rounded-3 overflow-hidden">
-                {/* onReady={}  */}
-                <YouTube videoId={YouTubeGetID(articleContent?.body.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
-              </div>
-              : null
+              <div
+                id="postBody"
+                className="postBody"
+                dangerouslySetInnerHTML={{
+                  __html: `<span>${articleContent?.body.replace(new RegExp1(youtubeRegex)) || ''}</span>`,
+                }}
+              />
+              : 
+              <div
+                id="postBody"
+                className="postBody"
+                dangerouslySetInnerHTML={{
+                  __html: `<span>${articleContent?.body || ''}</span>`,
+                }}
+              />
             }
             <div className="attachments">
               <Accordion question="Article Attachments" />
