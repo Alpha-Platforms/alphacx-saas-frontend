@@ -1,9 +1,7 @@
 // @ts-nocheck
 import {httpPost} from '../../../../../../helpers/httpMethods';
-// import AcxLogo from '../../../../../../assets/images/acxsquarelogo.png';
 import {useFlutterwave, closePaymentModal} from 'flutterwave-react-v3';
 import {Fragment, useState} from 'react';
-import ScaleLoader from 'react-spinners/ScaleLoader';
 import { NotificationManager } from 'react-notifications';
 import {loadStripe} from '@stripe/stripe-js';
 import {
@@ -13,8 +11,9 @@ import {
     useElements,
 } from '@stripe/react-stripe-js';
 import {getRealCurrency} from './SubTop';
+import {separateNum} from '../../../../../../helper';
 
-const CheckoutForm = ({setIsVerifying, setPlanState}) => {
+const CheckoutForm = ({setPlanState}) => {
     const stripe = useStripe();
     const elements = useElements();
 
@@ -34,14 +33,15 @@ const CheckoutForm = ({setIsVerifying, setPlanState}) => {
 
         if (!stripeRes?.error) {
             // console.log('STRIPE RESPONSE => ', stripeRes);
-            setIsVerifying(true);
+            setPlanState(prev => ({...prev, isVerifying: true}));
             const verifyPaymentRes = await httpPost(`subscriptions/verify-payment`, stripeRes?.paymentMethod);
-            setIsVerifying(false);
+            setPlanState(prev => ({...prev, isVerifying: false}));
 
             if (verifyPaymentRes?.status === "success") {
                 NotificationManager.success('', 'Transaction successful', 4000);
-                setPlanState(prev => ({...prev, isUpdatingPlan: false,
-                stripeConfig: null}));
+                window.location.href = `/settings/account?tab=subscription`;
+                // setPlanState(prev => ({...prev, isUpdatingPlan: false,
+                // stripeConfig: null, amount: null, setSelectingPlan: false}));
             }
             } else {
             console.log(stripeRes?.error);
@@ -58,7 +58,7 @@ const CheckoutForm = ({setIsVerifying, setPlanState}) => {
     );
 };
 
-const FlutterWaveAction = ({config, isVerifying, setIsVerifying, setPlanState}) => {
+const FlutterWaveAction = ({config, setPlanState}) => {
 
     // use flutterwave react hook
     const handleFlutterPayment = useFlutterwave(config);
@@ -71,21 +71,22 @@ const FlutterWaveAction = ({config, isVerifying, setIsVerifying, setPlanState}) 
 
 
                     if (response?.status === "successful") {
-                        setIsVerifying(true);
+                        setPlanState(prev => ({...prev, isVerifying: true}));
                         const verifyPaymentRes = await httpPost(`subscriptions/verify-payment`, response);
-                        setIsVerifying(false);
+                        setPlanState(prev => ({...prev, isVerifying: false}));
 
                         if (verifyPaymentRes?.status === "success") {
                             NotificationManager.success('', 'Transaction successful', 4000);
-                            setPlanState(prev => ({...prev, isUpdatingPlan: false,
-                            flutterwaveConfig: null}));
+                            window.location.href = `/settings/account?tab=subscription`;
+                            // setPlanState(prev => ({...prev, isUpdatingPlan: false,
+                            // flutterwaveConfig: null, amount: null, selectingPlan: false}));
                         }
                     } else {
                         NotificationManager.error('', 'Transaction failed', 4000);
                     }
                 },
                 onClose: () => {
-                    setPlanState(prev => ({...prev, isUpdatingPlan: false, flutterwaveConfig: null}));
+                    setPlanState(prev => ({...prev, isUpdatingPlan: false, flutterwaveConfig: null, amout: null}));
                 }
             });
         }}>Make Payment</button>
@@ -93,11 +94,9 @@ const FlutterWaveAction = ({config, isVerifying, setIsVerifying, setPlanState}) 
 }
 
 const Summary = ({planState, setPlanState, plan, tenantInfo}) => {
-    const [isVerifying, setIsVerifying] = useState(false);
 
     return (
         <div className="summary-box">
-            {isVerifying && <div className="cust-table-loader"><ScaleLoader loading={true} color={"#006298"}/></div>} 
             <h5>Summary</h5>
 
             {/* <div className="summary-divider"/> */}
@@ -111,7 +110,7 @@ const Summary = ({planState, setPlanState, plan, tenantInfo}) => {
                             : ''}</span>
                 </div>
                 <div>
-                    <span>{`${planState.numOfAgents * (plan[planState?.billingCycle?.value])} ${getRealCurrency(tenantInfo?.currency || '') }`}</span>
+                    <span>{`${separateNum(planState?.amount ? planState?.amount : planState.numOfAgents * (plan[planState?.billingCycle?.value]))} ${getRealCurrency(tenantInfo?.currency || '') }`}</span>
                 </div>
             </div>
 
@@ -122,7 +121,7 @@ const Summary = ({planState, setPlanState, plan, tenantInfo}) => {
                     <span>Subtotal</span>
                 </div>
                 <div>
-                    <span>{`${planState.numOfAgents * (plan[planState?.billingCycle?.value])} ${getRealCurrency(tenantInfo?.currency || '') }`}</span>
+                    <span>{`${separateNum(planState?.amount ? planState?.amount : planState.numOfAgents * (plan[planState?.billingCycle?.value]))} ${getRealCurrency(tenantInfo?.currency || '') }`}</span>
                 </div>
             </div>
 
@@ -158,17 +157,17 @@ const Summary = ({planState, setPlanState, plan, tenantInfo}) => {
                     <span>Total</span>
                 </div>
                 <div>
-                    <span>{`${planState.numOfAgents * (plan[planState?.billingCycle?.value])} ${getRealCurrency(tenantInfo?.currency || '') }`}</span>
+                    <span>{`${separateNum(planState?.amount ? planState?.amount : planState.numOfAgents * (plan[planState?.billingCycle?.value]))} ${getRealCurrency(tenantInfo?.currency || '') }`}</span>
                 </div>
             </div>
 
             <div className="sbox-7">
                 {/* {!flutterwaveConfig && <button onClick={handleInitiatePayment}>{ !isContinuing ? 'Continue' : <ScaleLoader color={"#ffffff"} height={14} width={2} margin={1} />}</button>} */}
-                {planState.flutterwaveConfig && <FlutterWaveAction isVerifying={isVerifying} setIsVerifying={setIsVerifying} config={planState.flutterwaveConfig} setPlanState={setPlanState} />}
+                {planState.flutterwaveConfig && <FlutterWaveAction planState={planState} config={planState.flutterwaveConfig} setPlanState={setPlanState} />}
             </div>
             <div>
                 {planState.stripeConfig && <Elements stripe={loadStripe(planState.stripeConfig?.STRIPE_PUBLIC_KEY)} options={{ clientSecret: planState.stripeConfig?.clientSecret }}>
-                    <CheckoutForm setIsVerifying={setIsVerifying} setPlanState={setPlanState} />
+                    <CheckoutForm planState={planState} setPlanState={setPlanState} />
                 </Elements>}
             </div>
 
