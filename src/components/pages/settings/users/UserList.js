@@ -321,7 +321,7 @@ const UserList = ({
                     name: `${firstname} ${lastname}`,
                     emailAddress: email,
                     role,
-                    group: groups?.map( (item, index) => `${item.group.name}${groups.length-1 > index? ", ":" "}`).join(' '),
+                    group: groups?.map( (item, index) => `${item.group?.name}${groups?.length-1 > index? ", ":" "}`).join(' '),
                     created: created_at && moment(created_at).format('DD MMM, YYYY'),
                     // created: "13 Apr 2021",
                     contact: { firstname, lastname, id, avatar },
