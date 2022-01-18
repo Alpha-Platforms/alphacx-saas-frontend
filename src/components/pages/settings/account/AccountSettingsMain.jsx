@@ -8,9 +8,10 @@ import Subscription from './subscription/Subscription';
 import AccountSettings from './AccountSettings';
 
 
-const AccountSettingsMain = ({userRole}) => {
 
+const AccountSettingsMain = ({userRole, location}) => {
     const [tabKey, setTabKey] = useState("acct-settings");
+    // const [tabKey, setTabKey] = useState("sub-payment");
 
     // const [tabKey,
     //     setTabKey] = useState("sub-payment");
@@ -19,6 +20,13 @@ const AccountSettingsMain = ({userRole}) => {
     //     console.clear()
     //     console.log(userRole)
     // }, [])
+
+    useEffect(() => {
+        if (new URLSearchParams(location.search).get("tab") === "subscription") {
+            setTabKey("sub-payment");
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <div>

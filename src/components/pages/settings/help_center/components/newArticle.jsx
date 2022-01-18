@@ -172,17 +172,19 @@ const NewArticle = () => {
     // we will see in the index.md file we generate.
     return new Promise(async (resolve, reject) => {
         const data = new FormData();
-        data.append('file', imageObject.file);
-        data.append('upload_preset', config.cloudinaryUploadPreset);
-        data.append('cloud_name', config.cloudinaryCloudName);
-        try {
-          const res = await axios.post(`${config.cloudinaryBaseUrl}/image/upload`, data)
-          resolve({ data: {link: res.data?.url }});
-        } catch(err) {
-          console.log(err);
-          NotificationManager.error("Photo could not be uploaded", "Error");
-          reject('Photo not uploaded');
-        }
+        data.append('file', file);
+        data.append('upload_preset', process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET);
+        data.append('cloud_name', process.env.REACT_APP_CLOUDINARY_CLOUD_NAME);
+        axios.post(`${process.env.REACT_APP_CLOUDINARY_BASE_URL}/image/upload`, data)
+          .then(async res => {
+            // console.log(res.data?.url);
+            imageObject.src = res.data?.url;
+            // setEditorUploadImg(ReplyTicket.plainText + editorUploadImg + res.data?.url);
+            resolve({ data: { link: res.data?.url } });
+          })
+          .catch(err => {
+              NotificationManager.error("Photo could not be uploaded", "Error");
+          });
       // resolve({ data: { link: imageObject.localSrc } });
     });
   };
@@ -603,15 +605,15 @@ useEffect(() => {
                     popupClassName: "art-image-popup",
                     urlEnabled: true,
                     uploadEnabled: true,
-                    alignmentEnabled: true,
+                    alignmentEnabled: "left",
                     uploadCallback: _uploadImageCallBack,
                     previewImage: true,
-                    // inputAccept: "image/gif,imag e/jpeg,image/jpg,image/png,image/svg",
-                    inputAccept: getAcceptValue(allowedFiles.ext, allowedFiles.types),
-                    alt: { present: true, mandatory: true },
+                    inputAccept: "image/gif,imag e/jpeg,image/jpg,image/png,image/svg",
+                    // inputAccept: getAcceptValue(allowedFiles.ext, allowedFiles.types),
+                    alt: { present: false, mandatory: false },
                     defaultSize: {
                       height: "auto",
-                      width: "auto",
+                      width: "100%",
                     },
                   },
                   emoji: {

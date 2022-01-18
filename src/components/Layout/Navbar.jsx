@@ -22,6 +22,7 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 // 
 import Dropdown from "react-bootstrap/Dropdown";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import AccordionLink from "components/pages/help_center/components/accordion/AccordionLink";
 
 
 function DropDown() {
@@ -237,6 +238,33 @@ function Navbar({
   const { appReduceSidebarWidth } = useContext(LayoutContext);
   const [sp, setSp] = useState(window.pageYOffset);
   const [localUser, setlocalUser] = useState({});
+
+  const [notif, setNotif] = useState({
+    active: false,
+    trialDaysLeft: 0
+  });
+
+
+  useEffect(() => {
+    const tenantSubscription = JSON.parse(window.localStorage.getItem("tenantSubscription"));
+
+    if (tenantSubscription) {
+      if (tenantSubscription?.is_trial) {
+        const daysLeft = moment(tenantSubscription?.end_date).diff(moment(new Date()), 'days');
+        
+        if (daysLeft <= 8 && daysLeft >= 0) {
+          setNotif(prev => ({
+            ...prev,
+            active: true,
+            trialDaysLeft: daysLeft
+          }));
+        }
+      }
+    }
+  }, []);
+
+  
+
   useEffect(() => {
     getUserFromStorage();
   }, [window.localStorage.getItem("user")]);
@@ -254,24 +282,29 @@ function Navbar({
 
   return (
     <React.Fragment>
+      
       <div
         id="navbar"
         className={`${
           appReduceSidebarWidth === true
-            ? "section-wrap-nav"
-            : "section-wrap-nav section-wrap-navPadding"
+            ? (notif.active ? "section-wrap-nav section-wrap-nav-2" : "section-wrap-nav")
+            :  (notif.active ? "section-wrap-nav section-wrap-nav-2 section-wrap-navPadding" : "section-wrap-nav section-wrap-navPadding")
         }`}
       >
         <div className="navbar-position">
           <div
+            style={{ height: notif.active ? `calc(90px + 3rem)` : '90px' }}
             className={`${
               appReduceSidebarWidth === true
                 ? "navbar-wrap"
                 : "navbar-wrap section-wrap-navWidth"
             }`}
           >
+            {notif.active && <div className="sub-notif">
+              <span>Your Free Trial is ending in {notif.trialDaysLeft} days.</span> <Link to={`/settings/account?tab=subscription`} className="btn btn-sm bg-at-blue-light sub-notif-get">Get Alpha Plan Now</Link> <button onClick={() => setNotif(prev => ({...prev, active: false}))} className="sub-notif-cancel btn">×</button>
+            </div>}
 
-            <div className="navbar-content">
+            <div className="navbar-content" style={{ height: notif.active ? `calc(100% - 3rem)` : '100%' }}>
               <div className="pageTitle">
                 <span style={{ textTransform: "capitalize" }}>{pageName}</span>
               </div>

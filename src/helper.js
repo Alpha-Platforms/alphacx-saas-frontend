@@ -1,6 +1,7 @@
 import {CsvBuilder} from 'filefy';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import moment from 'moment';
 
 // function to return axios configuration with tenant token
 export const tenantTokenConfig = getState => {
@@ -183,3 +184,22 @@ export const getAcceptValue = (extArray, typesArray) => {
     const acceptValue = extArray.join(',') + ',' + typesArray.join(',');
     return acceptValue;
 }
+
+export const redirectToSub = (history, location) => {
+    // history is useHistory from react router dom
+    if (history && location && location.pathname !== "/settings/account") {
+        const tenantSubscription = JSON.parse(window.localStorage.getItem('tenantSubscription'));
+        if (tenantSubscription) {
+            if (moment(tenantSubscription?.end_date).isBefore(new Date())) {
+                // subscrition has ended
+                history.push("/settings/account?tab=subscription");
+            }
+        }
+    }
+}
+
+export const separateNum = (num) => {
+    if (typeof num !== "number") return num;
+    
+    return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+};

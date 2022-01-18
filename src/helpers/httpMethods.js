@@ -378,25 +378,6 @@ export const httpGetMainNoAuth = async (url, newHeaders) => {
 };
 
 
-export const httpOnpremGet = async (url) => {
-  if (!navigator.onLine) {
-    return NotificationManager.error(
-      "Please check your internet",
-      "Opps!",
-      3000
-    );
-  }
-
-  try {
-    const res = await axios.get(`https://restserverstaging.cardinalstone.com/api/registrars/${url}`);
-    return res;
-
-  } catch (error) {
-    return { error };
-  }
-};
-
-
 export const httpGet = async (url) => {
   if (!navigator.onLine) {
     return NotificationManager.error(
@@ -417,7 +398,7 @@ export const httpGet = async (url) => {
     return res.data;
   } catch (error) {
     // hideLoader();
-    console.log("eeeeeeee", error.response.data?.message);
+    // console.log("eeeeeeee", error.response.data?.message);
     if (
       error.response.data?.message ===
       "Unauthorized, Your token is invalid or expired"

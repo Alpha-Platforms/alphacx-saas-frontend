@@ -11,7 +11,7 @@ import Symbol1 from "../../../assets/imgF/symbolAuth.png";
 import Symbol2 from "../../../assets/imgF/symbolAuth2.png";
 import { NotificationManager } from "react-notifications";
 import {Validate} from "../../../helpers/validateInput";
-import { httpPost, httpPostMain } from "../../../helpers/httpMethods";
+import { httpPost, httpPostMain, httpGet } from "../../../helpers/httpMethods";
 import { css } from "@emotion/react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { wordCapitalize } from "helper";
@@ -35,6 +35,16 @@ const Login = ({match: {params}}) => {
   })
   const [environment] = useState(process.env.NODE_ENV)
 
+  const getTenantSubscription = async (tenantId) => {
+    const res = await httpGet(`subscriptions/${tenantId}`);
+    if (res
+        ?.status === "success") {
+          window.localStorage.setItem("tenantSubscription", JSON.stringify(res?.data));
+    } else {
+        setSubscription({})
+    }
+}
+
 
   useEffect(async () => {
     const hostLength = hostName.length;
@@ -52,6 +62,7 @@ const Login = ({match: {params}}) => {
       if (res?.status === "success") {
         window.localStorage.setItem("tenantId", res?.data?.id || "");
         window.localStorage.setItem("tenantToken", res?.data?.token);
+        getTenantSubscription(res?.data?.id);
       }
     }
 
@@ -131,6 +142,7 @@ const Login = ({match: {params}}) => {
         } else {
           setDomain(domain)
           setTenantId(res?.data?.id)
+          console.log('DOMAIN LOGIN RESPONSE => ', res?.data);
         }
         
       } else {

@@ -137,7 +137,7 @@ const Registration = () => {
             email: userInput.email.toLowerCase(),
             password: userInput.password,
             country: userInput.country,
-            currency: "Naira"
+            currency: userInput.country.toLowerCase() === "nigeria"? "NGN" : "USD"
         };
 
         const requiredData = {

@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import Layout from "../Layout/settings.jsx";
-import { Link, Route } from "react-router-dom";
+import { Route, useHistory, useLocation } from "react-router-dom";
 import { LayoutContext } from "../../context/layoutContext";
 import jwtDecode from "jwt-decode";
-import { useHistory } from "react-router";
 
 import store from "reduxstore/store.js";
 import accessControlList from "../../config/accessControlList.js";
+import { redirectToSub } from './../../helper';
 
 const DefaultLayout = ({ children, routeType, pageName, ...rest }) => {
   let browserRouter = children.props.history.push;
@@ -41,6 +41,11 @@ const DefaultLayoutRoute = ({
   const userRole = store.getState().userAuth.user.role;
 
   const history = useHistory();
+  const location = useLocation();
+  useEffect(() => {
+    redirectToSub(history, location);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.parse(window.localStorage.getItem('tenantSubscription'))]);
 
 
   useEffect(() => {
