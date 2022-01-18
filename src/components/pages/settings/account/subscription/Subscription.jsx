@@ -11,6 +11,7 @@ import {httpGet} from '../../../../../helpers/httpMethods';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import {ReactComponent as TickIcon} from '../../../../../assets/icons/tick.svg';
 import {getRealCurrency} from './components/SubTop';
+import {separateNum} from '../../../../../helper';
 
 
 const Subscription = () => {
@@ -21,7 +22,6 @@ const Subscription = () => {
     const [tenantInfo, setTenantInfo] = useState(null);
     const [subscription, setSubscription] = useState(null);
     const [paymentHistory, setPaymentHistory] = useState(null);
-    const [selectingPlan, setSelectingPlan] = useState(false);
 
     const [planState,
         setPlanState] = useState({
@@ -31,7 +31,10 @@ const Subscription = () => {
             isUpdatingPlan: false,
             flutterwaveConfig: null,
             stripeConfig: null,
-            loading: false
+            loading: false,
+            amount: null,
+            selectingPlan: false,
+            isVerifying: false
         });
 
     const getPlan = async () => {
@@ -52,6 +55,7 @@ const Subscription = () => {
             ?.status === "success") {
             setSubscription(res
                 ?.data);
+            
             window.localStorage.setItem("tenantSubscription", JSON.stringify(res?.data));
         } else {
             setSubscription({})
@@ -93,16 +97,28 @@ const Subscription = () => {
             setPlanState(prev => ({
                 ...prev,
                 selectedPlan: {label: plan?.name, value: plan?.name}
-            }));
+            })); 
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [plan]);
 
+    useEffect(() => {
+        if (subscription) {
+            setPlanState(prev => ({
+                ...prev,
+                billingCycle: subscription?.subscription?.interval === "yearly" ? {label: 'Billing Year', value: 'monthly_amount'} : {label: 'Billing Monthly', value: 'monthly_amount'}
+            }));
+        }
+    }, [subscription]);
+
     console.log('PLAN => ', plan);
+
+    console.log('SUBSCRIPTION => ', subscription);
+
 
     return (
         <Fragment>
-            {planState.loading && <div className="cust-table-loader"><ScaleLoader loading={true} color={"#006298"}/></div>}
+            {(planState.loading || planState.isVerifying) && <div className="cust-table-loader"><ScaleLoader loading={true} color={"#006298"}/></div>}
             {(plan && tenantInfo)
                 ?  <div>
                     <div className="d-flex justify-content-between col-md-8 mb-4">
@@ -116,46 +132,54 @@ const Subscription = () => {
                     {true
                         ? <Fragment>
                                 {Object.keys(plan).length !== 0 && <Fragment>
-                                    {selectingPlan ? <div>
+                                    {planState.selectingPlan ? <div>
                                         <p className="current-plan-text">
-                                            <small>Your current plan</small>
+                                            <small>Plan selected: Alpha Plan &nbsp; <button className="btn" onClick={() => setPlanState(prev => ({...prev, selectingPlan: false}))}>✖</button></small>
                                         </p>
 
                                         <div className="payment-sect-2">
-                                            <div><CurrentPlan plan={plan} planState={planState} tenantInfo={tenantInfo} setPlanState={setPlanState}/></div>
+                                            <div><CurrentPlan plan={plan} planState={planState} tenantInfo={tenantInfo} setPlanState={setPlanState} subscription={subscription} /></div>
                                             {(planState.isUpdatingPlan && (planState.flutterwaveConfig || planState.stripeConfig)) && <div><Summary planState={planState} setPlanState={setPlanState} tenantInfo={tenantInfo} plan={plan} /></div>}
                                             {false && <div><BillingDetails/></div>}
                                         </div>
                                     </div> : <div className="plan-selection">
                                     <div className="free-plan">
-                                        <p>Free Plan</p>
-                                        <h3>Free</h3>
-                                        <ul>
-                                            <li><span><TickIcon /></span> <span>Conversational Inbox</span></li>
-                                            <li><span><TickIcon /></span> <span>Embeddable Livechat Widget</span></li>
-                                            <li><span><TickIcon /></span> <span><del>Facebook Integration</del></span></li>
-                                            <li><span><TickIcon /></span> <span><del>Whatsapp Integration</del></span></li>
-                                            <li><span><TickIcon /></span> <span><del>Automation & Escalation</del></span></li>
-                                            <li><span><TickIcon /></span> <span><del>Knowledge Base System</del></span></li>
-                                        </ul>
                                         <div>
-                                            <button className="btn btn-outline-primary">Activate</button>
+                                            <p>Free Plan</p>
+                                            <h3>Free</h3>
+                                        </div>
+                                        <div>
+                                            <ul>
+                                                <li><span><TickIcon /></span> <span>Conversational Inbox</span></li>
+                                                <li><span><TickIcon /></span> <span>Embeddable Livechat Widget</span></li>
+                                                <li><span><TickIcon /></span> <span><del>Facebook Integration</del></span></li>
+                                                <li><span><TickIcon /></span> <span><del>Whatsapp Integration</del></span></li>
+                                                <li><span><TickIcon /></span> <span><del>Automation & Escalation</del></span></li>
+                                                <li><span><TickIcon /></span> <span><del>Knowledge Base System</del></span></li>
+                                            </ul>
+                                            <div>
+                                                <button className="btn btn-outline-primary" disabled={true}>Activate</button>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div className="alpha-plan">
-                                        <p>Alpha Plan</p>
-                                        <h3>{getRealCurrency((tenantInfo?.currency || "")) === "NGN" ? "₦" : "$" }{plan[planState?.billingCycle?.value]} <small>per user / Month</small></h3>
-                                        <ul>
-                                            <li><span><TickIcon /></span> <span>Conversational Inbox</span></li>
-                                            <li><span><TickIcon /></span> <span>Embeddable Livechat Widget</span></li>
-                                            <li><span><TickIcon /></span> <span>Facebook Integration</span></li>
-                                            <li><span><TickIcon /></span> <span>Whatsapp Integration</span></li>
-                                            <li><span><TickIcon /></span> <span>Automation & Escalation</span></li>
-                                            <li><span><TickIcon /></span> <span>Knowledge Base System</span></li>
-                                        </ul>
                                         <div>
-                                            <button className="btn bg-at-blue-light" onClick={() => setSelectingPlan(true)}>Select Plan</button>
+                                            <p>Alpha Plan</p>
+                                            <h3>{getRealCurrency((tenantInfo?.currency || "")) === "NGN" ? "₦" : "$" }{separateNum(plan[planState?.billingCycle?.value])} <small>per user / Month</small></h3>
+                                        </div>
+                                        <div>
+                                            <ul>
+                                                <li><span><TickIcon /></span> <span>Conversational Inbox</span></li>
+                                                <li><span><TickIcon /></span> <span>Embeddable Livechat Widget</span></li>
+                                                <li><span><TickIcon /></span> <span>Facebook Integration</span></li>
+                                                <li><span><TickIcon /></span> <span>Whatsapp Integration</span></li>
+                                                <li><span><TickIcon /></span> <span>Automation & Escalation</span></li>
+                                                <li><span><TickIcon /></span> <span>Knowledge Base System</span></li>
+                                            </ul>
+                                            <div>
+                                                <button className="btn bg-at-blue-light" onClick={() => setPlanState(prev => ({...prev, selectingPlan: true}))}>Select Plan</button>
+                                            </div>
                                         </div>
                                     </div>
 
