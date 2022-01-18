@@ -3,17 +3,12 @@ import Select from "react-select";
 import {getRealCurrency} from './SubTop';
 import {useState, useEffect} from 'react';
 import {httpPost} from '../../../../../../helpers/httpMethods';
+import {separateNum} from '../../../../../../helper';
+import acxLogo from '../../../../../../assets/images/whitebg.jpg';
 // import ScaleLoader from 'react-spinners/ScaleLoader';
 
-const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
+const CurrentPlan = ({plan, planState, tenantInfo, setPlanState, subscription}) => {
     const [initiating, setInitiating] = useState(false);
-
-    const handlePlanChange = option => {
-        setPlanState(prev => ({
-            ...prev,
-            selectedPlan: option
-        }));
-    }
 
     const handleInitiatePayment = async() => {
 
@@ -49,6 +44,7 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
             const currentUser = JSON.parse(window.localStorage.getItem('user'));
 
             if (getRealCurrency(tenantInfo?.currency || '') === "NGN") {
+                // FLUTTERWAVE PAYMENT
                 const config = {
                     public_key: initPaymentRes
                         ?.data
@@ -56,7 +52,7 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
                     tx_ref: initPaymentRes
                         ?.data
                             ?.reference,
-                    amount: planState.numOfAgents * (plan[planState?.billingCycle?.value]),
+                    amount: initPaymentRes?.data?.amount,
                     currency: "NGN",
                     // payment_options: 'card,mobilemoney,ussd',
                     payment_options: 'card',
@@ -76,17 +72,19 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
                     customizations: { 
                         title: 'AlphaCX',
                         description: `Payment for ${planState.numOfAgents} agents`,
-                        logo: 'https://alphacx.co/wp-content/uploads/2021/08/AlphaCX-Logo-Full-768x212.png'
+                        logo: acxLogo
                     }
                 };
     
                 setPlanState(prev => ({ 
                     ...prev, 
-                    flutterwaveConfig: config
+                    flutterwaveConfig: config,
+                    amount: initPaymentRes?.data?.amount
                 }));
 
 
             } else if (getRealCurrency(tenantInfo?.currency || '') === "USD") {
+                // STRIPE PAYMENT
                 setPlanState(prev => ({ 
                     ...prev, 
                     stripeConfig: initPaymentRes?.data
@@ -116,13 +114,14 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
             ...prev,
             loading: initiating
         }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [initiating]);
 
     return (
         <div className="currentplan-box">
             <div className="cp-top">
                 <div>
-                    <div>
+                    {/* <div>
                         <label>Plan</label>
                         <Select
                             name="plan"
@@ -133,7 +132,11 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
                                 {value: 'Alpha Plan', label: 'Alpha Plan'},
                                 ]}
                             onChange={handlePlanChange}/>
-                    </div>
+                    </div> */}
+                    <div>
+                    <label htmlFor="numOfAgents">Agents</label>
+                    <div><input type="number" className="form-control" value={planState.numOfAgents} name="numOfAgents" id="numOfAgents" min={0} onChange={e => setPlanState(prev => ({...prev, numOfAgents: e.target.value }))} disabled={planState.isUpdatingPlan} /></div>
+                </div>
                 </div>
 
                 <div className="sbox-1">
@@ -145,7 +148,7 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
                             name="plan"
                             className="billing-time-select"
                             value={planState.billingCycle}
-                            isDisabled={initiating || planState.isUpdatingPlan}
+                            isDisabled={initiating || planState.isUpdatingPlan || subscription?.subscription?.interval === "monthly" || subscription?.subscription?.interval === "yearly"}
                             options={[
                             {
                                 value: 'monthly_amount',
@@ -163,23 +166,19 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState}) => {
             </div>
 
             <p>
-                {plan[planState?.billingCycle?.value]} {getRealCurrency(tenantInfo?.currency || '')} per agent / month
+                {separateNum(plan[planState?.billingCycle?.value])} {getRealCurrency(tenantInfo?.currency || '')} per agent / month
             </p>
 
             <div className="agent-count-select">
                 <div>
-                    <label htmlFor="numOfAgents">Agents</label>
-                    <div><input type="number" className="form-control" value={planState.numOfAgents} name="numOfAgents" id="numOfAgents" min={0} onChange={e => setPlanState(prev => ({...prev, numOfAgents: e.target.value }))} disabled={planState.isUpdatingPlan} /></div>
-                </div>
-                <div>
-                    <span>{`${planState.numOfAgents * (plan[planState?.billingCycle?.value])} ${getRealCurrency(tenantInfo?.currency || '')} / ${planState?.billingCycle?.value === "monthly_amount" ? "month" : "year"}`}</span>
+                    <span>{`${separateNum(planState.numOfAgents * (plan[planState?.billingCycle?.value]))} ${getRealCurrency(tenantInfo?.currency || '')} / ${planState?.billingCycle?.value === "monthly_amount" ? "month" : "year"}`}</span>
                 </div>
             </div>
             
             <div className="updateplan-btn-wrapper">
                 <button onClick={handleUpdatePlanBtn} type="button" disabled={initiating || planState.isUpdatingPlan}>{Object.keys(plan || {}).length === 0 ? 'Select Plan' : 'Update Plan'}</button>
 
-                {planState.isUpdatingPlan && <button onClick={() => setPlanState(prev => ({...prev, isUpdatingPlan: false, flutterwaveConfig: null, stripeConfig: null}))} type="button">Cancel</button>}
+                {planState.isUpdatingPlan && <button onClick={() => setPlanState(prev => ({...prev, isUpdatingPlan: false, flutterwaveConfig: null, stripeConfig: null, amount: null}))} type="button">Cancel</button>}
             </div>
 
         </div>
