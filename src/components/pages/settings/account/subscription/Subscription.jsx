@@ -7,11 +7,12 @@ import BillingDetails from './components/BillingDetails';
 import './Subscription.scss'
 import PaymentHistory from './components/PaymentHistory';
 import PaymentForm from './components/PaymentForm';
-import {httpGet} from '../../../../../helpers/httpMethods';
+import {httpGet, httpPatch} from '../../../../../helpers/httpMethods';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import {ReactComponent as TickIcon} from '../../../../../assets/icons/tick.svg';
 import {getRealCurrency} from './components/SubTop';
 import {separateNum} from '../../../../../helper';
+import { NotificationManager } from 'react-notifications';
 
 
 const Subscription = () => {
@@ -22,6 +23,7 @@ const Subscription = () => {
     const [tenantInfo, setTenantInfo] = useState(null);
     const [subscription, setSubscription] = useState(null);
     const [paymentHistory, setPaymentHistory] = useState(null);
+    const [plans, setPlans] = useState(null);
 
     const [planState,
         setPlanState] = useState({
@@ -44,6 +46,7 @@ const Subscription = () => {
             
             setPlan(res
                 ?.data[0]?.name === "Alpha Plan" ? res?.data[0] : res?.data[1]);
+            setPlans(res?.data);
         } else {
             setPlan({})
         }
@@ -111,10 +114,21 @@ const Subscription = () => {
         }
     }, [subscription]);
 
-    console.log('PLAN => ', plan);
+    const handleActivateFreePlan = async () => {
+        if (!["Alpha Trial", "Alpha Plan"].includes(subscription?.plan?.name)) {
+            // user is not in trial or alpha plan
 
-    console.log('SUBSCRIPTION => ', subscription);
+            // const res = await httpPatch(`subscriptions/free-plan`, { tenantId: window.localStorage.getItem('tenantId'), planId: subscription?.plan?.id || "" });
 
+            const res = await httpPatch(`subscriptions/free-plan`, { tenantId: window.localStorage.getItem('tenantId'), planId: Array.isArray(plans) ? plans.find(x => x?.name === "Free Plan")?.id : "" });
+
+            if (res
+                ?.status === "success") {
+                window.location.href = `/settings/account?tab=subscription`;
+                return NotificationManager.success('', 'Successful', 4000);
+            }
+        }
+    }
 
     return (
         <Fragment>
@@ -143,7 +157,7 @@ const Subscription = () => {
                                             {false && <div><BillingDetails/></div>}
                                         </div>
                                     </div> : <div className="plan-selection">
-                                    <div className="free-plan">
+                                    <div className={`free-plan ${["Alpha Trial", "Alpha Plan"].includes(subscription?.plan?.name) ? "free-plan-disabled" : ""}`}>
                                         <div>
                                             <p>Free Plan</p>
                                             <h3>Free</h3>
@@ -158,7 +172,7 @@ const Subscription = () => {
                                                 <li><span><TickIcon /></span> <span><del>Knowledge Base System</del></span></li>
                                             </ul>
                                             <div>
-                                                <button className="btn btn-outline-primary" disabled={true}>Activate</button>
+                                                <button className="btn btn-outline-primary" disabled={["Alpha Trial", "Alpha Plan"].includes(subscription?.plan?.name)} onClick={() => handleActivateFreePlan()}>Activate</button>
                                             </div>
                                         </div>
                                     </div>
