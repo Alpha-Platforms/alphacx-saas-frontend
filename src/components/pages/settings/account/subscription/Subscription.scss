@@ -568,3 +568,12 @@
 iframe {
     border: 2px solid red;
 }
+
+.free-plan-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+
+    ul > li {
+        pointer-events: none !important;
+    }
+}
