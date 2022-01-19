@@ -5,15 +5,29 @@ import {useState, useEffect} from 'react';
 import {httpPost} from '../../../../../../helpers/httpMethods';
 import {separateNum} from '../../../../../../helper';
 import acxLogo from '../../../../../../assets/images/whitebg.jpg';
+import moment from 'moment';
 // import ScaleLoader from 'react-spinners/ScaleLoader';
 
 const CurrentPlan = ({plan, planState, tenantInfo, setPlanState, subscription}) => {
     const [initiating, setInitiating] = useState(false);
+    const [addMoreUser, setAddMoreUser] = useState(false);
 
     const handleInitiatePayment = async() => {
 
+        
+
+        setInitiating(true);
+
+        const paymentInitEndpoint = (false && ["monthly", "yearly"].includes(subscription?.subscription?.interval) && subscription?.plan?.name?.toLowerCase() === "alpha plan" && moment(subscription?.subscription?.end_date).isAfter(new Date())) ? `subscriptions/payment/initialize-subscription-update` : `subscriptions/initialize-payment`;
+
         // body data to initiate payment
-        const initPaymentBody = {
+        const initPaymentBody = paymentInitEndpoint === "subscriptions/payment/initialize-subscription-update" ? {
+            tenantId: window
+                .localStorage
+                .getItem('tenantId'),
+            numOfUsers: planState
+                ?.numOfAgents
+        } : {
             tenantId: window
                 .localStorage
                 .getItem('tenantId'),
@@ -27,9 +41,7 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState, subscription}) 
                 ?.numOfAgents
         }
 
-        setInitiating(true);
-
-        const initPaymentRes = await httpPost(`subscriptions/initialize-payment`, initPaymentBody);
+        const initPaymentRes = await httpPost(paymentInitEndpoint, initPaymentBody);
 
         setInitiating(false);
 

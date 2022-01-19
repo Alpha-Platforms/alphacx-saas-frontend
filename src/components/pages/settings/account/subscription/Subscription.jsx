@@ -7,14 +7,19 @@ import BillingDetails from './components/BillingDetails';
 import './Subscription.scss'
 import PaymentHistory from './components/PaymentHistory';
 import PaymentForm from './components/PaymentForm';
-import {httpGet} from '../../../../../helpers/httpMethods';
+import {httpGet, httpPatch} from '../../../../../helpers/httpMethods';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import {ReactComponent as TickIcon} from '../../../../../assets/icons/tick.svg';
 import {getRealCurrency} from './components/SubTop';
 import {separateNum} from '../../../../../helper';
+import { NotificationManager } from 'react-notifications';
+import {connect} from 'react-redux';
+import {getAgents} from '../../../../../reduxstore/actions/agentActions';
+import {getAdmins} from '../../../../../reduxstore/actions/adminActions';
+import {getSupervisors} from '../../../../../reduxstore/actions/supervisorActions';
 
 
-const Subscription = () => {
+const Subscription = ({getAgents, getAdmins, getSupervisors, agents, admins, supervisors, isUserAuthenticated}) => {
     const [plan,
         setPlan] = useState(null);
     const [tenantId] = useState(window.localStorage.getItem('tenantId'));
@@ -22,6 +27,28 @@ const Subscription = () => {
     const [tenantInfo, setTenantInfo] = useState(null);
     const [subscription, setSubscription] = useState(null);
     const [paymentHistory, setPaymentHistory] = useState(null);
+    const [plans, setPlans] = useState(null);
+    const [totalUsers, setTotalUsers] = useState(null);
+
+    console.log("TOTAL USERS => ", totalUsers);
+
+    useEffect(() => {
+        if (isUserAuthenticated) {
+            // get the first set of users
+            // getPaginatedUsers(50, 1);
+            getAgents();
+            getSupervisors();
+            getAdmins();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isUserAuthenticated]);
+
+    useEffect(() => {
+        const realAdmins = Array.isArray(admins) ? admins : [];
+        const realSupervisors = Array.isArray(supervisors) ? supervisors : [];
+        const realAgents = Array.isArray(agents) ? agents : [];
+        setTotalUsers([...realAdmins, ...realSupervisors, ...realAgents]);
+    }, [admins, supervisors, agents])
 
     const [planState,
         setPlanState] = useState({
@@ -44,6 +71,7 @@ const Subscription = () => {
             
             setPlan(res
                 ?.data[0]?.name === "Alpha Plan" ? res?.data[0] : res?.data[1]);
+            setPlans(res?.data);
         } else {
             setPlan({})
         }
@@ -111,10 +139,21 @@ const Subscription = () => {
         }
     }, [subscription]);
 
-    console.log('PLAN => ', plan);
+    const handleActivateFreePlan = async () => {
+        if (!["Alpha Trial", "Alpha Plan"].includes(subscription?.plan?.name)) {
+            // user is not in trial or alpha plan
 
-    console.log('SUBSCRIPTION => ', subscription);
+            // const res = await httpPatch(`subscriptions/free-plan`, { tenantId: window.localStorage.getItem('tenantId'), planId: subscription?.plan?.id || "" });
 
+            const res = await httpPatch(`subscriptions/free-plan`, { tenantId: window.localStorage.getItem('tenantId'), planId: Array.isArray(plans) ? plans.find(x => x?.name === "Free Plan")?.id : "" });
+
+            if (res
+                ?.status === "success") {
+                window.location.href = `/settings/account?tab=subscription`;
+                return NotificationManager.success('', 'Successful', 4000);
+            }
+        }
+    }
 
     return (
         <Fragment>
@@ -126,7 +165,7 @@ const Subscription = () => {
                     </div>
 
                     <div>
-                        <SubTop plan={plan} tenantInfo={tenantInfo} subscription={subscription} />
+                        <SubTop plan={plan} tenantInfo={tenantInfo} subscription={subscription} totalUsers={totalUsers} />
                     </div>
 
                     {true
@@ -143,7 +182,7 @@ const Subscription = () => {
                                             {false && <div><BillingDetails/></div>}
                                         </div>
                                     </div> : <div className="plan-selection">
-                                    <div className="free-plan">
+                                    <div className={`free-plan ${["Alpha Trial", "Alpha Plan"].includes(subscription?.plan?.name) ? "free-plan-disabled" : ""}`}>
                                         <div>
                                             <p>Free Plan</p>
                                             <h3>Free</h3>
@@ -158,7 +197,7 @@ const Subscription = () => {
                                                 <li><span><TickIcon /></span> <span><del>Knowledge Base System</del></span></li>
                                             </ul>
                                             <div>
-                                                <button className="btn btn-outline-primary" disabled={true}>Activate</button>
+                                                <button className="btn btn-outline-primary" disabled={["Alpha Trial", "Alpha Plan"].includes(subscription?.plan?.name)} onClick={() => handleActivateFreePlan()}>Activate</button>
                                             </div>
                                         </div>
                                     </div>
@@ -197,4 +236,15 @@ const Subscription = () => {
     )
 }
 
-export default Subscription;
+const mapStateToProps = (state, ownProps) => ({
+    isUsersLoaded: state.user.isUsersLoaded,
+    agents: state.agent.agents,
+    admins: state.admin.admins,
+    supervisors: state.supervisor.supervisors,
+    isAgentsLoaded: state.agent.isAgentsLoaded,
+    isAdminsLoaded: state.admin.isAdminsLoaded,
+    isSupervisorLoaded: state.supervisor.isSupervisorsLoaded,
+    isUserAuthenticated: state.userAuth.isUserAuthenticated,
+});
+
+export default connect(mapStateToProps, {getSupervisors, getAdmins, getAgents})(Subscription);

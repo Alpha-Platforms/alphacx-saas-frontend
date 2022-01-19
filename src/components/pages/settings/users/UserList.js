@@ -59,6 +59,7 @@ const UserList = ({
   const [importModalShow, setImportModalShow] = useState(false);
   const [userLoading, setUserLoading] = useState(false);
   const [combinedUsers, setCombinedUsers] = useState([])
+  const [canAddUser, setCanAddUser] = useState(false);
 
 
   useEffect(() => {
@@ -183,6 +184,8 @@ const UserList = ({
     });
   }
 
+  const tenantSubscription = JSON.parse(window.localStorage.getItem("tenantSubscription"));
+
 
   return (
     <div>
@@ -208,9 +211,9 @@ const UserList = ({
           </div>
           <div className="mt-3">
             
-            <AccessControl>
+            {((tenantSubscription?.plan?.name === "Free Plan" && combinedUsers.length > 3) || (tenantSubscription?.plan?.name === "Alpha Plan" && combinedUsers.length > tenantSubscription?.subscription?.no_of_users)) ? <br /> : <AccessControl>
               <button className="btn btn-custom btn-sm px-4 bg-at-blue-light py-2" onClick={() => setCreateModalShow(true)}>New User</button>
-            </AccessControl>
+            </AccessControl>}
 
             {/* <Dropdown className="new-user-dropdown" id="new-user-dropdown">
               <Dropdown.Toggle
@@ -321,7 +324,7 @@ const UserList = ({
                     name: `${firstname} ${lastname}`,
                     emailAddress: email,
                     role,
-                    group: groups?.map( (item, index) => `${item.group.name}${groups.length-1 > index? ", ":" "}`).join(' '),
+                    group: groups?.map( (item, index) => `${item.group?.name}${groups?.length-1 > index? ", ":" "}`).join(' '),
                     created: created_at && moment(created_at).format('DD MMM, YYYY'),
                     // created: "13 Apr 2021",
                     contact: { firstname, lastname, id, avatar },
