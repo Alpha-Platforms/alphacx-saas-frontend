@@ -241,7 +241,8 @@ function Navbar({
 
   const [notif, setNotif] = useState({
     active: false,
-    trialDaysLeft: 0
+    trialDaysLeft: 0,
+    plan: ""
   });
 
 
@@ -249,14 +250,17 @@ function Navbar({
     const tenantSubscription = JSON.parse(window.localStorage.getItem("tenantSubscription"));
 
     if (tenantSubscription) {
-      if (tenantSubscription?.is_trial) {
-        const daysLeft = moment(tenantSubscription?.end_date).diff(moment(new Date()), 'days');
+      if (tenantSubscription?.subscription?.is_trial || tenantSubscription?.plan?.name === "Alpha Plan") {
+
+        // days left for plan expiration
+        const daysLeft = moment(tenantSubscription?.subscription?.end_date).diff(moment(new Date()), 'days');
         
         if (daysLeft <= 8 && daysLeft >= 0) {
           setNotif(prev => ({
             ...prev,
             active: true,
-            trialDaysLeft: daysLeft
+            trialDaysLeft: daysLeft,
+            plan: tenantSubscription?.plan?.name
           }));
         }
       }
@@ -301,7 +305,7 @@ function Navbar({
             }`}
           >
             {notif.active && <div className="sub-notif">
-              <span>Your Free Trial is ending in {notif.trialDaysLeft} days.</span> <Link to={`/settings/account?tab=subscription`} className="btn btn-sm bg-at-blue-light sub-notif-get">Get Alpha Plan Now</Link> <button onClick={() => setNotif(prev => ({...prev, active: false}))} className="sub-notif-cancel btn">×</button>
+              <span>Your {notif.plan} is ending in {notif.trialDaysLeft} days.</span> <Link to={`/settings/account?tab=subscription`} className="btn btn-sm bg-at-blue-light sub-notif-get">Get Alpha Plan Now</Link> <button onClick={() => setNotif(prev => ({...prev, active: false}))} className="sub-notif-cancel btn">×</button>
             </div>}
 
             <div className="navbar-content" style={{ height: notif.active ? `calc(100% - 3rem)` : '100%' }}>
