@@ -16,28 +16,6 @@ import { NotificationManager } from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import {uuid} from '../../../../helper';
 // 
-import YouTube from 'react-youtube';
-// 
-function YouTubeGetID(url){
-  var ID = '';
-  url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
-  if(url[2] !== undefined) {
-    ID = url[2].split(/[^0-9a-z_-]/i);
-    ID = ID[0];
-  }
-  else {
-    ID = url;
-  }
-    return ID;
-}
-
-class RegExp1 extends RegExp {
-    [Symbol.replace](str) {
-        return RegExp.prototype[Symbol.replace].call(this, str, `<iframe width="100%" height="500" src="https://www.youtube.com/embed/${YouTubeGetID(str)}"></iframe>`);
-    }
-}
-
-const youtubeRegex = /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/;
 
 const Article = () => {
   const {slug} = useParams();
@@ -50,15 +28,7 @@ const Article = () => {
   const [shouldReturn404, setShouldReturn404] = useState(false);
 
   const [headings, setHeadings] = useState(null);
-  // youtube player options
-  const youtubePlayerOptions = {
-    height: '500px',
-    width: '100%',
-    playerVars: {
-      // https://developers.google.com/youtube/player_parameters
-      autoplay: 0,
-    },
-  };
+ 
   function useQuery() {
     return new URLSearchParams(useLocation().search);
   }
@@ -134,39 +104,15 @@ const Article = () => {
         <HelpNavBar activeBG={true} />
         <TopBar categoryId={query.get("cat")} />
         <div className="help-article">
-          {/* {policyLoading && (
-            <div
-              className={`cust-table-loader ${
-                policyLoading && "add-loader-opacity"
-              }`}
-            >
-              <ScaleLoader loading={policyLoading} color={"#006298"} />
-            </div>
-          )} */}
-          {/* <div className="rounded-3 overflow-hidden"> */}
-                {/* onReady={}  */}
-                {/* <YouTube videoId={YouTubeGetID(articleContent?.body.match(youtubeRegex)[0])} opts={youtubePlayerOptions} />
-              </div> */}
           <div className="content">
             <h3 className="title mb-5">{articleContent?.title}</h3>
-            
-            {(new RegExp(youtubeRegex)).test(articleContent?.body)? 
-              <div
-                id="postBody"
-                className="postBody"
-                dangerouslySetInnerHTML={{
-                  __html: `<span>${articleContent?.body.replace(new RegExp1(youtubeRegex)) || ''}</span>`,
-                }}
-              />
-              : 
-              <div
+             <div
                 id="postBody"
                 className="postBody"
                 dangerouslySetInnerHTML={{
                   __html: `<span>${articleContent?.body || ''}</span>`,
                 }}
               />
-            }
             <div className="attachments">
               <Accordion question="Article Attachments" />
             </div>
