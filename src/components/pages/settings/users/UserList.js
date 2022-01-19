@@ -208,9 +208,9 @@ const UserList = ({
           </div>
           <div className="mt-3">
             
-            <AccessControl>
+            {["Alpha Trial", "Alpha Plan"].includes(JSON.parse(window.localStorage.getItem("tenantSubscription"))?.plan?.name) && <AccessControl>
               <button className="btn btn-custom btn-sm px-4 bg-at-blue-light py-2" onClick={() => setCreateModalShow(true)}>New User</button>
-            </AccessControl>
+            </AccessControl>}
 
             {/* <Dropdown className="new-user-dropdown" id="new-user-dropdown">
               <Dropdown.Toggle

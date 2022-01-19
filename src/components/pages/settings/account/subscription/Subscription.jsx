@@ -13,9 +13,13 @@ import {ReactComponent as TickIcon} from '../../../../../assets/icons/tick.svg';
 import {getRealCurrency} from './components/SubTop';
 import {separateNum} from '../../../../../helper';
 import { NotificationManager } from 'react-notifications';
+import {connect} from 'react-redux';
+import {getAgents} from '../../../../../reduxstore/actions/agentActions';
+import {getAdmins} from '../../../../../reduxstore/actions/adminActions';
+import {getSupervisors} from '../../../../../reduxstore/actions/supervisorActions';
 
 
-const Subscription = () => {
+const Subscription = ({getAgents, getAdmins, getSupervisors, agents, admins, supervisors, isUserAuthenticated}) => {
     const [plan,
         setPlan] = useState(null);
     const [tenantId] = useState(window.localStorage.getItem('tenantId'));
@@ -24,6 +28,27 @@ const Subscription = () => {
     const [subscription, setSubscription] = useState(null);
     const [paymentHistory, setPaymentHistory] = useState(null);
     const [plans, setPlans] = useState(null);
+    const [totalUsers, setTotalUsers] = useState(null);
+
+    console.log("TOTAL USERS => ", totalUsers);
+
+    useEffect(() => {
+        if (isUserAuthenticated) {
+            // get the first set of users
+            // getPaginatedUsers(50, 1);
+            getAgents();
+            getSupervisors();
+            getAdmins();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isUserAuthenticated]);
+
+    useEffect(() => {
+        const realAdmins = Array.isArray(admins) ? admins : [];
+        const realSupervisors = Array.isArray(supervisors) ? supervisors : [];
+        const realAgents = Array.isArray(agents) ? agents : [];
+        setTotalUsers([...realAdmins, ...realSupervisors, ...realAgents]);
+    }, [admins, supervisors, agents])
 
     const [planState,
         setPlanState] = useState({
@@ -140,7 +165,7 @@ const Subscription = () => {
                     </div>
 
                     <div>
-                        <SubTop plan={plan} tenantInfo={tenantInfo} subscription={subscription} />
+                        <SubTop plan={plan} tenantInfo={tenantInfo} subscription={subscription} totalUsers={totalUsers} />
                     </div>
 
                     {true
@@ -211,4 +236,15 @@ const Subscription = () => {
     )
 }
 
-export default Subscription;
+const mapStateToProps = (state, ownProps) => ({
+    isUsersLoaded: state.user.isUsersLoaded,
+    agents: state.agent.agents,
+    admins: state.admin.admins,
+    supervisors: state.supervisor.supervisors,
+    isAgentsLoaded: state.agent.isAgentsLoaded,
+    isAdminsLoaded: state.admin.isAdminsLoaded,
+    isSupervisorLoaded: state.supervisor.isSupervisorsLoaded,
+    isUserAuthenticated: state.userAuth.isUserAuthenticated,
+});
+
+export default connect(mapStateToProps, {getSupervisors, getAdmins, getAgents})(Subscription);
