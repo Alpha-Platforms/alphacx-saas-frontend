@@ -38,7 +38,7 @@ const DefaultLayoutRoute = ({
   }) => {
 
   const [valid, setValid] = useState("loading");
-  const userRole = store.getState().userAuth.user.role;
+  const userRole = store.getState().userAuth?.user?.role;
 
   const history = useHistory();
   const location = useLocation();
