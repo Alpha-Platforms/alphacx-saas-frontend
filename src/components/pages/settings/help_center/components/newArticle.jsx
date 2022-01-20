@@ -338,7 +338,14 @@ const NewArticle = () => {
     getFolders();
   }, [newPost?.categoryId]);
 
-  const embedCallbackFunc = () => {
+  const embedCallbackFunc = (embeddedLink) => {
+    if (embeddedLink.indexOf("youtube") >= 0){
+      embeddedLink = embeddedLink.replace("watch?v=","embed/");
+      embeddedLink = embeddedLink.replace("/watch/", "/embed/");
+      embeddedLink = embeddedLink.replace("youtu.be/","youtube.com/embed/");
+      return embeddedLink;
+    }
+    return embeddedLink;
   }
 
   const handleFileSelect = function (e) {
@@ -576,14 +583,13 @@ useEffect(() => {
                     // "list",
                     "textAlign",
                     // "colorPicker",
-                    // "embedded",
+                    "embedded",
                   ],
                   // inline: {
                   //   inDropdown: false,
                   //   icon: boldB,
                   //   options: ["bold", "underline", "italic"],
                   // },
-
                   inline: {
                     inDropdown: false,
                     className: undefined,
@@ -645,11 +651,11 @@ useEffect(() => {
                     // icon: embedded,
                     className: undefined,
                     component: undefined,
-                    popupClassName: undefined,
+                    popupClassName: "article-embed-popup",
                     embedCallback: embedCallbackFunc,
                     defaultSize: {
-                      height: 'auto',
-                      width: 'auto',
+                      height: '440',
+                      width: '100%',
                     },
                   },
 
