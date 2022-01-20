@@ -405,7 +405,7 @@ function App(props) {
     //DisableInspect()
     return (
         <Provider store={store}>
-            <PersistGate persistor={persistor}>
+            <PersistGate loading={null} persistor={persistor}>
                 <NotificationContainer/>
 
                 <SiteRouter/>

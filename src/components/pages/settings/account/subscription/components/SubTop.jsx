@@ -50,7 +50,7 @@ const SubTop = ({plan, tenantInfo, subscription, totalUsers}) => {
                 <div>
                     <span>No of Users</span>
                     {/* <span>{subscription === null ? '...' : (subscription?.subscription?.no_of_users || 'N/A')}</span> */}
-                    <span>{subscription === null ? '...' : `${totalUsers?.length} of ${(subscription?.subscription?.no_of_users || 'N/A')}`}</span>
+                    <span>{subscription === null ? '...' : `${totalUsers?.length} of ${(subscription?.plan?.name === "Alpha Trial" ? "∞" : subscription?.plan?.name === "Free Plan" ? "3" : subscription?.subscription?.no_of_users || 'N/A')}`}</span>
                 </div>
             </div>
 
