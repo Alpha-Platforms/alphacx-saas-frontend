@@ -38,7 +38,7 @@ export const updateTwitterConfig = (newTwitterConfig, success, failed) => (dispa
     }
 
     const body = {
-        twitter_config: {...newTwitterConfig, env: "dev"}
+        twitter_config: newTwitterConfig
     };
 
     axios.patch(`${config.stagingBaseUrl}/settings/twitter-config`, JSON.stringify(body), userTokenConfig(getState)).then(res => {

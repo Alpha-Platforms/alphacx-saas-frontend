@@ -51,17 +51,17 @@ const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, getTwi
 
         })
 
-        // if (twitterConfig) {
+        if (twitterConfig) {
             
-        //     setSettings({
-        //         apiKey: twitterConfig.api_key,
-        //         apiSecretKey: twitterConfig.api_secret_key,
-        //         accessToken: twitterConfig.access_token,
-        //         accessTokenSecretKey: twitterConfig.access_token_secret_key,
-        //         bearerToken: twitterConfig.bearer_token
-        //     });
+            setSettings({
+                apiKey: twitterConfig.api_key,
+                apiSecretKey: twitterConfig.api_secret_key,
+                accessToken: twitterConfig.access_token,
+                accessTokenSecretKey: twitterConfig.access_token_secret_key,
+                bearerToken: twitterConfig.bearer_token
+            });
 
-        // }
+        }
 
     }, [twitterConfig])
     
@@ -70,9 +70,6 @@ const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, getTwi
     const handleConfigSave = () => {
 
         const {apiKey, apiSecretKey, accessToken, accessTokenSecretKey, bearerToken} = settings;      
-
-        console.clear()
-        console.log(settings)
         
         if (!apiKey || !apiSecretKey || !accessToken || !accessTokenSecretKey || !bearerToken) {
             return NotificationManager.error('Fill all fields', 'Error', 4000);
@@ -83,17 +80,8 @@ const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, getTwi
             api_secret_key: apiSecretKey, 
             access_token: accessToken, 
             access_token_secret_key: accessTokenSecretKey, 
-            bearer_token: bearerToken
-
-
-            // api_secret_key: 
-            // access_token:
-            // access_token_secret_key:
-            // bearer_token:
-            // apiSecretKey,
-            // accessToken, 
-            // accessTokenSecretKey, 
-            // bearerToken
+            bearer_token: bearerToken,
+            env: "dev"
 
         };
 
@@ -113,9 +101,6 @@ const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, getTwi
 
     return (
         <div>
-        {/* {loading && <div className="cust-table-loader"><ScaleLoader loading={true} color={"#006298"}/></div>} */}
-
-
             <div className="card card-body bg-white border-0 p-0 mb-4">
                 <header id="mainContentHeader" className="breadcrumb">
                     <h6 className="text-muted f-14">
@@ -209,7 +194,6 @@ const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, getTwi
                                             : ("Save Changes")
                                         }
                                     </button>
-
 
 
                                 </div>
