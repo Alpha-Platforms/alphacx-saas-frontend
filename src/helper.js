@@ -189,8 +189,8 @@ export const redirectToSub = (history, location) => {
     // history is useHistory from react router dom
     if (history && location && location.pathname !== "/settings/account") {
         const tenantSubscription = JSON.parse(window.localStorage.getItem('tenantSubscription'));
-        if (tenantSubscription) {
-            if (moment(tenantSubscription?.end_date).isBefore(new Date())) {
+        if (tenantSubscription && tenantSubscription?.subscription?.end_date) {
+            if (moment(tenantSubscription?.subscription?.end_date).isBefore(new Date())) {
                 // subscrition has ended
                 history.push("/settings/account?tab=subscription");
             }

@@ -196,8 +196,8 @@ function Conversation({user, ...props}) {
   // 
   useEffect(() => {
     // ticketHistoryId
-    if (tickets.length > 0 && location.state && location.state.hasOwnProperty('ticketId')) {
-      let currentTicket = tickets.find(ticket => ticket.id == location.state.ticketId);
+    if (tickets?.length > 0 && location.state && location.state.hasOwnProperty('ticketId')) {
+      let currentTicket = tickets?.find(ticket => ticket.id == location.state.ticketId);
       setSingleTicketFullInfo(currentTicket);
       loadSingleMessage(currentTicket);
       setTicketId(location.state.ticketId);
