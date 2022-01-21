@@ -7,6 +7,7 @@ import Badge from "react-bootstrap/Badge";
 import "./../settings.css";
 import whatsappImg from "../../../../assets/imgF/WhatsApp.png";
 import facebookImg from "../../../../assets/imgF/Facebook.png";
+import twitterImg from "../../../../assets/imgF/twitter.png";
 import termiiImg from "../../../../assets/imgF/termii.png";
 import smsImg from "../../../../assets/imgF/TwilioSms.svg";
 import { httpPatchMain, httpPostMain, httpGetMain, httpGet} from "../../../../helpers/httpMethods";
@@ -110,6 +111,30 @@ function SocialIntegrations({configs}) {
           </Link>
         </div>
       </div>
+      
+      <div className="col-md-4 col-sm-6 col-12">
+        <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
+          <Link to="/settings/integrations/twitter" className="d-block cursor text-decoration-none">
+            <div className="d-flex align-items-start p-md-4 p-3">
+              <div className="w">
+                <img src={twitterImg} alt="" width="38" />
+              </div>
+              <div className="ms-3 d-flex justify-content-between align-items-start">
+                <div className="me-2">
+                  <h6 className="text-dark mb-0">Twitter</h6>
+                  <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
+                    Receive and respond to Twitter direct messages as tickets
+                  </p>
+                </div>
+                <div className="">
+                  <Badge className={`${!smsConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>{!smsConnected? "Connect" : "Connected"}</Badge>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </div>
+      </div>
+      
       <div className="col-md-4 col-sm-6 col-12">
         <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
           <Link to="/settings/integrations/sms" className="d-block cursor text-decoration-none">
@@ -132,6 +157,7 @@ function SocialIntegrations({configs}) {
           </Link>
         </div>
       </div>
+
       <div className="col-md-4 col-sm-6 col-12">
         <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
           <Link to="/settings/integrations/email" className="d-block cursor text-decoration-none">
