@@ -56,6 +56,7 @@ import Fields from "./components/pages/settings/fields/Fields";
 //
 import SocialIntegrations from "./components/pages/settings/social_integrations/index";
 import FacebookIntegration from "./components/pages/settings/social_integrations/FacebookIntegration";
+import TwitterIntegration from "./components/pages/settings/twittersettings/TwitterSettings";
 import WhatsappIntegration from "./components/pages/settings/social_integrations/WhatsappIntegration";
 //
 import RatingsForm from "./components/pages/ratings/RatingsForm.jsx";
@@ -370,6 +371,11 @@ const SiteRouter = connect(mapStateToProps, {
                                 path="/settings/integrations/facebook"
                                 pageName="Facebook Integration"
                                 component={FacebookIntegration}/>
+                                <SettingsLayoutRoute
+                                    exact
+                                    path="/settings/integrations/twitter"
+                                    pageName="Twitter Integration"
+                                    component={TwitterIntegration}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/integrations/whatsapp"
