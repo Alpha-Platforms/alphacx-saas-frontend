@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect } from "react";
 import "./helpCenter.scss";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
@@ -19,6 +20,7 @@ import "../../../../styles/Ticket.css";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import Swal from "sweetalert2";
 import { wordCapitalize } from "../../../../helper";
+import moment from "moment";
 
 const HelpCenterSettings = () => {
   const [articles, setArticles] = useState([]);
@@ -143,7 +145,7 @@ const HelpCenterSettings = () => {
       title: "Publish",
       field: "isPublished",
       render: (rowData) => (
-        <div class="form-check form-switch">
+        <div className="form-check form-switch">
           <input
             className="form-check-input form-check-input-lg mt-1"
             checked={rowData.isPublished}
@@ -159,12 +161,12 @@ const HelpCenterSettings = () => {
         </div>
       ),
     },
+    // {
+    //   title: "Page Views",
+    //   field: "views",
+    // },
     {
-      title: "Page Views",
-      field: "views",
-    },
-    {
-      title: "Author",
+      title: "Account Owner",
       field: "author",
     },
     {
@@ -256,7 +258,7 @@ const HelpCenterSettings = () => {
   }, [page]);
 
   return (
-    <div class="settings-email help-center-settings">
+    <div className="settings-email help-center-settings">
       {policyLoading && (
         <div
           className={`cust-table-loader ${
@@ -266,7 +268,7 @@ const HelpCenterSettings = () => {
           <ScaleLoader loading={policyLoading} color={"#006298"} />
         </div>
       )}
-      <div class="card card-body bg-white border-0 mt-4">
+      <div className="card card-body bg-white border-0 mt-4">
         <div id="mainContentHeader">
           <h6 className="text-muted f-14">
             <Link to="/settings">
@@ -278,17 +280,17 @@ const HelpCenterSettings = () => {
             <span>Knowledge Base</span>
           </h6>
         </div>
-        <div class="d-flex justify-content-between flex-row">
-          <h5 class="mt-3 mb-4 fs-6 fw-bold">Knowledge Base Settings</h5>
+        <div className="d-flex justify-content-between flex-row">
+          <h5 className="mt-3 mb-4 fs-6 fw-bold">Knowledge Base Settings</h5>
           <div>
           <Link
-              class="btn btn-primary btn-sm ms-2"
+              className="btn btn-primary btn-sm ms-2"
               to="/settings/knowledge-base/categories"
             >
               <span>Categories</span>
             </Link>
             <Link
-              class="btn btn-primary btn-sm ms-2"
+              className="btn btn-primary btn-sm ms-2"
               to="/settings/knowledge-base/article"
             >
               <span>New Article</span>
@@ -312,8 +314,8 @@ const HelpCenterSettings = () => {
                     isPublished,
                     views: "100",
                     author: "Dabo Etela",
-                    created_at: created_at.split(" ")[0],
-                    modified_at: updated_at.split(" ")[0],
+                    created_at: moment(created_at).format("DD MMM, YYYY"),
+                    modified_at: moment(updated_at).format("DD MMM, YYYY"),
                   })
                 )}
                 options={{
