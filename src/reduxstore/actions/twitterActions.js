@@ -44,7 +44,7 @@ export const updateTwitterConfig = (newTwitterConfig, success, failed) => (dispa
     axios.patch(`${config.stagingBaseUrl}/settings/twitter-config`, JSON.stringify(body), userTokenConfig(getState)).then(res => {
         if (res.data
             ?.status === "success") {
-            success && success();
+            success && success(res?.data);
 			dispatch({
 				type: types.UPDATE_TWITTER_CONFIG
 			});
