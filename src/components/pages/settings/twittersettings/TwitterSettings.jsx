@@ -5,14 +5,14 @@ import RightArrow from "../../../../assets/imgF/arrow_right.png";
 import './style.css';
 import {NotificationManager} from 'react-notifications';
 import {connect} from 'react-redux';
-import {getTwitterConfig, updateTwitterConfig} from '../../../../reduxstore/actions/twitterActions';
+import {updateTwitterConfig} from '../../../../reduxstore/actions/configActions';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import ClipLoader from "react-spinners/ClipLoader";
 import {css} from "@emotion/react";
 import { Settings } from "@material-ui/icons";
 
 
-const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, getTwitterConfig, updateTwitterConfig, isUserAuthenticated}) => {
+const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, updateTwitterConfig, isUserAuthenticated}) => {
 
 
     const [settings, setSettings] = useState({
@@ -40,16 +40,16 @@ const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, getTwi
     useEffect(() => {    
     // eslint-disable-next-line react-hooks/exhaustive-deps
     
-        getTwitterConfig((data) => {
-            setSettings({
-                apiKey: data.api_key,
-                apiSecretKey: data.api_secret_key,
-                accessToken: data.access_token,
-                accessTokenSecretKey: data.access_token_secret_key,
-                bearerToken: data.bearer_token
-            });
+        // getTwitterConfig((data) => {
+        //     setSettings({
+        //         apiKey: data.api_key,
+        //         apiSecretKey: data.api_secret_key,
+        //         accessToken: data.access_token,
+        //         accessTokenSecretKey: data.access_token_secret_key,
+        //         bearerToken: data.bearer_token
+        //     });
 
-        })
+        // })
 
         if (twitterConfig) {
             
@@ -63,6 +63,7 @@ const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, getTwi
 
         }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [twitterConfig])
     
 
@@ -87,9 +88,8 @@ const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, getTwi
 
         setLoading(true);
         updateTwitterConfig(newConfig, 
-            () => {
+            (data) => {
                 NotificationManager.success('Updated successfully', 'Success', 4000);
-
                 setLoading(false);
             }, 
             msg => {
@@ -214,4 +214,4 @@ const mapStateToProps = (state, ownProps) => ({
     isUserAuthenticated: state.userAuth.isUserAuthenticated
 });
 
-export default connect(mapStateToProps, {getTwitterConfig, updateTwitterConfig})(TwitterSettings);
+export default connect(mapStateToProps, {updateTwitterConfig})(TwitterSettings);
