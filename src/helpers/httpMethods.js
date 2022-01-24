@@ -227,6 +227,7 @@ export const httpPostData = async (url, postBody) => {
     return { er: error.response.data };
   }
 };
+
 export const httpPostNoAuth = async (url, postBody, newHeaders) => {
   if (!navigator.onLine) {
     return NotificationManager.error(
@@ -299,7 +300,6 @@ export const httpGetMain = async (url) => {
   }
 };
 
-
 export const httpGetMainKB = async (url) => {
   if (!navigator.onLine) {
     return NotificationManager.error(
@@ -339,7 +339,6 @@ export const httpGetMainKB = async (url) => {
   }
 };
 
-
 export const httpGetMainNoAuth = async (url, newHeaders) => {
   if (!navigator.onLine) {
     return NotificationManager.error(
@@ -376,7 +375,6 @@ export const httpGetMainNoAuth = async (url, newHeaders) => {
     return { er: error.response.data };
   }
 };
-
 
 export const httpGet = async (url) => {
   if (!navigator.onLine) {
