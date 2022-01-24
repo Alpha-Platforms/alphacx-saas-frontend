@@ -36,7 +36,21 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import axios from 'axios';
 import {allowedFiles, getAcceptValue, allowDocs} from '../../../../../helper';
 import {config} from '../../../../../config/keys';
-
+// 
+let youtubeRegex = /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/g;
+// 
+function YouTubeGetID(url){
+  var ID = '';
+  url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+  if(url[2] !== undefined) {
+    ID = url[2].split(/[^0-9a-z_-]/i);
+    ID = ID[0];
+  }
+  else {
+    ID = url;
+  }
+    return ID;
+}
 // 67796966-e0c2-44db-b184-cc4a7e19bee0
 const NewArticle = () => {
   let { articleId } = useParams();
@@ -339,11 +353,9 @@ const NewArticle = () => {
   }, [newPost?.categoryId]);
 
   const embedCallbackFunc = (embeddedLink) => {
-    if (embeddedLink.indexOf("youtube") >= 0){
-      embeddedLink = embeddedLink.replace("watch?v=","embed/");
-      embeddedLink = embeddedLink.replace("/watch/", "/embed/");
-      embeddedLink = embeddedLink.replace("youtu.be/","youtube.com/embed/");
-      return embeddedLink;
+    if ((new RegExp(youtubeRegex)).test(embeddedLink)){
+      let youtubeId = YouTubeGetID(embeddedLink)
+      return `https://www.youtube.com/embed/${youtubeId}`;
     }
     return embeddedLink;
   }
