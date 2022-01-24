@@ -41,7 +41,7 @@ const Login = ({match: {params}}) => {
         ?.status === "success") {
           window.localStorage.setItem("tenantSubscription", JSON.stringify(res?.data));
     } else {
-        setSubscription({})
+        // setSubscription({})
     }
 }
 

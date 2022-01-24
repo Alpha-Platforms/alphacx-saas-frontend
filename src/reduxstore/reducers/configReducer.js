@@ -22,6 +22,17 @@ const configReducer = (state = initialState, action) => {
 				isConfigsLoading: true,
 				isConfigsLoaded: false
 			}
+		case types.UPDATE_TWITTER_CONFIG:
+			return {
+				...state,
+				configs: {
+					...state.configs,
+					twitter_config: {
+						...state.configs?.twitter_config,
+						...action.payload
+					}
+				}
+			}
 		default:
 			return state;
 	}
