@@ -30,8 +30,6 @@ const Subscription = ({getAgents, getAdmins, getSupervisors, agents, admins, sup
     const [plans, setPlans] = useState(null);
     const [totalUsers, setTotalUsers] = useState(null);
 
-    console.log("TOTAL USERS => ", totalUsers);
-
     useEffect(() => {
         if (isUserAuthenticated) {
             // get the first set of users
