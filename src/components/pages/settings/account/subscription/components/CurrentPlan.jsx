@@ -160,7 +160,7 @@ const CurrentPlan = ({plan, planState, tenantInfo, setPlanState, subscription}) 
                             name="plan"
                             className="billing-time-select"
                             value={planState.billingCycle}
-                            isDisabled={initiating || planState.isUpdatingPlan || subscription?.subscription?.interval === "monthly" || subscription?.subscription?.interval === "yearly"}
+                            isDisabled={initiating || planState.isUpdatingPlan || (subscription?.subscription?.interval === "monthly" && subscription?.plan?.name === "Alpha Plan") || (subscription?.subscription?.interval === "yearly" && subscription?.plan?.name === "Alpha Plan")}
                             options={[
                             {
                                 value: 'monthly_amount',
