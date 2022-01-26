@@ -44,7 +44,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgb(255, 151, 0);
+  /* background: rgb(255, 151, 0); */
+  background: #FDE6E6;
+  /* background: #F40D0D40; */
   position: relative;
   /* display: none; */
 }
