@@ -245,6 +245,7 @@ const CreateUserModal = ({
                                     <option value="Administrator">Administrator</option>
                                     <option value="Supervisor">Supervisor</option>
                                     <option value="Agent">Agent</option>
+                                    <option value="Observer">Observer</option>
                                     {/* {groups.map(({name, id}) => <option value={id}>{name}</option>)} */}
                                     
                                 </select>
