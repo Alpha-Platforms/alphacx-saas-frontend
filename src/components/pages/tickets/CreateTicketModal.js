@@ -24,7 +24,7 @@ import {createTags} from '../../../reduxstore/actions/tagActions';
 import {getChannels, addChannel} from '../../../reduxstore/actions/channelActions';
 import {getAcceptValue, allowedFiles} from '../../../helper';
 import {config} from '../../../config/keys';
-
+import { wordCapitalize, defaultTicketProperties } from '../../../helper';
 
 
 const CreateTicketModal = ({
@@ -91,13 +91,49 @@ const CreateTicketModal = ({
         dueHours: 0,
         channel: ''
     });
-    // const [cancelExec, setCancelExec] = useState(false);
+    
 
-    //
+    const [Category, setCategory] = useState([]);
+    const [openSaveTicketModal, setopenSaveTicketModal] = useState(false);
+
+    const [defaultStatus, setDefaultStatus] = useState([]);    
+    const [defaultPriority, setDefaultPriority] = useState([]);
+
+    const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(false)
+    const [assignType, setAssignType] = useState('teams')
+    const [categoriesAndSubs, setCategoriesAndSubs] = useState([])
+    
+
+    /* UPDATE MODAL FORM VALUES */
+    const [RSCustomerName, setRSCustomerName] = useState("");
+    const [RSTicketCate, setRSTicketCate] = useState("");
+    const [RSTickeSubject, setRSTickeSubject] = useState("");
+    const [RSTicketStage, setRSTicketStage] = useState("");
+    const [RSTicketPriority, setRSTicketPriority] = useState("");
+    const [RSTicketRemarks, setRSTicketRemarks] = useState("");
+    const [RSTicketAssignedAgent, setRSTicketAssignedAgent] = useState("");
+    const [RSTicketDueDate, setRSTicketDueDate] = useState("");
+    const [RSTeams, setRSTeams] = useState([])
+
+
+    
     useEffect(() => {
         getChannels();
+
+        setDefaultStatus(() => {
+            return statuses.filter(item => item.id === defaultTicketProperties.status.id).map(item => {
+                return {value: item.id, label: item.status}
+            })
+        })
+
+        setDefaultPriority(() => {
+            return priorities.filter(item => item.id === defaultTicketProperties.priority.id).map(item => {
+                return {value: item.id, label: item.name}
+            })
+        })
+
     }, [])
-    //  
+
     useEffect(() => {
         if(isEditing){
             setModalInputs(prevState => ({
@@ -106,7 +142,33 @@ const CreateTicketModal = ({
             }));
         }
     }, [createModalShow])
-    // 
+    
+
+    useEffect(() => {
+        if (isTicketCreated) {
+            resetTicketCreated();
+            setCreateModalShow(false);
+            setCreatingTicket(false);
+            setSubCatLoading(false);
+            // setChangingRow(true);
+            getPaginatedTickets(50, 1);
+            setUploadInfo({
+                blob: null,
+                msg: 'Add file or drag file here.',
+                error: false,
+                image: null,
+                ownAvatar: ''
+            });
+        }
+
+        prepCategoriesAndSubs()
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isTicketCreated])
+
+
+    // = = = = = F U N C T I O N S = = = = = = //
+
     const handleRSInput = async ({value}, {name}) => {
         // {value}, {name} destructured - react-select onChange event takes inputValue and meta
 
@@ -135,30 +197,6 @@ const CreateTicketModal = ({
         }));
     };
 
-    // useEffect(() => {
-    //     console.clear()
-    //     console.log(tags)
-    // }, [tags])
-    
-
-    // FIND AND REMOVE - getSubCategory, setSubCatLoading, 
-
-    // function handleTagSelection() {
-    //     const {tag} = this;
-    //     if (selectedTags.includes(tag)) {
-    //         setSelectedTags(prevState => prevState.filter(x => x !== tag));
-    //     } else {
-    //         setSelectedTags(prevState => [
-    //             ...prevState,
-    //             tag
-    //         ]);
-    //     }
-    // }
-
-    /* const handleTagSelection = tags => {
-        const realTags = tags.map(tag => tag.value);
-        setSelectedTags(realTags);
-    } */
 
     const handleTagSelection = tags => {
         setSelectedTags(tags);
@@ -247,35 +285,6 @@ const CreateTicketModal = ({
             
         }
     }
-
-    useEffect(() => {
-        if (isTicketCreated) {
-            resetTicketCreated();
-            setCreateModalShow(false);
-            setCreatingTicket(false);
-            setSubCatLoading(false);
-            // setChangingRow(true);
-            getPaginatedTickets(50, 1);
-            setUploadInfo({
-                blob: null,
-                msg: 'Add file or drag file here.',
-                error: false,
-                image: null,
-                ownAvatar: ''
-            });
-        }
-
-        prepCategoriesAndSubs()
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isTicketCreated])
-
-    const wordCapitalize = word => {
-        return word
-            .charAt(0)
-            .toUpperCase() + word.slice(1);
-    }
-
 
     // OLD GET CUSTOMER SEARCH, JUST IN CASE //
     // const timeBeforeSearch = 1500;
@@ -385,25 +394,6 @@ const CreateTicketModal = ({
         }
     }
 
-
-    const [Category, setCategory] = useState([]);
-    const [openSaveTicketModal, setopenSaveTicketModal] = useState(false);
-    const [ticketStatuses, setTicketStatuses] = useState([]);
-    const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(false)
-    const [assignType, setAssignType] = useState('teams')
-    const [categoriesAndSubs, setCategoriesAndSubs] = useState([])
-    
-
-    /* UPDATE MODAL FORM VALUES */
-    const [RSCustomerName, setRSCustomerName] = useState("");
-    const [RSTicketCate, setRSTicketCate] = useState("");
-    const [RSTickeSubject, setRSTickeSubject] = useState("");
-    const [RSTicketStage, setRSTicketStage] = useState("");
-    const [RSTicketPriority, setRSTicketPriority] = useState("");
-    const [RSTicketRemarks, setRSTicketRemarks] = useState("");
-    const [RSTicketAssignedAgent, setRSTicketAssignedAgent] = useState("");
-    const [RSTicketDueDate, setRSTicketDueDate] = useState("");
-    const [RSTeams, setRSTeams] = useState([])
 
     const prepCategoriesAndSubs = () => {
         categories.forEach(item => {
@@ -644,6 +634,7 @@ const CreateTicketModal = ({
                                     onChange={handleRSInput}
                                     isClearable={false}
                                     isMulti={false}
+                                    defaultValue={defaultStatus}
                                     options={
                                         // populate 'options' prop from $agents, with names remapped
                                         statuses?.map(item => {
@@ -683,8 +674,9 @@ const CreateTicketModal = ({
                                     onChange={handleRSInput}
                                     isClearable={false}
                                     noOptionsMessage={() => "No options available!"}
-                                    placeholder="Medium"
+                                    // placeholder="Medium"
                                     isMulti={false}
+                                    defaultValue={defaultPriority}
                                     options={
                                         // populate 'options' prop from $agents, with names remapped
                                         priorities?.map(item => {
