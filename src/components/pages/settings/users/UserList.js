@@ -27,6 +27,7 @@ import {updateUser} from '../../../../reduxstore/actions/userActions';
 import {getAgents, negateActiveState} from '../../../../reduxstore/actions/agentActions';
 import {getAdmins} from '../../../../reduxstore/actions/adminActions';
 import {getSupervisors} from '../../../../reduxstore/actions/supervisorActions';
+import {getObservers} from '../../../../reduxstore/actions/observerActions';
 import "../../../../styles/Setting.css";
 import {NotificationManager} from 'react-notifications';
 import AccessControl from "../../auth/accessControl.jsx"
@@ -49,6 +50,7 @@ const UserList = ({
   getAgents,
   getAdmins,
   getSupervisors,
+  getObservers,
   authenticatedUserRole
 }) => {
   // 
@@ -82,6 +84,7 @@ const UserList = ({
         getAgents();
         getSupervisors();
         getAdmins();
+        getObservers();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUserAuthenticated]);
@@ -393,4 +396,4 @@ const mapStateToProps = (state, ownProps) => ({
 
 });
 
-export default connect(mapStateToProps, { getPaginatedUsers, getAgents, getSupervisors, getAdmins, negateActiveState })(UserList);
+export default connect(mapStateToProps, { getPaginatedUsers, getAgents, getSupervisors, getAdmins, negateActiveState, getObservers })(UserList);

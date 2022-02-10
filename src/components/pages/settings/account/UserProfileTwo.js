@@ -56,7 +56,8 @@ const UserProfileTwo = ({
     const [RSRoles, setRSRoles] = useState([
         {value: "Agent", label: "Agent"},
         {value: "Supervisor", label: "Supervisor"},
-        {value: "Administrator", label: "Administrator"}
+        {value: "Administrator", label: "Administrator"},
+        {value: "Observer", label: "Observer"}
     ]);
 
     const [selectedRole, setSelectedRole] = useState([])

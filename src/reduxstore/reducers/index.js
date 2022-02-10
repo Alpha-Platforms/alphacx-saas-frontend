@@ -12,6 +12,7 @@ import groupReducer from './groupReducer';
 import agentReducer from './agentReducer';
 import adminReducer from './adminReducer';
 import supervisorReducer from './supervisorReducer';
+import observerReducer from './observerReducer';
 import userReducer from './userReducer';
 import tagReducer from './tagReducer';
 import subCategoryReducer from './subCategoryReducer';
@@ -41,6 +42,7 @@ const rootReducer = combineReducers({
     agent: agentReducer,
     admin: adminReducer,
     supervisor: supervisorReducer,
+    observer: observerReducer,
     user: userReducer,
     tag: tagReducer,
     subCategory: subCategoryReducer,
