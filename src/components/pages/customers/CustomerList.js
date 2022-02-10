@@ -169,7 +169,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                 </>)
             }
         ].filter(x => {
-            if (x.field === "action" && !multiIncludes(accessControlFunctions[user?.role], ["create_ticket", "create_customer"])) {
+            if (x.field === "action" && !multiIncludes(accessControlFunctions[user?.role], ["edit_customer"])) {
                 return false;
             }
             return true;

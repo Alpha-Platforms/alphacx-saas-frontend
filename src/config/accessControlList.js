@@ -11,13 +11,15 @@ const accessControlList = {
 > create_ticket: Can create tickets
 > create_customer: Can create customers
 > edit_customer: Can edit customers
-> edit_ticket: can edit tickets
+> edit_ticket: Can edit tickets
+> reply_conv: Can reply in conversation
+> comment_conv: Can comment in conversation 
 */
 export const accessControlFunctions = {
-    Supervisor: ["create_ticket", "create_customer", "edit_ticket", "edit_customer"],
+    Supervisor: ["create_ticket", "create_customer", "edit_ticket", "edit_customer", "edit_ticket", "reply_conv", "comment_conv"],
     get Administrator() { return this.Supervisor},
-    Agent: ["create_ticket", "create_customer", "edit_ticket", "edit_customer"],
-    Observer: []
+    Agent: ["create_ticket", "create_customer", "edit_ticket", "edit_customer", "edit_ticket", "reply_conv", "comment_conv"],
+    Observer: ["comment_conv"]
 }
 
 export default accessControlList;
