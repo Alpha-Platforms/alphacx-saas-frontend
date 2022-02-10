@@ -67,10 +67,11 @@ import {
 import { dateFormater } from "../../helpers/dateFormater";
 import { capitalize } from "@material-ui/core";
 import moment from "moment";
-import RSelect from "react-select/creatable";
-// 
+import RSelect from "react-select/creatable"; 
 import YouTube from 'react-youtube';
-// 
+import {multiIncludes} from '../../../helper';
+import {accessControlFunctions} from '../../../config/accessControlList';
+
 function YouTubeGetID(url){
   var ID = '';
   url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
@@ -193,6 +194,13 @@ function Conversation({user, ...props}) {
         autoplay: 0,
       },
     };
+
+  useEffect(() => {
+    if (!multiIncludes(accessControlFunctions[user?.role], ["reply_conv"])) {
+      setReplyType("note");
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   // 
   useEffect(() => {
     // ticketHistoryId
@@ -929,12 +937,12 @@ function Conversation({user, ...props}) {
                             <span>{dateFormater(ticket[0]?.updated_at)}</span>
                           </p>
                         </div>
-                        <div
+                        {multiIncludes(accessControlFunctions[user?.role], ["edit_ticket"]) && <div
                           className="custormChatHeaderInfoAction"
                           onClick={closeSaveTicketModal}
                         >
                           <StarIconTicket /> Update
-                        </div>
+                        </div>}
                       </div>
                     </div>
                   </div>
@@ -1210,8 +1218,8 @@ function Conversation({user, ...props}) {
                       </div>
                       <div className="pb-1 pt-0 bg-white border border-bottom-0 acx-rounded-top-10 w-100 overflow-hidden">
                         <Tabs activeKey={replyType} onSelect={(k) => setReplyType(k)} id="replyTypeToggle" className="mb-0 border-top-0">
-                          <Tab className="text-dark" eventKey="reply" title="Reply"/>
-                          <Tab className="text-dark" eventKey="note" title="Comment"/>
+                          {multiIncludes(accessControlFunctions[user?.role], ["reply_conv"]) && <Tab className="text-dark" eventKey="reply" title="Reply"/>}
+                          {multiIncludes(accessControlFunctions[user?.role], ["comment_conv"]) && <Tab className="text-dark" eventKey="note" title="Comment"/>}
                         </Tabs> 
                       </div>
                       <Editor

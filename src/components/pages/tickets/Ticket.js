@@ -55,9 +55,9 @@ import TextUnderline from "../../../assets/imgF/TextUnderline.png";
 import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
 import { CURRENT_CUSTOMER_TICKETS_LOADING } from '../../../reduxstore/types';
 import { httpGetMain, httpPostMain, httpPatchMain } from "../../../helpers/httpMethods";
-// 
 import YouTube from 'react-youtube';
-// 
+import {multiIncludes} from '../../../helper';
+import {accessControlFunctions} from '../../../config/accessControlList';
 
 function YouTubeGetID(url){
   var ID = '';
@@ -205,6 +205,13 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
           autoplay: 0,
         },
       };
+
+    useEffect(() => {
+      if (!multiIncludes(accessControlFunctions[user?.role], ["reply_conv"])) {
+        setReplyType("note");
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
       sortMsges(msgHistory);
@@ -798,12 +805,12 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                               <span>{dateFormater(ticket[0]?.updated_at)}</span>
                             </p>
                           </div>
-                          <div
+                          {multiIncludes(accessControlFunctions[user?.role], ["edit_ticket"]) && <div
                             className="custormChatHeaderInfoAction"
                             onClick={closeSaveTicketModal}
                           >
                             <StarIconTicket /> Update
-                          </div>
+                          </div>}
                         </div>
                       </div>
                     </div>
@@ -1100,8 +1107,8 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                         </div>
                         <div className="pb-1 pt-0 bg-white border border-bottom-0 acx-rounded-top-10 w-100 overflow-hidden">
                           <Tabs activeKey={replyType} onSelect={(k) => setReplyType(k)} id="replyTypeToggle" className="mb-0 border-top-0">
-                            <Tab className="text-dark" eventKey="reply" title="Reply"/>
-                            <Tab className="text-dark" eventKey="note" title="Comment"/>
+                          {multiIncludes(accessControlFunctions[user?.role], ["reply_conv"]) && <Tab className="text-dark" eventKey="reply" title="Reply"/>}
+                          {multiIncludes(accessControlFunctions[user?.role], ["comment_conv"]) && <Tab className="text-dark" eventKey="note" title="Comment"/>}
                           </Tabs> 
                         </div>
                         <Editor

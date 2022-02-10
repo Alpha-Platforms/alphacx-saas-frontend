@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {useState, Fragment, useEffect} from 'react';
 import MessageIcon from '../../../assets/svgicons/Message.svg';
 import TicketIcon from '../../../assets/svgicons/Ticket.svg';
@@ -25,10 +26,12 @@ import Notes from './components/Notes';
 import Timeline from './components/Timeline';
 import CreateCustomerModal from './CreateCustomerModal';
 import CreateTicketModal from '../tickets/CreateTicketModal';
+import {multiIncludes} from '../../../helper';
+import {accessControlFunctions} from '../../../config/accessControlList';
 
 const CircleIcon = (props) => <span style={{ backgroundColor: props.color }} className="cust-grey-circle"><img src={props.icon} alt="" className="pe-none"/></span>;
 
-const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded, currentCustomer}) => {
+const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded, currentCustomer, user}) => {
 
     const [createModalShow, setCreateModalShow] = useState(false);
     const {id} = useParams();
@@ -208,7 +211,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                             </div>
                             <div className="d-flex align-items-md-center">
                                 <div>
-                                    <button type="button" onClick={() => {
+                                    {multiIncludes(accessControlFunctions[user?.role], ["create_ticket"]) && <button type="button" onClick={() => {
                                             setCreateTicketModalShow(true);
                                             setIsEditing(true);
                                             setCustomerId(id);
@@ -218,7 +221,7 @@ const Customer = ({isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoaded
                                             <img src={TicketStar} className="" alt="" height="16" width="auto"/>
                                             <span className="">&nbsp; New Ticket</span>
                                         </div>
-                                    </button>
+                                    </button>}
                                     {/* <button
                                         type="button"
                                         className="reset-btn-outline btn btn-sm border btn-outline-secondary px-md-2 mx-md-2"><img src={MessageIcon} className="pe-none" alt=""/>&nbsp; Activation Email
@@ -354,7 +357,8 @@ const mapStateToProps = (state, ownProps) => ({
         customers: state.customer.customers, 
         isCustomerLoaded: state.customer.isCustomerLoaded, 
         isCurrentCustomerLoaded: state.customer.isCurrentCustomerLoaded, 
-        currentCustomer: state.customer.currentCustomer
+        currentCustomer: state.customer.currentCustomer,
+        user: state.userAuth.user
     });
 
 export default connect(mapStateToProps, {getCurrentCustomer})(Customer);
