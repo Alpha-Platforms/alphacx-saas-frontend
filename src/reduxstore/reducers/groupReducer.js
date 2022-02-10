@@ -24,6 +24,9 @@ const groupReducer = (state = initialState, action) => {
 				isGroupsLoading: true,
 				isGroupsLoaded: false
 			}
+		case types.DELETE_GROUP:
+			let newGroups = state.groups.filter(item => item.id !== action.payload);
+			return {...state, groups: newGroups}
 		default:
 			return state;
 	}
