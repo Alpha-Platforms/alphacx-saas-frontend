@@ -27,6 +27,7 @@ import {updateUser} from '../../../../reduxstore/actions/userActions';
 import {getAgents, negateActiveState} from '../../../../reduxstore/actions/agentActions';
 import {getAdmins} from '../../../../reduxstore/actions/adminActions';
 import {getSupervisors} from '../../../../reduxstore/actions/supervisorActions';
+import {getObservers} from '../../../../reduxstore/actions/observerActions';
 import "../../../../styles/Setting.css";
 import {NotificationManager} from 'react-notifications';
 import AccessControl from "../../auth/accessControl.jsx"
@@ -39,6 +40,7 @@ const UserList = ({
   agents,
   admins,
   supervisors,
+  observers,
   isAgentsLoaded,
   groups,
   negateActiveState,
@@ -49,6 +51,7 @@ const UserList = ({
   getAgents,
   getAdmins,
   getSupervisors,
+  getObservers,
   authenticatedUserRole
 }) => {
   // 
@@ -67,12 +70,14 @@ const UserList = ({
       const realAdmins = Array.isArray(admins) ? admins : [];
       const realSupervisors = Array.isArray(supervisors) ? supervisors : [];
       const realAgents = Array.isArray(agents) ? agents : [];
-      setCombinedUsers([...realAdmins, ...realSupervisors, ...realAgents]);
+      const realObservers = Array.isArray(observers) ? observers : [];
+      setCombinedUsers([...realAdmins, ...realSupervisors, ...realAgents, ...realObservers]);
     } else {
       setCombinedUsers([...agents])
     }
 
-  }, [admins, supervisors, agents])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [admins, supervisors, agents, observers])
 
 
   useEffect(() => {
@@ -82,6 +87,7 @@ const UserList = ({
         getAgents();
         getSupervisors();
         getAdmins();
+        getObservers();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUserAuthenticated]);
@@ -384,6 +390,7 @@ const mapStateToProps = (state, ownProps) => ({
   agents: state.agent.agents,
   admins: state.admin.admins,
   supervisors: state.supervisor.supervisors,
+  observers: state.observer.observers,
   isAgentsLoaded: state.agent.isAgentsLoaded,
   isAdminsLoaded: state.admin.isAdminsLoaded,
   isSupervisorLoaded: state.supervisor.isSupervisorsLoaded,
@@ -394,4 +401,4 @@ const mapStateToProps = (state, ownProps) => ({
 
 });
 
-export default connect(mapStateToProps, { getPaginatedUsers, getAgents, getSupervisors, getAdmins, negateActiveState })(UserList);
+export default connect(mapStateToProps, { getPaginatedUsers, getAgents, getSupervisors, getAdmins, negateActiveState, getObservers })(UserList);
