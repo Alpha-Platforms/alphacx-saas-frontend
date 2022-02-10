@@ -12,15 +12,16 @@ import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/cor
 import tableIcons from '../../../assets/materialicons/tableIcons';
 import MaterialTable from 'material-table';
 import {TablePagination} from '@material-ui/core';
-import {ReactComponent as ProfileSvg} from '../../../assets/svgicons/Profile.svg';
 import CreateCustomerModal from './CreateCustomerModal';
 import {exportTable, getUserInitials} from '../../../helper';
 import {Dropdown} from 'react-bootstrap';
 import {ReactComponent as DotSvg} from '../../../assets/icons/dots.svg';
 import SaveAlt from '@material-ui/icons/SaveAlt';
+import {multiIncludes} from '../../../helper';
+import {accessControlFunctions} from '../../../config/accessControlList';
     
 
-const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPaginatedCustomers, isUserAuthenticated}) => {
+const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPaginatedCustomers, isUserAuthenticated, user}) => {
     const [createModalShow,
         setCreateModalShow] = useState(false);
     const [uploadModalShow,
@@ -155,17 +156,24 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
             }, {
                 title: '',
                 field: 'action',
-                render: rowData => (<Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
-                                            <Dropdown.Toggle variant="transparent" size="sm">
-                                                <span className="cust-table-dots"><DotSvg/></span>
-                                            </Dropdown.Toggle>
-                                            <Dropdown.Menu>
-                                                <Dropdown.Item eventKey="1" onClick={handleEditClick.bind({customerId: rowData.contact.id})}><span className="black-text">Edit</span></Dropdown.Item>
-                                                <Dropdown.Item eventKey="2"><span className="black-text">Delete</span></Dropdown.Item>
-                                            </Dropdown.Menu>
-                                        </Dropdown>)
+                render: rowData => (<>
+                        {multiIncludes(accessControlFunctions[user?.role], ["create_ticket", "create_customer"]) && <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+                            <Dropdown.Toggle variant="transparent" size="sm">
+                                <span className="cust-table-dots"><DotSvg/></span>
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <Dropdown.Item eventKey="1" onClick={handleEditClick.bind({customerId: rowData.contact.id})}><span className="black-text">Edit</span></Dropdown.Item>
+                                <Dropdown.Item eventKey="2"><span className="black-text">Delete</span></Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>}
+                </>)
             }
-        ];
+        ].filter(x => {
+            if (x.field === "action" && !multiIncludes(accessControlFunctions[user?.role], ["create_ticket", "create_customer"])) {
+                return false;
+            }
+            return true;
+        });
 
         
 
@@ -373,6 +381,6 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
         )
     }
 
-    const mapStateToProps = (state, ownProps) => ({customers: state.customer.customers, isCustomersLoaded: state.customer.isCustomersLoaded, meta: state.customer.meta, isUserAuthenticated: state.userAuth.isUserAuthenticated})
+    const mapStateToProps = (state, ownProps) => ({customers: state.customer.customers, isCustomersLoaded: state.customer.isCustomersLoaded, meta: state.customer.meta, isUserAuthenticated: state.userAuth.isUserAuthenticated, user: state.userAuth.user})
 
     export default connect(mapStateToProps, {getCustomers, getPaginatedCustomers})(CustomerList);

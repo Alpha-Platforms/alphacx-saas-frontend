@@ -203,3 +203,16 @@ export const separateNum = (num) => {
     
     return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 };
+
+//
+export const multiIncludes = (arr, checkArr) => {
+    if (!Array.isArray(arr) || !Array.isArray(checkArr)) throw new Error("Arguments must be array");
+    
+    let allIncluded = true;
+    checkArr.forEach(x => {
+      if (arr.indexOf(x) === -1) {
+        allIncluded = false;
+      }
+    })
+    return allIncluded
+}
