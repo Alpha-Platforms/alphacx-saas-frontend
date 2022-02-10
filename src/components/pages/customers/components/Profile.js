@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {useState, Fragment, useEffect} from 'react';
 import {NotificationManager} from 'react-notifications';
 import {connect} from 'react-redux';
@@ -23,8 +24,11 @@ import {countrycodes} from '../../../shared/countrycodes';
 // resources
 import {ExpandChat} from "../../../../assets/images/svgs";
 
+import {multiIncludes} from '../../../../helper';
+import {accessControlFunctions} from '../../../../config/accessControlList';
 
-const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
+
+const Profile = ({currentCustomer, customerId, updateCustomer, user, ...props}) => {
     const [errors, setErrors] = useState({});
     // 
     const [editProfile, setEditProfile] = useState(false);
@@ -196,9 +200,9 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
                     <div className="d-flex justify-content-between align-items-center mb-4">
                         <h6 className="text-muted acx-ls-30 acx-fs-12">CONTACT INFORMATION</h6>
                         <div className="">
-                            <Button title="Toggle edit profile" className={`acx-btn-icon acx-btn-icon-default  ${editProfile? "active" : ""}`} onClick={handleEditProfile}>
+                            {multiIncludes(accessControlFunctions[user?.role], ["create_ticket"]) && <Button title="Toggle edit profile" className={`acx-btn-icon acx-btn-icon-default  ${editProfile? "active" : ""}`} onClick={handleEditProfile}>
                                 <i className="bi-pencil-square"></i>
-                            </Button>
+                            </Button>}
                         </div>
                     </div>
                     {/* CONTACT INFORMATION< */}
@@ -330,5 +334,7 @@ const Profile = ({currentCustomer, customerId, updateCustomer, ...props}) => {
     );
 };
 
-const mapStateToProps = (state, ownProps) => ({});
+const mapStateToProps = (state, ownProps) => ({
+    user: state.userAuth.user
+});
 export default connect(mapStateToProps, {updateCustomer})(Profile);

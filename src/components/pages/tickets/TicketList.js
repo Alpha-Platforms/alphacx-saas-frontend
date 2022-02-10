@@ -36,6 +36,8 @@ import Dropdown, {
 // Be sure to include styles at some point, probably during your bootstraping
 import '@trendmicro/react-buttons/dist/react-buttons.css';
 import '@trendmicro/react-dropdown/dist/react-dropdown.css';
+import {multiIncludes} from '../../../helper';
+import {accessControlFunctions} from '../../../config/accessControlList';
 // import { Button, ButtonGroup, ButtonToolbar } from '@trendmicro/react-buttons';
 
 const ExportDropdown = ({handlePDFExport, handleCSVExport}) => {
@@ -72,7 +74,8 @@ const TicketList = ({
   tickets,
   meta,
   getPaginatedTickets,
-  isUserAuthenticated
+  isUserAuthenticated,
+  user
 }) => {
   const [ticketLoading, setTicketLoading] = useState(false);
   const [createModalShow, setCreateModalShow] = useState(false);
@@ -410,6 +413,7 @@ const TicketList = ({
   };
 
   const handleSelectionChange = (rows) => {
+    if (!multiIncludes(accessControlFunctions[user?.role], ["delete_ticket"])) return
     selectedRows = rows;
 
     const deleteBtnWrapper = window.document.querySelector('#delete-btn-wrapper');
@@ -651,7 +655,8 @@ const mapStateToProps = (state, ownProps) => ({
   isTicketsLoaded: state.ticket.isTicketsLoaded,
   meta: state.ticket.meta,
   isTicketsFullyLoaded: state.ticket.isTicketsFullyLoaded,
-  isUserAuthenticated: state.userAuth.isUserAuthenticated
+  isUserAuthenticated: state.userAuth.isUserAuthenticated,
+  user: state.userAuth.user
 });
 
 export default connect(mapStateToProps, { getPaginatedTickets })(TicketList);

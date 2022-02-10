@@ -1,10 +1,10 @@
+// @ts-nocheck
 import React, { useEffect, useState, useContext, Fragment } from "react";
-import { Link, NavLink, useRouteMatch, useHistory, useLocation} from 'react-router-dom';
-import { AuthContext } from "../../context/authContext";
+import { Link, NavLink, useHistory} from 'react-router-dom';
+// import { AuthContext } from "../../context/authContext";
 import { LayoutContext } from "../../context/layoutContext";
-import { SearchIconNavbr, BellIconNavbar } from "../../assets/images/svgs";
-import userIcon from "../../assets/images/user.png";
-//import GoBack from './../helpers/GoBack';
+import {BellIconNavbar } from "../../assets/images/svgs";
+// import userIcon from "../../assets/images/user.png";
 import searchIcon from "../../assets/imgF/Search.png";
 import {HelpIcon} from '../../assets/SvgIconsSet.jsx';
 import CreateTicketModal from '../pages/tickets/CreateTicketModal';
@@ -16,13 +16,14 @@ import {connect} from 'react-redux';
 import moment from "moment";
 import { DowncaretIcon, PlusIcon} from "../../assets/SvgIconsSet.jsx";
 import { httpGetMain } from "../../helpers/httpMethods";
-// 
 import { NotificationManager } from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
-// 
 import Dropdown from "react-bootstrap/Dropdown";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import AccordionLink from "components/pages/help_center/components/accordion/AccordionLink";
+// import AccordionLink from "components/pages/help_center/components/accordion/AccordionLink";
+import {accessControlFunctions} from '../../config/accessControlList';
+import {multiIncludes} from '../../helper';
+
 
 
 function DropDown() {
@@ -72,6 +73,7 @@ function Notification(props){
 
   useEffect(() => {
     getNotifications();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.userId]);
 
   // 
@@ -203,40 +205,10 @@ function Notification(props){
 }
 
 function Navbar({
-  browserRouter,
-  routeType,
-  fullProps,
   pageName,
   user
 }) {
-  // let [initsidebarState, setinitsidebarState] = useContext(LayoutContext);
-  const getLocalItem = "h";
-  const router = useLocation();
-  let [LoginUser, setLoginUser] = useState(false);
-  let [navDrop, setnavDrop] = useState(false);
-  let [userData, setUserData] = useState();
-  const [currentPath, setCurrentPath] = useState(
-    router.pathname.replace("/", "")
-  );
-  const [UserProfilePage, setUserProfilePage] = useState("Profile");
-  const IsUserValidated = () => {
-    // const lastUsedToken = localStorage.getItem("token");
-    // if (
-    //   lastUsedToken === null ||
-    //   lastUsedToken === undefined ||
-    //   lastUsedToken === ""
-    // ) {
-    //   setLoginUser(false);
-    // } else {
-    //   setLoginUser(true);
-    //   let res = JSON.parse(getLocalItem("user"));
-    //   setUserData(res);
-    // }
-  };
-  let [useUserContextData, setUseUserContext] = useState(null);
-
   const { appReduceSidebarWidth } = useContext(LayoutContext);
-  const [sp, setSp] = useState(window.pageYOffset);
   const [localUser, setlocalUser] = useState({});
 
   const [notif, setNotif] = useState({
@@ -275,7 +247,7 @@ function Navbar({
 
   const getUserFromStorage = () => {
     let lUser = localStorage.getItem("user");
-    if (lUser == undefined || lUser == null) {
+    if (lUser === undefined || lUser === null) {
       return;
     } else {
       let parse = JSON.parse(lUser);
@@ -344,7 +316,7 @@ function Navbar({
                   </div>
                 </form>
 
-                <DropDown />
+                {multiIncludes(accessControlFunctions[user?.role], ["create_ticket", "create_customer"]) && <DropDown />}
 
                 {/* <div style={{ width: "1.5" }}>
                   <BellIconNavbar />

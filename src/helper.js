@@ -204,6 +204,18 @@ export const separateNum = (num) => {
     return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 };
 
+//
+export const multiIncludes = (arr, checkArr) => {
+    if (!Array.isArray(arr) || !Array.isArray(checkArr)) throw new Error("Arguments must be array");
+    
+    let allIncluded = true;
+    checkArr.forEach(x => {
+      if (arr.indexOf(x) === -1) {
+        allIncluded = false;
+      }
+    })
+    return allIncluded
+}
 export const defaultTicketProperties = {
     status: {id: "23838da6-0566-11ea-9a9f-362b9e225667"}, // Open, but name may be changed by tenant
 
