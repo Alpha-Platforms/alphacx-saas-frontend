@@ -280,8 +280,9 @@ const UserList = ({
                     field: "role",
                   },
                   {
-                    title: "Team",
+                    title: "Team(s)",
                     field: "group",
+                    render: (rowData) => (<div className={"table-tags"}><span className={`badge rounded-pill px-3 py-2 me-1 my-1 ${["acx-bg-purple-30", "acx-bg-red-30", "acx-bg-blue-light-30", "acx-bg-green-30"][Math.ceil(Math.random()*3)-1]}`}>{rowData.group[0]}</span><span className={`badge rounded-pill px-3 py-2 me-1 my-1 ${["acx-bg-purple-30", "acx-bg-red-30", "acx-bg-blue-light-30", "acx-bg-green-30"][Math.ceil(Math.random()*3)-1]}`}>{rowData?.group[1]}</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">{rowData.group.length > 2? `+${rowData.group.length-2}` : ""}</span></div>)
                   },
                   {
                     title: "Created",
@@ -324,9 +325,9 @@ const UserList = ({
                     name: `${firstname} ${lastname}`,
                     emailAddress: email,
                     role,
-                    group: groups?.map( (item, index) => `${item.group?.name}${groups?.length-1 > index? ", ":" "}`).join(' '),
+                    // group: groups?.map( (item, index) => `${item.group?.name}${groups?.length-1 > index? ", ":" "}`).join(' '),
+                    group: groups?.map( (item) => item.group.name),
                     created: created_at && moment(created_at).format('DD MMM, YYYY'),
-                    // created: "13 Apr 2021",
                     contact: { firstname, lastname, id, avatar },
                     isActivated,
                     userId: id

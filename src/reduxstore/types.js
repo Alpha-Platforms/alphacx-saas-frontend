@@ -82,6 +82,7 @@ export const STATUSES_LOADING = "STATUSES_LOADING";
 export const GET_GROUPS = "GET_GROUPS";
 export const ADD_GROUP = "ADD_GROUP";
 export const GROUPS_LOADING = "GROUPS_LOADING";
+export const DELETE_GROUP = "DELETE_GROUP";
 
 
 // AGENTS
