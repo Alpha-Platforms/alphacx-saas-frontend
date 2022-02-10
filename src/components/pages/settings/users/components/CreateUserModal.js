@@ -8,6 +8,7 @@ import {addAgent, getAgents, resetAgentCreated} from '../../../../../reduxstore/
 import {countrycodes} from '../../../../shared/countrycodes';
 import RSelect from "react-select";
 import {Validate} from "../../../../../helpers/validateInput";
+import { textCapitalize } from "helper";
 
 const CreateUserModal = ({
     createModalShow,
@@ -43,7 +44,7 @@ const CreateUserModal = ({
     // F U N C T I O N S
     const loadRSTeams = () => {
         const mappedTeams = groups.map(item => {
-            return {label: item.name, value: item.id}            
+            return {label: textCapitalize(item.name), value: item.id}
         })
         setRSTeams(mappedTeams)
     }

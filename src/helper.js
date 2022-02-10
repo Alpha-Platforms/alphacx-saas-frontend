@@ -216,3 +216,8 @@ export const multiIncludes = (arr, checkArr) => {
     })
     return allIncluded
 }
+export const defaultTicketProperties = {
+    status: {id: "23838da6-0566-11ea-9a9f-362b9e225667"}, // Open, but name may be changed by tenant
+
+    priority: {id: "5a6635d0-0561-11ea-8d71-362b9e155667"} // Medium, but name may be changed by tenant
+}
