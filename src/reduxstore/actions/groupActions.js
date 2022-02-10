@@ -72,16 +72,12 @@ export const deleteGroup = (groupId, success, failed) => (dispatch, getState) =>
     
     axios
         .delete(`${config.stagingBaseUrl}/groups/${groupId}`, userTokenConfig(getState))
-        .then(res => {
-            // console.log(res)
-            success && success(res);
+        .then(res => {            
+            dispatch({type: types.DELETE_GROUP, payload: groupId});
+            success && success(res.data.message);
         })
         .catch(err => {
-            // console.log(err)
-            // dispatch(returnErrors(err.response
-            //     ?.data, err.response
-            //     ?.status))
-            failed && failed(err);
+            failed && failed(err.response.data.message);
         });
 
 }

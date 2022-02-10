@@ -61,7 +61,13 @@ const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser, dele
   }, [location]);
 
   const initiateDeleteGroup = id => {
-    deleteGroup(groupToDelete, (success) => console.log(success), (failed) => console.log(failed))
+    deleteGroup(groupToDelete, 
+      (successMessage) => {
+      NotificationManager.success(successMessage, "Success", 4000);
+    },
+    (failedMessage) => {
+      NotificationManager.error(failedMessage, "Deletion Error", 4000);
+    })
   }
 
 

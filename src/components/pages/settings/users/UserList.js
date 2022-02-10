@@ -282,7 +282,7 @@ const UserList = ({
                   {
                     title: "Team(s)",
                     field: "group",
-                    render: (rowData) => (<div className={"table-tags"}><span className={`badge rounded-pill px-3 py-2 me-1 my-1 ${["acx-bg-purple-30", "acx-bg-red-30", "acx-bg-blue-light-30", "acx-bg-green-30"][Math.ceil(Math.random()*3)-1]}`}>{rowData.group[0]}</span><span className={`badge rounded-pill px-3 py-2 me-1 my-1 ${["acx-bg-purple-30", "acx-bg-red-30", "acx-bg-blue-light-30", "acx-bg-green-30"][Math.ceil(Math.random()*3)-1]}`}>{rowData?.group[1]}</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">{rowData.group.length? `+${rowData.group.length}` : ""}</span></div>)
+                    render: (rowData) => (<div className={"table-tags"}><span className={`badge rounded-pill px-3 py-2 me-1 my-1 ${["acx-bg-purple-30", "acx-bg-red-30", "acx-bg-blue-light-30", "acx-bg-green-30"][Math.ceil(Math.random()*3)-1]}`}>{rowData.group[0]}</span><span className={`badge rounded-pill px-3 py-2 me-1 my-1 ${["acx-bg-purple-30", "acx-bg-red-30", "acx-bg-blue-light-30", "acx-bg-green-30"][Math.ceil(Math.random()*3)-1]}`}>{rowData?.group[1]}</span><span className="badge rounded-pill text-muted border px-2 py-1 my-1">{rowData.group.length > 2? `+${rowData.group.length-2}` : ""}</span></div>)
                   },
                   {
                     title: "Created",
