@@ -25,8 +25,11 @@ import { httpGetMain } from "../../../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import { wordCapitalize } from "helper";
 import AccessControl from "components/pages/auth/accessControl";
+import {deleteGroup} from '../../../../reduxstore/actions/groupActions';
 
-const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser }) => {
+import { Modal } from "react-responsive-modal";
+
+const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser, deleteGroup }) => {
   // 
   const location = useLocation();
   // 
@@ -36,6 +39,9 @@ const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser }) =>
   const [groupId, setGroupId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [groupsLoading, setGroupsLoading] = useState(false);
+  
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [groupToDelete, setGroupToDelete] = useState("");
 
   const [tagColors] = useState([
     "acx-bg-green-30", 
@@ -43,7 +49,7 @@ const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser }) =>
     "acx-bg-blue-light-30",
     "acx-bg-blue-30"
   ])
-
+  
   useEffect(() => {
     setGroupsLoading(!isGroupsLoaded);
   }, [isGroupsLoaded]);
@@ -54,26 +60,10 @@ const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser }) =>
     }
   }, [location]);
 
-  /* useEffect(() => {
-            setUserLoading(!isUsersLoaded);
-            if (isUsersLoaded) {
-                setChangingRow(false);
-            }
-    }, [isUsersLoaded]); */
-  // // function to get the list of all ticket categories
-  // const getTicketCategories = async () => {
-  //   const res = await httpGetMain("categories");
-  //   if (res?.status === "success") {
-  //     setTicketCategories(res?.data?.categories);
-  //     // getAgents();
-  //   } else {
-  //     return NotificationManager.error(res?.er?.message, "Error", 4000);
-  //   }
-  // };
+  const initiateDeleteGroup = id => {
+    deleteGroup(groupToDelete, (success) => console.log(success), (failed) => console.log(failed))
+  }
 
-  // useEffect(() => {
-  //   getTicketCategories();
-  // }, []);
 
   function AlphacxMTPagination2(props) {
     const {
@@ -260,7 +250,7 @@ const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser }) =>
                               <span className="black-text">Edit</span>
                             </Link>
                           </Dropdown.Item>
-                          <Dropdown.Item eventKey="2">
+                          <Dropdown.Item eventKey="2" onClick={() => {setShowDeleteConfirm(true); setGroupToDelete(rowData.id)}} role="button">
                             <span className="black-text">Delete</span>
                           </Dropdown.Item>
                         </Dropdown.Menu>
@@ -327,6 +317,35 @@ const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser }) =>
         setAddMemberModalShow={setAddMemberModalShow}
         groups={groups}
       />
+
+<Modal
+      open={showDeleteConfirm}
+      onClose={() => setShowDeleteConfirm(false)}
+      center
+    >
+      <div className="p-5 w-100">
+        <h6 className="mb-5">Are you sure you want to delete this item?</h6>
+        <div className="d-flex justify-content-center">
+          <button
+            className="btn btn-sm f-12 border cancel px-4"
+            onClick={() => setShowDeleteConfirm(false)}
+          >
+            Cancel
+          </button>
+          <button
+            className="btn btn-sm ms-2 f-12 bg-custom px-4"
+            onClick={(e) => {
+              e.preventDefault()
+              initiateDeleteGroup(groupToDelete)
+              setShowDeleteConfirm(false)
+            }}
+          >
+            Yes
+          </button>
+        </div>
+      </div>
+    </Modal>
+
     </div>
   );
 };
@@ -340,4 +359,4 @@ const mapStateToProps = (state, ownProps) => ({
   authenticatedUser: state.userAuth.user
 });
 
-export default connect(mapStateToProps, null)(GroupList);
+export default connect(mapStateToProps, {deleteGroup})(GroupList);
