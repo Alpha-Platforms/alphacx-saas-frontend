@@ -40,6 +40,7 @@ const UserList = ({
   agents,
   admins,
   supervisors,
+  observers,
   isAgentsLoaded,
   groups,
   negateActiveState,
@@ -69,12 +70,14 @@ const UserList = ({
       const realAdmins = Array.isArray(admins) ? admins : [];
       const realSupervisors = Array.isArray(supervisors) ? supervisors : [];
       const realAgents = Array.isArray(agents) ? agents : [];
-      setCombinedUsers([...realAdmins, ...realSupervisors, ...realAgents]);
+      const realObservers = Array.isArray(observers) ? observers : [];
+      setCombinedUsers([...realAdmins, ...realSupervisors, ...realAgents, ...realObservers]);
     } else {
       setCombinedUsers([...agents])
     }
 
-  }, [admins, supervisors, agents])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [admins, supervisors, agents, observers])
 
 
   useEffect(() => {
@@ -386,6 +389,7 @@ const mapStateToProps = (state, ownProps) => ({
   agents: state.agent.agents,
   admins: state.admin.admins,
   supervisors: state.supervisor.supervisors,
+  observers: state.observer.observers,
   isAgentsLoaded: state.agent.isAgentsLoaded,
   isAdminsLoaded: state.admin.isAdminsLoaded,
   isSupervisorLoaded: state.supervisor.isSupervisorsLoaded,
