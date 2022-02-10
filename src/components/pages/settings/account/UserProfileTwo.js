@@ -391,7 +391,7 @@ const UserProfileTwo = ({
                         <div className="tab-content" id="pills-tabContent">
 
                             <div className="d-flex justify-content-between col-md-8">
-                                <h3 className="fs-6 text-black">Personal Information Settings</h3>
+                                <h3 className="fs-6 text-black">Personal Information Settingse</h3>
                             </div>
                             <div
                                 className="show fade col-md-8"

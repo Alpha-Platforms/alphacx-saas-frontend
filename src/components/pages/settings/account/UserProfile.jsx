@@ -120,7 +120,7 @@ const AccountSettings = () => {
           <div className="d-flex justify-content-between col-md-8">
             {/* <h5 className="fw-bold">Personal Information Settings</h5> */}
 
-            <h3 className="fs-6 text-black">Personal Information Settings</h3>
+            <h3 className="fs-6 text-black">Personal Information Settingss</h3>
 
             <button
               type="button"

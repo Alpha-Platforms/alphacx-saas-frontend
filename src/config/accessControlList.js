@@ -14,11 +14,12 @@ const accessControlList = {
 > edit_ticket: Can edit tickets
 > reply_conv: Can reply in conversation
 > comment_conv: Can comment in conversation 
+> delete_ticket: Can delete tickets
 */
 export const accessControlFunctions = {
-    Supervisor: ["create_ticket", "create_customer", "edit_ticket", "edit_customer", "edit_ticket", "reply_conv", "comment_conv"],
+    Supervisor: ["create_ticket", "create_customer", "edit_ticket", "edit_customer", "edit_ticket", "reply_conv", "comment_conv", "delete_ticket"],
     get Administrator() { return this.Supervisor},
-    Agent: ["create_ticket", "create_customer", "edit_ticket", "edit_customer", "edit_ticket", "reply_conv", "comment_conv"],
+    Agent: ["create_ticket", "create_customer", "edit_ticket", "edit_customer", "edit_ticket", "reply_conv", "comment_conv", "delete_ticket"],
     Observer: ["comment_conv"]
 }
 
