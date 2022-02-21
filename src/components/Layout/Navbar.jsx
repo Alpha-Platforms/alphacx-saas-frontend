@@ -3,7 +3,7 @@ import React, { useEffect, useState, useContext, Fragment } from "react";
 import { Link, NavLink, useHistory} from 'react-router-dom';
 // import { AuthContext } from "../../context/authContext";
 import { LayoutContext } from "../../context/layoutContext";
-import {BellIconNavbar } from "../../assets/images/svgs";
+import {NotificationBellEmpty, NotificationBellNew } from "../../assets/images/svgs";
 // import userIcon from "../../assets/images/user.png";
 import searchIcon from "../../assets/imgF/Search.png";
 import {HelpIcon} from '../../assets/SvgIconsSet.jsx';
@@ -15,7 +15,7 @@ import '../../styles/Navbar.css';
 import {connect} from 'react-redux';
 import moment from "moment";
 import { DowncaretIcon, PlusIcon} from "../../assets/SvgIconsSet.jsx";
-import { httpGetMain } from "../../helpers/httpMethods";
+import { httpGetMain, httpPatchMain } from "../../helpers/httpMethods";
 import { NotificationManager } from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -69,7 +69,15 @@ function DropDown() {
 function Notification(props){
   const [notifications, setNotifications] = useState([]);
   const [notificationsLoaded, setNotificationsLoaded] = useState(false);
+  const [isUnreadNotificiations, setIsUnreadNotificiations] = useState(true)
   const history = useHistory();
+
+  useEffect(() => {
+    notifications.map(item => {
+      if(item.isRead == false) setIsUnreadNotificiations(false);
+    })
+  }, [notifications])
+  
 
   useEffect(() => {
     getNotifications();
@@ -93,12 +101,11 @@ function Notification(props){
   } 
 
   const goToTicket = (e, data) =>{
-    // console.log(e.target.localName)
     if(e.target.localName == 'a') {
       return;
     }
-    // ${data?.ticketId}
-    if(data?.ticketId){
+    
+    if(data?.ticketId){      
       history.push({
           pathname:  `/conversation`,
           from: "notifications",
@@ -114,12 +121,19 @@ function Notification(props){
           from: "notifications"
       });
     }
+
+    // Mark notification as read when clicked
+    const res = httpPatchMain(`notifications/${data.notificationId}`, {
+      isRead: true
+    });
+
   }
 
   return (
     <NavDropdown title={<>
         <div className="d-flex justify-items-start align-items-center">
-          <BellIconNavbar />
+          
+          { isUnreadNotificiations ? <NotificationBellEmpty /> : <NotificationBellNew />}
         </div>
       </>} className="acx-dropdown-hidden acx-notification-nav-dropdown" id="navbarScrollingDropdown">
       <Dropdown.Header className="d-flex justify-content-between align-items-center border-bottom position-sticky bg-white py-2" style={{"top": "-10px", "zIndex": 20}}>
@@ -157,9 +171,9 @@ function Notification(props){
         :
         <Fragment>
           { notifications.slice(0).reverse().map((data, index) => {
-              if(data.type == "tickets" || data.type == "mention"){
+              if(!data.isRead && data.type == "tickets" || data.type == "mention"){
                 return (
-                  <NavDropdown.Item key={index} as="div" onClick={(e) => goToTicket(e, {ticketId: data?.others?.ticketId, ticketHistoryId: data?.others?.ticketHistoryId})}>
+                  <NavDropdown.Item key={index} as="div" onClick={(e) => goToTicket(e, {notificationId: data.id, ticketId: data?.others?.ticketId, ticketHistoryId: data?.others?.ticketHistoryId})}>
                     <div className="d-flex justify-content-start align-items-start">
                       <div className="me-3 flex-shrink-0 avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center acx-bg-affair-800">
                         {data?.sender?.avatar == null ? (
