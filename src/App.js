@@ -56,7 +56,9 @@ import Fields from "./components/pages/settings/fields/Fields";
 //
 import SocialIntegrations from "./components/pages/settings/social_integrations/index";
 import FacebookIntegration from "./components/pages/settings/social_integrations/FacebookIntegration";
-import TwitterIntegration from "./components/pages/settings/twittersettings/TwitterSettings";
+// import TwitterIntegration from "./components/pages/settings/twitter_settings/TwitterSettings";
+import TwitterSignup from "./components/pages/settings/twitter_settings/index";
+import TwitterAuth from "./components/pages/settings/twitter_settings/TwitterAuth";
 import WhatsappIntegration from "./components/pages/settings/social_integrations/WhatsappIntegration";
 //
 import RatingsForm from "./components/pages/ratings/RatingsForm.jsx";
@@ -183,6 +185,7 @@ const SiteRouter = connect(mapStateToProps, {
                             <Route exact path="/knowledge-base/:category/:slug" component={Article}/> {/* help pages end */}
                             <Route exact path="/feedback/:domain/:ticketId/:customerId" component={RatingsForm}/> {/* help pages end */}
                             <Route exact path="/account-verified" component={AccountVerified}/> {/* Customer Portal */}
+                            <Route exact path="/twitter-auth" component={TwitterAuth}/> {/* Customer Portal */}
                             <Route exact path="/customer-portal/tickets" component={CustomerPortal}/>
 
                             <Route exact path="/no-customers" component={CustomersNull}/>
@@ -371,11 +374,16 @@ const SiteRouter = connect(mapStateToProps, {
                                 path="/settings/integrations/facebook"
                                 pageName="Facebook Integration"
                                 component={FacebookIntegration}/>
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/integrations/twitter"
-                                    pageName="Twitter Integration"
-                                    component={TwitterIntegration}/>
+                            {/* <SettingsLayoutRoute
+                                exact
+                                path="/settings/integrations/twitter"
+                                pageName="Twitter Integration"
+                                component={TwitterIntegration}/> */}
+                            <SettingsLayoutRoute
+                                exact
+                                path="/settings/integrations/twitter"
+                                pageName="Twitter Integration"
+                                component={TwitterSignup}/>
                             <SettingsLayoutRoute
                                 exact
                                 path="/settings/integrations/whatsapp"
