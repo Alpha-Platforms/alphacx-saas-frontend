@@ -66,7 +66,7 @@ function DropDown() {
   )
 }
 
-function Notification(props){
+function Notification({userId}){
   const [notifications, setNotifications] = useState([]);
   const [notificationsLoaded, setNotificationsLoaded] = useState(false);
   const [isUnreadNotificiations, setIsUnreadNotificiations] = useState(true)
@@ -82,15 +82,34 @@ function Notification(props){
   useEffect(() => {
     getNotifications();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.userId]);
+  }, [userId]);
 
   // 
   function createMarkup(data) {
     return {__html: data}
   }
 
+  const markAllRead = e => {
+    httpPatchMain(`notifications_mark_all?userId=${userId}`).then(res => {
+      setNotifications([]);
+      setIsUnreadNotificiations(true);
+      setNotificationsLoaded(false)
+      return NotificationManager.success("All notifications marked read", "Success", 4000);
+    }).catch(error => console.log(error))
+
+    // if (res.status === "success") {
+    //   console.log(res.data);
+      // return NotificationManager.success(res.data, "Error", 4000);
+    // } else {
+    //   console.log(res);
+      // return NotificationManager.error(res, "Error", 4000);
+    // }
+    // /v1/notifications_mark_all?userId=17c28cf6-c3d3-4bc3-91bd-60290cec8792
+
+  }
+
   const getNotifications = async() => {
-    const res = await httpGetMain(`notifications/${props.userId}`);
+    const res = await httpGetMain(`notifications/${userId}`);
     if (res.status === "success") {
       setNotificationsLoaded(true);
       setNotifications(res?.data);
@@ -100,7 +119,7 @@ function Notification(props){
     }
   } 
 
-  const goToTicket = (e, data) =>{
+  const goToTicket = (e, data, index) =>{
     if(e.target.localName == 'a') {
       return;
     }
@@ -123,9 +142,23 @@ function Notification(props){
     }
 
     // Mark notification as read when clicked
-    const res = httpPatchMain(`notifications/${data.notificationId}`, {
+    httpPatchMain(`notifications/${data.notificationId}`, {
       isRead: true
-    });
+    }).then( ({data}) => {
+
+      // const notifs = [...notifications]
+      // notifs[index] = data
+      // setNotifications(notifs)
+
+    })
+
+
+    // the ideal thing is to update the notif that was effected - res should bring back that one with its new data
+    const filteredNotifications = notifications.filter(item => item.id !== data.notificationId)
+    setNotifications(filteredNotifications)
+
+
+
 
   }
 
@@ -136,20 +169,23 @@ function Notification(props){
           { isUnreadNotificiations ? <NotificationBellEmpty /> : <NotificationBellNew />}
         </div>
       </>} className="acx-dropdown-hidden acx-notification-nav-dropdown" id="navbarScrollingDropdown">
+
+      { notificationsLoaded && <>
       <Dropdown.Header className="d-flex justify-content-between align-items-center border-bottom position-sticky bg-white py-2" style={{"top": "-10px", "zIndex": 20}}>
         <div className="flex-grow-1">
           <p className={`acx-text-gray-800 mb-0 ${notifications.length == 0 || notifications == null || notifications == undefined? "text-center" : ""}`}>
             Notifications
           </p>
         </div>
-        {notifications.length == 0 || notifications == null || notifications == undefined?
+        {notifications.length == 0 || notifications == null || notifications == undefined || isUnreadNotificiations?
           ""
           :
           <div className="">
-            <a href="#read-notification" className="acx-link-primary">mark all as read</a>
+            <button type="button" onClick={markAllRead} className="acx-link-primary small">Mark all read</button>
           </div>
         }
       </Dropdown.Header>
+      
       {notificationsLoaded == false? 
         <NavDropdown.Item as="div">
             <div className="d-flex justify-content-center align-items-center py-5 ps-1 notification-loader-indicator">
@@ -173,7 +209,7 @@ function Notification(props){
           { notifications.slice(0).reverse().map((data, index) => {
               if(!data.isRead && data.type == "tickets" || data.type == "mention"){
                 return (
-                  <NavDropdown.Item key={index} as="div" onClick={(e) => goToTicket(e, {notificationId: data.id, ticketId: data?.others?.ticketId, ticketHistoryId: data?.others?.ticketHistoryId})}>
+                  <NavDropdown.Item key={index} as="div" onClick={(e) => goToTicket(e, {notificationId: data.id, ticketId: data?.others?.ticketId, ticketHistoryId: data?.others?.ticketHistoryId}, index)}>
                     <div className="d-flex justify-content-start align-items-start">
                       <div className="me-3 flex-shrink-0 avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center acx-bg-affair-800">
                         {data?.sender?.avatar == null ? (
@@ -214,6 +250,7 @@ function Notification(props){
           </NavDropdown.Item>
         </Fragment>
       }
+      </>}
     </NavDropdown>
   );
 }
