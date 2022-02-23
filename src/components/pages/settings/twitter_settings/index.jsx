@@ -75,10 +75,9 @@ const TwitterSignup = ({
         if (response) {
             // setProcessing(false);
             if (response.er) {
-                console.log(response);
+                setTwitterAuthSate("failed")
                 return NotificationManager.error("There was an error processing your request");
             }else{
-                console.log(response);
                 setTwitterAuthSate("successful")
                 return NotificationManager.success("Logged in successfully");
             }  
@@ -101,7 +100,6 @@ const TwitterSignup = ({
                 window.location.href = `https://api.twitter.com/oauth/authenticate?oauth_token=${response?.data?.oauth_token}`;
                 // NotificationManager.success("Page successfully connected");
             }
-                
         }
     }
 
