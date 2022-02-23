@@ -48,7 +48,7 @@ const TwitterSignup = ({
         } else if (hostName[hostLength-1] === "localhost" &&  hostLength !== 1 ) {
             setDomain("localhost:3000") 
         }else{
-            setDomain("4ad3-102-91-4-99.ngrok.io")
+            setDomain("76f7-197-210-70-82.ngrok.io")
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -73,10 +73,11 @@ const TwitterSignup = ({
         // setProcessing(true);
         const response = await httpPostMain("settings/twitter-signin-callback", data);
         if (response) {
+            // console.log(response);
             // setProcessing(false);
             if (response.er) {
                 setTwitterAuthSate("failed")
-                return NotificationManager.error("There was an error processing your request");
+                return NotificationManager.error(response.er.message);
             }else{
                 setTwitterAuthSate("successful")
                 return NotificationManager.success("Logged in successfully");
@@ -92,6 +93,7 @@ const TwitterSignup = ({
         };
         const response = await httpPostMain("settings/twitter/oauth/request_token", data);
         if (response) {
+            console.log(response);
             setProcessing(false);
             if (response.er) {
                 return NotificationManager.error("There was an error processing your request");
@@ -171,10 +173,11 @@ const TwitterSignup = ({
                                 </div>
                             </div>
                         :
-                            <div className="py-5">
-                                Please click to repeat
-                                <Button as={Link} to="/settings/integrations/twitter" className="" variant="info" size="lg">
-                                    <i className=""></i> Repeat twitter authorization
+                            <div className="py-5 text-center">
+                                <p className="mb-3">Please click to repeat</p>
+                                <Button as={Link} to="/settings/integrations/twitter" className="" variant="warning" size="lg"
+                                    onClick={()=> setTwitterAuthSate("login")}>
+                                    <i className=""></i> Repeat twitter login
                                 </Button>
                             </div>
                         }

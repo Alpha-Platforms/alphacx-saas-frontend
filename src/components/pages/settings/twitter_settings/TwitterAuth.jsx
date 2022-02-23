@@ -29,7 +29,7 @@ const TwitterAuth = () => {
             } else if(hostName[0] === "qustomar" || hostName[0] === "localhost"){
                 window.location.href = `${window.location.protocol}//${domain}.${window.location.hostname}:${window.location.port}/settings/integrations/twitter?oauth_token=${oauth_token}&oauth_verifier=${oauth_verifier}`;
             } else{
-                // window.location.href = `${window.location.protocol}//${domain}.${window.location.hostname}:${window.location.port}/settings/integrations/twitter?oauth_token=${oauth_token}&oauth_verifier=${oauth_verifier}`
+                window.location.href = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/settings/integrations/twitter?oauth_token=${oauth_token}&oauth_verifier=${oauth_verifier}`
             }
         }else{
             window.location.href = "/";
