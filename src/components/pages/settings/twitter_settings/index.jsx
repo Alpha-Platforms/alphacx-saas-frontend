@@ -93,7 +93,6 @@ const TwitterSignup = ({
         };
         const response = await httpPostMain("settings/twitter/oauth/request_token", data);
         if (response) {
-            console.log(response);
             setProcessing(false);
             if (response.er) {
                 return NotificationManager.error("There was an error processing your request");
