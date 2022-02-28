@@ -28,6 +28,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
   let {automationId} = useParams();
 
   const availablePlaceholders = [
+    {name: "Agent", value: "agentName"},
     {name: "Ticket", value: "ticketId"},
     {name: "Customer", value: "customerName"},
     {name: "Status", value: "status"},
