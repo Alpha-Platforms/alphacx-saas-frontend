@@ -48,7 +48,7 @@ export default function FacebookIntegration() {
         });
     }, []);
     const handleConnectFBPage = async (response) => {
-        console.log(response, typeof response);
+        // console.log(response, typeof response);
         if (response && response !== "undefined." && response !== undefined) return;
         showLoader();
         const data = {
