@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 // 
 import {connect} from 'react-redux';
 import {Link} from "react-router-dom";
@@ -32,10 +32,6 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
         {
             title: "Status",
             placeHolder: "status"
-        },
-        {
-            title: "Ticket",
-            placeHolder: "ticketId"
         },
         {
             title: "Category",
@@ -107,8 +103,7 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                             <Link to="/settings">
                                 <span className="text-custom">Settings</span>
                             </Link>{" "}
-                            <img src={RightArrow} alt="" className="img-fluid mx-2 me-3"/> {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
-                            className="img-fluid mx-2 me-3"></object> */}
+                            <img src={RightArrow} alt="" className="img-fluid mx-2 me-3"/>
                             <Link to="/settings/notifications/">
                                 <span className="text-custom">Notifications Settings</span>{" "}
                             </Link>
@@ -155,11 +150,13 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                                     value={newTemplate.type || ""}
                                     onChange={handleChange}
                                 >
-                                    <option value="">Select category</option>
-                                    <option value="emailAutoRespond">Email Auto Respond</option>
+                                    <option disabled selected>Select category</option>
+                                    <option value="statusAutoResponse">Status Auto Response</option>
                                     <option value="agentActivation">Agent Activation</option>
                                     <option value="customerActivation">Customer Activation</option>
                                     <option value="agentEmailAutoRespond">Agent Ticket Assignment</option>
+                                    <option value="mentionEmailNotification">Mention Email Notification</option>
+                                    <option value="customerInitiateResponse">Customer Initial Response</option>
                                 </select>
                             </div>
                             <div className="form-group mt-3 mb-4">

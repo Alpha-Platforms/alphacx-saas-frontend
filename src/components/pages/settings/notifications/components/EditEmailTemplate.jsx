@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 // 
 import {connect} from 'react-redux';
 import {useHistory, Link, useParams} from 'react-router-dom';
@@ -33,10 +33,6 @@ const EditEmailTemplate = ({isCurrentEmailTemplateLoaded, getCurrentEmailTemplat
         {
             title: "Status",
             placeHolder: "status"
-        },
-        {
-            title: "Ticket",
-            placeHolder: "ticketId"
         },
         {
             title: "Category",
@@ -180,11 +176,14 @@ const EditEmailTemplate = ({isCurrentEmailTemplateLoaded, getCurrentEmailTemplat
                                     value={newTemplate.type || ""}
                                     // onChange={handleChange}
                                     disabled
-                                >
-                                    <option value="">Select category</option>
-                                    <option value="emailAutoRespond">Email Auto Respond</option>
+                                >                                    
+                                    <option disabled selected>Select category</option>
+                                    <option value="statusAutoResponse">Status Auto Response</option>
                                     <option value="agentActivation">Agent Activation</option>
                                     <option value="customerActivation">Customer Activation</option>
+                                    <option value="agentEmailAutoRespond">Agent Ticket Assignment</option>
+                                    <option value="mentionEmailNotification">Mention Email Notification</option>
+                                    <option value="customerInitiateResponse">Customer Initial Response</option>
                                 </select>
                             </div>
                             <div className="form-group mt-3 mb-4">
