@@ -32,7 +32,7 @@ import Dropdown, {
   MenuItem,
   DropdownButton
 } from '@trendmicro/react-dropdown';
-
+import { Modal } from "react-responsive-modal";
 // Be sure to include styles at some point, probably during your bootstraping
 import '@trendmicro/react-buttons/dist/react-buttons.css';
 import '@trendmicro/react-dropdown/dist/react-dropdown.css';
@@ -82,7 +82,6 @@ const TicketList = ({
   const [changingRow, setChangingRow] = useState(false);
   const [rowsSelected, setRowsSelected] = useState([]);
   const [loading, setLoading] = useState(false);
-  
 
   let selectedRows = [];
 
@@ -107,6 +106,11 @@ const TicketList = ({
     }
   }, [isTicketsLoaded])
 
+  useEffect(() => {
+    const deleteBtnWrapper = window.document.querySelector('#delete-btn-wrapper');
+    deleteBtnWrapper.classList.add('d-none');
+  })
+
   const tableTheme = createTheme({
     palette: {
       primary: {
@@ -117,7 +121,6 @@ const TicketList = ({
       },
     },
   });
-
   const handleExportBtn = () => {
     // const exportBtn = document.querySelector('.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit');
     // exportBtn && exportBtn.click();
@@ -414,6 +417,7 @@ const TicketList = ({
 
   const handleSelectionChange = (rows) => {
     if (!multiIncludes(accessControlFunctions[user?.role], ["delete_ticket"])) return
+    
     selectedRows = rows;
 
     const deleteBtnWrapper = window.document.querySelector('#delete-btn-wrapper');
@@ -437,11 +441,6 @@ const TicketList = ({
     }
   };
 
-  useEffect(() => {
-    const deleteBtnWrapper = window.document.querySelector('#delete-btn-wrapper');
-    deleteBtnWrapper.classList.add('d-none');
-  })
-
 
   const handleDeleteTicket = async () => {
     // const deleteBtnWrapper = window.document.querySelector('#delete-btn-wrapper');
@@ -452,10 +451,10 @@ const TicketList = ({
     if (selectedRows.length > 0) {
 
       if (selectedRows.length === 1 ) {
+
         setTicketLoading(true);
         const res = await httpDeleteMain(`tickets/${selectedRows[0]?.ticketUid}`);
         selectedRows = [];
-        // deleteBtnWrapper.classList.add('d-none');
         selectedRowCount.innerHTML = 0;
 
         if (res?.status === "success") {
@@ -465,6 +464,7 @@ const TicketList = ({
           }, () => {
             setTicketLoading(false);
           })
+
         } else {
           setTicketLoading(false);
           return NotificationManager.error(res?.er?.message, "Error", 4000);
@@ -478,7 +478,6 @@ const TicketList = ({
         setTicketLoading(true);
         const res = await httpDeleteMain(`tickets`, JSON.stringify(reqBody));
         selectedRows = [];
-        // deleteBtnWrapper.classList.add('d-none');
         selectedRowCount.innerHTML = 0;
 
         if (res?.status === "success") {
@@ -496,6 +495,7 @@ const TicketList = ({
 
     } 
   }
+
 
   return (
     <div>
@@ -646,6 +646,33 @@ const TicketList = ({
         setCreateModalShow={setCreateModalShow}
         setChangingRow={setChangingRow}
       />
+
+      {/* delete confirm modal */} 
+      {/* -------------             modal open deselects selected tickets. Fix later              --------------- */}
+      <Modal
+        open={false}
+        // onClose={() => setShowDeleteConfirm(false)}
+        center
+      >
+        <div className="p-5 w-100">
+          <h6 className="mb-5">Are you sure you want to delete this item?</h6>
+          <div className="d-flex justify-content-center">
+            <button
+              className="btn btn-sm f-12 border cancel px-4"
+              // onClick={() => setShowDeleteConfirm(false)}
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="btn btn-sm ms-2 f-12 bg-custom px-4"
+              onClick={(e) => {}}
+            >
+              Yes
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

@@ -195,7 +195,9 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
     const [customFieldConfig, setCustomFieldConfig] = useState([]);
     const [customFieldsGroup, setCustomFieldsGroup] = useState([]);
     const [customFieldIsSet, setCustomFieldIsSet] = useState(false);
-     const [editorUploadImg, setEditorUploadImg] = useState("");
+    const [editorUploadImg, setEditorUploadImg] = useState("");
+    const [statusUpdateFailed, setStatusUpdateFailed] = useState(false)
+    const [statusOps, setStatusOps] = useState(false)
     // youtube player options
     const youtubePlayerOptions = {
         height: '180',
@@ -242,13 +244,20 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         setwsTickets(data?.data?.tickets);
       });
 
-
       AppSocket.io.on(`join_private`, (data) => {
           // console.log("something came up and this is the data => ", data);
       });
       return () => { AppSocket.io.disconnect()};
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+    
+    // if status update fails don't proceed with ticket update
+    useEffect(() => {
+      if(statusOps){
+        setStatusUpdateFailed(true);
+      }        
+    }, [statusOps])
+      
   
     useEffect(() => {
       AppSocket.io.on(`message`, (data) => {
@@ -551,6 +560,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         setMsgHistory((item) => [...item, replyData]);
         return NotificationManager.success("Ticket status successfully updated", "Success");
       } else{
+        setStatusOps(true);
         return NotificationManager.error(statusRes.er.message, "Error", 4000);
       }
     };
@@ -619,23 +629,28 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
         updateTicketStatus();
         setRSTicketStage({});
       }
-      const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
-      if (res.status === "success") {
-        setProcessing(false);
-        closeSaveTicketModal();
-        NotificationManager.success("Ticket successfully updated","Success");
-        const ticketRes = await httpGetMain(`tickets/${ticket[0].id}`);
-        if (ticketRes.status === "success") {
-            setTicket(ticketRes?.data);
-            return;
+
+      // if status update fails don't proceed with ticket update
+      if(!statusUpdateFailed){
+        const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
+        if (res.status === "success") {
+          setProcessing(false);
+          closeSaveTicketModal();
+          NotificationManager.success("Ticket successfully updated","Success");
+          const ticketRes = await httpGetMain(`tickets/${ticket[0].id}`);
+          if (ticketRes.status === "success") {
+              setTicket(ticketRes?.data);
+              return;
+          } else {
+            setLoadSingleTicket(false);
+            NotificationManager.info("please refresh your page to see changes");
+          }
         } else {
-          setLoadSingleTicket(false);
-          NotificationManager.info("please refresh your page to see changes");
+          setProcessing(false);
+          return NotificationManager.error(res.er.message, "Error", 4000);
         }
-      } else {
-        setProcessing(false);
-        return NotificationManager.error(res.er.message, "Error", 4000);
       }
+
     };
   
     const closeSaveTicketModal = () => {
@@ -651,7 +666,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
       setRSTicketSubject(ticket[0].subject);
       setRSTicketRemarks(ticket[0].description);
       setRSTicketTags(ticket[0].tags);
-      setRSTicketAssignee(ticket[0].assignee.id);
+      setRSTicketAssignee(ticket[0].assignee?.id);
     };
     function createMarkup(data) {
       return { __html: data };
@@ -1346,7 +1361,7 @@ const Ticket = ({isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curren
                           }}
                           defaultValue={{
                             value: ticket[0]?.assignee?.id , 
-                            label: `${ticket[0]?.assignee?.firstname}  ${ticket[0]?.assignee?.lastname}`
+                            label: `${ticket[0]?.assignee?.firstname || ''}  ${ticket[0]?.assignee?.lastname || ''}`
                           }}
                           options={
                             // populate 'options' prop from $Category, with names remapped
