@@ -214,7 +214,7 @@ const GroupList = ({ groups, categories, isGroupsLoaded, authenticatedUser, dele
                 icons={tableIcons}
                 columns={[
                   {
-                    title: "Name",
+                    title: "Unit",
                     field: "name",
                   },
                   {
