@@ -14,7 +14,7 @@ import { getAnalytics, getNewAnalytics } from './../../../reduxstore/actions/ana
 // 
 import '../../../styles/Dashboard.css';
 
-const DashboardTwo = ({isAnalyticsLoaded, analytics, user, getAnalytics, getNewAnalytics, isUserAuthenticated}) => {
+const DashboardTwo = ({isAnalyticsLoaded, isNewAnalyticsLoaded, analytics, newAnalytics, user, getAnalytics, getNewAnalytics, isUserAuthenticated}) => {
     useEffect(() => {
         if (isUserAuthenticated) {
             getAnalytics();
@@ -27,7 +27,7 @@ const DashboardTwo = ({isAnalyticsLoaded, analytics, user, getAnalytics, getNewA
         <Fragment>
             <Container fluid>
                 <Fragment>
-                    {!isAnalyticsLoaded ?
+                    {(!isAnalyticsLoaded && !isNewAnalyticsLoaded) ?
                         <div className="text-center mt-4"><ScaleLoader loading={true} color={"#006298"}/></div>
                     : <div className="dashboard-main">
                         {/* Authenticated User */}
@@ -65,12 +65,12 @@ const DashboardTwo = ({isAnalyticsLoaded, analytics, user, getAnalytics, getNewA
 
                             </div>
                             <div className="box-2">
-                                <TicketStatusPie analytics={analytics} />
+                                <TicketStatusPie analytics={analytics} newAnalytics={newAnalytics} />
                             </div>
                             <div className="box-3">
                                 <div>
-                                    <TicketCount analytics={analytics} />
-                                    <TicketCategoryBar analytics={analytics} />
+                                    <TicketCount analytics={analytics} newAnalytics={newAnalytics} />
+                                    <TicketCategoryBar analytics={analytics} newAnalytics={newAnalytics} />
                                 </div>
                             </div>
                             <div className="box-4">
@@ -86,7 +86,9 @@ const DashboardTwo = ({isAnalyticsLoaded, analytics, user, getAnalytics, getNewA
 
 const mapStateToProps = (state, ownProps) => ({
     isAnalyticsLoaded: state.analytics.isAnalyticsLoaded,
+    isNewAnayticsLoaded: state.analytics.isNewAnayticsLoaded,
     analytics: state.analytics.analytics,
+    newAnalytics: state.analytics.newAnalytics,
     user: state.userAuth.user,
     isUserAuthenticated: state.userAuth.isUserAuthenticated
 });

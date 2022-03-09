@@ -1,9 +1,7 @@
 // @ts-nocheck
 import {Pie} from 'react-chartjs-2';
-import {Dropdown} from 'react-bootstrap';
-import {connect } from 'react-redux';
 
-const TicketStatusPie = ({statuses, analytics}) => {
+const TicketStatusPie = ({newAnalytics}) => {
 
     const getColors = (statuses) => {
         const colors = [];
@@ -19,12 +17,11 @@ const TicketStatusPie = ({statuses, analytics}) => {
     }
 
     // const values = [25, 5, 20, 18];
-    const values = statuses?.slice(0, 5).map(sta => analytics?.allTickets?.filter(x => x.status_id === sta.id).length || 0);
+    const values = newAnalytics?.allStatus?.slice(0, 5)?.map((status) => status?.__meta__?.ticket_count);
     // const colors = ["#D1E8FF", "#1E90FF", "#0707ED", "#000080"];
-    const colors = getColors(statuses?.slice(0, 5));
+    const colors = getColors(newAnalytics?.allStatus?.slice(0, 5));
     // const labels = ["Open", "In Progress", "Pending", "Closed"];
-    const labels = statuses?.slice(0, 5)?.map(sta => ({ status: sta?.status, count: analytics?.allTickets?.filter(x => x.status_id === sta.id).length || 0}));
-
+    const labels = newAnalytics?.allStatus?.slice(0, 5)?.map((status) => status);
 
     const data = {
         // labels: ["Open", "Pending", "Closed", "In Progress"],
@@ -92,7 +89,7 @@ const TicketStatusPie = ({statuses, analytics}) => {
                                 style={{
                                 backgroundColor: colors[i]
                             }}></div>
-                            <p className="mb-0">{`${label?.status} (${label?.count})`}</p>
+                            <p className="mb-0">{`${label?.status} (${label?.__meta__?.ticket_count})`}</p>
                         </div>
                     ))}
                 </div>
@@ -102,8 +99,4 @@ const TicketStatusPie = ({statuses, analytics}) => {
     )
 }
 
-const mapStateToProps = (state, ownProps) => ({
-    statuses: state.status.statuses
-})
-
-export default connect(mapStateToProps, null)(TicketStatusPie);
+export default TicketStatusPie;
