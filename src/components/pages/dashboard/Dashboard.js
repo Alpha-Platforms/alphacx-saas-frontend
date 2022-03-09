@@ -10,14 +10,15 @@ import TicketCount from './components/TicketCount';
 import TicketStatusPie from './components/TicketStatusPie';
 import TicketLineGraph from './components/TicketLineGraph';
 import TicketCategoryBar from './components/TicketCategoryBar';
-import { getAnalytics } from './../../../reduxstore/actions/analyticsActions';
+import { getAnalytics, getNewAnalytics } from './../../../reduxstore/actions/analyticsActions';
 // 
 import '../../../styles/Dashboard.css';
 
-const DashboardTwo = ({isAnalyticsLoaded, analytics, user, getAnalytics, isUserAuthenticated}) => {
+const DashboardTwo = ({isAnalyticsLoaded, analytics, user, getAnalytics, getNewAnalytics, isUserAuthenticated}) => {
     useEffect(() => {
         if (isUserAuthenticated) {
             getAnalytics();
+            getNewAnalytics();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
@@ -90,4 +91,4 @@ const mapStateToProps = (state, ownProps) => ({
     isUserAuthenticated: state.userAuth.isUserAuthenticated
 });
 
-export default connect(mapStateToProps, { getAnalytics })(DashboardTwo);
+export default connect(mapStateToProps, { getAnalytics, getNewAnalytics })(DashboardTwo);
