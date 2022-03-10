@@ -443,6 +443,7 @@ const TicketList = ({
 
 
   const handleDeleteTicket = async () => {
+    closeTicketDeleteModal();
     // const deleteBtnWrapper = window.document.querySelector('#delete-btn-wrapper');
     const selectedRowCount = window.document.querySelector('#selected-row-count');
     // const ticketDeleteBtn = window.document.querySelector('#ticket-delete-btn');
@@ -494,6 +495,16 @@ const TicketList = ({
       }
 
     } 
+  }
+
+  const openTicketDeleteModal = () => {
+    const ticketDeleteModal = document.querySelector('#ticket-delete-confirm-modal');
+    ticketDeleteModal.classList.remove('d-none');
+  }
+
+  const closeTicketDeleteModal = () => {
+    const ticketDeleteModal = document.querySelector('#ticket-delete-confirm-modal');
+    ticketDeleteModal.classList.add('d-none');
   }
 
 
@@ -567,7 +578,7 @@ const TicketList = ({
 
               <div id="delete-btn-wrapper" className="delete-btn-wrapper d-none">
                 <div>
-                  <button onClick={handleDeleteTicket} id="ticket-delete-btn" className="btn" type="button"><i className="bi bi-trash"></i></button>
+                  <button onClick={openTicketDeleteModal} id="ticket-delete-btn" className="btn" type="button"><i className="bi bi-trash"></i></button>
                 </div>
                 <div>
                   <span><span id="selected-row-count">0</span> ticket(s) selected</span>
@@ -646,6 +657,7 @@ const TicketList = ({
         setCreateModalShow={setCreateModalShow}
         setChangingRow={setChangingRow}
       />
+      <div><div id='ticket-delete-confirm-modal' className="react-responsive-modal-root d-none" data-testid="root"><div className="react-responsive-modal-overlay" data-testid="overlay" aria-hidden="true"  style={{animation: "300ms ease 0s 1 normal none running react-responsive-modal-overlay-in"}}></div><div className="react-responsive-modal-container react-responsive-modal-containerCenter" onClick={closeTicketDeleteModal} data-testid="modal-container"><div className="react-responsive-modal-modal" role="dialog" aria-modal="true" data-testid="modal" tabindex="-1" style={{animation: "300ms ease 0s 1 normal none running react-responsive-modal-modal-in"}} onClick={(e) => e.stopPropagation()}><div className="p-5 w-100"><h6 className="mb-5">Are you sure you want to delete?</h6><div className="d-flex justify-content-center"><button className="btn btn-sm f-12 border cancel px-4" onClick={closeTicketDeleteModal}>Cancel</button><button className="btn btn-sm ms-2 f-12 bg-custom px-4" onClick={handleDeleteTicket}>Yes</button></div></div><button className="react-responsive-modal-closeButton" data-testid="close-button"><svg width="28" height="28" viewBox="0 0 36 36" data-testid="close-icon"><path d="M28.5 9.62L26.38 7.5 18 15.88 9.62 7.5 7.5 9.62 15.88 18 7.5 26.38l2.12 2.12L18 20.12l8.38 8.38 2.12-2.12L20.12 18z"></path></svg></button></div></div></div></div>
 
       {/* delete confirm modal */} 
       {/* -------------             modal open deselects selected tickets. Fix later              --------------- */}
