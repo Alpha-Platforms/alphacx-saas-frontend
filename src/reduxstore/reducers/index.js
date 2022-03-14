@@ -27,7 +27,7 @@ import channelReducer from './channelReducer';
 const persistConfig = {
     key: 'alphacx_platform',
     storage,
-    whitelist: ['error', 'tenantAuth', 'userAuth', 'priority', 'category', 'status', 'group', 'tag', 'subCategory', 'config', 'livechat', 'sms', 'sla', 'emailTemplate', 'channel']
+    whitelist: ['error', 'tenantAuth', 'userAuth', 'priority', 'status', 'group', 'tag', 'subCategory', 'config', 'livechat', 'sms', 'sla', 'emailTemplate', 'channel']
 }
 
 const rootReducer = combineReducers({
