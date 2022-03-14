@@ -55,7 +55,7 @@ export const getPaginatedTickets = (itemsPerPage, currentPage, success, failed) 
         })
         .catch(err => {
             dispatch({
-                type: types.GET_CUSTOMERS,
+                type: types.GET_TICKETS,
                 payload: {
                     meta: {
                         totalItems:"0",

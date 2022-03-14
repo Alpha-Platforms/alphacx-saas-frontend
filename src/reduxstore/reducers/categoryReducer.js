@@ -2,9 +2,13 @@ import * as types from '../types';
 
 const initialState = {
 	categories: [],
+	pagCategories: [],
     meta: null,
+    pagMeta: null,
 	isCategoriesLoading: false, //will be true when fetching data and back to false when the fetch is done
-	isCategoriesLoaded: false
+	isCategoriesLoaded: false,
+	isPagCategoriesLoading: false,
+	isPagCategoriesLoaded: false,
 }
 
 //export the post reducer
@@ -23,6 +27,20 @@ const categoryReducer = (state = initialState, action) => {
 				...state,
 				isCategoriesLoading: true,
 				isCategoriesLoaded: false
+			}
+		case types.GET_PAG_CATEGORIES:
+			return {
+				...state,
+				pagCategories: action.payload.categories,
+				pagMeta: action.payload.meta,
+				isPagCategoriesLoading: false,
+				isPagCategoriesLoaded: true
+				}
+		case types.PAG_CATEGORIES_LOADING:
+			return {
+				...state,
+				isPagCategoriesLoading: true,
+				isPagCategoriesLoaded: false
 			}
 		case types.ADD_CATEGORY:
 			return {

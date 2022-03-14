@@ -17,8 +17,9 @@ import { NotificationManager } from "react-notifications";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import { TablePagination, TablePaginationProps } from "@material-ui/core";
 import EditCatModal from './EditCatModal';
+import { getPaginatedCategories } from '../../../../../reduxstore/actions/categoryActions';
 
-const TicketCategoriesTab = ({ categories, meta, isCategoriesLoaded }) => {
+const TicketCategoriesTab = ({ pagCategories, meta, isPagCategoriesLoaded, getPaginatedCategories, isUserAuthenticated }) => {
   const [changingRow, setChangingRow] = useState(false);
 
   const [createModalShow, setCreateModalShow] = useState(false);
@@ -38,17 +39,26 @@ const TicketCategoriesTab = ({ categories, meta, isCategoriesLoaded }) => {
   });
 
   useEffect(() => {
-      setCustLoading(!isCategoriesLoaded);
-      if (isCategoriesLoaded) {
+      setCustLoading(!isPagCategoriesLoaded);
+      if (isPagCategoriesLoaded) {
           setCustLoading(false);
       }
-  }, [isCategoriesLoaded]);
+  }, [isPagCategoriesLoaded]);
+
+  useEffect(() => {
+    if (isUserAuthenticated) {
+        // get first set of tickets
+        getPaginatedCategories(50, 1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [isUserAuthenticated]);
+
 
 
 
   const mixedCat = [];
 
-  categories.forEach(cat => {
+  pagCategories.forEach(cat => {
 
     mixedCat.push({category: cat.name, parentCategory: '', catId: cat.id});
 
@@ -60,40 +70,82 @@ const TicketCategoriesTab = ({ categories, meta, isCategoriesLoaded }) => {
 
   });
 
+  // function AlphacxMTPagination(props) {
+  //   const {
+  //     ActionsComponent,
+  //     onChangePage,
+  //     onChangeRowsPerPage,
+  //     ...tablePaginationProps
+  //   } = props;
+  
+  //   return (
+  //     <TablePagination
+  //       {...tablePaginationProps}
+  //       // @ts-expect-error onChangePage was renamed to onPageChange
+  //       onPageChange={onChangePage}
+  //       onRowsPerPageChange={onChangeRowsPerPage}
+  //       ActionsComponent={(subprops) => {
+  //         const { onPageChange, ...actionsComponentProps } = subprops;
+  //         return (
+  //           // @ts-expect-error ActionsComponent is provided by material-table
+  //           <ActionsComponent
+  //             {...actionsComponentProps}
+  //             onChangePage={onPageChange}
+  //           />
+  //         );
+  //       }}
+  //     />
+  //   );
+  // }
 
-  function AlphacxMTPagination(props) {
+  const AlphacxMTPagination = (props) => {
     const {
       ActionsComponent,
       onChangePage,
       onChangeRowsPerPage,
       ...tablePaginationProps
     } = props;
-  
+
     return (
       <TablePagination
         {...tablePaginationProps}
-        // @ts-expect-error onChangePage was renamed to onPageChange
+        rowsPerPageOptions={[10, 20, 30, 50, 100, 150, 200]}
+        rowsPerPage={meta?.itemsPerPage || 5}
+        count={Number(meta?.totalItems || 20)}
+        page={(meta?.currentPage || 1) - 1}
         onPageChange={onChangePage}
-        onRowsPerPageChange={onChangeRowsPerPage}
+        // when the number of rows per page changes
+        onRowsPerPageChange={(event) => {
+          setChangingRow(true);
+          getPaginatedCategories(event.target.value, 1);
+        }}
         ActionsComponent={(subprops) => {
           const { onPageChange, ...actionsComponentProps } = subprops;
           return (
-            // @ts-expect-error ActionsComponent is provided by material-table
             <ActionsComponent
               {...actionsComponentProps}
-              onChangePage={onPageChange}
+              onChangePage={(event, newPage) => {
+                // fetch tickets with new current page
+                getPaginatedCategories(meta.itemsPerPage, newPage + 1);
+              }}
+              onRowsPerPageChange={(event) => {
+                // fetch tickets with new rows per page
+                getPaginatedCategories(event.target.value, meta.currentPage);
+              }}
             />
           );
         }}
       />
     );
-  }
+  };
 
   const openModal = function() {
     const {id, name} = this;
     setCurrentCatInfo({id, name});
     setCreateModalShow(true);
   }
+
+  console.log('mixedCat => ', mixedCat);
 
 
 
@@ -108,7 +160,7 @@ const TicketCategoriesTab = ({ categories, meta, isCategoriesLoaded }) => {
           id="alphacxMTable"
           className="mb-3 acx-user-table acx-category-table"
         >
-          {categories && !changingRow && (
+          {pagCategories && !changingRow && (
             <MuiThemeProvider theme={tableTheme}>
               <MaterialTable
                 title=""
@@ -166,7 +218,8 @@ const TicketCategoriesTab = ({ categories, meta, isCategoriesLoaded }) => {
                   // exportButton: true,
                   // tableLayout: "auto",
                   // paging: true,
-                  pageSize: 10,
+                  // pageSize: 10,
+                  pageSize: meta?.itemsPerPage || 10,
                   headerStyle: {
                     backgroundColor: "#f8f9fa",
                   },
@@ -180,6 +233,11 @@ const TicketCategoriesTab = ({ categories, meta, isCategoriesLoaded }) => {
                     Pagination: AlphacxMTPagination
                   }
                 }
+                localization={{
+                  body: {
+                    emptyDataSourceMessage: "No categories to display",
+                  },
+                }}
               />
             </MuiThemeProvider>
           )}
@@ -191,9 +249,10 @@ const TicketCategoriesTab = ({ categories, meta, isCategoriesLoaded }) => {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  categories: state.category.categories,
-  meta: state.category.meta,
-  isCategoriesLoaded: state.category.isCategoriesLoaded
+  pagCategories: state.category.pagCategories,
+  meta: state.category.pagMeta,
+  isPagCategoriesLoaded: state.category.isPagCategoriesLoaded,
+  isUserAuthenticated: state.userAuth.isUserAuthenticated,
 });
 
-export default connect(mapStateToProps, null)(TicketCategoriesTab);
+export default connect(mapStateToProps, { getPaginatedCategories })(TicketCategoriesTab);

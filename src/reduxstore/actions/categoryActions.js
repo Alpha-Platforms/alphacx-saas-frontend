@@ -14,12 +14,45 @@ export const getCategories = () => (dispatch, getState) => {
 		return;
 	}
 	dispatch(setCategoriesLoading());
-	axios.get(`${config.stagingBaseUrl}/categories?per_page=50`, userTokenConfig(getState))
+	axios.get(`${config.stagingBaseUrl}/categories?per_page=100`, userTokenConfig(getState))
 		.then(res => dispatch({
 			type: types.GET_CATEGORIES,
 			payload: res.data && res.data.status === "success" ? res.data.data : {}
 		}))
 		.catch(err => dispatch(returnErrors(err.response?.data, err.response?.status)));
+}
+
+export const getPaginatedCategories = (itemsPerPage, currentPage, success, failed) => (dispatch, getState) => {
+    if (!navigator.onLine) {
+        return console.error("Network error!");
+    }
+	console.log('Fetching paginated categories...');
+    dispatch(setPagCategoriesLoading());
+    axios
+        .get(`${config.stagingBaseUrl}/categories?per_page=${itemsPerPage}&page=${currentPage}`, userTokenConfig(getState))
+        .then(res => {
+            dispatch({
+                type: types.GET_PAG_CATEGORIES,
+                payload: (res.data && res.data.status === "success")
+                    ? res.data?.data
+                    : {}
+            });
+            success && success();
+        })
+        .catch(err => {
+            dispatch({
+                type: types.GET_PAG_CATEGORIES,
+                payload: {
+                    meta: {
+                        totalItems:"0",
+                        itemsPerPage: 50,
+                        currentPage: 1,
+                        totalPages: 0
+                    }
+                }
+            });
+            failed && failed();
+            dispatch(returnErrors(err.response?.data, err.response?.status))});
 }
 
 export const addCategory = (newCategory) => (dispatch, getState) => {
@@ -73,5 +106,11 @@ export const updateCategory = (catInfo, success, failed) => (dispatch, getState)
 export const setCategoriesLoading = () => {
 	return {
 		type: types.CATEGORIES_LOADING
+	}
+}
+
+export const setPagCategoriesLoading = () => {
+	return {
+		type: types.PAG_CATEGORIES_LOADING
 	}
 }
