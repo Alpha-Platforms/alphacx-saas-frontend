@@ -26,6 +26,76 @@ import {getAcceptValue, allowedFiles} from '../../../helper';
 import {config} from '../../../config/keys';
 import { wordCapitalize, defaultTicketProperties } from '../../../helper';
 
+const searchTypeChecker = (query) => {
+    let searchType = "";
+    if(Number(query)){
+        searchType = "phone_number"
+    } else if(/\S+@\S+\.\S+/.test(query)){
+        searchType = "email"
+    } else {
+        searchType = "lastname"
+    }
+    return searchType;
+}
+
+let customerFetchTimer;
+
+const getSearchedCustomers = async (userInput) => {
+    
+    const searchType = searchTypeChecker(userInput);
+    
+    return new Promise(async (resolve) => {
+        if (userInput.length < 1) resolve([]);
+        clearTimeout(customerFetchTimer);
+        customerFetchTimer = setTimeout(async () => {
+            try {
+                const res = await httpGetMain(`users?role=Customer&searchType=${searchType}&search=${userInput}`);
+            
+                if(res.status === "success"){
+                    let remappedData = []
+                    res.data.users.forEach(item => {
+                        remappedData.push({label: item.firstname+" "+item.lastname, value: item.id})
+                    })
+                    resolve(remappedData);
+                }
+                resolve([]);
+            } catch (err) {
+                resolve([]);
+            }
+
+        }, 1500);
+
+    });
+
+}
+
+let categoriesFetchTimer;
+
+const getSearchedCategories = async (userInput) => {
+    return new Promise(async (resolve) => {
+        if (userInput.length < 1) resolve([]);
+        clearTimeout(categoriesFetchTimer);
+        categoriesFetchTimer = setTimeout(async () => {
+            try {
+                const res = await httpGetMain(`search/categories?&search=${userInput}`);
+            
+                if(res.status === "success"){
+                    let remappedData = []
+                    res.data.categories.forEach(item => {
+                        remappedData.push({label: item?.name, value: item.id})
+                    })
+                    resolve(remappedData);
+                }
+                resolve([]);
+            } catch (err) {
+                resolve([]);
+            }
+
+        }, 1500);
+
+    });
+
+}
 
 const CreateTicketModal = ({
     createModalShow,
@@ -366,35 +436,6 @@ const CreateTicketModal = ({
         });
     }
 
-    const searchTypeChecker = (query) => {
-        let searchType = "";
-        if(Number(query)){
-            searchType = "phone_number"
-        } else if(/\S+@\S+\.\S+/.test(query)){
-            searchType = "email"
-        } else {
-            searchType = "lastname"
-        }
-        return searchType;
-    }
-
-
-    const getSearchedCustomers = async (userInput) => {
-
-        const searchType = searchTypeChecker(userInput)
-
-        const res = await httpGetMain(`users?role=Customer&searchType=${searchType}&search=${userInput}`);
-
-        if(res.status === "success"){
-            let remappedData = []
-            res.data.users.forEach(item => {
-                remappedData.push({label: item.firstname+" "+item.lastname, value: item.id})
-            })
-            return remappedData;
-        }
-    }
-
-
     const prepCategoriesAndSubs = () => {
         categories.forEach(item => {
             // Leave the below line commented until Olumide implemented nullable sub-categories
@@ -649,7 +690,7 @@ const CreateTicketModal = ({
                         <div className="row mb-3">
                             <div className="col-6 mt-2">
                                 <label htmlFor="title" className="form-label">Categories</label>
-                                <RSelect className="rselectfield" 
+                                {/* <RSelect className="rselectfield" 
                                     style={{ fontSize: "12px" }}
                                     name="category"
                                     // onChange={handleRSCategoryInput}
@@ -662,7 +703,14 @@ const CreateTicketModal = ({
                                             return {value: item.id,label: item.name}
                                         })
                                     }
-                                />
+                                /> */}
+                                <AsyncSelect 
+                                    isClearable={false}
+                                    loadOptions={getSearchedCategories}
+                                    name="category"
+                                    placeholder="Search..."
+                                    onChange={handleRSInput}
+                                />    
                             </div>
 
                             <div className="col-6 mt-2 position-relative">
