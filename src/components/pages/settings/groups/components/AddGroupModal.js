@@ -7,7 +7,36 @@ import {connect} from 'react-redux';
 import {getGroups, updateGroup} from '../../../../../reduxstore/actions/groupActions';
 import RSelect from 'react-select';
 import "../../../../../styles/ModalCustomStyle.css";
+import { httpGetMain } from '../../../../../helpers/httpMethods';
+import AsyncSelect from 'react-select/async';
 
+let categoriesFetchTimer;
+
+const getSearchedCategories = async (userInput) => {
+    return new Promise(async (resolve) => {
+        if (userInput.length < 1) resolve([]);
+        clearTimeout(categoriesFetchTimer);
+        categoriesFetchTimer = setTimeout(async () => {
+            try {
+                const res = await httpGetMain(`search/categories?&search=${userInput}`);
+            
+                if(res.status === "success"){
+                    let remappedData = []
+                    res.data.categories.forEach(item => {
+                        remappedData.push({label: item?.name, value: item.id})
+                    })
+                    resolve(remappedData);
+                }
+                resolve([]);
+            } catch (err) {
+                resolve([]);
+            }
+
+        }, 1500);
+
+    });
+
+}
 
 const AddGroupModal = ({
   addGroupModalShow,
@@ -42,10 +71,12 @@ const AddGroupModal = ({
   }
 
   const handleModalRSInput = (values, {name}) => {
+    console.log('values => ', values);
+    console.log('name => ', name);
 
     const temp = values.map( item => {
       return item.value           
-    })
+    }) 
 
     setNewTeam( prev => {
       return {...prev, [name]: temp }
@@ -193,7 +224,7 @@ const AddGroupModal = ({
                 <label className="form-label mt-2" htmlFor="groupDesc">
                   Ticket Category
                 </label>
-                <RSelect className="rselectfield"
+                {/* <RSelect className="rselectfield"
                   style={{ fontSize: "12px" }}
                   onMenuOpen={loadRSCategoryOptions}
                   isClearable={false}
@@ -206,7 +237,15 @@ const AddGroupModal = ({
                   options={RSCategories}
                   defaultValue={newTeam.categoryIds}
                   width="500"
-              />
+              /> */}
+              <AsyncSelect 
+                  isClearable={false}
+                  loadOptions={getSearchedCategories}
+                  name="categoryIds"
+                  placeholder="Search..."
+                  onChange={handleModalRSInput}
+                  isMulti={true}
+              />   
               </div>
 
               <div className="d-flex justify-content-end mt-3">
