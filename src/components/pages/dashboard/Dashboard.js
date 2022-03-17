@@ -17,7 +17,7 @@ import '../../../styles/Dashboard.css';
 const DashboardTwo = ({isAnalyticsLoaded, isNewAnalyticsLoaded, analytics, newAnalytics, user, getAnalytics, getNewAnalytics, isUserAuthenticated}) => {
     useEffect(() => {
         if (isUserAuthenticated) {
-            getAnalytics();
+            // getAnalytics();
             getNewAnalytics();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,7 +74,7 @@ const DashboardTwo = ({isAnalyticsLoaded, isNewAnalyticsLoaded, analytics, newAn
                                 </div>
                             </div>
                             <div className="box-4">
-                                <TicketLineGraph analytics={analytics} />
+                                <TicketLineGraph analytics={{ newTicket: [] }} />
                             </div>
                         </div>
                     </div>}

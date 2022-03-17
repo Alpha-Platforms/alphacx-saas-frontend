@@ -6,9 +6,9 @@ const TicketStatusPie = ({newAnalytics}) => {
     const getColors = (statuses) => {
         const colors = [];
         let start = 23;
-        const interval = Math.floor((100 - start) / statuses.length);
+        const interval = Math.floor((100 - start) / statuses?.length);
 
-        for (let i = 0; i < statuses.length; i++) {
+        for (let i = 0; i < statuses?.length; i++) {
             colors.push(`hsl(240, 100%, ${start}%)`);
             start = start + interval;
         }
@@ -19,7 +19,7 @@ const TicketStatusPie = ({newAnalytics}) => {
     // const values = [25, 5, 20, 18];
     const values = newAnalytics?.allStatus?.slice(0, 5)?.map((status) => status?.__meta__?.ticket_count);
     // const colors = ["#D1E8FF", "#1E90FF", "#0707ED", "#000080"];
-    const colors = getColors(newAnalytics?.allStatus?.slice(0, 5));
+    const colors = getColors(newAnalytics?.allStatus?.slice(0, 5) || []);
     // const labels = ["Open", "In Progress", "Pending", "Closed"];
     const labels = newAnalytics?.allStatus?.slice(0, 5)?.map((status) => status);
 
