@@ -26,7 +26,6 @@ export const getPaginatedCategories = (itemsPerPage, currentPage, success, faile
     if (!navigator.onLine) {
         return console.error("Network error!");
     }
-	console.log('Fetching paginated categories...');
     dispatch(setPagCategoriesLoading());
     axios
         .get(`${config.stagingBaseUrl}/categories?per_page=${itemsPerPage}&page=${currentPage}`, userTokenConfig(getState))
