@@ -1,7 +1,12 @@
+// @ts-nocheck
 import {CsvBuilder} from 'filefy';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import moment from 'moment';
+import axios from 'axios';
+import jwt_decode from 'jwt-decode';
+import dayjs from 'dayjs';
+import { config } from './config/keys';
 
 // function to return axios configuration with tenant token
 export const tenantTokenConfig = getState => {
@@ -221,3 +226,76 @@ export const defaultTicketProperties = {
 
     priority: {id: "5a6635d0-0561-11ea-8d71-362b9e155667"} // Medium, but name may be changed by tenant
 }
+
+const newAxios = axios.create();
+
+export const refreshUserTokens = () => {
+    return new Promise(async (resolve) => {
+        const token = localStorage.getItem('token');
+        const refreshToken = localStorage.getItem('refreshToken');
+
+        if (refreshToken && token) {
+            // token can be refreshed
+            // check for token
+            const decodedToken = jwt_decode(token);
+            const isTokenExpired = dayjs.unix(decodedToken.exp).diff(dayjs()) < 1;
+            if (isTokenExpired) {
+                // refresh tokens
+                try {
+                    const res = await axios.post(
+                        `${config.baseUrl}/auth/refresh`,
+                        { refreshToken },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                                'domain': localStorage.getItem("domain"),
+                                'Access-Control-Allow-Origin': '*',
+                                'Content-Type': 'application/json' 
+                            },
+                            }
+                    );
+                    // update new tokens in local storage
+                    localStorage.setItem('token', res.data?.token?.token);
+                    localStorage.setItem('refreshToken', res.data?.token?.refreshToken);
+                    
+                    resolve(res.data?.token?.token);
+                } catch (err) {
+                    // refreshing tokens failed
+
+                    // logout user
+                    localStorage.clear();
+                    window.location.href = "/login"
+                    resolve();
+                }
+            } else {
+                // slide
+                resolve();
+            }
+        } else {
+            resolve();
+        }
+    });
+};
+
+
+const requestHandler = async (request) => {
+    console.log('intercepting request');
+    const newToken = await refreshUserTokens();
+    if (newToken && request.headers) {
+        request.headers.Authorization = `Bearer ${newToken}`;
+    }
+
+    return request;
+};
+
+const errorHandler = (error) => {
+    return Promise.reject(error);
+};
+
+
+newAxios.interceptors.request.use(
+    (request) => requestHandler(request),
+    (error) => errorHandler(error),
+);
+
+export const customAxios = newAxios;

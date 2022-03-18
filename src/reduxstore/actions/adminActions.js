@@ -1,9 +1,9 @@
-import axios from 'axios';
 import * as types from '../types';
 import { config } from '../../config/keys';
 import { returnErrors } from './errorActions';
 import {userTokenConfig} from '../../helper';
 import { NotificationManager } from 'react-notifications';
+import { customAxios as axios } from "../../helper";
 
 export const getAdmins = () => (dispatch, getState) => {
 	if (!navigator.onLine) {

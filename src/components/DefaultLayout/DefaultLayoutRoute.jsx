@@ -1,9 +1,10 @@
+// @ts-nocheck
 import React, { useContext, useState, useEffect } from "react";
 import Layout from "../Layout/index.jsx";
 import { Route, useHistory, useLocation} from "react-router-dom";
 import { LayoutContext } from "../../context/layoutContext";
 import jwtDecode from "jwt-decode";
-import { redirectToSub } from './../../helper';
+import { redirectToSub, refreshUserTokens } from './../../helper';
 const DefaultLayout = ({ children, routeType, pageName, ...rest }) => {
   let browserRouter = children.props.history.push;
   let fullProps = children.props;
@@ -48,10 +49,16 @@ const DefaultLayoutRoute = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.parse(window.localStorage.getItem('tenantSubscription'))]);
 
-
   useEffect(() => {
-    ValidateToken();
-  }, [valid]);
+    setValid(true);
+    (async () => {
+      await refreshUserTokens();
+    })();
+  }, []);
+
+  // useEffect(() => {
+  //   ValidateToken();
+  // }, [valid]);
   const ValidateToken = () => {
     let token = localStorage.getItem("token");
     if (token == undefined || token == null || token == "") {
