@@ -212,6 +212,7 @@ export const separateNum = (num) => {
 //
 export const multiIncludes = (arr, checkArr) => {
     if (!Array.isArray(arr) || !Array.isArray(checkArr)) throw new Error("Arguments must be array");
+    // if (!Array.isArray(arr) || !Array.isArray(checkArr)) return false;
     
     let allIncluded = true;
     checkArr.forEach(x => {
@@ -229,7 +230,7 @@ export const defaultTicketProperties = {
 
 const newAxios = axios.create();
 
-export const refreshUserTokens = () => {
+export const refreshUserTokens = (redirectToLoginIfNoToken = false) => {
     return new Promise(async (resolve) => {
         const token = localStorage.getItem('token');
         const refreshToken = localStorage.getItem('refreshToken');
@@ -263,7 +264,9 @@ export const refreshUserTokens = () => {
                     // refreshing tokens failed
 
                     // logout user
-                    localStorage.clear();
+                    const onboardingSplash = localStorage.getItem("onboardingSplash")
+                    localStorage.clear()
+                    onboardingSplash && localStorage.setItem("onboardingSplash", onboardingSplash)
                     window.location.href = "/login"
                     resolve();
                 }
@@ -272,6 +275,21 @@ export const refreshUserTokens = () => {
                 resolve();
             }
         } else {
+            // logout user properly
+            if (redirectToLoginIfNoToken) {
+                const onboardingSplash = localStorage.getItem("onboardingSplash")
+                const domain = localStorage.getItem("domain")
+                const tenantId = localStorage.getItem("tenantId")
+                const tenantToken = localStorage.getItem("tenantToken")
+                const tenantSubscription = localStorage.getItem("tenantSubscription")
+                localStorage.clear()
+                onboardingSplash && localStorage.setItem("onboardingSplash", onboardingSplash)
+                domain && localStorage.setItem("domain", domain)
+                tenantId && localStorage.setItem("tenantId", tenantId)
+                tenantToken && localStorage.setItem("tenantToken", tenantToken)
+                tenantSubscription && localStorage.setItem("tenantSubscription", tenantSubscription)
+                window.location.href = "/login"
+            }
             resolve();
         }
     });
@@ -279,7 +297,6 @@ export const refreshUserTokens = () => {
 
 
 const requestHandler = async (request) => {
-    console.log('intercepting request');
     const newToken = await refreshUserTokens();
     if (newToken && request.headers) {
         request.headers.Authorization = `Bearer ${newToken}`;

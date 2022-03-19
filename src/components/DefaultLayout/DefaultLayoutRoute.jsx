@@ -52,25 +52,25 @@ const DefaultLayoutRoute = ({
   useEffect(() => {
     setValid(true);
     (async () => {
-      await refreshUserTokens();
+      await refreshUserTokens(true);
     })();
   }, []);
 
   // useEffect(() => {
   //   ValidateToken();
   // }, [valid]);
-  const ValidateToken = () => {
-    let token = localStorage.getItem("token");
-    if (token == undefined || token == null || token == "") {
-      localStorage.clear();
-      return setValid(false);
-    }
-    if (jwtDecode(token).exp < Date.now() / 1000) {
-      localStorage.clear();
-      return setValid(false);
-    }
-    setValid(true);
-  };
+  // const ValidateToken = () => {
+  //   let token = localStorage.getItem("token");
+  //   if (token == undefined || token == null || token == "") {
+  //     localStorage.clear();
+  //     return setValid(false);
+  //   }
+  //   if (jwtDecode(token).exp < Date.now() / 1000) {
+  //     localStorage.clear();
+  //     return setValid(false);
+  //   }
+  //   setValid(true);
+  // };
 
   return (
     <Route

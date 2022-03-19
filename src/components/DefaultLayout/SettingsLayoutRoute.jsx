@@ -51,7 +51,7 @@ const DefaultLayoutRoute = ({
   useEffect(() => {
     setValid(true);
     (async () => {
-      await refreshUserTokens();
+      await refreshUserTokens(true);
     })();
 
   }, [])
@@ -61,23 +61,23 @@ const DefaultLayoutRoute = ({
   // }, [valid]);
 
 
-  const ValidateToken = () => {
-    let token = localStorage.getItem("token");
+  // const ValidateToken = () => {
+  //   let token = localStorage.getItem("token");
 
-    if (token == undefined || token == null || token == "") {
-      localStorage.clear();
-      console.log(null)
-      return setValid(false);
-    }
+  //   if (token == undefined || token == null || token == "") {
+  //     localStorage.clear();
+  //     console.log(null)
+  //     return setValid(false);
+  //   }
 
-    if (jwtDecode(token).exp < Date.now() / 1000) {
-      localStorage.clear();
-      console.log("expired")
-      return setValid(false);
-    }
-    setValid(true);
+  //   if (jwtDecode(token).exp < Date.now() / 1000) {
+  //     localStorage.clear();
+  //     console.log("expired")
+  //     return setValid(false);
+  //   }
+  //   setValid(true);
 
-  };
+  // };
 
 
   return (
