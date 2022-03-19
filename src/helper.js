@@ -307,7 +307,7 @@ export const refreshUserTokens = (redirectToLoginIfNoToken = false) => {
 
 
 const requestHandler = async (request) => {
-    const newToken = await refreshUserTokens();
+    const newToken = await refreshUserTokens(true);
     if (newToken && request.headers) {
         request.headers.Authorization = `Bearer ${newToken}`;
     }
