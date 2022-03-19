@@ -31,7 +31,8 @@ export const tenantTokenConfig = getState => {
 // function to return axios configuration with user token
 export const userTokenConfig = getState => {
     //get tenant tenantToken from local storage
-    const userToken = getState().userAuth.userToken;
+    // const userToken = getState().userAuth.userToken;
+    const userToken = window.localStorage.getItem('token');
 
     // Headers
     const axiosConfig = {
@@ -255,9 +256,18 @@ export const refreshUserTokens = (redirectToLoginIfNoToken = false) => {
                             },
                             }
                     );
+                    const newToken = res.data?.token?.token;
+                    const newRefreshToken = res.data?.token?.refreshToken;
                     // update new tokens in local storage
-                    localStorage.setItem('token', res.data?.token?.token);
-                    localStorage.setItem('refreshToken', res.data?.token?.refreshToken);
+                    localStorage.setItem('token', newToken);
+                    localStorage.setItem('refreshToken', newRefreshToken);
+                    const localStorageUser = JSON.parse(window.localStorage.getItem('user'));
+                    if (localStorageUser & typeof localStorageUser === 'object') {
+                        // overwrite tokens with new ones
+                        localStorageUser.token = newToken;
+                        localStorageUser.refreshToken = newRefreshToken;
+                        window.localStorage.setItem('user', JSON.stringify(localStorageUser));
+                    }
                     
                     resolve(res.data?.token?.token);
                 } catch (err) {
