@@ -1,7 +1,12 @@
+// @ts-nocheck
 import {CsvBuilder} from 'filefy';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import moment from 'moment';
+import axios from 'axios';
+import jwt_decode from 'jwt-decode';
+import dayjs from 'dayjs';
+import { config } from './config/keys';
 
 // function to return axios configuration with tenant token
 export const tenantTokenConfig = getState => {
@@ -26,7 +31,8 @@ export const tenantTokenConfig = getState => {
 // function to return axios configuration with user token
 export const userTokenConfig = getState => {
     //get tenant tenantToken from local storage
-    const userToken = getState().userAuth.userToken;
+    // const userToken = getState().userAuth.userToken;
+    const userToken = window.localStorage.getItem('token');
 
     // Headers
     const axiosConfig = {
@@ -207,6 +213,7 @@ export const separateNum = (num) => {
 //
 export const multiIncludes = (arr, checkArr) => {
     if (!Array.isArray(arr) || !Array.isArray(checkArr)) throw new Error("Arguments must be array");
+    // if (!Array.isArray(arr) || !Array.isArray(checkArr)) return false;
     
     let allIncluded = true;
     checkArr.forEach(x => {
@@ -221,3 +228,101 @@ export const defaultTicketProperties = {
 
     priority: {id: "5a6635d0-0561-11ea-8d71-362b9e155667"} // Medium, but name may be changed by tenant
 }
+
+const newAxios = axios.create();
+
+export const refreshUserTokens = (redirectToLoginIfNoToken = false) => {
+    return new Promise(async (resolve) => {
+        const token = localStorage.getItem('token');
+        const refreshToken = localStorage.getItem('refreshToken');
+
+        if (refreshToken && token) {
+            // token can be refreshed
+            // check for token
+            const decodedToken = jwt_decode(token);
+            const isTokenExpired = dayjs.unix(decodedToken.exp).diff(dayjs()) < 1;
+            if (isTokenExpired) {
+                // refresh tokens
+                try {
+                    const res = await axios.post(
+                        `${config.stagingBaseUrl}/auth/refreshToken`,
+                        { refreshToken },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                                'domain': localStorage.getItem("domain"),
+                                'Access-Control-Allow-Origin': '*',
+                                'Content-Type': 'application/json' 
+                            },
+                            }
+                    );
+                    const newToken = res.data?.token?.token;
+                    const newRefreshToken = res.data?.token?.refreshToken;
+                    // update new tokens in local storage
+                    localStorage.setItem('token', newToken);
+                    localStorage.setItem('refreshToken', newRefreshToken);
+                    const localStorageUser = JSON.parse(window.localStorage.getItem('user'));
+                    if (localStorageUser & typeof localStorageUser === 'object') {
+                        // overwrite tokens with new ones
+                        localStorageUser.token = newToken;
+                        localStorageUser.refreshToken = newRefreshToken;
+                        window.localStorage.setItem('user', JSON.stringify(localStorageUser));
+                    }
+                    
+                    resolve(res.data?.token?.token);
+                } catch (err) {
+                    // refreshing tokens failed
+
+                    // logout user
+                    const onboardingSplash = localStorage.getItem("onboardingSplash")
+                    localStorage.clear()
+                    onboardingSplash && localStorage.setItem("onboardingSplash", onboardingSplash)
+                    window.location.href = "/login"
+                    resolve();
+                }
+            } else {
+                // slide
+                resolve();
+            }
+        } else {
+            // logout user properly
+            if (redirectToLoginIfNoToken) {
+                const onboardingSplash = localStorage.getItem("onboardingSplash")
+                const domain = localStorage.getItem("domain")
+                const tenantId = localStorage.getItem("tenantId")
+                const tenantToken = localStorage.getItem("tenantToken")
+                const tenantSubscription = localStorage.getItem("tenantSubscription")
+                localStorage.clear()
+                onboardingSplash && localStorage.setItem("onboardingSplash", onboardingSplash)
+                domain && localStorage.setItem("domain", domain)
+                tenantId && localStorage.setItem("tenantId", tenantId)
+                tenantToken && localStorage.setItem("tenantToken", tenantToken)
+                tenantSubscription && localStorage.setItem("tenantSubscription", tenantSubscription)
+                window.location.href = "/login"
+            }
+            resolve();
+        }
+    });
+};
+
+
+const requestHandler = async (request) => {
+    const newToken = await refreshUserTokens();
+    if (newToken && request.headers) {
+        request.headers.Authorization = `Bearer ${newToken}`;
+    }
+
+    return request;
+};
+
+const errorHandler = (error) => {
+    return Promise.reject(error);
+};
+
+
+newAxios.interceptors.request.use(
+    (request) => requestHandler(request),
+    (error) => errorHandler(error),
+);
+
+export const customAxios = newAxios;

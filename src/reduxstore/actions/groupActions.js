@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { customAxios as axios } from "../../helper";
 import * as types from '../types';
 import {config} from '../../config/keys';
 import {returnErrors} from './errorActions';

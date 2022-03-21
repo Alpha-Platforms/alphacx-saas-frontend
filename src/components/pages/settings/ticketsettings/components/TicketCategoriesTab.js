@@ -144,11 +144,6 @@ const TicketCategoriesTab = ({ pagCategories, meta, isPagCategoriesLoaded, getPa
     setCurrentCatInfo({id, name});
     setCreateModalShow(true);
   }
-
-  console.log('mixedCat => ', mixedCat);
-
-
-
   
   return (
     <div className="ticket-cat-tab">
