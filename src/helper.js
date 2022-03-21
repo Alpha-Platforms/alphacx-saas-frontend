@@ -245,7 +245,7 @@ export const refreshUserTokens = (redirectToLoginIfNoToken = false) => {
                 // refresh tokens
                 try {
                     const res = await axios.post(
-                        `${config.baseUrl}/auth/refresh`,
+                        `${config.stagingBaseUrl}/auth/refreshToken`,
                         { refreshToken },
                         {
                             headers: {
