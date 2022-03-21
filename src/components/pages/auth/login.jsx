@@ -45,6 +45,14 @@ const Login = ({match: {params}}) => {
     }
 }
 
+  useEffect(() => {
+      const token = localStorage.getItem('token');
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (token && refreshToken) {
+        window.location.href = "/";
+      }
+    }, []);
+
 
   useEffect(async () => {
     const hostLength = hostName.length;

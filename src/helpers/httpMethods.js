@@ -1,8 +1,9 @@
 // @ts-nocheck
-import axios from "axios";
+// import axios from "axios";
 // import { hideLoader } from '../helpers/loader';
 import { NotificationManager } from "react-notifications";
 import { parseDomain, ParseResultType } from "parse-domain";
+import { customAxios as axios } from "../helper";
 
 // if (process.env.REACT_APP_ENVIRONMENT === 'cardinal') {
 //   export let baseUrl = process.env.REACT_APP_AUTH_BASE_URL_CARDINAL;
