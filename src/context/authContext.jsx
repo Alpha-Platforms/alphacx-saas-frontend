@@ -29,18 +29,18 @@ export const AuthProvider = (props) => {
 
   const ValidateToken = () => {
     setExpiredSession(true);
-    let token = localStorage.getItem("token");
-    if (token) {
-      if (jwtDecode(token).exp < Date.now() / 1000) {
-        localStorage.clear();
-        window.location.href = "/login";
-      } else {
-        setExpiredSession(false);
-      }
-    } else {
-      localStorage.clear();
-      window.location.href = "/login";
-    }
+    // let token = localStorage.getItem("token");
+    // if (token) {
+    //   if (jwtDecode(token).exp < Date.now() / 1000) {
+    //     localStorage.clear();
+    //     window.location.href = "/login";
+    //   } else {
+    //     setExpiredSession(false);
+    //   }
+    // } else {
+    //   localStorage.clear();
+    //   window.location.href = "/login";
+    // }
   };
 
   const GetUserInfoFromStorge = () => {

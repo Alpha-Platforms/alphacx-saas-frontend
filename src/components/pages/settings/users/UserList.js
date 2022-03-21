@@ -332,7 +332,7 @@ const UserList = ({
                     emailAddress: email,
                     role,
                     // group: groups?.map( (item, index) => `${item.group?.name}${groups?.length-1 > index? ", ":" "}`).join(' '),
-                    group: groups?.map( (item) => item.group.name),
+                    group: groups?.map( (item) => item?.group?.name),
                     created: created_at && moment(created_at).format('DD MMM, YYYY'),
                     contact: { firstname, lastname, id, avatar },
                     isActivated,

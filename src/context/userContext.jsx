@@ -1,11 +1,15 @@
+// @ts-nocheck
 import React, { createContext, useState, useEffect } from "react";
 // import Loader from "react-loader-spinner";
 import "react-responsive-modal/styles.css";
-import axios from "axios";
-import { getLocalItem } from "../components/helpers/authService";
-import jwtDecode from "jwt-decode";
-import { httpGetMain, httpPostMain } from "helpers/httpMethods";
-import NotificationManager from "react-notifications/lib/NotificationManager";
+// import axios from "axios";
+// import { getLocalItem } from "../components/helpers/authService";
+// import jwtDecode from "jwt-decode";
+// import { httpGetMain, httpPostMain } from "helpers/httpMethods";
+// import NotificationManager from "react-notifications/lib/NotificationManager";
+import { refreshUserTokens } from "../helper";
+
+
 export const UserDataContext = createContext();
 
 export const UserDataProvider = (props) => {
@@ -14,46 +18,55 @@ export const UserDataProvider = (props) => {
   const [firstTimeLoad, setFirstTimeLoad] = useState(true);
 
   useEffect(() => {
-    RecallJwt();
-  }, []);
+      (async () => {
+        // refresh user token
+        // await refreshUserTokens();
+      })();
+    }, []);
+
+  // OLD TOKEN REFRESH IMPLEMENTATION
+
+  // useEffect(() => {
+  //   RecallJwt();
+  // }, []);
 
   // THIS CALLS JWT TOKEN EXP
   // To custantly (60sec) check if the user token is expired
-  const RecallJwt = () => {
-    setInterval(async () => {
-      ValidateToken();
-    }, 300000);
-  };
+  // const RecallJwt = () => {
+  //   setInterval(async () => {
+  //     ValidateToken();
+  //   }, 300000);
+  // };
 
-  const ValidateToken = async () => {
-    let token = localStorage.getItem("token");
-    let refreshToken = localStorage.getItem("refreshToken");
+  // const ValidateToken = async () => {
+  //   let token = localStorage.getItem("token");
+  //   let refreshToken = localStorage.getItem("refreshToken");
 
-    // zeelz: do proper check later
-    // if (token == undefined || token == null || token == "") {
-    //   setFirstTimeLoad(false);
-    //   localStorage.clear();
-    //   return (window.location.href = "/");
-    // }
+  //   // zeelz: do proper check later
+  //   // if (token == undefined || token == null || token == "") {
+  //   //   setFirstTimeLoad(false);
+  //   //   localStorage.clear();
+  //   //   return (window.location.href = "/");
+  //   // }
 
-    if (token && jwtDecode(token).exp < Date.now() / 1000) {
+  //   if (token && jwtDecode(token).exp < Date.now() / 1000) {
 
-        const res = await httpPostMain ("auth/refreshToken", {"refreshToken": refreshToken});
+  //       const res = await httpPostMain ("auth/refreshToken", {"refreshToken": refreshToken});
 
-        if (res?.status == "success") {
-          const {token: {token, refreshToken}} = res;
+  //       if (res?.status == "success") {
+  //         const {token: {token, refreshToken}} = res;
 
-          localStorage.setItem("token", token);
-          localStorage.setItem("refreshToken", refreshToken);
+  //         localStorage.setItem("token", token);
+  //         localStorage.setItem("refreshToken", refreshToken);
           
-        } else {
-          setFirstTimeLoad(false);
-          localStorage.clear();
-          return (window.location.href = "/login");
-        }
+  //       } else {
+  //         setFirstTimeLoad(false);
+  //         localStorage.clear();
+  //         return (window.location.href = "/login");
+  //       }
 
-    }
-  };
+  //   }
+  // };
 
   return (
     <UserDataContext.Provider value={{}}>

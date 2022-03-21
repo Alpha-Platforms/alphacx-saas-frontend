@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useContext, useEffect, useState } from "react";
 import Layout from "../Layout/settings.jsx";
 import { Route, useHistory, useLocation } from "react-router-dom";
@@ -6,7 +7,7 @@ import jwtDecode from "jwt-decode";
 
 import store from "reduxstore/store.js";
 import accessControlList from "../../config/accessControlList.js";
-import { redirectToSub } from './../../helper';
+import { redirectToSub, refreshUserTokens } from './../../helper';
 
 const DefaultLayout = ({ children, routeType, pageName, ...rest }) => {
   let browserRouter = children.props.history.push;
@@ -47,29 +48,36 @@ const DefaultLayoutRoute = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.parse(window.localStorage.getItem('tenantSubscription'))]);
 
-
   useEffect(() => {
-    ValidateToken();
-  }, [valid]);
-
-
-  const ValidateToken = () => {
-    let token = localStorage.getItem("token");
-
-    if (token == undefined || token == null || token == "") {
-      localStorage.clear();
-      console.log(null)
-      return setValid(false);
-    }
-
-    if (jwtDecode(token).exp < Date.now() / 1000) {
-      localStorage.clear();
-      console.log("expired")
-      return setValid(false);
-    }
     setValid(true);
+    (async () => {
+      await refreshUserTokens(true);
+    })();
 
-  };
+  }, [])
+
+  // useEffect(() => {
+  //   ValidateToken();
+  // }, [valid]);
+
+
+  // const ValidateToken = () => {
+  //   let token = localStorage.getItem("token");
+
+  //   if (token == undefined || token == null || token == "") {
+  //     localStorage.clear();
+  //     console.log(null)
+  //     return setValid(false);
+  //   }
+
+  //   if (jwtDecode(token).exp < Date.now() / 1000) {
+  //     localStorage.clear();
+  //     console.log("expired")
+  //     return setValid(false);
+  //   }
+  //   setValid(true);
+
+  // };
 
 
   return (
