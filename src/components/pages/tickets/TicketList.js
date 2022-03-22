@@ -138,13 +138,13 @@ const TicketList = ({
       <TablePagination
         {...tablePaginationProps}
         rowsPerPageOptions={[10, 20, 30, 50, 100, 150, 200]}
-        rowsPerPage={meta?.itemsPerPage || 5}
+        rowsPerPage={meta?.itemsPerPage || 50}
         count={Number(meta?.totalItems || 20)}
         page={(meta?.currentPage || 1) - 1}
         onPageChange={onChangePage}
         // when the number of rows per page changes
         onRowsPerPageChange={(event) => {
-          setChangingRow(true);
+          // setChangingRow(true);
           getPaginatedTickets(event.target.value, 1);
         }}
         ActionsComponent={(subprops) => {
