@@ -235,10 +235,10 @@ const AddGroupModal = ({
                   isMulti={true}
                   onChange={handleModalRSInput}
                   options={RSCategories}
-                  defaultValue={newTeam.categoryIds}
                   width="500"
-              /> */}
+                /> */}
               <AsyncSelect 
+                  defaultValue={newTeam.categoryIds}
                   isClearable={false}
                   loadOptions={getSearchedCategories}
                   name="categoryIds"
