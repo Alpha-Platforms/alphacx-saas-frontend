@@ -14,7 +14,7 @@ let categoriesFetchTimer;
 
 const getSearchedCategories = async (userInput) => {
     return new Promise(async (resolve) => {
-        if (userInput.length < 1) resolve([]);
+        // if (userInput.length < 1) resolve(['Search']);
         clearTimeout(categoriesFetchTimer);
         categoriesFetchTimer = setTimeout(async () => {
             try {
@@ -245,6 +245,7 @@ const AddGroupModal = ({
                   placeholder="Search..."
                   onChange={handleModalRSInput}
                   isMulti={true}
+                  defaultOptions
               />   
               </div>
 
