@@ -85,7 +85,7 @@ const CustomerList = ({isCustomersLoaded, customers, getCustomers, meta, getPagi
                 onPageChange={onChangePage}
                 // when the number of rows per page changes
                 onRowsPerPageChange={event => {
-                            setChangingRow(true);
+                            // setChangingRow(true);
                             getPaginatedCustomers(event.target.value, 1);
                             }}
                 ActionsComponent={(subprops) => {
