@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Cabin&display=swap');
+
 .widgetcolor-wrapper {
     border: 1px solid rgba(45, 50, 80, 0.22);
     width: 165px;
@@ -55,4 +57,153 @@
     -moz-border-radius: 5px;
     -ms-border-radius: 5px;
     -o-border-radius: 5px;
+}
+
+.livechat-column {
+    width: calc(81vw);
+    position: relative;
+    display: grid;
+    grid-template-columns: calc(81vw - 375px) 375px;
+}
+
+.livechat-column > div:nth-of-type(1) {
+    padding-right: 4rem;
+    /* border: 1px solid blue; */
+}
+
+.livechat-column > div:nth-of-type(2) {
+    /* border: 1px solid yellow; */
+}
+
+.preview-wrapper {
+    max-width: 375px;
+    height: 600px;
+    max-height: 100vh;
+    background: rgb(25, 117, 188);
+    color: white;
+    margin: 0px auto;
+    position: relative !important;
+    font-family: Cabin, Roboto, sans-serif !important;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.08);
+    pointer-events: none !important;
+}
+
+.preview-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+}
+
+.preview-header {
+    padding: 20px;
+}
+
+.preview-header-heading {
+    color: white;
+    font-size: 24px;
+    line-height: 29.16px;
+    font-weight: 400;
+    text-align: center;
+    margin-bottom: 7px;
+    padding-top: 13px;
+    position: relative;
+    font-family: Cabin, Roboto, sans-serif !important;
+}
+
+.preview-header-subheading {
+    color: white;
+    text-align: center;
+    font-size: 14px;
+    line-height: 17px;
+    font-weight: normal;
+    font-family: Cabin, Roboto, sans-serif !important;
+}
+
+.preview-body {
+    background: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    padding: 20px;
+    height: 469px;
+    border-radius: 10px 10px 0px 0px;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    overflow-y: scroll;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.preview-body::-webkit-scrollbar {
+    display: none;
+}
+  
+/* Hide scrollbar for IE and Edge */
+.preview-body {
+    -ms-overflow-style: none;
+}
+
+.preview-form input, .preview-form label, .preview-form select {
+    display: block;
+    font-size: 14px;
+    line-height: 17px;
+    width: 100%;
+    font-family: Cabin, Roboto, sans-serif !important;
+}
+
+.preview-form label {
+    margin-bottom: 7px;
+}
+
+.preview-form input, .preview-form textarea, .preview-form select {
+    background: rgba(238, 239, 242, 0.6);
+    border: 0.5px solid rgb(218, 218, 218);
+    border-radius: 3px;
+    padding: 0.6rem;
+    font-family: inherit;
+}
+
+.preview-form > div:not(div:last-child) {
+    margin-bottom: 13px;
+}
+
+.submit-btn-wrapper {
+    margin-top: 2.2rem;
+}
+
+.preview-form button[type="submit"] {
+    display: block;
+    width: 100%;
+    height: 45px;
+    border-radius: 3px;
+    background: rgb(25, 117, 188);
+    color: white;
+    font-family: Cabin, Roboto, sans-serif !important;
+}
+
+.preview-body > div:nth-child(2) {
+    text-align: center;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    padding: 18px 20px 0px;
+    display: flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.preview-body > div:nth-child(2) > span:nth-child(2) > a {
+    font-size: 12px;
+    line-height: 14.58px;
+    color: rgba(43, 48, 77, 0.5);
+    margin-left: 8px;
+    font-family: Cabin, Roboto, sans-serif !important;
+}
+
+.important-asterisk {
+    color: red;
+    display: inline-block;
+    transform: translateY(0.05rem);
 }
