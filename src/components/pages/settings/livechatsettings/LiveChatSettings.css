@@ -79,7 +79,7 @@
     max-width: 375px;
     height: 600px;
     max-height: 100vh;
-    background: rgb(25, 117, 188);
+    /* background: rgb(25, 117, 188); */
     color: white;
     margin: 0px auto;
     position: relative !important;
@@ -178,7 +178,7 @@
     width: 100%;
     height: 45px;
     border-radius: 3px;
-    background: rgb(25, 117, 188);
+    /* background: rgb(25, 117, 188); */
     color: white;
     font-family: Cabin, Roboto, sans-serif !important;
 }

@@ -262,29 +262,29 @@ const LiveChatSettings = ({livechatConfig, isConfigLoaded, isConfigLoading, getL
                             </div>
                             <div>
                                 <div className="livechat-preview">
-                                    <div class="preview-wrapper">
-                                        <div class="preview-container">
-                                            <div class="preview-header">
-                                                <div class="preview-header-heading">{settings.title}</div>
-                                                <div class=" preview-header-subheading">{settings.description}</div>
+                                    <div className="preview-wrapper" style={{ backgroundColor: settings.theme || 'rgb(25, 117, 188)' }}>
+                                        <div className="preview-container">
+                                            <div className="preview-header">
+                                                <div className="preview-header-heading">{settings.title}</div>
+                                                <div className=" preview-header-subheading">{settings.description}</div>
                                             </div>
-                                            <div class="preview-body">
+                                            <div className="preview-body">
                                                 <div>
-                                                    <form class="preview-form">
+                                                    <form className="preview-form">
                                                         <div>
-                                                            <label for="fullname">Full Name <span class="important-asterisk">*</span></label>
+                                                            <label htmlFor="fullname">Full Name <span className="important-asterisk">*</span></label>
                                                             <input type="text" name="fullname" id="fullname" required="" value=""/>
                                                         </div>
                                                         <div>
-                                                            <label for="email">Email <span class="important-asterisk">*</span></label>
+                                                            <label htmlFor="email">Email <span className="important-asterisk">*</span></label>
                                                             <input type="email" id="email" name="email" required="" value=""/>
                                                         </div>
                                                         <div>
-                                                            <label for="chatsubject">Chat Subject <span class="important-asterisk">*</span></label>
+                                                            <label htmlFor="chatsubject">Chat Subject <span className="important-asterisk">*</span></label>
                                                             <input type="text" id="chatsubject" name="chatsubject" required="" value=""/>
                                                         </div>
-                                                        <div class="submit-btn-wrapper">
-                                                            <button type="submit">Start Chat</button>
+                                                        <div className="submit-btn-wrapper">
+                                                            <button style={{ backgroundColor: settings.theme || 'rgb(25, 117, 188)' }} type="submit">Start Chat</button>
                                                         </div>
                                                     </form>
                                                 </div>
