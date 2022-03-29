@@ -41,6 +41,10 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
             title: "Agent",
             placeHolder: "agentName"
         },
+        {
+            title: "SLA Duration",
+            placeHolder: "slaDuration"
+        },
     ]
     // const availablePlaceholders = ["ticket", "customer", "status", "category"];
     const [placeholder, setPlaceholder] = useState("");
