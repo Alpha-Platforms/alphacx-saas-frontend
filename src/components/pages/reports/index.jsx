@@ -57,7 +57,7 @@ export default function Reports(){
                 <Col sm={6} md={4} className="settings-menu-item">
                 <div className="border rounded bg-light">
                     <Link
-                    to="#"
+                    to="/reports/filter"
                     className="d-block cursor text-decoration-none"
                     >
                     <div className="d-flex p-md-4">

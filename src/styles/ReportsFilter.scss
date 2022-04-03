@@ -1,0 +1,113 @@
+.reports-filter-wrapper {
+    background-color: #FEFEFE;
+    box-shadow: 0px 0px 24px rgba(0, 98, 152, 0.1);
+    margin-left: -1rem !important;
+    padding: 54px 40px;
+
+    & > h2 {
+        font-size: 25px;
+        font-weight: 400;
+        line-height: 30px;
+        color: #2D3250;
+        margin-bottom: 20px;
+    }
+
+    & > p {
+        color: rgba(0, 0, 0, 0.5);
+        font-weight: 400;
+        line-height: 19px;
+        font-size: 16px;
+    }
+
+    & > div:nth-of-type(1) {
+        & > button:nth-of-type(1) {
+            background-color: #006298;
+            color: white;
+            font-size: 14px;
+            line-height: 17px;
+            text-align: center;
+            padding: 8px 29px;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+        }
+
+        & > span {
+            padding: 8px 16px;
+            border-radius: 6px;
+            margin: 0 0.5rem;
+        }
+    }
+}
+
+.filter-dropdown-wrapper {
+    position: relative;
+
+    li {
+        list-style: none;
+    }
+
+    ul {
+        padding: 0;
+    }
+}
+
+.filter-dropdown {
+    width: 384px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: absolute;
+    top: 0;
+    background-color: #FEFEFE;
+    box-shadow: 0px 0px 24px rgba(0, 98, 152, 0.1);
+    border-radius: 5px;
+    padding: 20px;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform: translateY(-10px);
+    opacity: 0;
+    pointer-events: none;
+    
+    &.active {
+        transform: translateY(20px);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    & ul {
+        margin-bottom: 0 !important;
+    }
+
+    & li {
+        margin: 10px 0;
+        font-size: 14px;
+        line-height: 17px;
+        color: #00000070;
+        padding: 4px 8px;
+        border-radius: 5px;
+        cursor: pointer;
+
+        &:last-child {
+            margin-bottom: 0px;
+        }
+
+        &:first-child {
+            margin-top: 0px;
+        }
+
+        &.active {
+            background-color: rgba(0, 98, 152, 0.05);
+        }
+
+        &:hover {
+            background-color: rgba(0, 98, 152, 0.02);
+        }
+    }
+
+    & > div:nth-child(1) {
+        margin-right: 23px;
+    }
+
+    & > div:nth-child(2) {
+        border-left: 0.5px solid #DADADA;
+        padding-left: 13px;
+    }
+}
