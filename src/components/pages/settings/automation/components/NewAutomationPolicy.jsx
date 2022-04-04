@@ -88,7 +88,8 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
 
   // FUNCTION TO CREATE AN AUTOMATION
   const createAutomation = async () => {
-    const dueDate = Math.floor((Number(automationBody.durationDays) || 0)) * 24 + Math.floor(Number(automationBody.durationHours));
+    const dueDate = Math.floor((Number(automationBody.durationDays) || 0)) * 24 + Number(automationBody.durationHours);
+
     const requestBody = {
       name: automationBody.title,
       dueDate: dueDate * 60,
@@ -136,7 +137,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
     if (res?.status === "success") {
       const data = res?.data;
 
-      console.log('AUTOMATION DATA => ', data)
+      // console.log('AUTOMATION DATA => ', data)
 
       if (data) {
         // console.log('AUTOMATION DATA => ', data);
@@ -144,8 +145,13 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
         setAutomationBody(prev => ({
           ...prev,
           title: data?.name,
+          
+          // durationDays: Math.floor((Number(data?.due_date) || 0) / 1440) || 0,
+          // durationHours: Math.floor((Number(data?.due_date) % 1440) / 60) || 0,
+
           durationDays: Math.floor((Number(data?.due_date) || 0) / 1440) || 0,
-          durationHours: Math.floor((Number(data?.due_date) % 1440) / 60) || 0,
+          durationHours: (Number(data?.due_date) % 1440) / 60 || 0,
+
           categories: data?.reminder?.categories?.map(catId => ({value: catId, label: categoriz.find(x => x.id === catId)?.name}))
         }));
 
@@ -153,7 +159,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
           id: uuid(),
           channel: act?.action?.toLowerCase() === 'email' ? {value: wordCapitalize(act?.action || '').trim(), label: wordCapitalize(act?.action || '').trim()} : {value: act?.action?.toUpperCase(), label: act?.action?.toUpperCase()},
           days: act?.days || 0,
-          hours: Math.floor(Number(act?.hours) / 60) || 0,
+          hours: Number(act?.hours) / 60 || 0,
           subject: act?.subject || '',
           body: act.body,
           recipientType: act?.recipient?.type || 'agent',
@@ -191,7 +197,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
   // FUNCTION TO UPDATE AN AUTOMATION IF IN EDIT MODE
   const updateAutomationPolicy = async () => {
     setPolicyLoading(true);
-    const dueDate = Math.floor((Number(automationBody.durationDays) || 0)) * 24 + Math.floor(Number(automationBody.durationHours));
+    const dueDate = Math.floor((Number(automationBody.durationDays) || 0)) * 24 + Number(automationBody.durationHours);
 
     const requestBody = {
       name: automationBody.title,
@@ -237,7 +243,7 @@ const NewAutomationPolicy = ({categoriz, agents, groups, isAgentsLoaded, isGroup
 
 
   const handleMinorKeydown = e => {
-    const unwanted = ["-", "+", "e", "." ];
+    const unwanted = ["-", "+", "e"];
 
     if (unwanted.includes(e.key)) {
       e.preventDefault();
