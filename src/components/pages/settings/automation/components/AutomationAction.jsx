@@ -101,6 +101,10 @@ const AutomationAction = ({
   const handleMinorInput = e => {
     const {name, value} = e.target;
 
+    if(name === "days" || name === "hours"){
+      console.log(value)
+    }
+
     setActionState({
       [name]: value
     });
@@ -108,7 +112,7 @@ const AutomationAction = ({
   }
 
   const handleMinorKeydown = e => {
-    const unwanted = ["-", "+", "e", "." ];
+    const unwanted = ["-", "+", "e"];
 
     if (unwanted.includes(e.key)) {
       e.preventDefault();
