@@ -72,7 +72,7 @@ const DropdownContact = ({ id, color, setFilters }) => {
                 setCustomerLoading(true);
                 const customers = await getSearchedCustomers(searchInput);
                 setCustomerLoading(false);
-                setCustomers(customers);
+                setCustomers(customers?.slice(0, 9));
                 console.log('customers => ', customers);
             })();
         }

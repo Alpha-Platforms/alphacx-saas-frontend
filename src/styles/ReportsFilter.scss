@@ -147,6 +147,7 @@
 }
 
 .filter-dropdown-interval {
+    max-width: 100%;
     & > div:nth-of-type(1) {
         display: flex;
         justify-content: space-between;
@@ -169,7 +170,8 @@
 
     & > div:nth-of-type(2) {
         & > div.react-calendar {
-            border: none !important;
+            border: none!important;
+            max-width: 282px;
         }
     }
 }
