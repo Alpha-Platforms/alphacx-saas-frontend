@@ -2,8 +2,15 @@ import React, { useState, useEffect } from 'react'
 import FilterDropdown from './components/FilterDropdown';
 import '../../../styles/ReportsFilter.scss'
 
+/* 
+filters props => { label: '', value: '', color }
+*/
+
+const colors = ['#FF4D35', '#0796F7'];
+
 const ReportsFilter = () => {
   const [dropdownActive, setDropdownActive] = useState(false);
+  const [filters, setFilters] = useState([]);
   
   useEffect(() => {
     const filterDropdown = window.document.querySelector('.filter-dropdown');
@@ -30,7 +37,7 @@ const ReportsFilter = () => {
         <span style={{ color: `#FF4D35`, background: `#FF4D3510` }}>Adekunle Adewale ×</span>
       </div>
 
-      <FilterDropdown active={dropdownActive} />
+      <FilterDropdown active={dropdownActive} setFilters={setFilters} />
 
       <div className="reports-filter-body">
 

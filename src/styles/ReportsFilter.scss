@@ -52,9 +52,10 @@
 }
 
 .filter-dropdown {
-    width: 384px;
+    min-width: 384px;
+    max-width: 500px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 162px 1fr;
     position: absolute;
     top: 0;
     background-color: #FEFEFE;
@@ -80,7 +81,7 @@
         margin: 10px 0;
         font-size: 14px;
         line-height: 17px;
-        color: #00000070;
+        color: #00000090;
         padding: 4px 8px;
         border-radius: 5px;
         cursor: pointer;
@@ -109,5 +110,62 @@
     & > div:nth-child(2) {
         border-left: 0.5px solid #DADADA;
         padding-left: 13px;
+    }
+}
+
+.filter-dropdown-contact {
+
+    & > div:nth-child(1) {
+        margin-bottom: 1rem;
+        position: relative;
+
+        input {
+            display: inline-block;
+            width: 100%;
+            background: rgba(7, 150, 247, 0.1);
+            border-radius: 3px;
+            border: none;
+            padding: 7px 10px 7px 27px;
+            outline: none !important;
+        }
+        
+        span {
+            display: inline-block;
+            position: absolute;
+            top: 50%;
+            left: 5px;
+            transform: translateY(-50%);
+            pointer-events: none;        
+        }
+    }
+
+    & > .fdc-loading {
+        font-style: italic;
+        display: inline-block;
+        margin: 4px 0;
+    }
+}
+
+.filter-dropdown-interval {
+    & > div:nth-of-type(1) {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+
+
+        & > span {
+            background-color: rgba(7, 150, 247, 0.1);
+            padding: 5px 10px;
+            border-radius: 6px;
+            color:rgba(0, 0, 0, 0.8);
+            cursor: pointer;
+        }
+    }
+
+    & > div:nth-of-type(2) {
+        & > div.react-calendar {
+            border: none !important;
+        }
     }
 }
