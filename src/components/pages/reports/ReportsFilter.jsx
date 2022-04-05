@@ -291,8 +291,6 @@ const ReportsFilter = () => {
     return () => window.document.removeEventListener('click', handleDocClick, true);
   }, [dropdownActive]);
 
-  console.log('FILTERS => ', filters);
-
   const handleFilterApply = async (itemsPerPage, currentPage) => {
     setLoading(true);
     const res = await httpGetMain(`tickets?${filters.map((item) => item?.value).join('&')}&per_page=${itemsPerPage}&page=${currentPage}`);
@@ -302,11 +300,7 @@ const ReportsFilter = () => {
      } else {
        Notification.error(`Could not fetch tickets`, 'Error');
      }
-
-     console.log('respone => ', res);
   }
-
-  console.log('ticketData => ', ticketData);
 
   return (
     <div className="reports-filter-wrapper">
