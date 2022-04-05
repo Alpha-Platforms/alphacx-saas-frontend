@@ -15,45 +15,46 @@ const options = ['Channel', 'Contact', 'Status', 'Personnel', 'Interval', 'Searc
 const colors = ['#FF4D35', '#0796F7', '#00BB2D', '#3D642D', '#6C6960', '#ED760E', '#A03472', '#C2B078'];
 
 
+const handleFilter = (id, color, setFilters, label, value) => {
+    setFilters((prev) => {
+        if (prev.find((item) => item.id === id)) {
+            // object exists in filters array
+            return prev.map((item) => {
+                if (item?.id === id) {
+                    return { ...item, id, color, label, value }
+                } 
+                return item;
+            });
+        }
+        return [...prev, { id, color, label, value }];
+    });
+}
+
 
 const DropdownChannel = ({ id, color, setFilters }) => {
 
-    const handleFilter = (label, value) => {
-        setFilters((prev) => {
-            if (prev.find((item) => item.id === id)) {
-                // Channel object exists in filters array
-                return prev.map((item) => {
-                    if (item?.id === id) {
-                        return { ...item, id, color, label, value }
-                    } 
-                    return item;
-                });
-            }
-            return [...prev, { id, color, label, value }];
-        });
-    }
 
     return (
         <div className="filter-dropdown-channel">
             <ul>
-                <li onClick={() => handleFilter('Helpdesk', 'helpdesk')}>Helpdesk</li>
-                <li onClick={() => handleFilter('Live Chat', 'livechat')}>Live Chat</li>
-                <li onClick={() => handleFilter('Email', 'email')}>Email</li>
-                <li onClick={() => handleFilter('WhatsApp', 'whatsapp')}>WhatsApp</li>
-                <li onClick={() => handleFilter('Facebook', 'facebook')}>Facebook</li>
+                <li onClick={() => handleFilter(id, color, setFilters, 'Helpdesk', 'helpdesk')}>Helpdesk</li>
+                <li onClick={() => handleFilter(id, color, setFilters, 'Live Chat', 'livechat')}>Live Chat</li>
+                <li onClick={() => handleFilter(id, color, setFilters, 'Email', 'email')}>Email</li>
+                <li onClick={() => handleFilter(id, color, setFilters, 'WhatsApp', 'whatsapp')}>WhatsApp</li>
+                <li onClick={() => handleFilter(id, color, setFilters, 'Facebook', 'facebook')}>Facebook</li>
             </ul>
         </div>
     );
 };
 
-const DropdownStatus = () => {
+const DropdownStatus = ({ id, color, setFilters }) => {
     const status = useSelector((state) => state.status);
 
     return (
         <div className="filter-dropdown-status">
             <ul>
                 {
-                    status.isStatusesLoaded && status.statuses?.map((item) => <li key={item?.id}>{ item?.status }</li>)
+                    status.isStatusesLoaded && status.statuses?.map((item) => <li key={item?.id} onClick={() => handleFilter(id, color, setFilters, item?.status, item?.id)}>{ item?.status }</li>)
                 }
             </ul>
         </div>
@@ -128,10 +129,10 @@ const FilterDropdown = ({ active, setFilters }) => {
                 </ul>
             </div>
             <div>
-                {activeOption === 'Channel' && <DropdownChannel idx={options.indexOf(activeOption)} id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters}  />}
-                {activeOption === 'Status' && <DropdownStatus idx={options.indexOf(activeOption)} id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
-                {activeOption === 'Contact' && <DropdownContact idx={options.indexOf(activeOption)} id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
-                {activeOption === 'Interval' && <DropdownInterval idx={options.indexOf(activeOption)} id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
+                {activeOption === 'Channel' && <DropdownChannel id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters}  />}
+                {activeOption === 'Status' && <DropdownStatus id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
+                {activeOption === 'Contact' && <DropdownContact id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
+                {activeOption === 'Interval' && <DropdownInterval id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
             </div>
         </div>
     </div>
