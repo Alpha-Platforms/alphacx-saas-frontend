@@ -3,10 +3,8 @@ import FilterDropdown from './components/FilterDropdown';
 import '../../../styles/ReportsFilter.scss'
 
 /* 
-filters props => { label: '', value: '', color }
+filters props => { id: '', label: '', value: '', color }
 */
-
-const colors = ['#FF4D35', '#0796F7'];
 
 const ReportsFilter = () => {
   const [dropdownActive, setDropdownActive] = useState(false);
@@ -27,14 +25,15 @@ const ReportsFilter = () => {
     return () => window.document.removeEventListener('click', handleDocClick, true);
   }, [dropdownActive]);
 
+  console.log('FILTERS => ', filters);
+
   return (
     <div className="reports-filter-wrapper">
       <h2>Filter Options</h2>
       <p>Select the Add Filter button to filter and generate your reports</p>
       <div>
         <button onClick={() => !dropdownActive && setDropdownActive(true)}>Add Filter</button>
-        <span style={{ color: `#0796F7`, background: `#0796F710`}}>14 February - 28 February ×</span>
-        <span style={{ color: `#FF4D35`, background: `#FF4D3510` }}>Adekunle Adewale ×</span>
+        {filters.map((item) => <span key={item?.id} style={{ color: item?.color, background: `${item?.color}10` }}>{ item?.label }</span>)}
       </div>
 
       <FilterDropdown active={dropdownActive} setFilters={setFilters} />

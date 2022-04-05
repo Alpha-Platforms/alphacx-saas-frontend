@@ -12,17 +12,35 @@ import dayjs from 'dayjs';
 
 const options = ['Channel', 'Contact', 'Status', 'Personnel', 'Interval', 'Search', 'Category', 'Priority'];
 
+const colors = ['#FF4D35', '#0796F7', '#00BB2D', '#3D642D', '#6C6960', '#ED760E', '#A03472', '#C2B078'];
 
 
-const DropdownChannel = () => {
+
+const DropdownChannel = ({ id, color, setFilters }) => {
+
+    const handleFilter = (label, value) => {
+        setFilters((prev) => {
+            if (prev.find((item) => item.id === id)) {
+                // Channel object exists in filters array
+                return prev.map((item) => {
+                    if (item?.id === id) {
+                        return { ...item, id, color, label, value }
+                    } 
+                    return item;
+                });
+            }
+            return [...prev, { id, color, label, value }];
+        });
+    }
+
     return (
         <div className="filter-dropdown-channel">
             <ul>
-                <li>Helpdesk</li>
-                <li>Live Chat</li>
-                <li>Email</li>
-                <li>Whats</li>
-                <li>Email</li>
+                <li onClick={() => handleFilter('Helpdesk', 'helpdesk')}>Helpdesk</li>
+                <li onClick={() => handleFilter('Live Chat', 'livechat')}>Live Chat</li>
+                <li onClick={() => handleFilter('Email', 'email')}>Email</li>
+                <li onClick={() => handleFilter('WhatsApp', 'whatsapp')}>WhatsApp</li>
+                <li onClick={() => handleFilter('Facebook', 'facebook')}>Facebook</li>
             </ul>
         </div>
     );
@@ -110,10 +128,10 @@ const FilterDropdown = ({ active, setFilters }) => {
                 </ul>
             </div>
             <div>
-                {activeOption === 'Channel' && <DropdownChannel />}
-                {activeOption === 'Status' && <DropdownStatus />}
-                {activeOption === 'Contact' && <DropdownContact />}
-                {activeOption === 'Interval' && <DropdownInterval />}
+                {activeOption === 'Channel' && <DropdownChannel idx={options.indexOf(activeOption)} id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters}  />}
+                {activeOption === 'Status' && <DropdownStatus idx={options.indexOf(activeOption)} id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
+                {activeOption === 'Contact' && <DropdownContact idx={options.indexOf(activeOption)} id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
+                {activeOption === 'Interval' && <DropdownInterval idx={options.indexOf(activeOption)} id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
             </div>
         </div>
     </div>
