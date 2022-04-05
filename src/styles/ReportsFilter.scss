@@ -26,15 +26,30 @@
             font-size: 14px;
             line-height: 17px;
             text-align: center;
-            padding: 8px 29px;
+            padding: 8px 16px;
             border-radius: 4px;
-            margin-right: 0.5rem;
+            margin-right: 0.6rem;
+            margin-top: 0.5rem;
         }
 
         & > span {
             padding: 8px 16px;
             border-radius: 6px;
-            margin: 0 0.5rem;
+            margin-right: 0.4rem;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+
+        & > button:last-of-type:not(:first-child) {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: black;
+            font-size: 14px;
+            line-height: 17px;
+            text-align: center;
+            padding: 8px 16px;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            // box-shadow: 0px 0px 3px 3px rgba(0, 0, 0, 0.1);
         }
     }
 }

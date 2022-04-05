@@ -73,7 +73,6 @@ const DropdownContact = ({ id, color, setFilters }) => {
                 const customers = await getSearchedCustomers(searchInput);
                 setCustomerLoading(false);
                 setCustomers(customers?.slice(0, 9));
-                console.log('customers => ', customers);
             })();
         }
     }, [searchInput])
@@ -102,8 +101,6 @@ const DropdownInterval = ({ id, color, setFilters }) => {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [activate, setActivate] = useState(false);
-
-    console.log('start => ', startDate, 'end => ', endDate);
 
     useEffect(() => {
         if (activate) {
