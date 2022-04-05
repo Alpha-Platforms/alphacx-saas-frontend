@@ -61,7 +61,7 @@ const DropdownStatus = ({ id, color, setFilters }) => {
     );
 }
 
-const DropdownContact = () => {
+const DropdownContact = ({ id, color, setFilters }) => {
     const [searchInput, setSearchInput] = useState('');
     const [customerLoading, setCustomerLoading] = useState(false);
     const [customers, setCustomers] = useState(null);
@@ -88,7 +88,7 @@ const DropdownContact = () => {
             {customers && <>
                 {customers?.length === 0 ? (!customerLoading && <div>No contact found</div>) : (
                         <ul>
-                            { customers.map((item) => <li key={item?.value} >{ item?.label }</li>) }
+                            { customers.map((item) => <li key={item?.value} onClick={() => handleFilter(id, color, setFilters, item?.label, item?.value)}>{ item?.label }</li>) }
                         </ul>
                     )
                 }
