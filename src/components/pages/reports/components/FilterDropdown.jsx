@@ -97,21 +97,29 @@ const DropdownContact = ({ id, color, setFilters }) => {
     );
 }
 
-const DropdownInterval = () => {
+const DropdownInterval = ({ id, color, setFilters }) => {
     const [startActive, setStartActive] = useState(true);
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
+    const [activate, setActivate] = useState(false);
 
     console.log('start => ', startDate, 'end => ', endDate);
+
+    useEffect(() => {
+        if (activate) {
+            handleFilter(id, color, setFilters, `${dayjs(startDate).format('DD MMMM')} - ${dayjs(endDate).format('DD MMMM')}`, `${dayjs(startDate).format('DD-MM-YYYY')}&${dayjs(endDate).format('DD-MM-YYYY')}`);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [startDate, endDate, activate]);
 
     return (
         <div className="filter-dropdown-interval">
             <div>
-                <span onClick={() => setStartActive(true)} className={startActive ? 'active' : ''}><i><TicketCalender /></i> {dayjs(startDate).format('DD MMMM')}</span>
-                <span onClick={() => setStartActive(false)} className={!startActive ? 'active' : ''}><i><TicketCalender /></i> {dayjs(endDate).format('DD MMMM')}</span>
+                <span onClick={() => (!activate && setActivate(true)) || setStartActive(true)} className={startActive ? 'active' : ''}><i><TicketCalender /></i> {dayjs(startDate).format('DD MMMM')}</span>
+                <span onClick={() => (!activate && setActivate(true)) || setStartActive(false)} className={!startActive ? 'active' : ''}><i><TicketCalender /></i> {dayjs(endDate).format('DD MMMM')}</span>
             </div>
             <div>
-                {startActive ? <Calendar onChange={setStartDate} value={startDate} /> : <Calendar onChange={setEndDate} value={endDate} />}
+                {startActive ? <Calendar onChange={(val) => (!activate && setActivate(true)) || setStartDate(val)} value={startDate} /> : <Calendar onChange={(val) => (!activate && setActivate(true)) || setEndDate(val)} value={endDate} />}
             </div>
         </div>
     );
