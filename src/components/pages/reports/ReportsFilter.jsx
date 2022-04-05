@@ -15,6 +15,8 @@ import {Link} from 'react-router-dom';
 import dayjs from 'dayjs';
 import { TablePagination } from "@material-ui/core";
 import { httpGetMain } from '../../../helpers/httpMethods';
+import ScaleLoader from "react-spinners/ScaleLoader";
+import { NotificationManager } from 'react-notifications';
 
 const tableTheme = createTheme({
   palette: {
@@ -272,6 +274,7 @@ const ReportsFilter = () => {
   const [dropdownActive, setDropdownActive] = useState(false);
   const [filters, setFilters] = useState([]);
   const [ticketData, setTicketData] = useState({ tickets: null, meta: null });
+  const [loading, setLoading] = useState(false);
   
   useEffect(() => {
     const filterDropdown = window.document.querySelector('.filter-dropdown');
@@ -291,9 +294,13 @@ const ReportsFilter = () => {
   console.log('FILTERS => ', filters);
 
   const handleFilterApply = async (itemsPerPage, currentPage) => {
-     const res = await httpGetMain(`tickets?${filters.map((item) => item?.value).join('&')}&per_page=${itemsPerPage}&page=${currentPage}`);
+    setLoading(true);
+    const res = await httpGetMain(`tickets?${filters.map((item) => item?.value).join('&')}&per_page=${itemsPerPage}&page=${currentPage}`);
+    setLoading(false);
      if (res?.status === 'success' && res?.data) {
        setTicketData((prev) => ({ ...prev, ...res?.data }));
+     } else {
+       Notification.error(`Could not fetch tickets`, 'Error');
      }
 
      console.log('respone => ', res);
@@ -313,9 +320,18 @@ const ReportsFilter = () => {
 
       <FilterDropdown active={dropdownActive} setFilters={setFilters} />
 
-      <div className="reports-filter-body">
+      <div className={`reports-filter-body ${ticketData.tickets ? 'active': ''}`}>
         {ticketData?.tickets && <Tickets handleFilterApply={handleFilterApply} tickets={ticketData.tickets} meta={ticketData.meta} />}
       </div>
+      {(loading) && (
+        <div
+          className={`cust-table-loader ${
+            true && "add-loader-opacity"
+          }`}
+        >
+          <ScaleLoader loading={true} color={"#006298"} />
+        </div>
+      )}
     </div>
   )
 }

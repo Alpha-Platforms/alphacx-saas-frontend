@@ -67,8 +67,10 @@
 }
 
 .reports-filter-body {
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    margin-top: 3rem;
+    &.active {
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        margin-top: 3rem;
+    }
 }
 
 .filter-dropdown {
@@ -86,6 +88,7 @@
     transform: translateY(-10px);
     opacity: 0;
     pointer-events: none;
+    z-index: 20;
     
     &.active {
         transform: translateY(20px);
