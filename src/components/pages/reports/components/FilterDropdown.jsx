@@ -37,11 +37,11 @@ const DropdownChannel = ({ id, color, setFilters }) => {
     return (
         <div className="filter-dropdown-channel">
             <ul>
-                <li onClick={() => handleFilter(id, color, setFilters, 'Helpdesk', 'helpdesk')}>Helpdesk</li>
-                <li onClick={() => handleFilter(id, color, setFilters, 'Live Chat', 'livechat')}>Live Chat</li>
-                <li onClick={() => handleFilter(id, color, setFilters, 'Email', 'email')}>Email</li>
-                <li onClick={() => handleFilter(id, color, setFilters, 'WhatsApp', 'whatsapp')}>WhatsApp</li>
-                <li onClick={() => handleFilter(id, color, setFilters, 'Facebook', 'facebook')}>Facebook</li>
+                <li onClick={() => handleFilter(id, color, setFilters, 'Helpdesk', `${id.toLowerCase()}=helpdesk`)}>Helpdesk</li>
+                <li onClick={() => handleFilter(id, color, setFilters, 'Live Chat', `${id.toLowerCase()}=livechat`)}>Live Chat</li>
+                <li onClick={() => handleFilter(id, color, setFilters, 'Email', `${id.toLowerCase()}=email`)}>Email</li>
+                <li onClick={() => handleFilter(id, color, setFilters, 'WhatsApp', `${id.toLowerCase()}=whatsapp`)}>WhatsApp</li>
+                <li onClick={() => handleFilter(id, color, setFilters, 'Facebook', `${id.toLowerCase()}=facebook`)}>Facebook</li>
             </ul>
         </div>
     );
@@ -54,7 +54,7 @@ const DropdownStatus = ({ id, color, setFilters }) => {
         <div className="filter-dropdown-status">
             <ul>
                 {
-                    status.isStatusesLoaded && status.statuses?.map((item) => <li key={item?.id} onClick={() => handleFilter(id, color, setFilters, item?.status, item?.id)}>{ item?.status }</li>)
+                    status.isStatusesLoaded && status.statuses?.map((item) => <li key={item?.id} onClick={() => handleFilter(id, color, setFilters, item?.status, `${id.toLowerCase()}=${item?.id}`)}>{ item?.status }</li>)
                 }
             </ul>
         </div>
@@ -87,7 +87,7 @@ const DropdownContact = ({ id, color, setFilters }) => {
             {customers && <>
                 {customers?.length === 0 ? (!customerLoading && <div>No contact found</div>) : (
                         <ul>
-                            { customers.map((item) => <li key={item?.value} onClick={() => handleFilter(id, color, setFilters, item?.label, item?.value)}>{ item?.label }</li>) }
+                            { customers.map((item) => <li key={item?.value} onClick={() => handleFilter(id, color, setFilters, item?.label, `${id.toLowerCase()}=${item?.value}`)}>{ item?.label }</li>) }
                         </ul>
                     )
                 }
@@ -104,7 +104,7 @@ const DropdownInterval = ({ id, color, setFilters }) => {
 
     useEffect(() => {
         if (activate) {
-            handleFilter(id, color, setFilters, `${dayjs(startDate).format('DD MMMM')} - ${dayjs(endDate).format('DD MMMM')}`, `${dayjs(startDate).format('DD-MM-YYYY')}&${dayjs(endDate).format('DD-MM-YYYY')}`);
+            handleFilter(id, color, setFilters, `${dayjs(startDate).format('DD MMMM')} - ${dayjs(endDate).format('DD MMMM')}`, `start_date=${dayjs(startDate).format('DD-MM-YYYY')}&end_date=${dayjs(endDate).format('DD-MM-YYYY')}`);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [startDate, endDate, activate]);
