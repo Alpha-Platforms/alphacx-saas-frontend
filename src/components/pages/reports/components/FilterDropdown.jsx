@@ -8,6 +8,7 @@ import { ReactComponent as TicketCalender } from '../../../../assets/icons/Ticke
 import { getSearchedCustomers } from '../../tickets/CreateTicketModal';
 import 'react-calendar/dist/Calendar.css';
 import Calendar from 'react-calendar';
+import dayjs from 'dayjs';
 
 const options = ['Channel', 'Contact', 'Status', 'Personnel', 'Interval', 'Search', 'Category', 'Priority'];
 
@@ -87,8 +88,8 @@ const DropdownInterval = () => {
     return (
         <div className="filter-dropdown-interval">
             <div>
-                <span onClick={() => setStartActive(true)}><i><TicketCalender /></i> 14 February</span>
-                <span onClick={() => setStartActive(false)}><i><TicketCalender /></i> 14 February</span>
+                <span onClick={() => setStartActive(true)} className={startActive ? 'active' : ''}><i><TicketCalender /></i> {dayjs(startDate).format('DD MMMM')}</span>
+                <span onClick={() => setStartActive(false)} className={!startActive ? 'active' : ''}><i><TicketCalender /></i> {dayjs(endDate).format('DD MMMM')}</span>
             </div>
             <div>
                 {startActive ? <Calendar onChange={setStartDate} value={startDate} /> : <Calendar onChange={setEndDate} value={endDate} />}
