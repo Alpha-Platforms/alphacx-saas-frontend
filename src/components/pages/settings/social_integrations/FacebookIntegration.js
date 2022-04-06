@@ -22,13 +22,14 @@ export default function FacebookIntegration() {
   
     const authFb = () => {
         FB.login(function (response) {
+            console.clear();
+            console.log("FB.login response", response)
             if (response.authResponse && response.authResponse !== "undefined." && response.authResponse !== undefined) {
                 setFBData(response?.authResponse);
                 handleConnectFBPage(response?.authResponse);
                 setPageConnected(true);
                 FB.api("/me", function (response) {
-                    console.clear();
-                    console.log("Facebook response", response)
+                    console.log("FB.api response:", response)
                 });
             } else {
                 console.log("User cancelled login or did not fully authorize.");
