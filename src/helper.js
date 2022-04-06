@@ -287,17 +287,19 @@ export const refreshUserTokens = (redirectToLoginIfNoToken = false) => {
         } else {
             // logout user properly
             if (redirectToLoginIfNoToken) {
-                const onboardingSplash = localStorage.getItem("onboardingSplash")
-                const domain = localStorage.getItem("domain")
-                const tenantId = localStorage.getItem("tenantId")
-                const tenantToken = localStorage.getItem("tenantToken")
-                const tenantSubscription = localStorage.getItem("tenantSubscription")
+                const onboardingSplash = localStorage.getItem("onboardingSplash");
+                const domain = localStorage.getItem("domain");
+                const tenantId = localStorage.getItem("tenantId");
+                const tenantToken = localStorage.getItem("tenantToken");
+                const tenantSubscription = localStorage.getItem("tenantSubscription");
+                const accessToken = localStorage.getItem("accessToken");
                 localStorage.clear()
-                onboardingSplash && localStorage.setItem("onboardingSplash", onboardingSplash)
-                domain && localStorage.setItem("domain", domain)
-                tenantId && localStorage.setItem("tenantId", tenantId)
-                tenantToken && localStorage.setItem("tenantToken", tenantToken)
-                tenantSubscription && localStorage.setItem("tenantSubscription", tenantSubscription)
+                onboardingSplash && localStorage.setItem("onboardingSplash", onboardingSplash);
+                domain && localStorage.setItem("domain", domain);
+                tenantId && localStorage.setItem("tenantId", tenantId);
+                tenantToken && localStorage.setItem("tenantToken", tenantToken);
+                tenantSubscription && localStorage.setItem("tenantSubscription", tenantSubscription);
+                accessToken && localStorage.setItem("accessToken", accessToken);
                 window.location.href = "/login"
             }
             resolve();

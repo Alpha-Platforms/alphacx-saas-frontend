@@ -118,6 +118,7 @@ const Login = ({match: {params}}) => {
           window.localStorage.setItem("user", JSON.stringify(res.data));
           window.localStorage.setItem("token", res.data.token);
           window.localStorage.setItem("refreshToken", res.data.refreshToken);
+          res.data.accessToken && window.localStorage.setItem("accessToken", res.data.accessToken);
           window.location.href = `/`;
     
         } else {
