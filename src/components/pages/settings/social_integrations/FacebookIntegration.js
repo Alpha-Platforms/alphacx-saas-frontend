@@ -27,6 +27,8 @@ export default function FacebookIntegration() {
                 handleConnectFBPage(response?.authResponse);
                 setPageConnected(true);
                 FB.api("/me", function (response) {
+                    console.clear();
+                    console.log("Facebook response", response)
                 });
             } else {
                 console.log("User cancelled login or did not fully authorize.");
