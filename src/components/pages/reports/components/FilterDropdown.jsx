@@ -19,10 +19,10 @@ const colors = ['#FF4D35', '#0796F7', '#00BB2D', '#3D642D', '#CB2821', '#ED760E'
 
 const handleFilter = (id, color, setFilters, label, value) => {
     setFilters((prev) => {
-        if (prev.find((item) => item.label === label)) {
+        if (prev.find((item) => item.label === label && item?.id === id)) {
             // check an item in the filter array has current filter label
             return prev.map((item) => {
-                if (item?.label === label) {
+                if (item?.label === label && item?.id === id) {
                     // return new stuff
                     return { ...item, id, color, label, value, uuid: uuid() }
                 } 

@@ -246,7 +246,7 @@ const Tickets = ({ tickets, meta, handleFilterApply }) => {
                   // exportButton: true,
                   tableLayout: "auto",
                   paging: true,
-                  pageSize: meta?.itemsPerPage || 50,
+                  pageSize: tickets?.length === 0 ? 10 : (meta?.itemsPerPage || 50),
                   headerStyle: {
                     // backgroundColor: '#f8f9fa'
                     backgroundColor: "#fefdfd",
