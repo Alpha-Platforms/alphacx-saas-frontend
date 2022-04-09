@@ -188,7 +188,44 @@ const DropdownCategory = ({ id, color, setFilters }) => {
             {categories && <>
                 {categories?.length === 0 ? (<div>No category found</div>) : (
                         <ul>
-                            { categories.map((item) => <li key={item?.id} onClick={() => handleFilter(id, color, setFilters, `${item?.firstname} ${item?.lastname}`, `${id.toLowerCase()}=${item?.id}`)}>{ `${item?.name}` }</li>) }
+                            { categories.map((item) => <li key={item?.id} onClick={() => handleFilter(id, color, setFilters, `${item?.name} ${item?.lastname}`, `${id.toLowerCase()}=${item?.id}`)}>{ `${item?.name}` }</li>) }
+                        </ul>
+                    )
+                }
+            </>}
+        </div>
+    )
+}
+
+
+const DropdownPriority = ({ id, color, setFilters }) => {
+    const [searchInput, setSearchInput] = useState('');
+    const [priorities, setPriorities] = useState('');
+    // const [priorityLoading, setPriorityLoading] = useState(false);
+    // get all agents from the redux
+    const priority = useSelector((state) => state.priority);
+
+    useEffect(() => {
+        if (searchInput || searchInput === '') {
+            if (Array.isArray(priority?.priorities)) {
+                const regex = new RegExp(`${searchInput}`, 'gi');
+                const searchedAgents = priority?.priorities?.filter((item) => regex.test(item?.name)).slice(0, 9);
+                setPriorities(searchedAgents);
+            }
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchInput])
+    
+    return (
+        <div className="filter-dropdown-priority">
+            <div>
+                <span><SearchIcon /></span>
+                <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
+            </div>
+            {priorities && <>
+                {priorities?.length === 0 ? (<div>No priority found</div>) : (
+                        <ul>
+                            { priorities.map((item) => <li key={item?.id} onClick={() => handleFilter(id, color, setFilters, `${item?.name}`, `${id.toLowerCase()}=${item?.id}`)}>{ `${item?.name}` }</li>) }
                         </ul>
                     )
                 }
@@ -228,6 +265,7 @@ const FilterDropdown = ({ active, setFilters }) => {
                 {activeOption === 'Interval' && <DropdownInterval id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
                 {activeOption === 'Personnel' && <DropdownPersonnel id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
                 {activeOption === 'Category' && <DropdownCategory id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
+                {activeOption === 'Priority' && <DropdownPriority id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
             </div>
         </div>
     </div>
