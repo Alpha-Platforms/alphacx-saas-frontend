@@ -300,7 +300,7 @@ const ReportsFilter = () => {
      if (res?.status === 'success' && res?.data) {
        setTicketData((prev) => ({ ...prev, ...res?.data }));
      } else {
-       Notification.error(`Could not fetch tickets`, 'Error');
+      NotificationManager.error(`Could not fetch tickets`, 'Error');
      }
   }
 

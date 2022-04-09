@@ -133,7 +133,7 @@ const DropdownPersonnel = ({ id, color, setFilters }) => {
     const agent = useSelector((state) => state.agent);
 
     useEffect(() => {
-        if (searchInput) {
+        if (searchInput || searchInput === '') {
             if (Array.isArray(agent?.agents)) {
                 const regex = new RegExp(`${searchInput}`, 'gi');
                 const searchedAgents = agent?.agents?.filter((item) => regex.test(item?.firstname) || regex.test(item?.lastname) || regex.test(item?.email)).slice(0, 9);
@@ -153,6 +153,42 @@ const DropdownPersonnel = ({ id, color, setFilters }) => {
                 {personnels?.length === 0 ? (<div>No personnel found</div>) : (
                         <ul>
                             { personnels.map((item) => <li key={item?.id} onClick={() => handleFilter(id, color, setFilters, `${item?.firstname} ${item?.lastname}`, `${id.toLowerCase()}=${item?.id}`)}>{ `${item?.firstname} ${item?.lastname}` }</li>) }
+                        </ul>
+                    )
+                }
+            </>}
+        </div>
+    )
+}
+
+const DropdownCategory = ({ id, color, setFilters }) => {
+    const [searchInput, setSearchInput] = useState('');
+    const [categories, setCategories] = useState('');
+    // const [categoryLoading, setCategoryLoading] = useState(false);
+    // get all agents from the redux
+    const category = useSelector((state) => state.category);
+
+    useEffect(() => {
+        if (searchInput || searchInput === '') {
+            if (Array.isArray(category?.categories)) {
+                const regex = new RegExp(`${searchInput}`, 'gi');
+                const searchedAgents = category?.categories?.filter((item) => regex.test(item?.name)).slice(0, 9);
+                setCategories(searchedAgents);
+            }
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchInput])
+    
+    return (
+        <div className="filter-dropdown-category">
+            <div>
+                <span><SearchIcon /></span>
+                <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
+            </div>
+            {categories && <>
+                {categories?.length === 0 ? (<div>No category found</div>) : (
+                        <ul>
+                            { categories.map((item) => <li key={item?.id} onClick={() => handleFilter(id, color, setFilters, `${item?.firstname} ${item?.lastname}`, `${id.toLowerCase()}=${item?.id}`)}>{ `${item?.name}` }</li>) }
                         </ul>
                     )
                 }
@@ -191,6 +227,7 @@ const FilterDropdown = ({ active, setFilters }) => {
                 {activeOption === 'Contact' && <DropdownContact id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
                 {activeOption === 'Interval' && <DropdownInterval id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
                 {activeOption === 'Personnel' && <DropdownPersonnel id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
+                {activeOption === 'Category' && <DropdownCategory id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
             </div>
         </div>
     </div>
