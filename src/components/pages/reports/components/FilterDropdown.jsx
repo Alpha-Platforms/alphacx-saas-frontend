@@ -251,6 +251,21 @@ const DropdownSearch = ({ id, color, setFilters }) => {
     )
 }
 
+const DropdownRating = ({ id, color, setFilters }) => {
+    const [searchInput, setSearchInput] = useState(0);
+    
+    return (
+        <div className="filter-dropdown-rating">
+            <div>
+                <input type="number" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} min={0} max={5} />
+            </div>
+            <div>
+                {(searchInput || searchInput === 0) && <button  onClick={() => handleFilter(id, color, setFilters, searchInput, `${id.toLowerCase()}=${searchInput}`) || setSearchInput(0)} >Add</button>}
+            </div>
+        </div>
+    )
+}
+
 const FilterDropdown = ({ active, setFilters }) => {
   const [activeOption, setActiveOption] = useState('Channel');
   const isUserAuthenticated = useSelector((state) => state.userAuth?.isUserAuthenticated);
@@ -284,6 +299,7 @@ const FilterDropdown = ({ active, setFilters }) => {
                 {activeOption === 'Category' && <DropdownCategory id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
                 {activeOption === 'Priority' && <DropdownPriority id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
                 {activeOption === 'Search' && <DropdownSearch id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
+                {activeOption === 'Rating' && <DropdownRating id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
             </div>
         </div>
     </div>
