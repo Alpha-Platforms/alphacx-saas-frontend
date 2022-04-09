@@ -2,7 +2,7 @@
 import React from 'react'
 import { useEffect } from 'react';
 import { useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { ReactComponent as SearchIcon } from '../../../../assets/icons/search.svg'; 
 import { ReactComponent as TicketCalender } from '../../../../assets/icons/Ticketcalendar.svg'; 
 import { getSearchedCustomers } from '../../tickets/CreateTicketModal';
@@ -10,6 +10,7 @@ import 'react-calendar/dist/Calendar.css';
 import Calendar from 'react-calendar';
 import dayjs from 'dayjs';
 import { uuid } from '../../../../helper';
+import { getAgents } from '../../../../reduxstore/actions/agentActions';
 
 const options = ['Channel', 'Contact', 'Status', 'Personnel', 'Interval', 'Search', 'Category', 'Priority'];
 
@@ -124,8 +125,57 @@ const DropdownInterval = ({ id, color, setFilters }) => {
     );
 }
 
+const DropdownPersonnel = ({ id, color, setFilters }) => {
+    const [searchInput, setSearchInput] = useState('');
+    const [personnels, setPersonnels] = useState('');
+    // const [personnelLoading, setPersonnelLoading] = useState(false);
+    // get all agents from the redux
+    const agent = useSelector((state) => state.agent);
+
+    useEffect(() => {
+        if (searchInput) {
+            if (Array.isArray(agent?.agents)) {
+                const regex = new RegExp(`${searchInput}`, 'gi');
+                const searchedAgents = agent?.agents?.filter((item) => regex.test(item?.firstname) || regex.test(item?.lastname) || regex.test(item?.email)).slice(0, 9);
+                setPersonnels(searchedAgents);
+            }
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchInput])
+    
+    return (
+        <div className="filter-dropdown-personnel">
+            <div>
+                <span><SearchIcon /></span>
+                <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
+            </div>
+            {personnels && <>
+                {personnels?.length === 0 ? (<div>No personnel found</div>) : (
+                        <ul>
+                            { personnels.map((item) => <li key={item?.id} onClick={() => handleFilter(id, color, setFilters, `${item?.firstname} ${item?.lastname}`, `${id.toLowerCase()}=${item?.id}`)}>{ `${item?.firstname} ${item?.lastname}` }</li>) }
+                        </ul>
+                    )
+                }
+            </>}
+        </div>
+    )
+}
+
 const FilterDropdown = ({ active, setFilters }) => {
   const [activeOption, setActiveOption] = useState('Channel');
+  const isUserAuthenticated = useSelector((state) => state.userAuth?.isUserAuthenticated);
+  
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isUserAuthenticated) {
+        dispatch(getAgents());
+        // getSupervisors();
+        // getAdmins();
+        // getObservers();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isUserAuthenticated]);
 
   return (
     <div className="filter-dropdown-wrapper">
@@ -140,6 +190,7 @@ const FilterDropdown = ({ active, setFilters }) => {
                 {activeOption === 'Status' && <DropdownStatus id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
                 {activeOption === 'Contact' && <DropdownContact id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
                 {activeOption === 'Interval' && <DropdownInterval id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
+                {activeOption === 'Personnel' && <DropdownPersonnel id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
             </div>
         </div>
     </div>

@@ -198,3 +198,36 @@
         }
     }
 }
+
+.filter-dropdown-personnel {
+
+    & > div:nth-child(1) {
+        margin-bottom: 1rem;
+        position: relative;
+
+        input {
+            display: inline-block;
+            width: 100%;
+            background: rgba(7, 150, 247, 0.1);
+            border-radius: 3px;
+            border: none;
+            padding: 7px 10px 7px 27px;
+            outline: none !important;
+        }
+        
+        span {
+            display: inline-block;
+            position: absolute;
+            top: 50%;
+            left: 5px;
+            transform: translateY(-50%);
+            pointer-events: none;        
+        }
+    }
+
+    & > .fdc-loading {
+        font-style: italic;
+        display: inline-block;
+        margin: 4px 0;
+    }
+}
