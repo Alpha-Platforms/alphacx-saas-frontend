@@ -308,7 +308,7 @@ const ReportsFilter = () => {
       <p>Select the Add Filter button to filter and generate your reports</p>
       <div>
         <button onClick={() => !dropdownActive && setDropdownActive(true)}><PlusIcon /> Add Filter</button>
-        {filters.map((item) => <span key={item?.id} onClick={() => setFilters((prev) => prev.filter((x) => x?.id !== item?.id))} style={{ color: item?.color, background: `${item?.color}10` }}>{ item?.label } &nbsp;&nbsp;&nbsp;×</span>)}
+        {filters.map((item) => <span key={item?.id} onClick={() => setFilters((prev) => prev.filter((x) => x?.uuid !== item?.uuid))} style={{ color: item?.color, background: `${item?.color}10` }}>{ item?.label } &nbsp;&nbsp;&nbsp;×</span>)}
         {filters.length > 0 && <button onClick={() => handleFilterApply(50, 1)}>Apply Filter</button>}
       </div>
 

@@ -9,6 +9,7 @@ import { getSearchedCustomers } from '../../tickets/CreateTicketModal';
 import 'react-calendar/dist/Calendar.css';
 import Calendar from 'react-calendar';
 import dayjs from 'dayjs';
+import { uuid } from '../../../../helper';
 
 const options = ['Channel', 'Contact', 'Status', 'Personnel', 'Interval', 'Search', 'Category', 'Priority'];
 
@@ -17,16 +18,17 @@ const colors = ['#FF4D35', '#0796F7', '#00BB2D', '#3D642D', '#6C6960', '#ED760E'
 
 const handleFilter = (id, color, setFilters, label, value) => {
     setFilters((prev) => {
-        if (prev.find((item) => item.id === id)) {
-            // object exists in filters array
+        if (prev.find((item) => item.label === label)) {
+            // check an item in the filter array has current filter label
             return prev.map((item) => {
-                if (item?.id === id) {
-                    return { ...item, id, color, label, value }
+                if (item?.label === label) {
+                    // return new stuff
+                    return { ...item, id, color, label, value, uuid: uuid() }
                 } 
                 return item;
             });
         }
-        return [...prev, { id, color, label, value }];
+        return [...prev, { id, color, label, value, uuid: uuid() }];
     });
 }
 
