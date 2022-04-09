@@ -12,9 +12,9 @@ import dayjs from 'dayjs';
 import { uuid } from '../../../../helper';
 import { getAgents } from '../../../../reduxstore/actions/agentActions';
 
-const options = ['Channel', 'Contact', 'Status', 'Personnel', 'Interval', 'Search', 'Category', 'Priority'];
+const options = ['Channel', 'Contact', 'Status', 'Personnel', 'Interval', 'Search', 'Category', 'Priority', 'Rating'];
 
-const colors = ['#FF4D35', '#0796F7', '#00BB2D', '#3D642D', '#6C6960', '#ED760E', '#A03472', '#C2B078'];
+const colors = ['#FF4D35', '#0796F7', '#00BB2D', '#3D642D', '#CB2821', '#ED760E', '#A03472', '#C2B078', '#781F19'];
 
 
 const handleFilter = (id, color, setFilters, label, value) => {
@@ -188,7 +188,7 @@ const DropdownCategory = ({ id, color, setFilters }) => {
             {categories && <>
                 {categories?.length === 0 ? (<div>No category found</div>) : (
                         <ul>
-                            { categories.map((item) => <li key={item?.id} onClick={() => handleFilter(id, color, setFilters, `${item?.name} ${item?.lastname}`, `${id.toLowerCase()}=${item?.id}`)}>{ `${item?.name}` }</li>) }
+                            { categories.map((item) => <li key={item?.id} onClick={() => handleFilter(id, color, setFilters, `${item?.name}`, `${id.toLowerCase()}=${item?.id}`)}>{ `${item?.name}` }</li>) }
                         </ul>
                     )
                 }
@@ -196,6 +196,8 @@ const DropdownCategory = ({ id, color, setFilters }) => {
         </div>
     )
 }
+
+
 
 
 const DropdownPriority = ({ id, color, setFilters }) => {
@@ -234,6 +236,21 @@ const DropdownPriority = ({ id, color, setFilters }) => {
     )
 }
 
+const DropdownSearch = ({ id, color, setFilters }) => {
+    const [searchInput, setSearchInput] = useState('');
+    
+    return (
+        <div className="filter-dropdown-search">
+            <div>
+                <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
+            </div>
+            <div>
+                {searchInput && <button  onClick={() => handleFilter(id, color, setFilters, searchInput, `${id.toLowerCase()}=${searchInput}`) || setSearchInput('')} >Add</button>}
+            </div>
+        </div>
+    )
+}
+
 const FilterDropdown = ({ active, setFilters }) => {
   const [activeOption, setActiveOption] = useState('Channel');
   const isUserAuthenticated = useSelector((state) => state.userAuth?.isUserAuthenticated);
@@ -266,6 +283,7 @@ const FilterDropdown = ({ active, setFilters }) => {
                 {activeOption === 'Personnel' && <DropdownPersonnel id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
                 {activeOption === 'Category' && <DropdownCategory id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
                 {activeOption === 'Priority' && <DropdownPriority id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
+                {activeOption === 'Search' && <DropdownSearch id={activeOption} color={colors[options.indexOf(activeOption)]} setFilters={setFilters} />}
             </div>
         </div>
     </div>
