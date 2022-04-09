@@ -65,6 +65,12 @@ const getStatusColor = (status, id) => {
 
 
 
+
+
+
+
+
+// ticket tables
 const Tickets = ({ tickets, meta, handleFilterApply }) => {
 
   const AlphacxMTPagination = (props) => {
@@ -275,8 +281,6 @@ const ReportsFilter = () => {
   const [filters, setFilters] = useState([]);
   const [ticketData, setTicketData] = useState({ tickets: null, meta: null });
   const [loading, setLoading] = useState(false);
-
-  console.log('FILTERS => ', filters);
   
   useEffect(() => {
     const filterDropdown = window.document.querySelector('.filter-dropdown');
