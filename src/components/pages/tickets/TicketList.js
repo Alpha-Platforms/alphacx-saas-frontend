@@ -337,7 +337,7 @@ const TicketList = ({
                 created: moment(created_at).format("DD MMM, YYYY"),
                 state: status,
                 assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-                rating: rating ? (rating?.value || 0) : 0
+                rating
               })
             );
         exportTable(tableColumns, data, "csv", "TicketExport");
@@ -357,7 +357,7 @@ const TicketList = ({
               created: moment(created_at).format("DD MMM, YYYY"),
               state: status,
               assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-              rating: rating ? (rating?.value || 0) : 0
+              rating
             })
           );
           exportTable(tableColumns, data, "csv", "TicketExport");
@@ -386,7 +386,7 @@ const TicketList = ({
                   created: moment(created_at).format("DD MMM, YYYY"),
                   state: status,
                   assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-                  rating: rating ? (rating?.value || 0) : 0
+                  rating
                 })
               );
         exportTable(tableColumns, data, "pdf", "TicketExport");
@@ -406,7 +406,7 @@ const TicketList = ({
               created: moment(created_at).format("DD MMM, YYYY"),
               state: status,
               assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-              rating: rating ? (rating?.value || 0) : 0
+              rating
             })
           );
           exportTable(tableColumns, data, "pdf", "TicketExport");

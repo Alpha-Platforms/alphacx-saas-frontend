@@ -329,13 +329,14 @@ const ReportsFilter = () => {
                 created: dayjs(created_at).format("DD MMM, YYYY"),
                 state: status,
                 assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-                rating: rating ? (rating?.value || 0) : 0
+                rating
               })
             );
         exportTable(tableColumns, data, "csv", "TicketExport");
       } else if (type === "all") {
         setLoading(true);
-        const res = await httpGetMain(`tickets?per_page=${ticketData.meta?.totalItems}&page=${1}`);
+        // fetch all filtered result
+        const res = await httpGetMain(`tickets?${filters.map((item) => item?.value).join('&')}&per_page=${ticketData.meta?.totalItems}&page=${1}`);
         setLoading(false);
         if (res?.status === 'success') {
           const data = res?.data?.tickets?.map(
@@ -349,7 +350,7 @@ const ReportsFilter = () => {
               created: dayjs(created_at).format("DD MMM, YYYY"),
               state: status,
               assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-              rating: rating ? (rating?.value || 0) : 0
+              rating
             })
           );
           exportTable(tableColumns, data, "csv", "TicketExport");
@@ -378,13 +379,14 @@ const ReportsFilter = () => {
                   created: dayjs(created_at).format("DD MMM, YYYY"),
                   state: status,
                   assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-                  rating: rating ? (rating?.value || 0) : 0
+                  rating: rating
                 })
               );
         exportTable(tableColumns, data, "pdf", "TicketExport");
       } else if (type === "all") {
         setLoading(true);
-        const res = await httpGetMain(`tickets?per_page=${ticketData.meta?.totalItems}&page=${1}`);
+        // fetch all filter result
+        const res = await httpGetMain(`tickets?${filters.map((item) => item?.value).join('&')}&per_page=${ticketData.meta?.totalItems}&page=${1}`);
         setLoading(false);
         if (res?.status === 'success') {
           const data = res?.data?.tickets?.map(
@@ -398,7 +400,7 @@ const ReportsFilter = () => {
               created: dayjs(created_at).format("DD MMM, YYYY"),
               state: status,
               assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-              rating: rating ? (rating?.value || 0) : 0
+              rating
             })
           );
           exportTable(tableColumns, data, "pdf", "TicketExport");
@@ -455,7 +457,7 @@ const ReportsFilter = () => {
           >
 
             <div className="btn-toolbar mb-md-0">
-              <ExportDropdown handlePDFExport={handlePDFExport} handleCSVExport={handleCSVExport} />
+              <ExportDropdown handlePDFExport={handlePDFExport} handleCSVExport={handleCSVExport} exportAll={true} />
             </div>
 
                 {/* <div id="delete-btn-wrapper" className="delete-btn-wrapper d-none">

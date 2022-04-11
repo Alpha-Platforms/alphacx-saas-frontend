@@ -66,7 +66,7 @@ export const exportTable = (exportColumns, exportData, exportType, fileName) => 
             case 'createdTime':
                 return `${rowData.created}`.trim();
             case 'rating':
-                return rowData.rating ? (rowData.rating?.value || 0) : 0
+                return rowData.rating ? (rowData.rating?.value || '') : ''
             default:
                 return rowData[column.field]
         }
