@@ -193,8 +193,6 @@ const ReportsFilter = () => {
   const [loading, setLoading] = useState(false);
   let selectedRows = [];
 
-  console.log('TICKETS => ', ticketData.tickets);
-
   const handleSelectionChange = (rows) => {
     // if (!multiIncludes(accessControlFunctions[user?.role], ["delete_ticket"])) return
     
