@@ -40,11 +40,11 @@ import {multiIncludes} from '../../../helper';
 import {accessControlFunctions} from '../../../config/accessControlList';
 // import { Button, ButtonGroup, ButtonToolbar } from '@trendmicro/react-buttons';
 
-const ExportDropdown = ({handlePDFExport, handleCSVExport}) => {
+export const ExportDropdown = ({handlePDFExport, handleCSVExport, addLeftMargin}) => {
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
 
 
-  return <Dropdown id="export-dropdown-main" className="ticket-export-dropdown">
+  return <Dropdown id="export-dropdown-main" className={`ticket-export-dropdown ${addLeftMargin ? 'mg-lft' : ''}`}>
   <DropdownToggle onClick={() => setExportMenuOpen(!exportMenuOpen)}><SaveAlt /></DropdownToggle>
   <DropdownMenu className="export-dd-menu" style={{ display: exportMenuOpen ? "block" : "none" }} onMouseLeave={() => setExportMenuOpen(false) }>
       <MenuItem className="export-dd-child">
@@ -528,7 +528,7 @@ const TicketList = ({
         >
 
           <div className="btn-toolbar mb-md-0">
-            <ExportDropdown handlePDFExport={handlePDFExport} handleCSVExport={handleCSVExport} />
+            <ExportDropdown handlePDFExport={handlePDFExport} handleCSVExport={handleCSVExport} addLeftMargin={true} />
             {/* <Dropdown id="export-dropdown-main">
               <Dropdown.Toggle
                 id="export-dropdown"

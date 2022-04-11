@@ -91,6 +91,7 @@ import AccountVerified from "components/pages/auth/verified";
 import LiveChatSettings from './components/pages/settings/livechatsettings/LiveChatSettings';
 
 import SmsSettings from "components/pages/settings/smssettings/smsSettings";
+import ReportsFilter from "components/pages/reports/ReportsFilter";
 
 
 const mapStateToProps = (state, ownProps) => ({isUserAuthenticated: state.userAuth.isUserAuthenticated});
@@ -232,6 +233,11 @@ const SiteRouter = connect(mapStateToProps, {
                                 path="/reports"
                                 pageName="Reports"
                                 component={Reports}/>
+                            <SettingsLayoutRoute
+                                exact
+                                path="/reports/filter"
+                                pageName="Reports"
+                                component={ReportsFilter}/>
                             {/* <SettingsLayoutRoute
                                 exact
                                 path="/settings/profile"

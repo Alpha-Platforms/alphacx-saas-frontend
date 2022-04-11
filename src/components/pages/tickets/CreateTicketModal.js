@@ -26,7 +26,7 @@ import {getAcceptValue, allowedFiles} from '../../../helper';
 import {config} from '../../../config/keys';
 import { wordCapitalize, defaultTicketProperties } from '../../../helper';
 
-const searchTypeChecker = (query) => {
+export const searchTypeChecker = (query) => {
     let searchType = "";
     if(Number(query)){
         searchType = "phone_number"
@@ -40,7 +40,7 @@ const searchTypeChecker = (query) => {
 
 let customerFetchTimer;
 
-const getSearchedCustomers = async (userInput) => {
+export const getSearchedCustomers = async (userInput) => {
     
     const searchType = searchTypeChecker(userInput);
     
