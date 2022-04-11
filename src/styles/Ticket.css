@@ -142,8 +142,11 @@
 }
 
 #export-dropdown-main {
-    margin-left: 18.25rem;
     background: transparent;
+}
+
+#export-dropdown-main.mg-lft {
+    margin-left: 18.25rem;
 }
 
 #export-dropdown-main:focus {
