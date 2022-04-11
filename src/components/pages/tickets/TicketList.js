@@ -40,7 +40,7 @@ import {multiIncludes} from '../../../helper';
 import {accessControlFunctions} from '../../../config/accessControlList';
 // import { Button, ButtonGroup, ButtonToolbar } from '@trendmicro/react-buttons';
 
-export const ExportDropdown = ({handlePDFExport, handleCSVExport, addLeftMargin}) => {
+export const ExportDropdown = ({handlePDFExport, handleCSVExport, addLeftMargin, exportAll}) => {
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
 
 
@@ -56,7 +56,7 @@ export const ExportDropdown = ({handlePDFExport, handleCSVExport, addLeftMargin}
             AS CSV
           </MenuItem>
       </MenuItem>
-      <MenuItem className="export-dd-child">
+      {exportAll && <MenuItem className="export-dd-child">
           Export All Ticket
           <MenuItem onClick={() => handlePDFExport('all')}>
               As PDF
@@ -64,7 +64,7 @@ export const ExportDropdown = ({handlePDFExport, handleCSVExport, addLeftMargin}
           <MenuItem onClick={() => handleCSVExport('all')}>
               AS CSV
           </MenuItem>
-      </MenuItem>
+      </MenuItem>}
   </DropdownMenu>
 </Dropdown>
 }
@@ -528,7 +528,7 @@ const TicketList = ({
         >
 
           <div className="btn-toolbar mb-md-0">
-            <ExportDropdown handlePDFExport={handlePDFExport} handleCSVExport={handleCSVExport} addLeftMargin={true} />
+            <ExportDropdown handlePDFExport={handlePDFExport} handleCSVExport={handleCSVExport} addLeftMargin={true} exportAll={true} />
             {/* <Dropdown id="export-dropdown-main">
               <Dropdown.Toggle
                 id="export-dropdown"
