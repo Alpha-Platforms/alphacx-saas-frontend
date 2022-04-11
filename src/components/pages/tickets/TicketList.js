@@ -322,6 +322,7 @@ const TicketList = ({
   const handleCSVExport = async (type) => {
     if (tickets) {
       if (type === "selected") {
+        if (selectedRows.length === 0) return;
         const data =
         selectedRows.length !== 0
           ? selectedRows
@@ -370,6 +371,7 @@ const TicketList = ({
   const handlePDFExport = async (type) => {
     if (tickets) {
       if (type === "selected") {
+        if (selectedRows.length === 0) return;
         const data =
           selectedRows.length !== 0
             ? selectedRows

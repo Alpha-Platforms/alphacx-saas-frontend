@@ -316,6 +316,7 @@ const ReportsFilter = () => {
   const handleCSVExport = async (type) => {
     if (ticketData.tickets) {
       if (type === "selected") {
+        if (selectedRows.length === 0) return;
         const data =
         selectedRows.length !== 0
           ? selectedRows
@@ -364,6 +365,7 @@ const ReportsFilter = () => {
   const handlePDFExport = async (type) => {
     if (ticketData.tickets) {
       if (type === "selected") {
+        if (selectedRows.length === 0) return;
         const data =
           selectedRows.length !== 0
             ? selectedRows
