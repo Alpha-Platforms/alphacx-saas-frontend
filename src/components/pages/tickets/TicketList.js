@@ -329,7 +329,7 @@ const TicketList = ({
               ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id }) => ({
                 name: `${customer.firstname} ${customer.lastname == "default" ? "" : customer.lastname || "" }`,
                 email: customer.email,
-                subject: `${subject.substr(0, 25)}...`,
+                subject,
                 ticketUid: id,
                 ticketId: ticket_id,
                 category: category.name,
@@ -349,7 +349,7 @@ const TicketList = ({
             ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id  }) => ({
               name: `${textCapitalize(customer?.firstname || '')} ${textCapitalize(customer.lastname === "default"? "" : customer.lastname ? customer?.lastname : '')}`,
               email: customer.email,
-              subject: `${subject.substr(0, 25)}...`,
+              subject,
               // ticketId: id.slice(-8),
               ticketId: ticket_id,
               category: category.name,
@@ -377,7 +377,7 @@ const TicketList = ({
                 ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id  }) => ({
                   name: textCapitalize(`${customer.firstname} ${customer.lastname == "default"? "" : customer.lastname || ""}`),
                   email: customer.email,
-                  subject: `${subject.substr(0, 25)}...`,
+                  subject,
                   // ticketId: id.slice(-8),
                   ticketId: ticket_id,
                   category: category.name,
@@ -397,7 +397,7 @@ const TicketList = ({
             ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id  }) => ({
               name: `${textCapitalize(customer?.firstname || 'Firstname')} ${textCapitalize(customer.lastname === "default"? "" : customer.lastname ? customer?.lastname : '')}`,
               email: customer.email,
-              subject: `${subject.substr(0, 25)}...`,
+              subject,
               // ticketId: id.slice(-8),
               ticketId: ticket_id,
               category: category.name,
