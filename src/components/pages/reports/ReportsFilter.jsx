@@ -193,7 +193,7 @@ const ReportsFilter = () => {
   const [loading, setLoading] = useState(false);
   let selectedRows = [];
 
-  console.log('selectedRows => ', selectedRows);
+  console.log('TICKETS => ', ticketData.tickets);
 
   const handleSelectionChange = (rows) => {
     // if (!multiIncludes(accessControlFunctions[user?.role], ["delete_ticket"])) return
@@ -331,7 +331,7 @@ const ReportsFilter = () => {
                 created: dayjs(created_at).format("DD MMM, YYYY"),
                 state: status,
                 assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-                rating: rating || 0
+                rating: rating ? (rating?.value || 0) : 0
               })
             );
         exportTable(tableColumns, data, "csv", "TicketExport");
@@ -351,7 +351,7 @@ const ReportsFilter = () => {
               created: dayjs(created_at).format("DD MMM, YYYY"),
               state: status,
               assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-              rating: rating || 0
+              rating: rating ? (rating?.value || 0) : 0
             })
           );
           exportTable(tableColumns, data, "csv", "TicketExport");
@@ -380,7 +380,7 @@ const ReportsFilter = () => {
                   created: dayjs(created_at).format("DD MMM, YYYY"),
                   state: status,
                   assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-                  rating: rating || 0
+                  rating: rating ? (rating?.value || 0) : 0
                 })
               );
         exportTable(tableColumns, data, "pdf", "TicketExport");
@@ -400,7 +400,7 @@ const ReportsFilter = () => {
               created: dayjs(created_at).format("DD MMM, YYYY"),
               state: status,
               assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-              rating: rating || 0
+              rating: rating ? (rating?.value || 0) : 0
             })
           );
           exportTable(tableColumns, data, "pdf", "TicketExport");
