@@ -193,8 +193,6 @@ const ReportsFilter = () => {
   const [loading, setLoading] = useState(false);
   let selectedRows = [];
 
-  console.log('selectedRows => ', selectedRows);
-
   const handleSelectionChange = (rows) => {
     // if (!multiIncludes(accessControlFunctions[user?.role], ["delete_ticket"])) return
     
@@ -316,6 +314,7 @@ const ReportsFilter = () => {
   const handleCSVExport = async (type) => {
     if (ticketData.tickets) {
       if (type === "selected") {
+        if (selectedRows.length === 0) return;
         const data =
         selectedRows.length !== 0
           ? selectedRows
@@ -323,34 +322,35 @@ const ReportsFilter = () => {
               ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id }) => ({
                 name: `${customer.firstname} ${customer.lastname == "default" ? "" : customer.lastname || "" }`,
                 email: customer.email,
-                subject: `${subject.substr(0, 25)}...`,
+                subject,
                 ticketUid: id,
                 ticketId: ticket_id,
                 category: category.name,
                 created: dayjs(created_at).format("DD MMM, YYYY"),
                 state: status,
                 assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-                rating: rating || 0
+                rating
               })
             );
         exportTable(tableColumns, data, "csv", "TicketExport");
       } else if (type === "all") {
         setLoading(true);
-        const res = await httpGetMain(`tickets?per_page=${ticketData.meta?.totalItems}&page=${1}`);
+        // fetch all filtered result
+        const res = await httpGetMain(`tickets?${filters.map((item) => item?.value).join('&')}&per_page=${ticketData.meta?.totalItems}&page=${1}`);
         setLoading(false);
         if (res?.status === 'success') {
           const data = res?.data?.tickets?.map(
             ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id  }) => ({
               name: `${textCapitalize(customer?.firstname || '')} ${textCapitalize(customer.lastname === "default"? "" : customer.lastname ? customer?.lastname : '')}`,
               email: customer.email,
-              subject: `${subject.substr(0, 25)}...`,
+              subject,
               // ticketId: id.slice(-8),
               ticketId: ticket_id,
               category: category.name,
               created: dayjs(created_at).format("DD MMM, YYYY"),
               state: status,
               assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-              rating: rating || 0
+              rating
             })
           );
           exportTable(tableColumns, data, "csv", "TicketExport");
@@ -364,6 +364,7 @@ const ReportsFilter = () => {
   const handlePDFExport = async (type) => {
     if (ticketData.tickets) {
       if (type === "selected") {
+        if (selectedRows.length === 0) return;
         const data =
           selectedRows.length !== 0
             ? selectedRows
@@ -371,34 +372,35 @@ const ReportsFilter = () => {
                 ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id  }) => ({
                   name: textCapitalize(`${customer.firstname} ${customer.lastname == "default"? "" : customer.lastname || ""}`),
                   email: customer.email,
-                  subject: `${subject.substr(0, 25)}...`,
+                  subject,
                   // ticketId: id.slice(-8),
                   ticketId: ticket_id,
                   category: category.name,
                   created: dayjs(created_at).format("DD MMM, YYYY"),
                   state: status,
                   assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-                  rating: rating || 0
+                  rating: rating
                 })
               );
         exportTable(tableColumns, data, "pdf", "TicketExport");
       } else if (type === "all") {
         setLoading(true);
-        const res = await httpGetMain(`tickets?per_page=${ticketData.meta?.totalItems}&page=${1}`);
+        // fetch all filter result
+        const res = await httpGetMain(`tickets?${filters.map((item) => item?.value).join('&')}&per_page=${ticketData.meta?.totalItems}&page=${1}`);
         setLoading(false);
         if (res?.status === 'success') {
           const data = res?.data?.tickets?.map(
             ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id  }) => ({
               name: `${textCapitalize(customer?.firstname || 'Firstname')} ${textCapitalize(customer.lastname === "default"? "" : customer.lastname ? customer?.lastname : '')}`,
               email: customer.email,
-              subject: `${subject.substr(0, 25)}...`,
+              subject,
               // ticketId: id.slice(-8),
               ticketId: ticket_id,
               category: category.name,
               created: dayjs(created_at).format("DD MMM, YYYY"),
               state: status,
               assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-              rating: rating || 0
+              rating
             })
           );
           exportTable(tableColumns, data, "pdf", "TicketExport");
@@ -455,7 +457,7 @@ const ReportsFilter = () => {
           >
 
             <div className="btn-toolbar mb-md-0">
-              <ExportDropdown handlePDFExport={handlePDFExport} handleCSVExport={handleCSVExport} />
+              <ExportDropdown handlePDFExport={handlePDFExport} handleCSVExport={handleCSVExport} exportAll={true} />
             </div>
 
                 {/* <div id="delete-btn-wrapper" className="delete-btn-wrapper d-none">

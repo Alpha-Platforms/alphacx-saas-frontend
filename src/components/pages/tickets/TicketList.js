@@ -40,7 +40,7 @@ import {multiIncludes} from '../../../helper';
 import {accessControlFunctions} from '../../../config/accessControlList';
 // import { Button, ButtonGroup, ButtonToolbar } from '@trendmicro/react-buttons';
 
-export const ExportDropdown = ({handlePDFExport, handleCSVExport, addLeftMargin}) => {
+export const ExportDropdown = ({handlePDFExport, handleCSVExport, addLeftMargin, exportAll}) => {
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
 
 
@@ -56,7 +56,7 @@ export const ExportDropdown = ({handlePDFExport, handleCSVExport, addLeftMargin}
             AS CSV
           </MenuItem>
       </MenuItem>
-      <MenuItem className="export-dd-child">
+      {exportAll && <MenuItem className="export-dd-child">
           Export All Ticket
           <MenuItem onClick={() => handlePDFExport('all')}>
               As PDF
@@ -64,7 +64,7 @@ export const ExportDropdown = ({handlePDFExport, handleCSVExport, addLeftMargin}
           <MenuItem onClick={() => handleCSVExport('all')}>
               AS CSV
           </MenuItem>
-      </MenuItem>
+      </MenuItem>}
   </DropdownMenu>
 </Dropdown>
 }
@@ -322,6 +322,7 @@ const TicketList = ({
   const handleCSVExport = async (type) => {
     if (tickets) {
       if (type === "selected") {
+        if (selectedRows.length === 0) return;
         const data =
         selectedRows.length !== 0
           ? selectedRows
@@ -329,14 +330,14 @@ const TicketList = ({
               ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id }) => ({
                 name: `${customer.firstname} ${customer.lastname == "default" ? "" : customer.lastname || "" }`,
                 email: customer.email,
-                subject: `${subject.substr(0, 25)}...`,
+                subject,
                 ticketUid: id,
                 ticketId: ticket_id,
                 category: category.name,
                 created: moment(created_at).format("DD MMM, YYYY"),
                 state: status,
                 assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-                rating: rating || 0
+                rating
               })
             );
         exportTable(tableColumns, data, "csv", "TicketExport");
@@ -349,14 +350,14 @@ const TicketList = ({
             ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id  }) => ({
               name: `${textCapitalize(customer?.firstname || '')} ${textCapitalize(customer.lastname === "default"? "" : customer.lastname ? customer?.lastname : '')}`,
               email: customer.email,
-              subject: `${subject.substr(0, 25)}...`,
+              subject,
               // ticketId: id.slice(-8),
               ticketId: ticket_id,
               category: category.name,
               created: moment(created_at).format("DD MMM, YYYY"),
               state: status,
               assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-              rating: rating || 0
+              rating
             })
           );
           exportTable(tableColumns, data, "csv", "TicketExport");
@@ -370,6 +371,7 @@ const TicketList = ({
   const handlePDFExport = async (type) => {
     if (tickets) {
       if (type === "selected") {
+        if (selectedRows.length === 0) return;
         const data =
           selectedRows.length !== 0
             ? selectedRows
@@ -377,14 +379,14 @@ const TicketList = ({
                 ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id  }) => ({
                   name: textCapitalize(`${customer.firstname} ${customer.lastname == "default"? "" : customer.lastname || ""}`),
                   email: customer.email,
-                  subject: `${subject.substr(0, 25)}...`,
+                  subject,
                   // ticketId: id.slice(-8),
                   ticketId: ticket_id,
                   category: category.name,
                   created: moment(created_at).format("DD MMM, YYYY"),
                   state: status,
                   assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-                  rating: rating || 0
+                  rating
                 })
               );
         exportTable(tableColumns, data, "pdf", "TicketExport");
@@ -397,14 +399,14 @@ const TicketList = ({
             ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id  }) => ({
               name: `${textCapitalize(customer?.firstname || 'Firstname')} ${textCapitalize(customer.lastname === "default"? "" : customer.lastname ? customer?.lastname : '')}`,
               email: customer.email,
-              subject: `${subject.substr(0, 25)}...`,
+              subject,
               // ticketId: id.slice(-8),
               ticketId: ticket_id,
               category: category.name,
               created: moment(created_at).format("DD MMM, YYYY"),
               state: status,
               assignedTo: textCapitalize(`${assignee?.firstname || ""} ${assignee?.lastname || ""}`),
-              rating: rating || 0
+              rating
             })
           );
           exportTable(tableColumns, data, "pdf", "TicketExport");
@@ -528,7 +530,7 @@ const TicketList = ({
         >
 
           <div className="btn-toolbar mb-md-0">
-            <ExportDropdown handlePDFExport={handlePDFExport} handleCSVExport={handleCSVExport} addLeftMargin={true} />
+            <ExportDropdown handlePDFExport={handlePDFExport} handleCSVExport={handleCSVExport} addLeftMargin={true} exportAll={true} />
             {/* <Dropdown id="export-dropdown-main">
               <Dropdown.Toggle
                 id="export-dropdown"
