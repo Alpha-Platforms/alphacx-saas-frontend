@@ -22,14 +22,12 @@ export default function FacebookIntegration() {
   
     const authFb = () => {
         FB.login(function (response) {
-            console.clear();
-            console.log("FB.login response.authResponse", response.authResponse)
             if (response.authResponse && response.authResponse !== "undefined." && response.authResponse !== undefined) {
                 setFBData(response?.authResponse);
                 handleConnectFBPage(response?.authResponse);
                 setPageConnected(true);
                 FB.api("/me", function (response) {
-                    console.log("FB.api response:", response)
+                    // console.log("FB.api response:", response)
                 });
             } else {
                 console.log("User cancelled login or did not fully authorize.");
@@ -44,16 +42,13 @@ export default function FacebookIntegration() {
     useEffect(() => {
             FB.init({
             appId: "244578957291734",
-            // appId: "265267201741571",
             autoLogAppEvents: true,
             xfbml: true,
             version: "v11.0",
         });
     }, []);
     const handleConnectFBPage = async (response) => {
-        console.log("Begining of connect fn", response)
-        // console.log(response, typeof response);
-        if (response && response !== "undefined." && response !== undefined) return;
+        if (!response) return;
         showLoader();
         const data = {
             facebook_config: {

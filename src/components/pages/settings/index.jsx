@@ -38,9 +38,12 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import AccessControl from "../auth/accessControl.jsx"
+import ContactAlphcxModal from "./ContactAlphcxModal";
 
 
 function SettingsHome({signedUser}) {
+
+  const [contactSupportModalShow, setContactSupportModalShow] = useState(false)
 
   
   return (
@@ -286,98 +289,32 @@ function SettingsHome({signedUser}) {
           </div>
         </Col>
       </AccessControl>
-
-        {/* <Col sm={6} md={4} className="settings-menu-item">   
-          <div className="border rounded bg-light">
-            <Link to="settings/livechat" className="d-block cursor text-decoration-none">
-              <div className="d-flex p-md-4">
-                <div className="">
-                  <img src={AccountLightIcon} alt="" />
-                </div>
-                <div className="ms-3">
-                  <h6 className="text-dark mb-0">Live Chat</h6>
-                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                    Setup configurations for you live chat widget.
-                  </p>
-                </div>
-              </div>
-            </Link>
-          </div>
-        </Col> */}
-        {/* <Col sm={6} md={4} className="settings-menu-item">   
-          <div className="h-100 border rounded bg-light">
-            <Link to="settings/fields" className="d-block cursor text-decoration-none">
-              <div className="d-flex align-items-center p-md-4">
-                <div className="">
-                  <img src={FieldsLightIcon} alt="" />
-                </div>
-                <div className="ms-3">
-                  <h6 className="text-dark mb-0">Fields</h6>
-                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                    Setup fields for users, tickets and customers forms.
-                  </p>
-                </div>
-              </div>
-            </Link>
-          </div>
-        </Col> */}
-        {/*  <Col sm={6} md={4} className=""> 
-          <div className="h-100 border rounded bg-light">
-        {/*  <Col sm={6} md={4} className="settings-menu-item"> 
-          <div className="border rounded bg-light">
-            <Link
-              to="/settings/canned-responses"
-              className="d-block cursor text-decoration-none"
-            >
-              <div className="d-flex p-md-4">
-                <div className="">
-                  <img src={DocumentIcon} alt="" />
-                </div>
-                <div className="ms-3">
-                  <h6 className="text-dark mb-0">Canned Responses</h6>
-                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                    Create responses templates
-                  </p>
-                </div>
-              </div>
-            </Link>
-          </div>
-            </Col>
-          <Col className="">   
-          
-          <div className="border rounded bg-light">
-            <Link to="#" className="d-block cursor text-decoration-none">
-              <div className="d-flex p-md-4">
-                <div className="">
-                  <img src={LivechatIcon} alt="" />
-                </div>
-                <div className="ms-3">
-                  <h6 className="text-dark mb-0">Live Chat</h6>
-                  <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                    Setup and update Live Chat settings
-                  </p>
-                </div>
-              </div>
-            </Link>
-          </div> </Col>
-            
-          <Col className="">   
-          <div className="border rounded bg-light">
-          <Link to="#" className="d-block cursor text-decoration-none">
+      
+      <Col sm={6} md={4} className="settings-menu-item">   
+        <div className="border rounded bg-light">
+          <Link to="#" onClick={() => setContactSupportModalShow(true) } className="d-block cursor text-decoration-none" role="button">
             <div className="d-flex p-md-4">
               <div className="">
-                <img src={RoleLightIcon} alt="" />
+                <img src={LivechatIcon} alt="" />
               </div>
               <div className="ms-3">
-                <h6 className="text-dark mb-0">Submit a Ticket</h6>
+                <h6 className="text-dark mb-0">Contact AlphaCX</h6>
                 <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                  Description here
+                  Send a message to AlphaCX Support team.
                 </p>
               </div>
             </div>
           </Link>
-        </div> </Col>*/}
+        </div>
+      </Col>
+        
       </Row>
+
+      <ContactAlphcxModal
+        contactSupportModalShow={contactSupportModalShow}
+        setContactSupportModalShow={setContactSupportModalShow}
+        isEditing={false}
+      />
 
     </Container>
   );
