@@ -1293,6 +1293,9 @@ select {
 .message.message-out .message-text .message-title{
   text-align: right !important;
 }
+.message .message-text {
+  max-width: 100%;
+}
 /* 
 .message-inner {
   margin-left: 0.5rem;
