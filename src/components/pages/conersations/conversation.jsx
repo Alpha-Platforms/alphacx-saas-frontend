@@ -248,8 +248,11 @@ function Conversation({user, ...props}) {
   useEffect(() => {
     AppSocket.createConnection();
     AppSocket.io.on(`ws_tickets`, (data) => {
-      setTickets(data?.data?.tickets);
-      setWsTickets(data?.data?.tickets);
+      // BE ERROR: data is undefined when a singel ticket is clicked in conversation
+      // console.log('ws_ticket => ', data?.data?.tickets);
+      // console.log('ws_ticket socket data => ', data);
+      data?.data?.tickets && setTickets(data?.data?.tickets);
+      data?.data?.tickets && setWsTickets(data?.data?.tickets);
     });
     AppSocket.io.on(`ws_ticket`, (data) => {
       let ticketsData = { channel: filterTicketsState === "" ? "ALL" : filterTicketsState, per_page: 100 };
