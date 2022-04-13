@@ -1357,6 +1357,9 @@ select {
   /* background: #0062980d; */
   border-radius: 5px;
   padding: 0rem 0.5rem 0.5rem 0.5rem;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  word-wrap: anywhere;
 }
 
 .message-out .message-text {
