@@ -1,10 +1,7 @@
-
-    const  handleChange=(e)=>{
-        if (resourceType === "pdf") {
-        SetPDFdata({...pdfData, [e.target.name]: e.target.value })
-        console.log(pdfData)}
-  
-      
-  
-  
-       }
+/* eslint-disable */
+const handleChange = (e) => {
+    if (resourceType === 'pdf') {
+        SetPDFdata({ ...pdfData, [e.target.name]: e.target.value });
+        console.log(pdfData);
+    }
+};

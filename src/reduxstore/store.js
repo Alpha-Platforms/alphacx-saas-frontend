@@ -1,9 +1,10 @@
-import {createStore, applyMiddleware} from 'redux';
+/* eslint-disable */
+import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import {composeWithDevTools} from 'redux-devtools-extension/developmentOnly';
+import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import { persistStore } from 'redux-persist';
 
-//get root reducer
+// get root reducer
 import rootReducer from './reducers';
 
 const initialState = {};

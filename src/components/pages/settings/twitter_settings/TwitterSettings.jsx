@@ -1,45 +1,43 @@
+/* eslint-disable */
 // @ts-nocheck
-import {useState, useEffect} from "react";
-import {Link} from "react-router-dom";
-import RightArrow from "../../../../assets/imgF/arrow_right.png";
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './style.css';
-import {NotificationManager} from 'react-notifications';
-import {connect} from 'react-redux';
-import {updateTwitterConfig} from '../../../../reduxstore/actions/configActions';
+import { NotificationManager } from 'react-notifications';
+import { connect } from 'react-redux';
 import ScaleLoader from 'react-spinners/ScaleLoader';
-import ClipLoader from "react-spinners/ClipLoader";
-import {css} from "@emotion/react";
-import { Settings } from "@material-ui/icons";
+import ClipLoader from 'react-spinners/ClipLoader';
+import { css } from '@emotion/react';
+import { Settings } from '@material-ui/icons';
+import { updateTwitterConfig } from '../../../../reduxstore/actions/configActions';
+import RightArrow from '../../../../assets/imgF/arrow_right.png';
 
-
-const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, updateTwitterConfig, isUserAuthenticated}) => {
-
-
+function TwitterSettings({ twitterConfig, isConfigLoaded, isConfigLoading, updateTwitterConfig, isUserAuthenticated }) {
     const [settings, setSettings] = useState({
         apiKey: '',
         apiSecretKey: '',
         accessToken: '',
         accessTokenSecretKey: '',
-        bearerToken: ''
+        bearerToken: '',
     });
 
     const [loading, setLoading] = useState(false);
-    
-    const handleInputChange = e => {
-        const {name, value} = e.target;
-        
-        setSettings(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    }
 
-    const override = css ``;
-    const [color, setColor] = useState("#ffffff");
-    
-    useEffect(() => {    
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+
+        setSettings((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const override = css``;
+    const [color, setColor] = useState('#ffffff');
+
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+
         // getTwitterConfig((data) => {
         //     setSettings({
         //         apiKey: data.api_key,
@@ -52,52 +50,47 @@ const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, update
         // })
 
         if (twitterConfig) {
-            
             setSettings({
                 apiKey: twitterConfig.api_key,
                 apiSecretKey: twitterConfig.api_secret_key,
                 accessToken: twitterConfig.access_token,
                 accessTokenSecretKey: twitterConfig.access_token_secret_key,
-                bearerToken: twitterConfig.bearer_token
+                bearerToken: twitterConfig.bearer_token,
             });
-
         }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [twitterConfig])
-    
-
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [twitterConfig]);
 
     const handleConfigSave = () => {
+        const { apiKey, apiSecretKey, accessToken, accessTokenSecretKey, bearerToken } = settings;
 
-        const {apiKey, apiSecretKey, accessToken, accessTokenSecretKey, bearerToken} = settings;      
-        
         if (!apiKey || !apiSecretKey || !accessToken || !accessTokenSecretKey || !bearerToken) {
             return NotificationManager.error('Fill all fields', 'Error', 4000);
         }
 
         const newConfig = {
             api_key: apiKey,
-            api_secret_key: apiSecretKey, 
-            access_token: accessToken, 
-            access_token_secret_key: accessTokenSecretKey, 
+            api_secret_key: apiSecretKey,
+            access_token: accessToken,
+            access_token_secret_key: accessTokenSecretKey,
             bearer_token: bearerToken,
-            env: "dev"
-
+            env: 'dev',
         };
 
         setLoading(true);
-        updateTwitterConfig(newConfig, 
+        updateTwitterConfig(
+            newConfig,
             (data) => {
                 NotificationManager.success('Updated successfully', 'Success', 4000);
                 setLoading(false);
-            }, 
-            msg => {
+            },
+            (msg) => {
                 NotificationManager.error(msg, 'Error', 4000);
                 setLoading(false);
-            });
-
-    }
+            },
+        );
+    };
 
     return (
         <div>
@@ -106,11 +99,11 @@ const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, update
                     <h6 className="text-muted f-14">
                         <Link to="/settings">
                             <span className="text-custom">Settings</span>
-                        </Link>{" "}
+                        </Link>{' '}
                         <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
                         <Link to="/settings/integrations">
                             <span className="text-custom">Integrations</span>
-                        </Link>{" "}
+                        </Link>{' '}
                         <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
                         <span>Twitter</span>
                     </h6>
@@ -118,13 +111,12 @@ const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, update
                 <div className="d-flex justify-content-between flex-row">
                     <h5 className="mt-3 mb-2 ">Twitter Configuration</h5>
                 </div>
-                
+
                 <div className="mt-1 lcsettingslayout">
                     <div>
                         <div className="w-75">
-                            <form className="livechat-settings-form" onSubmit={e => e.preventDefault()}>
-                             
-                            <div className="form-group mt-3">
+                            <form className="livechat-settings-form" onSubmit={(e) => e.preventDefault()}>
+                                <div className="form-group mt-3">
                                     <label className="f-14 mb-1">API Key</label>
                                     <input
                                         type="text"
@@ -133,7 +125,8 @@ const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, update
                                         value={settings.apiKey}
                                         placeholder=""
                                         required
-                                        onChange={handleInputChange}/>
+                                        onChange={handleInputChange}
+                                    />
                                 </div>
 
                                 <div className="form-group mt-3">
@@ -145,7 +138,8 @@ const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, update
                                         value={settings.apiSecretKey}
                                         placeholder=""
                                         required
-                                        onChange={handleInputChange}/>
+                                        onChange={handleInputChange}
+                                    />
                                 </div>
 
                                 <div className="form-group mt-3">
@@ -157,7 +151,8 @@ const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, update
                                         value={settings.accessToken}
                                         placeholder=""
                                         required
-                                        onChange={handleInputChange}/>
+                                        onChange={handleInputChange}
+                                    />
                                 </div>
 
                                 <div className="form-group mt-3">
@@ -169,7 +164,8 @@ const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, update
                                         value={settings.accessTokenSecretKey}
                                         placeholder=""
                                         required
-                                        onChange={handleInputChange}/>
+                                        onChange={handleInputChange}
+                                    />
                                 </div>
 
                                 <div className="form-group mt-3">
@@ -181,37 +177,40 @@ const TwitterSettings = ({twitterConfig, isConfigLoaded, isConfigLoading, update
                                         value={settings.bearerToken}
                                         placeholder=""
                                         required
-                                        onChange={handleInputChange}/>
+                                        onChange={handleInputChange}
+                                    />
                                 </div>
 
                                 <div className="d-flex justify-content-end my-3 mt-4">
                                     <button
                                         onClick={handleConfigSave}
                                         className="btn btn-sm bg-at-blue-light px-3"
-                                        disabled={loading}>
-                                        {loading
-                                            ? (<><span>Saving changes...</span><ClipLoader color={color} loading={loading} css={override} size={15}/></>)
-                                            : ("Save Changes")
-                                        }
+                                        disabled={loading}
+                                    >
+                                        {loading ? (
+                                            <>
+                                                <span>Saving changes...</span>
+                                                <ClipLoader color={color} loading={loading} css={override} size={15} />
+                                            </>
+                                        ) : (
+                                            'Save Changes'
+                                        )}
                                     </button>
-
-
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     );
-};
+}
 
 const mapStateToProps = (state, ownProps) => ({
     twitterConfig: state.config.configs.twitter_config, // general config
     isConfigLoading: state.isConfigLoading,
     isConfigLoaded: state.isConfigLoaded,
-    isUserAuthenticated: state.userAuth.isUserAuthenticated
+    isUserAuthenticated: state.userAuth.isUserAuthenticated,
 });
 
-export default connect(mapStateToProps, {updateTwitterConfig})(TwitterSettings);
+export default connect(mapStateToProps, { updateTwitterConfig })(TwitterSettings);

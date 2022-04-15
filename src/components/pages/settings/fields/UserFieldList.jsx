@@ -1,70 +1,80 @@
-import {useState, Fragment, useEffect} from 'react';
-import { capitalize } from "@material-ui/core";
-// 
+/* eslint-disable */
+import { useState, Fragment, useEffect } from 'react';
+import { capitalize } from '@material-ui/core';
+//
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-// 
-import {ReactComponent as HamburgerSvg} from '../../../../assets/icons/hamburger.svg';
+//
+import { ReactComponent as HamburgerSvg } from '../../../../assets/icons/hamburger.svg';
 
-const UserFieldList = (props) => {
+function UserFieldList(props) {
     const [userFields, setUserFields] = useState([]);
-    // 
-    useEffect(() =>{
+    //
+    useEffect(() => {
         setUserFields(props.fieldData);
-    }, [props.fieldData])
+    }, [props.fieldData]);
 
     return (
-        <Fragment>
-            <div className="text-center">
-                <div className="fieldsWrapper" id="userFieldWrapper">
-                    {(userFields.length === 0)?
-                        <div className="text-center pt-5">
-                            <p className="">No data found</p>
-                        </div>
-                        :
-                        userFields.map((data) => {
-                            return(
-                                <div key={data.id} className="fieldParent my-2">
-                                    <Row className="w-100 ps-4">
-                                        <Col xs md={5}>
-                                            <div className="text-start">
-                                                <button
-                                                    type="button"
-                                                    className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor">
-                                                    <HamburgerSvg/>
-                                                </button>
-                                                <span>{capitalize(`${data.field_name}`)}</span>
-                                            </div>
-                                        </Col>
-                                        <Col xs md={4}>
-                                            <div className="text-start">
-                                                <span>{`${data.field_section}`}</span>
-                                            </div>
-                                        </Col>
-                                        <Col auto>
-                                            <div className="d-flex align-items-center justify-content-end">
-                                                {data.required?
-                                                    <span className="me-2">Required</span> 
-                                                :
-                                                    <span className="me-2">Optional</span>
-                                                }
-                                                <Button onClick={() => props.editCustomField(data.id)} className="acx-btn-icon rounded-circle" type="button" title="edit">
-                                                    <i className="bi-pencil-square acx-text-alpha-blue-400" title="edit"></i> 
-                                                </Button>
-                                                <Button onClick={() => props.deleteCustomField(data.id)} className="acx-btn-icon rounded-circle" type="button" title="delete">
-                                                    <i className="bi-trash text-danger" title="delete "></i> 
-                                                </Button>
-                                            </div>
-                                        </Col> 
-                                    </Row>
-                                </div>
-                            );
-                        })
-                    }
-                </div>
+        <div className="text-center">
+            <div className="fieldsWrapper" id="userFieldWrapper">
+                {userFields.length === 0 ? (
+                    <div className="text-center pt-5">
+                        <p className="">No data found</p>
+                    </div>
+                ) : (
+                    userFields.map((data) => {
+                        return (
+                            <div key={data.id} className="fieldParent my-2">
+                                <Row className="w-100 ps-4">
+                                    <Col xs md={5}>
+                                        <div className="text-start">
+                                            <button
+                                                type="button"
+                                                className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor"
+                                            >
+                                                <HamburgerSvg />
+                                            </button>
+                                            <span>{capitalize(`${data.field_name}`)}</span>
+                                        </div>
+                                    </Col>
+                                    <Col xs md={4}>
+                                        <div className="text-start">
+                                            <span>{`${data.field_section}`}</span>
+                                        </div>
+                                    </Col>
+                                    <Col auto>
+                                        <div className="d-flex align-items-center justify-content-end">
+                                            {data.required ? (
+                                                <span className="me-2">Required</span>
+                                            ) : (
+                                                <span className="me-2">Optional</span>
+                                            )}
+                                            <Button
+                                                onClick={() => props.editCustomField(data.id)}
+                                                className="acx-btn-icon rounded-circle"
+                                                type="button"
+                                                title="edit"
+                                            >
+                                                <i className="bi-pencil-square acx-text-alpha-blue-400" title="edit" />
+                                            </Button>
+                                            <Button
+                                                onClick={() => props.deleteCustomField(data.id)}
+                                                className="acx-btn-icon rounded-circle"
+                                                type="button"
+                                                title="delete"
+                                            >
+                                                <i className="bi-trash text-danger" title="delete " />
+                                            </Button>
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </div>
+                        );
+                    })
+                )}
             </div>
-        </Fragment>
+        </div>
     );
 }
 export default UserFieldList;

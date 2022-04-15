@@ -1,82 +1,82 @@
-import React, {useEffect, useState} from 'react';
-// 
-import {connect} from 'react-redux';
-import {Link} from "react-router-dom";
-import {useHistory} from 'react-router-dom';
+/* eslint-disable */
+import React, { useEffect, useState } from 'react';
+//
+import { connect } from 'react-redux';
+import { Link, useHistory } from 'react-router-dom';
 import ScaleLoader from 'react-spinners/ScaleLoader';
-import {NotificationManager} from 'react-notifications';
-// 
-import Form from "react-bootstrap/Form";
-// 
-import EditorBox from "../../../../reusables/EditorBox";
-import AddIcon from "../../../../../assets/icons/add.svg";
-import DeleteIcon from "../../../../../assets/icons/Delete.svg";
-import RightArrow from "../../../../../assets/imgF/arrow_right.png";
-// 
-import {addEmailTemplate} from './../../../../../reduxstore/actions/emailTemplateActions';
-// 
-import "./newEmailTemplate.scss";
-import "../NotificationSettings.scss";
+import { NotificationManager } from 'react-notifications';
+//
+import Form from 'react-bootstrap/Form';
+//
+import EditorBox from '../../../../reusables/EditorBox';
+import AddIcon from '../../../../../assets/icons/add.svg';
+import DeleteIcon from '../../../../../assets/icons/Delete.svg';
+import RightArrow from '../../../../../assets/imgF/arrow_right.png';
+//
+import { addEmailTemplate } from '../../../../../reduxstore/actions/emailTemplateActions';
+//
+import './newEmailTemplate.scss';
+import '../NotificationSettings.scss';
 
-const NewEmailTemplate = ({addEmailTemplate}) => {
-    // 
+function NewEmailTemplate({ addEmailTemplate }) {
+    //
     const availablePlaceholders = [
         {
-            title: "Ticket",
-            placeHolder: "ticketId"
+            title: 'Ticket',
+            placeHolder: 'ticketId',
         },
         {
-            title: "Customer",
-            placeHolder: "customerName"
+            title: 'Customer',
+            placeHolder: 'customerName',
         },
         {
-            title: "Status",
-            placeHolder: "status"
+            title: 'Status',
+            placeHolder: 'status',
         },
         {
-            title: "Category",
-            placeHolder: "categoryName"
+            title: 'Category',
+            placeHolder: 'categoryName',
         },
         {
-            title: "Agent",
-            placeHolder: "agentName"
+            title: 'Agent',
+            placeHolder: 'agentName',
         },
         {
-            title: "SLA Duration",
-            placeHolder: "slaDuration"
+            title: 'SLA Duration',
+            placeHolder: 'slaDuration',
         },
-    ]
+    ];
     // const availablePlaceholders = ["ticket", "customer", "status", "category"];
-    const [placeholder, setPlaceholder] = useState("");
+    const [placeholder, setPlaceholder] = useState('');
     const [custLoading, setCustLoading] = useState(false);
-    const [newTemplate, setNewTemplate] = useState({title: "", subject: "", text: "", type: ""});
+    const [newTemplate, setNewTemplate] = useState({ title: '', subject: '', text: '', type: '' });
 
     const insertPlaceholder = (i) => {
         const shortCode = `{${availablePlaceholders[i].placeHolder}}`;
         setNewTemplate({
             ...newTemplate,
-            text: newTemplate.text + " " + shortCode + " "
+            text: `${newTemplate.text} ${shortCode} `,
         });
-        setPlaceholder(" " + shortCode + " ");
+        setPlaceholder(` ${shortCode} `);
     };
 
     const handleChange = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setNewTemplate({
             ...newTemplate,
-            [name]: value
+            [name]: value,
         });
     };
 
-    const submitEmailTemplate = async() => {
+    const submitEmailTemplate = async () => {
         console.clear();
     };
 
     const history = useHistory();
 
     const redirectUser = () => {
-      history.push('/settings/notifications');
-    }
+        history.push('/settings/notifications');
+    };
 
     const handleSubmit = () => {
         setCustLoading(true);
@@ -84,34 +84,40 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
             title: newTemplate.title,
             subject: newTemplate.subject,
             body: newTemplate.text,
-            "type": newTemplate.type
+            type: newTemplate.type,
         };
-        addEmailTemplate(newEmailTemplate, 
+        addEmailTemplate(
+            newEmailTemplate,
             () => {
                 setCustLoading(false);
                 NotificationManager.success('Template created successfully', 'Success');
-            }, 
+            },
             (errMsg) => {
                 setCustLoading(false);
-                NotificationManager.error(errMsg, 'An error occured', 4000)
-            });
-    }
+                NotificationManager.error(errMsg, 'An error occured', 4000);
+            },
+        );
+    };
 
     return (
         <div className="new-email-template notification-settings">
-            {custLoading && <div className="cust-table-loader"><ScaleLoader loading={custLoading} color={"#006298"}/></div>}
+            {custLoading && (
+                <div className="cust-table-loader">
+                    <ScaleLoader loading={custLoading} color="#006298" />
+                </div>
+            )}
             <div className="card card-body bg-white border-0 p-5">
                 <div className="col-md-8">
                     <div id="mainContentHeader">
                         <h6 className="text-muted f-14">
                             <Link to="/settings">
                                 <span className="text-custom">Settings</span>
-                            </Link>{" "}
-                            <img src={RightArrow} alt="" className="img-fluid mx-2 me-3"/>
+                            </Link>{' '}
+                            <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
                             <Link to="/settings/notifications/">
-                                <span className="text-custom">Notifications Settings</span>{" "}
+                                <span className="text-custom">Notifications Settings</span>{' '}
                             </Link>
-                            <img src={RightArrow} alt="" className="img-fluid mx-2 me-3"/>
+                            <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
                             <span>Notification Template</span>
                         </h6>
                     </div>
@@ -127,8 +133,9 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                                     className="form-control form-control-sm"
                                     id="slaName"
                                     name="title"
-                                    value={newTemplate.title || ""}
-                                    onChange={handleChange}/>
+                                    value={newTemplate.title || ''}
+                                    onChange={handleChange}
+                                />
                             </div>
                             <div className="form-group mt-3">
                                 <label htmlFor="slaName" className="f-14 mb-1">
@@ -139,8 +146,9 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                                     className="form-control form-control-sm"
                                     id="slaName"
                                     name="subject"
-                                    value={newTemplate.subject || ""}
-                                    onChange={handleChange}/>
+                                    value={newTemplate.subject || ''}
+                                    onChange={handleChange}
+                                />
                             </div>
 
                             <div className="form-group mt-3">
@@ -151,10 +159,12 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                                     className="form-select form-select-sm f-14"
                                     id="type"
                                     name="type"
-                                    value={newTemplate.type || ""}
+                                    value={newTemplate.type || ''}
                                     onChange={handleChange}
                                 >
-                                    <option disabled selected>Select category</option>
+                                    <option disabled selected>
+                                        Select category
+                                    </option>
                                     <option value="statusAutoResponse">Status Auto Response</option>
                                     <option value="agentActivation">Agent Activation</option>
                                     <option value="customerActivation">Customer Activation</option>
@@ -178,13 +188,13 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                                 <EditorBox
                                     text={newTemplate.text}
                                     editorClassName="automation-editor"
-                                    textFormat={"plain"}
+                                    textFormat="plain"
                                     placeholder={placeholder}
                                     textParent={newTemplate}
                                     setPlaceholder={setPlaceholder}
                                     updateText={setNewTemplate}
                                 />
-                                   {/*  // updateText={setNewTemplate}
+                                {/*  // updateText={setNewTemplate}
                                    updateText={val => setNewTemplate((prevState) =>({
                                             ...prevState,
                                             body: val
@@ -197,9 +207,7 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
                                     // updateVal={actions.length} */}
                             </div>
                             <div className="text-end">
-                                <Link
-                                    to="/settings/notifications"
-                                    className="btn btn-sm bg-outline-custom cancel px-4">
+                                <Link to="/settings/notifications" className="btn btn-sm bg-outline-custom cancel px-4">
                                     Cancel
                                 </Link>
                                 <button className="btn btn-sm acx-btn-primary ms-2 px-4" onClick={handleSubmit}>
@@ -212,8 +220,8 @@ const NewEmailTemplate = ({addEmailTemplate}) => {
             </div>
         </div>
     );
-};
+}
 
-const mapStateToProps = (state, ownProps) => ({configs: state.config.configs});
+const mapStateToProps = (state, ownProps) => ({ configs: state.config.configs });
 
-export default connect(mapStateToProps, {addEmailTemplate})(NewEmailTemplate);
+export default connect(mapStateToProps, { addEmailTemplate })(NewEmailTemplate);
