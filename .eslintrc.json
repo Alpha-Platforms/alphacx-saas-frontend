@@ -28,7 +28,10 @@
             {
               "endOfLine": "auto"
             }
-          ]
+        ],
+        "no-nested-ternary": "off",
+        "no-useless-escape": "off",
+        "react/nodanger": "off"
     },
     "parser": "@babel/eslint-parser"
 }

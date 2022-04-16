@@ -1,59 +1,41 @@
+/* eslint-disable react/no-danger */
+/* eslint-disable react/prop-types */
 // @ts-nocheck
 import React, { useState, useEffect, useContext, Fragment } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
-//
 import remarkGfm from 'remark-gfm';
 import ReactMarkdown from 'react-markdown';
 import { useLocation } from 'react-router-dom';
-//
-// import { Modal } from "react-responsive-modal";
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Modal from 'react-bootstrap/Modal';
 import Spinner from 'react-bootstrap/Spinner';
-import PinIcon from '../../../assets/icons/pin.svg';
-import MessageList from './messageList';
-import searchIcon from '../../../assets/imgF/Search.png';
-import NoChatFound from './noChatFound';
-import './conversation.css';
-// import SingleChatOpen from "./sigleChat";
-import { getSubdomain, getTenantDomain, httpGetMain, httpPostMain, httpPatchMain } from '../../../helpers/httpMethods';
-import InitialsFromString from '../../helpers/InitialsFromString';
-import { makeStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
+import YouTube from 'react-youtube';
+import RSelect from 'react-select/creatable';
+import moment from 'moment';
+import ScaleLoader from 'react-spinners/ScaleLoader';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import { NotificationManager } from 'react-notifications';
-import ScaleLoader from 'react-spinners/ScaleLoader';
-// bootstrap components
+import { EditorState, convertToRaw, ContentState } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import draftToHtml from 'draftjs-to-html';
+import { capitalize } from '@material-ui/core';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-//
-import { EditorState, convertToRaw, ContentState } from 'draft-js';
-import { Editor } from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import draftToHtml from 'draftjs-to-html';
-// import TextAlignLeft from "../../../assets/imgF/TextAlignLeft.png";
-// import TextAlignCenter from "../../../assets/imgF/TextAlignCenter.png";
-// import TextAlignRight from "../../../assets/imgF/TextAlignRight.png";
-import { SocketDataContext } from "../../../context/socket";
-import {
-  StarIconTicket,
-  SendMsgIcon,
-  ExpandChat,
-} from "../../../assets/images/svgs";
-// import {config} from '../../../config/keys';
-import { dateFormater } from "../../helpers/dateFormater";
-import { capitalize } from "@material-ui/core";
-import moment from "moment";
-import RSelect from "react-select/creatable"; 
-import YouTube from 'react-youtube';
-import capitalizeFirstLetter from "../../helpers/capitalizeFirstLetter";
+import { NotificationManager } from 'react-notifications';
+import MessageList from './messageList';
+import searchIcon from '../../../assets/imgF/Search.png';
+import NoChatFound from './noChatFound';
+import { httpGetMain, httpPostMain, httpPatchMain } from '../../../helpers/httpMethods';
+import InitialsFromString from '../../helpers/InitialsFromString';
+import { SocketDataContext } from '../../../context/socket';
+import { StarIconTicket, SendMsgIcon } from '../../../assets/images/svgs';
+import { dateFormater } from '../../helpers/dateFormater';
+import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter';
 import UserProfile from './userProfile';
 import LinkImg from '../../../assets/imgF/insertLink.png';
 import TextUnderline from '../../../assets/imgF/TextUnderline.png';
@@ -62,18 +44,19 @@ import boldB from '../../../assets/imgF/boldB.png';
 import Smiley from '../../../assets/imgF/Smiley.png';
 import editorImg from '../../../assets/imgF/editorImg.png';
 import BackArrow from '../../../assets/imgF/back.png';
-import { UserDataContext } from '../../../context/userContext';
 import { multiIncludes } from '../../../helper';
 import { accessControlFunctions } from '../../../config/accessControlList';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import './conversation.css';
 
 function YouTubeGetID(url) {
     let ID = '';
-    url = url.replace(/(>|<)/gi, '').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
-    if (url[2] !== undefined) {
-        ID = url[2].split(/[^0-9a-z_-]/i);
-        ID = ID[0];
+    const newUrl = url.replace(/(>|<)/gi, '').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+    if (newUrl[2] !== undefined) {
+        const [id] = newUrl[2].split(/[^0-9a-z_-]/i);
+        ID = id;
     } else {
-        ID = url;
+        ID = newUrl;
     }
     return ID;
 }
@@ -83,20 +66,7 @@ const youtubeRegex =
 
 function Conversation({ user }) {
     const initialState = EditorState.createWithContent(ContentState.createFromText(''));
-    const [userMsg, setUsermsg] = useState([
-        {
-            img: '',
-            fullName: '',
-            msg: '',
-            date: '',
-            msgCount: '',
-            badge1: '',
-        },
-    ]);
-
     const { AppSocket } = useContext(SocketDataContext);
-    // const { loading } = useContext(UserDataContext);
-    // const [loadSelectedMsg, setloadSelectedMsg] = useState("");
     const [tickets, setTickets] = useState([]);
     const [filterTicketsState, setFilterTicketsState] = useState([]);
     const [ticket, setTicket] = useState([]);
@@ -111,15 +81,12 @@ function Conversation({ user }) {
     const [firstTimeLoad, setfirstTimeLoad] = useState(true);
     const [MessageSenderId, setMessageSenderId] = useState('');
     const [ticketId, setTicketId] = useState('');
-    // const [showUserProfile, setshowUserProfile] = useState(false);
-    //
     const [ReplyTicket, setReplyTicket] = useState({
         plainText: '',
         richText: '',
     });
     const [replyType, setReplyType] = useState('reply');
     const [mentions, setMentions] = useState([]);
-    //
     const [Agents, setAgents] = useState([]);
     const [channels, setChannels] = useState([]);
     const [Statuses, setStatuses] = useState([]);
@@ -129,7 +96,7 @@ function Conversation({ user }) {
         col2: '',
     });
     const [openSaveTicketModal, setOpenSaveTicketModal] = useState(false);
-    const [filterChat, setFilterChat] = useState('system');
+    const [filterChat] = useState('system');
     const [saveTicket, setSaveTicket] = useState({
         customer: '',
         subject: '',
@@ -139,7 +106,6 @@ function Conversation({ user }) {
     const [sendingReply, setSendingReply] = useState(false);
     const [msgHistory, setMsgHistory] = useState([]);
     const [wsTickets, setWsTickets] = useState([]);
-    const [categoryUpdate, setCategoryUpdate] = useState('');
     const [noResponseFound, setNoResponseFound] = useState(true);
     const [TodayMsges, setTodayMsges] = useState([]);
     const [YesterdayMsges, setYesterdayMsges] = useState([]);
@@ -241,10 +207,12 @@ function Conversation({ user }) {
             // BE ERROR: data is undefined when a singel ticket is clicked in conversation
             // console.log('ws_ticket => ', data?.data?.tickets);
             // console.log('ws_ticket socket data => ', data);
-            data?.data?.tickets && setTickets(data?.data?.tickets);
-            data?.data?.tickets && setWsTickets(data?.data?.tickets);
+            if (data?.data?.tickets) {
+                setTickets(data?.data?.tickets);
+                setWsTickets(data?.data?.tickets);
+            }
         });
-        AppSocket.io.on(`ws_ticket`, (data) => {
+        AppSocket.io.on(`ws_ticket`, () => {
             const ticketsData = { channel: filterTicketsState === '' ? 'ALL' : filterTicketsState, per_page: 100 };
             AppSocket.io.emit(`ws_tickets`, ticketsData);
         });
@@ -282,7 +250,6 @@ function Conversation({ user }) {
         });
 
         // return () => { AppSocket.io.disconnect() };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ticketId]);
     //
     useEffect(() => {
@@ -354,29 +321,21 @@ function Conversation({ user }) {
         setCustomFieldIsSet(true);
         setCustomFieldsGroup([...groupedCustomFields]);
     }, [ticket]);
-    //
-    useEffect(() => {
-        // causes livechat incoming replies to show twices as it component renders on ticketId change
-        // ticket id is needed on change to call the message socket event else no reply from customers comes in,
-        // it probably comes twice because
-        // console.log("ticket id", ticketId);
-    }, []);
-
-    // const getSocketItems = () =>{
-    // }
 
     const sortMsges = (msgs) => {
         const resultToday = msgs.filter((observation) => {
-            return moment(observation.created_at).format('DD/MM/YYYY') == moment(new Date()).format('DD/MM/YYYY');
+            return moment(observation.created_at).format('DD/MM/YYYY') === moment(new Date()).format('DD/MM/YYYY');
         });
         const resultYesterday = msgs.filter((observation) => {
-            return moment(observation.created_at).format('DD/MM/YYYY') == moment().add(-1, 'days').format('DD/MM/YYYY');
+            return (
+                moment(observation.created_at).format('DD/MM/YYYY') === moment().add(-1, 'days').format('DD/MM/YYYY')
+            );
         });
 
         const resultAchive = msgs.filter((observation) => {
             return (
-                moment(observation.created_at).format('DD/MM/YYYY') != moment().add(-1, 'days').format('DD/MM/YYYY') &&
-                moment(observation.created_at).format('DD/MM/YYYY') != moment(new Date()).format('DD/MM/YYYY')
+                moment(observation.created_at).format('DD/MM/YYYY') !== moment().add(-1, 'days').format('DD/MM/YYYY') &&
+                moment(observation.created_at).format('DD/MM/YYYY') !== moment(new Date()).format('DD/MM/YYYY')
             );
         });
 
@@ -390,36 +349,13 @@ function Conversation({ user }) {
         setTimeStampsMsg(resultTimestamps);
     };
 
-    // const changeLoadingTickets = (value) =>{
-    //   setLoadingTicks(value);
-    // }
 
     const onEditorStateChange = (editorState) => {
-        // handleDescriptionValidation(editorState);
-
         const plainText = editorState.getCurrentContent().getPlainText();
         const richText = draftToHtml(convertToRaw(editorState.getCurrentContent()));
         setEditorState(editorState);
         setReplyTicket({ plainText, richText });
-        // console.log(">>>>", richText, richText);
     };
-
-    //
-    const onReplyTypeChange = (event) => {
-        setReplyType(event.target.value);
-    };
-
-    // const getTickets = async () => {
-    //   const res = await httpGetMain("tickets?channel=whatsapp");
-    //   if (res?.status === "success") {
-    //     setLoadingTicks(true);
-    //     setTickets(res?.data?.tickets);
-    //     setLoadingTicks(false);
-    //   } else {
-    //     setLoadingTicks(false);
-    //     return NotificationManager.error(res?.er?.message, "Error", 4000);
-    //   }
-    // };
 
     const filterTicket = (value, type) => {
         if (type === 'channel') {
@@ -466,7 +402,7 @@ function Conversation({ user }) {
         }
 
         let plainTextContent = reply.plainText;
-        if (reply.plainText == '\n \n') {
+        if (reply.plainText === '\n \n') {
             plainTextContent = editorUploadImg;
         }
 
@@ -491,7 +427,9 @@ function Conversation({ user }) {
         const res = await httpPostMain(`tickets/${singleTicketFullInfo.id}/replies`, data);
 
         if (res?.status === 'success') {
-            ticket[0]?.channel !== 'livechat' && setMsgHistory((item) => [...item, replyData]);
+            if (ticket[0]?.channel !== 'livechat') {
+                setMsgHistory((item) => [...item, replyData]);
+            }
             scrollPosSendMsgList();
             setEditorState(initialState);
             setEditorUploadImg('');
@@ -503,19 +441,6 @@ function Conversation({ user }) {
             // setLoadingTicks(false);
             setSendingReply(false);
             return NotificationManager.error(res?.er?.message, 'Error', 4000);
-        }
-    };
-
-    const ReloadloadSingleMessage = async () => {
-        setLoadSingleTicket(true);
-
-        const res = await httpGetMain(`tickets/${MessageSenderId}`);
-        if (res.status === 'success') {
-            setTicket(res?.data);
-            setLoadSingleTicket(false);
-        } else {
-            setLoadSingleTicket(false);
-            return NotificationManager.error(res.er.message, 'Error', 4000);
         }
     };
 
@@ -541,21 +466,18 @@ function Conversation({ user }) {
         const res = await httpGetMain(`categories`);
         if (res.status === 'success') {
             setCategory(res?.data?.categories);
-        } else {
         }
     };
     const getPriorities = async () => {
         const res = await httpGetMain(`priorities`);
         if (res.status === 'success') {
             setPriority(res?.data?.priorities);
-        } else {
         }
     };
     const getTags = async () => {
         const res = await httpGetMain(`tags`);
         if (res.status === 'success') {
             setTags(res?.data?.tags_names.tags);
-        } else {
         }
     };
     const getAgents = async () => {
@@ -578,14 +500,14 @@ function Conversation({ user }) {
     const updateTicketStatus = async () => {
         if (RSTicketStage.label === 'Closed') {
             // get url and replace domain
-            const base_url = window.location.origin;
-            const complete_url = `${base_url}/feedback/${localStorage.domain}/${ticket[0].id}/${ticket[0].customer.id}`;
-            const rich_text = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation : <a target='_blank' href='${complete_url}'>Click here to rate us</a></p>`;
-            const ReplyTicket = {
-                richText: rich_text,
-                plainText: `Your ticket has been marked as closed, Please click on the link to rate this conversation ${complete_url}`,
+            const baseUrl = window.location.origin;
+            const completedUrl = `${baseUrl}/feedback/${localStorage.domain}/${ticket[0].id}/${ticket[0].customer.id}`;
+            const richText = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation : <a target='_blank' href='${completedUrl}'>Click here to rate us</a></p>`;
+            const reply = {
+                richText,
+                plainText: `Your ticket has been marked as closed, Please click on the link to rate this conversation ${completedUrl}`,
             };
-            replyTicket(ReplyTicket, 'attachment', 'reply');
+            replyTicket(reply, 'attachment', 'reply');
         }
         const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, { statusId: RSTicketStage.value });
         if (statusRes.status === 'success') {
@@ -653,7 +575,7 @@ function Conversation({ user }) {
     const getUser = async (id) => {
         const res = await httpGetMain(`users/${id}`);
         setfirstTimeLoad(false);
-        if (res.status == 'success') {
+        if (res.status === 'success') {
             setUserInfo(res.data);
         } else {
             setLoadSingleTicket(false);
@@ -729,7 +651,7 @@ function Conversation({ user }) {
         return { __html: data };
     }
     const checkRes = () => {
-        const a = ticket?.map((data) => {
+        ticket?.forEach((data) => {
             if (data.history.length === 0) {
                 setNoResponseFound(true);
             } else {
@@ -738,14 +660,13 @@ function Conversation({ user }) {
         });
     };
 
-    const _uploadImageCallBack = (file) => {
+    const uploadImageCallBack = (file) => {
         // long story short, every time we upload an image, we
         // need to save it to the state so we can get it's data
         // later when we decide what to do with it.
 
         // Make sure you have a uploadImages: [] as your default state
         const uploadedImages = [];
-        const imgUrl = '';
 
         const imageObject = {
             file,
@@ -773,13 +694,13 @@ function Conversation({ user }) {
                     setEditorUploadImg(ReplyTicket.plainText + editorUploadImg + res.data?.url);
                     resolve({ data: { link: res.data?.url } });
                 })
-                .catch((err) => {
+                .catch(() => {
                     NotificationManager.error('Photo could not be uploaded', 'Error');
                 });
         });
     };
 
-    function scollPosSendMsg(e) {
+    function scollPosSendMsg() {
         window.location.href = '#msgListTop';
     }
 
@@ -807,7 +728,7 @@ function Conversation({ user }) {
                                     >
                                         {/* <MenuItem value=""></MenuItem> */}
                                         <MenuItem value="All" label="All">
-                                            Channels
+                                            Channbels
                                         </MenuItem>
                                         {channels?.map((data) => {
                                             return (
@@ -1061,8 +982,8 @@ function Conversation({ user }) {
                                                                                         />
                                                                                     </div>
                                                                                 ) : null}
-                                                                                {ticket[0]?.channel == 'email' &&
-                                                                                data?.user?.role == 'Customer' ? (
+                                                                                {ticket[0]?.channel === 'email' &&
+                                                                                data?.user?.role === 'Customer' ? (
                                                                                     <div className="message-text-content">
                                                                                         <ReactMarkdown
                                                                                             children={data?.response
@@ -1177,8 +1098,8 @@ function Conversation({ user }) {
                                                                                     />
                                                                                 </div>
                                                                             ) : null}
-                                                                            {ticket[0]?.channel == 'email' &&
-                                                                            data?.user?.role == 'Customer' ? (
+                                                                            {ticket[0]?.channel === 'email' &&
+                                                                            data?.user?.role === 'Customer' ? (
                                                                                 <div className="message-text-content">
                                                                                     <ReactMarkdown
                                                                                         children={data?.response
@@ -1383,7 +1304,7 @@ function Conversation({ user }) {
                                                         urlEnabled: true,
                                                         uploadEnabled: true,
                                                         alignmentEnabled: 'LEFT',
-                                                        uploadCallback: _uploadImageCallBack,
+                                                        uploadCallback: uploadImageCallBack,
                                                         previewImage: true,
                                                         inputAccept:
                                                             'image/gif,image/jpeg,image/jpg,image/png,image/svg',
@@ -1840,7 +1761,7 @@ function Conversation({ user }) {
     );
 }
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
     user: state.userAuth.user,
 });
 export default connect(mapStateToProps)(Conversation);
