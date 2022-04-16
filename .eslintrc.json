@@ -13,7 +13,11 @@
             "jsx": true
         },
         "ecmaVersion": 6,
-        "sourceType": "module"
+        "sourceType": "module",
+        "requireConfigFile": false,
+        "babelOptions": {
+            "presets": ["@babel/preset-react"]
+        }
     },
     "plugins": [
         "react"

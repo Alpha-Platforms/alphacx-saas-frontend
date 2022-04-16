@@ -738,32 +738,6 @@ function Conversation({ user }) {
         });
     };
 
-    // const _uploadImageCallBack = (file) => {
-    //   // long story short, every time we upload an image, we
-    //   // need to save it to the state so we can get it's data
-    //   // later when we decide what to do with it.
-
-    //   // Make sure you have a uploadImages: [] as your default state
-    //   let uploadedImages = uploadImgS;
-
-    //   const imageObject = {
-    //     file: file,
-    //     localSrc: URL.createObjectURL(file),
-    //   };
-
-    //   setUploadIMGs(imageObject);
-
-    //   uploadImgS(uploadedImages);
-
-    //   // We need to return a promise with the image src
-    //   // the img src we will use here will be what's needed
-    //   // to preview it in the browser. This will be different than what
-    //   // we will see in the index.md file we generate.
-    //   return new Promise((resolve, reject) => {
-    //     resolve({ data: { link: imageObject.localSrc } });
-    //   });
-    // };
-
     const _uploadImageCallBack = (file) => {
         // long story short, every time we upload an image, we
         // need to save it to the state so we can get it's data
@@ -785,7 +759,7 @@ function Conversation({ user }) {
         // the img src we will use here will be what's needed
         // to preview it in the browser. This will be different than what
         // we will see in the index.md file we generate.
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             const data = new FormData();
 
             data.append('file', file);
