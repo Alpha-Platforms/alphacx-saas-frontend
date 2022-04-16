@@ -31,7 +31,9 @@
         ],
         "no-nested-ternary": "off",
         "no-useless-escape": "off",
-        "react/nodanger": "off"
+        "no-prototype-builtins": "off",
+        "no-underscore-dangle": "off",
+        "no-unused-expressions": "off"
     },
     "parser": "@babel/eslint-parser"
 }

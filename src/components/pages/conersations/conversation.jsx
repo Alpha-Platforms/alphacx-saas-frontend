@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/no-danger */
 /* eslint-disable react/prop-types */
 // @ts-nocheck
@@ -79,22 +80,22 @@ function Conversation({ user }) {
     const [Tags, setTags] = useState([]);
     const [editorState, setEditorState] = useState(initialState);
     const [firstTimeLoad, setfirstTimeLoad] = useState(true);
-    const [MessageSenderId, setMessageSenderId] = useState('');
+    // const [MessageSenderId, setMessageSenderId] = useState('');
     const [ticketId, setTicketId] = useState('');
     const [ReplyTicket, setReplyTicket] = useState({
         plainText: '',
         richText: '',
     });
     const [replyType, setReplyType] = useState('reply');
-    const [mentions, setMentions] = useState([]);
+    // const [mentions, setMentions] = useState([]);
     const [Agents, setAgents] = useState([]);
     const [channels, setChannels] = useState([]);
     const [Statuses, setStatuses] = useState([]);
     const [UserInfo, setUserInfo] = useState({});
-    const [ChatCol, setChatCol] = useState({
-        col1: '',
-        col2: '',
-    });
+    // const [ChatCol, setChatCol] = useState({
+    //     col1: '',
+    //     col2: '',
+    // });
     const [openSaveTicketModal, setOpenSaveTicketModal] = useState(false);
     const [filterChat] = useState('system');
     const [saveTicket, setSaveTicket] = useState({
@@ -106,20 +107,15 @@ function Conversation({ user }) {
     const [sendingReply, setSendingReply] = useState(false);
     const [msgHistory, setMsgHistory] = useState([]);
     const [wsTickets, setWsTickets] = useState([]);
-    const [noResponseFound, setNoResponseFound] = useState(true);
     const [TodayMsges, setTodayMsges] = useState([]);
     const [YesterdayMsges, setYesterdayMsges] = useState([]);
     const [AchiveMsges, setAchiveMsges] = useState([]);
-    const [timeStampsMsg, setTimeStampsMsg] = useState([]);
-    const [ShowAchive, setShowAchive] = useState(false);
     const [channel, setChannel] = useState('All');
     const [status, setstatus] = useState('All');
     const [activeChat, setActiveChat] = useState('');
-    const [updateTickStatusS, setupdateTickStatusS] = useState('');
 
     /* UPDATE MODAL FORM VALUES */
     const [processing, setProcessing] = useState(false);
-    const [RSCustomerName, setRSCustomerName] = useState('');
     const [RSTicketTags, setRSTicketTags] = useState([]);
     const [RSTicketAssignee, setRSTicketAssignee] = useState([]);
     const [RSTicketCategory, setRSTicketCategory] = useState('');
@@ -128,8 +124,6 @@ function Conversation({ user }) {
     const [RSTicketPriority, setRSTicketPriority] = useState('');
     const [RSTicketRemarks, setRSTicketRemarks] = useState('');
     const [RSTicketCustomFields, setRSTicketCustomFields] = useState(null);
-    // const [RSTicketAssignedAgent, setRSTicketAssignedAgent] = useState("");
-
     // ticket custom fields
     const [customFieldConfig, setCustomFieldConfig] = useState([]);
     const [customFieldsGroup, setCustomFieldsGroup] = useState([]);
@@ -140,8 +134,8 @@ function Conversation({ user }) {
     // scroll position
     const [scrollPosition, setScrollPosition] = useState('#lastMsg');
     const [editorUploadImg, setEditorUploadImg] = useState('');
-    //
     const location = useLocation();
+
     // youtube player options
     const youtubePlayerOptions = {
         height: '180',
@@ -152,17 +146,145 @@ function Conversation({ user }) {
         },
     };
 
+    /**
+     *
+     *
+     * @param {*} [e=scrollPosition] # + id of element you want to scroll to
+     */
+    function scrollPosSendMsgList(e = scrollPosition) {
+        window.location.href = e;
+    }
+
+    const getUser = async (id) => {
+        const res = await httpGetMain(`users/${id}`);
+        setfirstTimeLoad(false);
+        if (res.status === 'success') {
+            return setUserInfo(res.data);
+        }
+        setLoadSingleTicket(false);
+        return NotificationManager.error(res.er.message, 'Error', 4000);
+    };
+
+    const loadSingleMessage = async ({ id, customer, assignee, subject }) => {
+        setAchiveMsges([]);
+        getUser(customer.id);
+        setLoadSingleTicket(true);
+        setSenderInfo({ customer, subject });
+        setTicket([]);
+        // setChatCol({ col1: 'hideColOne', col2: 'showColTwo' });
+        // setMessageSenderId(id);
+        // setSingleTicketFullInfo();
+        const swData = { assigneeId: assignee?.id || '', userId: customer?.id || '' };
+        // customer.id && AppSocket.io.leave(`${customer.id}${assignee.id}`);
+        AppSocket.io.emit('join_private', swData);
+        const res = await httpGetMain(`tickets/${id}`);
+        setfirstTimeLoad(false);
+        if (res.status === 'success') {
+            setTicket(res?.data);
+            setMsgHistory(res?.data[0]?.history);
+            // sortMsges(res?.data[0]?.history);
+            // setMessageSenderId(res?.data[0]?.id);
+            setSaveTicket({
+                ...saveTicket,
+                customer: '',
+                subject: res?.data[0].subject,
+                description: res?.data[0].history,
+            });
+            const ticketsData = { channel: filterTicketsState === '' ? 'ALL' : filterTicketsState, per_page: 100 };
+            AppSocket.io.emit(`ws_tickets`, ticketsData);
+
+            setLoadSingleTicket(false);
+            return scrollPosSendMsgList(scrollPosition);
+        }
+        setLoadSingleTicket(false);
+        return NotificationManager.error(res.er.message, 'Error', 4000);
+    };
+
+    // get custom field config
+    const getCustomFieldConfig = async () => {
+        const res = await httpGetMain(`custom-field?belongsTo=ticket`);
+        if (res.status === 'success') {
+            setCustomFieldConfig(res?.data);
+        }
+    };
+
+    const getStatuses = async () => {
+        const res = await httpGetMain(`statuses`);
+        if (res.status === 'success') {
+            return setStatuses(res?.data?.statuses);
+        }
+        return NotificationManager.error(res.er.message, 'Error', 4000);
+    };
+
+    const getCategories = async () => {
+        const res = await httpGetMain(`categories`);
+        if (res.status === 'success') {
+            setCategory(res?.data?.categories);
+        }
+    };
+    const getPriorities = async () => {
+        const res = await httpGetMain(`priorities`);
+        if (res.status === 'success') {
+            setPriority(res?.data?.priorities);
+        }
+    };
+    const getTags = async () => {
+        const res = await httpGetMain(`tags`);
+        if (res.status === 'success') {
+            setTags(res?.data?.tags_names.tags);
+        }
+    };
+    const getAgents = async () => {
+        const res = await httpGetMain(`agents`);
+        if (res.status === 'success') {
+            return setAgents(res?.data);
+        }
+        return NotificationManager.error(res.er.message, 'Error', 4000);
+    };
+    const getChannels = async () => {
+        const res = await httpGetMain(`channel`);
+        if (res.status === 'success') {
+            return setChannels(res?.data?.channels);
+        }
+        return NotificationManager.error(res.er.message, 'Error', 4000);
+    };
+
+    const sortMsges = (msgs) => {
+        const resultToday = msgs.filter((observation) => {
+            return moment(observation.created_at).format('DD/MM/YYYY') === moment(new Date()).format('DD/MM/YYYY');
+        });
+        const resultYesterday = msgs.filter((observation) => {
+            return (
+                moment(observation.created_at).format('DD/MM/YYYY') === moment().add(-1, 'days').format('DD/MM/YYYY')
+            );
+        });
+
+        const resultAchive = msgs.filter((observation) => {
+            return (
+                moment(observation.created_at).format('DD/MM/YYYY') !== moment().add(-1, 'days').format('DD/MM/YYYY') &&
+                moment(observation.created_at).format('DD/MM/YYYY') !== moment(new Date()).format('DD/MM/YYYY')
+            );
+        });
+
+        setTodayMsges(resultToday);
+        setYesterdayMsges(resultYesterday);
+        setAchiveMsges(resultAchive);
+    };
+
+    function scollPosSendMsg() {
+        window.location.href = '#msgListTop';
+    }
+
     useEffect(() => {
         if (!multiIncludes(accessControlFunctions[user?.role], ['reply_conv'])) {
             setReplyType('note');
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    //
+
     useEffect(() => {
         // ticketHistoryId
         if (tickets?.length > 0 && location.state && location.state.hasOwnProperty('ticketId')) {
-            const currentTicket = tickets?.find((ticket) => ticket.id == location.state.ticketId);
+            const currentTicket = tickets?.find((item) => item.id === location.state.ticketId);
             setSingleTicketFullInfo(currentTicket);
             loadSingleMessage(currentTicket);
             setTicketId(location.state.ticketId);
@@ -171,12 +293,7 @@ function Conversation({ user }) {
             scrollPosSendMsgList(`#${location.state.ticketHistoryId}`);
         }
     }, [tickets, location]);
-    //
-    // useEffect(() => {
-    //   scrollPosSendMsgList(scrollPosition);
-    // }, [scrollPosition]);
 
-    //
     useEffect(() => {
         if (addHist) {
             setTimeout(() => {
@@ -186,7 +303,6 @@ function Conversation({ user }) {
     }, [addHist]);
 
     useEffect(() => {
-        // getTickets();
         sortMsges(msgHistory);
     }, [msgHistory]);
 
@@ -221,7 +337,6 @@ function Conversation({ user }) {
         };
     }, []);
 
-    //
     useEffect(() => {
         AppSocket.io.on(`message`, (data) => {
             if (data?.channel === 'livechat' || data.id === ticketId) {
@@ -253,7 +368,6 @@ function Conversation({ user }) {
     }, [ticketId]);
     //
     useEffect(() => {
-        // setLoadingTicks(true);
         setTickets(wsTickets);
         setLoadingTicks(false);
     }, [wsTickets]);
@@ -261,16 +375,16 @@ function Conversation({ user }) {
     useEffect(() => {
         setCustomFieldIsSet(false);
         setRSTicketCustomFields(null);
-        const ticket_custom_fields = ticket[0]?.custom_fields || {};
-        const merged_custom_user_fields = customFieldConfig.map((element) => {
-            if (ticket_custom_fields.hasOwnProperty(element.id)) {
+        const ticketCustomFields = ticket[0]?.custom_fields || {};
+        const mergedCustomUserFields = customFieldConfig.map((element) => {
+            if (ticketCustomFields.hasOwnProperty(element.id)) {
                 setRSTicketCustomFields((prevState) => ({
                     ...prevState,
-                    [element.id]: ticket_custom_fields[element.id],
+                    [element.id]: ticketCustomFields[element.id],
                 }));
                 return {
                     ...element,
-                    value: ticket_custom_fields[element.id],
+                    value: ticketCustomFields[element.id],
                 };
             }
             return {
@@ -279,8 +393,7 @@ function Conversation({ user }) {
             };
         });
         const groupedCustomFields = Object.entries(
-            //
-            merged_custom_user_fields.reduce(
+            mergedCustomUserFields.reduce(
                 (
                     acc,
                     {
@@ -322,34 +435,6 @@ function Conversation({ user }) {
         setCustomFieldsGroup([...groupedCustomFields]);
     }, [ticket]);
 
-    const sortMsges = (msgs) => {
-        const resultToday = msgs.filter((observation) => {
-            return moment(observation.created_at).format('DD/MM/YYYY') === moment(new Date()).format('DD/MM/YYYY');
-        });
-        const resultYesterday = msgs.filter((observation) => {
-            return (
-                moment(observation.created_at).format('DD/MM/YYYY') === moment().add(-1, 'days').format('DD/MM/YYYY')
-            );
-        });
-
-        const resultAchive = msgs.filter((observation) => {
-            return (
-                moment(observation.created_at).format('DD/MM/YYYY') !== moment().add(-1, 'days').format('DD/MM/YYYY') &&
-                moment(observation.created_at).format('DD/MM/YYYY') !== moment(new Date()).format('DD/MM/YYYY')
-            );
-        });
-
-        const resultTimestamps = msgs.filter((observation) => {
-            return observation?.response.includes('Ticket Stage has been marked') || observation?.statusAction;
-        });
-
-        setTodayMsges(resultToday);
-        setYesterdayMsges(resultYesterday);
-        setAchiveMsges(resultAchive);
-        setTimeStampsMsg(resultTimestamps);
-    };
-
-
     const onEditorStateChange = (editorState) => {
         const plainText = editorState.getCurrentContent().getPlainText();
         const richText = draftToHtml(convertToRaw(editorState.getCurrentContent()));
@@ -378,27 +463,27 @@ function Conversation({ user }) {
         scollPosSendMsg();
         // console.log(singleTicketFullInfo);
         const filterSentTick = tickets.filter((tic) => {
-            return tic.id == singleTicketFullInfo.id;
+            return tic.id === singleTicketFullInfo.id;
         });
         const filterSentTickAll = tickets.filter((tic) => {
             return tic.id != singleTicketFullInfo.id;
         });
         setActiveChat(ticketId);
-        filterSentTick[0].__meta__.history_count = ++filterSentTick[0].__meta__.history_count;
+        filterSentTick[0].__meta__.history_count += 1;
         filterSentTick[0].updated_at = new Date();
         const newTicket = [...filterSentTick, ...filterSentTickAll];
         setTickets(newTicket);
         let agentMentions = [];
         if (replyType === 'note') {
             // reply.richText
-            agentMentions = Agents.reduce(function (result, object) {
+            agentMentions = Agents.reduce((result, object) => {
                 if (reply.richText.includes(object?.id)) {
                     result.push(object.id);
                 }
                 return result;
             }, []);
 
-            setMentions(() => [...agentMentions]);
+            // setMentions(() => [...agentMentions]);
         }
 
         let plainTextContent = reply.plainText;
@@ -444,59 +529,6 @@ function Conversation({ user }) {
         }
     };
 
-    // get custom field config
-    const getCustomFieldConfig = async () => {
-        const res = await httpGetMain(`custom-field?belongsTo=ticket`);
-        if (res.status === 'success') {
-            setCustomFieldConfig(res?.data);
-        }
-    };
-
-    const getStatuses = async () => {
-        const res = await httpGetMain(`statuses`);
-        if (res.status === 'success') {
-            // getTickets();
-            setStatuses(res?.data?.statuses);
-        } else {
-            return NotificationManager.error(res.er.message, 'Error', 4000);
-        }
-    };
-
-    const getCategories = async () => {
-        const res = await httpGetMain(`categories`);
-        if (res.status === 'success') {
-            setCategory(res?.data?.categories);
-        }
-    };
-    const getPriorities = async () => {
-        const res = await httpGetMain(`priorities`);
-        if (res.status === 'success') {
-            setPriority(res?.data?.priorities);
-        }
-    };
-    const getTags = async () => {
-        const res = await httpGetMain(`tags`);
-        if (res.status === 'success') {
-            setTags(res?.data?.tags_names.tags);
-        }
-    };
-    const getAgents = async () => {
-        const res = await httpGetMain(`agents`);
-        if (res.status === 'success') {
-            setAgents(res?.data);
-        } else {
-            return NotificationManager.error(res.er.message, 'Error', 4000);
-        }
-    };
-    const getChannels = async () => {
-        const res = await httpGetMain(`channel`);
-        if (res.status === 'success') {
-            setChannels(res?.data?.channels);
-        } else {
-            return NotificationManager.error(res.er.message, 'Error', 4000);
-        }
-    };
-
     const updateTicketStatus = async () => {
         if (RSTicketStage.label === 'Closed') {
             // get url and replace domain
@@ -531,65 +563,28 @@ function Conversation({ user }) {
         return NotificationManager.error(statusRes.er.message, 'Error', 4000);
     };
 
-    //
-    const loadSingleMessage = async ({ id, customer, assignee, subject }) => {
-        setShowAchive(false);
-        setAchiveMsges([]);
-        getUser(customer.id);
-        setChatCol({ col1: 'hideColOne', col2: 'showColTwo' });
-        setSenderInfo({ customer, subject });
-        setMessageSenderId(id);
-        setLoadSingleTicket(true);
-        // setSingleTicketFullInfo();
-        setTicket([]);
-        const swData = { assigneeId: assignee?.id || '', userId: customer?.id || '' };
-        // customer.id && AppSocket.io.leave(`${customer.id}${assignee.id}`);
-        AppSocket.io.emit('join_private', swData);
-        //
-        const res = await httpGetMain(`tickets/${id}`);
-        setfirstTimeLoad(false);
-        if (res.status === 'success') {
-            setTicket(res?.data);
-            setMsgHistory(res?.data[0]?.history);
-            // sortMsges(res?.data[0]?.history);
-            setMessageSenderId(res?.data[0]?.id);
-            setSaveTicket({
-                ...saveTicket,
-                customer: '',
-                subject: res?.data[0].subject,
-                description: res?.data[0].history,
-            });
-            //
-            const ticketsData = { channel: filterTicketsState === '' ? 'ALL' : filterTicketsState, per_page: 100 };
-            AppSocket.io.emit(`ws_tickets`, ticketsData);
-
-            setLoadSingleTicket(false);
-            checkRes();
-            scrollPosSendMsgList(scrollPosition);
-        } else {
-            setLoadSingleTicket(false);
-            return NotificationManager.error(res.er.message, 'Error', 4000);
-        }
-    };
-
-    const getUser = async (id) => {
-        const res = await httpGetMain(`users/${id}`);
-        setfirstTimeLoad(false);
-        if (res.status === 'success') {
-            setUserInfo(res.data);
-        } else {
-            setLoadSingleTicket(false);
-            return NotificationManager.error(res.er.message, 'Error', 4000);
-        }
-    };
-
-    //
     const handleCustomFieldChange = (e) => {
         const { name, value } = e.target;
         setRSTicketCustomFields((prevState) => ({
             ...prevState,
             [name]: value,
         }));
+    };
+
+    const closeSaveTicketModal = () => {
+        setOpenSaveTicketModal(!openSaveTicketModal);
+        setSaveTicket({
+            customer: '',
+            subject: '',
+            description: [],
+            category: '',
+        });
+        setRSTicketPriority(ticket[0].priority.id);
+        setRSTicketCategory(ticket[0].category.id);
+        setRSTicketSubject(ticket[0].subject);
+        setRSTicketRemarks(ticket[0].description);
+        setRSTicketTags(ticket[0].tags);
+        setRSTicketAssignee(ticket[0]?.assignee?.id);
     };
 
     const updateTicket = async (status) => {
@@ -623,42 +618,17 @@ function Conversation({ user }) {
                 setTicket(ticketRes?.data);
             } else {
                 setLoadSingleTicket(false);
-                return NotificationManager.info('please refresh your page to see changes');
+                NotificationManager.info('please refresh your page to see changes');
             }
         } else {
             setProcessing(false);
-            return NotificationManager.error(res.er.message, 'Error', 4000);
+            NotificationManager.error(res.er.message, 'Error', 4000);
         }
-    };
-
-    const closeSaveTicketModal = () => {
-        setOpenSaveTicketModal(!openSaveTicketModal);
-        setSaveTicket({
-            customer: '',
-            subject: '',
-            description: [],
-            category: '',
-        });
-        setRSTicketPriority(ticket[0].priority.id);
-        setRSTicketCategory(ticket[0].category.id);
-        setRSTicketSubject(ticket[0].subject);
-        setRSTicketRemarks(ticket[0].description);
-        setRSTicketTags(ticket[0].tags);
-        setRSTicketAssignee(ticket[0]?.assignee?.id);
     };
 
     function createMarkup(data) {
         return { __html: data };
     }
-    const checkRes = () => {
-        ticket?.forEach((data) => {
-            if (data.history.length === 0) {
-                setNoResponseFound(true);
-            } else {
-                setNoResponseFound(false);
-            }
-        });
-    };
 
     const uploadImageCallBack = (file) => {
         // long story short, every time we upload an image, we
@@ -691,7 +661,7 @@ function Conversation({ user }) {
                 .then(async (res) => {
                     // console.log(res.data?.url);
                     imageObject.src = res.data?.url;
-                    setEditorUploadImg(ReplyTicket.plainText + editorUploadImg + res.data?.url);
+                    setEditorUploadImg(ReplyTicket.plainText + editorUploadImg + (res.data?.url || ''));
                     resolve({ data: { link: res.data?.url } });
                 })
                 .catch(() => {
@@ -700,13 +670,6 @@ function Conversation({ user }) {
         });
     };
 
-    function scollPosSendMsg() {
-        window.location.href = '#msgListTop';
-    }
-
-    function scrollPosSendMsgList(e = scrollPosition) {
-        window.location.href = e;
-    }
 
     return (
         <>
@@ -728,7 +691,7 @@ function Conversation({ user }) {
                                     >
                                         {/* <MenuItem value=""></MenuItem> */}
                                         <MenuItem value="All" label="All">
-                                            Channbels
+                                            Channels
                                         </MenuItem>
                                         {channels?.map((data) => {
                                             return (
@@ -828,7 +791,7 @@ function Conversation({ user }) {
                                   !SenderInfo?.customer?.lastname
                                       ? ''
                                       : capitalize(
-                                            SenderInfo?.customer?.lastname == 'default'
+                                            SenderInfo?.customer?.lastname === 'default'
                                                 ? ''
                                                 : SenderInfo?.customer?.lastname,
                                         )
@@ -851,7 +814,7 @@ function Conversation({ user }) {
                                 </div>
                                 {/* CHAT SECTION */}
                                 <div className="conversationsMain">
-                                    {AchiveMsges.length == 0 ? (
+                                    {AchiveMsges.length === 0 ? (
                                         ''
                                     ) : (
                                         <div className="achivemsagesSection">
@@ -870,10 +833,10 @@ function Conversation({ user }) {
 
                                         <div className="chatDateHeaderTitle">
                                             <span>
-                                                {moment(ticket[0].created_at).format('DD/MM/YYYY') ==
+                                                {moment(ticket[0].created_at).format('DD/MM/YYYY') ===
                                                 moment(new Date()).format('DD/MM/YYYY')
                                                     ? 'Today'
-                                                    : moment(ticket[0].created_at).format('DD/MM/YYYY') ==
+                                                    : moment(ticket[0].created_at).format('DD/MM/YYYY') ===
                                                       moment().add(-1, 'days').format('DD/MM/YYYY')
                                                     ? 'Yesterday'
                                                     : moment(ticket[0].created_at).fromNow()}
@@ -923,8 +886,8 @@ function Conversation({ user }) {
                                                     ) : (
                                                         <div
                                                             className={`message ${
-                                                                data?.user?.role == 'Customer' ? '' : 'message-out'
-                                                            } ${data?.type == 'note' ? 'message-note' : ''}`}
+                                                                data?.user?.role === 'Customer' ? '' : 'message-out'
+                                                            } ${data?.type === 'note' ? 'message-note' : ''}`}
                                                             id={`${data?.id}`}
                                                         >
                                                             <div className="message-container">
@@ -942,7 +905,7 @@ function Conversation({ user }) {
                                                                                 0,
                                                                                 1,
                                                                             )}${
-                                                                                data?.user?.lastname == 'default'
+                                                                                data?.user?.lastname === 'default'
                                                                                     ? ''
                                                                                     : data?.user?.lastname?.slice(0, 1)
                                                                             }`}</p>
@@ -961,7 +924,7 @@ function Conversation({ user }) {
                                                                                               )
                                                                                             : ''
                                                                                     } ${
-                                                                                        data?.user?.lastname ==
+                                                                                        data?.user?.lastname ===
                                                                                         'default'
                                                                                             ? ''
                                                                                             : data?.user?.lastname
@@ -986,11 +949,12 @@ function Conversation({ user }) {
                                                                                 data?.user?.role === 'Customer' ? (
                                                                                     <div className="message-text-content">
                                                                                         <ReactMarkdown
-                                                                                            children={data?.response
+                                                                                            remarkPlugins={[remarkGfm]}
+                                                                                        >
+                                                                                            {data?.response
                                                                                                 .replace('<p>', '')
                                                                                                 .replace('</p>', '')}
-                                                                                            remarkPlugins={[remarkGfm]}
-                                                                                        />
+                                                                                        </ReactMarkdown>
                                                                                     </div>
                                                                                 ) : (
                                                                                     <div
@@ -1017,7 +981,7 @@ function Conversation({ user }) {
                                         })}
                                     </div>
 
-                                    {YesterdayMsges.length == 0 ? (
+                                    {YesterdayMsges.length === 0 ? (
                                         ''
                                     ) : (
                                         <div className="chatDateHeader">
@@ -1040,8 +1004,8 @@ function Conversation({ user }) {
                                                 ) : (
                                                     <div
                                                         className={`message ${
-                                                            data?.user?.role == 'Customer' ? '' : 'message-out'
-                                                        } ${data?.type == 'note' ? 'message-note' : ''}`}
+                                                            data?.user?.role === 'Customer' ? '' : 'message-out'
+                                                        } ${data?.type === 'note' ? 'message-note' : ''}`}
                                                         id={`${data?.id}`}
                                                     >
                                                         <div className="message-container">
@@ -1059,7 +1023,7 @@ function Conversation({ user }) {
                                                                             0,
                                                                             1,
                                                                         )}${
-                                                                            data?.user?.lastname == 'default'
+                                                                            data?.user?.lastname === 'default'
                                                                                 ? ''
                                                                                 : data?.user?.lastname?.slice(0, 1)
                                                                         }`}</p>
@@ -1078,7 +1042,7 @@ function Conversation({ user }) {
                                                                                           )
                                                                                         : ''
                                                                                 } ${
-                                                                                    data?.user?.lastname == 'default'
+                                                                                    data?.user?.lastname === 'default'
                                                                                         ? ''
                                                                                         : data?.user?.lastname
                                                                                 }`}
@@ -1102,11 +1066,12 @@ function Conversation({ user }) {
                                                                             data?.user?.role === 'Customer' ? (
                                                                                 <div className="message-text-content">
                                                                                     <ReactMarkdown
-                                                                                        children={data?.response
+                                                                                        remarkPlugins={[remarkGfm]}
+                                                                                    >
+                                                                                        {data?.response
                                                                                             .replace('<p>', '')
                                                                                             .replace('</p>', '')}
-                                                                                        remarkPlugins={[remarkGfm]}
-                                                                                    />
+                                                                                    </ReactMarkdown>
                                                                                 </div>
                                                                             ) : (
                                                                                 <div
@@ -1132,7 +1097,7 @@ function Conversation({ user }) {
                                         );
                                     })}
 
-                                    {TodayMsges.length == 0 ? (
+                                    {TodayMsges.length === 0 ? (
                                         ''
                                     ) : (
                                         <div className="chatDateHeader">
@@ -1155,8 +1120,8 @@ function Conversation({ user }) {
                                                 ) : (
                                                     <div
                                                         className={`message ${
-                                                            data?.user?.role == 'Customer' ? '' : 'message-out'
-                                                        } ${data?.type == 'note' ? 'message-note' : ''}`}
+                                                            data?.user?.role === 'Customer' ? '' : 'message-out'
+                                                        } ${data?.type === 'note' ? 'message-note' : ''}`}
                                                         id={`${data?.id}`}
                                                     >
                                                         <div className="message-container">
@@ -1174,7 +1139,7 @@ function Conversation({ user }) {
                                                                             0,
                                                                             1,
                                                                         )}${
-                                                                            data?.user?.lastname == 'default'
+                                                                            data?.user?.lastname === 'default'
                                                                                 ? ''
                                                                                 : data?.user?.lastname?.slice(0, 1)
                                                                         }`}</p>
@@ -1193,7 +1158,7 @@ function Conversation({ user }) {
                                                                                           )
                                                                                         : ''
                                                                                 } ${
-                                                                                    data?.user?.lastname == 'default'
+                                                                                    data?.user?.lastname === 'default'
                                                                                         ? ''
                                                                                         : data?.user?.lastname
                                                                                 }`}
@@ -1213,15 +1178,16 @@ function Conversation({ user }) {
                                                                                     />
                                                                                 </div>
                                                                             ) : null}
-                                                                            {ticket[0]?.channel == 'email' &&
-                                                                            data?.user?.role == 'Customer' ? (
+                                                                            {ticket[0]?.channel === 'email' &&
+                                                                            data?.user?.role === 'Customer' ? (
                                                                                 <div className="message-text-content">
                                                                                     <ReactMarkdown
-                                                                                        children={data?.response
+                                                                                        remarkPlugins={[remarkGfm]}
+                                                                                    >
+                                                                                        {data?.response
                                                                                             .replace('<p>', '')
                                                                                             .replace('</p>', '')}
-                                                                                        remarkPlugins={[remarkGfm]}
-                                                                                    />
+                                                                                    </ReactMarkdown>
                                                                                 </div>
                                                                             ) : (
                                                                                 <div
@@ -1254,10 +1220,7 @@ function Conversation({ user }) {
                                 ) : (
                                     <div className="conversationCommentBox">
                                         <div className="single-chat-ckeditor position-relative">
-                                            <div
-                                                className="showBackArrowOnMobile"
-                                                onClick={() => setChatCol({ col1: 'showColOne', col2: 'hideColTwo' })}
-                                            >
+                                            <div className="showBackArrowOnMobile">
                                                 <img src={BackArrow} alt="" />
                                             </div>
                                             <div className="pb-1 pt-0 bg-white border border-bottom-0 acx-rounded-top-10 w-100 overflow-hidden">
@@ -1372,6 +1335,7 @@ function Conversation({ user }) {
 
                                             <div className="sendMsg">
                                                 <button
+                                                    type="button"
                                                     disabled={
                                                         sendingReply ? true : ticket[0].status.status === 'Closed'
                                                     }
@@ -1447,7 +1411,7 @@ function Conversation({ user }) {
                                         className="rselectfield"
                                         style={{ fontSize: '12px' }}
                                         isClearable={false}
-                                        onChange={(newValue, actionMeta) => {
+                                        onChange={(newValue) => {
                                             setRSTicketCategory(newValue.value);
                                         }}
                                         defaultValue={{
@@ -1467,7 +1431,7 @@ function Conversation({ user }) {
                                     <RSelect
                                         className="rselectfield"
                                         style={{ fontSize: '12px' }}
-                                        onChange={(newValue, actionMeta) => {
+                                        onChange={(newValue) => {
                                             setRSTicketStage((prevState) => ({
                                                 ...prevState,
                                                 value: newValue.value,
@@ -1493,7 +1457,7 @@ function Conversation({ user }) {
                                     <RSelect
                                         className="rselectfield"
                                         style={{ fontSize: '12px' }}
-                                        onChange={(newValue, actionMeta) => {
+                                        onChange={(newValue) => {
                                             setRSTicketPriority(newValue.value);
                                         }}
                                         isClearable={false}
@@ -1547,7 +1511,7 @@ function Conversation({ user }) {
                                                 className="rselectfield"
                                                 closeMenuOnSelect
                                                 menuPlacement="top"
-                                                onChange={(newValue, actionMeta) => {
+                                                onChange={(newValue) => {
                                                     setRSTicketAssignee(newValue.value);
                                                 }}
                                                 defaultValue={{
@@ -1567,7 +1531,7 @@ function Conversation({ user }) {
                                         </div>
                                     </div>
                                     <div className="mt-4 mb-4">
-                                        <label htmlFor="">Tags</label>
+                                        <label>Tags</label>
                                         <RSelect
                                             className="rselectfield"
                                             closeMenuOnSelect={false}
@@ -1602,7 +1566,7 @@ function Conversation({ user }) {
                                                 return (
                                                     <Fragment key={sections.section}>
                                                         {sections.fields.map((data) => {
-                                                            if (data?.field_type == 'select') {
+                                                            if (data?.field_type === 'select') {
                                                                 return (
                                                                     <Col md={6} key={data.id}>
                                                                         <Form.Group className="mb-3 form-group acx-form-group">
@@ -1660,10 +1624,10 @@ function Conversation({ user }) {
                                                                                           data?.multiple_options
                                                                                         ? data?.value
                                                                                               .split(',')
-                                                                                              .map((data) => {
+                                                                                              .map((val) => {
                                                                                                   return {
-                                                                                                      value: data,
-                                                                                                      label: data,
+                                                                                                      value: val,
+                                                                                                      label: val,
                                                                                                   };
                                                                                               })
                                                                                         : null
