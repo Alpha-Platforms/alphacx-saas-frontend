@@ -1,4 +1,3 @@
-/* eslint-disable */
 // @ts-nocheck
 import React, { useState, useEffect, useContext, Fragment } from 'react';
 import { connect } from 'react-redux';
@@ -6,7 +5,7 @@ import axios from 'axios';
 //
 import remarkGfm from 'remark-gfm';
 import ReactMarkdown from 'react-markdown';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom';
 //
 // import { Modal } from "react-responsive-modal";
 import Tab from 'react-bootstrap/Tab';
@@ -82,7 +81,7 @@ function YouTubeGetID(url) {
 const youtubeRegex =
     /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/;
 
-function Conversation({ user, ...props }) {
+function Conversation({ user }) {
     const initialState = EditorState.createWithContent(ContentState.createFromText(''));
     const [userMsg, setUsermsg] = useState([
         {
