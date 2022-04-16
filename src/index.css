@@ -41,9 +41,9 @@ body {
   background-color: #f6f9fb;
 }
 
-body > iframe:last-of-type {
+/* body > iframe:last-of-type {
   display: none;
-}
+} */
 
 select {
   -webkit-appearance: none !important;

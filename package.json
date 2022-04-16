@@ -84,6 +84,9 @@
     "format": "eslint ./src/**/*.{js,jsx,ts,tsx} --fix",
     "prettier-format": "prettier --config .prettierrc './src/**/*.{js,jsx,ts,tsx}' --write"
   },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
