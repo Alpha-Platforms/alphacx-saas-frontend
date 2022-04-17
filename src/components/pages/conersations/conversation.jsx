@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/no-danger */
 /* eslint-disable react/prop-types */
@@ -151,9 +152,9 @@ function Conversation({ user }) {
      *
      * @param {*} [e=scrollPosition] # + id of element you want to scroll to
      */
-    function scrollPosSendMsgList(e = scrollPosition) {
+    const scrollPosSendMsgList = (e = scrollPosition) => {
         window.location.href = e;
-    }
+    };
 
     const getUser = async (id) => {
         const res = await httpGetMain(`users/${id}`);
@@ -339,7 +340,7 @@ function Conversation({ user }) {
 
     useEffect(() => {
         AppSocket.io.on(`message`, (data) => {
-            if (data?.channel === 'livechat' || data.id === ticketId) {
+            if (data.id === ticketId) {
                 const msg = {
                     created_at: data.created_at,
                     id: data?.history?.id || data?.id,
@@ -435,10 +436,10 @@ function Conversation({ user }) {
         setCustomFieldsGroup([...groupedCustomFields]);
     }, [ticket]);
 
-    const onEditorStateChange = (editorState) => {
-        const plainText = editorState.getCurrentContent().getPlainText();
-        const richText = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-        setEditorState(editorState);
+    const onEditorStateChange = (newEditorState) => {
+        const plainText = newEditorState.getCurrentContent().getPlainText();
+        const richText = draftToHtml(convertToRaw(newEditorState.getCurrentContent()));
+        setEditorState(newEditorState);
         setReplyTicket({ plainText, richText });
     };
 
@@ -466,7 +467,7 @@ function Conversation({ user }) {
             return tic.id === singleTicketFullInfo.id;
         });
         const filterSentTickAll = tickets.filter((tic) => {
-            return tic.id != singleTicketFullInfo.id;
+            return tic.id !== singleTicketFullInfo.id;
         });
         setActiveChat(ticketId);
         filterSentTick[0].__meta__.history_count += 1;
@@ -521,12 +522,10 @@ function Conversation({ user }) {
             setReplyTicket({ plainText: '', richText: '' });
             // emit ws_tickets event on reply
             const channelData = { channel: filterTicketsState === '' ? 'ALL' : filterTicketsState, per_page: 100 };
-            AppSocket.io.emit(`ws_tickets`, channelData);
-        } else {
-            // setLoadingTicks(false);
-            setSendingReply(false);
-            return NotificationManager.error(res?.er?.message, 'Error', 4000);
+            return AppSocket.io.emit(`ws_tickets`, channelData);
         }
+        setSendingReply(false);
+        return NotificationManager.error(res?.er?.message, 'Error', 4000);
     };
 
     const updateTicketStatus = async () => {
@@ -587,11 +586,7 @@ function Conversation({ user }) {
         setRSTicketAssignee(ticket[0]?.assignee?.id);
     };
 
-    const updateTicket = async (status) => {
-        setProcessing(true);
-        if (status === '') {
-            return;
-        }
+    const updateTicket = async () => {
         const data = {
             priorityId: RSTicketPriority,
             categoryId: RSTicketCategory,
@@ -611,8 +606,8 @@ function Conversation({ user }) {
             closeSaveTicketModal();
             NotificationManager.success('Ticket successfully updated', 'Success');
             AppSocket.createConnection();
-            const data = { channel: filterTicketsState === '' ? 'ALL' : filterTicketsState, per_page: 100 };
-            AppSocket.io.emit(`ws_tickets`, data);
+            const socketData = { channel: filterTicketsState === '' ? 'ALL' : filterTicketsState, per_page: 100 };
+            AppSocket.io.emit(`ws_tickets`, socketData);
             const ticketRes = await httpGetMain(`tickets/${ticket[0].id}`);
             if (ticketRes.status === 'success') {
                 setTicket(ticketRes?.data);
@@ -669,7 +664,6 @@ function Conversation({ user }) {
                 });
         });
     };
-
 
     return (
         <>
@@ -802,12 +796,13 @@ function Conversation({ user }) {
                                                 </p>
                                             </div>
                                             {multiIncludes(accessControlFunctions[user?.role], ['edit_ticket']) && (
-                                                <div
+                                                <button
+                                                    type="button"
                                                     className="custormChatHeaderInfoAction"
                                                     onClick={closeSaveTicketModal}
                                                 >
                                                     <StarIconTicket /> Update
-                                                </div>
+                                                </button>
                                             )}
                                         </div>
                                     </div>
@@ -1494,13 +1489,14 @@ function Conversation({ user }) {
                                 />
                             </Form.Group>
 
-                            <p
+                            <button
+                                type="button"
+                                style={{ outline: 'none' }}
                                 className="btn mt-2 mb-0 p-0 text-start"
-                                role="button"
                                 onClick={() => setIsAdditionalOptionVisible((v) => !v)}
                             >
                                 Additional Options
-                            </p>
+                            </button>
 
                             {isAdditionalOptionVisible && (
                                 <div className="additional-options">

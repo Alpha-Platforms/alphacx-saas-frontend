@@ -41,9 +41,10 @@ body {
   background-color: #f6f9fb;
 }
 
-/* body > iframe:last-of-type {
-  display: none;
-} */
+/* disable iframe injected by react-scripts */
+body > iframe:not([src])[style] {
+  display: none !important;
+}
 
 select {
   -webkit-appearance: none !important;
