@@ -92,7 +92,7 @@ import LiveChatSettings from './components/pages/settings/livechatsettings/LiveC
 
 import SmsSettings from "components/pages/settings/smssettings/smsSettings";
 import ReportsFilter from "components/pages/reports/ReportsFilter";
-
+import FBIntegration from "./components/pages/settings/social_integrations/fb.jsx";
 
 const mapStateToProps = (state, ownProps) => ({isUserAuthenticated: state.userAuth.isUserAuthenticated});
 
@@ -399,7 +399,12 @@ const SiteRouter = connect(mapStateToProps, {
                                 exact
                                 path="/settings/ratings"
                                 pageName="Ratings and Feedback"
-                                component={RatingsSettings}/> {/*......settings pages end */}
+                                component={RatingsSettings}/>
+                            <Route
+                                exact
+                                path="/integrations"
+                                pageName="Ratings and Feedback"
+                                component={FBIntegration}/> {/*......settings pages end */}
 
                             <Route>
                                 <div
