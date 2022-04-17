@@ -18,6 +18,7 @@ import MailLightIcon from "../../../../assets/icons/mail_light.svg";
 
 import { NotificationManager } from "react-notifications";
 import { connect } from "react-redux";
+import { hostname } from "os";
 
 function SocialIntegrations({configs}) {
 
@@ -52,6 +53,18 @@ function SocialIntegrations({configs}) {
       return NotificationManager.error(res.er.message, "Error", 4000);
     }
   };
+
+  const goToFB = (e) => {
+    e.preventDefault()
+    const subdomain = "app"
+    const path = "integrations"
+    const params = `domain=${window.localStorage.getItem('domain')}&id=${window.localStorage.getItem('token')}&uid=${window.localStorage.getItem('refreshToken')}`
+    const protocol = window.location.protocol
+    const hostname = window.location.hostname.split(".").slice(1).join(".")
+    const port = window.location.port
+    window.location.href = `${protocol}//${subdomain}.${hostname}:${port}/${path}?${params}`;
+
+  }
 
   return (
     <div className="social-integration-page">
@@ -91,7 +104,9 @@ function SocialIntegrations({configs}) {
       </div>
       <div className="col-md-4 col-sm-6 col-12">
         <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
-          <Link to="/settings/integrations/facebook" className="d-block cursor text-decoration-none">
+          {/* <Link to="/settings/integrations/facebook" className="d-block cursor text-decoration-none"> */}
+          
+          <a href="#" className="d-block cursor text-decoration-none" role="button" onClick={goToFB}>
             <div className="d-flex align-items-start p-md-4 p-3">
               <div className="w">
                 <img src={facebookImg} alt="" width="38"/>
@@ -108,7 +123,7 @@ function SocialIntegrations({configs}) {
                 </div>
               </div>
             </div>
-          </Link>
+          </a>
         </div>
       </div>
       
