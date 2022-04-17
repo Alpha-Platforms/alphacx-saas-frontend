@@ -321,9 +321,7 @@ function Conversation({ user }) {
     useEffect(() => {
         AppSocket.createConnection();
         AppSocket.io.on(`ws_tickets`, (data) => {
-            // BE ERROR: data is undefined when a singel ticket is clicked in conversation
-            // console.log('ws_ticket => ', data?.data?.tickets);
-            // console.log('ws_ticket socket data => ', data);
+            console.log('%cconversation.jsx line:324 socket data', 'color: white; background-color: #007acc;', data);
             if (data?.data?.tickets) {
                 setTickets(data?.data?.tickets);
                 setWsTickets(data?.data?.tickets);
@@ -364,8 +362,6 @@ function Conversation({ user }) {
             AppSocket.io.emit(`ws_tickets`, ticketsData);
             scrollPosSendMsgList();
         });
-
-        // return () => { AppSocket.io.disconnect() };
     }, [ticketId]);
     //
     useEffect(() => {

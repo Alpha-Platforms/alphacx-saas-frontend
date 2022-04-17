@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -12,12 +13,12 @@ function Index({ user, isUserAuthenticated, ...props }) {
     const [onboardingSplashScreen, setOnboardingSplashScreen] = useState(false);
     const hideOnboardingModal = () => setOpen(false);
     const openOnboardingModal = () => setOpen(true);
-    console.log('%cindex.jsx line:15 location.pathname', 'color: white; background-color: #007acc;', location.pathname);
+    // console.log('%cindex.jsx line:15 location.pathname', 'color: white; background-color: #007acc;', location.pathname);
     useEffect(() => {
         if (isUserAuthenticated) {
             setOpen(false);
             const onboardingSplash = localStorage.getItem('onboardingSplash');
-            if (!onboardingSplash || onboardingSplash != 'hide') {
+            if (!onboardingSplash || onboardingSplash !== 'hide') {
                 setOnboardingSplashScreen(true);
             } else {
                 setOnboardingSplashScreen(false);
@@ -38,7 +39,9 @@ function Index({ user, isUserAuthenticated, ...props }) {
                 </div>
 
                 <Sidebar browserRouter={props.browserRouter} currentRoute={props.currentRoute} />
-                <section className={`app-container ${location.pathname === '/conversation' ? 'convo-page' : ''}`}>{props.children}</section>
+                <section className={`app-container ${location.pathname === '/conversation' ? 'convo-page' : ''}`}>
+                    {props.children}
+                </section>
             </div>
             {onboardingSplashScreen ? (
                 <OnboardingModal open={open} hide={hideOnboardingModal} setOpen={openOnboardingModal} />

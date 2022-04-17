@@ -18,9 +18,9 @@
 }
 
 .app-container.convo-page {
-  height: calc(100vh - 90px) !important;
-  overflow: hidden;
-  margin-top: 0.5rem;
+  /* height: calc(100vh - 90px) !important; */
+  /* overflow: hidden; */
+  /* margin-top: 0.5rem; */
 }
 
 .navbar-wrap {
