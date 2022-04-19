@@ -70,7 +70,7 @@ function Conversation({ user }) {
     const initialState = EditorState.createWithContent(ContentState.createFromText(''));
     const { AppSocket } = useContext(SocketDataContext);
     const [tickets, setTickets] = useState([]);
-    const [filterTicketsState, setFilterTicketsState] = useState([]);
+    const [filterTicketsState, setFilterTicketsState] = useState('');
     const [ticket, setTicket] = useState([]);
     const [loadingTicks, setLoadingTicks] = useState(true);
     const [loadSingleTicket, setLoadSingleTicket] = useState(false);
@@ -191,7 +191,7 @@ function Conversation({ user }) {
                 subject: res?.data[0].subject,
                 description: res?.data[0].history,
             });
-            const ticketsData = { channel: filterTicketsState === '' ? 'ALL' : filterTicketsState, per_page: 100 };
+            const ticketsData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
             AppSocket.io.emit(`ws_tickets`, ticketsData);
 
             setLoadSingleTicket(false);
@@ -321,14 +321,15 @@ function Conversation({ user }) {
     useEffect(() => {
         AppSocket.createConnection();
         AppSocket.io.on(`ws_tickets`, (data) => {
-            console.log('%cconversation.jsx line:324 socket data', 'color: white; background-color: #007acc;', data);
-            if (data?.data?.tickets) {
+            console.log('%cconversation.jsx line:324 data', 'color: white; background-color: #007acc;', data);
+            if (data?.data?.tickets && data?.data?.tickets?.length !== 0) {
                 setTickets(data?.data?.tickets);
                 setWsTickets(data?.data?.tickets);
             }
         });
-        AppSocket.io.on(`ws_ticket`, () => {
-            const ticketsData = { channel: filterTicketsState === '' ? 'ALL' : filterTicketsState, per_page: 100 };
+        AppSocket.io.on(`ws_ticket`, (data) => {
+            console.log('%cconversation.jsx line:331 data', 'color: white; background-color: #007acc;', data);
+            const ticketsData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
             AppSocket.io.emit(`ws_tickets`, ticketsData);
         });
         return () => {
@@ -338,6 +339,7 @@ function Conversation({ user }) {
 
     useEffect(() => {
         AppSocket.io.on(`message`, (data) => {
+            console.log('%cconversation.jsx line:342 data', 'color: white; background-color: #007acc;', data);
             if (data.id === ticketId) {
                 const msg = {
                     created_at: data.created_at,
@@ -358,7 +360,7 @@ function Conversation({ user }) {
                     setMsgHistory((item) => [...item, msg]);
                 }
             }
-            const ticketsData = { channel: filterTicketsState === '' ? 'ALL' : filterTicketsState, per_page: 100 };
+            const ticketsData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
             AppSocket.io.emit(`ws_tickets`, ticketsData);
             scrollPosSendMsgList();
         });
@@ -517,7 +519,7 @@ function Conversation({ user }) {
             setEditorUploadImg('');
             setReplyTicket({ plainText: '', richText: '' });
             // emit ws_tickets event on reply
-            const channelData = { channel: filterTicketsState === '' ? 'ALL' : filterTicketsState, per_page: 100 };
+            const channelData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
             return AppSocket.io.emit(`ws_tickets`, channelData);
         }
         setSendingReply(false);
@@ -550,7 +552,7 @@ function Conversation({ user }) {
 
             setMsgHistory((item) => [...item, replyData]);
 
-            const channelData = { channel: filterTicketsState === '' ? 'ALL' : filterTicketsState, per_page: 100 };
+            const channelData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
             AppSocket.io.emit(`ws_tickets`, channelData);
 
             return NotificationManager.success('Ticket status successfully updated', 'Success');
@@ -602,7 +604,7 @@ function Conversation({ user }) {
             closeSaveTicketModal();
             NotificationManager.success('Ticket successfully updated', 'Success');
             AppSocket.createConnection();
-            const socketData = { channel: filterTicketsState === '' ? 'ALL' : filterTicketsState, per_page: 100 };
+            const socketData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
             AppSocket.io.emit(`ws_tickets`, socketData);
             const ticketRes = await httpGetMain(`tickets/${ticket[0].id}`);
             if (ticketRes.status === 'success') {
