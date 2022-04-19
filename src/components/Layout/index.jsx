@@ -1,62 +1,58 @@
-import React, { useEffect, useContext, useState } from "react";
-import {connect} from 'react-redux';
-// 
-import Sidebar from "./Sidebar";
-import Navbar from "./Navbar.jsx";
+/* eslint-disable react/prop-types */
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import Sidebar from './Sidebar';
+import Navbar from './Navbar';
 import OnboardingModal from './components/OnboardingModal';
-import { LayoutContext } from "../../context/layoutContext";
-// 
-import "./layout.css";
+import './layout.css';
 
-const Index = ({user, isUserAuthenticated, ...props}) => {
-  // 
-  const [open, setOpen] = useState(false);
-  const [onboardingSplashScreen, setOnboardingSplashScreen] = useState(false)
-  // 
-  const hideOnboardingModal = () => setOpen(false);
-  const openOnboardingModal = () => setOpen(true);
-  // 
-  useEffect(() => {
+function Index({ user, isUserAuthenticated, ...props }) {
+    const location = useLocation();
+    const [open, setOpen] = useState(false);
+    const [onboardingSplashScreen, setOnboardingSplashScreen] = useState(false);
+    const hideOnboardingModal = () => setOpen(false);
+    const openOnboardingModal = () => setOpen(true);
+    // console.log('%cindex.jsx line:15 location.pathname', 'color: white; background-color: #007acc;', location.pathname);
+    useEffect(() => {
         if (isUserAuthenticated) {
-          setOpen(false);
-          let onboardingSplash = localStorage.getItem("onboardingSplash")
-          if(!onboardingSplash || onboardingSplash != "hide"){
-              setOnboardingSplashScreen(true);
-          }else{
-              setOnboardingSplashScreen(false);
-          }
+            setOpen(false);
+            const onboardingSplash = localStorage.getItem('onboardingSplash');
+            if (!onboardingSplash || onboardingSplash !== 'hide') {
+                setOnboardingSplashScreen(true);
+            } else {
+                setOnboardingSplashScreen(false);
+            }
         }
-  }, [isUserAuthenticated]);
+    }, [isUserAuthenticated]);
 
-  return (
-    <React.Fragment>
-      <div className="general-wrapper">
-        <div id="hideNav">
-          <Navbar
-            browserRouter={props.browserRouter}
-            routeType={props.routeType}
-            fullProps={props.fullProps}
-            pageName={props.pageName}
-          />
-        </div>
+    return (
+        <>
+            <div className="general-wrapper">
+                <div id="hideNav">
+                    <Navbar
+                        browserRouter={props.browserRouter}
+                        routeType={props.routeType}
+                        fullProps={props.fullProps}
+                        pageName={props.pageName}
+                    />
+                </div>
 
-        <Sidebar
-          browserRouter={props.browserRouter}
-          currentRoute={props.currentRoute}
-        />
-        <section className="app-container">{props.children}</section>
-      </div>
-      {onboardingSplashScreen ? 
-        <OnboardingModal open={open} hide={hideOnboardingModal} setOpen={openOnboardingModal} />
-        : null
-      }
-    </React.Fragment>
-  );
+                <Sidebar browserRouter={props.browserRouter} currentRoute={props.currentRoute} />
+                <section className={`app-container ${location.pathname === '/conversation' ? 'convo-page' : ''}`}>
+                    {props.children}
+                </section>
+            </div>
+            {onboardingSplashScreen ? (
+                <OnboardingModal open={open} hide={hideOnboardingModal} setOpen={openOnboardingModal} />
+            ) : null}
+        </>
+    );
 }
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
     user: state.userAuth.user,
-    isUserAuthenticated: state.userAuth.isUserAuthenticated
+    isUserAuthenticated: state.userAuth.isUserAuthenticated,
 });
 
 export default connect(mapStateToProps, null)(Index);

@@ -1,11 +1,6 @@
-
-
-const ArticleCatForm = () => {
-
-    return (<div>
-
-    </div>)
+/* eslint-disable */
+function ArticleCatForm() {
+    return <div />;
 }
 
-
-export default ArticleCatForm
+export default ArticleCatForm;

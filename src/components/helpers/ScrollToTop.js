@@ -1,11 +1,17 @@
-import {useEffect} from "react";
-import {useLocation} from "react-router-dom";
-import {setCurrentTicketLoading} from '../../reduxstore/actions/ticketActions';
-import {setCurrentCustomerLoading} from './../../reduxstore/actions/customerActions';
-import {connect} from 'react-redux';
+/* eslint-disable */
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { setCurrentTicketLoading } from '../../reduxstore/actions/ticketActions';
+import { setCurrentCustomerLoading } from '../../reduxstore/actions/customerActions';
 
-const ScrollToTop = ({isCurrentTicketLoaded, setCurrentTicketLoading, isCurrentCustomerLoaded, setCurrentCustomerLoading}) => {
-    const {pathname} = useLocation();
+function ScrollToTop({
+    isCurrentTicketLoaded,
+    setCurrentTicketLoading,
+    isCurrentCustomerLoaded,
+    setCurrentCustomerLoading,
+}) {
+    const { pathname } = useLocation();
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -25,6 +31,9 @@ const ScrollToTop = ({isCurrentTicketLoaded, setCurrentTicketLoading, isCurrentC
     return null;
 }
 
-const mapStateToProps = (state, ownProps) => ({isCurrentTicketLoaded: state.ticket.isCurrentTicketLoaded, isCurrentCustomerLoaded: state.customer.isCurrentCustomerLoaded});
+const mapStateToProps = (state, ownProps) => ({
+    isCurrentTicketLoaded: state.ticket.isCurrentTicketLoaded,
+    isCurrentCustomerLoaded: state.customer.isCurrentCustomerLoaded,
+});
 
-export default connect(mapStateToProps, {setCurrentTicketLoading, setCurrentCustomerLoading})(ScrollToTop);
+export default connect(mapStateToProps, { setCurrentTicketLoading, setCurrentCustomerLoading })(ScrollToTop);

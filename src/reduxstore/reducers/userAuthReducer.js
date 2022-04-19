@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as types from '../types';
 
 const initialState = {
@@ -5,11 +6,11 @@ const initialState = {
     userToken: JSON.parse(localStorage.getItem('user'))?.token,
     user: null,
     isUserLoading: true,
-    isUserAuthenticated: false
-}
+    isUserAuthenticated: false,
+};
 
 const userAuthReducer = (state = initialState, action) => {
-    switch(action.type) {
+    switch (action.type) {
         case types.USER_LOADED:
             return {
                 ...state,
@@ -17,11 +18,11 @@ const userAuthReducer = (state = initialState, action) => {
                 isUserLoading: false,
                 isUserLoaded: true,
                 user: action.payload?.user,
-                userToken: action.payload?.token
+                userToken: action.payload?.token,
             };
         default:
             return state;
     }
-}
+};
 
 export default userAuthReducer;

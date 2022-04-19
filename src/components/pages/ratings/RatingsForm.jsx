@@ -1,51 +1,52 @@
-import React, { useEffect, useState, Fragment } from "react";
-import { Link } from "react-router-dom";
-import { NotificationManager } from "react-notifications";
-import {Modal} from 'react-responsive-modal';
-// 
+/* eslint-disable */
+import React, { useEffect, useState, Fragment } from 'react';
+import { Link, useLocation, useParams } from 'react-router-dom';
+import { NotificationManager } from 'react-notifications';
+import { Modal } from 'react-responsive-modal';
+//
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import Button  from 'react-bootstrap/Button';
-import Spinner  from 'react-bootstrap/Spinner';
-import Image  from 'react-bootstrap/Image';
-// 
+import Button from 'react-bootstrap/Button';
+import Spinner from 'react-bootstrap/Spinner';
+import Image from 'react-bootstrap/Image';
+//
 import StarRatings from 'react-star-ratings';
-import { useLocation, useParams } from "react-router-dom";
-// 
-import { httpPostNoAuth, httpGetMainNoAuth } from "../../../helpers/httpMethods";
+
+//
+import { httpPostNoAuth, httpGetMainNoAuth } from '../../../helpers/httpMethods';
 // resources and assets
-import Buke from "../../../assets/svgicons/Buke.svg";
-import Logo from "../../../assets/svgicons/Logo.svg";
-import "../settings/settings.css";
+import Buke from '../../../assets/svgicons/Buke.svg';
+import Logo from '../../../assets/svgicons/Logo.svg';
+import '../settings/settings.css';
 
 export default function RatingsForm() {
     const [rating, setRating] = useState(0);
     const [npsScore, setNpsScore] = useState(0);
-    const [comment, setComment] = useState("");
+    const [comment, setComment] = useState('');
     const [processing, setProcessing] = useState(false);
     const [ratingsConfig, setRatingsConfig] = useState({
-        "ratingLabel": "Satisfied with our customer support service? Click on the stars below to rate us.",
-        "commentLabel": "Tell us what we can improved upon",
-        "npsLabel": "How likely are you to recommend us to a friend or colleague?"
+        ratingLabel: 'Satisfied with our customer support service? Click on the stars below to rate us.',
+        commentLabel: 'Tell us what we can improved upon',
+        npsLabel: 'How likely are you to recommend us to a friend or colleague?',
     });
-    // 
+    //
     const [showModal, setShowModal] = useState(false);
-    // 
+    //
     const { domain, ticketId, customerId } = useParams();
-    // 
+    //
 
     useEffect(() => {
-        getRatingConfig(domain)
-    },[domain])
+        getRatingConfig(domain);
+    }, [domain]);
 
-    const getRatingConfig = async (domain) =>{
+    const getRatingConfig = async (domain) => {
         const headers = {
-            "domain": domain
-        }
+            domain,
+        };
         const res = await httpGetMainNoAuth(`settings/config?type=rating`, headers);
-        if (res?.status === "success") {
+        if (res?.status === 'success') {
             setRatingsConfig({
                 ...ratingsConfig,
                 npsLabel: res?.data.npsLabel,
@@ -53,56 +54,54 @@ export default function RatingsForm() {
                 commentLabel: res?.data.commentLabel,
             });
         } else {
-            return;
         }
     };
 
-    const handleSubmit = async () =>{
+    const handleSubmit = async () => {
         setProcessing(true);
-        if(ticketId == null ){
+        if (ticketId == null) {
             setProcessing(false);
-            return NotificationManager.error("ticket id is not defined", "Error", 4000);
+            return NotificationManager.error('ticket id is not defined', 'Error', 4000);
         }
-        if(customerId == null ){
+        if (customerId == null) {
             setProcessing(false);
-            return NotificationManager.error("user id is not defined", "Error", 4000);
+            return NotificationManager.error('user id is not defined', 'Error', 4000);
         }
-        if(rating === 0 ){
+        if (rating === 0) {
             setProcessing(false);
-            return NotificationManager.error("rating must be 1 or more ", "Error", 4000);
+            return NotificationManager.error('rating must be 1 or more ', 'Error', 4000);
         }
         const data = {
-            "value": rating,
-            "npsScore": npsScore,
-            "ticketId": ticketId,
-            "customerId": customerId,
-            "comment": comment
+            value: rating,
+            npsScore,
+            ticketId,
+            customerId,
+            comment,
         };
         const headers = {
-            "domain": domain
-        }
+            domain,
+        };
         const res = await httpPostNoAuth(`ratings`, data, headers);
-        if (res?.status === "success") {
+        if (res?.status === 'success') {
             setProcessing(false);
             setShowModal(true);
-            return NotificationManager.success("Thanks for your feedback 😃", "Success");
-        } else {
-            setProcessing(false);
-            return NotificationManager.error(res?.er?.message, "Error", 4000);
+            return NotificationManager.success('Thanks for your feedback 😃', 'Success');
         }
-    }
+        setProcessing(false);
+        return NotificationManager.error(res?.er?.message, 'Error', 4000);
+    };
 
     const handleHideModal = () => {
         setShowModal(false);
-    }
+    };
 
-    return(
-        <Fragment>
+    return (
+        <>
             <section className="ratings-page bg-white min-vh-100">
                 <Container fluid className="py-5">
                     <Row className="justify-content-center">
                         <Col sm={12} md={8} lg={6}>
-                            <Form className="mt-3" onSubmit={e => e.preventDefault()}>
+                            <Form className="mt-3" onSubmit={(e) => e.preventDefault()}>
                                 <div className="text-center mb-4">
                                     <h1 className="mb-3">Rate Your Experience</h1>
                                     <p className="">{ratingsConfig.ratingLabel}</p>
@@ -116,16 +115,27 @@ export default function RatingsForm() {
                                             starHoverColor="#DFB300"
                                             starSpacing="4px"
                                             starDimension="40px"
-                                            changeRating={(newRating) => { setRating(newRating) }}
+                                            changeRating={(newRating) => {
+                                                setRating(newRating);
+                                            }}
                                             numberOfStars={5}
-                                            name='rating'
+                                            name="rating"
                                         />
                                     </div>
                                 </div>
-                                <hr className="mb-5"/>
+                                <hr className="mb-5" />
                                 <Form.Group className="mb-5 form-group acx-form-group" controlId="improveMessage">
                                     <Form.Label>{ratingsConfig.commentLabel}</Form.Label>
-                                    <Form.Control onChange={e => { setComment(e.target.value) }} className="shadow-sm" as="textarea" defaultValue=" " placeholder="Tell us how we can improve..." rows={6}/>
+                                    <Form.Control
+                                        onChange={(e) => {
+                                            setComment(e.target.value);
+                                        }}
+                                        className="shadow-sm"
+                                        as="textarea"
+                                        defaultValue=" "
+                                        placeholder="Tell us how we can improve..."
+                                        rows={6}
+                                    />
                                 </Form.Group>
                                 <div className="mb-5">
                                     <div className="">
@@ -134,13 +144,21 @@ export default function RatingsForm() {
                                     <div className="p-3 bg-light border acx-hover-border-primary rounded ">
                                         <div className="d-flex justify-content-between align-items-center">
                                             {(() => {
-                                                let rows = [];
+                                                const rows = [];
                                                 for (let i = 0; i <= 10; i++) {
                                                     rows.push(
-                                                        <button type="button" key={i} onClick={() => setNpsScore(i)}
-                                                                className={`mb-0 btn acx-btn-icon acx-hover-border-primary rounded-1 ${(npsScore == i ? "acx-bg-primary": "")}`}>
-                                                            <span className={`${(npsScore == i ? "text-white": "")}`}>{i}</span>
-                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            key={i}
+                                                            onClick={() => setNpsScore(i)}
+                                                            className={`mb-0 btn acx-btn-icon acx-hover-border-primary rounded-1 ${
+                                                                npsScore == i ? 'acx-bg-primary' : ''
+                                                            }`}
+                                                        >
+                                                            <span className={`${npsScore == i ? 'text-white' : ''}`}>
+                                                                {i}
+                                                            </span>
+                                                        </button>,
                                                     );
                                                 }
                                                 return rows;
@@ -149,13 +167,28 @@ export default function RatingsForm() {
                                     </div>
                                 </div>
                                 <div className="mb-3 text-center">
-                                    <Button type="submit" onClick={handleSubmit} size="lg" disabled={processing} className="acx-btn-primary px-4"> 
-                                        {(processing) ? <span className="text-light"><Spinner as="span" 
-                                                animation="border" variant="light" size="sm" role="status" 
-                                                aria-hidden="true"/> Loading...
+                                    <Button
+                                        type="submit"
+                                        onClick={handleSubmit}
+                                        size="lg"
+                                        disabled={processing}
+                                        className="acx-btn-primary px-4"
+                                    >
+                                        {processing ? (
+                                            <span className="text-light">
+                                                <Spinner
+                                                    as="span"
+                                                    animation="border"
+                                                    variant="light"
+                                                    size="sm"
+                                                    role="status"
+                                                    aria-hidden="true"
+                                                />{' '}
+                                                Loading...
                                             </span>
-                                            : <span className="text-white">Submit</span>
-                                        }
+                                        ) : (
+                                            <span className="text-white">Submit</span>
+                                        )}
                                     </Button>
                                 </div>
                             </Form>
@@ -169,10 +202,12 @@ export default function RatingsForm() {
                 </Container>
             </section>
             <Modal
-                open={showModal} onClose={handleHideModal}
+                open={showModal}
+                onClose={handleHideModal}
                 aria-labelledby="contained-modal-title-vcenter"
                 size="lg"
-                centered>
+                centered
+            >
                 {/* <Modal.Body> */}
                 <div className="p-4 saveTicketWrapModal">
                     <div className="text-center">
@@ -183,16 +218,19 @@ export default function RatingsForm() {
                             <h3 className="mb-3">Review Submitted!</h3>
                             <p className="text-center">
                                 Thank you for taking out time
-                                <br />to rate us
+                                <br />
+                                to rate us
                             </p>
                             <div className="">
-                                <Button as="a" href="https://alphacx.co" variant="success" className="">Continue</Button>
+                                <Button as="a" href="https://alphacx.co" variant="success" className="">
+                                    Continue
+                                </Button>
                             </div>
                         </div>
                     </div>
                 </div>
                 {/* </Modal.Body> */}
             </Modal>
-        </Fragment>
+        </>
     );
 }

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { hideLoader, showLoader } from 'components/helpers/loader';
 import { httpPatchMain } from 'helpers/httpMethods';
 import React, {useState, useEffect} from 'react'
