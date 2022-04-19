@@ -1070,6 +1070,7 @@ select {
   overflow-y: scroll;
   padding-bottom: 30px;
   flex-grow: 1;
+  scroll-behavior: auto !important;
 }
 .conversationsMain::-webkit-scrollbar {
   width: 0.5px !important;
@@ -1293,6 +1294,9 @@ select {
 .message.message-out .message-text .message-title{
   text-align: right !important;
 }
+.message .message-text {
+  max-width: 100%;
+}
 /* 
 .message-inner {
   margin-left: 0.5rem;
@@ -1323,7 +1327,7 @@ select {
 }
 .message-content {
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   flex-direction: column;
 }
 .message-content + .message-content {

@@ -40,6 +40,7 @@
     "parse-domain": "^4.1.0",
     "react": "^17.0.2",
     "react-bootstrap": "^2.0.0-beta.6",
+    "react-calendar": "^3.7.0",
     "react-chartjs-2": "^3.0.3",
     "react-circular-progressbar": "^2.0.4",
     "react-color": "^2.19.3",
@@ -76,9 +77,16 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start-secure": "HTTPS=true SSL_CRT_FILE=./.cert/cert.pem SSL_KEY_FILE=./.cert/key.pem react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint ./src/**/*.{js,jsx,ts,tsx} --max-warnings=0",
+    "format": "eslint ./src/**/*.{js,jsx,ts,tsx} --fix",
+    "prettier-format": "prettier --config .prettierrc './src/**/*.{js,jsx,ts,tsx}' --write"
+  },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
   },
   "eslintConfig": {
     "extends": [
@@ -97,5 +105,18 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.17.0",
+    "@babel/preset-react": "^7.16.7",
+    "eslint": "^7.11.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-react-hooks": "^4.4.0",
+    "prettier": "^2.6.2"
   }
 }

@@ -1,5 +1,6 @@
-import {combineReducers} from 'redux';
-import {persistReducer} from 'redux-persist';
+/* eslint-disable */
+import { combineReducers } from 'redux';
+import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import errorReducer from './errorReducer';
 import userAuthReducer from './userAuthReducer';
@@ -23,12 +24,27 @@ import smsReducer from './smsReducer';
 import slaReducer from './slaReducer';
 import emailTemplateReducer from './emailTemplateReducer';
 import channelReducer from './channelReducer';
-// , 
+// ,
 const persistConfig = {
     key: 'alphacx_platform',
     storage,
-    whitelist: ['error', 'tenantAuth', 'userAuth', 'priority', 'status', 'group', 'tag', 'subCategory', 'config', 'livechat', 'sms', 'sla', 'emailTemplate', 'channel']
-}
+    whitelist: [
+        'error',
+        'tenantAuth',
+        'userAuth',
+        'priority',
+        'status',
+        'group',
+        'tag',
+        'subCategory',
+        'config',
+        'livechat',
+        'sms',
+        'sla',
+        'emailTemplate',
+        'channel',
+    ],
+};
 
 const rootReducer = combineReducers({
     error: errorReducer,
@@ -52,7 +68,7 @@ const rootReducer = combineReducers({
     sms: smsReducer,
     sla: slaReducer,
     emailTemplate: emailTemplateReducer,
-    channel: channelReducer
+    channel: channelReducer,
 });
 
 export default persistReducer(persistConfig, rootReducer);
