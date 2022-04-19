@@ -1,70 +1,70 @@
-import React, {useEffect, useState} from "react";
-import "./login.css";
-import AlphaLogo from "../../../assets/imgF/alpha.png";
-import Logo from "../../../assets/imgF/logo.png";
-import showPasswordImg from "../../../assets/imgF/Show.png";
-import Symbol1 from "../../../assets/imgF/symbolAuth.png";
-import Symbol2 from "../../../assets/imgF/symbolAuth2.png";
-import {NotificationManager} from "react-notifications";
-import swal from "sweetalert";
-import {ValidateEmail, validatePassword, Validate} from "../../../helpers/validateInput";
-import {httpPost} from "../../../helpers/httpMethods";
-import {css} from "@emotion/react";
-import ClipLoader from "react-spinners/ClipLoader";
-import {CSSTransition} from 'react-transition-group';
-import {countries} from '../../../components/shared/countries';
+/* eslint-disable */
+import React, { useEffect, useState } from 'react';
+import './login.css';
+import { NotificationManager } from 'react-notifications';
+import swal from 'sweetalert';
+import { css } from '@emotion/react';
+import ClipLoader from 'react-spinners/ClipLoader';
+import { CSSTransition } from 'react-transition-group';
 import RSelect from 'react-select';
-import ThankYou from "../../../assets/imgF/thank-you.png";
-import {ReactComponent as ApproveIcon} from "../../../assets/icons/check-green.svg";
+import AlphaLogo from '../../../assets/imgF/alpha.png';
+import Logo from '../../../assets/imgF/logo.png';
+import showPasswordImg from '../../../assets/imgF/Show.png';
+import Symbol1 from '../../../assets/imgF/symbolAuth.png';
+import Symbol2 from '../../../assets/imgF/symbolAuth2.png';
+import { ValidateEmail, validatePassword, Validate } from '../../../helpers/validateInput';
+import { httpPost } from '../../../helpers/httpMethods';
+import { countries } from '../../shared/countries';
+import ThankYou from '../../../assets/imgF/thank-you.png';
+import { ReactComponent as ApproveIcon } from '../../../assets/icons/check-green.svg';
 
-const override = css ``;
+const override = css``;
 
-const Login = ({history}) => {
-    const [userInput,
-        setUserInput] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        companyName: "",
-        domain: "",
-        country: ""
+function Login({ history }) {
+    const [userInput, setUserInput] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        companyName: '',
+        domain: '',
+        country: '',
     });
 
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [color, setColor] = useState("#ffffff");
+    const [color, setColor] = useState('#ffffff');
     const [activeForm, setActiveForm] = useState('form-one');
     const [menuHeight, setMenuHeight] = useState(null);
-    const [isVerified, setIsVerified] = useState(false)
-    const [domainChecking, setDomainChecking] = useState(false)
-    const [lockDomain, setLockDomain] = useState(false)
+    const [isVerified, setIsVerified] = useState(false);
+    const [domainChecking, setDomainChecking] = useState(false);
+    const [lockDomain, setLockDomain] = useState(false);
 
-    const calcHeight = el => {
+    const calcHeight = (el) => {
         const height = el.offsetHeight;
         setMenuHeight(height);
-    }
+    };
 
     const handleChange = (e) => {
         setUserInput({
             ...userInput,
-            [e.target.name]: e.target.value
+            [e.target.name]: e.target.value,
         });
-        if(e.target.name === "email"){
-            localStorage.setItem("tenantEmail", e.target.value)
+        if (e.target.name === 'email') {
+            localStorage.setItem('tenantEmail', e.target.value);
         }
     };
 
-    const handleRSChange = ({value}, {name}) => {
+    const handleRSChange = ({ value }, { name }) => {
         setUserInput({
             ...userInput,
-            [name]: value
+            [name]: value,
         });
-    }
+    };
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const validateEmail = ValidateEmail (userInput.email);
+        const validateEmail = ValidateEmail(userInput.email);
 
         const data = {
             domain: userInput.domain,
@@ -74,279 +74,306 @@ const Login = ({history}) => {
             email: userInput.email,
             password: userInput.password,
             country: userInput.country,
-            currency: userInput.country === "Nigeria"? "NGN" : "USD"
+            currency: userInput.country === 'Nigeria' ? 'NGN' : 'USD',
         };
 
         setLoading(true);
-        const res = await httpPost("auth/register", data);
+        const res = await httpPost('auth/register', data);
 
-        if (res.status === "success") {
+        if (res.status === 'success') {
             setLoading(false);
             setIsVerified(true);
-            NotificationManager.success("Verification mail has been to you", "Acount Created!", 4000);
+            NotificationManager.success('Verification mail has been to you', 'Acount Created!', 4000);
         } else {
             setLoading(false);
-            NotificationManager.error(res?.er?.message, "Error", 4000);
+            NotificationManager.error(res?.er?.message, 'Error', 4000);
         }
-
     };
 
     // ONBLUR VALIDATION
-    const handleBlur = (e) => {   
-        if (e.target.name === "email") {
-            Validate.email(e, userInput, setUserInput)
-            
-        } else if (e.target.name === "password") {
-            Validate.password(e, userInput, setUserInput)
-
-        } else if (e.target.name === "firstName" || e.target.name === "lastName") {
-            Validate.length(e, userInput, setUserInput)
+    const handleBlur = (e) => {
+        if (e.target.name === 'email') {
+            Validate.email(e, userInput, setUserInput);
+        } else if (e.target.name === 'password') {
+            Validate.password(e, userInput, setUserInput);
+        } else if (e.target.name === 'firstName' || e.target.name === 'lastName') {
+            Validate.length(e, userInput, setUserInput);
         }
-        
-    }
+    };
 
     const verifyDomain = async (e) => {
-
-        const domain = userInput.domain;
+        const { domain } = userInput;
 
         setDomainChecking(true);
 
-        Validate.length(e, userInput, setUserInput)
+        Validate.length(e, userInput, setUserInput);
 
-        const res = await httpPost(`auth/login`, {domain});
-        if (res.status === "success") {
-            setDomainChecking(false)
+        const res = await httpPost(`auth/login`, { domain });
+        if (res.status === 'success') {
+            setDomainChecking(false);
             setUserInput({
                 ...userInput,
-                [e.target.name]: ""
+                [e.target.name]: '',
             });
 
-            NotificationManager.error(res?.er?.message, "This domain already exists", 4000);
-
+            NotificationManager.error(res?.er?.message, 'This domain already exists', 4000);
         } else {
             setDomainChecking(false);
-            setLockDomain(true)
+            setLockDomain(true);
         }
-
-    }
+    };
 
     const checkContinue = () => {
-        const {firstName, lastName, email, password} = userInput;
-        if (!firstName || !lastName || !email || !password) 
-            return true;
-        return false
-    }
+        const { firstName, lastName, email, password } = userInput;
+        if (!firstName || !lastName || !email || !password) return true;
+        return false;
+    };
 
     return (
         <div className="auth-container  d-flex justify-content-center codei-ui-andy-setDefaults">
             <div className="symbol-wrap2">
-                <img src={Symbol2} alt=""/>
+                <img src={Symbol2} alt="" />
             </div>
             <div className="login-logo mb-3">
-                <img src={AlphaLogo} alt=""/>
-                <img src={Logo} alt=""/>
+                <img src={AlphaLogo} alt="" />
+                <img src={Logo} alt="" />
             </div>
 
             <div className="login-container pb-5">
-                
-                { !isVerified ?
-                <form>
-                    <div
-                        className="Auth-header"
-                        style={{
-                        marginBottom: "30px"
-                    }}>
-                        <h3>Welcome to AlphaCX</h3>
-                        <p>Create an account for your business</p>
-                    </div>
+                {!isVerified ? (
+                    <form>
+                        <div
+                            className="Auth-header"
+                            style={{
+                                marginBottom: '30px',
+                            }}
+                        >
+                            <h3>Welcome to AlphaCX</h3>
+                            <p>Create an account for your business</p>
+                        </div>
 
-                    <div
-                        className="input-main-wrap regform-wrapper"
-                        style={{
-                        minHeight: `${menuHeight}px`
-                    }}>
-                        <CSSTransition
-                            in={activeForm === "form-one"}
-                            unmountOnExit
-                            timeout={500}
-                            classNames="regform-primary"
-                            onEnter={calcHeight}>
-                            <div className="regform">
-                                <div className="input-wrap-with-two-inputes">
-                                    <div className="inputWrapTwo">
-                                        <label htmlFor="" className="form-label">First Name</label>
-                                        <input
-                                            type="text"
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            name="firstName"
-                                            autoComplete="off"
-                                            value={userInput.firstName}/>
+                        <div
+                            className="input-main-wrap regform-wrapper"
+                            style={{
+                                minHeight: `${menuHeight}px`,
+                            }}
+                        >
+                            <CSSTransition
+                                in={activeForm === 'form-one'}
+                                unmountOnExit
+                                timeout={500}
+                                classNames="regform-primary"
+                                onEnter={calcHeight}
+                            >
+                                <div className="regform">
+                                    <div className="input-wrap-with-two-inputes">
+                                        <div className="inputWrapTwo">
+                                            <label htmlFor="" className="form-label">
+                                                First Name
+                                            </label>
+                                            <input
+                                                type="text"
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                name="firstName"
+                                                autoComplete="off"
+                                                value={userInput.firstName}
+                                            />
+                                        </div>
+
+                                        <div className="inputWrapTwo">
+                                            <label htmlFor="" className="form-label">
+                                                Last Name
+                                            </label>
+                                            <input
+                                                type="text"
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                name="lastName"
+                                                autoComplete="off"
+                                                className="d-inline-block me-0 w-100"
+                                                value={userInput.lastName}
+                                            />
+                                        </div>
                                     </div>
 
-                                    <div className="inputWrapTwo">
-                                        <label htmlFor="" className="form-label">Last Name</label>
-                                        <input
-                                            type="text"
-                                            onChange={handleChange}
-                                            onBlur={handleBlur}
-                                            name="lastName"
-                                            autoComplete="off"
-                                            className="d-inline-block me-0 w-100"
-                                            value={userInput.lastName}/>
+                                    <div className="input-main-wrap mt-2">
+                                        <div className="input-wrap">
+                                            <label htmlFor="" className="form-label">
+                                                Email Address
+                                            </label>
+                                            <input
+                                                type="text"
+                                                onChange={handleChange}
+                                                onBlur={handleBlur}
+                                                name="email"
+                                                autoComplete="off"
+                                                value={userInput.email}
+                                            />
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div className="input-main-wrap mt-2">
                                     <div className="input-wrap">
-                                        <label htmlFor="" className="form-label">Email Address</label>
+                                        <label htmlFor="" className="form-label">
+                                            Password
+                                        </label>
                                         <input
-                                            type="text"
+                                            type={`${showPassword ? 'text' : 'password'}`}
                                             onChange={handleChange}
                                             onBlur={handleBlur}
-                                            name="email"
-                                            autoComplete="off"
-                                            value={userInput.email}/>
+                                            name="password"
+                                            autoComplete="new-password"
+                                            value={userInput.password}
+                                        />
+                                        <div className="passworEye">
+                                            <img
+                                                src={showPasswordImg}
+                                                alt=""
+                                                onClick={() => setShowPassword(!showPassword)}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="haveAnAccou">
+                                        <span />
+                                        <a href="/login">Already have an account? Login</a>
+                                    </div>
+
+                                    <div className="submit-auth-btn">
+                                        <button
+                                            type="button"
+                                            disabled={checkContinue()}
+                                            onClick={() => setActiveForm('form-two')}
+                                        >
+                                            Continue
+                                        </button>
                                     </div>
                                 </div>
+                            </CSSTransition>
 
-                                <div className="input-wrap">
-                                    <label htmlFor="" className="form-label">Password</label>
-                                    <input
-                                        type={`${showPassword
-                                        ? "text"
-                                        : "password"}`}
-                                        onChange={handleChange}
-                                        onBlur={handleBlur}
-                                        name="password"
-                                        autoComplete="new-password"
-                                        value={userInput.password}/>
-                                    <div className="passworEye">
-                                        <img
-                                            src={showPasswordImg}
-                                            alt=""
-                                            onClick={() => setShowPassword(!showPassword)}/>
+                            <CSSTransition
+                                in={activeForm === 'form-two'}
+                                unmountOnExit
+                                timeout={500}
+                                onEnter={calcHeight}
+                                classNames="regform-secondary"
+                            >
+                                <div className="regform mt-0">
+                                    <div className="input-main-wrap">
+                                        <div className="input-wrap">
+                                            <label htmlFor="" className="form-label">
+                                                Company Name
+                                            </label>
+                                            <input
+                                                type="text"
+                                                onChange={handleChange}
+                                                name="companyName"
+                                                autoComplete="off"
+                                                value={userInput.companyName}
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="haveAnAccou">
-                                    <span></span>
-                                    <a href="/login">Already have an account? Login</a>
-                                </div>
 
-                                <div className="submit-auth-btn">
-                                    <button
-                                        type="button"
-                                        disabled={checkContinue()}
-                                        onClick={() => setActiveForm('form-two')}>Continue
-                                    </button>
-                                </div>
-                            </div>
-                        </CSSTransition>
-
-                        <CSSTransition
-                            in={activeForm === "form-two"}
-                            unmountOnExit
-                            timeout={500}
-                            onEnter={calcHeight}
-                            classNames="regform-secondary">
-                            <div className='regform mt-0'>
-                                <div className="input-main-wrap">
                                     <div className="input-wrap">
-                                        <label htmlFor="" className="form-label">Company Name</label>
-                                        <input
-                                            type="text"
-                                            onChange={handleChange}
-                                            name="companyName"
-                                            autoComplete="off"
-                                            value={userInput.companyName}/>
+                                        <label htmlFor="" className="form-label">
+                                            Domain
+                                        </label>
+                                        <div className="input-group">
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                disabled={lockDomain}
+                                                name="domain"
+                                                autoComplete="off"
+                                                onChange={handleChange}
+                                                onBlur={verifyDomain}
+                                                value={userInput.domain}
+                                            />
+                                            <span className="input-group-text" id="basic-addon2">
+                                                {domainChecking ? (
+                                                    <ClipLoader
+                                                        color={color}
+                                                        loading={domainChecking}
+                                                        css={override}
+                                                        size={20}
+                                                    />
+                                                ) : lockDomain ? (
+                                                    <>
+                                                        <ApproveIcon style={{ color: '#0f9d15', marginRight: '5px' }} />
+                                                        <span>alphacx.co</span>
+                                                    </>
+                                                ) : (
+                                                    '.alphacx.co'
+                                                )}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="input-wrap">
+                                        <div className="">
+                                            <label htmlFor="status" className="form-label">
+                                                Country
+                                            </label>
+                                            <RSelect
+                                                className="rselectfield bg-light"
+                                                style={{ fontSize: '12px' }}
+                                                name="country"
+                                                placeholder="Search or select country"
+                                                onChange={handleRSChange}
+                                                isClearable={false}
+                                                isMulti={false}
+                                                options={countries?.map((item) => {
+                                                    return { value: item.name, label: item.name };
+                                                })}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="haveAnAccou">
+                                        <button type="button" onClick={() => setActiveForm('form-one')}>
+                                            Back
+                                        </button>
+                                        <a href="/login">Already have an account? Login</a>
+                                    </div>
+
+                                    <div className="submit-auth-btn">
+                                        <button disabled={loading} onClick={handleSubmit}>
+                                            {' '}
+                                            {loading ? (
+                                                <ClipLoader color={color} loading={loading} css={override} size={30} />
+                                            ) : (
+                                                'Register'
+                                            )}
+                                        </button>
                                     </div>
                                 </div>
+                            </CSSTransition>
+                        </div>
+                    </form>
+                ) : (
+                    <form>
+                        <div className="d-flex justify-content-center my-4">
+                            <img src={ThankYou} alt="" />
+                        </div>
+                        <div className="Auth-header mb-2">
+                            <h3 className="mb-3">Congratulations!</h3>
+                            <p className="text-center">
+                                Your account has been created successfully. <br />
+                                An activation mail has been sent to <strong>{userInput?.email}</strong>
+                            </p>
+                        </div>
 
-                                <div className="input-wrap">
-                                    <label htmlFor="" className="form-label">Domain</label>
-                                    <div className="input-group">
-                                        <input type="text" className="form-control" 
-                                            disabled={lockDomain}
-                                            name="domain"
-                                            autoComplete="off"
-                                            onChange={handleChange}
-                                            onBlur={verifyDomain}
-                                            value={userInput.domain}
-                                        />
-                                        <span className="input-group-text" id="basic-addon2">
-                                            { domainChecking ? 
-                                                (<ClipLoader color={color} loading={domainChecking} css={override} size={20}/>) 
-                                            :lockDomain?
-                                                <><ApproveIcon style={{color: "#0f9d15", marginRight: "5px"}} /><span>alphacx.co</span></>
-                                                
-                                            :
-                                                (".alphacx.co")
-                                            }
-                                        </span>
-
-                                    </div>
-
-                                </div>
-
-                                <div className="input-wrap">
-                                    <div className="">
-                                        <label htmlFor="status" className="form-label">Country</label>
-                                        <RSelect className="rselectfield bg-light"
-                                            style={{ fontSize: "12px" }}
-                                            name="country"
-                                            placeholder="Search or select country"
-                                            onChange={handleRSChange}
-                                            isClearable={false}
-                                            isMulti={false}
-                                            options={
-                                                countries?.map(item => {
-                                                    return {value: item.name, label: item.name}
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="haveAnAccou">
-                                    <button type="button" onClick={() => setActiveForm('form-one')}>Back</button>
-                                    <a href="/login">Already have an account? Login</a>
-                                </div>
-
-                                <div className="submit-auth-btn">
-                                    <button disabled={loading} onClick={handleSubmit}>
-                                        {" "}
-                                        {loading
-                                            ? (<ClipLoader color={color} loading={loading} css={override} size={30}/>)
-                                            : ("Register")}
-                                    </button>
-                                </div>
-                            </div>
-                        </CSSTransition>
-
-                    </div>
-                </form>
-                :
-                <form>
-                    <div className="d-flex justify-content-center my-4">
-                        <img src={ThankYou } alt="" />
-                    </div>
-                    <div className="Auth-header mb-2">
-                        <h3 className="mb-3">Congratulations!</h3>
-                        <p className="text-center">Your account has been created successfully. <br />An activation mail has been sent to <strong>{userInput?.email}</strong></p>
-                    </div>
-        
-                    <div className="submit-auth-btn text-center mt-4">
-                        <a className="fs-6" href="https://app.alphacx.co/knowledge-base">
-                            See Quick Setup Steps
-                        </a>
-                    </div>
-                </form>
-                }
+                        <div className="submit-auth-btn text-center mt-4">
+                            <a className="fs-6" href="https://app.alphacx.co/knowledge-base">
+                                See Quick Setup Steps
+                            </a>
+                        </div>
+                    </form>
+                )}
             </div>
             <div className="symbol-wrap">
-                <img src={Symbol1} alt=""/>
+                <img src={Symbol1} alt="" />
             </div>
         </div>
     );
-};
+}
 
 export default Login;

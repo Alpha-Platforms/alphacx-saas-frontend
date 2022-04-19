@@ -1,18 +1,19 @@
-import React from "react";
-import "./dashboard.scss";
-import "./dashcards/pieChartCard/pieChartCard.scss";
-import "react-circular-progressbar/dist/styles.css";
+/* eslint-disable */
+import React from 'react';
+import './dashboard.scss';
+import './dashcards/pieChartCard/pieChartCard.scss';
+import 'react-circular-progressbar/dist/styles.css';
 
-import Navigation from "./navigation";
-import AgentDashboard from "./agentDashboard";
+import Navigation from './navigation';
+import AgentDashboard from './agentDashboard';
 
-const Dashboard = () => {
-  return (
-    <>
-      {/* <Navigation page="Dashboard" /> */}
-      <AgentDashboard />
-    </>
-  );
-};
+function Dashboard() {
+    return (
+        <>
+            {/* <Navigation page="Dashboard" /> */}
+            <AgentDashboard />
+        </>
+    );
+}
 
 export default Dashboard;

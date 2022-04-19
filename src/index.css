@@ -41,6 +41,11 @@ body {
   background-color: #f6f9fb;
 }
 
+/* disable iframe injected by react-scripts */
+body > iframe:not([src])[style] {
+  display: none !important;
+}
+
 select {
   -webkit-appearance: none !important;
   -moz-appearance: none !important;

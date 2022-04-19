@@ -1,34 +1,36 @@
+/* eslint-disable */
 // @ts-nocheck
 import VisaLogo from '../../../../../../assets/images/visa.png';
 import MasterCardLogo from '../../../../../../assets/images/mastercard.png';
 
-const BillingDetails = () => {
-
+function BillingDetails() {
     return (
         <div className="billing-details">
             <h5>Billing Details</h5>
 
             <div className="card-box">
-                <div><img src={VisaLogo} alt=""/></div>
+                <div>
+                    <img src={VisaLogo} alt="" />
+                </div>
                 <div>
                     <div>
                         <span>
-                            <span className="cardpin-ball"/>
-                            <span className="cardpin-ball"/>
-                            <span className="cardpin-ball"/>
-                            <span className="cardpin-ball"/>
+                            <span className="cardpin-ball" />
+                            <span className="cardpin-ball" />
+                            <span className="cardpin-ball" />
+                            <span className="cardpin-ball" />
                         </span>
                         <span>
-                            <span className="cardpin-ball"/>
-                            <span className="cardpin-ball"/>
-                            <span className="cardpin-ball"/>
-                            <span className="cardpin-ball"/>
+                            <span className="cardpin-ball" />
+                            <span className="cardpin-ball" />
+                            <span className="cardpin-ball" />
+                            <span className="cardpin-ball" />
                         </span>
                         <span>
-                            <span className="cardpin-ball"/>
-                            <span className="cardpin-ball"/>
-                            <span className="cardpin-ball"/>
-                            <span className="cardpin-ball"/>
+                            <span className="cardpin-ball" />
+                            <span className="cardpin-ball" />
+                            <span className="cardpin-ball" />
+                            <span className="cardpin-ball" />
                         </span>
                         <span>1648</span>
                     </div>
@@ -40,26 +42,28 @@ const BillingDetails = () => {
             </div>
 
             <div className="card-box">
-                <div><img src={MasterCardLogo} alt=""/></div>
+                <div>
+                    <img src={MasterCardLogo} alt="" />
+                </div>
                 <div>
                     <div>
                         <span>
-                            <span className="cardpin-ball"/>
-                            <span className="cardpin-ball"/>
-                            <span className="cardpin-ball"/>
-                            <span className="cardpin-ball"/>
+                            <span className="cardpin-ball" />
+                            <span className="cardpin-ball" />
+                            <span className="cardpin-ball" />
+                            <span className="cardpin-ball" />
                         </span>
                         <span>
-                            <span className="cardpin-ball"/>
-                            <span className="cardpin-ball"/>
-                            <span className="cardpin-ball"/>
-                            <span className="cardpin-ball"/>
+                            <span className="cardpin-ball" />
+                            <span className="cardpin-ball" />
+                            <span className="cardpin-ball" />
+                            <span className="cardpin-ball" />
                         </span>
                         <span>
-                            <span className="cardpin-ball"/>
-                            <span className="cardpin-ball"/>
-                            <span className="cardpin-ball"/>
-                            <span className="cardpin-ball"/>
+                            <span className="cardpin-ball" />
+                            <span className="cardpin-ball" />
+                            <span className="cardpin-ball" />
+                            <span className="cardpin-ball" />
                         </span>
                         <span>1648</span>
                     </div>
@@ -74,9 +78,8 @@ const BillingDetails = () => {
                 <h6>Billing Address</h6>
                 <p>12 Ozumba Mbadiwe Street, Victoria Island, Lagos</p>
             </div>
-
         </div>
-    )
+    );
 }
 
 export default BillingDetails;

@@ -1,16 +1,17 @@
-import React from "react";
-import "./navigation.scss";
-import avatar from "../../../../assets/images/user.png";
-import DashboardIcon from "./icons";
-import { useScrollDetect } from "../../../helpers/helpers";
-import Sidebar from "../../../Layout/Sidebar";
-import Navbar from "../../../Layout/Navbar";
+/* eslint-disable */
+import React from 'react';
+import './navigation.scss';
+import avatar from '../../../../assets/images/user.png';
+import DashboardIcon from './icons';
+import { useScrollDetect } from '../../../helpers/helpers';
+import Sidebar from '../../../Layout/Sidebar';
+import Navbar from '../../../Layout/Navbar';
 
-const Navigation = ({ page }) => {
-  const { shadow } = useScrollDetect();
-  return (
-    <div className="dashboard-navigation">
-      {/* <div className={`topbar ${shadow ? "box-shadow" : ""}`}>
+function Navigation({ page }) {
+    const { shadow } = useScrollDetect();
+    return (
+        <div className="dashboard-navigation">
+            {/* <div className={`topbar ${shadow ? "box-shadow" : ""}`}>
         <h3 className="sub-title">Dashboard</h3>
         <div className="user-info">
           <div></div>
@@ -20,9 +21,9 @@ const Navigation = ({ page }) => {
           </div>
         </div>
       </div> */}
-      <Navbar page={page} />
-      <Sidebar />
-      {/* <div className="sidebar">
+            <Navbar page={page} />
+            <Sidebar />
+            {/* <div className="sidebar">
         <div className="logo">
           <DashboardIcon name="logo" />
         </div>
@@ -47,8 +48,8 @@ const Navigation = ({ page }) => {
           </div>
         </div>
       </div> */}
-    </div>
-  );
-};
+        </div>
+    );
+}
 
 export default Navigation;

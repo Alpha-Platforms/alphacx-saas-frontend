@@ -1,8 +1,9 @@
-import React from 'react'
-import {useHistory} from 'react-router-dom'
-export default function GoBack() {
-    let history = useHistory();
+/* eslint-disable */
+import React from 'react';
+import { useHistory } from 'react-router-dom';
 
-     return(history.goBack())
-    
+export default function GoBack() {
+    const history = useHistory();
+
+    return history.goBack();
 }
