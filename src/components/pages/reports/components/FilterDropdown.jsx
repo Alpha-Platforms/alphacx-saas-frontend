@@ -1,15 +1,17 @@
-/* eslint-disable */
+/* eslint-disable react/prop-types */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disabled */
 // @ts-nocheck
-import React from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import Calendar from 'react-calendar';
+import dayjs from 'dayjs';
 import { ReactComponent as SearchIcon } from '../../../../assets/icons/search.svg';
 import { ReactComponent as TicketCalender } from '../../../../assets/icons/Ticketcalendar.svg';
 import { getSearchedCustomers } from '../../tickets/CreateTicketModal';
 import 'react-calendar/dist/Calendar.css';
-import Calendar from 'react-calendar';
-import dayjs from 'dayjs';
 import { uuid } from '../../../../helper';
 import { getAgents } from '../../../../reduxstore/actions/agentActions';
 
@@ -19,7 +21,8 @@ const colors = ['#FF4D35', '#0796F7', '#00BB2D', '#3D642D', '#CB2821', '#ED760E'
 
 const handleFilter = (id, color, setFilters, label, value) => {
     setFilters((prev) => {
-        if (prev.find((item) => item.label === label && item?.id === id)) {
+        // check if a filter with the same label and id exists in the filter array (excluding label check for interval filter);
+        if (prev.find((item) => (id === 'Interval' ? true : item.label === label) && item?.id === id)) {
             // check an item in the filter array has current filter label
             return prev.map((item) => {
                 if (item?.label === label && item?.id === id) {
@@ -37,19 +40,11 @@ function DropdownChannel({ id, color, setFilters }) {
     return (
         <div className="filter-dropdown-channel">
             <ul>
-                <li onClick={() => handleFilter(id, color, setFilters, 'Helpdesk', `${id.toLowerCase()}=helpdesk`)}>
-                    Helpdesk
-                </li>
-                <li onClick={() => handleFilter(id, color, setFilters, 'Live Chat', `${id.toLowerCase()}=livechat`)}>
-                    Live Chat
-                </li>
-                <li onClick={() => handleFilter(id, color, setFilters, 'Email', `${id.toLowerCase()}=email`)}>Email</li>
-                <li onClick={() => handleFilter(id, color, setFilters, 'WhatsApp', `${id.toLowerCase()}=whatsapp`)}>
-                    WhatsApp
-                </li>
-                <li onClick={() => handleFilter(id, color, setFilters, 'Facebook', `${id.toLowerCase()}=facebook`)}>
-                    Facebook
-                </li>
+                <li onClick={() => handleFilter(id, color, setFilters, 'Helpdesk', `helpdesk`)}>Helpdesk</li>
+                <li onClick={() => handleFilter(id, color, setFilters, 'Live Chat', `livechat`)}>Live Chat</li>
+                <li onClick={() => handleFilter(id, color, setFilters, 'Email', `email`)}>Email</li>
+                <li onClick={() => handleFilter(id, color, setFilters, 'WhatsApp', `whatsapp`)}>WhatsApp</li>
+                <li onClick={() => handleFilter(id, color, setFilters, 'Facebook', `facebook`)}>Facebook</li>
             </ul>
         </div>
     );
@@ -65,9 +60,7 @@ function DropdownStatus({ id, color, setFilters }) {
                     status.statuses?.map((item) => (
                         <li
                             key={item?.id}
-                            onClick={() =>
-                                handleFilter(id, color, setFilters, item?.status, `${id.toLowerCase()}=${item?.id}`)
-                            }
+                            onClick={() => handleFilter(id, color, setFilters, item?.status, `${item?.id}`)}
                         >
                             {item?.status}
                         </li>
@@ -86,9 +79,9 @@ function DropdownContact({ id, color, setFilters }) {
         if (searchInput) {
             (async () => {
                 setCustomerLoading(true);
-                const customers = await getSearchedCustomers(searchInput);
+                const custs = await getSearchedCustomers(searchInput);
                 setCustomerLoading(false);
-                setCustomers(customers?.slice(0, 9));
+                setCustomers(custs?.slice(0, 9));
             })();
         }
     }, [searchInput]);
@@ -102,32 +95,21 @@ function DropdownContact({ id, color, setFilters }) {
                 <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
             </div>
             {customerLoading && <span className="fdc-loading">Loading...</span>}
-            {customers && (
-                <>
-                    {customers?.length === 0 ? (
-                        !customerLoading && <div>No contact found</div>
-                    ) : (
-                        <ul>
-                            {customers.map((item) => (
-                                <li
-                                    key={item?.value}
-                                    onClick={() =>
-                                        handleFilter(
-                                            id,
-                                            color,
-                                            setFilters,
-                                            item?.label,
-                                            `${id.toLowerCase()}=${item?.value}`,
-                                        )
-                                    }
-                                >
-                                    {item?.label}
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </>
-            )}
+            {customers &&
+                (customers?.length === 0 ? (
+                    !customerLoading && <div>No contact found</div>
+                ) : (
+                    <ul>
+                        {customers.map((item) => (
+                            <li
+                                key={item?.value}
+                                onClick={() => handleFilter(id, color, setFilters, item?.label, `${item?.value}`)}
+                            >
+                                {item?.label}
+                            </li>
+                        ))}
+                    </ul>
+                ))}
         </div>
     );
 }
@@ -145,10 +127,9 @@ function DropdownInterval({ id, color, setFilters }) {
                 color,
                 setFilters,
                 `${dayjs(startDate).format('DD MMMM')} - ${dayjs(endDate).format('DD MMMM')}`,
-                `start_date=${dayjs(startDate).format('DD-MM-YYYY')}&end_date=${dayjs(endDate).format('DD-MM-YYYY')}`,
+                `start_date=${dayjs(startDate).format('MM-DD-YYYY')}&end_date=${dayjs(endDate).format('MM-DD-YYYY')}`,
             );
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [startDate, endDate, activate]);
 
     return (
@@ -206,7 +187,6 @@ function DropdownPersonnel({ id, color, setFilters }) {
                 setPersonnels(searchedAgents);
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchInput]);
 
     return (
@@ -217,30 +197,27 @@ function DropdownPersonnel({ id, color, setFilters }) {
                 </span>
                 <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
             </div>
-            {personnels && (
-                <>
-                    {personnels?.length === 0 ? (
-                        <div>No personnel found</div>
-                    ) : (
-                        <ul>
-                            {personnels.map((item) => (
-                                <li
-                                    key={item?.id}
-                                    onClick={() =>
-                                        handleFilter(
-                                            id,
-                                            color,
-                                            setFilters,
-                                            `${item?.firstname} ${item?.lastname}`,
-                                            `${id.toLowerCase()}=${item?.id}`,
-                                        )
-                                    }
-                                >{`${item?.firstname} ${item?.lastname}`}</li>
-                            ))}
-                        </ul>
-                    )}
-                </>
-            )}
+            {personnels &&
+                (personnels?.length === 0 ? (
+                    <div>No personnel found</div>
+                ) : (
+                    <ul>
+                        {personnels.map((item) => (
+                            <li
+                                key={item?.id}
+                                onClick={() =>
+                                    handleFilter(
+                                        id,
+                                        color,
+                                        setFilters,
+                                        `${item?.firstname} ${item?.lastname}`,
+                                        `${item?.id}`,
+                                    )
+                                }
+                            >{`${item?.firstname} ${item?.lastname}`}</li>
+                        ))}
+                    </ul>
+                ))}
         </div>
     );
 }
@@ -260,7 +237,6 @@ function DropdownCategory({ id, color, setFilters }) {
                 setCategories(searchedAgents);
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchInput]);
 
     return (
@@ -271,30 +247,19 @@ function DropdownCategory({ id, color, setFilters }) {
                 </span>
                 <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
             </div>
-            {categories && (
-                <>
-                    {categories?.length === 0 ? (
-                        <div>No category found</div>
-                    ) : (
-                        <ul>
-                            {categories.map((item) => (
-                                <li
-                                    key={item?.id}
-                                    onClick={() =>
-                                        handleFilter(
-                                            id,
-                                            color,
-                                            setFilters,
-                                            `${item?.name}`,
-                                            `${id.toLowerCase()}=${item?.id}`,
-                                        )
-                                    }
-                                >{`${item?.name}`}</li>
-                            ))}
-                        </ul>
-                    )}
-                </>
-            )}
+            {categories &&
+                (categories?.length === 0 ? (
+                    <div>No category found</div>
+                ) : (
+                    <ul>
+                        {categories.map((item) => (
+                            <li
+                                key={item?.id}
+                                onClick={() => handleFilter(id, color, setFilters, `${item?.name}`, `${item?.id}`)}
+                            >{`${item?.name}`}</li>
+                        ))}
+                    </ul>
+                ))}
         </div>
     );
 }
@@ -314,7 +279,6 @@ function DropdownPriority({ id, color, setFilters }) {
                 setPriorities(searchedAgents);
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchInput]);
 
     return (
@@ -325,30 +289,19 @@ function DropdownPriority({ id, color, setFilters }) {
                 </span>
                 <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} />
             </div>
-            {priorities && (
-                <>
-                    {priorities?.length === 0 ? (
-                        <div>No priority found</div>
-                    ) : (
-                        <ul>
-                            {priorities.map((item) => (
-                                <li
-                                    key={item?.id}
-                                    onClick={() =>
-                                        handleFilter(
-                                            id,
-                                            color,
-                                            setFilters,
-                                            `${item?.name}`,
-                                            `${id.toLowerCase()}=${item?.id}`,
-                                        )
-                                    }
-                                >{`${item?.name}`}</li>
-                            ))}
-                        </ul>
-                    )}
-                </>
-            )}
+            {priorities &&
+                (priorities?.length === 0 ? (
+                    <div>No priority found</div>
+                ) : (
+                    <ul>
+                        {priorities.map((item) => (
+                            <li
+                                key={item?.id}
+                                onClick={() => handleFilter(id, color, setFilters, `${item?.name}`, `${item?.id}`)}
+                            >{`${item?.name}`}</li>
+                        ))}
+                    </ul>
+                ))}
         </div>
     );
 }
@@ -364,9 +317,9 @@ function DropdownSearch({ id, color, setFilters }) {
             <div>
                 {searchInput && (
                     <button
+                        type="button"
                         onClick={() =>
-                            handleFilter(id, color, setFilters, searchInput, `${id.toLowerCase()}=${searchInput}`) ||
-                            setSearchInput('')
+                            handleFilter(id, color, setFilters, searchInput, `${searchInput}`) || setSearchInput('')
                         }
                     >
                         Add
@@ -394,9 +347,9 @@ function DropdownRating({ id, color, setFilters }) {
             <div>
                 {(searchInput || searchInput === 0) && (
                     <button
+                        type="button"
                         onClick={() =>
-                            handleFilter(id, color, setFilters, searchInput, `${id.toLowerCase()}=${searchInput}`) ||
-                            setSearchInput(0)
+                            handleFilter(id, color, setFilters, searchInput, `${searchInput}`) || setSearchInput(0)
                         }
                     >
                         Add
@@ -420,7 +373,6 @@ function FilterDropdown({ active, setFilters }) {
             // getAdmins();
             // getObservers();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
 
     return (
