@@ -1,8 +1,9 @@
-/* eslint-disable */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable react/prop-types */
+/* eslint-disabled */
 // @ts-nocheck
-import React, { useState, useEffect } from 'react';
-import FilterDropdown from './components/FilterDropdown';
-import '../../../styles/ReportsFilter.scss';
+import React, { useState, useEffect, memo } from 'react';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import MaterialTable from 'material-table';
 import { Link } from 'react-router-dom';
@@ -13,6 +14,8 @@ import { NotificationManager } from 'react-notifications';
 import { httpGetMain } from '../../../helpers/httpMethods';
 import { ReactComponent as StarYellowSvg } from '../../../assets/icons/Star-yellow.svg';
 import { ReactComponent as StarUnactiveSvg } from '../../../assets/icons/Star-unactive.svg';
+import FilterDropdown from './components/FilterDropdown';
+import '../../../styles/ReportsFilter.scss';
 import tableIcons from '../../../assets/materialicons/tableIcons';
 import { PlusIcon } from '../../../assets/SvgIconsSet';
 import { ExportDropdown } from '../tickets/TicketList';
@@ -65,11 +68,12 @@ const getStatusColor = (status, id) => {
 
 // ticket tables
 function Tickets({ tickets, meta, handleFilterApply, tableColumns, handleSelectionChange }) {
-    function AlphacxMTPagination(props) {
+    const AlphacxMTPagination = memo((props) => {
         const { ActionsComponent, onChangePage, onChangeRowsPerPage, ...tablePaginationProps } = props;
 
         return (
             <TablePagination
+                // eslint-disable-next-line react/jsx-props-no-spreading
                 {...tablePaginationProps}
                 rowsPerPageOptions={[10, 20, 30, 50, 100, 150, 200]}
                 rowsPerPage={meta?.itemsPerPage || 50}
@@ -81,10 +85,11 @@ function Tickets({ tickets, meta, handleFilterApply, tableColumns, handleSelecti
                     // setChangingRow(true);
                     handleFilterApply(event.target.value, 1);
                 }}
-                ActionsComponent={(subprops) => {
+                ActionsComponent={memo((subprops) => {
                     const { onPageChange, ...actionsComponentProps } = subprops;
                     return (
                         <ActionsComponent
+                            // eslint-disable-next-line react/jsx-props-no-spreading
                             {...actionsComponentProps}
                             onChangePage={(event, newPage) => {
                                 // fetch tickets with new current page
@@ -96,10 +101,10 @@ function Tickets({ tickets, meta, handleFilterApply, tableColumns, handleSelecti
                             }}
                         />
                     );
-                }}
+                })}
             />
         );
-    }
+    });
 
     return (
         <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table acx-ticket-table fit-content">
@@ -378,7 +383,7 @@ function ReportsFilter() {
                               }) => ({
                                   name: textCapitalize(
                                       `${customer.firstname} ${
-                                          customer.lastname == 'default' ? '' : customer.lastname || ''
+                                          customer.lastname === 'default' ? '' : customer.lastname || ''
                                       }`,
                                   ),
                                   email: customer.email,
@@ -445,10 +450,25 @@ function ReportsFilter() {
     }, [dropdownActive]);
 
     const handleFilterApply = async (itemsPerPage, currentPage) => {
+        const filterQuery = Object.entries(
+            filters.reduce((prev, curr) => {
+                // get a deep copy of previous object
+                const prevRef = JSON.parse(JSON.stringify(prev));
+                if (prevRef[curr.id]) {
+                    // a filter key exists as key in object
+                    // add new value to existing array
+                    prevRef[curr.id] = [...prevRef[curr.id], curr.value];
+                } else {
+                    prevRef[curr.id] = [curr.value];
+                }
+                return prevRef;
+            }, {}),
+        )
+            .map(([key, value]) => (key === 'Interval' ? value : `${key.toLowerCase()}=${value.join(',')}`))
+            .join('&');
+
         setLoading(true);
-        const res = await httpGetMain(
-            `tickets?${filters.map((item) => item?.value).join('&')}&per_page=${itemsPerPage}&page=${currentPage}`,
-        );
+        const res = await httpGetMain(`tickets?${filterQuery}&per_page=${itemsPerPage}&page=${currentPage}`);
         setLoading(false);
         if (res?.status === 'success' && res?.data) {
             setTicketData((prev) => ({ ...prev, ...res?.data }));
@@ -462,7 +482,7 @@ function ReportsFilter() {
             <h2>Filter Options</h2>
             <p>Select the Add Filter button to filter and generate your reports</p>
             <div>
-                <button onClick={() => !dropdownActive && setDropdownActive(true)}>
+                <button type="button" onClick={() => !dropdownActive && setDropdownActive(true)}>
                     <PlusIcon /> Add Filter
                 </button>
                 {filters.map((item) => (
@@ -474,7 +494,11 @@ function ReportsFilter() {
                         {item?.label} &nbsp;&nbsp;&nbsp;×
                     </span>
                 ))}
-                {filters.length > 0 && <button onClick={() => handleFilterApply(50, 1)}>Apply Filter</button>}
+                {filters.length > 0 && (
+                    <button type="button" onClick={() => handleFilterApply(50, 1)}>
+                        Apply Filter
+                    </button>
+                )}
             </div>
 
             <FilterDropdown active={dropdownActive} setFilters={setFilters} />
