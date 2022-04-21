@@ -3,11 +3,12 @@ import { hideLoader, showLoader } from 'components/helpers/loader';
 import { httpPatchMain } from 'helpers/httpMethods';
 import React, {useState, useEffect} from 'react'
 import { NotificationManager } from 'react-notifications';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import "../settings.css";
 // img assets
 import facebookImg from "../../../../assets/imgF/Facebook.png";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
+import ArrowLeft from "../../../../assets/icons/Arrow---Left.svg";
 
 const FB = window.FB
 
@@ -18,6 +19,8 @@ const FBIntegration = ({location}) => {
     const [domain, setDomain] = useState("")
     const [baseUrl, setBaseUrl] = useState("")
     // const [domain, setDomain] = useState("")
+    const [showRedirectText, setShowRedirectText] = useState(false)
+    const history = useHistory()
 
 
 
@@ -56,9 +59,14 @@ const FBIntegration = ({location}) => {
             version: "v11.0",
         });
 
-      
     }, [])
 
+    const redirectToPreviewPage = () => {
+        setShowRedirectText(true)
+        setTimeout(() => {
+            history.goBack()           
+        }, 1000);
+    }
 
     const handleConnectFBPage = async (response) => {
         if (!response) return;
@@ -83,6 +91,9 @@ const FBIntegration = ({location}) => {
             }
             localStorage.setItem("pageConnected", "true");
             NotificationManager.success("Page successfully connected");
+
+            // Go back
+            redirectToPreviewPage()
         }
     // hideLoader();
     };
@@ -111,50 +122,59 @@ const FBIntegration = ({location}) => {
 
 
     return (
-        <div className="social-integrating-page">
-        <header id="mainContentHeader" className="breadcrumb">
-            <h6 className="text-muted f-14">
-                <a href={`${baseUrl}/settings`}>
-                    <span className="text-custom">Settings</span>
-                </a>{" "}
-                <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
-                <a href={`${baseUrl}/settings/integrations`}>
-                    <span className="text-custom">Integrations</span>
-                </a>{" "}
-                <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
-                <span>Facebook</span>
-            </h6>
-        </header>
-        <div className="">
-            <h5 className="">Facebook</h5>
-            <section>
-                <div className="connectViaWhatsWrap">
-                    <div className="connectViaWhatsappInstr">
-                        <img src={facebookImg} alt="" />
-                        <div className="connectViaInstText">
-                            <p>Communicate with Facebook users via AlphaCX</p>
-                            <p>
-                                Connect your company’s Facebook page to Conversational Inbox and
-                                start chatting with Facebook users.
-                                <br /> Incoming message allocation is based ticket distribution
-                                rules. Chats can be converted to tickets.
-                            </p>
+        <div className="container" style={{marginTop: "5rem"}}>
+            
+            {showRedirectText && <div className="py-3 fs-5 text-end">Redirecting...</div>}
+
+            <div className="border p-4 bg-white rounded social-integrating-page">
+            <header id="mainContentHeader" className="breadcrumb">
+                <h6 className="text-muted f-14">
+                    <a href={`${baseUrl}/settings`}>
+                        <span className="text-custom">Settings</span>
+                    </a>{" "}
+                    <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
+                    <a href={`${baseUrl}/settings/integrations`}>
+                        <span className="text-custom">Integrations</span>
+                    </a>{" "}
+                    <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
+                    <span>Facebook</span>
+                </h6>
+            </header>
+            <div className="">
+                <h5 className="">Facebook Integration</h5>
+                <section>
+                    <div className="connectViaWhatsWrap">
+                        <div className="connectViaWhatsappInstr">
+                            <img src={facebookImg} alt="" />
+                            <div className="connectViaInstText">
+                                <p>Communicate with Facebook users via AlphaCX</p>
+                                <p>
+                                    Connect your company’s Facebook page to Conversational Inbox and
+                                    start chatting with Facebook users.
+                                    <br /> Incoming message allocation is based ticket distribution
+                                    rules. Chats can be converted to tickets.
+                                </p>
+                            </div>
+                        </div>
+
+                        <p className="mt-3">
+                            You need to create your company Facebook page or use an existing
+                            one.
+                            <br /> You need to be the Administrator of that page.
+                        </p>
+
+                        <div className="">
+                            <button className="btn acx-btn-primary px-3 py-2" onClick={authFb} disabled={pageConnected}>
+                                {pageConnected ? "Page Connected" : "Connect Page"}
+                            </button>
                         </div>
                     </div>
-
-                    <p className="mt-3">
-                        You need to create your company Facebook page or use an existing
-                        one.
-                        <br /> You need to be the Administrator of that page.
-                    </p>
-
-                    <div className="">
-                        <button className="btn acx-btn-primary px-3 py-2" onClick={authFb} disabled={pageConnected}>
-                            {pageConnected ? "Page Connected" : "Connect Page"}
-                        </button>
-                    </div>
-                </div>
-            </section>
+                </section>
+            </div>
+        </div>
+        <div className='pt-2'>
+            <button className='fs-6' onClick={() => history.goBack()}>
+                <img src={ArrowLeft} alt="ArrowLeft" /> Back</button>
         </div>
     </div>
     )
