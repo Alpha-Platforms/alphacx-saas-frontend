@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-/* eslint-disabled */
+/* eslint-disable */
 // @ts-nocheck
 import Select from 'react-select';
 import { useState, useEffect } from 'react';
@@ -51,6 +51,11 @@ function CurrentPlan({ plan, planState, tenantInfo, setPlanState, subscription }
             // get current user from localStorage
             const currentUser = JSON.parse(window.localStorage.getItem('user'));
 
+            /* *
+            * if currency is NGN, use flutterwave for payment, if currency is        
+            * USD, use stripe for payment
+            * 
+            */
             if (getRealCurrency(tenantInfo?.currency || '') === 'NGN') {
                 // FLUTTERWAVE PAYMENT
                 const config = {
@@ -105,7 +110,6 @@ function CurrentPlan({ plan, planState, tenantInfo, setPlanState, subscription }
             ...prev,
             loading: initiating,
         }));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [initiating]);
 
     return (

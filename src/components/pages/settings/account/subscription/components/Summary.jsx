@@ -1,7 +1,9 @@
-/* eslint-disable */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable react/prop-types */
+/* eslint-disabled */
 // @ts-nocheck
+import React from 'react';
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
-import { Fragment, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { loadStripe } from '@stripe/stripe-js';
 import { CardElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
@@ -17,20 +19,29 @@ function CheckoutForm({ setPlanState }) {
         event.preventDefault();
 
         if (!stripe || !elements) {
+            // Stripe.js has not loaded yet.  stripe must be fully loaded before form submission
             return;
         }
 
-        const stripeRes = await stripe.createPaymentMethod({
-            type: 'card',
-            card: elements.getElement(CardElement),
-        });
+        // const stripeRes = await stripe.createPaymentMethod({
+        //     type: 'card',
+        //     card: elements.getElement(CardElement),
+        // });
+
+        // Get a reference to a mounted CardElement. Elements knows how
+        // to find your CardElement because there can only ever be one of
+        // each type of element.
+        const cardElement = elements.getElement(CardElement);
+
+        // use stripe.createToken to get a unique token for the card
+        const { error, token } = await stripe.createToken(cardElement);
 
         /* const { error, token } = await stripe.createToken(elements.getElement(CardElement)); */
 
-        if (!stripeRes?.error) {
-            // console.log('STRIPE RESPONSE => ', stripeRes);
+        if (!error) {
+            console.log('STRIPE TOKEN => ', token);
             setPlanState((prev) => ({ ...prev, isVerifying: true }));
-            const verifyPaymentRes = await httpPost(`subscriptions/verify-payment`, stripeRes?.paymentMethod);
+            const verifyPaymentRes = await httpPost(`subscriptions/verify-payment`, token);
             setPlanState((prev) => ({ ...prev, isVerifying: false }));
 
             if (verifyPaymentRes?.status === 'success') {
@@ -40,7 +51,7 @@ function CheckoutForm({ setPlanState }) {
                 // stripeConfig: null, amount: null, setSelectingPlan: false}));
             }
         } else {
-            console.log(stripeRes?.error);
+            console.error(error);
         }
     };
 
@@ -60,6 +71,7 @@ function FlutterWaveAction({ config, setPlanState }) {
 
     return (
         <button
+            type="button"
             onClick={() => {
                 handleFlutterPayment({
                     callback: async (response) => {
@@ -144,7 +156,7 @@ function Summary({ planState, setPlanState, plan, tenantInfo }) {
                         name="coupoun"
                         placeholder="Enter Coupon Code"
                     />
-                    <button disabled>Apply</button>
+                    <button type="button" disabled>Apply</button>
                 </div>
             </div>
 
