@@ -1,4 +1,5 @@
-/* eslint-disable */
+/* eslint-disable react/prop-types */
+/* eslint-disabled */
 // @ts-nocheck
 import Select from 'react-select';
 import { useState, useEffect } from 'react';

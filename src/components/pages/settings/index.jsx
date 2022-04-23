@@ -290,7 +290,6 @@ function SettingsHome({ signedUser }) {
             <ContactAlphcxModal
                 contactSupportModalShow={contactSupportModalShow}
                 setContactSupportModalShow={setContactSupportModalShow}
-                isEditing={false}
             />
         </Container>
     );
