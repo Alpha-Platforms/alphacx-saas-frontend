@@ -11,7 +11,7 @@ import { httpPost } from '../../../../../../helpers/httpMethods';
 import { getRealCurrency } from './SubTop';
 import { separateNum } from '../../../../../../helper';
 
-function CheckoutForm({ setPlanState }) {
+function CheckoutForm({ setPlanState, planState }) {
     const stripe = useStripe();
     const elements = useElements();
 
@@ -23,27 +23,23 @@ function CheckoutForm({ setPlanState }) {
             return;
         }
 
-        // const stripeRes = await stripe.createPaymentMethod({
-        //     type: 'card',
-        //     card: elements.getElement(CardElement),
-        // });
-
         // Get a reference to a mounted CardElement. Elements knows how
         // to find your CardElement because there can only ever be one of
         // each type of element.
         const cardElement = elements.getElement(CardElement);
 
-        // use stripe.createToken to get a unique token for the card
-        const { error, token } = await stripe.createToken(cardElement);
+        setPlanState((prev) => ({ ...prev, isVerifying: true }));
 
-        /* const { error, token } = await stripe.createToken(elements.getElement(CardElement)); */
+        // get stripe's payment intent
+        const stripeRes = await stripe.confirmCardPayment(planState.stripeConfig?.clientSecret, {
+            payment_method: {
+                card: cardElement,
+            },
+        });
 
-        if (!error) {
-            console.log('STRIPE TOKEN => ', token);
-            setPlanState((prev) => ({ ...prev, isVerifying: true }));
-            const verifyPaymentRes = await httpPost(`subscriptions/verify-payment`, token);
+        if (!stripeRes?.error) {
+            const verifyPaymentRes = await httpPost(`subscriptions/verify-payment`, stripeRes?.paymentIntent);
             setPlanState((prev) => ({ ...prev, isVerifying: false }));
-
             if (verifyPaymentRes?.status === 'success') {
                 NotificationManager.success('', 'Transaction successful', 4000);
                 window.location.href = `/settings/account?tab=subscription`;
@@ -51,7 +47,8 @@ function CheckoutForm({ setPlanState }) {
                 // stripeConfig: null, amount: null, setSelectingPlan: false}));
             }
         } else {
-            console.error(error);
+            setPlanState((prev) => ({ ...prev, isVerifying: false }));
+            console.error(stripeRes?.error);
         }
     };
 
