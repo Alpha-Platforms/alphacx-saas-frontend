@@ -38,18 +38,18 @@ function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalSho
         }
 
         setCreating(true);
+        const domain = window.localStorage.getItem('domain');
 
         const supportBody = {
             firstname: user?.firstname || '',
             lastname: user?.lastname || '',
             email: user?.email || '',
-            subject,
+            subject: `${domain} :: $subject`,
             description: message,
             plainDescription: message,
             attachment: '',
             channel: 'livechat',
             support_ticket: true,
-            domain: window.localStorage.getItem('domain'),
         };
 
         try {
