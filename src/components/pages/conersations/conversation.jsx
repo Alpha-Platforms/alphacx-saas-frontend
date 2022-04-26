@@ -340,7 +340,7 @@ function Conversation({ user }) {
     useEffect(() => {
         AppSocket.io.on(`message`, (data) => {
             console.log('%cconversation.jsx line:342 data', 'color: white; background-color: #007acc;', data);
-            if (data.id === ticketId) {
+            if (data.id === ticketId || data?.ticket?.id === ticketId /* for live-chat */) {
                 const msg = {
                     created_at: data.created_at,
                     id: data?.history?.id || data?.id,
@@ -349,7 +349,7 @@ function Conversation({ user }) {
                     type: 'reply',
                     user: data.user,
                 };
-                if (data?.channel === 'livechat') {
+                if (data?.channel === 'livechat' || data?.ticket?.channel === 'livechat') {
                     setMsgHistory((item) => {
                         if (item[item.length - 1]?.id === msg?.id) {
                             return item;
