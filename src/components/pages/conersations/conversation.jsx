@@ -183,6 +183,21 @@ function Conversation({ user }) {
         if (res.status === 'success') {
             setTicket(res?.data);
             setMsgHistory(res?.data[0]?.history);
+            // update the unread count of item to be loaded to zero since it is being loaded
+            setTickets((prev) =>
+                prev.map((item) => {
+                    if (item?.id === id) {
+                        return {
+                            ...item,
+                            __meta__: {
+                                ...item.__meta__,
+                                unRead: 0,
+                            },
+                        };
+                    }
+                    return item;
+                }),
+            );
             // sortMsges(res?.data[0]?.history);
             // setMessageSenderId(res?.data[0]?.id);
             setSaveTicket({
