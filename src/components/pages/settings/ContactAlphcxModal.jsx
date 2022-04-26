@@ -44,7 +44,7 @@ function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalSho
             firstname: user?.firstname || '',
             lastname: user?.lastname || '',
             email: user?.email || '',
-            subject: `${domain} :: $subject`,
+            subject: `${domain} :: ${subject}`,
             description: message,
             plainDescription: message,
             attachment: '',

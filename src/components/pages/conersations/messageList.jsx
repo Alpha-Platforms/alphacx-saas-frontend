@@ -106,14 +106,14 @@ export default function MessageList({
                             <div
                                 key={index}
                                 className={`message-listmain ${
-                                    data.id === activeChat ? 'message-listmain-active' : ''
+                                    data?.id === activeChat ? 'message-listmain-active' : ''
                                 }`}
                                 onClick={() => {
                                     scrollPosSendMsgList('#lastMsg');
                                     loadSingleMessage(data);
                                     setSingleTicketFullInfo(data);
-                                    setTicketId(data.id);
-                                    setActiveChat(data.id);
+                                    setTicketId(data?.id);
+                                    setActiveChat(data?.id);
                                 }}
                                 id="msgListTop"
                             >
@@ -156,42 +156,42 @@ export default function MessageList({
                   }`}
                                     </p>
                                     <p className="senderMSG text-truncate" style={{ maxWidth: '160px' }}>
-                                        {!Array.isArray(data.history)
+                                        {!Array.isArray(data?.history)
                                             ? ''
-                                            : data.history.length == 0
+                                            : data?.history.length == 0
                                             ? ''
-                                            : data.history[0].plain_response === null ||
-                                              data.history[0].plain_response === undefined
+                                            : data?.history[0].plain_response === null ||
+                                              data?.history[0].plain_response === undefined
                                             ? ''
-                                            : data.history[0].plain_response}
+                                            : data?.history[0].plain_response}
                                     </p>
                                     <div className="msg-badges">
                                         <div
                                             style={{
-                                                background: `"${getChannelColor(data.channel, 'background')}"`,
-                                                color: `"${getChannelColor(data.channel)}"`,
+                                                background: `"${getChannelColor(data?.channel, 'background')}"`,
+                                                color: `"${getChannelColor(data?.channel)}"`,
                                             }}
                                         >
-                                            {data.channel}
+                                            {data?.channel}
                                         </div>
 
                                         <div
                                             style={{
-                                                background: `"${data.status.background_color}"`,
-                                                color: `"${data.status.forecolor}"`,
+                                                background: `"${data?.status.background_color}"`,
+                                                color: `"${data?.status.forecolor}"`,
                                             }}
                                         >
-                                            {data.status.status}
+                                            {data?.status.status}
                                         </div>
                                     </div>
                                 </div>
                                 <div className="message-user-time">
-                                    {data?.__meta__?.unRead == 0 || data.id === activeChat ? (
+                                    {data?.__meta__?.unRead == 0 || data?.id === activeChat ? (
                                         ''
                                     ) : (
                                         <p className="msgCountCon">{data?.__meta__?.unRead}</p>
                                     )}
-                                    <p className="msGtime">{formatDate(data.updated_at)}</p>
+                                    <p className="msGtime">{formatDate(data?.updated_at)}</p>
                                 </div>
                             </div>
                         );
