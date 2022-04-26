@@ -324,13 +324,53 @@ function Conversation({ user }) {
             console.log('%cconversation.jsx line:324 data', 'color: white; background-color: #007acc;', data);
             if (data?.data?.tickets && data?.data?.tickets?.length !== 0) {
                 setTickets(data?.data?.tickets);
-                setWsTickets(data?.data?.tickets);
+                // setWsTickets(data?.data?.tickets);
             }
         });
         AppSocket.io.on(`ws_ticket`, (data) => {
             console.log('%cconversation.jsx line:331 data', 'color: white; background-color: #007acc;', data);
-            const ticketsData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
-            AppSocket.io.emit(`ws_tickets`, ticketsData);
+            // const ticketsData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
+            // AppSocket.io.emit(`ws_tickets`, ticketsData);
+            console.log('tickets => ', tickets);
+            setTickets((prev) => {
+                console.log('prev => ', prev);
+                // get ticket from existing
+                const currentTicket = prev.find((item) => item?.id === data?.id);
+                if (currentTicket) {
+                    // ticket of `data` exists
+                    // add new message history and update read count and push to first item in the array
+                    const newCurrentTicket = {
+                        ...currentTicket,
+                        history: Array.isArray(data?.history)
+                            ? [...data.history, ...currentTicket.history]
+                            : [...currentTicket.history],
+                        __meta__: {
+                            history_count:
+                                Number(currentTicket?.__meta__?.history_count) >= 0
+                                    ? Number(currentTicket.__meta__.history_count) + 1
+                                    : 1,
+                            unRead:
+                                Number(currentTicket.__meta__.unRead) >= 0
+                                    ? Number(currentTicket.__meta__.unRead) + 1
+                                    : 1,
+                        },
+                    };
+                    // remove current ticke from the tickets
+                    const remainingTickets = prev.filter((item) => item?.id !== data?.id);
+                    // make first item in the array
+                    return [newCurrentTicket, ...remainingTickets];
+                }
+                // ticket of `data` does not exist
+                const newTicket = {
+                    ...data,
+                    __meta__: {
+                        history_count: 1,
+                        unRead: 1,
+                    },
+                };
+                // add as first item
+                return [newTicket, ...prev];
+            });
         });
         return () => {
             AppSocket.io.disconnect();
@@ -366,10 +406,10 @@ function Conversation({ user }) {
         });
     }, [ticketId]);
     //
-    useEffect(() => {
-        setTickets(wsTickets);
-        setLoadingTicks(false);
-    }, [wsTickets]);
+    // useEffect(() => {
+    //     setTickets(wsTickets);
+    //     setLoadingTicks(false);
+    // }, [wsTickets]);
 
     useEffect(() => {
         setCustomFieldIsSet(false);
