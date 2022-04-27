@@ -106,9 +106,6 @@ function FlutterWaveAction({ config, setPlanState }) {
 }
 
 function Summary({ planState, setPlanState, plan, tenantInfo }) {
-    console.log('%cSummary.jsx line:109 planState', 'color: white; background-color: #007acc;', planState);
-    console.log('%cSummary.jsx line:110 plan', 'color: white; background-color: #007acc;', plan);
-    console.log('%cSummary.jsx line:111 tenantInfo', 'color: white; background-color: #007acc;', tenantInfo);
     return (
         <div className="summary-box">
             <h5>Summary</h5>

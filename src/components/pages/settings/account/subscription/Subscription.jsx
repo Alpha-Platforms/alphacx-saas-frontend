@@ -41,9 +41,9 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
     }, [isUserAuthenticated]);
 
     useEffect(() => {
-        const realAdmins = Array.isArray(admins) ? admins : [];
-        const realSupervisors = Array.isArray(supervisors) ? supervisors : [];
-        const realAgents = Array.isArray(agents) ? agents : [];
+        const realAdmins = Array.isArray(admins) ? admins.filter((item) => item?.isActivated === true) : [];
+        const realSupervisors = Array.isArray(supervisors) ? supervisors.filter((item) => item?.isActivated === true) : [];
+        const realAgents = Array.isArray(agents) ? agents.filter((item) => item?.isActivated === true) : [];
         setTotalUsers([...realAdmins, ...realSupervisors, ...realAgents]);
     }, [admins, supervisors, agents]);
 
