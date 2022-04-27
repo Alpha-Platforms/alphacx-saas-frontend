@@ -347,7 +347,6 @@ function Conversation({ user }) {
             // const ticketsData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
             // AppSocket.io.emit(`ws_tickets`, ticketsData);
             setTickets((prev) => {
-                console.log('single ticket => ', ticket);
                 // get ticket from existing
                 const currentTicket = prev.find((item) => item?.id === data?.id);
                 if (currentTicket) {

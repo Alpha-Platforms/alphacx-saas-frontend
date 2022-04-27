@@ -106,6 +106,9 @@ function FlutterWaveAction({ config, setPlanState }) {
 }
 
 function Summary({ planState, setPlanState, plan, tenantInfo }) {
+    console.log('%cSummary.jsx line:109 planState', 'color: white; background-color: #007acc;', planState);
+    console.log('%cSummary.jsx line:110 plan', 'color: white; background-color: #007acc;', plan);
+    console.log('%cSummary.jsx line:111 tenantInfo', 'color: white; background-color: #007acc;', tenantInfo);
     return (
         <div className="summary-box">
             <h5>Summary</h5>
@@ -120,9 +123,28 @@ function Summary({ planState, setPlanState, plan, tenantInfo }) {
                     </span>
                 </div>
                 <div>
-                    <span>{`${separateNum(
+                    {/* <span>{`${separateNum(
                         planState?.amount
                             ? planState?.amount
+                            : planState.numOfAgents * plan[planState?.billingCycle?.value],
+                    )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span> */}
+                    <span>{`${separateNum(
+                        planState.numOfAgents * plan[planState?.billingCycle?.value],
+                    )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
+                </div>
+            </div>
+
+            <div className="sbox-2 mt-3">
+                <div>
+                    <span>VAT</span>
+                </div>
+                <div>
+                    <span>{`${separateNum(
+                        planState?.amount
+                            ? Number(planState?.amount)
+                                ? Number(planState?.amount) -
+                                  planState.numOfAgents * plan[planState?.billingCycle?.value]
+                                : planState?.amount
                             : planState.numOfAgents * plan[planState?.billingCycle?.value],
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
                 </div>
