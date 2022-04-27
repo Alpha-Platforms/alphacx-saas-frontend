@@ -44,7 +44,9 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
         const realAdmins = Array.isArray(admins) ? admins.filter((item) => item?.isActivated === true) : [];
         const realSupervisors = Array.isArray(supervisors) ? supervisors.filter((item) => item?.isActivated === true) : [];
         const realAgents = Array.isArray(agents) ? agents.filter((item) => item?.isActivated === true) : [];
-        setTotalUsers([...realAdmins, ...realSupervisors, ...realAgents]);
+        const allUsers = [...realAdmins, ...realSupervisors, ...realAgents];
+        setTotalUsers(allUsers);
+        setPlanState((prev) => ({ ...prev, numOfAgents: allUsers.length }))
     }, [admins, supervisors, agents]);
 
     const [planState, setPlanState] = useState({
@@ -197,6 +199,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
                                                         tenantInfo={tenantInfo}
                                                         setPlanState={setPlanState}
                                                         subscription={subscription}
+                                                        totalUsers={totalUsers}
                                                     />
                                                 </div>
                                                 {planState.isUpdatingPlan &&

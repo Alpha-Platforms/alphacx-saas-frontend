@@ -10,7 +10,7 @@ import { separateNum } from '../../../../../../helper';
 import acxLogo from '../../../../../../assets/images/whitebg.jpg';
 // import ScaleLoader from 'react-spinners/ScaleLoader';
 
-function CurrentPlan({ plan, planState, tenantInfo, setPlanState, subscription }) {
+function CurrentPlan({ plan, planState, tenantInfo, setPlanState, subscription, totalUsers}) {
     const [initiating, setInitiating] = useState(false);
     const [addMoreUser, setAddMoreUser] = useState(false);
 
@@ -112,8 +112,14 @@ function CurrentPlan({ plan, planState, tenantInfo, setPlanState, subscription }
         }));
     }, [initiating]);
 
+    const handleNumChange = (e) => {
+        if (Number(e.target.value) < totalUsers?.length) return;
+        setPlanState((prev) => ({ ...prev, numOfAgents: e.target.value }))
+    }
+
     return (
         <div className="currentplan-box">
+            <p className='mb-1'><small><b>ⓘ</b> You can only pay for your number of active users ({totalUsers.length}) and above.</small></p>
             <div className="cp-top">
                 <div>
                     {/* <div>
@@ -137,8 +143,8 @@ function CurrentPlan({ plan, planState, tenantInfo, setPlanState, subscription }
                                 value={planState.numOfAgents}
                                 name="numOfAgents"
                                 id="numOfAgents"
-                                min={0}
-                                onChange={(e) => setPlanState((prev) => ({ ...prev, numOfAgents: e.target.value }))}
+                                min={totalUsers.length}
+                                onChange={handleNumChange}
                                 disabled={planState.isUpdatingPlan}
                             />
                         </div>
