@@ -160,10 +160,10 @@ export default function MessageList({
                                             ? ''
                                             : data?.history.length == 0
                                             ? ''
-                                            : data?.history[0].plain_response === null ||
-                                              data?.history[0].plain_response === undefined
+                                            : data?.history[0]?.plain_response === null ||
+                                              data?.history[0]?.plain_response === undefined
                                             ? ''
-                                            : data?.history[0].plain_response}
+                                            : data?.history[0]?.plain_response}
                                     </p>
                                     <div className="msg-badges">
                                         <div
@@ -177,11 +177,11 @@ export default function MessageList({
 
                                         <div
                                             style={{
-                                                background: `"${data?.status.background_color}"`,
-                                                color: `"${data?.status.forecolor}"`,
+                                                background: `"${data?.status?.background_color}"`,
+                                                color: `"${data?.status?.forecolor}"`,
                                             }}
                                         >
-                                            {data?.status.status}
+                                            {data?.status?.status}
                                         </div>
                                     </div>
                                 </div>

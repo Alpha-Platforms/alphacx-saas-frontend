@@ -336,17 +336,18 @@ function Conversation({ user }) {
     useEffect(() => {
         AppSocket.createConnection();
         AppSocket.io.on(`ws_tickets`, (data) => {
-            console.log('%cconversation.jsx line:324 data', 'color: white; background-color: #007acc;', data);
+            // console.log('%cconversation.jsx line:324 data', 'color: white; background-color: #007acc;', data);
             if (data?.data?.tickets && data?.data?.tickets?.length !== 0) {
                 setTickets(data?.data?.tickets);
                 // setWsTickets(data?.data?.tickets);
             }
         });
         AppSocket.io.on(`ws_ticket`, (data) => {
-            console.log('%cconversation.jsx line:331 data', 'color: white; background-color: #007acc;', data);
+            // console.log('%cconversation.jsx line:331 data', 'color: white; background-color: #007acc;', data);
             // const ticketsData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
             // AppSocket.io.emit(`ws_tickets`, ticketsData);
             setTickets((prev) => {
+                console.log('single ticket => ', ticket);
                 // get ticket from existing
                 const currentTicket = prev.find((item) => item?.id === data?.id);
                 if (currentTicket) {
@@ -392,7 +393,7 @@ function Conversation({ user }) {
 
     useEffect(() => {
         AppSocket.io.on(`message`, (data) => {
-            console.log('%cconversation.jsx line:342 data', 'color: white; background-color: #007acc;', data);
+            // console.log('%cconversation.jsx line:342 data', 'color: white; background-color: #007acc;', data);
             if (data.id === ticketId || data?.ticket?.id === ticketId /* for live-chat */) {
                 const msg = {
                     created_at: data.created_at,
@@ -409,6 +410,22 @@ function Conversation({ user }) {
                         }
                         return [...item, msg];
                     });
+                    setTimeout(() => {
+                        setTickets((prev) => {
+                            return prev.map((item) => {
+                                if (item?.id === ticketId) {
+                                    return {
+                                        ...item,
+                                        __meta__: {
+                                            ...item?.__meta__,
+                                            unRead: 0,
+                                        },
+                                    };
+                                }
+                                return item;
+                            });
+                        });
+                    }, 1000);
                 } else {
                     setMsgHistory((item) => [...item, msg]);
                 }
