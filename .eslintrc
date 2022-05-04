@@ -34,7 +34,8 @@
         "no-prototype-builtins": "off",
         "no-underscore-dangle": "off",
         "no-unused-expressions": "off",
-        "camelcase": "warn"
+        "camelcase": "warn",
+        "no-constant-condition": "off"
     },
     "parser": "@babel/eslint-parser"
 }

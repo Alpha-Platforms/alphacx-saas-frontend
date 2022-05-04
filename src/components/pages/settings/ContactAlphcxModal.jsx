@@ -1,12 +1,12 @@
-/* eslint-disable */
-import React, { useState, useEffect } from 'react';
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable react/prop-types */
+import React, { useState } from 'react';
 import { Modal } from 'react-responsive-modal';
 import { NotificationManager } from 'react-notifications';
-import ScaleLoader from 'react-spinners/ScaleLoader';
-import { httpPostMain } from '../../../helpers/httpMethods';
-// import "../../../../../styles/ModalCustomStyle.css";
+import axios from 'axios';
+import { config } from '../../../config/keys';
 
-function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalShow, isEditing }) {
+function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalShow }) {
     // create user modal
     const [creating, setCreating] = useState(false);
     const [newMessage, setNewMessage] = useState({
@@ -30,27 +30,42 @@ function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalSho
         if (!subject || !message) {
             return NotificationManager.error('All fields are required', 'Validation Error');
         }
+        let user;
+        // get user from localStorage
+        const localUser = window.localStorage.getItem('user');
+        if (localUser) {
+            user = JSON.parse(localUser)?.user;
+        }
 
         setCreating(true);
-        // const res = await httpPostMain("", newMessage);
+        const domain = window.localStorage.getItem('domain');
 
-        // FOR TEST ONLY
-        const res = await new Promise((resolve) => {
-            setTimeout(() => {
-                resolve({ status: 'success' });
-            }, 2000);
-        });
-        console.log(newMessage);
+        const supportBody = {
+            firstname: user?.firstname || '',
+            lastname: user?.lastname || '',
+            email: user?.email || '',
+            subject: `${domain} :: ${subject}`,
+            description: message,
+            plainDescription: message,
+            attachment: '',
+            channel: 'livechat',
+            support_ticket: true,
+        };
 
-        setCreating(false);
-
-        if (res.status === 'success' || res.status === 'Success') {
-            // setNewMessage({subject: "", message: ""});
-            setContactSupportModalShow(false);
-            NotificationManager.success('Message sent successfully', 'Success', 4000);
-        } else {
-            return NotificationManager.error(res?.er?.message, 'Error', 4000);
+        try {
+            const res = await axios.post(`${config.stagingBaseUrl}/customer/ticket`, supportBody, {
+                headers: { domain: 'manager' },
+            });
+            console.log('response => ', res.data);
+            if (res.data?.status?.toLowerCase() === 'success') {
+                NotificationManager.success('Message sent successfully', 'Success', 4000);
+                setContactSupportModalShow(false);
+            }
+        } catch (err) {
+            NotificationManager.error(err.response.data?.message, 'Error', 4000);
         }
+
+        return setCreating(false);
     };
 
     return (
@@ -64,7 +79,7 @@ function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalSho
             open={contactSupportModalShow}
             onClose={handleModalHide}
             aria-labelledby="contained-modal-title-vcenter"
-            centered
+            center
         >
             {/* <Modal.Body> */}
             <div className="saveTicketWrapModal p-4 pb-1 mb-0">
