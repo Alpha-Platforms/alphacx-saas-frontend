@@ -1,7 +1,9 @@
-/* eslint-disable */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable react/prop-types */
+/* eslint-disabled */
 // @ts-nocheck
+import React from 'react';
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
-import { Fragment, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { loadStripe } from '@stripe/stripe-js';
 import { CardElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
@@ -9,7 +11,7 @@ import { httpPost } from '../../../../../../helpers/httpMethods';
 import { getRealCurrency } from './SubTop';
 import { separateNum } from '../../../../../../helper';
 
-function CheckoutForm({ setPlanState }) {
+function CheckoutForm({ setPlanState, planState }) {
     const stripe = useStripe();
     const elements = useElements();
 
@@ -17,22 +19,27 @@ function CheckoutForm({ setPlanState }) {
         event.preventDefault();
 
         if (!stripe || !elements) {
+            // Stripe.js has not loaded yet.  stripe must be fully loaded before form submission
             return;
         }
 
-        const stripeRes = await stripe.createPaymentMethod({
-            type: 'card',
-            card: elements.getElement(CardElement),
+        // Get a reference to a mounted CardElement. Elements knows how
+        // to find your CardElement because there can only ever be one of
+        // each type of element.
+        const cardElement = elements.getElement(CardElement);
+
+        setPlanState((prev) => ({ ...prev, isVerifying: true }));
+
+        // get stripe's payment intent
+        const stripeRes = await stripe.confirmCardPayment(planState.stripeConfig?.clientSecret, {
+            payment_method: {
+                card: cardElement,
+            },
         });
 
-        /* const { error, token } = await stripe.createToken(elements.getElement(CardElement)); */
-
         if (!stripeRes?.error) {
-            // console.log('STRIPE RESPONSE => ', stripeRes);
-            setPlanState((prev) => ({ ...prev, isVerifying: true }));
-            const verifyPaymentRes = await httpPost(`subscriptions/verify-payment`, stripeRes?.paymentMethod);
+            const verifyPaymentRes = await httpPost(`subscriptions/verify-payment`, stripeRes?.paymentIntent);
             setPlanState((prev) => ({ ...prev, isVerifying: false }));
-
             if (verifyPaymentRes?.status === 'success') {
                 NotificationManager.success('', 'Transaction successful', 4000);
                 window.location.href = `/settings/account?tab=subscription`;
@@ -40,7 +47,8 @@ function CheckoutForm({ setPlanState }) {
                 // stripeConfig: null, amount: null, setSelectingPlan: false}));
             }
         } else {
-            console.log(stripeRes?.error);
+            setPlanState((prev) => ({ ...prev, isVerifying: false }));
+            console.error(stripeRes?.error);
         }
     };
 
@@ -60,6 +68,7 @@ function FlutterWaveAction({ config, setPlanState }) {
 
     return (
         <button
+            type="button"
             onClick={() => {
                 handleFlutterPayment({
                     callback: async (response) => {
@@ -111,9 +120,28 @@ function Summary({ planState, setPlanState, plan, tenantInfo }) {
                     </span>
                 </div>
                 <div>
-                    <span>{`${separateNum(
+                    {/* <span>{`${separateNum(
                         planState?.amount
                             ? planState?.amount
+                            : planState.numOfAgents * plan[planState?.billingCycle?.value],
+                    )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span> */}
+                    <span>{`${separateNum(
+                        planState.numOfAgents * plan[planState?.billingCycle?.value],
+                    )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
+                </div>
+            </div>
+
+            <div className="sbox-2 mt-3">
+                <div>
+                    <span>VAT</span>
+                </div>
+                <div>
+                    <span>{`${separateNum(
+                        planState?.amount
+                            ? Number(planState?.amount)
+                                ? Number(planState?.amount) -
+                                  planState.numOfAgents * plan[planState?.billingCycle?.value]
+                                : planState?.amount
                             : planState.numOfAgents * plan[planState?.billingCycle?.value],
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
                 </div>
@@ -144,7 +172,7 @@ function Summary({ planState, setPlanState, plan, tenantInfo }) {
                         name="coupoun"
                         placeholder="Enter Coupon Code"
                     />
-                    <button disabled>Apply</button>
+                    <button type="button" disabled>Apply</button>
                 </div>
             </div>
 
