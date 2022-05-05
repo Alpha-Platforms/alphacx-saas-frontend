@@ -335,6 +335,7 @@ function Conversation({ user }) {
     //
     useEffect(() => {
         AppSocket.createConnection();
+        AppSocket.createNativeConnection();
         AppSocket.io.on(`ws_tickets`, (data) => {
             // console.log('%cconversation.jsx line:324 data', 'color: white; background-color: #007acc;', data);
             if (data?.data?.tickets && data?.data?.tickets?.length !== 0) {

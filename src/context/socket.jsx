@@ -27,6 +27,48 @@ export function SocketDataProvider(props) {
         }
     };
 
+    console.log('AppSocket => ', AppSocket);
+
+    AppSocket.createNativeConnection = () => {
+        console.log('Attemting to call native');
+        if (AppSocket?.connected) return;
+        console.log('Called Native');
+
+        AppSocket.native = new WebSocket('wss://1jxn2z9fi1.execute-api.us-east-1.amazonaws.com/dev');
+        // listen for connection
+
+        AppSocket.native.addEventListener('open', (event) => {
+            AppSocket.connected = true;
+            console.log('connection is open => ', event);
+            const msg = {
+                "msgid":"123223",
+                "action":"authy",
+                "msglocation":"",
+                "msgplatform":"Web",
+                "msgtimestamp":"2022-05-01 10:45:32",
+                "msgsender": {
+                  "msgsenderdevice":"MAC-1029383",
+                  "msgsenderid":"Muna",
+                  "domain":"pluzzer"
+                }
+              };
+            AppSocket.native.send(JSON.stringify(msg));
+        });
+
+        // Listen for messages
+        AppSocket.native.addEventListener('message', (event) => {
+            console.log('Message from server ', JSON.parse(event.data));
+        });
+
+        AppSocket.native.addEventListener('error', function (event) {
+            console.log(event)
+        });
+        
+        AppSocket.native.addEventListener('close', function (event) {
+            console.log("socket close")
+        });
+    }
+
     AppSocket.createConnection = async () => {
         if (AppSocket.io?.connected) return; // if there has been a connection before, return
         // open a connection
@@ -57,6 +99,8 @@ export function SocketDataProvider(props) {
             console.log('App disconnected from server');
         }
     };
+
+    console.log('AppSocket => ', AppSocket);
 
     return (
         <SocketDataContext.Provider
