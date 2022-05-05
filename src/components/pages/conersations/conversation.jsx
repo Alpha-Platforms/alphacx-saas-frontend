@@ -50,6 +50,7 @@ import { multiIncludes } from '../../../helper';
 import { accessControlFunctions } from '../../../config/accessControlList';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './conversation.css';
+import Socket from '../../../socket';
 
 function YouTubeGetID(url) {
     let ID = '';
@@ -66,10 +67,13 @@ function YouTubeGetID(url) {
 const youtubeRegex =
     /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/;
 
+let socket;
+
 function Conversation({ user }) {
     const initialState = EditorState.createWithContent(ContentState.createFromText(''));
-    const { AppSocket } = useContext(SocketDataContext);
+    // const { AppSocket } = useContext(SocketDataContext);
     const [tickets, setTickets] = useState([]);
+    const [meta, setMeta] = useState({});
     const [filterTicketsState, setFilterTicketsState] = useState('');
     const [ticket, setTicket] = useState([]);
     const [loadingTicks, setLoadingTicks] = useState(true);
@@ -172,12 +176,13 @@ function Conversation({ user }) {
         setLoadSingleTicket(true);
         setSenderInfo({ customer, subject });
         setTicket([]);
-        // setChatCol({ col1: 'hideColOne', col2: 'showColTwo' });
-        // setMessageSenderId(id);
-        // setSingleTicketFullInfo();
+
+        /* 
+        FIXME:  handle with http if ought to
         const swData = { assigneeId: assignee?.id || '', userId: customer?.id || '' };
-        // customer.id && AppSocket.io.leave(`${customer.id}${assignee.id}`);
         AppSocket.io.emit('join_private', swData);
+         */
+
         const res = await httpGetMain(`tickets/${id}`);
         setfirstTimeLoad(false);
         if (res.status === 'success') {
@@ -198,16 +203,16 @@ function Conversation({ user }) {
                     return item;
                 }),
             );
-            // sortMsges(res?.data[0]?.history);
-            // setMessageSenderId(res?.data[0]?.id);
             setSaveTicket({
                 ...saveTicket,
                 customer: '',
                 subject: res?.data[0].subject,
                 description: res?.data[0].history,
             });
+            /* 
+            FIXME:  handle with http if ought to
             const ticketsData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
-            AppSocket.io.emit(`ws_tickets`, ticketsData);
+            AppSocket.io.emit(`ws_tickets`, ticketsData); */
 
             setLoadSingleTicket(false);
             return scrollPosSendMsgList(scrollPosition);
@@ -332,114 +337,125 @@ function Conversation({ user }) {
         getChannels();
     }, []);
 
-    //
     useEffect(() => {
-        AppSocket.createConnection();
-        AppSocket.createNativeConnection();
-        AppSocket.io.on(`ws_tickets`, (data) => {
-            // console.log('%cconversation.jsx line:324 data', 'color: white; background-color: #007acc;', data);
-            if (data?.data?.tickets && data?.data?.tickets?.length !== 0) {
-                setTickets(data?.data?.tickets);
-                // setWsTickets(data?.data?.tickets);
-            }
-        });
-        AppSocket.io.on(`ws_ticket`, (data) => {
-            // console.log('%cconversation.jsx line:331 data', 'color: white; background-color: #007acc;', data);
-            // const ticketsData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
-            // AppSocket.io.emit(`ws_tickets`, ticketsData);
-            setTickets((prev) => {
-                // get ticket from existing
-                const currentTicket = prev.find((item) => item?.id === data?.id);
-                if (currentTicket) {
-                    // ticket of `data` exists
-                    // add new message history and update read count and push to first item in the array
-                    const newCurrentTicket = {
-                        ...currentTicket,
-                        history: Array.isArray(data?.history)
-                            ? [...data.history, ...currentTicket.history]
-                            : [...currentTicket.history],
-                        __meta__: {
-                            history_count:
-                                Number(currentTicket?.__meta__?.history_count) >= 0
-                                    ? Number(currentTicket.__meta__.history_count) + 1
-                                    : 1,
-                            unRead:
-                                Number(currentTicket.__meta__.unRead) >= 0
-                                    ? Number(currentTicket.__meta__.unRead) + 1
-                                    : 1,
-                        },
-                    };
-                    // remove current ticke from the tickets
-                    const remainingTickets = prev.filter((item) => item?.id !== data?.id);
-                    // make first item in the array
-                    return [newCurrentTicket, ...remainingTickets];
+        (async () => {
+            const initRes = await httpGetMain(`tickets`);
+            console.log('%cconversation.jsx line:341 initRes', 'color: white; background-color: #007acc;', initRes);
+            if (initRes?.status === 'success') {
+                const res = await httpGetMain(`tickets?per_page=${initRes?.data?.meta?.totalItems}`);
+                if (res?.status === 'success') {
+                    setTickets(res?.data?.tickets || []);
+                    setMeta(res?.data?.meta || {});
+                    console.log('%cconversation.jsx line:345 res', 'color: white; background-color: #007acc;', res);
                 }
-                // ticket of `data` does not exist
-                const newTicket = {
-                    ...data,
-                    __meta__: {
-                        history_count: 1,
-                        unRead: 1,
-                    },
-                };
-                // add as first item
-                return [newTicket, ...prev];
-            });
-        });
-        return () => {
-            AppSocket.io.disconnect();
-        };
+            }
+        })();
     }, []);
 
-    useEffect(() => {
-        AppSocket.io.on(`message`, (data) => {
-            // console.log('%cconversation.jsx line:342 data', 'color: white; background-color: #007acc;', data);
-            if (data.id === ticketId || data?.ticket?.id === ticketId /* for live-chat */) {
-                const msg = {
-                    created_at: data.created_at,
-                    id: data?.history?.id || data?.id,
-                    plain_response: data?.history?.plain_response || data?.plain_response,
-                    response: data?.history?.response || data?.response,
-                    type: 'reply',
-                    user: data.user,
-                };
-                if (data?.channel === 'livechat' || data?.ticket?.channel === 'livechat') {
-                    setMsgHistory((item) => {
-                        if (item[item.length - 1]?.id === msg?.id) {
-                            return item;
-                        }
-                        return [...item, msg];
-                    });
-                    setTimeout(() => {
-                        setTickets((prev) => {
-                            return prev.map((item) => {
-                                if (item?.id === ticketId) {
-                                    return {
-                                        ...item,
-                                        __meta__: {
-                                            ...item?.__meta__,
-                                            unRead: 0,
-                                        },
-                                    };
-                                }
-                                return item;
-                            });
-                        });
-                    }, 1000);
-                } else {
-                    setMsgHistory((item) => [...item, msg]);
-                }
-            }
-            const ticketsData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
-            AppSocket.io.emit(`ws_tickets`, ticketsData);
-            scrollPosSendMsgList();
-        });
-    }, [ticketId]);
-    //
     // useEffect(() => {
-    //     setTickets(wsTickets);
-    //     setLoadingTicks(false);
-    // }, [wsTickets]);
+    //     AppSocket.createConnection();
+    //     AppSocket.createNativeConnection();
+    //     AppSocket.io.on(`ws_tickets`, (data) => {
+    //         // console.log('%cconversation.jsx line:324 data', 'color: white; background-color: #007acc;', data);
+    //         if (data?.data?.tickets && data?.data?.tickets?.length !== 0) {
+    //             setTickets(data?.data?.tickets);
+    //             // setWsTickets(data?.data?.tickets);
+    //         }
+    //     });
+    //     AppSocket.io.on(`ws_ticket`, (data) => {
+    //         // console.log('%cconversation.jsx line:331 data', 'color: white; background-color: #007acc;', data);
+    //         // const ticketsData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
+    //         // AppSocket.io.emit(`ws_tickets`, ticketsData);
+    //         setTickets((prev) => {
+    //             // get ticket from existing
+    //             const currentTicket = prev.find((item) => item?.id === data?.id);
+    //             if (currentTicket) {
+    //                 // ticket of `data` exists
+    //                 // add new message history and update read count and push to first item in the array
+    //                 const newCurrentTicket = {
+    //                     ...currentTicket,
+    //                     history: Array.isArray(data?.history)
+    //                         ? [...data.history, ...currentTicket.history]
+    //                         : [...currentTicket.history],
+    //                     __meta__: {
+    //                         history_count:
+    //                             Number(currentTicket?.__meta__?.history_count) >= 0
+    //                                 ? Number(currentTicket.__meta__.history_count) + 1
+    //                                 : 1,
+    //                         unRead:
+    //                             Number(currentTicket.__meta__.unRead) >= 0
+    //                                 ? Number(currentTicket.__meta__.unRead) + 1
+    //                                 : 1,
+    //                     },
+    //                 };
+    //                 // remove current ticke from the tickets
+    //                 const remainingTickets = prev.filter((item) => item?.id !== data?.id);
+    //                 // make first item in the array
+    //                 return [newCurrentTicket, ...remainingTickets];
+    //             }
+    //             // ticket of `data` does not exist
+    //             const newTicket = {
+    //                 ...data,
+    //                 __meta__: {
+    //                     history_count: 1,
+    //                     unRead: 1,
+    //                 },
+    //             };
+    //             // add as first item
+    //             return [newTicket, ...prev];
+    //         });
+    //     });
+    //     return () => {
+    //         AppSocket.io.disconnect();
+    //     };
+    // }, []);
+
+
+    // useEffect(() => {
+    //     AppSocket.io.on(`message`, (data) => {
+    //         if (data.id === ticketId || data?.ticket?.id === ticketId /* for live-chat */) {
+    //             const msg = {
+    //                 created_at: data.created_at,
+    //                 id: data?.history?.id || data?.id,
+    //                 plain_response: data?.history?.plain_response || data?.plain_response,
+    //                 response: data?.history?.response || data?.response,
+    //                 type: 'reply',
+    //                 user: data.user,
+    //             };
+    //             if (data?.channel === 'livechat' || data?.ticket?.channel === 'livechat') {
+    //                 setMsgHistory((item) => {
+    //                     if (item[item.length - 1]?.id === msg?.id) {
+    //                         return item;
+    //                     }
+    //                     return [...item, msg];
+    //                 });
+    //                 setTimeout(() => {
+    //                     setTickets((prev) => {
+    //                         return prev.map((item) => {
+    //                             if (item?.id === ticketId) {
+    //                                 return {
+    //                                     ...item,
+    //                                     __meta__: {
+    //                                         ...item?.__meta__,
+    //                                         unRead: 0,
+    //                                     },
+    //                                 };
+    //                             }
+    //                             return item;
+    //                         });
+    //                     });
+    //                 }, 1000);
+    //             } else {
+    //                 setMsgHistory((item) => [...item, msg]);
+    //             }
+    //         }
+    //         /* 
+    //         FIXME:  handle with http if ought to
+    //         const ticketsData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
+    //         AppSocket.io.emit(`ws_tickets`, ticketsData); */
+    //         scrollPosSendMsgList();
+    //     });
+    // }, [ticketId]);
 
     useEffect(() => {
         setCustomFieldIsSet(false);
@@ -514,16 +530,21 @@ function Conversation({ user }) {
     const filterTicket = (value, type) => {
         if (type === 'channel') {
             setChannel(value);
+
+            /* 
+            FIXME:  handle with http if ought to
             AppSocket.createConnection();
             const data = { channel: value === 'All' ? '' : value, per_page: 100 };
-            AppSocket.io.emit(`ws_tickets`, data);
+            AppSocket.io.emit(`ws_tickets`, data); */
         }
 
         if (type === 'status') {
             setstatus(value);
+            /* 
+            FIXME:  handle with http if ought to
             AppSocket.createConnection();
             const data = { status: value === 'All' ? '' : value, per_page: 100 };
-            AppSocket.io.emit(`ws_tickets`, data);
+            AppSocket.io.emit(`ws_tickets`, data); */
         }
         setFilterTicketsState(value);
     };
@@ -589,8 +610,10 @@ function Conversation({ user }) {
             setEditorUploadImg('');
             setReplyTicket({ plainText: '', richText: '' });
             // emit ws_tickets event on reply
+            /* 
+            FIXME:  handle with http if ought to
             const channelData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
-            return AppSocket.io.emit(`ws_tickets`, channelData);
+            return AppSocket.io.emit(`ws_tickets`, channelData); */
         }
         setSendingReply(false);
         return NotificationManager.error(res?.er?.message, 'Error', 4000);
@@ -622,8 +645,10 @@ function Conversation({ user }) {
 
             setMsgHistory((item) => [...item, replyData]);
 
+            /*
+            FIXME:  handle with http if ought to
             const channelData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
-            AppSocket.io.emit(`ws_tickets`, channelData);
+            AppSocket.io.emit(`ws_tickets`, channelData); */
 
             return NotificationManager.success('Ticket status successfully updated', 'Success');
         }
@@ -673,9 +698,13 @@ function Conversation({ user }) {
             setProcessing(false);
             closeSaveTicketModal();
             NotificationManager.success('Ticket successfully updated', 'Success');
+
+            /*
+            FIXME: handle with http if ought to 
             AppSocket.createConnection();
             const socketData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
             AppSocket.io.emit(`ws_tickets`, socketData);
+ */
             const ticketRes = await httpGetMain(`tickets/${ticket[0].id}`);
             if (ticketRes.status === 'success') {
                 setTicket(ticketRes?.data);
