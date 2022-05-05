@@ -67,7 +67,7 @@ function YouTubeGetID(url) {
 const youtubeRegex =
     /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/;
 
-let socket;
+let appSocket;
 
 function Conversation({ user }) {
     const initialState = EditorState.createWithContent(ContentState.createFromText(''));
@@ -350,7 +350,24 @@ function Conversation({ user }) {
                 }
             }
         })();
+
+        const loggedInUser = JSON.stringify(window.localStorage.getItem('user') || '{}');
+        const domain = window.localStorage.getItem('domain');
+
+        appSocket = new Socket(loggedInUser?.id, domain);
+        /* create a socket connection */
+        appSocket.createConnection();
+
+        // useEffect clean up
+        return () => appSocket.socket.close();
     }, []);
+
+    useEffect(() => {
+        // Listen for messages
+        appSocket.socket.addEventListener('message', (event) => {
+            console.log('Message from server ', JSON.parse(event.data));
+        });
+    }, [ticketId]);
 
     // useEffect(() => {
     //     AppSocket.createConnection();
@@ -409,7 +426,6 @@ function Conversation({ user }) {
     //         AppSocket.io.disconnect();
     //     };
     // }, []);
-
 
     // useEffect(() => {
     //     AppSocket.io.on(`message`, (data) => {

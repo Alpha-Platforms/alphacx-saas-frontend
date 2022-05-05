@@ -92,7 +92,7 @@ class Socket {
                     msgreciever: {
                         ...this.defaultMsgObj.msgreciever,
                         ...newMsgObj.msgreciever,
-                    }
+                    },
                 },
                 null,
                 4,

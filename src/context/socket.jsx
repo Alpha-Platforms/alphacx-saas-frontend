@@ -27,7 +27,7 @@ export function SocketDataProvider(props) {
         }
     };
 
-    console.log('AppSocket => ', AppSocket);
+/*     console.log('AppSocket => ', AppSocket);
 
     AppSocket.createNativeConnection = () => {
         console.log('Attemting to call native');
@@ -67,7 +67,7 @@ export function SocketDataProvider(props) {
         AppSocket.native.addEventListener('close', function (event) {
             console.log("socket close")
         });
-    }
+    } */
 
     AppSocket.createConnection = async () => {
         if (AppSocket.io?.connected) return; // if there has been a connection before, return
@@ -99,8 +99,6 @@ export function SocketDataProvider(props) {
             console.log('App disconnected from server');
         }
     };
-
-    console.log('AppSocket => ', AppSocket);
 
     return (
         <SocketDataContext.Provider
