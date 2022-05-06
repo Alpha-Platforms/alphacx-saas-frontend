@@ -17,7 +17,8 @@ class Socket {
     domain;
 
     constructor(userId, domain) {
-        this.user = userId;
+        this.userId = userId;
+        this.domain = domain;
         this.defaultMsgObj = {
             msgid: uuid(),
             action: 'liveStream',
@@ -67,6 +68,8 @@ class Socket {
                 },
             };
 
+            console.log('%csocket.js line:70 msg', 'color: white; background-color: #007acc;', msg);
+
             this.socket.send(JSON.stringify(msg));
         });
 
@@ -79,6 +82,29 @@ class Socket {
         });
     }
 
+    /**
+     *  A typical liveStream message object
+     * {
+            "msgid":"123223",
+            "action":"liveStream",
+            "msglocation":"lat:38.8951, log:-77.0364",
+            "msgplatform":"web",
+            "msgtimestamp":"2020-06-30 10:45",
+            "msgsender":{
+            "msgsenderdevice":"MAC-1029383",
+            "msgsenderid":"muna",
+            "domain":"pluzzer"
+            },
+            "msgreciever":{
+            "msgrecieverid":"chima",
+            "domain":"pluzzer"
+            },
+            "payload":{}
+        }
+     *
+     * @param {*} newMsgObj
+     * @memberof Socket
+     */
     sendMessage(newMsgObj) {
         this.send(
             JSON.stringify(

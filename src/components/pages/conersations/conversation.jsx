@@ -339,19 +339,19 @@ function Conversation({ user }) {
 
     useEffect(() => {
         (async () => {
-            const initRes = await httpGetMain(`tickets`);
+            const initRes = await httpGetMain(`tickets?per_page=100`);
             console.log('%cconversation.jsx line:341 initRes', 'color: white; background-color: #007acc;', initRes);
             if (initRes?.status === 'success') {
-                const res = await httpGetMain(`tickets?per_page=${initRes?.data?.meta?.totalItems}`);
-                if (res?.status === 'success') {
-                    setTickets(res?.data?.tickets || []);
-                    setMeta(res?.data?.meta || {});
-                    console.log('%cconversation.jsx line:345 res', 'color: white; background-color: #007acc;', res);
-                }
+                setTickets(initRes?.data?.tickets || []);
+                setMeta(initRes?.data?.meta || {});
+                // const res = await httpGetMain(`tickets?per_page=${initRes?.data?.meta?.totalItems}`);
+                // if (res?.status === 'success') {
+                //     console.log('%cconversation.jsx line:345 res', 'color: white; background-color: #007acc;', res);
+                // }
             }
         })();
 
-        const loggedInUser = JSON.stringify(window.localStorage.getItem('user') || '{}');
+        const loggedInUser = JSON.parse(window.localStorage.getItem('user') || '{}')?.user;
         const domain = window.localStorage.getItem('domain');
 
         appSocket = new Socket(loggedInUser?.id, domain);
@@ -370,7 +370,7 @@ function Conversation({ user }) {
     }, [ticketId]);
 
     // useEffect(() => {
-    //     AppSocket.createConnection();
+    //     ApSocket.createConnection();
     //     AppSocket.createNativeConnection();
     //     AppSocket.io.on(`ws_tickets`, (data) => {
     //         // console.log('%cconversation.jsx line:324 data', 'color: white; background-color: #007acc;', data);
