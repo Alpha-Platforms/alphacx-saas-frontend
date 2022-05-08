@@ -29,6 +29,7 @@ function LiveChatSettings({
         domains: '',
         theme: '#004882',
         tenantDomain: window.localStorage.getItem('domain'),
+        tenantDomainId: window.localStorage.getItem('tenantId'),
     });
 
     const [loading, setLoading] = useState(true);

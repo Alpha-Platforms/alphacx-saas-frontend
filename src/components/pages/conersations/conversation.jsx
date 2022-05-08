@@ -170,12 +170,19 @@ function Conversation({ user }) {
         return NotificationManager.error(res.er.message, 'Error', 4000);
     };
 
-    const loadSingleMessage = async ({ id, customer, assignee, subject }) => {
+    const loadSingleMessage = async ({ id, customer, assignee, subject, ...rest }) => {
         setAchiveMsges([]);
         getUser(customer.id);
         setLoadSingleTicket(true);
         setSenderInfo({ customer, subject });
         setTicket([]);
+
+        appSocket.sendAuthyMessage({
+            msgid: id,
+            msgsender: {
+                msgsenderid: assignee?.id,
+            },
+        });
 
         /* 
         FIXME:  handle with http if ought to

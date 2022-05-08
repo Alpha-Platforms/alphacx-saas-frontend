@@ -1,5 +1,4 @@
 // @ts-nocheck
-import dayjs from 'dayjs';
 import { config } from './config/keys';
 import { uuid } from './helper';
 
@@ -12,19 +11,21 @@ class Socket {
 
     userId;
 
-    defaultMsgObj;
+    defaultLiveSteamMsg;
+
+    defaultAuthyMsg;
 
     domain;
 
     constructor(userId, domain) {
         this.userId = userId;
         this.domain = domain;
-        this.defaultMsgObj = {
+        this.defaultLiveSteamMsg = {
             msgid: uuid(),
             action: 'liveStream',
             msglocation: '',
             msgplatform: 'web',
-            msgtimestamp: dayjs(),
+            msgtimestamp: new Date(),
             msgsender: {
                 msgsenderdevice: navigator.userAgent,
                 msgsenderid: userId,
@@ -35,6 +36,19 @@ class Socket {
                 domain,
             },
             payload: {},
+        };
+
+        this.defaultAuthyMsg = {
+            msgid: uuid(),
+            action: 'authy',
+            msglocation: '',
+            msgplatform: 'Web',
+            msgtimestamp: new Date(),
+            msgsender: {
+                msgsenderdevice: navigator.userAgent,
+                msgsenderid: userId,
+                domain,
+            },
         };
     }
 
@@ -55,22 +69,7 @@ class Socket {
 
             console.log('Connection is open => ', event);
 
-            const msg = {
-                msgid: uuid(),
-                action: 'authy',
-                msglocation: '',
-                msgplatform: 'Web',
-                msgtimestamp: dayjs(),
-                msgsender: {
-                    msgsenderdevice: navigator.userAgent,
-                    msgsenderid: this.userId,
-                    domain: this.domain,
-                },
-            };
-
-            console.log('%csocket.js line:70 msg', 'color: white; background-color: #007acc;', msg);
-
-            this.socket.send(JSON.stringify(msg));
+            this.sendAuthyMessage();
         });
 
         this.socket.addEventListener('error', (event) => {
@@ -83,47 +82,42 @@ class Socket {
     }
 
     /**
-     *  A typical liveStream message object
-     * {
-            "msgid":"123223",
-            "action":"liveStream",
-            "msglocation":"lat:38.8951, log:-77.0364",
-            "msgplatform":"web",
-            "msgtimestamp":"2020-06-30 10:45",
-            "msgsender":{
-            "msgsenderdevice":"MAC-1029383",
-            "msgsenderid":"muna",
-            "domain":"pluzzer"
-            },
-            "msgreciever":{
-            "msgrecieverid":"chima",
-            "domain":"pluzzer"
-            },
-            "payload":{}
-        }
      *
      * @param {*} newMsgObj
      * @memberof Socket
      */
-    sendMessage(newMsgObj) {
-        this.send(
-            JSON.stringify(
-                {
-                    ...this.defaultMsgObj,
-                    ...newMsgObj,
-                    msgsender: {
-                        ...this.defaultMsgObj.msgsender,
-                        ...newMsgObj.msgsender,
-                    },
-                    msgreciever: {
-                        ...this.defaultMsgObj.msgreciever,
-                        ...newMsgObj.msgreciever,
-                    },
-                },
-                null,
-                4,
-            ),
-        );
+    sendLiveStreamMessage(newMsgObj = {}) {
+        const msgObj = {
+            ...this.defaultLiveSteamMsg,
+            ...newMsgObj,
+            msgsender: {
+                ...this.defaultLiveSteamMsg.msgsender,
+                ...newMsgObj?.msgsender,
+            },
+            msgreciever: {
+                ...this.defaultLiveSteamMsg.msgreciever,
+                ...newMsgObj?.msgreciever,
+            },
+        };
+
+        console.log('%csocket.js line:106 LIVESTREAM MESSAGE', 'color: white; background-color: #007acc;', msgObj);
+
+        this.socket.send(JSON.stringify(msgObj, null, 4));
+    }
+
+    sendAuthyMessage(newMsgObj = {}) {
+        console.log('Calling authy');
+        const msgObj = {
+            ...this.defaultAuthyMsg,
+            ...newMsgObj,
+            msgsender: {
+                ...this.defaultAuthyMsg.msgsender,
+                ...newMsgObj?.msgsender,
+            },
+        };
+
+        console.log('%csocket.js line:121 AUTHY MESSAGE', 'color: white; background-color: #007acc;', msgObj);
+        this.socket.send(JSON.stringify(msgObj));
     }
 }
 
