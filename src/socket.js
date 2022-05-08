@@ -17,9 +17,13 @@ class Socket {
 
     domain;
 
-    constructor(userId, domain) {
+    tenantId;
+
+    constructor(userId, domain, tenantId) {
         this.userId = userId;
         this.domain = domain;
+        this.tenantId = tenantId;
+
         this.defaultLiveSteamMsg = {
             msgid: uuid(),
             action: 'liveStream',
@@ -28,14 +32,15 @@ class Socket {
             msgtimestamp: new Date(),
             msgsender: {
                 msgsenderdevice: navigator.userAgent,
-                msgsenderid: userId,
+                msgsenderid: tenantId,
                 domain,
+                tenantid: tenantId,
+                accounttype: 'agent',
             },
             msgreciever: {
-                // msgrecieverid: 'chima',
                 domain,
             },
-            payload: {},
+            data: {},
         };
 
         this.defaultAuthyMsg = {
@@ -46,8 +51,10 @@ class Socket {
             msgtimestamp: new Date(),
             msgsender: {
                 msgsenderdevice: navigator.userAgent,
-                msgsenderid: userId,
+                tenantid: tenantId,
+                msgsenderid: tenantId,
                 domain,
+                accounttype: 'agent',
             },
         };
     }
@@ -106,7 +113,6 @@ class Socket {
     }
 
     sendAuthyMessage(newMsgObj = {}) {
-        console.log('Calling authy');
         const msgObj = {
             ...this.defaultAuthyMsg,
             ...newMsgObj,

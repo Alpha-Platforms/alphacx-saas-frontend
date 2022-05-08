@@ -177,13 +177,6 @@ function Conversation({ user }) {
         setSenderInfo({ customer, subject });
         setTicket([]);
 
-        appSocket.sendAuthyMessage({
-            msgid: id,
-            msgsender: {
-                msgsenderid: assignee?.id,
-            },
-        });
-
         /* 
         FIXME:  handle with http if ought to
         const swData = { assigneeId: assignee?.id || '', userId: customer?.id || '' };
@@ -360,8 +353,9 @@ function Conversation({ user }) {
 
         const loggedInUser = JSON.parse(window.localStorage.getItem('user') || '{}')?.user;
         const domain = window.localStorage.getItem('domain');
+        const tenantId = window.localStorage.getItem('tenantId');
 
-        appSocket = new Socket(loggedInUser?.id, domain);
+        appSocket = new Socket(loggedInUser?.id, domain, tenantId);
         /* create a socket connection */
         appSocket.createConnection();
 
