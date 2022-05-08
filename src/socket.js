@@ -85,6 +85,7 @@ class Socket {
 
         this.socket.addEventListener('close', (event) => {
             console.log('%csocket.js WebSocket has closed: ', 'color: white; background-color: #007acc;', event);
+            this.socket = new WebSocket(this.socketUrl);
         });
     }
 
