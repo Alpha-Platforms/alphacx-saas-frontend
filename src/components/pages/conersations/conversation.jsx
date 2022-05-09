@@ -388,8 +388,6 @@ function Conversation({ user }) {
         };
     }, []);
 
-    console.log('message history => ', msgHistory);
-
     useEffect(() => {
         // Listen for messages
         appSocket?.socket.addEventListener('message', (event) => {
@@ -609,6 +607,10 @@ function Conversation({ user }) {
         setMsgHistory((item) => [...item, replyData]);
 
         const res = await httpPostMain(`tickets/${singleTicketFullInfo.id}/replies`, data);
+        // deep copy the currently loaded ticket
+        const currentTicket = JSON.parse(JSON.stringify(singleTicketFullInfo));
+        // remove history property from object before sending via socket
+        Reflect.deleteProperty(currentTicket, 'history');
 
         if (res?.status === 'success') {
             const msgObj = {
@@ -616,7 +618,7 @@ function Conversation({ user }) {
                     msgrecieverid: singleTicketFullInfo?.customer?.id,
                 },
                 data: {
-                    ...singleTicketFullInfo,
+                    ...currentTicket,
                     reply: {
                         ...data,
                         uuid: uuid(),
