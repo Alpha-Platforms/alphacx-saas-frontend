@@ -29,6 +29,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { NotificationManager } from 'react-notifications';
+import debounce from 'debounce';
 import MessageList from './messageList';
 import searchIcon from '../../../assets/imgF/Search.png';
 import NoChatFound from './noChatFound';
@@ -46,7 +47,7 @@ import boldB from '../../../assets/imgF/boldB.png';
 import Smiley from '../../../assets/imgF/Smiley.png';
 import editorImg from '../../../assets/imgF/editorImg.png';
 import BackArrow from '../../../assets/imgF/back.png';
-import { multiIncludes } from '../../../helper';
+import { multiIncludes, uuid } from '../../../helper';
 import { accessControlFunctions } from '../../../config/accessControlList';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './conversation.css';
@@ -68,6 +69,7 @@ const youtubeRegex =
     /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/;
 
 let appSocket;
+let replyUuid;
 
 function Conversation({ user }) {
     const initialState = EditorState.createWithContent(ContentState.createFromText(''));
@@ -359,120 +361,106 @@ function Conversation({ user }) {
         /* create a socket connection */
         appSocket.createConnection();
 
+        appSocket?.socket.addEventListener('close', (event) => {
+            console.log('%csocket.js WebSocket has closed: ', 'color: white; background-color: #007acc;', event);
+            if (navigator.onLine) {
+                // appSocket.createConnection();
+            }
+        });
+
+        const closeConnection = () => {
+            console.log('close connection function fired');
+            appSocket?.socket.close();
+        };
+        const openConnection = () => {
+            console.log('open connection function fired');
+            appSocket?.createConnection();
+        };
+
+        window.document.addEventListener('online', openConnection);
+        window.document.addEventListener('offline', closeConnection);
+
         // useEffect clean up
-        return () => appSocket.socket.close();
+        return () => {
+            window.document.removeEventListener('online', openConnection);
+            window.document.removeEventListener('offline', closeConnection);
+            closeConnection();
+        };
     }, []);
+
+    console.log('message history => ', msgHistory);
 
     useEffect(() => {
         // Listen for messages
-        appSocket.socket.addEventListener('message', (event) => {
+        appSocket?.socket.addEventListener('message', (event) => {
             console.log('Message from server ', JSON.parse(event.data));
+            const eventData = JSON.parse(event.data);
+            if (eventData?.type === 'liveStream' && eventData?.status === 'incoming') {
+                const data = eventData?.data;
+                scrollPosSendMsgList('#lastMsg');
+
+                if (ticketId) {
+                    const reply = {
+                        created_at: data?.reply?.created_at || new Date(),
+                        id: data?.reply?.id || uuid(),
+                        ...data?.reply,
+                    };
+                    // set message history only when the
+                    debounce(
+                        setMsgHistory((prev) => {
+                            const lastMsg = prev.reverse()[0];
+                            if (lastMsg?.uuid && lastMsg?.uuid === data?.reply) return prev;
+                            return [...prev, reply];
+                        }),
+                        2000,
+                    );
+                }
+                debounce(
+                    setTickets((prev) => {
+                        // get ticket from existing
+                        const currentTicket = prev.find((item) => item?.id === data?.id);
+                        if (currentTicket) {
+                            // ticket of `data` exists
+                            // add new message history and update read count and push to first item in the array
+                            const newCurrentTicket = {
+                                ...currentTicket,
+                                history: Array.isArray(data?.history)
+                                    ? [...data.history, ...currentTicket.history]
+                                    : data?.reply
+                                    ? [data?.reply, ...currentTicket.history]
+                                    : [...currentTicket.history],
+                                __meta__: {
+                                    history_count:
+                                        Number(currentTicket?.__meta__?.history_count) >= 0
+                                            ? Number(currentTicket.__meta__.history_count) + 1
+                                            : 1,
+                                    unRead:
+                                        Number(currentTicket.__meta__.unRead) >= 0
+                                            ? Number(currentTicket.__meta__.unRead) + 1
+                                            : 1,
+                                },
+                            };
+                            // remove current ticke from the tickets
+                            const remainingTickets = prev.filter((item) => item?.id !== data?.id);
+                            // make first item in the array
+                            return [newCurrentTicket, ...remainingTickets];
+                        }
+                        // ticket of `data` does not exist
+                        const newTicket = {
+                            ...data,
+                            __meta__: {
+                                history_count: 1,
+                                unRead: 1,
+                            },
+                        };
+                        // add as first item
+                        return [newTicket, ...prev];
+                    }),
+                    2000,
+                );
+            }
         });
     }, [ticketId]);
-
-    // useEffect(() => {
-    //     ApSocket.createConnection();
-    //     AppSocket.createNativeConnection();
-    //     AppSocket.io.on(`ws_tickets`, (data) => {
-    //         // console.log('%cconversation.jsx line:324 data', 'color: white; background-color: #007acc;', data);
-    //         if (data?.data?.tickets && data?.data?.tickets?.length !== 0) {
-    //             setTickets(data?.data?.tickets);
-    //             // setWsTickets(data?.data?.tickets);
-    //         }
-    //     });
-    //     AppSocket.io.on(`ws_ticket`, (data) => {
-    //         // console.log('%cconversation.jsx line:331 data', 'color: white; background-color: #007acc;', data);
-    //         // const ticketsData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
-    //         // AppSocket.io.emit(`ws_tickets`, ticketsData);
-    //         setTickets((prev) => {
-    //             // get ticket from existing
-    //             const currentTicket = prev.find((item) => item?.id === data?.id);
-    //             if (currentTicket) {
-    //                 // ticket of `data` exists
-    //                 // add new message history and update read count and push to first item in the array
-    //                 const newCurrentTicket = {
-    //                     ...currentTicket,
-    //                     history: Array.isArray(data?.history)
-    //                         ? [...data.history, ...currentTicket.history]
-    //                         : [...currentTicket.history],
-    //                     __meta__: {
-    //                         history_count:
-    //                             Number(currentTicket?.__meta__?.history_count) >= 0
-    //                                 ? Number(currentTicket.__meta__.history_count) + 1
-    //                                 : 1,
-    //                         unRead:
-    //                             Number(currentTicket.__meta__.unRead) >= 0
-    //                                 ? Number(currentTicket.__meta__.unRead) + 1
-    //                                 : 1,
-    //                     },
-    //                 };
-    //                 // remove current ticke from the tickets
-    //                 const remainingTickets = prev.filter((item) => item?.id !== data?.id);
-    //                 // make first item in the array
-    //                 return [newCurrentTicket, ...remainingTickets];
-    //             }
-    //             // ticket of `data` does not exist
-    //             const newTicket = {
-    //                 ...data,
-    //                 __meta__: {
-    //                     history_count: 1,
-    //                     unRead: 1,
-    //                 },
-    //             };
-    //             // add as first item
-    //             return [newTicket, ...prev];
-    //         });
-    //     });
-    //     return () => {
-    //         AppSocket.io.disconnect();
-    //     };
-    // }, []);
-
-    // useEffect(() => {
-    //     AppSocket.io.on(`message`, (data) => {
-    //         if (data.id === ticketId || data?.ticket?.id === ticketId /* for live-chat */) {
-    //             const msg = {
-    //                 created_at: data.created_at,
-    //                 id: data?.history?.id || data?.id,
-    //                 plain_response: data?.history?.plain_response || data?.plain_response,
-    //                 response: data?.history?.response || data?.response,
-    //                 type: 'reply',
-    //                 user: data.user,
-    //             };
-    //             if (data?.channel === 'livechat' || data?.ticket?.channel === 'livechat') {
-    //                 setMsgHistory((item) => {
-    //                     if (item[item.length - 1]?.id === msg?.id) {
-    //                         return item;
-    //                     }
-    //                     return [...item, msg];
-    //                 });
-    //                 setTimeout(() => {
-    //                     setTickets((prev) => {
-    //                         return prev.map((item) => {
-    //                             if (item?.id === ticketId) {
-    //                                 return {
-    //                                     ...item,
-    //                                     __meta__: {
-    //                                         ...item?.__meta__,
-    //                                         unRead: 0,
-    //                                     },
-    //                                 };
-    //                             }
-    //                             return item;
-    //                         });
-    //                     });
-    //                 }, 1000);
-    //             } else {
-    //                 setMsgHistory((item) => [...item, msg]);
-    //             }
-    //         }
-    //         /* 
-    //         FIXME:  handle with http if ought to
-    //         const ticketsData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
-    //         AppSocket.io.emit(`ws_tickets`, ticketsData); */
-    //         scrollPosSendMsgList();
-    //     });
-    // }, [ticketId]);
 
     useEffect(() => {
         setCustomFieldIsSet(false);
@@ -568,6 +556,8 @@ function Conversation({ user }) {
 
     const replyTicket = async (reply, attachment, type = replyType) => {
         scollPosSendMsg();
+
+        // return console.log('%cconversation.jsx line:572 singleTicketFullInfo', 'color: white; background-color: #007acc;', singleTicketFullInfo);
         // console.log(singleTicketFullInfo);
         const filterSentTick = tickets.filter((tic) => {
             return tic.id === singleTicketFullInfo.id;
@@ -616,23 +606,31 @@ function Conversation({ user }) {
             mentions: agentMentions,
         };
 
+        setMsgHistory((item) => [...item, replyData]);
+
         const res = await httpPostMain(`tickets/${singleTicketFullInfo.id}/replies`, data);
 
         if (res?.status === 'success') {
-            if (ticket[0]?.channel !== 'livechat') {
-                setMsgHistory((item) => [...item, replyData]);
-            }
+            const msgObj = {
+                msgreciever: {
+                    msgrecieverid: singleTicketFullInfo?.customer?.id,
+                },
+                data: {
+                    ...singleTicketFullInfo,
+                    reply: {
+                        ...data,
+                        uuid: uuid(),
+                    },
+                },
+            };
+            appSocket.sendLiveStreamMessage(msgObj);
             scrollPosSendMsgList();
             setEditorState(initialState);
             setEditorUploadImg('');
-            setReplyTicket({ plainText: '', richText: '' });
-            // emit ws_tickets event on reply
-            /* 
-            FIXME:  handle with http if ought to
-            const channelData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
-            return AppSocket.io.emit(`ws_tickets`, channelData); */
+            return setReplyTicket({ plainText: '', richText: '' });
         }
-        setSendingReply(false);
+
+        // setSendingReply(false);
         return NotificationManager.error(res?.er?.message, 'Error', 4000);
     };
 

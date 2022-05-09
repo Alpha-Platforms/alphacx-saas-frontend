@@ -25,7 +25,7 @@ class Socket {
         this.tenantId = tenantId;
 
         this.defaultLiveSteamMsg = {
-            msgid: uuid(),
+            msgid: domain,
             action: 'liveStream',
             msglocation: '',
             msgplatform: 'web',
@@ -39,12 +39,14 @@ class Socket {
             },
             msgreciever: {
                 domain,
+                msgrecieverid: tenantId,
+                tenantid: tenantId,
             },
             data: {},
         };
 
         this.defaultAuthyMsg = {
-            msgid: uuid(),
+            msgid: domain,
             action: 'authy',
             msglocation: '',
             msgplatform: 'Web',
@@ -81,11 +83,6 @@ class Socket {
 
         this.socket.addEventListener('error', (event) => {
             console.log('%cerror socket.js WebSocket Error', 'color: red; display: block; width: 100%;', event);
-        });
-
-        this.socket.addEventListener('close', (event) => {
-            console.log('%csocket.js WebSocket has closed: ', 'color: white; background-color: #007acc;', event);
-            this.socket = new WebSocket(this.socketUrl);
         });
     }
 
