@@ -47,7 +47,7 @@ import boldB from '../../../assets/imgF/boldB.png';
 import Smiley from '../../../assets/imgF/Smiley.png';
 import editorImg from '../../../assets/imgF/editorImg.png';
 import BackArrow from '../../../assets/imgF/back.png';
-import { multiIncludes, uuid } from '../../../helper';
+import { multiIncludes } from '../../../helper';
 import { accessControlFunctions } from '../../../config/accessControlList';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './conversation.css';
@@ -68,8 +68,7 @@ function YouTubeGetID(url) {
 const youtubeRegex =
     /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/;
 
-let appSocket;
-let replyUuid;
+// let appSocket;
 
 function Conversation({ user }) {
     const initialState = EditorState.createWithContent(ContentState.createFromText(''));
@@ -142,6 +141,8 @@ function Conversation({ user }) {
     const [scrollPosition, setScrollPosition] = useState('#lastMsg');
     const [editorUploadImg, setEditorUploadImg] = useState('');
     const location = useLocation();
+    const [appSocket, setAppSocket] = useState(null);
+    const [connectionClosed, setConnectionClosed] = useState(false);
 
     // youtube player options
     const youtubePlayerOptions = {
@@ -172,7 +173,7 @@ function Conversation({ user }) {
         return NotificationManager.error(res.er.message, 'Error', 4000);
     };
 
-    const loadSingleMessage = async ({ id, customer, assignee, subject, ...rest }) => {
+    const loadSingleMessage = async ({ id, customer, assignee, subject }) => {
         setAchiveMsges([]);
         getUser(customer.id);
         setLoadSingleTicket(true);
@@ -353,40 +354,45 @@ function Conversation({ user }) {
             }
         })();
 
-        const loggedInUser = JSON.parse(window.localStorage.getItem('user') || '{}')?.user;
-        const domain = window.localStorage.getItem('domain');
-        const tenantId = window.localStorage.getItem('tenantId');
-
-        appSocket = new Socket(loggedInUser?.id, domain, tenantId);
-        /* create a socket connection */
-        appSocket.createConnection();
-
-        appSocket?.socket.addEventListener('close', (event) => {
-            console.log('%csocket.js WebSocket has closed: ', 'color: white; background-color: #007acc;', event);
-            if (navigator.onLine) {
-                // appSocket.createConnection();
-            }
-        });
-
-        const closeConnection = () => {
-            console.log('close connection function fired');
-            appSocket?.socket.close();
-        };
-        const openConnection = () => {
-            console.log('open connection function fired');
-            appSocket?.createConnection();
-        };
-
-        window.document.addEventListener('online', openConnection);
-        window.document.addEventListener('offline', closeConnection);
-
-        // useEffect clean up
-        return () => {
-            window.document.removeEventListener('online', openConnection);
-            window.document.removeEventListener('offline', closeConnection);
-            closeConnection();
-        };
     }, []);
+
+    const loggedInUser = JSON.parse(window.localStorage.getItem('user') || '{}')?.user;
+    const domain = window.localStorage.getItem('domain');
+    const tenantId = window.localStorage.getItem('tenantId');
+
+    useEffect(() => {
+        setAppSocket(new Socket(loggedInUser?.id, domain, tenantId));
+    }, []);
+
+    useEffect(() => {
+        setConnectionClosed(false);
+        /* create a socket connection */
+        if (appSocket) {
+            appSocket.createConnection();
+
+            appSocket?.socket.addEventListener('close', (event) => {
+                setConnectionClosed(true);
+                console.log('%csocket.js WebSocket has closed: ', 'color: white; background-color: #007acc;', event);
+                if (navigator.onLine) {
+                    setAppSocket(new Socket(loggedInUser?.id, domain, tenantId));
+                }
+            });
+        }
+
+        return () => appSocket?.socket.close();
+    }, [appSocket]);
+
+    useEffect(() => {
+        const newConnection = () => {
+            if (connectionClosed) {
+                setAppSocket(new Socket(loggedInUser?.id, domain, tenantId));
+            }
+        };
+
+        window.document.addEventListener('online', newConnection);
+
+        return () => window.document.removeEventListener('online', newConnection);
+    }, [connectionClosed]);
 
     useEffect(() => {
         // Listen for messages
@@ -399,15 +405,11 @@ function Conversation({ user }) {
 
                 if (ticketId) {
                     const reply = {
-                        created_at: data?.reply?.created_at || new Date(),
-                        id: data?.reply?.id || uuid(),
                         ...data?.reply,
                     };
                     // set message history only when the
                     debounce(
                         setMsgHistory((prev) => {
-                            const lastMsg = prev.reverse()[0];
-                            if (lastMsg?.uuid && lastMsg?.uuid === data?.reply) return prev;
                             return [...prev, reply];
                         }),
                         2000,
@@ -458,7 +460,7 @@ function Conversation({ user }) {
                 );
             }
         });
-    }, [ticketId]);
+    }, [ticketId, appSocket]);
 
     useEffect(() => {
         setCustomFieldIsSet(false);
@@ -604,6 +606,41 @@ function Conversation({ user }) {
             mentions: agentMentions,
         };
 
+        /*
+        A TYPICAL SINGLE MESSAGE HISTORY 
+        {
+            "id": "20e63725-e316-4270-86b2-4eb9000959c5",
+            "response": "<p>A simple message from mill</p>",
+            "plain_response": "A simple message from mill",
+            "attachment": null,
+            "type": "reply",
+            "created_at": "2022-05-09 15:20:06",
+            "isRead": true,
+            "statusAction": false,
+            "mentions": null,
+            "attachments": null,
+            "user": {
+                "id": "39e31925-18e2-4879-8467-1d64ac7e08bf",
+                "firstname": "Joshua",
+                "lastname": "Mill",
+                "email": "joshua@mill.com",
+                "phone_number": null,
+                "isActivated": true,
+                "group_id": null,
+                "avatar": null,
+                "description": null,
+                "tags": null,
+                "created_at": "2022-05-09 15:20:06",
+                "organization_id": null,
+                "others": null,
+                "assignedTicketCount": 0,
+                "custom_fields": null,
+                "role": "Customer"
+            }
+        }
+        
+        */
+
         setMsgHistory((item) => [...item, replyData]);
 
         const res = await httpPostMain(`tickets/${singleTicketFullInfo.id}/replies`, data);
@@ -619,10 +656,7 @@ function Conversation({ user }) {
                 },
                 data: {
                     ...currentTicket,
-                    reply: {
-                        ...data,
-                        uuid: uuid(),
-                    },
+                    reply: replyData,
                 },
             };
             appSocket.sendLiveStreamMessage(msgObj);
