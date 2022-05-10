@@ -330,6 +330,8 @@ function Conversation({ user }) {
         sortMsges(msgHistory);
     }, [msgHistory]);
 
+    console.log('msgHistory => ', msgHistory);
+
     useEffect(() => {
         getStatuses();
         getCategories();
@@ -353,7 +355,6 @@ function Conversation({ user }) {
                 // }
             }
         })();
-
     }, []);
 
     const loggedInUser = JSON.parse(window.localStorage.getItem('user') || '{}')?.user;
@@ -1112,7 +1113,9 @@ function Conversation({ user }) {
                                                                     </div>
                                                                     <div className="message-footer">
                                                                         <span className="text-muted">
-                                                                            {dateFormater(data.created_at)}
+                                                                            {dateFormater(
+                                                                                data?.createdAt || data?.created_at,
+                                                                            )}
                                                                         </span>
                                                                     </div>
                                                                 </div>
@@ -1229,7 +1232,9 @@ function Conversation({ user }) {
                                                                 </div>
                                                                 <div className="message-footer">
                                                                     <span className="text-muted">
-                                                                        {dateFormater(data.created_at)}
+                                                                        {dateFormater(
+                                                                            data?.createdAt || data?.created_at,
+                                                                        )}
                                                                     </span>
                                                                 </div>
                                                             </div>
@@ -1345,7 +1350,9 @@ function Conversation({ user }) {
                                                                 </div>
                                                                 <div className="message-footer">
                                                                     <span className="text-muted">
-                                                                        {dateFormater(data.created_at)}
+                                                                        {dateFormater(
+                                                                            data?.createdAt || data?.created_at,
+                                                                        )}
                                                                     </span>
                                                                 </div>
                                                             </div>
