@@ -8,6 +8,7 @@ import Badge from "react-bootstrap/Badge";
 import "./../settings.css";
 import whatsappImg from "../../../../assets/imgF/WhatsApp.png";
 import facebookImg from "../../../../assets/imgF/Facebook.png";
+import instagramImg from "../../../../assets/imgF/instagram.png";
 import twitterImg from "../../../../assets/imgF/twitter.png";
 import termiiImg from "../../../../assets/imgF/termii.png";
 import smsImg from "../../../../assets/imgF/TwilioSms.svg";
@@ -29,6 +30,7 @@ function SocialIntegrations({configs}) {
   const [smsConnected, setSmsConnected] = useState(false)
   const [emailConnected, setEmailConnected] = useState(false)
   const [facebookConnected, setFacebookConnected] = useState(false)
+  const [instagramConnected, setInstagramConnected] = useState(false)
   const [whatsappConnected, setWhatsappConnected] = useState(false)
   const [livechatConnected, setLivechatConnected] = useState(false)
 
@@ -38,6 +40,7 @@ function SocialIntegrations({configs}) {
     if(configs.sms_config){setSmsConnected(true)}    
     if(configs.email_config){setEmailConnected(true)}
     if(configs.facebook_config){setFacebookConnected(true)}
+    if(configs.instagram_config){setInstagramConnected(true)}
     if(configs.livechat_config){setLivechatConnected(true)}
     if(configs.whatsapp_config){setWhatsappConnected(true)}
 
@@ -64,6 +67,18 @@ function SocialIntegrations({configs}) {
     const hostname = window.location.hostname.split(".").slice(1).join(".")
     const port = window.location.port
     window.location.href = `${protocol}//${subdomain}.${hostname}:${port}/${path}?${params}`;
+
+  }
+
+  const goToConnector = (e, channel) => {
+      e.preventDefault()
+      const subdomain = "app"
+      const path = "integrations"
+      const params = `channel=${channel}&domain=${window.localStorage.getItem('domain')}&id=${window.localStorage.getItem('token')}&uid=${window.localStorage.getItem('refreshToken')}`
+      const protocol = window.location.protocol
+      const hostname = window.location.hostname.split(".").slice(1).join(".")
+      const port = window.location.port
+      window.location.href = `${protocol}//${subdomain}.${hostname}:${port}/${path}?${params}`;
 
   }
 
@@ -103,11 +118,12 @@ function SocialIntegrations({configs}) {
           </Link>
         </div>
       </div>
+
       <div className="col-md-4 col-sm-6 col-12">
         <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
           {/* <Link to="/settings/integrations/facebook" className="d-block cursor text-decoration-none"> */}
           
-          <a href="#" className="d-block cursor text-decoration-none" role="button" onClick={goToFB}>
+          <a href="#" className="d-block cursor text-decoration-none" role="button" onClick={(e) => goToConnector(e, "facebook")}>
             <div className="d-flex align-items-start p-md-4 p-3">
               <div className="w">
                 <img src={facebookImg} alt="" width="38"/>
@@ -120,14 +136,43 @@ function SocialIntegrations({configs}) {
                   </p>
                 </div>
                 <div className="">
-                  <Badge className={`${!facebookConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>{!facebookConnected? "Connect" : "Connected"}</Badge>
+                  <Badge className={`${!facebookConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>
+                    {!facebookConnected? "Connect" : "Connected"}
+                  </Badge>
                 </div>
               </div>
             </div>
           </a>
         </div>
       </div>
-      
+            
+      <div className="col-md-4 col-sm-6 col-12">
+        <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
+          {/* <Link to="/settings/integrations/facebook" className="d-block cursor text-decoration-none"> */}
+          
+          <a href="#" className="d-block cursor text-decoration-none" role="button" onClick={(e) => goToConnector(e, "instagram")}>
+            <div className="d-flex align-items-start p-md-4 p-3">
+              <div className="w">
+                <img src={instagramImg} alt="" width="38"/>
+              </div>
+              <div className="ms-3 d-flex justify-content-between align-items-start">
+                <div className="me-2">
+                  <h6 className="text-dark mb-0">Instagram</h6>
+                  <p className="acx-fs-8 lh-base mt-1 mb-2  text-muted">
+                    Connect your business Instagram Page
+                  </p>
+                </div>
+                <div className="">
+                  <Badge className={`${!instagramConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>
+                    {!instagramConnected? "Connect" : "Connected"}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+
       <div className="col-md-4 col-sm-6 col-12">
         <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
           <Link to="/settings/integrations/twitter" className="d-block cursor text-decoration-none">
@@ -196,6 +241,7 @@ function SocialIntegrations({configs}) {
           </Link>
         </div>
       </div>
+
       <div className="col-md-4 col-sm-6 col-12">
         <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
           <Link to="/settings/integrations/livechat" className="d-block cursor text-decoration-none">

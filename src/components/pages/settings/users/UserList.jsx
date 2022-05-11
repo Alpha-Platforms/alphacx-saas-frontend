@@ -40,7 +40,7 @@ function UserList({
     supervisors,
     observers,
     isAgentsLoaded,
-    groups,
+    // groups,
     negateActiveState,
     isAdminsLoaded,
     isSupervisorLoaded,
@@ -62,6 +62,8 @@ function UserList({
     const [combinedUsers, setCombinedUsers] = useState([]);
     const [canAddUser, setCanAddUser] = useState(false);
 
+  
+
     useEffect(() => {
         if (authenticatedUserRole === 'Administrator' || authenticatedUserRole === 'Supervisor') {
             const realAdmins = Array.isArray(admins) ? admins : [];
@@ -72,7 +74,7 @@ function UserList({
         } else {
             setCombinedUsers([...agents]);
         }
-
+        
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [admins, supervisors, agents, observers]);
 
@@ -293,8 +295,7 @@ function UserList({
                                     },
                                     {
                                         title: 'Team(s)',
-                                        field: 'group',
-                                        render: (rowData) => (
+                                        render: (rowData) => {return rowData.group && (
                                             <div className="table-tags">
                                                 <span
                                                     className={`badge rounded-pill px-3 py-2 me-1 my-1 ${
@@ -306,25 +307,29 @@ function UserList({
                                                         ][Math.ceil(Math.random() * 3) - 1]
                                                     }`}
                                                 >
-                                                    {rowData.group[0]}
+                                                    {rowData?.group[0]}
                                                 </span>
-                                                <span
-                                                    className={`badge rounded-pill px-3 py-2 me-1 my-1 ${
-                                                        [
-                                                            'acx-bg-purple-30',
-                                                            'acx-bg-red-30',
-                                                            'acx-bg-blue-light-30',
-                                                            'acx-bg-green-30',
-                                                        ][Math.ceil(Math.random() * 3) - 1]
-                                                    }`}
-                                                >
-                                                    {rowData?.group[1]}
-                                                </span>
-                                                <span className="badge rounded-pill text-muted border px-2 py-1 my-1">
-                                                    {rowData.group.length > 2 ? `+${rowData.group.length - 2}` : ''}
-                                                </span>
+                                                { rowData?.group?.length > 1 &&
+                                                    <span
+                                                        className={`badge rounded-pill px-3 py-2 me-1 my-1 ${
+                                                            [
+                                                                'acx-bg-purple-30',
+                                                                'acx-bg-red-30',
+                                                                'acx-bg-blue-light-30',
+                                                                'acx-bg-green-30',
+                                                            ][Math.ceil(Math.random() * 3) - 1]
+                                                        }`}
+                                                    >
+                                                        {rowData?.group[1]}
+                                                    </span>
+                                                }
+                                                { rowData?.group?.length > 2 &&
+                                                    <span className="badge rounded-pill text-muted border px-2 py-1 my-1">
+                                                       {`+${rowData?.group?.length - 2}`}
+                                                    </span>
+                                                }
                                             </div>
-                                        ),
+                                        )},
                                     },
                                     {
                                         title: 'Created',
@@ -361,7 +366,6 @@ function UserList({
                                         created_at,
                                         isActivated,
                                         id,
-                                        group_id,
                                         avatar,
                                     }) => ({
                                         name: `${firstname} ${lastname}`,
@@ -421,7 +425,7 @@ const mapStateToProps = (state, ownProps) => ({
     isAgentsLoaded: state.agent.isAgentsLoaded,
     isAdminsLoaded: state.admin.isAdminsLoaded,
     isSupervisorLoaded: state.supervisor.isSupervisorsLoaded,
-    groups: state.group.groups,
+    // groups: state.group.groups,
     isUserAuthenticated: state.userAuth.isUserAuthenticated,
     signedUser: state.userAuth.user,
     authenticatedUserRole: state.userAuth.user.role,
