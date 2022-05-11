@@ -402,10 +402,8 @@ function Conversation({ user }) {
                 const eventData = JSON.parse(event.data);
                 if (eventData?.type === 'liveStream' && eventData?.status === 'incoming') {
                     const data = eventData?.data;
-                    scrollPosSendMsgList('#lastMsg');
                     console.log('TICKET ID AFTER LISTENER => ', ticketId);
-
-                    if (ticketId) {
+                    if (ticketId && data?.id === ticketId) {
                         const reply = {
                             ...data?.reply,
                         };
@@ -413,6 +411,7 @@ function Conversation({ user }) {
                         setMsgHistory((prev) => {
                             return [...prev, reply];
                         });
+                        scrollPosSendMsgList('#lastMsg');
                     }
                     setTickets((prev) => {
                         // get ticket from existing
