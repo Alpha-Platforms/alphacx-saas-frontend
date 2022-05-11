@@ -79,7 +79,8 @@ import AccountVerified from './components/pages/auth/verified';
 import LiveChatSettings from './components/pages/settings/livechatsettings/LiveChatSettings';
 import SmsSettings from './components/pages/settings/smssettings/smsSettings';
 import ReportsFilter from './components/pages/reports/ReportsFilter';
-import FBIntegration from './components/pages/settings/social_integrations/fb';
+import FBIGIntegration from './components/pages/settings/social_integrations/fbig';
+import Instagram from './components/pages/settings/social_integrations/Instagram';
 
 const mapStateToProps = (state) => ({ isUserAuthenticated: state.userAuth.isUserAuthenticated });
 
@@ -354,11 +355,12 @@ const SiteRouter = connect(mapStateToProps, {
                                 pageName="Ratings and Feedback"
                                 component={RatingsSettings}
                             />
+                            <Route exact path="/instagram" pageName="Ratings and Feedback" component={Instagram} />
                             <Route
                                 exact
                                 path="/integrations"
                                 pageName="Ratings and Feedback"
-                                component={FBIntegration}
+                                component={FBIGIntegration}
                             />{' '}
                             {/* ......settings pages end */}
                             <Route>
