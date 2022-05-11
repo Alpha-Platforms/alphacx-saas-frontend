@@ -602,42 +602,24 @@ function Conversation({ user }) {
             mentions: agentMentions,
         };
 
-        /*
-        A TYPICAL SINGLE MESSAGE HISTORY 
-        {
-            "id": "20e63725-e316-4270-86b2-4eb9000959c5",
-            "response": "<p>A simple message from mill</p>",
-            "plain_response": "A simple message from mill",
-            "attachment": null,
-            "type": "reply",
-            "created_at": "2022-05-09 15:20:06",
-            "isRead": true,
-            "statusAction": false,
-            "mentions": null,
-            "attachments": null,
-            "user": {
-                "id": "39e31925-18e2-4879-8467-1d64ac7e08bf",
-                "firstname": "Joshua",
-                "lastname": "Mill",
-                "email": "joshua@mill.com",
-                "phone_number": null,
-                "isActivated": true,
-                "group_id": null,
-                "avatar": null,
-                "description": null,
-                "tags": null,
-                "created_at": "2022-05-09 15:20:06",
-                "organization_id": null,
-                "others": null,
-                "assignedTicketCount": 0,
-                "custom_fields": null,
-                "role": "Customer"
-            }
-        }
-        
-        */
-
         setMsgHistory((item) => [...item, replyData]);
+        setTickets((prev) => {
+            // get ticket from existing
+            const currentTicket = prev.find((item) => item?.id === ticketId);
+            if (currentTicket) {
+                // ticket of `data` exists
+                // add new message history and update read count and push to first item in the array
+                const newCurrentTicket = {
+                    ...currentTicket,
+                    history: [replyData, ...currentTicket.history],
+                };
+                // remove current ticke from the tickets
+                const remainingTickets = prev.filter((item) => item?.id !== ticketId);
+                // make first item in the array
+                return [newCurrentTicket, ...remainingTickets];
+            }
+            return prev;
+        });
         scrollPosSendMsgList();
         const currentTicket = JSON.parse(JSON.stringify(singleTicketFullInfo));
         // remove history property from object before sending via socket

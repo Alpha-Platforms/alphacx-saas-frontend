@@ -24,7 +24,6 @@ export default function MessageList({
 }) {
     const [renderTicket, setRenderTicket] = useState([]);
     const [loadingTickets, setLoadingTickets] = useState(true);
-    console.log('statuses => ', statuses);
 
     useEffect(() => {
         setLoadingTicks(true);
@@ -104,8 +103,7 @@ export default function MessageList({
                     </div>
                 ) : (
                     renderTicket.map((data, index) => {
-                        const realStatus = statuses?.find((item) => item?.id === data?.status?.id);
-                        console.log('realStatus => ', realStatus);
+                        const currentStatus = statuses?.find((item) => item?.id === data?.status?.id);
                         return (
                             <div
                                 key={index}
@@ -181,11 +179,11 @@ export default function MessageList({
 
                                         <div
                                             style={{
-                                                background: `"${realStatus?.background_color}"`,
-                                                color: `"${realStatus?.forecolor}"`,
+                                                background: `"${currentStatus?.background_color}"`,
+                                                color: `"${currentStatus?.forecolor}"`,
                                             }}
                                         >
-                                            {realStatus?.status}
+                                            {currentStatus?.status}
                                         </div>
                                     </div>
                                 </div>
