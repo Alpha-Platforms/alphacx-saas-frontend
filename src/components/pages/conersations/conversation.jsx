@@ -3,7 +3,7 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable react/prop-types */
 // @ts-nocheck
-import React, { useState, useEffect, useContext, Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import remarkGfm from 'remark-gfm';
@@ -29,7 +29,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { NotificationManager } from 'react-notifications';
-import debounce from 'debounce';
+// import debounce from 'debounce';
 import MessageList from './messageList';
 import searchIcon from '../../../assets/imgF/Search.png';
 import NoChatFound from './noChatFound';
@@ -330,8 +330,6 @@ function Conversation({ user }) {
         sortMsges(msgHistory);
     }, [msgHistory]);
 
-    console.log('msgHistory => ', msgHistory);
-
     useEffect(() => {
         getStatuses();
         getCategories();
@@ -396,27 +394,26 @@ function Conversation({ user }) {
     }, [connectionClosed]);
 
     useEffect(() => {
-        // Listen for messages
-        appSocket?.socket.addEventListener('message', (event) => {
-            console.log('Message from server ', JSON.parse(event.data));
-            const eventData = JSON.parse(event.data);
-            if (eventData?.type === 'liveStream' && eventData?.status === 'incoming') {
-                const data = eventData?.data;
-                scrollPosSendMsgList('#lastMsg');
+        if (appSocket?.socket) {
+            appSocket.socket.onmessage = (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                console.log('Message from server ', JSON.parse(event.data));
+                const eventData = JSON.parse(event.data);
+                if (eventData?.type === 'liveStream' && eventData?.status === 'incoming') {
+                    const data = eventData?.data;
+                    scrollPosSendMsgList('#lastMsg');
+                    console.log('TICKET ID AFTER LISTENER => ', ticketId);
 
-                if (ticketId) {
-                    const reply = {
-                        ...data?.reply,
-                    };
-                    // set message history only when the
-                    debounce(
+                    if (ticketId) {
+                        const reply = {
+                            ...data?.reply,
+                        };
+                        // set message history only when the
                         setMsgHistory((prev) => {
                             return [...prev, reply];
-                        }),
-                        2000,
-                    );
-                }
-                debounce(
+                        });
+                    }
                     setTickets((prev) => {
                         // get ticket from existing
                         const currentTicket = prev.find((item) => item?.id === data?.id);
@@ -456,11 +453,10 @@ function Conversation({ user }) {
                         };
                         // add as first item
                         return [newTicket, ...prev];
-                    }),
-                    2000,
-                );
-            }
-        });
+                    });
+                }
+            };
+        }
     }, [ticketId, appSocket]);
 
     useEffect(() => {
@@ -643,25 +639,24 @@ function Conversation({ user }) {
         */
 
         setMsgHistory((item) => [...item, replyData]);
-
-        const res = await httpPostMain(`tickets/${singleTicketFullInfo.id}/replies`, data);
-        // deep copy the currently loaded ticket
+        scrollPosSendMsgList();
         const currentTicket = JSON.parse(JSON.stringify(singleTicketFullInfo));
         // remove history property from object before sending via socket
         Reflect.deleteProperty(currentTicket, 'history');
+        const msgObj = {
+            msgreciever: {
+                msgrecieverid: singleTicketFullInfo?.customer?.id,
+            },
+            data: {
+                ...currentTicket,
+                reply: replyData,
+            },
+        };
+        appSocket.sendLiveStreamMessage(msgObj);
+        const res = await httpPostMain(`tickets/${singleTicketFullInfo.id}/replies`, data);
+        // deep copy the currently loaded ticket
 
         if (res?.status === 'success') {
-            const msgObj = {
-                msgreciever: {
-                    msgrecieverid: singleTicketFullInfo?.customer?.id,
-                },
-                data: {
-                    ...currentTicket,
-                    reply: replyData,
-                },
-            };
-            appSocket.sendLiveStreamMessage(msgObj);
-            scrollPosSendMsgList();
             setEditorState(initialState);
             setEditorUploadImg('');
             return setReplyTicket({ plainText: '', richText: '' });
