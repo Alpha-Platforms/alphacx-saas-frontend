@@ -20,9 +20,11 @@ export default function MessageList({
     activeChat,
     setActiveChat,
     scrollPosSendMsgList,
+    statuses
 }) {
     const [renderTicket, setRenderTicket] = useState([]);
     const [loadingTickets, setLoadingTickets] = useState(true);
+    console.log('statuses => ', statuses);
 
     useEffect(() => {
         setLoadingTicks(true);
@@ -102,6 +104,8 @@ export default function MessageList({
                     </div>
                 ) : (
                     renderTicket.map((data, index) => {
+                        const realStatus = statuses?.find((item) => item?.id === data?.status?.id);
+                        console.log('realStatus => ', realStatus);
                         return (
                             <div
                                 key={index}
@@ -177,11 +181,11 @@ export default function MessageList({
 
                                         <div
                                             style={{
-                                                background: `"${data?.status?.background_color}"`,
-                                                color: `"${data?.status?.forecolor}"`,
+                                                background: `"${realStatus?.background_color}"`,
+                                                color: `"${realStatus?.forecolor}"`,
                                             }}
                                         >
-                                            {data?.status?.status}
+                                            {realStatus?.status}
                                         </div>
                                     </div>
                                 </div>

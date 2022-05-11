@@ -885,6 +885,7 @@ function Conversation({ user }) {
                             setActiveChat={setActiveChat}
                             scrollPosSendMsgList={scrollPosSendMsgList}
                             setTicketId={setTicketId}
+                            statuses={Statuses}
                         />
                     </div>
 
