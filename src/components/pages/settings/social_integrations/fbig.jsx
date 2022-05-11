@@ -7,6 +7,7 @@ import { Link, useHistory } from 'react-router-dom';
 import "../settings.css";
 // img assets
 import facebookImg from "../../../../assets/imgF/Facebook.png";
+import instagramImg from "../../../../assets/imgF/instagram.png";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
 import ArrowLeft from "../../../../assets/icons/Arrow---Left.svg";
 import { wordCapitalize } from 'helper';
@@ -99,7 +100,7 @@ const FBIntegration = ({location}) => {
             NotificationManager.success("Page successfully connected");
 
             // Go back
-            // redirectToPreviewPage()
+            redirectToPreviewPage()
         }
     // hideLoader();
     };
@@ -154,12 +155,12 @@ const FBIntegration = ({location}) => {
                 <section>
                     <div className="connectViaWhatsWrap">
                         <div className="connectViaWhatsappInstr">
-                            <img src={facebookImg} alt="" />
+                            <img src={channel === "facebook"? facebookImg : instagramImg} alt="" />
                             <div className="connectViaInstText">
                                 <p>Communicate with {wordCapitalize(channel)} users via AlphaCX</p>
                                 <p>
                                     Connect your company’s {wordCapitalize(channel)} page to Conversational Inbox and
-                                    start chatting with Facebook users.
+                                    start chatting with {wordCapitalize(channel)} users.
                                     <br /> Incoming message allocation is based ticket distribution
                                     rules. Chats can be converted to tickets.
                                 </p>

@@ -30,6 +30,7 @@ function SocialIntegrations({configs}) {
   const [smsConnected, setSmsConnected] = useState(false)
   const [emailConnected, setEmailConnected] = useState(false)
   const [facebookConnected, setFacebookConnected] = useState(false)
+  const [instagramConnected, setInstagramConnected] = useState(false)
   const [whatsappConnected, setWhatsappConnected] = useState(false)
   const [livechatConnected, setLivechatConnected] = useState(false)
 
@@ -39,6 +40,7 @@ function SocialIntegrations({configs}) {
     if(configs.sms_config){setSmsConnected(true)}    
     if(configs.email_config){setEmailConnected(true)}
     if(configs.facebook_config){setFacebookConnected(true)}
+    if(configs.instagram_config){setInstagramConnected(true)}
     if(configs.livechat_config){setLivechatConnected(true)}
     if(configs.whatsapp_config){setWhatsappConnected(true)}
 
@@ -134,7 +136,9 @@ function SocialIntegrations({configs}) {
                   </p>
                 </div>
                 <div className="">
-                  <Badge className={`${!facebookConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>{!facebookConnected? "Connect" : "Connected"}</Badge>
+                  <Badge className={`${!facebookConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>
+                    {!facebookConnected? "Connect" : "Connected"}
+                  </Badge>
                 </div>
               </div>
             </div>
@@ -159,7 +163,9 @@ function SocialIntegrations({configs}) {
                   </p>
                 </div>
                 <div className="">
-                  <Badge className={`${!facebookConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>{!facebookConnected? "Connect" : "Connected"}</Badge>
+                  <Badge className={`${!instagramConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>
+                    {!instagramConnected? "Connect" : "Connected"}
+                  </Badge>
                 </div>
               </div>
             </div>
