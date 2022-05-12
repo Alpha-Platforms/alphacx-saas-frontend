@@ -47,7 +47,7 @@ import boldB from '../../../assets/imgF/boldB.png';
 import Smiley from '../../../assets/imgF/Smiley.png';
 import editorImg from '../../../assets/imgF/editorImg.png';
 import BackArrow from '../../../assets/imgF/back.png';
-import { multiIncludes } from '../../../helper';
+import { multiIncludes, uuid } from '../../../helper';
 import { accessControlFunctions } from '../../../config/accessControlList';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './conversation.css';
@@ -143,6 +143,7 @@ function Conversation({ user }) {
     const location = useLocation();
     const [appSocket, setAppSocket] = useState(null);
     const [connectionClosed, setConnectionClosed] = useState(false);
+    const [generatedUuid] = useState(uuid());
 
     // youtube player options
     const youtubePlayerOptions = {
@@ -360,7 +361,7 @@ function Conversation({ user }) {
     const tenantId = window.localStorage.getItem('tenantId');
 
     useEffect(() => {
-        setAppSocket(new Socket(loggedInUser?.id, domain, tenantId));
+        setAppSocket(new Socket(generatedUuid, domain, tenantId));
     }, []);
 
     useEffect(() => {

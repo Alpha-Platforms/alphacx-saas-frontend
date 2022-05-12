@@ -32,7 +32,7 @@ class Socket {
             msgtimestamp: new Date(),
             msgsender: {
                 msgsenderdevice: navigator.userAgent,
-                msgsenderid: tenantId,
+                msgsenderid: userId,
                 domain,
                 tenantid: tenantId,
                 accounttype: 'agent',
@@ -54,7 +54,7 @@ class Socket {
             msgsender: {
                 msgsenderdevice: navigator.userAgent,
                 tenantid: tenantId,
-                msgsenderid: tenantId,
+                msgsenderid: userId,
                 domain,
                 accounttype: 'agent',
             },
