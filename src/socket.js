@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { config } from './config/keys';
-import { uuid } from './helper';
+// import { uuid } from './helper';
 
 class Socket {
     socket;
@@ -34,13 +34,14 @@ class Socket {
                 msgsenderdevice: navigator.userAgent,
                 msgsenderid: userId,
                 domain,
-                tenantid: tenantId,
+                tenantid: domain,
                 accounttype: 'agent',
             },
             msgreciever: {
                 domain,
                 msgrecieverid: tenantId,
-                tenantid: tenantId,
+                // tenantid: tenantId,
+                tenantid: domain,
             },
             data: {},
         };
@@ -53,7 +54,8 @@ class Socket {
             msgtimestamp: new Date(),
             msgsender: {
                 msgsenderdevice: navigator.userAgent,
-                tenantid: tenantId,
+                // tenantid: tenantId,
+                tenantid: domain,
                 msgsenderid: userId,
                 domain,
                 accounttype: 'agent',
@@ -76,13 +78,13 @@ class Socket {
         this.socket.addEventListener('open', (event) => {
             this.connected = true;
 
-            console.log('Connection is open => ', event);
+            // console.log('Connection is open => ', event);
 
             this.sendAuthyMessage();
         });
 
         this.socket.addEventListener('error', (event) => {
-            console.log('%cerror socket.js WebSocket Error', 'color: red; display: block; width: 100%;', event);
+            // console.log('%cerror socket.js WebSocket Error', 'color: red; display: block; width: 100%;', event);
         });
     }
 
@@ -105,7 +107,7 @@ class Socket {
             },
         };
 
-        console.log('%csocket.js line:106 LIVESTREAM MESSAGE', 'color: white; background-color: #007acc;', msgObj);
+        // console.log('%csocket.js line:106 LIVESTREAM MESSAGE', 'color: white; background-color: #007acc;', msgObj);
 
         this.socket.send(JSON.stringify(msgObj, null, 4));
     }
@@ -120,7 +122,7 @@ class Socket {
             },
         };
 
-        console.log('%csocket.js line:121 AUTHY MESSAGE', 'color: white; background-color: #007acc;', msgObj);
+        // console.log('%csocket.js line:121 AUTHY MESSAGE', 'color: white; background-color: #007acc;', msgObj);
         this.socket.send(JSON.stringify(msgObj));
     }
 }

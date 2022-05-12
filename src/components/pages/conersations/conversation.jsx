@@ -344,7 +344,7 @@ function Conversation({ user }) {
     useEffect(() => {
         (async () => {
             const initRes = await httpGetMain(`tickets?per_page=100`);
-            console.log('%cconversation.jsx line:341 initRes', 'color: white; background-color: #007acc;', initRes);
+            // console.log('%cconversation.jsx line:341 initRes', 'color: white; background-color: #007acc;', initRes);
             if (initRes?.status === 'success') {
                 setTickets(initRes?.data?.tickets || []);
                 setMeta(initRes?.data?.meta || {});
@@ -372,7 +372,7 @@ function Conversation({ user }) {
 
             appSocket?.socket.addEventListener('close', (event) => {
                 setConnectionClosed(true);
-                console.log('%csocket.js WebSocket has closed: ', 'color: white; background-color: #007acc;', event);
+                // console.log('%csocket.js WebSocket has closed: ', 'color: white; background-color: #007acc;', event);
                 if (navigator.onLine) {
                     setAppSocket(new Socket(loggedInUser?.id, domain, tenantId));
                 }
@@ -399,11 +399,12 @@ function Conversation({ user }) {
             appSocket.socket.onmessage = (event) => {
                 event.preventDefault();
                 event.stopPropagation();
-                console.log('Message from server ', JSON.parse(event.data));
                 const eventData = JSON.parse(event.data);
-                if (eventData?.type === 'liveStream' && eventData?.status === 'incoming') {
+                if (
+                    (eventData?.type === 'liveStream' || eventData?.type === 'socketHook') &&
+                    eventData?.status === 'incoming'
+                ) {
                     const data = eventData?.data;
-                    console.log('TICKET ID AFTER LISTENER => ', ticketId);
                     if (ticketId && data?.id === ticketId) {
                         const reply = {
                             ...data?.reply,
