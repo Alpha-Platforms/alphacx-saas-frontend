@@ -49,7 +49,7 @@ export default function MessageList({
     };
 
     const getChannelColor = (channel, placement = 'foreground') => {
-        channel = channel.toLowerCase();
+        channel = channel?.toLowerCase();
         const obj = {
             facebook: '#1877F2',
             email: '#2B304D',
@@ -170,11 +170,11 @@ export default function MessageList({
                                     <div className="msg-badges">
                                         <div
                                             style={{
-                                                background: `"${getChannelColor(data?.channel, 'background')}"`,
-                                                color: `"${getChannelColor(data?.channel)}"`,
+                                                background: `"${getChannelColor(data?.channel || '', 'background')}"`,
+                                                color: `"${getChannelColor(data?.channel || '')}"`,
                                             }}
                                         >
-                                            {data?.channel}
+                                            {data?.channel || ''}
                                         </div>
 
                                         <div

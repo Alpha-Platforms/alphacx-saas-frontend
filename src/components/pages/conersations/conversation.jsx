@@ -370,7 +370,7 @@ function Conversation({ user }) {
         if (appSocket) {
             appSocket.createConnection();
 
-            appSocket?.socket.addEventListener('close', (event) => {
+            appSocket?.socket.addEventListener('close', () => {
                 setConnectionClosed(true);
                 // console.log('%csocket.js WebSocket has closed: ', 'color: white; background-color: #007acc;', event);
                 if (navigator.onLine) {
@@ -400,6 +400,7 @@ function Conversation({ user }) {
                 event.preventDefault();
                 event.stopPropagation();
                 const eventData = JSON.parse(event.data);
+                // console.log('Message from socket => ', eventData);
                 if (
                     (eventData?.type === 'liveStream' || eventData?.type === 'socketHook') &&
                     eventData?.status === 'incoming'
@@ -1239,7 +1240,7 @@ function Conversation({ user }) {
                                     {TodayMsges.map((data) => {
                                         return (
                                             <React.Fragment key={data?.id}>
-                                                {data?.response.includes('Ticket Stage has been marked') ||
+                                                {data?.response?.includes('Ticket Stage has been marked') ||
                                                 data?.statusAction ? (
                                                     <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
                                                         <span> {`${data?.response}`}</span>
