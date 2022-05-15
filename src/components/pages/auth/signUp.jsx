@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 // react-bootstrap component
 import RSelect from 'react-select';
 import Row from 'react-bootstrap/Row';
@@ -31,6 +31,21 @@ import TicketsImg from '../../../assets/images/tickets.png';
 import ConversationsImg from '../../../assets/images/conversations.png';
 
 function Registration() {
+
+    const {search} = useLocation()
+
+    useEffect(() => {
+        const qparams = new URLSearchParams(search) // update to useSearchParams() when RR is upgraded to v6
+
+        const email = qparams.get('email')
+        const firstName = qparams.get('firstName')
+        const lastName = qparams.get('lastName')
+
+        if(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email)){ // if email isn't valid just ignore everything
+            setUserInput((prev) => ({...prev, email, firstName, lastName}))
+        }
+    }, [])
+
     //
     const [userInput, setUserInput] = useState({
         firstName: '',
@@ -41,6 +56,8 @@ function Registration() {
         domain: '',
         country: 'Nigeria',
     });
+
+    
     //
     const [passwordShown, setPasswordShown] = useState(false);
     const [validated, setValidated] = useState(false);
@@ -68,7 +85,7 @@ function Registration() {
     };
 
     const verifyDomain = async (e) => {
-        if (Validate.noSpecialChars(e, userInput, setUserInput)) {
+        if (!lockDomain && Validate.noSpecialChars(e, userInput, setUserInput)) {
             const domain = userInput.domain.toLowerCase();
             setDomainChecking(true);
             const res = await httpPost(`auth/login`, { domain });
@@ -78,13 +95,14 @@ function Registration() {
                     ...userInput,
                     [e.target.name]: '',
                 });
-                NotificationManager.error(res?.er?.message, 'This domain already exists', 4000);
+                NotificationManager.error('This domain has been taken. Please choose another', 'Domain not available', 4000);
             } else {
                 setDomainChecking(false);
                 setLockDomain(true);
             }
         }
     };
+
     //
     const handleChange = (e) => {
         setUserInput((prev) => ({
@@ -190,6 +208,7 @@ function Registration() {
                                                             required
                                                             autoComplete="off"
                                                             name="firstName"
+                                                            value={userInput.firstName}
                                                             onChange={(e) => handleChange(e)}
                                                             onBlur={(e) => handleBlur(e)}
                                                             className="bg-light acx-form-control"
@@ -207,6 +226,7 @@ function Registration() {
                                                             required
                                                             autoComplete="off"
                                                             name="lastName"
+                                                            value={userInput.lastName}
                                                             onChange={(e) => handleChange(e)}
                                                             onBlur={(e) => handleBlur(e)}
                                                             placeholder="Last Name"
@@ -287,6 +307,7 @@ function Registration() {
                                                         disabled={lockDomain}
                                                         onChange={(e) => handleChange(e)}
                                                         name="domain"
+                                                        onMouseLeave={(e) => verifyDomain(e)}
                                                         onBlur={(e) => verifyDomain(e)}
                                                         value={userInput.domain}
                                                         className="bg-light acx-form-control"
@@ -311,6 +332,7 @@ function Registration() {
                                                         )}
                                                     </InputGroup.Text>
                                                 </InputGroup>
+                                                {userInput.domain && <small>Your URL will be <strong>{userInput.domain}.alphacx.co</strong></small>}
                                             </Form.Group>
                                             <Form.Group className="mb-3 form-group acx-form-group">
                                                 <Form.Label visuallyHidden className="mb-1">
