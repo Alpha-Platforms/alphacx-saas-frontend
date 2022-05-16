@@ -344,7 +344,7 @@ function Conversation({ user }) {
     useEffect(() => {
         (async () => {
             const initRes = await httpGetMain(`tickets?per_page=100`);
-            // console.log('%cconversation.jsx line:341 initRes', 'color: white; background-color: #007acc;', initRes);
+            console.log('%cconversation.jsx line:341 initRes', 'color: white; background-color: #007acc;', initRes);
             if (initRes?.status === 'success') {
                 setTickets(initRes?.data?.tickets || []);
                 setMeta(initRes?.data?.meta || {});
