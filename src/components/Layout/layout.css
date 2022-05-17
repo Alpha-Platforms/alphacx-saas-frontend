@@ -139,10 +139,20 @@
   display: block;
 }
 
-.settings-container {
+/* .settings-container {
   margin-left: calc(5% + 50px);
   margin-right: 10%;
   margin-top: calc(1rem + 75px);
+} */
+
+.settings-wrpr {
+  margin-left: calc(3% + 60px);
+  margin-right: 3%;
+  margin-top: calc(1rem + 75px);
+}
+
+.settings-wrpr.expanded {
+  margin-left: calc(3% + 240px)!important;
 }
 
 .settings-container .settings-menu-item div {
