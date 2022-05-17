@@ -5,11 +5,14 @@ import { connect } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { httpPostMain } from '../../../../../helpers/httpMethods';
-import { getCategories } from '../../../../../reduxstore/actions/categoryActions';
+import { getCategories, getPaginatedCategories } from '../../../../../reduxstore/actions/categoryActions';
 import { getSubCategories } from '../../../../../reduxstore/actions/subCategoryActions';
 
-function NewCategoryTab({ categories, meta, getCategories, getSubCategories, isCatLoading }) {
-    const [newCategory, setNewCategory] = useState({});
+function NewCategoryTab({ categories, meta, getCategories, getPaginatedCategories, getSubCategories, isCatLoading }) {
+    const [newCategory, setNewCategory] = useState({
+        name: '',
+        description: '',
+    });
     const [policyLoading, setPolicyLoading] = useState(false);
 
     const handleChange = (e) => {
@@ -46,6 +49,7 @@ function NewCategoryTab({ categories, meta, getCategories, getSubCategories, isC
         if (res?.status === 'success' || res?.status === 'Success') {
             setNewCategory({});
             NotificationManager.success(res.data.message, 'Success', 4000);
+            getPaginatedCategories(50, 1);
             getCategories();
         } else {
             console.error(res.er);
@@ -90,7 +94,7 @@ function NewCategoryTab({ categories, meta, getCategories, getSubCategories, isC
                                 className="form-control form-control"
                                 id="category"
                                 name="name"
-                                value={newCategory.name || ''}
+                                value={newCategory?.name || ''}
                                 onChange={handleChange}
                             />
                         </div>
@@ -116,13 +120,13 @@ function NewCategoryTab({ categories, meta, getCategories, getSubCategories, isC
                             <label className="f-14 d-inline" htmlFor="form-description">
                                 Description:
                             </label>
-                            <textarea name="description" id="description" className="form-control ct-description" />
+                            <textarea onChange={handleChange} name="description" id="description" value={newCategory?.description || ''} className="form-control ct-description" />
                         </div>
                     </div>
                     <div className="my-3 mt-4 text-end">
                         <button
                             className="btn btn-sm bg-at-blue-light px-3"
-                            disabled={newCategory.name === '' || !newCategory.name}
+                            disabled={newCategory?.name === '' || !newCategory?.name}
                         >
                             Add New Category
                         </button>
@@ -139,4 +143,4 @@ const mapStateToProps = (state, ownProps) => ({
     isCatLoading: state.category.isCategoriesLoading,
 });
 
-export default connect(mapStateToProps, { getCategories, getSubCategories })(NewCategoryTab);
+export default connect(mapStateToProps, { getCategories, getSubCategories, getPaginatedCategories })(NewCategoryTab);
