@@ -12,7 +12,7 @@ import ArrowLeft from "../../../../assets/icons/Arrow---Left.svg";
 
 const FB = window.FB
 
-const FBIntegration = ({location}) => {
+const Instagram = ({location}) => {
 
     const [FBData, setFBData] = useState({});
     const [pageConnected, setPageConnected] = useState(false);
@@ -46,9 +46,9 @@ const FBIntegration = ({location}) => {
 
         setDomain(domain)
 
-        localStorage.setItem('domain', domain)
-        localStorage.setItem('token', token)
-        localStorage.setItem('refreshToken', uid)
+        // localStorage.setItem('domain', domain)
+        // localStorage.setItem('token', token)
+        // localStorage.setItem('refreshToken', uid)
 
 
         // run facebook login script
@@ -103,8 +103,9 @@ const FBIntegration = ({location}) => {
     const authFb = () => {
         FB.login(function (response) {
             if (response.authResponse && response.authResponse !== "undefined." && response.authResponse !== undefined) {
-                setFBData(response?.authResponse);
-                handleConnectFBPage(response?.authResponse);
+                // setFBData(response?.authResponse);
+                console.log("response:", response, "Auth Response:", response.authResponse)
+                // handleConnectFBPage(response?.authResponse);
                 setPageConnected(true);
                 FB.api("/me", function (response) {
                     // console.log("FB.api response:", response)
@@ -114,8 +115,7 @@ const FBIntegration = ({location}) => {
             }
             },
             {
-            scope:
-                "pages_messaging,pages_manage_metadata,pages_read_engagement,pages_show_list",
+            scope: "instagram_basic, instagram_manage_messages, pages_manage_metadata",
             }
         );
     };
@@ -180,4 +180,4 @@ const FBIntegration = ({location}) => {
     )
 }
 
-export default FBIntegration
+export default Instagram

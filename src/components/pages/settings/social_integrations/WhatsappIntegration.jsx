@@ -113,15 +113,12 @@ export default function WhatsappIntegration() {
                             <div className="connectViaInstText">
                                 <p>Connect Whatsapp to your Open Channel</p>
                                 <p>
-                                    Use the following <span className="acx-text-primary">instruction</span> to connect a
-                                    Whatsapp Account
+                                    Use the following <span className="">instruction</span> to connect a Whatsapp Account
                                 </p>
                             </div>
                         </div>
 
-                        <p className="connectViaTwilSoInbt">
-                            Connect via <span style={{ color: '#006298' }}>Twillio</span>{' '}
-                        </p>
+                        <p className="mt-3"><strong>Connect via Twillio</strong></p>
 
                         <div className="mt-4 mb-5 col-md-8">
                             {/* <div className="inputContainInter">
