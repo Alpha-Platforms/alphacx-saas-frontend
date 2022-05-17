@@ -98,7 +98,6 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
     const [Priority, setPriority] = useState([]);
     const [editorState, setEditorState] = useState(initialState);
     const [firstTimeLoad, setfirstTimeLoad] = useState(true);
-    const [MessageSenderId, setMessageSenderId] = useState('');
     const [ReplyTicket, setReplyTicket] = useState({
         plainText: '',
         richText: '',
@@ -354,6 +353,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
     // const ReloadloadSingleMessage = async () => {
     //     setLoadSingleTicket(true);
 
+    // // MessageSenderId here should be the current ticket id
     //     const res = await httpGetMain(`tickets/${MessageSenderId}`);
     //     if (res.status === 'success') {
     //         setTicket(res?.data);
@@ -517,20 +517,15 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         setAchiveMsges([]);
         getUser(customer?.id);
         setSenderInfo({ customer, subject });
-        setMessageSenderId(id);
-        setLoadSingleTicket(true);
         setfirstTimeLoad(false);
         setTicket(currentTicket);
-        setMsgHistory(currentTicket?.history);
-        // sortMsges(res?.data[0]?.history);
-        setMessageSenderId(currentTicket?.id);
+        setMsgHistory(history);
         setSaveTicket({
             ...saveTicket,
             customer: '',
             subject,
             description: history,
         });
-        setLoadSingleTicket(false);
         checkRes();
     };
 
