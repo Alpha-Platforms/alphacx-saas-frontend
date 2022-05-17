@@ -65,7 +65,9 @@ function UseOwnEmail({ emailState, setEmailState }) {
                     <p className="mt-1 description-text f-12 text-muted">IMAP</p>
                 </div>
 
-                <div className="col-md-3 text-center">
+                {/* COMMENTED OTHER MAIL SERVER OPTIONS */}
+                
+                {/* <div className="col-md-3 text-center">
                     <a
                         className={`py-3 px-4 rounded bg-outline-mail d-inline-block ${
                             emailState.emailSystem === 'microsoft' ? 'mail-active' : ''
@@ -103,7 +105,7 @@ function UseOwnEmail({ emailState, setEmailState }) {
                         <img src={Gmail} alt="gmail" className="img-fluid" />
                     </a>
                     <p className="mt-1 description-text f-12 text-muted">Gmail</p>
-                </div>
+                </div> */}
             </div>
             <div id="email-controller" className={emailState.emailSystem === 'imap' ? '' : 'd-none'}>
                 <h5 className="fs-6 fw-bold mt-2 mb-3">Use Mail Server for</h5>
