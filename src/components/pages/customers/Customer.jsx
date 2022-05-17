@@ -422,6 +422,7 @@ function Customer({ isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoade
                 isEditing={isEditing}
                 customerId={customerId}
                 customer={currentCustomer}
+                fromSingleCustomer={true}
             />
 
             <CreateCustomerModal
