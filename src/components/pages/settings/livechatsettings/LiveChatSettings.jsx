@@ -12,6 +12,7 @@ import ScaleLoader from 'react-spinners/ScaleLoader';
 import { getLivechatConfig, updateLivechatConfig } from '../../../../reduxstore/actions/livechatActions';
 import { getAgents } from '../../../../reduxstore/actions/agentActions';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
+import { getHostnamesFromString } from '../../../../helper';
 
 function LiveChatSettings({
     livechatConfig,
@@ -46,8 +47,12 @@ function LiveChatSettings({
             ...prev,
             [name]: value,
         }));
+        const settingsToEmbed = {
+            ...JSON.parse(JSON.stringify(settings)),
+            domains: getHostnamesFromString(value),
+        }
         setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
-        <script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(JSON.stringify(settings))}'});</script>`);
+        <script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(JSON.stringify(settingsToEmbed))}'});</script>`);
     };
 
     useEffect(() => {
@@ -62,17 +67,24 @@ function LiveChatSettings({
                         getLivechatConfig(
                             (config) => {
                                 setLoading(false);
-                                setSettings((prev) => ({
-                                    ...prev,
+                                const settingsFromConfig = {
                                     title: config?.title || '',
                                     description: config?.description || '',
                                     initialText: config?.initialChat || '',
                                     domains: config?.hostName || '',
                                     theme: config?.color || '',
+                                };
+                                setSettings((prev) => ({
+                                    ...prev,
+                                    ...settingsFromConfig,
                                 }));
+                                const settingsToEmbed = {
+                                    ...JSON.parse(JSON.stringify(settingsFromConfig)),
+                                    domains: getHostnamesFromString(value),
+                                }
                                 setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
             <script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(
-                JSON.stringify(settings),
+                JSON.stringify(settingsToEmbed),
             )}'});</script>`);
                             },
                             () => {

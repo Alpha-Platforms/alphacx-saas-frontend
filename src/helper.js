@@ -298,3 +298,26 @@ newAxios.interceptors.request.use(
 );
 
 export const customAxios = newAxios;
+
+export const getHostNameFromUrl = (url = '') => {
+    if (url.startsWith('https://') || url.startsWith('http://')) {
+        try {
+            const { hostname } = new URL(url);
+            return hostname;
+        } catch(err) {
+            return '';
+        }
+    } else {
+        try {
+            const { hostname } = new URL(`https://${url}`);
+            return hostname;
+        } catch(err) {
+            return '';
+        }
+    }
+};
+
+export const getHostnamesFromString = (str = '') => {
+    // string is semi-color separated
+    return str.split(';').map((url) => getHostNameFromUrl(url)).filter((item) => item).join(';');
+}
