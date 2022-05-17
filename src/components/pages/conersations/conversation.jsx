@@ -317,6 +317,7 @@ function Conversation({ user }) {
             setScrollPosition(`#${location.state.ticketHistoryId}`);
             scrollPosSendMsgList(`#${location.state.ticketHistoryId}`);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tickets, location]);
 
     useEffect(() => {
@@ -362,6 +363,7 @@ function Conversation({ user }) {
 
     useEffect(() => {
         setAppSocket(new Socket(generatedUuid, domain, tenantId));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -380,6 +382,7 @@ function Conversation({ user }) {
         }
 
         return () => appSocket?.socket.close();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [appSocket]);
 
     useEffect(() => {
@@ -392,6 +395,7 @@ function Conversation({ user }) {
         window.document.addEventListener('online', newConnection);
 
         return () => window.document.removeEventListener('online', newConnection);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [connectionClosed]);
 
     useEffect(() => {
@@ -459,6 +463,7 @@ function Conversation({ user }) {
                 }
             };
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ticketId, appSocket]);
 
     useEffect(() => {
@@ -522,6 +527,7 @@ function Conversation({ user }) {
         //
         setCustomFieldIsSet(true);
         setCustomFieldsGroup([...groupedCustomFields]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ticket]);
 
     const onEditorStateChange = (newEditorState) => {

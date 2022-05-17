@@ -36,7 +36,7 @@ import Smiley from '../../../assets/imgF/Smiley.png';
 import BackArrow from '../../../assets/imgF/back.png';
 import editorImg from '../../../assets/imgF/editorImg.png';
 import LinkImg from '../../../assets/imgF/insertLink.png';
-import { multiIncludes } from '../../../helper';
+import { multiIncludes, uuid } from '../../../helper';
 import UserProfile from '../conersations/userProfile';
 import TicketTimeline from '../conersations/TicketTimeline';
 import { dateFormater } from '../../helpers/dateFormater';
@@ -50,6 +50,7 @@ import TextUnderline from '../../../assets/imgF/TextUnderline.png';
 import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter';
 import { httpGetMain, httpPostMain, httpPatchMain } from '../../../helpers/httpMethods';
 import { accessControlFunctions } from '../../../config/accessControlList';
+import Socket from '../../../socket';
 
 function YouTubeGetID(url) {
     let ID = '';
@@ -138,6 +139,78 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
     const [editorUploadImg, setEditorUploadImg] = useState('');
     const [statusUpdateFailed, setStatusUpdateFailed] = useState(false);
     const [statusOps, setStatusOps] = useState(false);
+    const [appSocket, setAppSocket] = useState(null);
+    const [generatedUuid] = useState(uuid());
+    const [connectionClosed, setConnectionClosed] = useState(false);
+
+    const loggedInUser = JSON.parse(window.localStorage.getItem('user') || '{}')?.user;
+    const domain = window.localStorage.getItem('domain');
+    const tenantId = window.localStorage.getItem('tenantId');
+
+    useEffect(() => {
+        setAppSocket(new Socket(generatedUuid, domain, tenantId));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        setConnectionClosed(false);
+        /* create a socket connection */
+        if (appSocket) {
+            appSocket.createConnection();
+
+            appSocket?.socket.addEventListener('close', () => {
+                setConnectionClosed(true);
+                // console.log('%csocket.js WebSocket has closed: ', 'color: white; background-color: #007acc;', event);
+                if (navigator.onLine) {
+                    setAppSocket(new Socket(loggedInUser?.id, domain, tenantId));
+                }
+            });
+        }
+
+        return () => appSocket?.socket.close();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [appSocket]);
+
+    useEffect(() => {
+        const newConnection = () => {
+            if (connectionClosed) {
+                setAppSocket(new Socket(loggedInUser?.id, domain, tenantId));
+            }
+        };
+
+        window.document.addEventListener('online', newConnection);
+
+        return () => window.document.removeEventListener('online', newConnection);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [connectionClosed]);
+
+    useEffect(() => {
+        if (appSocket?.socket) {
+            appSocket.socket.onmessage = (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                const eventData = JSON.parse(event.data);
+                // console.log('Message from socket => ', eventData);
+                if (
+                    (eventData?.type === 'liveStream' || eventData?.type === 'socketHook') &&
+                    eventData?.status === 'incoming'
+                ) {
+                    const data = eventData?.data;
+                    if (currentTicket?.id && data?.id === currentTicket?.id) {
+                        const reply = {
+                            ...data?.reply,
+                        };
+                        // set message history only when the
+                        setMsgHistory((prev) => {
+                            return [...prev, reply];
+                        });
+                        scrollPosSendMsgList();
+                    }
+                }
+            };
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentTicket?.id, appSocket]);
 
     useEffect(() => {
         // get current ticket when component mounts
@@ -164,32 +237,6 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
             autoplay: 0,
         },
     };
-
-    // useEffect(() => {
-    //     AppSocket.io.on(`message`, (data) => {
-    //         if (data?.channel === 'livechat' || data.id === id) {
-    //             const msg = {
-    //                 created_at: data.created_at,
-    //                 id: data?.history?.id || data?.id,
-    //                 plain_response: data?.history?.plain_response || data?.plain_response,
-    //                 response: data?.history?.response || data?.response,
-    //                 type: 'reply',
-    //                 user: data.user,
-    //             };
-    //             if (data?.channel === 'livechat') {
-    //                 setMsgHistory((item) => {
-    //                     if (item[item.length - 1]?.id === msg?.id) {
-    //                         return item;
-    //                     }
-    //                     return [...item, msg];
-    //                 });
-    //             } else {
-    //                 setMsgHistory((item) => [...item, msg]);
-    //             }
-    //         }
-    //         scrollPosSendMsgList();
-    //     });
-    // }, [id]);
 
     useEffect(() => {
         setCustomFieldIsSet(false);
@@ -325,7 +372,21 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
             mentions: agentMentions,
         };
         setMsgHistory((item) => [...item, replyData]);
-        const res = await httpPostMain(`tickets/${currentTicket.id}/replies`, data);
+        scrollPosSendMsgList();
+        const currentTicketCopy = JSON.parse(JSON.stringify(currentTicket));
+        // remove history property from object before sending via socket
+        Reflect.deleteProperty(currentTicketCopy, 'history');
+        const msgObj = {
+            msgreciever: {
+                msgrecieverid: currentTicket?.customer?.id,
+            },
+            data: {
+                ...currentTicketCopy,
+                reply: replyData,
+            },
+        };
+        appSocket.sendLiveStreamMessage(msgObj);
+        const res = await httpPostMain(`tickets/${currentTicket?.id}/replies`, data);
         if (res?.status === 'success') {
             setEditorState(initialState);
             setEditorUploadImg('');
