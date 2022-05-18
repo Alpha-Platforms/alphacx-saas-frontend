@@ -20,7 +20,8 @@ export default function MessageList({
     activeChat,
     setActiveChat,
     scrollPosSendMsgList,
-    statuses
+    statuses,
+    ticketsLoaded
 }) {
     const [renderTicket, setRenderTicket] = useState([]);
     const [loadingTickets, setLoadingTickets] = useState(true);
@@ -88,18 +89,17 @@ export default function MessageList({
 
     return (
         <div className="message-list-container">
-            {loadingTickets ? (
+            {loadingTickets || !ticketsLoaded ? (
                 <div className="d-flex justify-content-center align-items-center pt-5 away">
                     {' '}
-                    <ScaleLoader color="#0d4166" loading={loadingTickets} size={35} />
+                    <ScaleLoader color="#0d4166" loading size={35} />
                 </div>
             ) : Array.isArray(renderTicket) ? (
                 renderTicket.length == 0 ? (
                     <div className="d-flex justify-content-center align-items-center pt-5 away">
-                        {/* <p className="text-center pt-5 lead h4">
-              No ticket found
-            </p> */}{' '}
-                        <ScaleLoader color="#0d4166" loading size={35} />
+                        {<p className="text-center pt-5 lead h4">
+                        No tickets found
+                        </p>}{' '}
                     </div>
                 ) : (
                     renderTicket.map((data, index) => {
