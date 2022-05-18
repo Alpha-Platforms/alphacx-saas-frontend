@@ -1,4 +1,8 @@
-/* eslint-disable */
+/* eslint-disable react/prop-types */
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-unused-vars */
+/* eslint-disablef */
 // @ts-nocheck
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
@@ -11,7 +15,10 @@ import RSelect from 'react-select';
 import RCreatable from 'react-select/creatable';
 import AsyncSelect from 'react-select/async';
 import { getSubCategory } from '../../../reduxstore/actions/categoryActions';
-import { getInstantSearchedCustomers } from '../../../reduxstore/actions/customerActions';
+import {
+    getInstantSearchedCustomers,
+    getPaginatedCurrentCustomerTickets,
+} from '../../../reduxstore/actions/customerActions';
 import { getPaginatedTickets, addTicket, resetTicketCreated } from '../../../reduxstore/actions/ticketActions';
 import PinIcon from '../../../assets/icons/pin.svg';
 import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter';
@@ -108,6 +115,8 @@ function CreateTicketModal({
     channels,
     getChannels,
     addChannel,
+    fromSingleCustomer,
+    getPaginatedCurrentCustomerTickets
 }) {
     const [selectedTags, setSelectedTags] = useState([]);
     const [tagSelectLoading, setTagSelectLoading] = useState(false);
@@ -323,6 +332,9 @@ function CreateTicketModal({
                             newTicket,
                             () => {
                                 NotificationManager.success('Ticket created successfully', 'Successful');
+                                if (fromSingleCustomer) {
+                                    getPaginatedCurrentCustomerTickets(10, 1, customerId);
+                                }
                                 setCreatingTicket(false);
                             },
                             (errMsg) => {
@@ -341,6 +353,9 @@ function CreateTicketModal({
                     newTicket,
                     () => {
                         NotificationManager.success('Ticket created successfully', 'Successful');
+                        if (fromSingleCustomer) {
+                            getPaginatedCurrentCustomerTickets(10, 1, customerId);
+                        }
                         setCreatingTicket(false);
                     },
                     (errMsg) => {
@@ -1063,4 +1078,5 @@ export default connect(mapStateToProps, {
     createTags,
     getChannels,
     addChannel,
+    getPaginatedCurrentCustomerTickets,
 })(CreateTicketModal);

@@ -1,8 +1,15 @@
-/* eslint-disable */
+/* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable react/no-danger */
+/* eslint-disable react/no-children-prop */
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable react/prop-types */
+/* eslint-disable no-shadow */
 // @ts-nocheck
-import { useState, Fragment, useEffect, useContext } from 'react';
+import { useState, Fragment, useEffect } from 'react';
 import axios from 'axios';
-// bootstrap components
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Tab from 'react-bootstrap/Tab';
@@ -11,7 +18,6 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
-//
 import moment from 'moment';
 import { connect } from 'react-redux';
 import draftToHtml from 'draftjs-to-html';
@@ -19,55 +25,41 @@ import { useParams } from 'react-router-dom';
 import RSelect from 'react-select/creatable';
 import { Editor } from 'react-draft-wysiwyg';
 import { capitalize } from '@material-ui/core';
-import ClipLoader from 'react-spinners/ClipLoader';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
-//
 import remarkGfm from 'remark-gfm';
 import ReactMarkdown from 'react-markdown';
-//
-import PinIcon from '../../../assets/icons/pin.svg';
-import WorkIcon from '../../../assets/svgicons/Work.svg';
-import TicketIcon from '../../../assets/svgicons/Ticket.svg';
-import ProfileLightIcon from '../../../assets/svgicons/Profile-Light.svg';
-//
+import { NotificationManager } from 'react-notifications';
+import YouTube from 'react-youtube';
 import boldB from '../../../assets/imgF/boldB.png';
 import Smiley from '../../../assets/imgF/Smiley.png';
 import BackArrow from '../../../assets/imgF/back.png';
 import editorImg from '../../../assets/imgF/editorImg.png';
 import LinkImg from '../../../assets/imgF/insertLink.png';
-//
-import { getUserInitials } from '../../../helper';
+import { multiIncludes, uuid } from '../../../helper';
 import UserProfile from '../conersations/userProfile';
 import TicketTimeline from '../conersations/TicketTimeline';
 import { dateFormater } from '../../helpers/dateFormater';
 import { getCurrentTicket } from '../../../reduxstore/actions/ticketActions';
-import { StarIconTicket, SendMsgIcon, ExpandChat } from '../../../assets/images/svgs';
-//
+import { StarIconTicket, SendMsgIcon } from '../../../assets/images/svgs';
 import '../../../styles/Ticket.css';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-//
-import NoChatFound from '../conersations/noChatFound';
-import { NotificationManager } from 'react-notifications';
-import { SocketDataContext } from '../../../context/socket';
 import TextItalic from '../../../assets/imgF/TextItalic.png';
 import InitialsFromString from '../../helpers/InitialsFromString';
 import TextUnderline from '../../../assets/imgF/TextUnderline.png';
 import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter';
-import { CURRENT_CUSTOMER_TICKETS_LOADING } from '../../../reduxstore/types';
 import { httpGetMain, httpPostMain, httpPatchMain } from '../../../helpers/httpMethods';
-import YouTube from 'react-youtube';
-import { multiIncludes } from '../../../helper';
 import { accessControlFunctions } from '../../../config/accessControlList';
+import Socket from '../../../socket';
 
 function YouTubeGetID(url) {
     let ID = '';
-    url = url.replace(/(>|<)/gi, '').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
-    if (url[2] !== undefined) {
-        ID = url[2].split(/[^0-9a-z_-]/i);
-        ID = ID[0];
+    const newUrl = url.replace(/(>|<)/gi, '').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+    if (newUrl[2] !== undefined) {
+        const [id] = newUrl[2].split(/[^0-9a-z_-]/i);
+        ID = id;
     } else {
-        ID = url;
+        ID = newUrl;
     }
     return ID;
 }
@@ -75,12 +67,20 @@ function YouTubeGetID(url) {
 const youtubeRegex =
     /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/;
 
-function CircleIcon(props) {
-    return (
-        <span className="cust-grey-circle">
-            <img src={props.icon} alt="" className="pe-none" />
-        </span>
-    );
+// function CircleIcon(props) {
+//     return (
+//         <span className="cust-grey-circle">
+//             <img src={props.icon} alt="" className="pe-none" />
+//         </span>
+//     );
+// }
+
+function scrollPosSendMsgList() {
+    // window.location.href = '#lastMsg';
+    const ticketConvoBox = window.document.querySelector('#ticketConvoBox');
+    if (ticketConvoBox) {
+        ticketConvoBox.scrollTop = ticketConvoBox.scrollHeight;
+    }
 }
 
 function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }) {
@@ -88,67 +88,17 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
 
     const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(false);
 
-    useEffect(() => {
-        // get current ticket when component mounts
-        getCurrentTicket(id);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    useEffect(() => {
-        if (currentTicket) {
-            const { customer, subject } = currentTicket;
-            setSenderInfo(currentTicket);
-            AppSocket.io.emit('join_private', { assigneeId: currentTicket?.assignee_id || '', userId: user.id || '' });
-            setTimeout(() => {
-                /* const ticketConvoBox = window.document.querySelector('#ticketConvoBox');
-
-          if (ticketConvoBox) {
-            console.log('ticket box is avaialable');
-            ticketConvoBox.scrollTop = ticketConvoBox.scrollHeight;
-          } */
-                scrollPosSendMsgList();
-            }, 1000);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentTicket]);
-
     /** >>>>> FROM CODE-UI-ANDY */
     const initialState = EditorState.createWithContent(ContentState.createFromText(''));
-    const [userMsg, setUsermsg] = useState([
-        {
-            img: '',
-            fullName: '',
-            msg: '',
-            date: '',
-            msgCount: '',
-            badge1: '',
-        },
-    ]);
 
-    const {
-        AppSocket,
-        setWsTicketFilter,
-        wsTicketFilter,
-        // setMsgHistory,
-        // msgHistory,
-    } = useContext(SocketDataContext);
     const [Tags, setTags] = useState([]);
-    const [loadSelectedMsg, setloadSelectedMsg] = useState('');
-    const [tickets, setTickets] = useState([]);
-    const [filterTicketsState, setFilterTicketsState] = useState([]);
     const [ticket, setTicket] = useState([]);
-    const [LoadingTick, setLoadingTicks] = useState(true);
     const [loadSingleTicket, setLoadSingleTicket] = useState(false);
     const [SenderInfo, setSenderInfo] = useState(false);
-    const [singleTicketFullInfo, setTingleTicketFullInfo] = useState(false);
     const [Category, setCategory] = useState([]);
     const [Priority, setPriority] = useState([]);
     const [editorState, setEditorState] = useState(initialState);
     const [firstTimeLoad, setfirstTimeLoad] = useState(true);
-    const [MessageSenderId, setMessageSenderId] = useState('');
-    const [TicketId, setTicketId] = useState('');
-    const [showUserProfile, setshowUserProfile] = useState(false);
-    //
     const [ReplyTicket, setReplyTicket] = useState({
         plainText: '',
         richText: '',
@@ -159,12 +109,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
     const [Agents, setAgents] = useState([]);
     const [Statuses, setStatuses] = useState([]);
     const [UserInfo, setUserInfo] = useState({});
-    const [ChatCol, setChatCol] = useState({
-        col1: '',
-        col2: '',
-    });
     const [openSaveTicketModal, setopenSaveTicketModal] = useState(false);
-    const [filterChat, setFilterChat] = useState('system');
     const [saveTicket, setSaveTicket] = useState({
         customer: '',
         subject: '',
@@ -173,18 +118,12 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
     });
     const [sendingReply, setsendingReply] = useState(false);
     const [msgHistory, setMsgHistory] = useState([]);
-    const [wsTickets, setwsTickets] = useState([]);
-    const [categoryUpdate, setCategoryUpdate] = useState('');
     const [noResponseFound, setNoResponseFound] = useState(true);
     const [TodayMsges, setTodayMsges] = useState([]);
     const [YesterdayMsges, setYesterdayMsges] = useState([]);
     const [AchiveMsges, setAchiveMsges] = useState([]);
-    const [ShowAchive, setShowAchive] = useState(false);
-    const [Channel, setChannel] = useState('All');
-    const [Status, setStatus] = useState('All');
     // UPDATE MODAL FORM VALUES
     const [processing, setProcessing] = useState(false);
-    const [RSCustomerTags, setRSCustomerTags] = useState([]);
     const [RSTicketTags, setRSTicketTags] = useState([]);
     const [RSTicketCategory, setRSTicketCategory] = useState('');
     const [RSTicketSubject, setRSTicketSubject] = useState('');
@@ -193,7 +132,6 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
     const [RSTicketRemarks, setRSTicketRemarks] = useState('');
     const [RSTicketAssignee, setRSTicketAssignee] = useState([]);
     const [RSTicketCustomFields, setRSTicketCustomFields] = useState(null);
-    const [RSCustomerName, setRSCustomerName] = useState('');
     // ticket custom fields
     const [customFieldConfig, setCustomFieldConfig] = useState([]);
     const [customFieldsGroup, setCustomFieldsGroup] = useState([]);
@@ -201,6 +139,95 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
     const [editorUploadImg, setEditorUploadImg] = useState('');
     const [statusUpdateFailed, setStatusUpdateFailed] = useState(false);
     const [statusOps, setStatusOps] = useState(false);
+    const [appSocket, setAppSocket] = useState(null);
+    const [generatedUuid] = useState(uuid());
+    const [connectionClosed, setConnectionClosed] = useState(false);
+
+    const loggedInUser = JSON.parse(window.localStorage.getItem('user') || '{}')?.user;
+    const domain = window.localStorage.getItem('domain');
+    const tenantId = window.localStorage.getItem('tenantId');
+
+    useEffect(() => {
+        setAppSocket(new Socket(generatedUuid, domain, tenantId));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        setConnectionClosed(false);
+        /* create a socket connection */
+        if (appSocket) {
+            appSocket.createConnection();
+
+            appSocket?.socket.addEventListener('close', () => {
+                setConnectionClosed(true);
+                // console.log('%csocket.js WebSocket has closed: ', 'color: white; background-color: #007acc;', event);
+                if (navigator.onLine) {
+                    setAppSocket(new Socket(loggedInUser?.id, domain, tenantId));
+                }
+            });
+        }
+
+        return () => appSocket?.socket.close();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [appSocket]);
+
+    useEffect(() => {
+        const newConnection = () => {
+            if (connectionClosed) {
+                setAppSocket(new Socket(loggedInUser?.id, domain, tenantId));
+            }
+        };
+
+        window.document.addEventListener('online', newConnection);
+
+        return () => window.document.removeEventListener('online', newConnection);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [connectionClosed]);
+
+    useEffect(() => {
+        if (appSocket?.socket) {
+            appSocket.socket.onmessage = (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                const eventData = JSON.parse(event.data);
+                // console.log('Message from socket => ', eventData);
+                if (
+                    (eventData?.type === 'liveStream' || eventData?.type === 'socketHook') &&
+                    eventData?.status === 'incoming'
+                ) {
+                    const data = eventData?.data;
+                    if (currentTicket?.id && data?.id === currentTicket?.id) {
+                        const reply = {
+                            ...data?.reply,
+                        };
+                        // set message history only when the
+                        setMsgHistory((prev) => {
+                            return [...prev, reply];
+                        });
+                        scrollPosSendMsgList();
+                    }
+                }
+            };
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentTicket?.id, appSocket]);
+
+    useEffect(() => {
+        // get current ticket when component mounts
+        getCurrentTicket(id);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        if (currentTicket) {
+            setSenderInfo(currentTicket);
+            setTimeout(() => {
+                scrollPosSendMsgList();
+            }, 1000);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentTicket]);
+
     // youtube player options
     const youtubePlayerOptions = {
         height: '180',
@@ -212,106 +239,9 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
     };
 
     useEffect(() => {
-        if (!multiIncludes(accessControlFunctions[user?.role], ['reply_conv'])) {
-            setReplyType('note');
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    useEffect(() => {
-        sortMsges(msgHistory);
-    }, [msgHistory]);
-
-    useEffect(() => {
-        scrollPosSendMsgList();
-    }, [TodayMsges, YesterdayMsges, AchiveMsges]);
-
-    useEffect(() => {
-        getStatuses();
-        getCategories();
-        getPriorities();
-        getTags();
-        getAgents();
-        getCustomFieldConfig();
-    }, []);
-
-    useEffect(() => {
-        setLoadingTicks(true);
-        setTickets(wsTickets);
-        setLoadingTicks(false);
-    }, [wsTickets]);
-
-    useEffect(() => {
-        AppSocket.createConnection();
-        AppSocket.io.on(`ws_tickets`, (data) => {
-            setwsTickets(data?.data?.tickets);
-        });
-
-        AppSocket.io.on(`join_private`, (data) => {
-            // console.log("something came up and this is the data => ", data);
-        });
-        return () => {
-            AppSocket.io.disconnect();
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    // if status update fails don't proceed with ticket update
-    useEffect(() => {
-        if (statusOps) {
-            setStatusUpdateFailed(true);
-        }
-    }, [statusOps]);
-
-    useEffect(() => {
-        AppSocket.io.on(`message`, (data) => {
-            /* if(data.id == id){
-          console.log('SAME');
-          let msg = {
-            created_at: data.created_at,
-            id: data?.history?.id || data?.id,
-            plain_response: data?.history?.plain_response || data?.plain_response,
-            response: data?.history?.response || data?.response,
-            type: "reply",
-            user: data.user,
-          };
-          setMsgHistory((item) => [...item, msg]);
-        } else {
-          console.log('NOT SAME');
-        } */
-
-            if (data?.channel === 'livechat' || data.id === id) {
-                const msg = {
-                    created_at: data.created_at,
-                    id: data?.history?.id || data?.id,
-                    plain_response: data?.history?.plain_response || data?.plain_response,
-                    response: data?.history?.response || data?.response,
-                    type: 'reply',
-                    user: data.user,
-                };
-                if (data?.channel === 'livechat') {
-                    setMsgHistory((item) => {
-                        if (item[item.length - 1]?.id === msg?.id) {
-                            return item;
-                        }
-                        return [...item, msg];
-                    });
-                } else {
-                    setMsgHistory((item) => [...item, msg]);
-                }
-            }
-            scrollPosSendMsgList();
-        });
-        // return () => {
-        //   AppSocket.io.disconnect();
-        // };
-    }, [id]);
-
-    //
-    useEffect(() => {
         setCustomFieldIsSet(false);
         setRSTicketCustomFields(null);
-        const ticket_custom_fields = ticket[0]?.custom_fields || {};
+        const ticket_custom_fields = ticket?.custom_fields || {};
         const merged_custom_user_fields = customFieldConfig.map((element) => {
             if (ticket_custom_fields.hasOwnProperty(element.id)) {
                 setRSTicketCustomFields((prevState) => ({
@@ -370,21 +300,24 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         //
         setCustomFieldIsSet(true);
         setCustomFieldsGroup([...groupedCustomFields]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ticket]);
 
     const sortMsges = (msgs) => {
         const Today = [];
         const resultToday = msgs.filter((observation) => {
-            return moment(observation.created_at).format('DD/MM/YYYY') == moment(new Date()).format('DD/MM/YYYY');
+            return moment(observation.created_at).format('DD/MM/YYYY') === moment(new Date()).format('DD/MM/YYYY');
         });
         const resultYesterday = msgs.filter((observation) => {
-            return moment(observation.created_at).format('DD/MM/YYYY') == moment().add(-1, 'days').format('DD/MM/YYYY');
+            return (
+                moment(observation.created_at).format('DD/MM/YYYY') === moment().add(-1, 'days').format('DD/MM/YYYY')
+            );
         });
 
         const resultAchive = msgs.filter((observation) => {
             return (
-                moment(observation.created_at).format('DD/MM/YYYY') != moment().add(-1, 'days').format('DD/MM/YYYY') &&
-                moment(observation.created_at).format('DD/MM/YYYY') != moment(new Date()).format('DD/MM/YYYY')
+                moment(observation.created_at).format('DD/MM/YYYY') !== moment().add(-1, 'days').format('DD/MM/YYYY') &&
+                moment(observation.created_at).format('DD/MM/YYYY') !== moment(new Date()).format('DD/MM/YYYY')
             );
         });
         setTodayMsges(resultToday);
@@ -401,12 +334,6 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         setReplyTicket({ plainText, richText });
     };
 
-    function scrollPosSendMsgList(e) {
-        window.location.href = '#lastMsg';
-        // let element = document.getElementById("lastMsg");
-        // element.scrollIntoView({behavior: 'smooth'});
-    }
-
     const replyTicket = async (reply, attachment, type = replyType) => {
         let agentMentions = [];
         if (replyType === 'note') {
@@ -422,7 +349,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         }
 
         let plainTextContent = reply.plainText;
-        if (reply.plainText == '\n \n') {
+        if (reply.plainText === '\n \n') {
             plainTextContent = editorUploadImg;
         }
 
@@ -445,26 +372,36 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
             mentions: agentMentions,
         };
         setMsgHistory((item) => [...item, replyData]);
-        const res = await httpPostMain(`tickets/${currentTicket.id}/replies`, data);
+        scrollPosSendMsgList();
+        const currentTicketCopy = JSON.parse(JSON.stringify(currentTicket));
+        // remove history property from object before sending via socket
+        Reflect.deleteProperty(currentTicketCopy, 'history');
+        const msgObj = {
+            msgreciever: {
+                msgrecieverid: currentTicket?.customer?.id,
+            },
+            data: {
+                ...currentTicketCopy,
+                reply: replyData,
+            },
+        };
+        appSocket.sendLiveStreamMessage(msgObj);
+        const res = await httpPostMain(`tickets/${currentTicket?.id}/replies`, data);
         if (res?.status === 'success') {
             setEditorState(initialState);
             setEditorUploadImg('');
             setReplyTicket({ plainText: '', richText: '' });
-            // emit ws_tickets event on reply
-            AppSocket.createConnection();
-            const channelData = { channel: filterTicketsState === '' ? 'ALL' : filterTicketsState, per_page: 100 };
-            AppSocket.io.emit(`ws_tickets`, channelData);
             scrollPosSendMsgList();
         } else {
             // setLoadingTicks(false);
             setsendingReply(false);
-            return NotificationManager.error(res?.er?.message, 'Error', 4000);
+            NotificationManager.error(res?.er?.message, 'Error', 4000);
         }
     };
 
-    const onReplyTypeChange = (event) => {
-        setReplyType(event.target.value);
-    };
+    // const onReplyTypeChange = (event) => {
+    //     setReplyType(event.target.value);
+    // };
 
     // get custom field config
     const getCustomFieldConfig = async () => {
@@ -474,33 +411,32 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         }
     };
 
-    const ReloadloadSingleMessage = async () => {
-        setLoadSingleTicket(true);
+    // const ReloadloadSingleMessage = async () => {
+    //     setLoadSingleTicket(true);
 
-        const res = await httpGetMain(`tickets/${MessageSenderId}`);
-        if (res.status == 'success') {
-            setTicket(res?.data);
-            setLoadSingleTicket(false);
-        } else {
-            setLoadSingleTicket(false);
-            return NotificationManager.error(res.er.message, 'Error', 4000);
-        }
-    };
+    // // MessageSenderId here should be the current ticket id
+    //     const res = await httpGetMain(`tickets/${MessageSenderId}`);
+    //     if (res.status === 'success') {
+    //         setTicket(res?.data);
+    //         setLoadSingleTicket(false);
+    //     } else {
+    //         setLoadSingleTicket(false);
+    //         return NotificationManager.error(res.er.message, 'Error', 4000);
+    //     }
+    // };
 
     const getStatuses = async () => {
         const res = await httpGetMain(`statuses`);
-        if (res.status == 'success') {
+        if (res.status === 'success') {
             // getTickets();
             setStatuses(res?.data?.statuses);
-        } else {
         }
     };
 
     const getCategories = async () => {
         const res = await httpGetMain(`categories`);
-        if (res.status == 'success') {
+        if (res.status === 'success') {
             setCategory(res?.data?.categories);
-        } else {
         }
     };
 
@@ -509,7 +445,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         if (res.status === 'success') {
             setPriority(res?.data?.priorities);
         } else {
-            return NotificationManager.error(res.er.message, 'Error', 4000);
+            NotificationManager.error(res.er.message, 'Error', 4000);
         }
     };
 
@@ -517,7 +453,6 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         const res = await httpGetMain(`tags`);
         if (res.status === 'success') {
             setTags(res?.data?.tags_names.tags);
-        } else {
         }
     };
 
@@ -526,7 +461,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         if (res.status === 'success') {
             setAgents(res?.data);
         } else {
-            return NotificationManager.error(res.er.message, 'Error', 4000);
+            NotificationManager.error(res.er.message, 'Error', 4000);
         }
     };
 
@@ -543,7 +478,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         if (RSTicketStage.label === 'Closed') {
             // get url and replace domain
             const base_url = window.location.origin;
-            const complete_url = `${base_url}/feedback/${localStorage.domain}/${ticket[0].id}/${ticket[0].customer.id}`;
+            const complete_url = `${base_url}/feedback/${localStorage.domain}/${ticket.id}/${ticket.customer.id}`;
             const rich_text = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation : <a target='_blank' href='${complete_url}'>Click here to rate us</a></p>`;
             const ReplyTicket = {
                 richText: rich_text,
@@ -551,7 +486,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
             };
             replyTicket(ReplyTicket, 'attachment', 'reply');
         }
-        const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, { statusId: RSTicketStage.value });
+        const statusRes = await httpPatchMain(`tickets-status/${ticket.id}`, { statusId: RSTicketStage.value });
         if (statusRes.status === 'success') {
             const replyData = {
                 type: 'reply',
@@ -560,7 +495,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                 created_at: new Date(),
                 plain_response: `Ticket Stage has been marked as ${RSTicketStage.label}`,
                 response: `Ticket Stage has been marked as ${RSTicketStage.label}`,
-                user: ticket[0]?.assignee,
+                user: ticket?.assignee,
             };
             setMsgHistory((item) => [...item, replyData]);
             return NotificationManager.success('Ticket status successfully updated', 'Success');
@@ -569,49 +504,90 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         return NotificationManager.error(statusRes.er.message, 'Error', 4000);
     };
 
-    const loadSingleMessage = async ({ id, customer, assignee, subject }) => {
-        setShowAchive(false);
-        setAchiveMsges([]);
-        getUser(customer?.id);
-        setChatCol({ col1: 'hideColOne', col2: 'showColTwo' });
-        setSenderInfo({ customer, subject });
-        setMessageSenderId(id);
-        setLoadSingleTicket(true);
-        setTingleTicketFullInfo();
-        setTicket([]);
-        const swData = { assigneeId: assignee?.id || '', userId: customer?.id || '' };
-        UserInfo.id && AppSocket.io.leave(`${UserInfo.id}${assignee?.id}`);
-        AppSocket.io.emit('join_private', swData);
-        const res = await httpGetMain(`tickets/${id}`);
-        setfirstTimeLoad(false);
-        if (res.status == 'success') {
-            setTicket(res?.data);
-            setMsgHistory(res?.data[0]?.history);
-            // sortMsges(res?.data[0]?.history);
-            setMessageSenderId(res?.data[0]?.id);
-            setSaveTicket({
-                ...saveTicket,
-                customer: '',
-                subject: res?.data[0].subject,
-                description: res?.data[0].history,
-            });
-            setLoadSingleTicket(false);
-            checkRes();
-        } else {
-            setLoadSingleTicket(false);
-            return NotificationManager.error(res.er.message, 'Error', 4000);
-        }
+    const closeSaveTicketModal = () => {
+        setopenSaveTicketModal(!openSaveTicketModal);
+        setSaveTicket({
+            customer: '',
+            subject: '',
+            description: [],
+            category: '',
+        });
+        setRSTicketPriority(ticket.priority.id);
+        setRSTicketCategory(ticket.category.id);
+        setRSTicketSubject(ticket.subject);
+        setRSTicketRemarks(ticket.description);
+        setRSTicketTags(ticket.tags);
+        setRSTicketAssignee(ticket.assignee?.id);
+    };
+    function createMarkup(data) {
+        return { __html: data };
+    }
+    const checkRes = () => {
+        ticket?.forEach((data) => {
+            if (data.history.length === 0) {
+                setNoResponseFound(true);
+            } else {
+                setNoResponseFound(false);
+            }
+        });
     };
 
     const getUser = async (id) => {
         const res = await httpGetMain(`users/${id}`);
         setfirstTimeLoad(false);
-        if (res.status == 'success') {
+        if (res.status === 'success') {
             setUserInfo(res.data);
         } else {
             setLoadSingleTicket(false);
-            return NotificationManager.error(res.er.message, 'Error', 4000);
+            NotificationManager.error(res.er.message, 'Error', 4000);
         }
+    };
+
+    useEffect(() => {
+        if (!multiIncludes(accessControlFunctions[user?.role], ['reply_conv'])) {
+            setReplyType('note');
+        }
+    }, []);
+
+    useEffect(() => {
+        sortMsges(msgHistory);
+    }, [msgHistory]);
+
+    useEffect(() => {
+        scrollPosSendMsgList();
+    }, [TodayMsges, YesterdayMsges, AchiveMsges]);
+
+    useEffect(() => {
+        getStatuses();
+        getCategories();
+        getPriorities();
+        getTags();
+        getAgents();
+        getCustomFieldConfig();
+    }, []);
+
+    // if status update fails don't proceed with ticket update
+    useEffect(() => {
+        if (statusOps) {
+            setStatusUpdateFailed(true);
+        }
+    }, [statusOps]);
+
+    const loadSingleMessage = async (currentTicket) => {
+        const { id, customer, subject, history } = currentTicket;
+        setAchiveMsges([]);
+        getUser(customer?.id);
+        setSenderInfo({ customer, subject });
+        setfirstTimeLoad(false);
+        setTicket(currentTicket);
+        setMsgHistory(history);
+        setSaveTicket({
+            ...saveTicket,
+            customer: '',
+            subject,
+            description: history,
+        });
+        checkRes();
     };
 
     const updateTicket = async (status) => {
@@ -636,12 +612,12 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
 
         // if status update fails don't proceed with ticket update
         if (!statusUpdateFailed) {
-            const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
+            const res = await httpPatchMain(`tickets/${ticket.id}`, data);
             if (res.status === 'success') {
                 setProcessing(false);
                 closeSaveTicketModal();
                 NotificationManager.success('Ticket successfully updated', 'Success');
-                const ticketRes = await httpGetMain(`tickets/${ticket[0].id}`);
+                const ticketRes = await httpGetMain(`tickets/${ticket.id}`);
                 if (ticketRes.status === 'success') {
                     setTicket(ticketRes?.data);
                 } else {
@@ -650,64 +626,10 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                 }
             } else {
                 setProcessing(false);
-                return NotificationManager.error(res.er.message, 'Error', 4000);
+                NotificationManager.error(res.er.message, 'Error', 4000);
             }
         }
     };
-
-    const closeSaveTicketModal = () => {
-        setopenSaveTicketModal(!openSaveTicketModal);
-        setSaveTicket({
-            customer: '',
-            subject: '',
-            description: [],
-            category: '',
-        });
-        setRSTicketPriority(ticket[0].priority.id);
-        setRSTicketCategory(ticket[0].category.id);
-        setRSTicketSubject(ticket[0].subject);
-        setRSTicketRemarks(ticket[0].description);
-        setRSTicketTags(ticket[0].tags);
-        setRSTicketAssignee(ticket[0].assignee?.id);
-    };
-    function createMarkup(data) {
-        return { __html: data };
-    }
-    const checkRes = () => {
-        const a = ticket?.map((data) => {
-            if (data.history.length === 0) {
-                setNoResponseFound(true);
-            } else {
-                setNoResponseFound(false);
-            }
-        });
-    };
-
-    // const _uploadImageCallBack = (file) => {
-    //   // long story short, every time we upload an image, we
-    //   // need to save it to the state so we can get it's data
-    //   // later when we decide what to do with it.
-
-    //   // Make sure you have a uploadImages: [] as your default state
-    //   let uploadedImages = uploadImgS;
-
-    //   const imageObject = {
-    //     file: file,
-    //     localSrc: URL.createObjectURL(file),
-    //   };
-
-    //   setUploadIMGs(imageObject);
-
-    //   uploadImgS(uploadedImages);
-
-    //   // We need to return a promise with the image src
-    //   // the img src we will use here will be what's needed
-    //   // to preview it in the browser. This will be different than what
-    //   // we will see in the index.md file we generate.
-    //   return new Promise((resolve, reject) => {
-    //     resolve({ data: { link: imageObject.localSrc } });
-    //   });
-    // };
 
     const _uploadImageCallBack = (file) => {
         // long story short, every time we upload an image, we
@@ -730,7 +652,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         // the img src we will use here will be what's needed
         // to preview it in the browser. This will be different than what
         // we will see in the index.md file we generate.
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             const data = new FormData();
 
             data.append('file', file);
@@ -741,10 +663,10 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                 .then(async (res) => {
                     // console.log(res.data?.url);
                     imageObject.src = res.data?.url;
-                    setEditorUploadImg(ReplyTicket.plainText + editorUploadImg + res.data?.url);
+                    setEditorUploadImg(`${ReplyTicket.plainText + editorUploadImg}${res?.data?.url}`);
                     resolve({ data: { link: res.data?.url } });
                 })
-                .catch((err) => {
+                .catch(() => {
                     NotificationManager.error('Photo could not be uploaded', 'Error');
                 });
         });
@@ -756,7 +678,6 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         if (isCurrentTicketLoaded && currentTicket) {
             loadSingleMessage(currentTicket);
         }
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isCurrentTicketLoaded, currentTicket]);
 
@@ -820,16 +741,16 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                     <div className="conversationHeaderMainV2">
                                         <div className="custormChatHeaderInfo">
                                             <div className="custormChatHeaderInfoData pt-3">
-                                                <h1>{ticket[0]?.subject}</h1>
+                                                <h1>{ticket?.subject}</h1>
                                                 <p>
                                                     {`${capitalize(SenderInfo?.customer?.firstname || '')} ${capitalize(
-                                                        SenderInfo?.customer?.lastname == 'default'
+                                                        SenderInfo?.customer?.lastname === 'default'
                                                             ? ''
                                                             : SenderInfo?.customer?.lastname || '',
                                                     )} 
                                 ${capitalize(SenderInfo?.customer?.email || '')}`}
                                                     <span className="custormChatHeaderDot" />{' '}
-                                                    <span>{dateFormater(ticket[0]?.updated_at)}</span>
+                                                    <span>{dateFormater(ticket?.updated_at)}</span>
                                                 </p>
                                             </div>
                                             {multiIncludes(accessControlFunctions[user?.role], ['edit_ticket']) && (
@@ -843,36 +764,19 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                         </div>
                                     </div>
                                 </div>
-                                {/* <div>
-                      <div className="achivemsagesSection pt-3"
-                          onClick={() => setShowAchive(!ShowAchive)}>
-                          <ExpandChat />
-                          {AchiveMsges.length == 0 &&
-                          TodayMsges.length == 0 &&
-                          YesterdayMsges.length == 0 ? (
-                            <span> No response found ({AchiveMsges.length})</span>
-                          ) : (
-                            <span>
-                              {" "}
-                              {ShowAchive ? "Condense" : "Expand"} all conversation
-                              ({AchiveMsges.length})
-                            </span>
-                          )}
-                        </div>
-                    </div> */}
                                 {/* CHAT SECTION */}
                                 <div id="ticketConvoBox" className="conversationsMain">
                                     <div className="chatDateHeader">
                                         <div className="chatDateHeaderhr1" />
                                         <div className="chatDateHeaderTitle">
                                             <span>
-                                                {moment(ticket[0].created_at).format('DD/MM/YYYY') ==
+                                                {moment(ticket.created_at).format('DD/MM/YYYY') ===
                                                 moment(new Date()).format('DD/MM/YYYY')
                                                     ? 'Today'
-                                                    : moment(ticket[0].created_at).format('DD/MM/YYYY') ==
+                                                    : moment(ticket.created_at).format('DD/MM/YYYY') ===
                                                       moment().add(-1, 'days').format('DD/MM/YYYY')
                                                     ? 'Yesterday'
-                                                    : moment(ticket[0].created_at).fromNow()}
+                                                    : moment(ticket.created_at).fromNow()}
                                             </span>{' '}
                                         </div>
                                         <div className="chatDateHeaderhr2" />
@@ -881,8 +785,8 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                         This message is assigned to{' '}
                                         <span>
                                             {' '}
-                                            {`${capitalize(ticket[0]?.assignee?.firstname || '')} ${capitalize(
-                                                ticket[0]?.assignee?.lastname || '',
+                                            {`${capitalize(ticket?.assignee?.firstname || '')} ${capitalize(
+                                                ticket?.assignee?.lastname || '',
                                             )}`}
                                         </span>
                                     </div>
@@ -893,15 +797,15 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                     >
                                         <span>
                                             {' '}
-                                            {`${capitalize(ticket[0]?.assignee?.firstname || '')} ${capitalize(
-                                                ticket[0]?.assignee?.lastname || '',
+                                            {`${capitalize(ticket?.assignee?.firstname || '')} ${capitalize(
+                                                ticket?.assignee?.lastname || '',
                                             )}`}
                                         </span>{' '}
                                         picked up this chat
                                     </div>
 
                                     <div className="msgAssingedToee3">
-                                        Ticket Status has been marked as <span> {ticket[0].status.status}</span>
+                                        Ticket Status has been marked as <span> {ticket.status.status}</span>
                                     </div>
 
                                     <div className="">
@@ -916,8 +820,8 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                                     ) : (
                                                         <div
                                                             className={`message ${
-                                                                data?.user?.role == 'Customer' ? '' : 'message-out'
-                                                            } ${data?.type == 'note' ? 'message-note' : ''}`}
+                                                                data?.user?.role === 'Customer' ? '' : 'message-out'
+                                                            } ${data?.type === 'note' ? 'message-note' : ''}`}
                                                         >
                                                             <div className="message-container">
                                                                 <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
@@ -934,7 +838,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                                                                 0,
                                                                                 1,
                                                                             )}${
-                                                                                data?.user?.lastname == 'default'
+                                                                                data?.user?.lastname === 'default'
                                                                                     ? ''
                                                                                     : data?.user?.lastname?.slice(0, 1)
                                                                             }`}</p>
@@ -953,7 +857,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                                                                               )
                                                                                             : ''
                                                                                     } ${
-                                                                                        data?.user?.lastname ==
+                                                                                        data?.user?.lastname ===
                                                                                         'default'
                                                                                             ? ''
                                                                                             : data?.user?.lastname
@@ -974,8 +878,8 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                                                                         />
                                                                                     </div>
                                                                                 ) : null}
-                                                                                {ticket[0]?.channel == 'email' &&
-                                                                                data?.user?.role == 'Customer' ? (
+                                                                                {ticket?.channel === 'email' &&
+                                                                                data?.user?.role === 'Customer' ? (
                                                                                     <div className="message-text-content">
                                                                                         <ReactMarkdown
                                                                                             children={data?.response
@@ -1009,7 +913,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                         })}
                                     </div>
 
-                                    {YesterdayMsges.length == 0 ? (
+                                    {YesterdayMsges.length === 0 ? (
                                         ''
                                     ) : (
                                         <div className="chatDateHeader">
@@ -1032,8 +936,8 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                                 ) : (
                                                     <div
                                                         className={`message ${
-                                                            data?.user?.role == 'Customer' ? '' : 'message-out'
-                                                        } ${data?.type == 'note' ? 'message-note' : ''}`}
+                                                            data?.user?.role === 'Customer' ? '' : 'message-out'
+                                                        } ${data?.type === 'note' ? 'message-note' : ''}`}
                                                     >
                                                         <div className="message-container">
                                                             <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
@@ -1050,7 +954,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                                                             0,
                                                                             1,
                                                                         )}${
-                                                                            data?.user?.lastname == 'default'
+                                                                            data?.user?.lastname === 'default'
                                                                                 ? ''
                                                                                 : data?.user?.lastname?.slice(0, 1)
                                                                         }`}</p>
@@ -1069,7 +973,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                                                                           )
                                                                                         : ''
                                                                                 } ${
-                                                                                    data?.user?.lastname == 'default'
+                                                                                    data?.user?.lastname === 'default'
                                                                                         ? ''
                                                                                         : data?.user?.lastname
                                                                                 }`}
@@ -1089,8 +993,8 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                                                                     />
                                                                                 </div>
                                                                             ) : null}
-                                                                            {ticket[0]?.channel == 'email' &&
-                                                                            data?.user?.role == 'Customer' ? (
+                                                                            {ticket?.channel === 'email' &&
+                                                                            data?.user?.role === 'Customer' ? (
                                                                                 <div className="message-text-content">
                                                                                     <ReactMarkdown
                                                                                         children={data?.response
@@ -1123,7 +1027,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                         );
                                     })}
 
-                                    {TodayMsges.length == 0 ? (
+                                    {TodayMsges.length === 0 ? (
                                         ''
                                     ) : (
                                         <div className="chatDateHeader">
@@ -1146,8 +1050,8 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                                 ) : (
                                                     <div
                                                         className={`message ${
-                                                            data?.user?.role == 'Customer' ? '' : 'message-out'
-                                                        } ${data?.type == 'note' ? 'message-note' : ''}`}
+                                                            data?.user?.role === 'Customer' ? '' : 'message-out'
+                                                        } ${data?.type === 'note' ? 'message-note' : ''}`}
                                                     >
                                                         <div className="message-container">
                                                             <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
@@ -1164,7 +1068,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                                                             0,
                                                                             1,
                                                                         )}${
-                                                                            data?.user?.lastname == 'default'
+                                                                            data?.user?.lastname === 'default'
                                                                                 ? ''
                                                                                 : data?.user?.lastname?.slice(0, 1)
                                                                         }`}</p>
@@ -1183,7 +1087,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                                                                           )
                                                                                         : ''
                                                                                 } ${
-                                                                                    data?.user?.lastname == 'default'
+                                                                                    data?.user?.lastname === 'default'
                                                                                         ? ''
                                                                                         : data?.user?.lastname
                                                                                 }`}
@@ -1203,8 +1107,8 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                                                                     />
                                                                                 </div>
                                                                             ) : null}
-                                                                            {ticket[0]?.channel == 'email' &&
-                                                                            data?.user?.role == 'Customer' ? (
+                                                                            {ticket?.channel === 'email' &&
+                                                                            data?.user?.role === 'Customer' ? (
                                                                                 <div className="message-text-content">
                                                                                     <ReactMarkdown
                                                                                         children={data?.response
@@ -1236,45 +1140,15 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                             </Fragment>
                                         );
                                     })}
-                                    <div id="lastMsg" />
-                                    {/* <div
-                      className="msgRepliesSectionChattsdw"
-                      style={{ marginTop: "10px" }}
-                    >
-                      <div className="customerTiketChat">
-                        <div className="customerTImageHeader">
-                          <div className="imgContainercth">
-                            <img src={pic} alt="" />
-                            <div className="custorActiveStateimgd"></div>
-                          </div>
-                        </div>
-                        <div className="custormernameticket">
-                          <p style={{ color: "#006298" }}>
-                            Hammed Daudu{" "}
-                            <span style={{ color: "#656565" }}>replied</span>
-                          </p>
-                          <p>Just now</p>
-                        </div>
-                      </div>
-
-                      <div
-                        className="msgbodyticketHeader"
-                        style={{ color: "rgba(101, 101, 101, 0.7)" }}
-                      >
-                        is typing...
-                      </div>
-                    </div> */}
+                                    {/* <div id="lastMsg" /> */}
                                 </div>
                                 {/* CHAT COMMENT BOX SECTION */}
-                                {ticket[0].status.status === 'Closed' ? (
+                                {ticket.status.status === 'Closed' ? (
                                     ''
                                 ) : (
                                     <div id="ticketConvoEditorBox" className="conversationCommentBox">
                                         <div className="single-chat-ckeditor position-relative">
-                                            <div
-                                                className="showBackArrowOnMobile"
-                                                onClick={() => setChatCol({ col1: 'showColOne', col2: 'hideColTwo' })}
-                                            >
+                                            <div className="showBackArrowOnMobile">
                                                 <img src={BackArrow} alt="" />
                                             </div>
                                             <div className="pb-1 pt-0 bg-white border border-bottom-0 acx-rounded-top-10 w-100 overflow-hidden">
@@ -1293,8 +1167,8 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                                 </Tabs>
                                             </div>
                                             <Editor
-                                                disabled={ticket[0].status.status === 'Closed'}
-                                                readOnly={ticket[0].status.status === 'Closed'}
+                                                disabled={ticket.status.status === 'Closed'}
+                                                readOnly={ticket.status.status === 'Closed'}
                                                 editorState={editorState}
                                                 toolbar={{
                                                     options: ['emoji', 'inline', 'image', 'link'],
@@ -1387,9 +1261,8 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                             />
                                             <div className="sendMsg">
                                                 <button
-                                                    disabled={
-                                                        sendingReply ? true : ticket[0].status.status === 'Closed'
-                                                    }
+                                                    type="button"
+                                                    disabled={sendingReply ? true : ticket.status.status === 'Closed'}
                                                     onClick={() => replyTicket(ReplyTicket, 'attachment')}
                                                 >
                                                     <SendMsgIcon /> Send
@@ -1428,8 +1301,8 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                     <Form.Label className="mb-0">Customer</Form.Label>
                                     <Form.Control
                                         value={`${capitalizeFirstLetter(
-                                            ticket[0]?.customer?.firstname,
-                                        )} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
+                                            ticket?.customer?.firstname,
+                                        )} ${capitalizeFirstLetter(ticket?.customer?.lastname)}`}
                                         type="text"
                                         disabled
                                     />
@@ -1447,12 +1320,12 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                         className="rselectfield"
                                         style={{ fontSize: '12px' }}
                                         isClearable={false}
-                                        onChange={(newValue, actionMeta) => {
+                                        onChange={(newValue) => {
                                             setRSTicketCategory(newValue.value);
                                         }}
                                         defaultValue={{
-                                            value: ticket[0]?.category?.id,
-                                            label: ticket[0]?.category?.name,
+                                            value: ticket?.category?.id,
+                                            label: ticket?.category?.name,
                                         }}
                                         options={
                                             // populate 'options' prop from $Category, with names remapped
@@ -1467,7 +1340,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                     <RSelect
                                         className="rselectfield"
                                         style={{ fontSize: '12px' }}
-                                        onChange={(newValue, actionMeta) => {
+                                        onChange={(newValue) => {
                                             setRSTicketStage((prevState) => ({
                                                 ...prevState,
                                                 value: newValue.value,
@@ -1476,8 +1349,8 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                         }}
                                         isClearable={false}
                                         defaultValue={{
-                                            value: ticket[0]?.status?.id,
-                                            label: ticket[0]?.status?.status,
+                                            value: ticket?.status?.id,
+                                            label: ticket?.status?.status,
                                         }}
                                         options={
                                             // populate 'options' prop from $Category, with names remapped
@@ -1493,13 +1366,13 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                     <RSelect
                                         className="rselectfield"
                                         style={{ fontSize: '12px' }}
-                                        onChange={(newValue, actionMeta) => {
+                                        onChange={(newValue) => {
                                             setRSTicketPriority(newValue.value);
                                         }}
                                         isClearable={false}
                                         defaultValue={{
-                                            value: ticket[0]?.priority?.id,
-                                            label: ticket[0]?.priority?.name,
+                                            value: ticket?.priority?.id,
+                                            label: ticket?.priority?.name,
                                         }}
                                         options={
                                             // populate 'options' prop from $Statuses, with names remapped
@@ -1515,7 +1388,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                 <Form.Label className="mb-0">Subject</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    defaultValue={`${ticket[0]?.subject}`}
+                                    defaultValue={`${ticket?.subject}`}
                                     onChange={(e) => setRSTicketSubject(e.target.value)}
                                 />
                             </Form.Group>
@@ -1525,7 +1398,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                 <Form.Control
                                     as="textarea"
                                     rows={5}
-                                    defaultValue={ticket[0]?.plain_description}
+                                    defaultValue={ticket?.plain_description}
                                     onChange={(e) => setRSTicketRemarks(e.target.value)}
                                 />
                             </Form.Group>
@@ -1547,13 +1420,13 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                                 className="rselectfield"
                                                 closeMenuOnSelect
                                                 menuPlacement="top"
-                                                onChange={(newValue, actionMeta) => {
+                                                onChange={(newValue) => {
                                                     setRSTicketAssignee(newValue.value);
                                                 }}
                                                 defaultValue={{
-                                                    value: ticket[0]?.assignee?.id,
-                                                    label: `${ticket[0]?.assignee?.firstname || ''}  ${
-                                                        ticket[0]?.assignee?.lastname || ''
+                                                    value: ticket?.assignee?.id,
+                                                    label: `${ticket?.assignee?.firstname || ''}  ${
+                                                        ticket?.assignee?.lastname || ''
                                                     }`,
                                                 }}
                                                 options={
@@ -1582,8 +1455,8 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                                 );
                                             }}
                                             defaultValue={
-                                                ticket[0]?.tags
-                                                    ? ticket[0]?.tags.map((data) => {
+                                                ticket?.tags
+                                                    ? ticket?.tags.map((data) => {
                                                           return { value: data, label: data };
                                                       })
                                                     : null
@@ -1604,7 +1477,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                                 return (
                                                     <Fragment key={sections.section}>
                                                         {sections.fields.map((data) => {
-                                                            if (data?.field_type == 'select') {
+                                                            if (data?.field_type === 'select') {
                                                                 return (
                                                                     <Col md={6} key={data.id}>
                                                                         <Form.Group className="mb-3 form-group acx-form-group">
