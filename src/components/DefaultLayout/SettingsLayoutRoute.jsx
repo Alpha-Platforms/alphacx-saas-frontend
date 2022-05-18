@@ -25,7 +25,7 @@ function DefaultLayout({ children, routeType, pageName, ...rest }) {
             fullProps={fullProps}
             pageName={pageName}
         >
-            <div className="mt-4">{children}</div>
+            <div className={`settings-wrpr ${appReduceSidebarWidth? 'expanded' : ''}`}>{children}</div>
         </Layout>
     );
 }
