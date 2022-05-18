@@ -74,6 +74,7 @@ function Conversation({ user }) {
     const initialState = EditorState.createWithContent(ContentState.createFromText(''));
     // const { AppSocket } = useContext(SocketDataContext);
     const [tickets, setTickets] = useState([]);
+    const [ticketsLoaded, setTicketsLoaded] = useState(false);
     const [meta, setMeta] = useState({});
     const [filterTicketsState, setFilterTicketsState] = useState('');
     const [ticket, setTicket] = useState([]);
@@ -349,6 +350,7 @@ function Conversation({ user }) {
             if (initRes?.status === 'success') {
                 setTickets(initRes?.data?.tickets || []);
                 setMeta(initRes?.data?.meta || {});
+                setTicketsLoaded(true);
                 // const res = await httpGetMain(`tickets?per_page=${initRes?.data?.meta?.totalItems}`);
                 // if (res?.status === 'success') {
                 //     console.log('%cconversation.jsx line:345 res', 'color: white; background-color: #007acc;', res);
@@ -877,6 +879,7 @@ function Conversation({ user }) {
                             scrollPosSendMsgList={scrollPosSendMsgList}
                             setTicketId={setTicketId}
                             statuses={Statuses}
+                            ticketsLoaded={ticketsLoaded}
                         />
                     </div>
 
