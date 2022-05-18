@@ -275,7 +275,7 @@
 
 #ticketDetailsWrapper {
     position: fixed;
-    width: calc(100vw - 140px);
+    /* width: calc(100vw - 140px); */
     height: calc(100vh - 75px) !important;
     overflow: hidden;
 }
