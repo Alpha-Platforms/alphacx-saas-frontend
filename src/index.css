@@ -91,10 +91,12 @@ button:focus {
   padding-left: 50px;
   position: relative;
   left: 194px;
+  width: calc(100% - 194px);
 }
 
 .reduceAppPadding {
   left: 16px !important;
+  width: calc(100% - 60px);
 }
 
 .section-wrap-nav {
