@@ -20,6 +20,7 @@ export default function MessageList({
     activeChat,
     setActiveChat,
     scrollPosSendMsgList,
+    statuses
 }) {
     const [renderTicket, setRenderTicket] = useState([]);
     const [loadingTickets, setLoadingTickets] = useState(true);
@@ -48,7 +49,7 @@ export default function MessageList({
     };
 
     const getChannelColor = (channel, placement = 'foreground') => {
-        channel = channel.toLowerCase();
+        channel = channel?.toLowerCase();
         const obj = {
             facebook: '#1877F2',
             email: '#2B304D',
@@ -102,6 +103,7 @@ export default function MessageList({
                     </div>
                 ) : (
                     renderTicket.map((data, index) => {
+                        const currentStatus = statuses?.find((item) => item?.id === data?.status?.id);
                         return (
                             <div
                                 key={index}
@@ -168,20 +170,20 @@ export default function MessageList({
                                     <div className="msg-badges">
                                         <div
                                             style={{
-                                                background: `"${getChannelColor(data?.channel, 'background')}"`,
-                                                color: `"${getChannelColor(data?.channel)}"`,
+                                                background: `"${getChannelColor(data?.channel || '', 'background')}"`,
+                                                color: `"${getChannelColor(data?.channel || '')}"`,
                                             }}
                                         >
-                                            {data?.channel}
+                                            {data?.channel || ''}
                                         </div>
 
                                         <div
                                             style={{
-                                                background: `"${data?.status?.background_color}"`,
-                                                color: `"${data?.status?.forecolor}"`,
+                                                background: `"${currentStatus?.background_color}"`,
+                                                color: `"${currentStatus?.forecolor}"`,
                                             }}
                                         >
-                                            {data?.status?.status}
+                                            {currentStatus?.status}
                                         </div>
                                     </div>
                                 </div>
