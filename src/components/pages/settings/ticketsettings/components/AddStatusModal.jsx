@@ -56,7 +56,16 @@ function AddStatusModal({
         setModalStatus((prev) => ({ ...prev, id: '', status: '' }));
     };
 
-    const updateSuccess = () => {
+    const updateSuccess = (newStatus) => {
+        setStatuses((prev) => prev?.map((item) => {
+            if (item?.id === newStatus?.id) {
+                return {
+                    ...item,
+                    ...newStatus
+                }
+            }
+            return item;
+        }));
         setEditing(false);
         setCreateModalShow(false);
         setModalStatus((prev) => ({ ...prev, id: '', status: '' }));
