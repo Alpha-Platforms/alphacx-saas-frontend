@@ -46,7 +46,7 @@ export const updateStatus = (statusId, newStatus, successCallback, failureCallba
                 type: types.UPDATE_STATUS,
                 payload: res.data,
             });
-            successCallback && successCallback();
+            successCallback && successCallback(res.data?.data);
         })
         .catch((err) => {
             dispatch(returnErrors(err.response?.data, err.response?.status));
