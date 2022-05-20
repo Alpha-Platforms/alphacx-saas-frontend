@@ -66,6 +66,9 @@ export const getPaginatedAgents = (itemsPerPage, currentPage) => (dispatch, getS
 export const addAgent = (newAgent, success, failed) => (dispatch, getState) => {
     // Request body
     const body = JSON.stringify(newAgent);
+    
+    const allGroups = getState()?.group?.groups;
+    const { groupIds } = newAgent;
 
     axios
         .post(`${config.stagingBaseUrl}/agent`, body, userTokenConfig(getState))
@@ -74,6 +77,20 @@ export const addAgent = (newAgent, success, failed) => (dispatch, getState) => {
             if (res.data?.status === 'success') {
                 success && success(res.data);
                 const data = res.data?.data;
+                const groups = groupIds?.map((grp_id) => {
+                    const groupInArr = allGroups?.find((grp) => grp?.id === grp_id)
+                    if (groupInArr) {
+                        return {
+                            id: groupInArr?.id,
+                            group_id: groupInArr?.id,
+                            group: {
+                                ...groupInArr,
+                            }
+                        }
+                    }
+                    return {};
+                });
+
                 dispatch({
                     type:
                         data?.role === 'Administrator'
@@ -89,6 +106,10 @@ export const addAgent = (newAgent, success, failed) => (dispatch, getState) => {
                                     id: data?.userId,
                                     firstname: data?.firstName,
                                     lastname: data?.lastName,
+                                    isActivated: true,
+                                    groups,
+                                    created_at: new Date(),
+
                                 };
                                 return newData;
                         }

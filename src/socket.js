@@ -19,7 +19,7 @@ class Socket {
 
     tenantId;
 
-    constructor(userId, domain, tenantId) {
+    constructor(userId, domain, tenantId, accounttype = 'agent') {
         this.userId = userId;
         this.domain = domain;
         this.tenantId = tenantId;
@@ -35,7 +35,7 @@ class Socket {
                 msgsenderid: userId,
                 domain,
                 tenantid: domain,
-                accounttype: 'agent',
+                accounttype,
             },
             msgreciever: {
                 domain,
@@ -58,7 +58,7 @@ class Socket {
                 tenantid: domain,
                 msgsenderid: userId,
                 domain,
-                accounttype: 'agent',
+                accounttype,
             },
         };
     }
@@ -78,13 +78,13 @@ class Socket {
         this.socket.addEventListener('open', (event) => {
             this.connected = true;
 
-            // console.log('Connection is open => ', event);
+            console.log('Connection is open => ', event);
 
             this.sendAuthyMessage();
         });
 
         this.socket.addEventListener('error', (event) => {
-            // console.log('%cerror socket.js WebSocket Error', 'color: red; display: block; width: 100%;', event);
+            console.log('%cerror socket.js WebSocket Error', 'color: red; display: block; width: 100%;', event);
         });
     }
 
@@ -107,7 +107,7 @@ class Socket {
             },
         };
 
-        // console.log('%csocket.js line:106 LIVESTREAM MESSAGE', 'color: white; background-color: #007acc;', msgObj);
+        console.log('%csocket.js line:106 LIVESTREAM MESSAGE', 'color: white; background-color: #007acc;', msgObj);
 
         this.socket.send(JSON.stringify(msgObj, null, 4));
     }
@@ -122,7 +122,7 @@ class Socket {
             },
         };
 
-        // console.log('%csocket.js line:121 AUTHY MESSAGE', 'color: white; background-color: #007acc;', msgObj);
+        console.log('%csocket.js line:121 AUTHY MESSAGE', 'color: white; background-color: #007acc;', msgObj);
         this.socket.send(JSON.stringify(msgObj));
     }
 }
