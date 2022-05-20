@@ -452,7 +452,9 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
     const getTags = async () => {
         const res = await httpGetMain(`tags`);
         if (res.status === 'success') {
-            setTags(res?.data?.tags_names.tags);
+            if (res?.data?.tags_names?.tags) {
+                setTags(res?.data?.tags_names.tags);
+            }
         }
     };
 
@@ -1463,7 +1465,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                             }
                                             options={
                                                 // populate 'options' prop from $Tags remapped
-                                                Tags.map((data) => {
+                                                Tags?.map((data) => {
                                                     return { value: data, label: data };
                                                 })
                                             }
