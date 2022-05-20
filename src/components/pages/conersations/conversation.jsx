@@ -257,7 +257,9 @@ function Conversation({ user }) {
     const getTags = async () => {
         const res = await httpGetMain(`tags`);
         if (res.status === 'success') {
-            setTags(res?.data?.tags_names.tags);
+            if (res?.data?.tags_names?.tags) {
+                setTags(res?.data?.tags_names.tags);
+            }
         }
     };
     const getAgents = async () => {
@@ -346,7 +348,7 @@ function Conversation({ user }) {
     useEffect(() => {
         (async () => {
             const initRes = await httpGetMain(`tickets?per_page=100`);
-            // console.log('%cconversation.jsx line:341 initRes', 'color: white; background-color: #007acc;', initRes);
+            console.log('%cconversation.jsx line:341 initRes', 'color: white; background-color: #007acc;', initRes);
             if (initRes?.status === 'success') {
                 setTickets(initRes?.data?.tickets || []);
                 setMeta(initRes?.data?.meta || {});
@@ -406,7 +408,7 @@ function Conversation({ user }) {
                 event.preventDefault();
                 event.stopPropagation();
                 const eventData = JSON.parse(event.data);
-                // console.log('Message from socket => ', eventData);
+                console.log('Message from socket => ', eventData);
                 if (
                     (eventData?.type === 'liveStream' || eventData?.type === 'socketHook') &&
                     eventData?.status === 'incoming'
@@ -1692,7 +1694,7 @@ function Conversation({ user }) {
                                             }
                                             options={
                                                 // populate 'options' prop from $Tags remapped
-                                                Tags.map((data) => {
+                                                Tags?.map((data) => {
                                                     return { value: data, label: data };
                                                 })
                                             }
