@@ -194,7 +194,7 @@ function Profile({ currentCustomer, customerId, updateCustomer, user, ...props }
         setErrors(validationMessages);
 
         if (isValid) {
-            // updateCustomer(customerId, profileData);
+            // updateCustomer(customerId, profileData);            
             const res = await httpPatchMain(`customer/${customerId}`, profileData);
             if (res.status === 'success') {
                 setEditProfile(false);
@@ -380,7 +380,7 @@ function Profile({ currentCustomer, customerId, updateCustomer, user, ...props }
                                                                 )}
                                                             </Form.Label>
                                                             <Form.Control
-                                                                name={data?.id}
+                                                                name={data?.field_type === 'email'? 'email' : data?.id}
                                                                 type={data?.field_type}
                                                                 className={`text-dark ${
                                                                     editProfile ? '' : 'py-0'
@@ -389,7 +389,7 @@ function Profile({ currentCustomer, customerId, updateCustomer, user, ...props }
                                                                 readOnly={!editProfile}
                                                                 defaultValue={data?.value || ''}
                                                                 required={data?.required}
-                                                                onChange={handleCustomFieldChange}
+                                                                onChange={data?.field_type === 'email'? handleChange : handleCustomFieldChange}
                                                             />
                                                             <span className="text-danger d-block small">
                                                                 {getError(data?.id)}
