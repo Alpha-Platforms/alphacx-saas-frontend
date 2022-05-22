@@ -1384,7 +1384,12 @@ function Conversation({ user }) {
                                                 readOnly={ticket[0].status.status === 'Closed'}
                                                 editorState={editorState}
                                                 toolbar={{
-                                                    options: ['emoji', 'inline', 'image', 'link'],
+                                                    // options: ['emoji', 'inline', 'image', 'link'],
+                                                    options:
+                                                        ticket[0]?.channel === 'facebook' ||
+                                                        ticket[0]?.channel === 'instagram'
+                                                            ? ['emoji', 'image', 'link']
+                                                            : ['emoji', 'inline', 'image', 'link'],
 
                                                     inline: {
                                                         inDropdown: false,

@@ -387,3 +387,7 @@ background: transparent;
 .attach-wrapper li div:nth-child(2) {
     margin-left: 0.6rem;
 }
+
+.message-text-content p img {
+    width: 100%!important;
+}
