@@ -1451,7 +1451,7 @@ select {
 .ticktTagsgfs3 div {
   margin-right: 10px;
   margin-bottom: 10px !important;
-  padding: 5px 6px 5px 6px;
+  padding: 5px 10px;
   border-radius: 10px;
   white-space: nowrap;
   font-size: 8px;

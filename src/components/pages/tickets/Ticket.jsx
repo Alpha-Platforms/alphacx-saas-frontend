@@ -522,6 +522,8 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         setRSTicketAssignee(ticket.assignee?.id);
     };
     function createMarkup(data) {
+        console.clear();
+        console.log(data);
         return { __html: data };
     }
     const checkRes = () => {
@@ -673,8 +675,6 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                 });
         });
     };
-
-    /* <<<<<< FROM CODE-UI-ANDY */
 
     useEffect(() => {
         if (isCurrentTicketLoaded && currentTicket) {
@@ -1173,7 +1173,11 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                                                 readOnly={ticket.status.status === 'Closed'}
                                                 editorState={editorState}
                                                 toolbar={{
-                                                    options: ['emoji', 'inline', 'image', 'link'],
+                                                    options:
+                                                        currentTicket?.channel === 'facebook' ||
+                                                        currentTicket?.channel === 'instagram'
+                                                            ? ['emoji', 'image', 'link']
+                                                            : ['emoji', 'inline', 'image', 'link'],
 
                                                     inline: {
                                                         inDropdown: false,
