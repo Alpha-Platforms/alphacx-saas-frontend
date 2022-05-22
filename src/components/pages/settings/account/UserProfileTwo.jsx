@@ -13,6 +13,7 @@ import { getCurrentAgent, getAgents } from '../../../../reduxstore/actions/agent
 import { updateUser, updateUserPassword } from '../../../../reduxstore/actions/userActions';
 import ImageDefault from '../../../../assets/svgicons/image-default.svg';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
+import showPasswordImg from "../../../../assets/imgF/Show.png";
 import { config } from '../../../../config/keys';
 // import {isAdminRole} from "components/pages/auth/accessControl";
 
@@ -60,8 +61,9 @@ function UserProfileTwo({
     ]);
 
     const [selectedRole, setSelectedRole] = useState([]);
-
     const [accessControl, setAccessControl] = useState(false);
+    const [showPassword, setShowPassword] = useState(false)
+
 
     useEffect(() => {
         setAccessControl(authenticatedUser.role === 'Administrator');
@@ -515,9 +517,7 @@ function UserProfileTwo({
                                             autoComplete="new-password"
                                             autoComplete="new-password"
                                         />
-                                        {/* <button className="btn btn-sm bg-at-blue-light px-3 py-1 mt-3">
-                                                Change Password
-                                            </button> */}
+                                        
                                     </div>
                                     <div className="mb-4 w-100">
                                         <label
@@ -529,7 +529,7 @@ function UserProfileTwo({
                                         </label>
                                         <input
                                             className="form-control"
-                                            type="password"
+                                            type={`${showPassword ? "text" : "password"}`}
                                             name="newPassword"
                                             id="newPassword"
                                             value={personalInfoInputs.newPassword || ''}
@@ -538,9 +538,21 @@ function UserProfileTwo({
                                             autoComplete="new-password"
                                             autoComplete="new-password"
                                         />
-                                        {/* <button className="btn btn-sm bg-at-blue-light px-3 py-1 mt-3">
-                                                Change Password
-                                            </button> */}
+
+                                        <div className="passworEye">
+                                            <img
+                                                style={{
+                                                    top: '-24.5px',
+                                                    right: '12px'
+                                                }}      
+                                                src={showPasswordImg }
+                                                alt="Reveal password"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                            />
+                                        </div>
+
+
+                                        
                                     </div>
                                 </div>
                             )}

@@ -287,7 +287,7 @@ function CreateTicketModal({
             channel,
         } = modalInputs;
 
-        if (!customer || !category || !stage || !subject || !description) {
+        if (!customer || !category || !subject || !description) {
             NotificationManager.error('All fields are required', 'Error', 5000);
         } else {
             // initiate ticket creation
@@ -295,12 +295,12 @@ function CreateTicketModal({
 
             const newTicket = {
                 customer,
-                priorityId: priority || '5a6635d0-0561-11ea-8d71-362b9e155667',
+                priorityId: priority || defaultPriority[0].value,
                 assigneeId: assignee || null,
                 description,
                 plainDescription: description,
                 userId: customer,
-                statusId: stage,
+                statusId: stage || defaultStatus[0].value,
                 subject,
                 categoryId: category,
                 channel: channel || 'helpdesk',
@@ -792,7 +792,7 @@ function CreateTicketModal({
                                 isClearable={false}
                                 loadOptions={getSearchedCategories}
                                 name="category"
-                                placeholder="Search..."
+                                placeholder="Type to search"
                                 onChange={handleRSInput}
                             />
                         </div>
