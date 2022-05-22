@@ -370,8 +370,8 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
  */}
                             </>
                         )}
-                        <div className="ticktTagsgfs3">
-                            {ticket[0]?.tags == null ? (
+                        <div className="ticktTagsgfs3 d-flex justify-content-center border-top pt-2">
+                            {ticket[0]?.tags === null || ticket[0]?.tags.length === 0?(
                                 <p
                                     style={{
                                         fontSize: '11px',
