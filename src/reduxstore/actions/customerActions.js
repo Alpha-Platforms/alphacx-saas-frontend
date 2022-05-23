@@ -48,7 +48,6 @@ export const getInstantSearchedCustomers = async (term) => {
 export const addNewCustomer =
     (newCust, pageSize = 50) =>
     (dispatch, getState) => {
-        console.log('Calling from addNewCustomer');
         const existingCust = JSON.parse(JSON.stringify(getState()?.customer?.customers || []));
 
         if (existingCust.length >= pageSize) existingCust.pop();

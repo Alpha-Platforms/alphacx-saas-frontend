@@ -8,7 +8,7 @@ const initialState = {
 };
 
 // export the post reducer
-const tagReducer = (state = initialState, action) => {
+const livechatReducer = (state = initialState, action) => {
     switch (action.type) {
         case types.GET_LIVECHAT_CONFIG:
             return {
@@ -30,4 +30,4 @@ const tagReducer = (state = initialState, action) => {
     }
 };
 
-export default tagReducer;
+export default livechatReducer;
