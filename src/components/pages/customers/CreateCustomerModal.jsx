@@ -35,6 +35,7 @@ function CreateCustomerModal({
     getCurrentCustomer,
     addNewCustomer,
     custMeta,
+    customField,
 }) {
     const [selectedTags, setSelectedTags] = useState([]);
     const [modalInputs, setModalInputs] = useState({
@@ -56,6 +57,8 @@ function CreateCustomerModal({
         ownAvatar: '',
     });
     const [tagSelectLoading, setTagSelectLoading] = useState(false);
+
+    const emailCustomFields = customField.customFields?.filter((item) => item?.field_type === 'email');
 
     const handleTagSelection = (tags) => {
         setSelectedTags(tags);
@@ -107,7 +110,8 @@ function CreateCustomerModal({
 
     const handleCustomerCreation = async () => {
         const { firstname, lastname, workphone, emailaddress, organisation, ccode } = modalInputs;
-        if (!firstname || !lastname || !emailaddress) {
+        const isEmailRequired = emailCustomFields?.length > 0 ? false : true;
+        if (!firstname || !lastname || isEmailRequired) {
             NotificationManager.error('Fill up the required fields', 'Error');
         } else {
             setCreatingCust(true);
@@ -661,6 +665,7 @@ const mapStateToProps = (state, ownProps) => ({
     tags: state.tag.tags?.tags_names?.tags,
     customers: state.customer.customers,
     custMeta: state.customer?.meta || {},
+    customField: state.customField,
 });
 
 export default connect(mapStateToProps, {
