@@ -665,6 +665,24 @@ function Conversation({ user }) {
         return NotificationManager.error(res?.er?.message, 'Error', 4000);
     };
 
+    const editorEditableBox = document.querySelector('.editorClassName');
+
+    useEffect(() => {
+        if (editorEditableBox) {
+            editorEditableBox.onkeydown = (e) => {
+                if (e.shiftKey && e.which === 13) return;
+                if (e.ctrlKey && e.which === 13) return;
+                if (e.metaKey && e.which === 13) return;
+                if (e.altKey && e.which === 13) return;
+                if (e.which === 13) {
+                    e.target?.blur();
+                    replyTicket(ReplyTicket, 'attachment');
+                }
+            };
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [editorEditableBox, ReplyTicket]);
+
     const updateTicketStatus = async () => {
         if (RSTicketStage.label === 'Closed') {
             // get url and replace domain
