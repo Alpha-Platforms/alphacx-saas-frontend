@@ -64,8 +64,6 @@ function Fields() {
     const isLoading = customFieldFromStore?.isCustomFieldsLoading;
     // const isLoaded = customFieldFromStore?.isCustomFieldsLoaded;
 
-    console.log('customFieldFromState => ', customFieldFromStore);
-
     // const getCustomField = async () => {
     //     const res = await httpGetMain(`custom-field`);
     //     if (res.status === 'success') {
