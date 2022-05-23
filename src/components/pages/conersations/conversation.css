@@ -860,7 +860,7 @@ select {
   order: 1 !important;
 }
 .editorClassName.rdw-editor-main{
-  overflow: unset !important;
+  overflow: scroll !important;
 }
 .editorClassName.rdw-editor-main .rdw-suggestion-dropdown{
   min-width: 200px;
