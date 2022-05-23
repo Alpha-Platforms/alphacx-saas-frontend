@@ -12,12 +12,12 @@ import instagramImg from "../../../../assets/imgF/instagram.png";
 import twitterImg from "../../../../assets/imgF/twitter.png";
 import termiiImg from "../../../../assets/imgF/termii.png";
 import smsImg from "../../../../assets/imgF/TwilioSms.svg";
-import { httpPatchMain, httpPostMain, httpGetMain, httpGet} from "../../../../helpers/httpMethods";
+import { httpPatchMain, httpPostMain, httpGetMain, httpGet, httpDeleteMain} from "../../../../helpers/httpMethods";
 import { hideLoader, showLoader } from "../../../helpers/loader";
 import RightArrow from "../../../../assets/imgF/arrow_right.png";
 import AccountLightIcon from "../../../../assets/icons/Social-blurb.svg";
 import MailLightIcon from "../../../../assets/icons/mail_light.svg";
-
+import Modal from 'react-responsive-modal';
 import { NotificationManager } from "react-notifications";
 import { connect } from "react-redux";
 import { hostname } from "os";
@@ -33,19 +33,23 @@ function SocialIntegrations({configs}) {
   const [instagramConnected, setInstagramConnected] = useState(false)
   const [whatsappConnected, setWhatsappConnected] = useState(false)
   const [livechatConnected, setLivechatConnected] = useState(false)
-
+  const [isDeleteConfirmed, setIsDeleteConfirmed] = useState(false)
 
   useEffect(() => {
     
     if(configs.sms_config){setSmsConnected(true)}    
-    if(configs.email_config){setEmailConnected(true)}
-    if(configs.facebook_config){setFacebookConnected(true)}
-    if(configs.instagram_config){setInstagramConnected(true)}
+    if(configs.email_config?.email){setEmailConnected(true)}
+    if(configs.facebook_config?.id){setFacebookConnected(true)}
+    if(configs.instagram_config?.id){setInstagramConnected(true)}
     if(configs.livechat_config){setLivechatConnected(true)}
-    if(configs.whatsapp_config){setWhatsappConnected(true)}
-
+    if(configs.whatsapp_config?.twillo_account_sid){setWhatsappConnected(true)}
+    
   }, [configs])
 
+  useEffect(() => {
+    getConfig();
+  }, []);
+  
   const getConfig = async () => {
     const res = await httpGetMain(`settings/config`);
     if (res.status === "success") {
@@ -69,6 +73,17 @@ function SocialIntegrations({configs}) {
     window.location.href = `${protocol}//${subdomain}.${hostname}:${port}/${path}?${params}`;
 
   }
+
+  const disconnectFBIG = async () => {
+    setIsDeleteConfirmed(false)
+    const res = await httpDeleteMain(`settings/facebook/disconnect`);
+    if (res.status === "success") {
+      setFacebookConnected(false)
+      return NotificationManager.success('Integration disconnected', "Successful", 4000);
+    } else {
+      return NotificationManager.error(res.er.message, "Error", 4000);
+    }
+  };
 
   const goToConnector = (e, channel) => {
       e.preventDefault()
@@ -111,7 +126,7 @@ function SocialIntegrations({configs}) {
                   </p>
                 </div>
                 <div className="">
-                <Badge className={`${!whatsappConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>{!whatsappConnected? "Connect" : "Connected"}</Badge>
+                <Badge className={`${!whatsappConnected? 'acx-bg-primary  text-white' : 'acx-bg-gray-100 text-muted fw-light'} px-3 py-2`}>{!whatsappConnected? "Connect" : "Disconnect"}</Badge>
                 </div>
               </div>
             </div>
@@ -123,7 +138,7 @@ function SocialIntegrations({configs}) {
         <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
           {/* <Link to="/settings/integrations/facebook" className="d-block cursor text-decoration-none"> */}
           
-          <a href="#" className="d-block cursor text-decoration-none" role="button" onClick={(e) => goToConnector(e, "facebook")}>
+          <a href="#" className="d-block cursor text-decoration-none" role="button" onClick={(e) => (facebookConnected? setIsDeleteConfirmed(true) : goToConnector(e, "facebook"))}>
             <div className="d-flex align-items-start p-md-4 p-3">
               <div className="w">
                 <img src={facebookImg} alt="" width="38"/>
@@ -136,8 +151,8 @@ function SocialIntegrations({configs}) {
                   </p>
                 </div>
                 <div className="">
-                  <Badge className={`${!facebookConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>
-                    {!facebookConnected? "Connect" : "Connected"}
+                  <Badge className={`${!facebookConnected? 'acx-bg-primary  text-white' : 'acx-bg-gray-100 text-muted fw-light'} px-3 py-2`}>
+                    {!facebookConnected? "Connect" : "Disconnect"}
                   </Badge>
                 </div>
               </div>
@@ -163,8 +178,8 @@ function SocialIntegrations({configs}) {
                   </p>
                 </div>
                 <div className="">
-                  <Badge className={`${!instagramConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>
-                    {!instagramConnected? "Connect" : "Connected"}
+                  <Badge className={`${!instagramConnected? 'acx-bg-primary  text-white' : 'acx-bg-gray-100 text-muted fw-light'} px-3 py-2`}>
+                    {!instagramConnected? "Connect" : "Disconnect"}
                   </Badge>
                 </div>
               </div>
@@ -188,7 +203,7 @@ function SocialIntegrations({configs}) {
                   </p>
                 </div>
                 <div className="">
-                  <Badge className={`${!smsConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>{!smsConnected? "Connect" : "Connected"}</Badge>
+                  <Badge className={`${!smsConnected? 'acx-bg-primary  text-white' : 'acx-bg-gray-100 text-muted fw-light'} px-3 py-2`}>{!smsConnected? "Connect" : "Disconnect"}</Badge>
                 </div>
               </div>
             </div>
@@ -211,7 +226,7 @@ function SocialIntegrations({configs}) {
                   </p>
                 </div>
                 <div className="">
-                  <Badge className={`${!smsConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>{!smsConnected? "Connect" : "Connected"}</Badge>
+                  <Badge className={`${!smsConnected? 'acx-bg-primary  text-white' : 'acx-bg-gray-100 text-muted fw-light'} px-3 py-2`}>{!smsConnected? "Connect" : "Disconnect"}</Badge>
                 </div>
               </div>
             </div>
@@ -234,7 +249,7 @@ function SocialIntegrations({configs}) {
                   </p>
                 </div>
                 <div className="">
-                <Badge className={`${!emailConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>{!emailConnected? "Connect" : "Connected"}</Badge>
+                <Badge className={`${!emailConnected? 'acx-bg-primary  text-white' : 'acx-bg-gray-100 text-muted fw-light'} px-3 py-2`}>{!emailConnected? "Connect" : "Disconnect"}</Badge>
                 </div>
               </div>
             </div>
@@ -255,7 +270,7 @@ function SocialIntegrations({configs}) {
                   <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">Configure livechat widget for your website and app</p>
                 </div>
                 <div className="">
-                <Badge className={`${!livechatConnected? 'acx-bg-gray-100 text-muted' : 'acx-bg-primary  text-white'} px-3 py-2`}>{!livechatConnected? "Connect" : "Connected"}</Badge>
+                <Badge className={`${!livechatConnected? 'acx-bg-primary  text-white' : 'acx-bg-gray-100 text-muted fw-light'} px-3 py-2`}>{!livechatConnected? "Connect" : "Disconnect"}</Badge>
                 </div>
               </div>
             </div>
@@ -264,9 +279,30 @@ function SocialIntegrations({configs}) {
       </div>
       {/* integrations column ends */}
       </div>
+      {/* confirm modal */}
+      <Modal open={isDeleteConfirmed} onClose={() => setIsDeleteConfirmed(false)} center>
+          <div className="p-5 w-100">
+              <h6 className="mb-5">Are you sure you want to disconnect Facebook?</h6>
+              <div className="d-flex justify-content-center">
+                  <button
+                      className="btn btn-sm f-12 border cancel px-4"
+                      onClick={() => setIsDeleteConfirmed(false)}
+                  >
+                      Cancel
+                  </button>
+                  <button
+                      className="btn btn-sm ms-2 f-12 bg-custom px-4"
+                      onClick={disconnectFBIG}
+                  >
+                      Yes, disconnect
+                  </button>
+              </div>
+          </div>
+      </Modal>
     </div>
   );
 }
+
 
 
 
