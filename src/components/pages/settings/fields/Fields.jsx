@@ -1,4 +1,6 @@
-/* eslint-disable */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disabled */
 // @ts-nocheck
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -15,17 +17,17 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 // components
-import ContactFieldList from './ContactFieldList.jsx';
-import TicketFieldList from './TicketFieldList.jsx';
-import UserFieldList from './UserFieldList.jsx';
+// import ContactFieldList from './ContactFieldList';
+import TicketFieldList from './TicketFieldList';
+import UserFieldList from './UserFieldList';
 //
 import { httpPostMain, httpGetMain, httpDelete, httpPatchMain } from '../../../../helpers/httpMethods';
 // styles & resources
 import '../../../../styles/Setting.css';
 import '../settings.css';
 import { ReactComponent as HamburgerSvg } from '../../../../assets/icons/hamburger.svg';
-import { ReactComponent as FormMinusSvg } from '../../../../assets/icons/form-minus.svg';
-import { ReactComponent as FormMinusNeutralSvg } from '../../../../assets/icons/form-minus-neutral.svg';
+// import { ReactComponent as FormMinusSvg } from '../../../../assets/icons/form-minus.svg';
+// import { ReactComponent as FormMinusNeutralSvg } from '../../../../assets/icons/form-minus-neutral.svg';
 
 function Fields() {
     const [tabKey, setTabKey] = useState('user-field');
@@ -55,21 +57,11 @@ function Fields() {
     const [isEdit, setIsEdit] = useState(false);
     const [actionId, setActionId] = useState('');
     //
-    useEffect(() => {
-        getCustomField();
-    }, []);
-    //
-    useEffect(() => {
-        sortCustomFields(customFieldData);
-        getFieldSections(customFieldData);
-    }, [customFieldData]);
 
-    //
     const getCustomField = async () => {
         const res = await httpGetMain(`custom-field`);
         if (res.status === 'success') {
             setCustomFieldData(res?.data);
-        } else {
         }
     };
 
@@ -101,6 +93,16 @@ function Fields() {
         }, []);
         setFieldSections(filterEmptyArray([...new Set(fieldSectionsResult)]));
     };
+
+    useEffect(() => {
+        getCustomField();
+    }, []);
+
+    //
+    useEffect(() => {
+        sortCustomFields(customFieldData);
+        getFieldSections(customFieldData);
+    }, [customFieldData]);
 
     // form field input change
     const handleChange = (e) => {
@@ -359,6 +361,7 @@ function Fields() {
                                 <div className="">
                                     <div className="mb-2 mt-4">
                                         <button
+                                            type="button"
                                             className="btn btn-sm acx-btn-outline-primary border px-3 me-3"
                                             onClick={() => {
                                                 setIsEdit(false);
@@ -619,12 +622,14 @@ function Fields() {
                         <p className="mb-3">You won't be able to revert this!</p>
                         <div className="d-flex justify-content-center">
                             <button
+                                type="button"
                                 className="btn btn-sm f-12 border cancel px-4"
                                 onClick={() => setDeleteConfirm(false)}
                             >
                                 Cancel
                             </button>
                             <button
+                                type="button"
                                 className="btn btn-sm ms-2 f-12 bg-custom px-4"
                                 onClick={(e) => {
                                     e.preventDefault();

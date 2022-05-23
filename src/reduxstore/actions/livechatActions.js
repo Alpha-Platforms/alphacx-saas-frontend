@@ -8,7 +8,7 @@ export const getLivechatConfig = (updateStateConfig, failed) => (dispatch, getSt
     if (!navigator.onLine) {
         return;
     }
-    dispatch(setTagsLoading());
+    dispatch(setLivechatsLoading());
     axios
         .get(`${config.stagingBaseUrl}/settings/config?type=livechat`, userTokenConfig(getState))
         .then((res) => {
@@ -59,6 +59,6 @@ export const updateLivechatConfig = (newLivechatConfig, success, failed) => (dis
         });
 };
 
-export const setTagsLoading = () => {
-    return { type: types.TAGS_LOADING };
+export const setLivechatsLoading = () => {
+    return { type: types.LIVECHAT_CONFIG_LOADING };
 };
