@@ -5,8 +5,8 @@ import { Modal } from 'react-responsive-modal';
 import { NotificationManager } from 'react-notifications';
 import axios from 'axios';
 import { config } from '../../../config/keys';
-import { uuid } from '../../../helper';
-import Socket from '../../../socket';
+// import { uuid } from '../../../helper';
+// import Socket from '../../../socket';
 
 function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalShow }) {
     // create user modal
@@ -15,57 +15,57 @@ function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalSho
         subject: '',
         message: '',
     });
-    const [appSocket, setAppSocket] = useState(null);
-    const [connectionClosed, setConnectionClosed] = useState(false);
-    const [generatedUuid] = useState(uuid());
+    // const [appSocket, setAppSocket] = useState(null);
+    // const [connectionClosed, setConnectionClosed] = useState(false);
+    // const [generatedUuid] = useState(uuid());
 
-    const loggedInUser = JSON.parse(window.localStorage.getItem('user') || '{}')?.user;
-    // const domain = window.localStorage.getItem('domain');
+    // const loggedInUser = JSON.parse(window.localStorage.getItem('user') || '{}')?.user;
+    // // const domain = window.localStorage.getItem('domain');
     // const tenantId = window.localStorage.getItem('tenantId');
     const domain = 'manager';
-    const tenantId = 'manager';
-    const accounttype = 'client';
+    // const tenantId = 'manager';
+    // const accounttype = 'client';
 
-    useEffect(() => {
-        setAppSocket(new Socket(generatedUuid, domain, tenantId, accounttype));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // useEffect(() => {
+    //     setAppSocket(new Socket(generatedUuid, domain, tenantId, accounttype));
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
 
-    useEffect(() => {
-        setConnectionClosed(false);
-        /* create a socket connection */
-        if (appSocket) {
-            appSocket.createConnection();
+    // useEffect(() => {
+    //     setConnectionClosed(false);
+    //     /* create a socket connection */
+    //     if (appSocket) {
+    //         appSocket.createConnection();
 
-            appSocket?.socket.addEventListener('close', () => {
-                setConnectionClosed(true);
-                // console.log('%csocket.js WebSocket has closed: ', 'color: white; background-color: #007acc;', event);
-                if (navigator.onLine) {
-                    setAppSocket(new Socket(loggedInUser?.id, domain, tenantId, accounttype));
-                }
-            });
+    //         appSocket?.socket.addEventListener('close', () => {
+    //             setConnectionClosed(true);
+    //             // console.log('%csocket.js WebSocket has closed: ', 'color: white; background-color: #007acc;', event);
+    //             if (navigator.onLine) {
+    //                 setAppSocket(new Socket(loggedInUser?.id, domain, tenantId, accounttype));
+    //             }
+    //         });
 
-            appSocket.socket.onmessage = (event) => {
-                console.log('Message from socket => ', JSON.parse(event?.data || '{}'));
-            };
-        }
+    //         appSocket.socket.onmessage = (event) => {
+    //             console.log('Message from socket => ', JSON.parse(event?.data || '{}'));
+    //         };
+    //     }
 
-        return () => appSocket?.socket.close();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [appSocket]);
+    //     return () => appSocket?.socket.close();
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [appSocket]);
 
-    useEffect(() => {
-        const newConnection = () => {
-            if (connectionClosed) {
-                setAppSocket(new Socket(loggedInUser?.id, domain, tenantId, accounttype));
-            }
-        };
+    // useEffect(() => {
+    //     const newConnection = () => {
+    //         if (connectionClosed) {
+    //             setAppSocket(new Socket(loggedInUser?.id, domain, tenantId, accounttype));
+    //         }
+    //     };
 
-        window.document.addEventListener('online', newConnection);
+    //     window.document.addEventListener('online', newConnection);
 
-        return () => window.document.removeEventListener('online', newConnection);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [connectionClosed]);
+    //     return () => window.document.removeEventListener('online', newConnection);
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [connectionClosed]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -153,7 +153,7 @@ function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalSho
                     data,
                 };
 
-                appSocket.sendLiveStreamMessage(msg);
+                // appSocket.sendLiveStreamMessage(msg);
             }
         } catch (err) {
             NotificationManager.error(err.response.data?.message, 'Error', 4000);

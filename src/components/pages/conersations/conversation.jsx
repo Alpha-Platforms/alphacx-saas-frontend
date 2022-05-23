@@ -141,6 +141,7 @@ function Conversation({ user }) {
     // scroll position
     const [scrollPosition, setScrollPosition] = useState('#lastMsg');
     const [editorUploadImg, setEditorUploadImg] = useState('');
+    const [attachments, setAttachments] = useState([]);
     const location = useLocation();
     const [appSocket, setAppSocket] = useState(null);
     const [connectionClosed, setConnectionClosed] = useState(false);
@@ -596,6 +597,8 @@ function Conversation({ user }) {
         if (reply.plainText === '\n \n') {
             plainTextContent = editorUploadImg;
         }
+        // attachmments that are truly in the response
+        const actualAttachments = attachments.filter((item) => reply?.richText?.indexOf(item) !== -1);
 
         const data = {
             type,
@@ -603,7 +606,7 @@ function Conversation({ user }) {
             plainResponse: plainTextContent,
             phoneNumber: singleTicketFullInfo.customer.phone_number,
             mentions: agentMentions,
-            // attachment: "",
+            attachments: actualAttachments,
         };
         const replyData = {
             type,
@@ -613,6 +616,7 @@ function Conversation({ user }) {
             response: reply.richText,
             user,
             mentions: agentMentions,
+            attachments: actualAttachments,
         };
 
         setMsgHistory((item) => [...item, replyData]);
@@ -653,12 +657,31 @@ function Conversation({ user }) {
         if (res?.status === 'success') {
             setEditorState(initialState);
             setEditorUploadImg('');
+            setAttachments([]);
             return setReplyTicket({ plainText: '', richText: '' });
         }
 
         // setSendingReply(false);
         return NotificationManager.error(res?.er?.message, 'Error', 4000);
     };
+
+    const editorEditableBox = document.querySelector('.editorClassName');
+
+    useEffect(() => {
+        if (editorEditableBox) {
+            editorEditableBox.onkeydown = (e) => {
+                if (e.shiftKey && e.which === 13) return;
+                if (e.ctrlKey && e.which === 13) return;
+                if (e.metaKey && e.which === 13) return;
+                if (e.altKey && e.which === 13) return;
+                if (e.which === 13) {
+                    e.target?.blur();
+                    replyTicket(ReplyTicket, 'attachment');
+                }
+            };
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [editorEditableBox, ReplyTicket]);
 
     const updateTicketStatus = async () => {
         if (RSTicketStage.label === 'Closed') {
@@ -795,6 +818,7 @@ function Conversation({ user }) {
                     // console.log(res.data?.url);
                     imageObject.src = res.data?.url;
                     setEditorUploadImg(ReplyTicket.plainText + editorUploadImg + (res.data?.url || ''));
+                    setAttachments((prev) => [...prev, res.data?.url]);
                     resolve({ data: { link: res.data?.url } });
                 })
                 .catch(() => {
