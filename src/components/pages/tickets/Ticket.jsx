@@ -137,6 +137,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
     const [customFieldsGroup, setCustomFieldsGroup] = useState([]);
     const [customFieldIsSet, setCustomFieldIsSet] = useState(false);
     const [editorUploadImg, setEditorUploadImg] = useState('');
+    const [attachments, setAttachments] = useState([]);
     const [statusUpdateFailed, setStatusUpdateFailed] = useState(false);
     const [statusOps, setStatusOps] = useState(false);
     const [appSocket, setAppSocket] = useState(null);
@@ -353,6 +354,9 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
             plainTextContent = editorUploadImg;
         }
 
+        // attachmments that are truly in the response
+        const actualAttachments = attachments.filter((item) => reply?.richText?.indexOf(item) !== -1);
+
         const data = {
             type,
             response: reply.richText,
@@ -360,6 +364,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
             phoneNumber: currentTicket.customer.phone_number,
             // attachment: "",
             mentions: agentMentions,
+            attachments: actualAttachments,
         };
 
         const replyData = {
@@ -370,6 +375,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
             type,
             user,
             mentions: agentMentions,
+            attachments: actualAttachments,
         };
         setMsgHistory((item) => [...item, replyData]);
         scrollPosSendMsgList();
@@ -390,6 +396,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         if (res?.status === 'success') {
             setEditorState(initialState);
             setEditorUploadImg('');
+            setAttachments([]);
             setReplyTicket({ plainText: '', richText: '' });
             scrollPosSendMsgList();
         } else {
@@ -398,6 +405,24 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
             NotificationManager.error(res?.er?.message, 'Error', 4000);
         }
     };
+
+    const editorEditableBox = document.querySelector('.editorClassName');
+
+    useEffect(() => {
+        if (editorEditableBox) {
+            editorEditableBox.onkeydown = (e) => {
+                if (e.shiftKey && e.which === 13) return;
+                if (e.ctrlKey && e.which === 13) return;
+                if (e.metaKey && e.which === 13) return;
+                if (e.altKey && e.which === 13) return;
+                if (e.which === 13) {
+                    e.target?.blur();
+                    replyTicket(ReplyTicket, 'attachment');
+                }
+            };
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [editorEditableBox, ReplyTicket]);
 
     // const onReplyTypeChange = (event) => {
     //     setReplyType(event.target.value);
@@ -668,6 +693,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                     // console.log(res.data?.url);
                     imageObject.src = res.data?.url;
                     setEditorUploadImg(`${ReplyTicket.plainText + editorUploadImg}${res?.data?.url}`);
+                    setAttachments((prev) => [...prev, res.data?.url]);
                     resolve({ data: { link: res.data?.url } });
                 })
                 .catch(() => {
