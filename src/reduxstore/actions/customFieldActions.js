@@ -26,6 +26,10 @@ export const getCustomFields = () => (dispatch, getState) => {
         });
 };
 
+export const addCustomField = (data) => {
+    return { type: types.ADD_CUSTOM_FIELD, payload: data };
+};
+
 export const setCustomFieldsLoading = () => {
     return { type: types.CUSTOM_FIELDS_LOADING };
 };

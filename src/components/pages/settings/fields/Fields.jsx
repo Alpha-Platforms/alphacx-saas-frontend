@@ -16,18 +16,20 @@ import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
+import { useDispatch, useSelector } from 'react-redux';
 // components
 // import ContactFieldList from './ContactFieldList';
 import TicketFieldList from './TicketFieldList';
 import UserFieldList from './UserFieldList';
 //
-import { httpPostMain, httpGetMain, httpDelete, httpPatchMain } from '../../../../helpers/httpMethods';
+import { httpPostMain, httpDelete, httpPatchMain } from '../../../../helpers/httpMethods';
 // styles & resources
 import '../../../../styles/Setting.css';
 import '../settings.css';
 import { ReactComponent as HamburgerSvg } from '../../../../assets/icons/hamburger.svg';
 // import { ReactComponent as FormMinusSvg } from '../../../../assets/icons/form-minus.svg';
 // import { ReactComponent as FormMinusNeutralSvg } from '../../../../assets/icons/form-minus-neutral.svg';
+import { getCustomFields, addCustomField } from '../../../../reduxstore/actions/customFieldActions';
 
 function Fields() {
     const [tabKey, setTabKey] = useState('user-field');
@@ -43,7 +45,7 @@ function Fields() {
         options: [''],
     });
     //
-    const [customFieldData, setCustomFieldData] = useState([]);
+    // const [customFieldData, setCustomFieldData] = useState([]);
     const [customFields, setCustomFields] = useState({
         fieldName: '',
         fieldType: '',
@@ -56,14 +58,20 @@ function Fields() {
     const [deleteConfirm, setDeleteConfirm] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [actionId, setActionId] = useState('');
-    //
+    const dispatch = useDispatch();
+    const customFieldFromStore = useSelector((state) => state.customField);
+    const customFieldData = customFieldFromStore?.customFields;
+    const isLoading = customFieldFromStore?.isCustomFieldsLoading;
+    // const isLoaded = customFieldFromStore?.isCustomFieldsLoaded;
 
-    const getCustomField = async () => {
-        const res = await httpGetMain(`custom-field`);
-        if (res.status === 'success') {
-            setCustomFieldData(res?.data);
-        }
-    };
+    console.log('customFieldFromState => ', customFieldFromStore);
+
+    // const getCustomField = async () => {
+    //     const res = await httpGetMain(`custom-field`);
+    //     if (res.status === 'success') {
+    //         setCustomFieldData(res?.data);
+    //     }
+    // };
 
     // sort custom fields
     const sortCustomFields = (data) => {
@@ -94,9 +102,9 @@ function Fields() {
         setFieldSections(filterEmptyArray([...new Set(fieldSectionsResult)]));
     };
 
-    useEffect(() => {
-        getCustomField();
-    }, []);
+    // useEffect(() => {
+    //     getCustomField();
+    // }, []);
 
     //
     useEffect(() => {
@@ -248,7 +256,8 @@ function Fields() {
         if (res.status === 'success') {
             setProcessing(false);
             setModalShow(false);
-            setCustomFieldData((prevState) => [...prevState, res?.data]);
+            // setCustomFieldData((prevState) => [...prevState, res?.data]);
+            dispatch(addCustomField(res?.data));
             // console.log(res)
             return NotificationManager.success('Custom field created successfully', 'Success', 4000);
         }
@@ -275,7 +284,7 @@ function Fields() {
         if (res.status === 'success') {
             setProcessing(false);
             setModalShow(false);
-            getCustomField();
+            dispatch(getCustomFields());
             return NotificationManager.success('Custom field updated successfully', 'Success', 4000);
         }
         setProcessing(false);
@@ -286,7 +295,7 @@ function Fields() {
         setDeleteConfirm(false);
         const res = await httpDelete(`custom-field/${actionId}`);
         if (res?.status === 'success') {
-            getCustomField();
+            dispatch(getCustomFields());
             return NotificationManager.success('Custom field deleted', 'Success');
         }
         return NotificationManager.error(res.message, 'Error', 4000);
@@ -347,6 +356,7 @@ function Fields() {
                                             deleteCustomField={deleteCustomField}
                                             editCustomField={editCustomField}
                                             fieldData={userFields}
+                                            isLoading={isLoading}
                                         />
                                     </Tab>
                                     {/* Ticket Field Tab */}

@@ -1,28 +1,29 @@
-/* eslint-disable */
+/* eslint-disable react/prop-types */
+// @ts-nocheck
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disabled */
 import { useState, Fragment, useEffect } from 'react';
 import { capitalize } from '@material-ui/core';
 //
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-//
+import ScaleLoader from 'react-spinners/ScaleLoader';
 import { ReactComponent as HamburgerSvg } from '../../../../assets/icons/hamburger.svg';
 
-function UserFieldList(props) {
+function UserFieldList({ fieldData, editCustomField, deleteCustomField, isLoading }) {
     const [userFields, setUserFields] = useState([]);
     //
     useEffect(() => {
-        setUserFields(props.fieldData);
-    }, [props.fieldData]);
+        setUserFields(fieldData);
+    }, [fieldData]);
 
     return (
         <div className="text-center">
-            <div className="fieldsWrapper" id="userFieldWrapper">
-                {userFields.length === 0 ? (
-                    <div className="text-center pt-5">
-                        <p className="">No data found</p>
-                    </div>
-                ) : (
+            <div className={!isLoading ? `fieldsWrapper` : ''} id="userFieldWrapper">
+                {isLoading ? (
+                    <ScaleLoader loading color="#006298" height={20} width={2} />
+                ) : userFields.length > 0 ? (
                     userFields.map((data) => {
                         return (
                             <div key={data.id} className="fieldParent my-2">
@@ -51,7 +52,7 @@ function UserFieldList(props) {
                                                 <span className="me-2">Optional</span>
                                             )}
                                             <Button
-                                                onClick={() => props.editCustomField(data.id)}
+                                                onClick={() => editCustomField(data.id)}
                                                 className="acx-btn-icon rounded-circle"
                                                 type="button"
                                                 title="edit"
@@ -59,7 +60,7 @@ function UserFieldList(props) {
                                                 <i className="bi-pencil-square acx-text-alpha-blue-400" title="edit" />
                                             </Button>
                                             <Button
-                                                onClick={() => props.deleteCustomField(data.id)}
+                                                onClick={() => deleteCustomField(data.id)}
                                                 className="acx-btn-icon rounded-circle"
                                                 type="button"
                                                 title="delete"
@@ -72,6 +73,10 @@ function UserFieldList(props) {
                             </div>
                         );
                     })
+                ) : (
+                    <div className="text-center pt-5">
+                        <p className="">No data found</p>
+                    </div>
                 )}
             </div>
         </div>

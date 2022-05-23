@@ -3,7 +3,7 @@ import * as types from '../types';
 
 const initialState = {
     customFields: [],
-    isCustomFieldsLoading: false,
+    isCustomFieldsLoading: true,
     isCustomFieldsLoaded: false,
 };
 
@@ -14,14 +14,19 @@ const customFieldReducer = (state = initialState, action) => {
             return {
                 ...state,
                 customFields: action.payload,
-                isCustomFieldsLoading: false,
                 isCustomFieldsLoaded: true,
+                isCustomFieldsLoading: false,
             };
         case types.CUSTOM_FIELDS_LOADING:
             return {
                 ...state,
                 isCustomFieldsLoading: true,
                 isCustomFieldsLoaded: false,
+            };
+        case types.ADD_CUSTOM_FIELD:
+            return {
+                ...state,
+                customFields: [...state.customFields, action.payload],
             };
         default:
             return state;
