@@ -80,8 +80,9 @@ function LiveChatSettings({
                                 }));
                                 const settingsToEmbed = {
                                     ...JSON.parse(JSON.stringify(settingsFromConfig)),
-                                    domains: getHostnamesFromString(value),
+                                    domains: getHostnamesFromString(settingsFromConfig?.domains),
                                 }
+                                console.log('settings to embed => ', settingsToEmbed);
                                 setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
             <script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(
                 JSON.stringify(settingsToEmbed),
@@ -114,7 +115,11 @@ function LiveChatSettings({
         if (!title || !description || !initialText || !domains || !theme || !tenantDomain) {
             NotificationManager.error('Please, fill all fields', 'Opps');
         } else {
-            const encryptedSettings = simpleCrypto.encrypt(JSON.stringify(settings));
+            const settingsToEmbed = {
+                ...settings,
+                domains: getHostnamesFromString(settings.domains),
+            }
+            const encryptedSettings = simpleCrypto.encrypt(JSON.stringify(settingsToEmbed));
             copy(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
             <script>ACX.createLiveChatWidget({payload: '${encryptedSettings}'});</script>`);
             NotificationManager.success('', 'Copied', 3000);
