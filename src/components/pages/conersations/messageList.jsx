@@ -193,7 +193,7 @@ export default function MessageList({
                                     ) : (
                                         <p className="msgCountCon">{data?.__meta__?.unRead}</p>
                                     )}
-                                    <p className="msGtime">{formatDate(data?.updated_at)}</p>
+                                    <p className="msGtime">{formatDate(data?.updated_at || data?.created_at)}</p>
                                 </div>
                             </div>
                         );
