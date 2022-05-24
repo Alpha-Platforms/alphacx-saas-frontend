@@ -21,6 +21,7 @@ import Modal from 'react-responsive-modal';
 import { NotificationManager } from "react-notifications";
 import { connect } from "react-redux";
 import { hostname } from "os";
+import { Capitalize } from "components/helpers/helpers";
 
 function SocialIntegrations({configs}) {
 
@@ -34,6 +35,7 @@ function SocialIntegrations({configs}) {
   const [whatsappConnected, setWhatsappConnected] = useState(false)
   const [livechatConnected, setLivechatConnected] = useState(false)
   const [isDeleteConfirmed, setIsDeleteConfirmed] = useState(false)
+  const [platform, setPlatform] = useState("");
 
   useEffect(() => {
     
@@ -76,12 +78,12 @@ function SocialIntegrations({configs}) {
 
   const disconnectFBIG = async () => {
     setIsDeleteConfirmed(false)
-    const res = await httpDeleteMain(`settings/facebook/disconnect`);
+    const res = await httpDeleteMain(`settings/${platform}/disconnect`);
     if (res.status === "success") {
-      setFacebookConnected(false)
-      return NotificationManager.success('Integration disconnected', "Successful", 4000);
+      platform === 'facebook'? setFacebookConnected(false) : setInstagramConnected(false)
+      return NotificationManager.success(`${Capitalize(platform)} integration disconnected`, "Successful", 4000);
     } else {
-      return NotificationManager.error(res.er.message, "Error", 4000);
+      return NotificationManager.error(res.error, "Error", 4000);
     }
   };
 
@@ -138,7 +140,10 @@ function SocialIntegrations({configs}) {
         <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
           {/* <Link to="/settings/integrations/facebook" className="d-block cursor text-decoration-none"> */}
           
-          <a href="#" className="d-block cursor text-decoration-none" role="button" onClick={(e) => (facebookConnected? setIsDeleteConfirmed(true) : goToConnector(e, "facebook"))}>
+          <a href="#" className="d-block cursor text-decoration-none" role="button" onClick={(e) => {
+            setPlatform('facebook')
+            facebookConnected? setIsDeleteConfirmed(true) : goToConnector(e, "facebook")
+          }}>
             <div className="d-flex align-items-start p-md-4 p-3">
               <div className="w">
                 <img src={facebookImg} alt="" width="38"/>
@@ -165,7 +170,10 @@ function SocialIntegrations({configs}) {
         <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
           {/* <Link to="/settings/integrations/facebook" className="d-block cursor text-decoration-none"> */}
           
-          <a href="#" className="d-block cursor text-decoration-none" role="button" onClick={(e) => goToConnector(e, "instagram")}>
+          <a href="#" className="d-block cursor text-decoration-none" role="button" onClick={(e) => {
+            setPlatform('instagram')
+            instagramConnected? setIsDeleteConfirmed(true) : goToConnector(e, "instagram")
+          }}>
             <div className="d-flex align-items-start p-md-4 p-3">
               <div className="w">
                 <img src={instagramImg} alt="" width="38"/>
@@ -282,7 +290,7 @@ function SocialIntegrations({configs}) {
       {/* confirm modal */}
       <Modal open={isDeleteConfirmed} onClose={() => setIsDeleteConfirmed(false)} center>
           <div className="p-5 w-100">
-              <h6 className="mb-5">Are you sure you want to disconnect Facebook?</h6>
+              <h6 className="mb-5">Are you sure you want to disconnect { Capitalize(platform) }?</h6>
               <div className="d-flex justify-content-center">
                   <button
                       className="btn btn-sm f-12 border cancel px-4"
