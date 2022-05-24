@@ -456,6 +456,8 @@ function Conversation({ user }) {
                         }
                         // ticket of `data` does not exist
                         const newTicket = {
+                            customer: data?.reply?.user,
+                            history: [data?.reply],
                             ...data,
                             __meta__: {
                                 history_count: 1,
