@@ -80,7 +80,7 @@ export default function MessageList({
     const formatDate = (date) => {
         let formatedDate = '';
         if (moment(`${date}`).format('DD/MM/YYYY') == moment(new Date()).format('DD/MM/YYYY')) {
-            formatedDate = moment(`${date}`).format('LT');
+            formatedDate = moment(`${date}`).add(1, 'hours').format('LT');
         } else {
             formatedDate = moment(`${date}`).format('Do MMM, yyyy');
         }
@@ -103,7 +103,7 @@ export default function MessageList({
                     </div>
                 ) : (
                     renderTicket.map((data, index) => {
-                        const currentStatus = statuses?.find((item) => item?.id === data?.status?.id);
+                        const currentStatus = statuses?.find((item) => item?.id === data?.status?.id || item?.id === data?.status_id);
                         return (
                             <div
                                 key={index}
