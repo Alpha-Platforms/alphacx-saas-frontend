@@ -6,7 +6,8 @@ import Gmail from '../../../../../../assets/imgF/gmail.png';
 import OtherMail from '../../../../../../assets/imgF/otherMail.png';
 import MicrosoftOffice from '../../../../../../assets/imgF/microsoftOffice.png';
 
-function UseOwnEmail({ emailState, setEmailState }) {
+function UseOwnEmail({ emailState, setEmailState, setActivateSaveBtn }) {
+
     const handleMailServerChange = (e) => {
         if (e.target.checked) {
             setEmailState({
@@ -20,6 +21,13 @@ function UseOwnEmail({ emailState, setEmailState }) {
         let { name, value, type, checked } = e.target;
         // if the input type is text, use `value` else use `checked`
         value = type === 'checkbox' ? checked : value;
+
+        if(
+            emailState.emailConfig.email 
+            && emailState.emailConfig.host 
+            && emailState.emailConfig.password 
+            && emailState.emailConfig.port
+        ) {setActivateSaveBtn(true)}
 
         setEmailState({
             ...emailState,
@@ -35,6 +43,20 @@ function UseOwnEmail({ emailState, setEmailState }) {
         // if the input type is text, use `value` else use `checked`
         value = type === 'checkbox' ? checked : value;
 
+        if(
+            emailState.outgoingEmailConfig.type === 'smtp' 
+            && emailState.outgoingEmailConfig.email 
+            && emailState.outgoingEmailConfig.host 
+            && emailState.outgoingEmailConfig.password 
+            && emailState.outgoingEmailConfig.port
+        ){
+            setActivateSaveBtn(true)
+        } else if(emailState.outgoingEmailConfig.email && emailState.outgoingEmailConfig.apiKey) {
+            setActivateSaveBtn(true)
+        }
+
+
+
         setEmailState({
             ...emailState,
             outgoingEmailConfig: {
@@ -45,117 +67,16 @@ function UseOwnEmail({ emailState, setEmailState }) {
     };
 
     return (
-        <div className="card-body " id="mail-server">
-            <p>Email system</p>
-            <div className="row gx-3">
-                <div className="col-md-3 text-center">
-                    <a
-                        className={`py-3 px-5 p-sm-3 rounded bg-outline-mail d-inline-block ${
-                            emailState.emailSystem === 'imap' ? 'mail-active' : ''
-                        }`}
-                        onClick={() =>
-                            setEmailState({
-                                ...emailState,
-                                emailSystem: 'imap',
-                            })
-                        }
-                    >
-                        <img src={OtherMail} alt="other" className="img-fluid" />
-                    </a>
-                    <p className="mt-1 description-text f-12 text-muted">IMAP</p>
-                </div>
+        <div className="card-body p-0" id="mail-server">           
+           
+            {/* emailState.emailSystem === 'imap' ? 'mail-active' : '' */}                    
+            {/* onClick={() => setEmailState({...emailState, emailSystem: 'imap', }) } */}                    
 
-                {/* COMMENTED OTHER MAIL SERVER OPTIONS */}
-                
-                {/* <div className="col-md-3 text-center">
-                    <a
-                        className={`py-3 px-4 rounded bg-outline-mail d-inline-block ${
-                            emailState.emailSystem === 'microsoft' ? 'mail-active' : ''
-                        }`}
-                        id="microsoft"
-                        onClick={() =>
-                            setEmailState({
-                                ...emailState,
-                                emailSystem: 'microsoft',
-                            })
-                        }
-                    >
-                        <img src={MicrosoftOffice} alt="microsoft" className="img-fluid" />
-                    </a>
-                    <p className="mt-1 description-text f-12 text-muted">
-                        Microsoft office
-                        <br />
-                        365
-                    </p>
-                </div>
-
-                <div className="col-md-3 text-center">
-                    <a
-                        className={`py-3 px-5 p-sm-3 rounded bg-outline-mail d-inline-block ${
-                            emailState.emailSystem === 'gmail' ? 'mail-active' : ''
-                        }`}
-                        id="gmail"
-                        onClick={() =>
-                            setEmailState({
-                                ...emailState,
-                                emailSystem: 'gmail',
-                            })
-                        }
-                    >
-                        <img src={Gmail} alt="gmail" className="img-fluid" />
-                    </a>
-                    <p className="mt-1 description-text f-12 text-muted">Gmail</p>
-                </div> */}
-            </div>
-            <div id="email-controller" className={emailState.emailSystem === 'imap' ? '' : 'd-none'}>
-                <h5 className="fs-6 fw-bold mt-2 mb-3">Use Mail Server for</h5>
-
-                <ul className="nav nav-pills" id="fieldTabsSelector" role="tablist">
-                    <li className="nav-item" role="presentation">
-                        <button
-                            className={`nav-link px-0 me-5 ${
-                                emailState.mailServer === 'incoming-only' && 'active'
-                            } text-muted`}
-                            id="pills-customer-tab"
-                            type="button"
-                            role="tab"
-                            onClick={() =>
-                                setEmailState({
-                                    ...emailState,
-                                    mailServer: 'incoming-only',
-                                })
-                            }
-                            aria-controls="customer-field-view"
-                            aria-selected="true"
-                        >
-                            Incoming Mail Settings
-                        </button>
-                    </li>
-                    <li className="nav-item" role="presentation">
-                        <button
-                            className={`nav-link px-0 me-5 ${
-                                emailState.mailServer === 'outgoing-only' && 'active'
-                            } text-muted`}
-                            id="pills-ticket-tab"
-                            onClick={() =>
-                                setEmailState({
-                                    ...emailState,
-                                    mailServer: 'outgoing-only',
-                                })
-                            }
-                            type="button"
-                            role="tab"
-                            aria-controls="ticket-categoriese-view"
-                            aria-selected="false"
-                        >
-                            Outgoing Mail Settings
-                        </button>
-                    </li>
-                </ul>
+            <div id="email-controller" className={emailState.emailSystem === 'imap' ? '' : 'd-none'}>               
 
                 {/* INCOMING EMAIL */}
                 {(emailState.mailServer === 'both' || emailState.mailServer === 'incoming-only') && (
-                    <div className="incoming-mail mt-4">
+                    <div className="incoming-mail mt-4 px-3">
                         <div className="row">
                             <div className="form-group mt-2 col-6">
                                 <label className="form-label">
@@ -248,8 +169,8 @@ function UseOwnEmail({ emailState, setEmailState }) {
 
                 {/* OUTGOING EMAIL */}
                 {(emailState.mailServer === 'both' || emailState.mailServer === 'outgoing-only') && (
-                    <div className="outgoing-mail mt-2">
-                        <div className="row my-3">
+                    <div className="outgoing-mail">
+                        <div className="row py-3 m-0 bg-light">
                             <div className="col-md-3">
                                 <div className="form-check">
                                     <input
@@ -301,8 +222,8 @@ function UseOwnEmail({ emailState, setEmailState }) {
                         </div>
 
                         {emailState.outgoingEmailConfig.type === 'smtp' ? (
-                            <div>
-                                <div className="alert-danger text-dark mt-3 mb-2">
+                            <div className='px-3'>
+                                {/* <div className="alert-danger text-dark mt-3 mb-2">
                                     <p className="p-2">
                                         Gmail limits the number of emails sent per day{' '}
                                         <span>
@@ -311,7 +232,7 @@ function UseOwnEmail({ emailState, setEmailState }) {
                                             </a>
                                         </span>
                                     </p>
-                                </div>
+                                </div> */}
 
                                 <div className="row">
                                     <div className="form-group mt-2 col-6">
@@ -423,7 +344,7 @@ function UseOwnEmail({ emailState, setEmailState }) {
                                 </div>
                             </div>
                         ) : (
-                            <div>
+                            <div className='px-3'>
                                 {/* SendGrid API */}
                                 <div className="row">
                                     <div className="form-group mt-2 col-6">
