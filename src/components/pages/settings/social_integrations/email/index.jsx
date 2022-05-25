@@ -39,7 +39,12 @@ function EmailSettings({ configs, isConfigsLoaded }) {
     const tableColumns = [
         {
             title: 'Name',
-            field: 'name',
+            // field: <span className='fbb'>{'name'}</span>,
+            render: (rowData) => (<a href='#' type='button' onClick={() => history.push(
+                `/settings/integrations/email/email-form${
+                    rowData?.idx === 1 ? '?type=outgoing' : ''
+                }`,
+            )} className='fbb'>{rowData.name}</a>)
         },
         {
             title: 'Email',
@@ -56,34 +61,17 @@ function EmailSettings({ configs, isConfigsLoaded }) {
         {
             title: '',
             field: 'dropdownAction',
-            render: (rowData) => (
-                <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown email-dropdown">
-                    <Dropdown.Toggle variant="transparent" size="sm">
-                        <span className="cust-table-dots">
-                            <DotSvg />
-                        </span>
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                        <Dropdown.Item
-                            to
-                            eventKey="1"
-                            onClick={() =>
-                                history.push(
-                                    `/settings/integrations/email/email-form${
-                                        rowData?.idx === 1 ? '?type=outgoing' : ''
-                                    }`,
-                                )
-                            }
-                        >
-                            {/* <Link to="/settings/integrations/email/email-form"> */}
-                            <span className="black-text">Edit</span>
-                            {/* </Link> */}
-                        </Dropdown.Item>
-                        <Dropdown.Item eventKey="2">
-                            <span className="black-text">Delete</span>
-                        </Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
+            render: (rowData) => (<button 
+                className='btn border bg-light py-0 px-3' 
+                onClick={() => 
+                    history.push(
+                        `/settings/integrations/email/email-form${
+                            rowData?.idx === 1 ? '?type=outgoing' : ''
+                        }`,
+                    )
+                }>Edit</button>
+                        
+                            
             ),
         },
     ];
@@ -120,20 +108,6 @@ function EmailSettings({ configs, isConfigsLoaded }) {
                 </div>
                 <div className="d-flex justify-content-between flex-row align-items-center">
                     <h5 className="mt-3 mb-4 fs-6 fw-bold">Email Settings</h5>
-                    <div>
-                        {/* <a className="btn btn-outline-gray btn-sm">
-              <span className="d-flex justify-content-center align-items-center">
-                <span>Advanced Settings</span>
-              </span>
-            </a> */}
-                        <button
-                            disabled
-                            className="btn btn-primary btn-sm ms-2"
-                            to="/settings/email/integrations/email-form"
-                        >
-                            <span>New support email</span>
-                        </button>
-                    </div>
                 </div>
 
                 {/* <div className="text-center empty-state">
