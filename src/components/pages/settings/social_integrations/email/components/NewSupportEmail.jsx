@@ -12,7 +12,13 @@ import UseOwnEmail from './UseOwnEmail';
 import { getConfigs } from '../../../../../../reduxstore/actions/configActions';
 
 function NewSupportEmail({ configs, getConfigs }) {
+    const { search } = useLocation();
+    const type = new URLSearchParams(search).get('type');
+
     const [defaultServer, setDefaultServer] = useState(false);
+    const [activateSaveBtn, setActivateSaveBtn] = useState(false);
+    const [show, setShow] = useState(false);
+    const [passwordChanged, setPasswordChanged] = useState(false);
     const [emailState, setEmailState] = useState({
         activeRadio: 'own-server',
         mailServer: 'incoming-only',
@@ -35,23 +41,44 @@ function NewSupportEmail({ configs, getConfigs }) {
             type: 'smtp',
         },
     });
-    const { search } = useLocation();
-    const type = new URLSearchParams(search).get('type');
 
     useEffect(() => {
         if (type === 'outgoing') {
             setEmailState((prev) => ({
                 ...prev,
-                activeRadio: 'own-server',
+                activeRadio: 'outgoing',
                 mailServer: 'outgoing-only',
             }));
         }
     }, [type]);
 
-    console.log('EMAIL STATE => ', emailState);
+    useEffect(() => {
+        if (configs) {
+            setEmailState((prev) => ({
+                ...prev,
+                emailConfig: {
+                    ...prev.emailConfig,
+                    tls: configs?.email_config?.tls || false,
+                    host: configs?.email_config?.host || '',
+                    email: configs?.email_config?.email || '',
+                    port: configs?.email_config?.port || null,
+                    password: configs?.email_config?.password || '',
+                },
+                outgoingEmailConfig: {
+                    ...prev.outgoingEmailConfig,
+                    tls: configs?.outgoing_email_config?.tls || false,
+                    host: configs?.outgoing_email_config?.host || '',
+                    port: configs?.outgoing_email_config?.port || '',
+                    email: configs?.outgoing_email_config?.email || '',
+                    password: configs?.outgoing_email_config?.password || '',
+                    type: configs?.outgoing_email_config?.type || 'smtp',
+                    apiKey: configs?.outgoing_email_config?.apiKey || '',
+                    from: configs?.outgoing_email_config?.from || '',
+                },
+            }));
+        }
+    }, [configs]);
 
-    const [show, setShow] = useState(false);
-    const [passwordChanged, setPasswordChanged] = useState(false);
 
     const handleClose = () => {
         setShow(false);
@@ -132,48 +159,6 @@ function NewSupportEmail({ configs, getConfigs }) {
         }
     };
 
-    // const handleConfigChange = (e) => {
-    //   let {name, value, type, checked} = e.target;
-    //   value = type === "checkbox" ? checked : value;
-    //   if(type === "password"){setPasswordChanged(true)}
-
-    //   setEmailState({
-    //       ...emailState,
-    //       emailConfig: {
-    //           ...emailState.emailConfig,
-    //           [name]: value
-    //       }
-    //   });
-
-    // };
-
-    useEffect(() => {
-        if (configs) {
-            setEmailState((prev) => ({
-                ...prev,
-                emailConfig: {
-                    ...prev.emailConfig,
-                    tls: configs?.email_config?.tls || false,
-                    host: configs?.email_config?.host || '',
-                    email: configs?.email_config?.email || '',
-                    port: configs?.email_config?.port || null,
-                    password: configs?.email_config?.password || '',
-                },
-                outgoingEmailConfig: {
-                    ...prev.outgoingEmailConfig,
-                    tls: configs?.outgoing_email_config?.tls || false,
-                    host: configs?.outgoing_email_config?.host || '',
-                    port: configs?.outgoing_email_config?.port || '',
-                    email: configs?.outgoing_email_config?.email || '',
-                    password: configs?.outgoing_email_config?.password || '',
-                    type: configs?.outgoing_email_config?.type || 'smtp',
-                    apiKey: configs?.outgoing_email_config?.apiKey || '',
-                    from: configs?.outgoing_email_config?.from || '',
-                },
-            }));
-        }
-    }, [configs]);
-
     return (
         <div className="new-support-email">
             <div className="card card-body bg-white border-0 ">
@@ -203,87 +188,78 @@ function NewSupportEmail({ configs, getConfigs }) {
                             {/* <p className="f-16 fw-bold mb-3">Mail Server</p> */}
                             <div className="row">
                                 <div className="col-md-12 d-flex my-1">
+                                    <h5 className="fs-6 fw-bold me-4">Use Mail Server for:</h5>
                                     <div className="form-check">
                                         <input
                                             className="form-check-input"
                                             name="mail-radio-1"
                                             type="radio"
                                             id="radio-1"
-                                            value="acx-server"
-                                            checked={emailState.activeRadio === 'acx-server'}
-                                            onChange={handleServerChange}
+                                            value="incoming"
+                                            checked={!(emailState.activeRadio === 'outgoing')}
+                                            // onChange={handleServerChange}
+                                            onChange={(e) =>
+                                                setEmailState({
+                                                    ...emailState,
+                                                    mailServer: 'incoming-only',
+                                                    activeRadio: e.target.value
+                                                })
+                                            }
                                         />
                                         <label className="form-check-label f-14" htmlFor="radio-1">
-                                            Use AlphaCX Mail Server
+                                            Incoming Mail Settings
                                         </label>
                                     </div>
-                                    <div className="form-check ms-5">
+
+                                  
+
+
+                                    <div className="form-check ms-4">
                                         <input
                                             className="form-check-input"
                                             name="mail-radio-1"
                                             type="radio"
                                             id="radio-2"
-                                            value="own-server"
-                                            checked={emailState.activeRadio === 'own-server'}
-                                            onChange={handleServerChange}
+                                            value="outgoing"
+                                            checked={emailState.activeRadio === 'outgoing'}
+                                            onChange={(e) =>
+                                                setEmailState({
+                                                    ...emailState,
+                                                    mailServer: 'outgoing-only',
+                                                    activeRadio: e.target.value
+                                                })
+                                            }
                                         />
                                         <label className="form-check-label f-14" htmlFor="radio-2">
-                                            Use your own mail server
+                                            Outgoing Mail Settings
                                         </label>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        {emailState.activeRadio === 'default-server' ? (
-                            // Default server form start
-                            // ...
-                            // ...
-                            // ...
-                            <div className="card-body d-block" id="default">
-                                <div className="form-group">
-                                    <label htmlFor="forward-mail" className="form-label f-14">
-                                        Forward Your Emails to
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="form-control form-control-sm w-75"
-                                        id="forward-mail"
-                                        placeholder="--"
-                                    />
-                                    <a className=" text-custom f-12 mt-1">
-                                        How to convert your emails into Alphaticket tickets ?
-                                    </a>
-                                </div>
-                            </div>
-                        ) : emailState.activeRadio === 'acx-server' ? (
-                            <div />
-                        ) : (
-                            // Use own server form start
-                            // ...
-                            // ...
-                            // ...
-                            <UseOwnEmail emailState={emailState} setEmailState={setEmailState} />
-                        )}
+                        
+                        <UseOwnEmail emailState={emailState} setEmailState={setEmailState} setActivateSaveBtn={setActivateSaveBtn} />
 
-                        {emailState.activeRadio === 'own-server' && emailState.emailSystem === 'imap' && (
-                            <div className="d-flex justify-content-end my-4 mx-3 text-end">
-                                <Link
-                                    to="/settings/integrations/email"
-                                    className="btn btn-sm px-4 bg-outline-custom cancel"
-                                >
-                                    Cancel
-                                </Link>
-                                <button
-                                    className="btn btn-sm px-4 bg-custom ms-3"
-                                    id="save-changes"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#successModal"
-                                    onClick={handleSubmit}
-                                >
-                                    Save
-                                </button>
-                            </div>
-                        )}
+                        <div className="d-flex justify-content-end my-4 mx-3 text-end">
+                            <Link
+                                to="/settings/integrations/email"
+                                className="btn btn-sm px-4 bg-outline-custom cancel"
+                            >
+                                Cancel
+                            </Link>
+                            <button
+                                className="btn btn-sm px-4 bg-custom ms-3"
+                                id="save-changes"
+                                data-bs-toggle="modal"
+                                data-bs-target="#successModal"
+                                onClick={handleSubmit}
+                                disabled={!activateSaveBtn}
+                                // disabled
+                            >
+                                Save
+                            </button>
+                        </div>
+                       
                     </div>
                 </div>
             </div>
