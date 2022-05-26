@@ -1,7 +1,8 @@
 .react-responsive-modal-container {
-  display: flex;
+  display: grid;
   justify-content: center;
   align-items: center;
+  place-items: center;
 }
 
 .react-responsive-modal-modal {

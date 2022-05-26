@@ -11,7 +11,7 @@ import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/cor
 import '../../../../styles/Ticket.css';
 import { NotificationManager } from 'react-notifications';
 import { Modal } from 'react-responsive-modal';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { httpDelete, httpGetMain } from '../../../../helpers/httpMethods';
 import { ReactComponent as DotSvg } from '../../../../assets/icons/dots.svg';
 import tableIcons from '../../../../assets/materialicons/tableIcons';
@@ -181,7 +181,7 @@ function AutomationSettings() {
         <div className="help-center-settings automation-settings">
             {policyLoading && (
                 <div className={`cust-table-loader ${policyLoading && 'add-loader-opacity'}`}>
-                    <ScaleLoader loading={policyLoading} color="#006298" />
+                    <MoonLoader loading={policyLoading} color="#006298" size={30} />
                 </div>
             )}
             <Modal open={openDeleteActionModal} onClose={() => setOpenDeleteActionModal(false)} center>

@@ -6,7 +6,7 @@ import RightArrow from '../../../../assets/imgF/arrow_right.png';
 import './smsSettings.css';
 import { NotificationManager } from 'react-notifications';
 import { connect } from 'react-redux';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { css } from '@emotion/react';
 import { getSmsConfig, updateSmsConfig } from '../../../../reduxstore/actions/smsActions';
@@ -85,7 +85,7 @@ function SmsSettings({
 
     return (
         <div>
-            {/* {loading && <div className="cust-table-loader"><ScaleLoader loading={true} color={"#006298"}/></div>} */}
+            {/* {loading && <div className="cust-table-loader"><MoonLoader loading={true} color={"#006298"} size={30} /></div>} */}
 
             <div className="card card-body bg-white border-0 p-0 mb-4">
                 <header id="mainContentHeader" className="breadcrumb">

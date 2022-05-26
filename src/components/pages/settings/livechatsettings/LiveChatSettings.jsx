@@ -8,7 +8,7 @@ import './LiveChatSettings.css';
 import copy from 'copy-to-clipboard';
 import { NotificationManager } from 'react-notifications';
 import { connect } from 'react-redux';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { getLivechatConfig, updateLivechatConfig } from '../../../../reduxstore/actions/livechatActions';
 import { getAgents } from '../../../../reduxstore/actions/agentActions';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
@@ -31,7 +31,10 @@ function LiveChatSettings({
         theme: '#004882',
         tenantDomain: window.localStorage.getItem('domain'),
         tenantDomainId: window.localStorage.getItem('tenantId'),
+        footerBranding: true,
     });
+
+    console.log('%cLiveChatSettings.jsx line:37 settings', 'color: white; background-color: #007acc;', settings);
 
     const [loading, setLoading] = useState(true);
     const [shouldRender, setShouldRender] = useState(false);
@@ -41,18 +44,25 @@ function LiveChatSettings({
     const simpleCrypto = new SimpleCrypto('@alphacxcryptkey');
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value, checked } = e.target;
 
-        setSettings((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
+        if (name === 'footerBranding') {
+            setSettings((prev) => ({
+                ...prev,
+                [name]: checked,
+            }));
+        } else {
+            setSettings((prev) => ({
+                ...prev,
+                [name]: value,
+            }));
+        }
         const settingsToEmbed = {
             ...JSON.parse(JSON.stringify(settings)),
             domains: getHostnamesFromString(value),
         }
         setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
-        <script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(JSON.stringify(settingsToEmbed))}'});</script>`);
+        <script defer>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(JSON.stringify(settingsToEmbed))}'});</script>`);
     };
 
     useEffect(() => {
@@ -67,12 +77,14 @@ function LiveChatSettings({
                         getLivechatConfig(
                             (config) => {
                                 setLoading(false);
+                                console.log('config => ', config);
                                 const settingsFromConfig = {
                                     title: config?.title || '',
                                     description: config?.description || '',
                                     initialText: config?.initialChat || '',
                                     domains: config?.hostName || '',
                                     theme: config?.color || '',
+                                    footerBranding: config?.footerBranding === false ? false : true,
                                 };
                                 setSettings((prev) => ({
                                     ...prev,
@@ -84,7 +96,7 @@ function LiveChatSettings({
                                 }
                                 console.log('settings to embed => ', settingsToEmbed);
                                 setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
-            <script>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(
+            <script defer>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(
                 JSON.stringify(settingsToEmbed),
             )}'});</script>`);
                             },
@@ -121,13 +133,13 @@ function LiveChatSettings({
             }
             const encryptedSettings = simpleCrypto.encrypt(JSON.stringify(settingsToEmbed));
             copy(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
-            <script>ACX.createLiveChatWidget({payload: '${encryptedSettings}'});</script>`);
+            <script defer>ACX.createLiveChatWidget({payload: '${encryptedSettings}'});</script>`);
             NotificationManager.success('', 'Copied', 3000);
         }
     };
 
     const handleConfigSave = () => {
-        const { title, description, initialText, domains, theme, tenantDomain } = settings;
+        const { title, description, initialText, domains, theme, tenantDomain, footerBranding } = settings;
 
         if (!title || !description || !initialText || !domains || !theme || !tenantDomain) {
             return NotificationManager.error('Fill all fields', 'Error', 4000);
@@ -140,6 +152,7 @@ function LiveChatSettings({
             hostName: domains,
             color: theme,
             domain: tenantDomain,
+            footerBranding
         };
 
         setLoading(true);
@@ -160,7 +173,7 @@ function LiveChatSettings({
         <div>
             {loading && (
                 <div className="cust-table-loader">
-                    <ScaleLoader loading color="#006298" />
+                    <MoonLoader loading color="#006298" size={30} />
                 </div>
             )}
             <div className="card card-body bg-white border-0 p-0 mb-4">
@@ -266,6 +279,7 @@ function LiveChatSettings({
                                                             className="form-control form-control"
                                                             name="domains"
                                                             value={settings.domains}
+                                                            value={settings.domains}
                                                             // placeholder="alphacx.co;sub.site.com;google.com"
                                                             style={{ fontFamily: 'monospace' }}
                                                             required
@@ -305,6 +319,21 @@ function LiveChatSettings({
                                                         <div>
                                                             <small>This is the primary color of your widget.</small>
                                                         </div>
+                                                    </div>
+
+                                                    <div className="form-check mt-4">
+                                                        <input
+                                                            id="footerBranding"
+                                                            type="checkbox"
+                                                            className="form-check-input"
+                                                            name="footerBranding"
+                                                            checked={settings.footerBranding}
+                                                            required
+                                                            onChange={handleInputChange}
+                                                        />
+                                                        <label className="f-14 mb-1" htmlFor="footerBranding">
+                                                            Footer Branding
+                                                        </label>
                                                     </div>
 
                                                     <div className="form-group mt-4">
@@ -362,6 +391,7 @@ function LiveChatSettings({
                                                                         id="fullname"
                                                                         required=""
                                                                         value=""
+                                                                        readOnly
                                                                     />
                                                                 </div>
                                                                 <div>
@@ -375,6 +405,7 @@ function LiveChatSettings({
                                                                         name="email"
                                                                         required=""
                                                                         value=""
+                                                                        readOnly
                                                                     />
                                                                 </div>
                                                                 <div>
@@ -388,6 +419,7 @@ function LiveChatSettings({
                                                                         name="chatsubject"
                                                                         required=""
                                                                         value=""
+                                                                        readOnly
                                                                     />
                                                                 </div>
                                                                 <div className="submit-btn-wrapper">
@@ -403,7 +435,7 @@ function LiveChatSettings({
                                                                 </div>
                                                             </form>
                                                         </div>
-                                                        <div>
+                                                        {settings.footerBranding && (<div>
                                                             <span>
                                                                 <svg
                                                                     width="17"
@@ -431,7 +463,7 @@ function LiveChatSettings({
                                                                     We care with AlphaCX
                                                                 </a>
                                                             </span>
-                                                        </div>
+                                                        </div>)}
                                                     </div>
                                                 </div>
                                             </div>

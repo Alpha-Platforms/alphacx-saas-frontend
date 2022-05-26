@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { NotificationManager } from 'react-notifications';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import RSelect from 'react-select';
 import { timezone } from '../../../shared/timezone';
 import { languages } from '../../../shared/languages';
@@ -96,7 +96,7 @@ function AccountSettings() {
         <div className="account-settings">
             {accountLoading && (
                 <div className={`cust-table-loader ${accountLoading && 'add-loader-opacity'}`}>
-                    <ScaleLoader loading={accountLoading} color="#006298" />
+                    <MoonLoader loading={accountLoading} color="#006298" size={30} />
                 </div>
             )}
 

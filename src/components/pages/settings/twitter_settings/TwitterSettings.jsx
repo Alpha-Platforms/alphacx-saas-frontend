@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import './style.css';
 import { NotificationManager } from 'react-notifications';
 import { connect } from 'react-redux';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { css } from '@emotion/react';
 import { Settings } from '@material-ui/icons';

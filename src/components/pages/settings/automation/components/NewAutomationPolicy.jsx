@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { Link, useParams, useHistory } from 'react-router-dom';
 import { useEffect } from 'react';
 import { NotificationManager } from 'react-notifications';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import RSelect from 'react-select';
 import { connect } from 'react-redux';
 import AutomationAction from './AutomationAction';
@@ -285,7 +285,7 @@ function NewAutomationPolicy({
         <div className="new-automation-policy">
             {policyLoading && (
                 <div className={`cust-table-loader ${policyLoading && 'add-loader-opacity'}`}>
-                    <ScaleLoader loading={policyLoading} color="#006298" />
+                    <MoonLoader loading={policyLoading} color="#006298" size={30} />
                 </div>
             )}
             <div className="card card-body bg-white border-0 p-0 ">

@@ -5,7 +5,7 @@ import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/cor
 import MaterialTable from 'material-table';
 import { Dropdown } from 'react-bootstrap';
 import { connect } from 'react-redux';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { TablePagination } from '@material-ui/core';
 import { Link, useLocation } from 'react-router-dom';
 import moment from 'moment';
@@ -181,7 +181,7 @@ function UserList({
         <div>
             {userLoading && (
                 <div className="cust-table-loader">
-                    <ScaleLoader loading={userLoading} color="#006298" />
+                    <MoonLoader loading={userLoading} color="#006298" size={30} />
                 </div>
             )}
             <div className="card card-body bg-white border-0 p-0 mb-4">
@@ -402,7 +402,7 @@ function UserList({
                     </div>
                 ) : (
                     <div className="cust-table-loader">
-                        <ScaleLoader loading color="#006298" />
+                        <MoonLoader loading color="#006298" size={30} />
                     </div>
                 )}
             </div>

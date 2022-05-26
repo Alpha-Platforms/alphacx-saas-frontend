@@ -8,7 +8,7 @@ import { capitalize } from '@material-ui/core';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { ReactComponent as HamburgerSvg } from '../../../../assets/icons/hamburger.svg';
 
 function UserFieldList({ fieldData, editCustomField, deleteCustomField, isLoading }) {
@@ -22,7 +22,7 @@ function UserFieldList({ fieldData, editCustomField, deleteCustomField, isLoadin
         <div className="text-center">
             <div className={!isLoading ? `fieldsWrapper` : ''} id="userFieldWrapper">
                 {isLoading ? (
-                    <ScaleLoader loading color="#006298" height={20} width={2} />
+                    <MoonLoader loading color="#006298" size={30} />
                 ) : userFields.length > 0 ? (
                     userFields.map((data) => {
                         return (

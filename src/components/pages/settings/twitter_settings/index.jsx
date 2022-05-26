@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 // import PropTypes from 'prop-types';
 import { NotificationManager } from 'react-notifications';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { Settings } from '@material-ui/icons';
 import { connect } from 'react-redux';
