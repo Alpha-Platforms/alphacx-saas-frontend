@@ -328,7 +328,6 @@ function LiveChatSettings({
                                                             className="form-check-input"
                                                             name="footerBranding"
                                                             checked={settings.footerBranding}
-                                                            required
                                                             onChange={handleInputChange}
                                                         />
                                                         <label className="f-14 mb-1" htmlFor="footerBranding">
