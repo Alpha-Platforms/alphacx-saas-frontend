@@ -435,7 +435,7 @@ function LiveChatSettings({
                                                                 </div>
                                                             </form>
                                                         </div>
-                                                        <div>
+                                                        {settings.footerBranding && (<div>
                                                             <span>
                                                                 <svg
                                                                     width="17"
@@ -463,7 +463,7 @@ function LiveChatSettings({
                                                                     We care with AlphaCX
                                                                 </a>
                                                             </span>
-                                                        </div>
+                                                        </div>)}
                                                     </div>
                                                 </div>
                                             </div>
