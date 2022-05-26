@@ -120,7 +120,7 @@ function SocialIntegrations({configs}) {
               <div className="w">
                 <img src={whatsappImg} alt="" width="38"/>
               </div>
-              <div className="ms-3 d-flex justify-content-between align-items-start">
+              <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
                 <div className="me-2">
                   <h6 className="text-dark mb-0">WhatsApp by Twilio</h6>
                   <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
@@ -148,11 +148,11 @@ function SocialIntegrations({configs}) {
               <div className="w">
                 <img src={facebookImg} alt="" width="38"/>
               </div>
-              <div className="ms-3 d-flex justify-content-between align-items-start">
+              <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
                 <div className="me-2">
                   <h6 className="text-dark mb-0">Facebook</h6>
-                  <p className="acx-fs-8 lh-base mt-1 mb-2  text-muted">
-                    Connect your users via Facebook
+                  <p className={`acx-fs-8 lh-base mt-1 mb-2  text-muted ${facebookConnected && 'fw-bold'}`}>
+                    {!facebookConnected? "Connect your business Instagram Page" : configs.facebook_config?.page_name || 'Page not available'}
                   </p>
                 </div>
                 <div className="">
@@ -178,11 +178,11 @@ function SocialIntegrations({configs}) {
               <div className="w">
                 <img src={instagramImg} alt="" width="38"/>
               </div>
-              <div className="ms-3 d-flex justify-content-between align-items-start">
+              <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
                 <div className="me-2">
                   <h6 className="text-dark mb-0">Instagram</h6>
-                  <p className="acx-fs-8 lh-base mt-1 mb-2  text-muted">
-                    Connect your business Instagram Page
+                  <p className={`acx-fs-8 lh-base mt-1 mb-2  text-muted ${instagramConnected && 'fw-bold'}`}>
+                    {!instagramConnected? "Connect your business Instagram Page" : configs.instagram_config?.page_name}
                   </p>
                 </div>
                 <div className="">
@@ -203,7 +203,7 @@ function SocialIntegrations({configs}) {
               <div className="w">
                 <img src={twitterImg} alt="" width="38" />
               </div>
-              <div className="ms-3 d-flex justify-content-between align-items-start">
+              <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
                 <div className="me-2">
                   <h6 className="text-dark mb-0">Twitter</h6>
                   <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
@@ -226,7 +226,7 @@ function SocialIntegrations({configs}) {
               <div className="w">
                 <img src={termiiImg} alt="" width="38" />
               </div>
-              <div className="ms-3 d-flex justify-content-between align-items-start">
+              <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
                 <div className="me-2">
                   <h6 className="text-dark mb-0">SMS by Termii</h6>
                   <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
@@ -249,7 +249,7 @@ function SocialIntegrations({configs}) {
               <div className="w">
                 <img src={MailLightIcon} alt="" width="38" />
               </div>
-              <div className="ms-3 d-flex justify-content-between align-items-start">
+              <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
                 <div className="me-2">
                   <h6 className="text-dark mb-0">Email to Ticket</h6>
                   <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
@@ -272,7 +272,7 @@ function SocialIntegrations({configs}) {
               <div className="w">
                 <img src={AccountLightIcon} alt="" width="34"/>
               </div>
-              <div className="ms-3 d-flex justify-content-between align-items-start">
+              <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
                 <div className="me-2">
                   <h6 className="text-dark mb-0"> Live Chat</h6>
                   <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">Configure livechat widget for your website and app</p>
