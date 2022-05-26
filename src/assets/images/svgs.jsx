@@ -2526,3 +2526,14 @@ export function Star() {
         </svg>
     );
 }
+
+
+export function CollapseLeft () {
+    return (
+        <svg width="11" height="10" viewBox="0 0 11 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 9.12821L5.93589 5.06411L10 1" stroke="white" stroke-width="0.87088" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5.0625 9.12821L0.998394 5.06411L5.0625 1" stroke="white" stroke-width="0.87088" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    )
+}
+
