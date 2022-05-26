@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 //
 import { connect } from 'react-redux';
 import { useHistory, Link, useParams } from 'react-router-dom';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { NotificationManager } from 'react-notifications';
 //
 import Form from 'react-bootstrap/Form';
@@ -134,7 +134,7 @@ function EditEmailTemplate({
         <div className="new-email-template notification-settings">
             {custLoading && (
                 <div className="cust-table-loader">
-                    <ScaleLoader loading={custLoading} color="#006298" />
+                    <MoonLoader loading={custLoading} color="#006298" size={30} />
                 </div>
             )}
             <div className="card card-body bg-white border-0 p-5">

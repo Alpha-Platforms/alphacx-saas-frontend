@@ -8,7 +8,7 @@ import './LiveChatSettings.css';
 import copy from 'copy-to-clipboard';
 import { NotificationManager } from 'react-notifications';
 import { connect } from 'react-redux';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { getLivechatConfig, updateLivechatConfig } from '../../../../reduxstore/actions/livechatActions';
 import { getAgents } from '../../../../reduxstore/actions/agentActions';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
@@ -173,7 +173,7 @@ function LiveChatSettings({
         <div>
             {loading && (
                 <div className="cust-table-loader">
-                    <ScaleLoader loading color="#006298" />
+                    <MoonLoader loading color="#006298" size={30} />
                 </div>
             )}
             <div className="card card-body bg-white border-0 p-0 mb-4">

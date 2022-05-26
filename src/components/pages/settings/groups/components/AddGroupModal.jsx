@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-responsive-modal';
 import { NotificationManager } from 'react-notifications';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { connect } from 'react-redux';
 import RSelect from 'react-select';
 import AsyncSelect from 'react-select/async';

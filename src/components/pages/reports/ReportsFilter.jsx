@@ -9,7 +9,7 @@ import MaterialTable from 'material-table';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { TablePagination } from '@material-ui/core';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { NotificationManager } from 'react-notifications';
 import { httpGetMain } from '../../../helpers/httpMethods';
 import { ReactComponent as StarYellowSvg } from '../../../assets/icons/Star-yellow.svg';
@@ -538,7 +538,7 @@ function ReportsFilter() {
             </div>
             {loading && (
                 <div className={`cust-table-loader ${true && 'add-loader-opacity'}`}>
-                    <ScaleLoader loading color="#006298" />
+                    <MoonLoader loading color="#006298" size={30} />
                 </div>
             )}
         </div>

@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../../../styles/Customer.css';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import MaterialTable from 'material-table';
 import { TablePagination } from '@material-ui/core';
@@ -271,7 +271,7 @@ function CustomerList({
         <div>
             {custLoading && (
                 <div className="cust-table-loader">
-                    <ScaleLoader loading={custLoading} color="#006298" />
+                    <MoonLoader loading={custLoading} color="#006298" size={30} />
                 </div>
             )}
 

@@ -5,7 +5,7 @@ import './AccountSettings.scss';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { NotificationManager } from 'react-notifications';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import RSelect from 'react-select';
@@ -374,13 +374,13 @@ function UserProfileTwo({
         <div className="account-settings">
             {accountLoading && (
                 <div className={`cust-table-loader ${accountLoading && 'add-loader-opacity'}`}>
-                    <ScaleLoader loading={accountLoading} color="#006298" />
+                    <MoonLoader loading={accountLoading} color="#006298" size={30} />
                 </div>
             )}
 
             {!isCurrentAgentLoaded ? (
                 <div className="single-cust-loader">
-                    <ScaleLoader loading color="#006298" />
+                    <MoonLoader loading color="#006298" size={30} />
                 </div>
             ) : !currentAgent ? (
                 <div>

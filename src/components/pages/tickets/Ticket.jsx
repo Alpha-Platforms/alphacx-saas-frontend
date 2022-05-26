@@ -25,7 +25,7 @@ import { useParams } from 'react-router-dom';
 import RSelect from 'react-select/creatable';
 import { Editor } from 'react-draft-wysiwyg';
 import { capitalize } from '@material-ui/core';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import remarkGfm from 'remark-gfm';
 import ReactMarkdown from 'react-markdown';
@@ -713,7 +713,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         <>
             {!isCurrentTicketLoaded ? (
                 <div className="single-cust-loader">
-                    <ScaleLoader loading color="#006298" />
+                    <MoonLoader loading color="#006298" size={30} />
                 </div>
             ) : !currentTicket ? (
                 <div>No Ticket Found.</div>
@@ -736,16 +736,12 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
                         {/* CHAT COL TWO */}
                         {firstTimeLoad ? (
                             <div className="single-cust-loader">
-                                <ScaleLoader loading color="#006298" />
+                                <MoonLoader loading color="#006298" size={30} />
                             </div>
                         ) : loadSingleTicket ? (
                             <div className="d-flex justify-content-center align-items-center mt-5 w-100">
                                 {' '}
-                                <ScaleLoader
-                                    color="#0d4166"
-                                    loading={loadSingleTicket}
-                                    // size={35}
-                                />
+                                <MoonLoader color="#0d4166" loading={loadSingleTicket} size={30} />
                             </div>
                         ) : (
                             <div className="conversation-layout-col-two-chatCol">

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import MaterialTable from 'material-table';
 import { TablePagination } from '@material-ui/core';
 import '../../../styles/Ticket.css';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import moment from 'moment';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
@@ -57,7 +57,7 @@ function UsersTable({ isTicketsLoaded, tickets }) {
     return (
         <div>
             <div className="cust-table-loader">
-                <ScaleLoader loading={ticketLoading} color="#006298" />
+                <MoonLoader loading={ticketLoading} color="#006298" size={30} />
             </div>
             <div className="m-4">
                 <Breadcrumb>

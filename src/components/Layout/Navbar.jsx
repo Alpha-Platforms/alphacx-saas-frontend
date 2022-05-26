@@ -6,7 +6,7 @@ import { Link, NavLink, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { NotificationManager } from 'react-notifications';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import Dropdown from 'react-bootstrap/Dropdown';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { LayoutContext } from '../../context/layoutContext';
@@ -195,7 +195,7 @@ function Notification({ userId }) {
                     {notificationsLoaded == false ? (
                         <NavDropdown.Item as="div">
                             <div className="d-flex justify-content-center align-items-center py-5 ps-1 notification-loader-indicator">
-                                <ScaleLoader color="#0d4166" loading={notificationsLoaded == false} size={5} />
+                                <MoonLoader color="#0d4166" loading={notificationsLoaded == false} size={30} />
                             </div>
                         </NavDropdown.Item>
                     ) : notifications.length == 0 || notifications == null || notifications == undefined ? (

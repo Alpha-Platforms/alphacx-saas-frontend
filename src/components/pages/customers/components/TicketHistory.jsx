@@ -6,7 +6,7 @@ import { TablePagination } from '@material-ui/core';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { getPaginatedCurrentCustomerTickets } from '../../../../reduxstore/actions/customerActions';
 import ShowIcon from '../../../../assets/icons/Show.svg';
 
@@ -190,7 +190,7 @@ function TicketHistory({
             >
                 {!isCurrentCustomerTicketsLoaded ? (
                     <div className="text-center">
-                        <ScaleLoader loading={ticketLoading} color="#006298" />
+                        <MoonLoader loading={ticketLoading} color="#006298" size={30} />
                     </div>
                 ) : (
                     <MuiThemeProvider theme={tableTheme}>

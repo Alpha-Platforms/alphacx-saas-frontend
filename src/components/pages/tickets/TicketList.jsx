@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import MaterialTable from 'material-table';
 import { TablePagination } from '@material-ui/core';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import moment from 'moment';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import SaveAlt from '@material-ui/icons/SaveAlt';
@@ -540,7 +540,7 @@ function TicketList({ isTicketsLoaded, tickets, meta, getPaginatedTickets, isUse
         <div>
             {(ticketLoading || loading) && (
                 <div className={`cust-table-loader ${ticketLoading && 'add-loader-opacity'}`}>
-                    <ScaleLoader loading color="#006298" />
+                    <MoonLoader loading color="#006298" size={30} />
                 </div>
             )}
             <div className="ticket-table-wrapper">

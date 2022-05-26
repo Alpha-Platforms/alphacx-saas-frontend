@@ -204,7 +204,7 @@ function Summary({ planState, setPlanState, plan, tenantInfo }) {
             </div>
 
             <div className="sbox-7">
-                {/* {!flutterwaveConfig && <button onClick={handleInitiatePayment}>{ !isContinuing ? 'Continue' : <ScaleLoader color={"#ffffff"} height={14} width={2} margin={1} />}</button>} */}
+                {/* {!flutterwaveConfig && <button onClick={handleInitiatePayment}>{ !isContinuing ? 'Continue' : <MoonLoader color={"#ffffff"} size={30} height={14} width={2} margin={1} />}</button>} */}
                 {planState.flutterwaveConfig && (
                     <FlutterWaveAction
                         planState={planState}
