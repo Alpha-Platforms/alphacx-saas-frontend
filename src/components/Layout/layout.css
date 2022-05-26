@@ -821,3 +821,7 @@ button.dropdown-toggle {
 .global-create-dropdown .dropdown-menu.show > .dropdown-item:first-child {
   border-bottom: solid 1px #f4f4f4;
 }
+
+.rotate-180 {
+  transform: rotate(180deg);
+}

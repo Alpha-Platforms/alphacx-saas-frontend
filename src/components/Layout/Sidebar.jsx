@@ -1,11 +1,9 @@
 /* eslint-disable */
 import React, { useState, useContext, useEffect } from 'react';
-import Swal from 'sweetalert2';
 import { NotificationManager } from 'react-notifications';
 import Modal from 'react-responsive-modal';
 import AccessControl from 'components/pages/auth/accessControl';
 import { LayoutContext } from '../../context/layoutContext';
-import { AuthContext } from '../../context/authContext';
 import {
     // appLogo,
     // dashboardIcon,
@@ -19,6 +17,7 @@ import {
     SettingsIcon,
     AppLogo,
     AppFullLogo,
+    CollapseLeft,
 } from '../../assets/images/svgs';
 
 export default function Sidebar({ browserRouter, currentRoute }) {
@@ -43,7 +42,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                 </header>
                 <ul className="sidebar-list mb-auto">
                     <li onClick={() => reduceSidebarWidth()} className="sidebar-list--item">
-                        <span className="sidebar-list--icon">{toggleIcon}</span>
+                        <span className={`sidebar-list--icon ${appReduceSidebarWidth === true ? '' : 'rotate-180'}`}>{<CollapseLeft />}</span>
                         <span className="sidebar-list--text small fst-italic">Collapse Menu</span>
                     </li>
 
