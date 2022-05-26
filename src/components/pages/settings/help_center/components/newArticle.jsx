@@ -23,7 +23,7 @@ import { httpGetMain, httpPatchMain, httpPostMain } from '../../../../../helpers
 import { NotificationManager } from 'react-notifications';
 import { Link, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import axios from 'axios';
 import { allowedFiles, getAcceptValue, allowDocs } from '../../../../../helper';
 import { config } from '../../../../../config/keys';
@@ -572,7 +572,7 @@ function NewArticle() {
         <div className=" settings-email help-center-settings">
             {policyLoading && (
                 <div className={`cust-table-loader ${policyLoading && 'add-loader-opacity'}`}>
-                    <ScaleLoader loading={policyLoading} color="#006298" />
+                    <MoonLoader loading={policyLoading} color="#006298" size={30} />
                 </div>
             )}
             <div className="card card-body bg-white border-0 p-5 mt-4">

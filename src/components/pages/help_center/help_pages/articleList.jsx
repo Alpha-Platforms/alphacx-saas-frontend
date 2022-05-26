@@ -5,7 +5,7 @@ import { useEffect, Fragment } from 'react';
 import { useState } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { useLocation, useParams, Link } from 'react-router-dom';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { HelpNavIcon } from '../../../../assets/images/svgs';
 import { httpGetMain, httpGetMainKB, invalidTenant } from '../../../../helpers/httpMethods';
 import HelpNavBar from '../../../Layout/helpNavBar';
@@ -68,7 +68,7 @@ function ArticleList() {
         <>
             {policyLoading ? (
                 <div className="cust-table-loader">
-                    <ScaleLoader loading={policyLoading} color="#006298" />
+                    <MoonLoader loading={policyLoading} color="#006298" size={30} />
                 </div>
             ) : !shouldReturn404 ? (
                 <>
@@ -80,7 +80,7 @@ function ArticleList() {
               policyLoading && "add-loader-opacity"
             }`}
           >
-            <ScaleLoader loading={policyLoading} color={"#006298"} />
+            <MoonLoader loading={policyLoading} color={"#006298"} size={30} />
           </div>
         )} */}
                     <div className="article-list">

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { httpPostMain } from '../../../../../helpers/httpMethods';
 import { getCategories, getPaginatedCategories } from '../../../../../reduxstore/actions/categoryActions';
 import { getSubCategories } from '../../../../../reduxstore/actions/subCategoryActions';
@@ -79,7 +79,7 @@ function NewCategoryTab({ categories, meta, getCategories, getPaginatedCategorie
         <div className="ticket-cat-tab">
             {(policyLoading || isCatLoading) && (
                 <div className={`cust-table-loader ${policyLoading && 'add-loader-opacity'}`}>
-                    <ScaleLoader loading={policyLoading} color="#006298" />
+                    <MoonLoader loading={policyLoading} color="#006298" size={30} />
                 </div>
             )}
             <div className="w-75">

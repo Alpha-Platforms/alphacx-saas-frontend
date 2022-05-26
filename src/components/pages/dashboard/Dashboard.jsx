@@ -4,7 +4,7 @@ import { useEffect, Fragment, useState } from 'react';
 //
 import { connect } from 'react-redux';
 import Container from 'react-bootstrap/Container';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 //
 import TicketCount from './components/TicketCount';
@@ -38,7 +38,7 @@ function DashboardTwo({
             <>
                 {!isAnalyticsLoaded && !isNewAnalyticsLoaded ? (
                     <div className="text-center mt-4">
-                        <ScaleLoader loading color="#006298" />
+                        <MoonLoader loading color="#006298" size={30} />
                     </div>
                 ) : (
                     <div className="dashboard-main">

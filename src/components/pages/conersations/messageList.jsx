@@ -1,7 +1,7 @@
 /* eslint-disable */
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import moment from 'moment';
 import truncateWithEllipses from '../../helpers/truncate';
 import { timeFormater } from '../../helpers/dateFormater';
@@ -92,7 +92,7 @@ export default function MessageList({
             {loadingTickets || !ticketsLoaded ? (
                 <div className="d-flex justify-content-center align-items-center pt-5 away">
                     {' '}
-                    <ScaleLoader color="#0d4166" loading size={35} />
+                    <MoonLoader color="#0d4166" loading size={30} />
                 </div>
             ) : Array.isArray(renderTicket) ? (
                 renderTicket.length == 0 ? (

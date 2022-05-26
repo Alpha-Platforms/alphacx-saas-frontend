@@ -10,7 +10,7 @@ import './helpCenter.scss';
 import LogoBG from '../../../assets/imgF/logoBG.png';
 import { httpGetMain, getTenantDomain, httpGetMainKB, invalidTenant } from '../../../helpers/httpMethods';
 import { NotificationManager } from 'react-notifications';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { Link } from 'react-router-dom';
 import { shuffleArray } from '../../../helper';
 
@@ -57,7 +57,7 @@ function HelpCenter() {
         <>
             {loading ? (
                 <div className="cust-table-loader">
-                    <ScaleLoader loading={loading} color="#006298" />
+                    <MoonLoader loading={loading} color="#006298" size={30} />
                 </div>
             ) : !shouldReturn404 ? (
                 <>

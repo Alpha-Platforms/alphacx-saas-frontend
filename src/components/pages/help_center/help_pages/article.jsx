@@ -14,7 +14,7 @@ import matter from 'gray-matter';
 import { httpGetMain, httpGetMainKB, invalidTenant } from '../../../../helpers/httpMethods';
 import { useLocation, useParams } from 'react-router-dom';
 import { NotificationManager } from 'react-notifications';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { uuid } from '../../../../helper';
 //
 
@@ -98,7 +98,7 @@ function Article() {
         <>
             {policyLoading ? (
                 <div className="cust-table-loader">
-                    <ScaleLoader loading={policyLoading} color="#006298" />
+                    <MoonLoader loading={policyLoading} color="#006298" size={30} />
                 </div>
             ) : !shouldReturn404 ? (
                 <>
@@ -151,7 +151,7 @@ function Article() {
                                 </div>
                             ) : (
                                 <div className="single-cust-loader">
-                                    <ScaleLoader loading color="#006298" />
+                                    <MoonLoader loading color="#006298" size={30} />
                                 </div>
                             )}
                         </div>

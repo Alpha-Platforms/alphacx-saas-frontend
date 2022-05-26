@@ -6,7 +6,7 @@ import { Link, useHistory } from 'react-router-dom';
 import MaterialTable from 'material-table';
 import { TablePagination } from '@material-ui/core';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import tableIcons from '../../../../assets/materialicons/tableIcons';
@@ -150,7 +150,7 @@ function NotificationSettings({ getEmailTemplates, isEmailTemplatesLoaded, email
         <div className="notification-settings">
             {custLoading && (
                 <div className="cust-table-loader">
-                    <ScaleLoader loading={custLoading} color="#006298" />
+                    <MoonLoader loading={custLoading} color="#006298" size={30} />
                 </div>
             )}
             <div className="card card-body bg-white border-0 ">

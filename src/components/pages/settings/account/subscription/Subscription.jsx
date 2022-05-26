@@ -9,7 +9,7 @@ import './Subscription.scss';
 import PaymentHistory from './components/PaymentHistory';
 import PaymentForm from './components/PaymentForm';
 import { httpGet, httpPatch } from '../../../../../helpers/httpMethods';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { ReactComponent as TickIcon } from '../../../../../assets/icons/tick.svg';
 
 import { separateNum } from '../../../../../helper';
@@ -153,7 +153,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
         <>
             {(planState.loading || planState.isVerifying) && (
                 <div className="cust-table-loader">
-                    <ScaleLoader loading color="#006298" />
+                    <MoonLoader loading color="#006298" size={30} />
                 </div>
             )}
             {plan && tenantInfo ? (
@@ -375,7 +375,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
                 </div>
             ) : (
                 <div className="cust-table-loader">
-                    <ScaleLoader loading color="#006298" />
+                    <MoonLoader loading color="#006298" size={30} />
                 </div>
             )}
         </>

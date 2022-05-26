@@ -6,7 +6,7 @@ import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/cor
 import { connect } from 'react-redux';
 import { Dropdown } from 'react-bootstrap';
 import { NotificationManager } from 'react-notifications';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { TablePagination, TablePaginationProps } from '@material-ui/core';
 import tableIcons from '../../../../../assets/materialicons/tableIcons';
 import { ReactComponent as DeleteGreySvg } from '../../../../../assets/icons/Delete-grey.svg';
@@ -142,7 +142,7 @@ function TicketCategoriesTab({
         <div className="ticket-cat-tab">
             {custLoading && (
                 <div className="cust-table-loader">
-                    <ScaleLoader loading={custLoading} color="#006298" />
+                    <MoonLoader loading={custLoading} color="#006298" size={30} />
                 </div>
             )}
 

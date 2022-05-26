@@ -8,7 +8,7 @@ import { getRealCurrency } from './SubTop';
 import { httpPost } from '../../../../../../helpers/httpMethods';
 import { separateNum } from '../../../../../../helper';
 import acxLogo from '../../../../../../assets/images/whitebg.jpg';
-// import ScaleLoader from 'react-spinners/ScaleLoader';
+// import MoonLoader from 'react-spinners/MoonLoader';
 
 function CurrentPlan({ plan, planState, tenantInfo, setPlanState, subscription, totalUsers}) {
     const [initiating, setInitiating] = useState(false);

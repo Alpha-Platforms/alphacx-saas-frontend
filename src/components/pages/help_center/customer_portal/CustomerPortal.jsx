@@ -3,7 +3,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 
 import { Pagination } from 'react-bootstrap';
 import { NotificationManager } from 'react-notifications';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { connect } from 'react-redux';
 import HelpNavBar from '../../../Layout/helpNavBar';
 import TotalCard from '../../dashboard/dashcards/totalCard';
@@ -261,7 +261,7 @@ function CustomerPortal({ statuses, categories }) {
 
                         {!custState.isCustTicketsLoaded ? (
                             <div className="text-center pt-3">
-                                <ScaleLoader loading color="#006298" />
+                                <MoonLoader loading color="#006298" size={30} />
                             </div>
                         ) : custState.custTickets.length === 0 ? (
                             <div>No Tickets yet.</div>

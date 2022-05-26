@@ -10,7 +10,7 @@ import { TablePagination } from '@material-ui/core';
 import { Dropdown } from 'react-bootstrap';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import '../../../../styles/Ticket.css';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import Swal from 'sweetalert2';
 import moment from 'moment';
 import { wordCapitalize } from '../../../../helper';
@@ -253,7 +253,7 @@ function HelpCenterSettings() {
         <div className="settings-email help-center-settings">
             {policyLoading && (
                 <div className={`cust-table-loader ${policyLoading && 'add-loader-opacity'}`}>
-                    <ScaleLoader loading={policyLoading} color="#006298" />
+                    <MoonLoader loading={policyLoading} color="#006298" size={30} />
                 </div>
             )}
             <div className="card card-body bg-white border-0 mt-4">

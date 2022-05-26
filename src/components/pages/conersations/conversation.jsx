@@ -16,7 +16,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import YouTube from 'react-youtube';
 import RSelect from 'react-select/creatable';
 import moment from 'moment';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -931,7 +931,7 @@ function Conversation({ user }) {
                                 }}
                             >
                                 {' '}
-                                <ScaleLoader color="#0d4166" loading={loadSingleTicket} size={35} />
+                                <MoonLoader color="#0d4166" loading={loadSingleTicket} size={30} />
                             </div>
                         ) : (
                             <div className="conversation-layout-col-two-chatCol vgb">
@@ -1541,7 +1541,7 @@ function Conversation({ user }) {
                                 }}
                             >
                                 {' '}
-                                <ScaleLoader color="#0d4166" loading={loadSingleTicket} size={35} />
+                                <MoonLoader color="#0d4166" loading={loadSingleTicket} size={30} />
                             </div>
                         ) : (
                             <UserProfile UserInfo={UserInfo} ticket={ticket} />

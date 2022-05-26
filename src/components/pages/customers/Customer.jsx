@@ -5,7 +5,7 @@ import { Tabs, Tab, Button } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import ScaleLoader from 'react-spinners/ScaleLoader';
+import MoonLoader from 'react-spinners/MoonLoader';
 import { connect } from 'react-redux';
 import MessageIcon from '../../../assets/svgicons/Message.svg';
 import TicketIcon from '../../../assets/svgicons/Ticket.svg';
@@ -93,7 +93,7 @@ function Customer({ isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoade
         <>
             {!isCurrentCustomerLoaded ? (
                 <div className="single-cust-loader">
-                    <ScaleLoader loading color="#006298" />
+                    <MoonLoader loading color="#006298" size={30} />
                 </div>
             ) : !currentCustomer ? (
                 <div>No Customer Found.</div>
