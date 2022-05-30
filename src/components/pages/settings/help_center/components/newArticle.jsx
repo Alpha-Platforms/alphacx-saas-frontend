@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disablde */
 // @ts-nocheck
 import React, { useState, Fragment } from 'react';
 import RightArrow from '../../../../../assets/imgF/arrow_right.png';
@@ -25,7 +25,7 @@ import { Link, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import MoonLoader from 'react-spinners/MoonLoader';
 import axios from 'axios';
-import { allowedFiles, getAcceptValue, allowDocs } from '../../../../../helper';
+import { allowedFiles, getAcceptValue, allowDocs, slugify } from '../../../../../helper';
 import { config } from '../../../../../config/keys';
 //
 const youtubeRegex =
@@ -72,6 +72,10 @@ function NewArticle() {
     const [folders, setFolders] = useState([]);
     const [editorState, setEditorState] = useState(initialState);
     const [flInfo, setFlInfo] = useState({ title: '', link: '', newWindow: false });
+    const [postInfo, setPostInfo] = useState({
+        title: '',
+        category: '',
+    });
 
     // File upload state
     const [uploadInfo, setUploadInfo] = useState({
@@ -86,6 +90,7 @@ function NewArticle() {
 
     const handleChange = (e) => {
         const { value, name } = e.target;
+        if (name === 'categoryId') setPostInfo((prev) => ({ ...prev, category: name }));
         setNewPost({ ...newPost, [name]: value });
     };
 
@@ -102,7 +107,6 @@ function NewArticle() {
         }).then((result) => {
             if (result.isConfirmed) {
                 setNewPost({ ...newPost, publishGlobal: !publishGlobal });
-            } else {
             }
         });
     };
@@ -252,6 +256,11 @@ function NewArticle() {
         const res = await httpGetMain(`article/${articleId}`);
         if (res?.status == 'success') {
             const { title, body, folders } = res?.data;
+            setPostInfo((prev) => ({
+                ...prev,
+                title,
+                category: folders?.[0]?.category?.name
+            }));
 
             setNewPost({
                 ...newPost,
@@ -319,8 +328,9 @@ function NewArticle() {
         if (res?.status == 'success') {
             setPolicyLoading(false);
             NotificationManager.success(res.message, 'Success', 4000);
+            setPostInfo(res?.data?.title);
 
-            window.location.href = `/settings/knowledge-base`;
+            // window.location.href = `/settings/knowledge-base`;
         } else {
             setPolicyLoading(false);
             return NotificationManager.error(res?.er?.message, 'Error', 4000);
@@ -740,7 +750,8 @@ function NewArticle() {
                 <p>Preview</p>
               </Link> */}
                                     <button
-                                        className="btn btn-sm ms-2 f-12 bg-custom px-4 w-45"
+                                        type="button"
+                                        className="btn btn-sm me-2 py-1 f-12 bg-custom px-4"
                                         onClick={articleId ? handlePatchArticle : handleSubmitNewArticle}
                                         disabled={
                                             (newPost.title === '' || newPost.richText === '', newPost.folderId === '')
@@ -748,6 +759,16 @@ function NewArticle() {
                                     >
                                         Save Changes
                                     </button>
+                                    {articleId && (
+                                        <a
+                                            className="btn btn-sm btn-outline ms-2 py-1 f-12 px-4"
+                                            href={`/knowledge-base/${slugify(postInfo?.category)}/${slugify(postInfo?.title)}`}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            View Article
+                                        </a>
+                                    )}
                                 </div>
 
                                 <div className="category mb-4">
