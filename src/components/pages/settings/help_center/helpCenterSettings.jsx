@@ -271,10 +271,10 @@ function HelpCenterSettings() {
                 <div className="d-flex justify-content-between flex-row">
                     <h5 className="mt-3 mb-4 fs-6 fw-bold">Knowledge Base Settings</h5>
                     <div>
-                        <Link className="btn btn-primary btn-sm ms-2" to="/settings/knowledge-base/categories">
+                        <Link className="btn btn-primary btn-sm py-1 ms-2" to="/settings/knowledge-base/categories">
                             <span>Categories</span>
                         </Link>
-                        <Link className="btn btn-primary btn-sm ms-2" to="/settings/knowledge-base/article">
+                        <Link className="btn btn-primary btn-sm ms-2 py-1" to="/settings/knowledge-base/article">
                             <span>New Article</span>
                         </Link>
                     </div>
