@@ -14,7 +14,7 @@ import { faqs, navigation } from '../faq';
 import './articleList.scss';
 import { slugify, textCapitalize } from '../../../../helper';
 import { ReactComponent as Paper } from '../../../../assets/icons/Paper.svg';
-import { ReactComponent as Folder } from '../../../../assets/icons/Folder.svg';
+import Folder from '../../../../assets/icons/Folder.svg';
 
 function ArticleList() {
     const query = useQuery();
@@ -85,9 +85,9 @@ function ArticleList() {
         )} */}
                     <div className="article-list">
                         <h3 className="nav-info mb-0 pb-3" style={{ marginLeft: '-5px' }}>
-                            <Folder /> <span className="ms-2 pt-1">{catName}</span>
+                            <img src={Folder} alt="" width="30px" /> <span className="ms-2 pt-1 ">{catName}</span>
                         </h3>
-                        <div className="articles">
+                        <div className="articles cat-articles">
                             {articles.map((item, i) => (
                                 <Link key={i} to={`${pageUrl}/${slugify(item?.title?.toLowerCase())}`}>
                                     <div className="article-link">

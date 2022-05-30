@@ -106,10 +106,11 @@ function Article() {
                     <TopBar categoryId={query.get('cat')} />
                     <div className="help-article">
                         <div className="content">
-                            <h3 className="title mb-5">{articleContent?.title}</h3>
+                            <h3 className="title">{articleContent?.title}</h3>
+                            <hr />
                             <div
                                 id="postBody"
-                                className="postBody"
+                                className="postBody pt-3"
                                 dangerouslySetInnerHTML={{
                                     __html: `<span>${articleContent?.body || ''}</span>`,
                                 }}
