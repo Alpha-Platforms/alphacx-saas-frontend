@@ -51,10 +51,9 @@
     }
     .top {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       .btn {
-        width: 45% !important;
-        margin: 0 !important;
+        // width: 45% !important;
       }
     }
     .action_btns {

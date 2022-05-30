@@ -114,9 +114,6 @@ function Article() {
                                     __html: `<span>${articleContent?.body || ''}</span>`,
                                 }}
                             />
-                            <div className="attachments">
-                                <Accordion question="Article Attachments" />
-                            </div>
                             <div className="rating">
                                 <p>Was this article helpful?</p>
                                 <div>
@@ -128,32 +125,6 @@ function Article() {
                                     </button>
                                 </div>
                             </div>
-                            <div className="stars">
-                                <p>Rate this article</p>
-                                <StarRating numOfStars={5} />
-                            </div>
-                        </div>
-                        <div className="sidebar">
-                            <p>Content</p>
-                            {headings ? (
-                                <div className="content-nav">
-                                    {headings
-                                        .filter((x) => x.innerText)
-                                        .sort((a, b) => a.distanceToTop - b.distanceToTop)
-                                        .map((heading) => (
-                                            <p
-                                                className={`${heading.active ? 'active' : ''}`}
-                                                onClick={() => handleHeadingClick(heading)}
-                                            >
-                                                {heading.innerText}
-                                            </p>
-                                        ))}
-                                </div>
-                            ) : (
-                                <div className="single-cust-loader">
-                                    <MoonLoader loading color="#006298" size={30} />
-                                </div>
-                            )}
                         </div>
                     </div>
                 </>
