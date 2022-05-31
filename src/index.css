@@ -539,3 +539,22 @@ input[type="radio"]:after {
 .swal2-container.swal2-center > .swal2-popup {
   padding: 20px 0px 48px 0px !important;
 }
+
+.formErrorMsg {
+	/*color: #843534;
+	*/color: #a94442;
+	background-color: #f2dede;
+	border: 1px solid #ebccd1;
+	border-radius: 4px;
+	font-size: 11px;
+	padding: 6px;
+	margin: 10px 0;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-ms-border-radius: 4px;
+	-o-border-radius: 4px;
+}
+
+.formErrorMsg::first-letter {
+  text-transform: capitalize;
+}

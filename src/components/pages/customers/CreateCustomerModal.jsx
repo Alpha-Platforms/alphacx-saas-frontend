@@ -1,11 +1,19 @@
-/* eslint-disable */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable react/no-this-in-sfc */
+/* eslint-disable no-lonely-if */
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable no-shadow */
+/* eslint-disable react/prop-types */
 // @ts-nocheck
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Modal } from 'react-responsive-modal';
 import { NotificationManager } from 'react-notifications';
 import { connect } from 'react-redux';
 import RSelect from 'react-select/creatable';
 import axios from 'axios';
+import SimpleReactValidator from 'simple-react-validator';
 import {
     addCustomer,
     getPaginatedCustomers,
@@ -18,7 +26,6 @@ import { countrycodes } from '../../shared/countrycodes';
 import ImageDefault from '../../../assets/svgicons/image-default.svg';
 import { createTags } from '../../../reduxstore/actions/tagActions';
 import { config } from '../../../config/keys';
-import { Validate } from '../../../helpers/validateInput';
 
 function CreateCustomerModal({
     createModalShow,
@@ -57,6 +64,13 @@ function CreateCustomerModal({
         ownAvatar: '',
     });
     const [tagSelectLoading, setTagSelectLoading] = useState(false);
+    const [, forceUpdate] = useState();
+
+    const simpleValidator = useRef(
+        new SimpleReactValidator({
+            element: (message) => <div className="formErrorMsg">{message.replace(/(The|field)/gi, '').trim()}</div>,
+        }),
+    );
 
     const emailCustomFields = customField.customFields?.filter((item) => item?.field_type === 'email');
 
@@ -73,19 +87,6 @@ function CreateCustomerModal({
             ...prevState,
             [name]: value,
         }));
-    };
-
-    // ONBLUR VALIDATION
-    const handleBlur = (e) => {
-        if (e.target.name === 'emailaddress') {
-            Validate.email(e, modalInputs, setModalInputs);
-        } else if (e.target.name === 'password') {
-            Validate.password(e, modalInputs, setModalInputs);
-        } else if (e.target.name === 'firstname' || e.target.name === 'lastname') {
-            Validate.length(e, modalInputs, setModalInputs);
-        } else if (e.target.name === 'workphone') {
-            Validate.ngPhone(e, modalInputs, setModalInputs);
-        }
     };
 
     useEffect(() => {
@@ -109,11 +110,10 @@ function CreateCustomerModal({
     }, [createModalShow]);
 
     const handleCustomerCreation = async () => {
-        const { firstname, lastname, workphone, emailaddress, organisation, ccode } = modalInputs;
-        const isEmailRequired = emailCustomFields?.length > 0 ? false : true;
-        if (!firstname || !lastname || isEmailRequired) {
-            NotificationManager.error('Fill up the required fields', 'Error');
-        } else {
+        const { firstname, lastname, workphone, emailaddress, organisation } = modalInputs;
+        // const isEmailRequired = !(emailCustomFields?.length > 0);
+        if (simpleValidator.current.allValid()) {
+            // all input is valid
             setCreatingCust(true);
 
             if (uploadInfo.image) {
@@ -194,6 +194,11 @@ function CreateCustomerModal({
                     // NotificationManager.error('An error occured', 'Error');
                 }
             }
+        } else {
+            // show all errors if exist
+            simpleValidator.current.showMessages();
+            // force update component to display error
+            forceUpdate(1);
         }
     };
 
@@ -223,10 +228,9 @@ function CreateCustomerModal({
     };
 
     const handleCustomerEdit = () => {
-        const { firstname, lastname, workphone, emailaddress, organisation, ccode } = modalInputs;
-        if (!firstname || !lastname || !emailaddress) {
-            NotificationManager.error('Fill up the required fields', 'Error');
-        } else {
+        const { firstname, lastname, workphone, emailaddress, organisation } = modalInputs;
+
+        if (simpleValidator.current.allValid()) {
             setEditingCust(true);
 
             if (uploadInfo.image) {
@@ -265,6 +269,11 @@ function CreateCustomerModal({
                 };
                 updateCustomer(customerId, newCustomer, custEditSuccess, custEditFail);
             }
+        } else {
+            // show all errors if exist
+            simpleValidator.current.showMessages();
+            // force update component to display error
+            forceUpdate(1);
         }
     };
 
@@ -433,8 +442,15 @@ function CreateCustomerModal({
                                 className="form-control"
                                 value={modalInputs.firstname}
                                 onChange={handleModalInput}
-                                onBlur={(e) => handleBlur(e)}
                             />
+                            {
+                                /* simple validation */
+                                simpleValidator.current.message(
+                                    'First Name',
+                                    modalInputs.firstname,
+                                    'required|alpha_num_space|between:2,25',
+                                )
+                            }
                         </div>
                         <div className="col-6 mt-2">
                             <label htmlFor="lastname" className="form-label">
@@ -447,8 +463,15 @@ function CreateCustomerModal({
                                 className="form-control"
                                 value={modalInputs.lastname}
                                 onChange={handleModalInput}
-                                onBlur={(e) => handleBlur(e)}
                             />
+                            {
+                                /* simple validation */
+                                simpleValidator.current.message(
+                                    'Last Name',
+                                    modalInputs.lastname,
+                                    'required|alpha_num_space|between:2,25',
+                                )
+                            }
                         </div>
                     </div>
                     <div className="row">
@@ -496,9 +519,12 @@ function CreateCustomerModal({
                                     ariaLabel="work phone"
                                     ariaDescribedby="workphone"
                                     onChange={handleModalInput}
-                                    onBlur={(e) => handleBlur(e)}
                                 />
                             </div>
+                            {
+                                /* simple validation */
+                                simpleValidator.current.message('Work phone', modalInputs.workphone, 'phone')
+                            }
                         </div>
                         <div className="col-6 mt-3">
                             <label htmlFor="emailaddress" className="form-label">
@@ -511,8 +537,15 @@ function CreateCustomerModal({
                                 className="form-control"
                                 value={modalInputs.emailaddress}
                                 onChange={handleModalInput}
-                                onBlur={(e) => handleBlur(e)}
                             />
+                            {
+                                /* simple validation */
+                                simpleValidator.current.message(
+                                    'Email Address',
+                                    modalInputs.emailaddress,
+                                    `${!(emailCustomFields?.length > 0) ? 'required|' : ''}email`,
+                                )
+                            }
                         </div>
                     </div>
                     <p
