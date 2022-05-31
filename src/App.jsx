@@ -16,7 +16,7 @@ import ResetPassword from './components/pages/auth/resetPassword';
 import 'react-responsive-modal/styles.css';
 
 import HelpCenter from './components/pages/help_center/helpCenter';
-import Conversation from './components/pages/conersations/conversation';
+import Conversation from './components/pages/conversations/conversation';
 import store, { persistor } from './reduxstore/store';
 import { loadUser } from './reduxstore/actions/userAuthActions';
 import { getPriorities } from './reduxstore/actions/priorityActions';
