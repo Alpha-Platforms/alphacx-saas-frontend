@@ -1,14 +1,19 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disablde */
 // @ts-nocheck
-import React, { useState, Fragment } from 'react';
-import RightArrow from '../../../../../assets/imgF/arrow_right.png';
-import EmptyArticle from '../../../../../assets/images/empty_article.png';
-import './newArticle.scss';
+import React, { useState, useEffect, Fragment } from 'react';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState, convertToRaw, ContentState, convertFromHTML, Modifier } from 'draft-js';
+import { EditorState, convertToRaw, ContentState, Modifier } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
-import AddCategory from '../../../../../assets/imgF/addCategory.png';
+import { NotificationManager } from 'react-notifications';
+import { Link, useParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import MoonLoader from 'react-spinners/MoonLoader';
+import axios from 'axios';
+import RightArrow from '../../../../../assets/imgF/arrow_right.png';
 import boldB from '../../../../../assets/imgF/boldB.png';
 import insertLink from '../../../../../assets/imgF/insertLink.png';
 import Smiley from '../../../../../assets/imgF/Smiley.png';
@@ -18,15 +23,10 @@ import TextUnderline from '../../../../../assets/imgF/TextUnderline.png';
 import TextAlignLeft from '../../../../../assets/imgF/TextAlignLeft.png';
 import TextAlignCenter from '../../../../../assets/imgF/TextAlignCenter.png';
 import TextAlignRight from '../../../../../assets/imgF/TextAlignRight.png';
-import { useEffect } from 'react';
 import { httpGetMain, httpPatchMain, httpPostMain } from '../../../../../helpers/httpMethods';
-import { NotificationManager } from 'react-notifications';
-import { Link, useParams } from 'react-router-dom';
-import Swal from 'sweetalert2';
-import MoonLoader from 'react-spinners/MoonLoader';
-import axios from 'axios';
 import { allowedFiles, getAcceptValue, allowDocs, slugify } from '../../../../../helper';
 import { config } from '../../../../../config/keys';
+import './newArticle.scss';
 //
 const youtubeRegex =
     /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/g;
@@ -125,7 +125,7 @@ function NewArticle() {
     //   setCategories([...categories, value]);
     // };
 
-    function CustomOption(props) {
+    function CustomOption() {
         const addText = () => {
             const { contentBlocks, entityMap } = htmlToDraft(
                 `<a href='${flInfo.link}' target="${flInfo.newWindow ? '_blank' : '_self'}">${flInfo.title}</a>`,
@@ -259,7 +259,7 @@ function NewArticle() {
             setPostInfo((prev) => ({
                 ...prev,
                 title,
-                category: folders?.[0]?.category?.name
+                category: folders?.[0]?.category?.name,
             }));
 
             setNewPost({
@@ -320,15 +320,16 @@ function NewArticle() {
             // categoryId: newPost.categoryId,
             folderId: newPost.folderId,
         };
-        // return
-        console.clear();
 
         const res = await httpPatchMain(`articles/${articleId}`, data);
 
-        if (res?.status == 'success') {
+        if (res?.status === 'success') {
             setPolicyLoading(false);
             NotificationManager.success(res.message, 'Success', 4000);
-            setPostInfo(res?.data?.title);
+            setPostInfo((prev) => ({
+                ...prev,
+                title: res?.data?.title,
+            }));
 
             // window.location.href = `/settings/knowledge-base`;
         } else {
@@ -339,14 +340,13 @@ function NewArticle() {
 
     useEffect(() => {
         fetchCategories();
-        if (!articleId) {
-        } else {
-            fetchArticleDetails(categories);
-        }
+        articleId && fetchArticleDetails();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
         getFolders();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [newPost?.categoryId]);
 
     const embedCallbackFunc = (embeddedLink) => {
@@ -762,7 +762,9 @@ function NewArticle() {
                                     {articleId && (
                                         <a
                                             className="btn btn-sm btn-outline ms-2 py-1 f-12 px-4"
-                                            href={`/knowledge-base/${slugify(postInfo?.category)}/${slugify(postInfo?.title)}`}
+                                            href={`/knowledge-base/${slugify(postInfo?.category)}/${slugify(
+                                                postInfo?.title,
+                                            )}`}
                                             target="_blank"
                                             rel="noreferrer"
                                         >

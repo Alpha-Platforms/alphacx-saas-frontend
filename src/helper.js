@@ -106,12 +106,12 @@ export const uuid = () => {
     return uuid;
 };
 
-export const textCapitalize = (str) => {
-    return str.toLowerCase().replace(/(^|\s)\S/g, (L) => L.toUpperCase());
+export const textCapitalize = (str = '') => {
+    return str ? str.toLowerCase().replace(/(^|\s)\S/g, (L) => L.toUpperCase()) : '';
 };
 
-export const slugify = (str) => {
-    return str.toLowerCase().replace(/\W+/gi, ' ').replace(/_/gi, ' ').trim().replace(/\s+/gi, '-');
+export const slugify = (str = '') => {
+    return str ? str.toLowerCase().replace(/\W+/gi, ' ').replace(/_/gi, ' ').trim().replace(/\s+/gi, '-') : '';
 };
 
 export const shuffleArray = (array) => {
