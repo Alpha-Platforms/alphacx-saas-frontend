@@ -1,8 +1,15 @@
-/* eslint-disable */
-import React, { useState, useEffect } from 'react';
+/* eslint-disable no-shadow */
+/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-bitwise */
+/* eslint-disable react/prop-types */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+// @ts-nocheck
+import React, { useState, useEffect, useRef } from 'react';
 import { Modal } from 'react-responsive-modal';
 import { NotificationManager } from 'react-notifications';
 import MoonLoader from 'react-spinners/MoonLoader';
+import SimpleReactValidator from 'simple-react-validator';
 import { connect } from 'react-redux';
 import RSelect from 'react-select';
 import AsyncSelect from 'react-select/async';
@@ -54,6 +61,13 @@ function AddGroupModal({
         description: '',
         categoryIds: [],
     });
+    const [, forceUpdate] = useState();
+
+    const simpleValidator = useRef(
+        new SimpleReactValidator({
+            element: (message) => <div className="formErrorMsg">{message.replace(/(The|field)/gi, '').trim()}</div>,
+        }),
+    );
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -82,68 +96,73 @@ function AddGroupModal({
 
     // add new team
     const submitNewTeam = async () => {
-        const { name, categoryIds } = newTeam;
+        // const { name, categoryIds } = newTeam;
 
-        if (!name || categoryIds.length === 0) {
-            return NotificationManager.error('All fields are required', 'Opps!');
-        }
+        if (simpleValidator.current.allValid()) {
+            setCreating(true);
+            const res = await httpPostMain('groups', newTeam);
 
-        setCreating(true);
-        const res = await httpPostMain('groups', newTeam);
-
-        setCreating(false);
-        if (res.status === 'success' || res.status === 'Success') {
-            setAddGroupModalShow(false);
-            getGroups();
-            NotificationManager.success('Team created successfully', 'Success', 4000);
+            setCreating(false);
+            if (res.status === 'success' || res.status === 'Success') {
+                setAddGroupModalShow(false);
+                getGroups();
+                NotificationManager.success('Team created successfully', 'Success', 4000);
+            } else {
+                // console.error(res);
+                return NotificationManager.error(res?.er?.message, 'Error', 4000);
+            }
         } else {
-            // console.error(res);
-            return NotificationManager.error(res?.er?.message, 'Error', 4000);
+            // show all errors if exist
+            simpleValidator.current.showMessages();
+            // force update component to display error
+            forceUpdate(1);
         }
     };
 
     // update a team
     const updateTeam = () => {
-        const { name, categoryIds } = newTeam;
+        // const { name, categoryIds } = newTeam;
+        if (simpleValidator.current.allValid()) {
+            let newCategoryIds = [];
+            if (
+                newTeam.categoryIds.some((value) => {
+                    return typeof value === 'object';
+                })
+            ) {
+                newCategoryIds = newTeam.categoryIds.reduce(function (result, object) {
+                    result.push(object.value);
+                    return result;
+                }, []);
+            } else {
+                newCategoryIds = [...newTeam.categoryIds];
+            }
 
-        if (!name || categoryIds.length === 0) {
-            return NotificationManager.error('All fields are required', 'Opps!');
-        }
+            const alteredTeam = {
+                ...newTeam,
+                categoryIds: newCategoryIds,
+            };
 
-        let newCategoryIds = [];
-        if (
-            newTeam.categoryIds.some((value) => {
-                return typeof value === 'object';
-            })
-        ) {
-            newCategoryIds = newTeam.categoryIds.reduce(function (result, object) {
-                result.push(object.value);
-                return result;
-            }, []);
+            setEditing(true);
+            updateGroup(
+                groupId,
+                alteredTeam,
+                () => {
+                    NotificationManager.success('Team updated successfully', 'Success');
+                    setEditing(false);
+                    setAddGroupModalShow(false);
+                    getGroups();
+                },
+                () => {
+                    NotificationManager.error('Something', 'Opps!');
+                    setEditing(false);
+                },
+            );
         } else {
-            newCategoryIds = [...newTeam.categoryIds];
+            // show all errors if exist
+            simpleValidator.current.showMessages();
+            // force update component to display error
+            forceUpdate(1);
         }
-
-        const alteredTeam = {
-            ...newTeam,
-            categoryIds: newCategoryIds,
-        };
-
-        setEditing(true);
-        updateGroup(
-            groupId,
-            alteredTeam,
-            () => {
-                NotificationManager.success('Team updated successfully', 'Success');
-                setEditing(false);
-                setAddGroupModalShow(false);
-                getGroups();
-            },
-            () => {
-                NotificationManager.error('Something', 'Opps!');
-                setEditing(false);
-            },
-        );
     };
 
     const handleModalHide = () => {
@@ -209,6 +228,14 @@ function AddGroupModal({
                                 value={newTeam.name || ''}
                                 onChange={handleChange}
                             />
+                            {
+                                /* simple validation */
+                                simpleValidator.current.message(
+                                    'Team name',
+                                    newTeam.name,
+                                    'required|alpha_num_space|min:2',
+                                )
+                            }
                         </div>
 
                         <div className="col-12 mt-3">
@@ -252,6 +279,14 @@ function AddGroupModal({
                                 isMulti
                                 defaultOptions
                             />
+                            {
+                                /* simple validation */
+                                simpleValidator.current.message(
+                                    'Category',
+                                    newTeam.categoryIds?.length !== 0 ? 'true' : '',
+                                    'required|alpha_num_space',
+                                )
+                            }
                         </div>
 
                         <div className="d-flex justify-content-end mt-3">
@@ -278,7 +313,7 @@ function AddGroupModal({
     );
 }
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
     categories: state.category.categories,
     groups: state.group.groups,
 });

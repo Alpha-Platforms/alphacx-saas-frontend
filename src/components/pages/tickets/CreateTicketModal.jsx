@@ -1,8 +1,12 @@
-/* eslint-disable react/prop-types */
+/* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable react/no-this-in-sfc */
+/* eslint-disable no-lonely-if */
 /* eslint-disable react/react-in-jsx-scope */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-unused-vars */
-/* eslint-disablef */
+/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable no-shadow */
+/* eslint-disable react/prop-types */
 // @ts-nocheck
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
@@ -14,6 +18,7 @@ import BeatLoader from 'react-spinners/BeatLoader';
 import RSelect from 'react-select';
 import RCreatable from 'react-select/creatable';
 import AsyncSelect from 'react-select/async';
+import SimpleReactValidator from 'simple-react-validator';
 import { getSubCategory } from '../../../reduxstore/actions/categoryActions';
 import {
     getInstantSearchedCustomers,
@@ -185,6 +190,14 @@ function CreateTicketModal({
     const [RSTicketDueDate, setRSTicketDueDate] = useState('');
     const [RSTeams, setRSTeams] = useState([]);
 
+    const [, forceUpdate] = useState();
+
+    const simpleValidator = useRef(
+        new SimpleReactValidator({
+            element: (message) => <div className="formErrorMsg">{message.replace(/(The|field)/gi, '').trim()}</div>,
+        }),
+    );
+
     useEffect(() => {
         getChannels();
 
@@ -287,9 +300,7 @@ function CreateTicketModal({
             channel,
         } = modalInputs;
 
-        if (!customer || !category || !subject || !description) {
-            NotificationManager.error('All fields are required', 'Error', 5000);
-        } else {
+        if (simpleValidator.current.allValid()) {
             // initiate ticket creation
             setCreatingTicket(true);
 
@@ -368,6 +379,11 @@ function CreateTicketModal({
                     },
                 );
             }
+        } else {
+            // show all errors if exist
+            simpleValidator.current.showMessages();
+            // force update component to display error
+            forceUpdate(1);
         }
     };
 
@@ -746,6 +762,10 @@ function CreateTicketModal({
                                 }
                                 defaultOptions
                             />
+                            {
+                                /* simple validation */
+                                simpleValidator.current.message('Customer', modalInputs.customer, 'required')
+                            }
                         </div>
 
                         <div className="col-6 mt-2">
@@ -795,6 +815,10 @@ function CreateTicketModal({
                                 placeholder="Type to search"
                                 onChange={handleRSInput}
                             />
+                            {
+                                /* simple validation */
+                                simpleValidator.current.message('Category', modalInputs.category, 'required')
+                            }
                         </div>
 
                         <div className="col-6 mt-2 position-relative">
@@ -827,6 +851,10 @@ function CreateTicketModal({
                                 Subject
                             </label>
                             <input type="text" name="subject" className="form-control" onChange={handleModalInput} />
+                            {
+                                /* simple validation */
+                                simpleValidator.current.message('Subject', modalInputs.subject, 'required')
+                            }
                         </div>
                     </div>
 
@@ -841,6 +869,10 @@ function CreateTicketModal({
                             onChange={handleModalInput}
                             rows={2}
                         />
+                        {
+                            /* simple validation */
+                            simpleValidator.current.message('Description', modalInputs.description, 'required')
+                        }
                     </div>
 
                     <p
