@@ -626,11 +626,11 @@ function NewArticle() {
                                         'inline',
                                         'link',
                                         'image',
-
                                         // "list",
                                         'textAlign',
                                         // "colorPicker",
                                         'embedded',
+                                        'fontSize',
                                     ],
                                     // inline: {
                                     //   inDropdown: false,
@@ -704,6 +704,14 @@ function NewArticle() {
                                             height: '440',
                                             width: '100%',
                                         },
+                                    },
+
+                                    fontSize: {
+                                        // icon: 'T',
+                                        options: [8, 9, 10, 11, 12, 14, 16, 18, 24, 30, 36, 48, 60, 72, 96],
+                                        className: undefined,
+                                        component: undefined,
+                                        dropdownClassName: 'artblocktype-dropdown',
                                     },
 
                                     link: {
