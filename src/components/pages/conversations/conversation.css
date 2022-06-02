@@ -1274,6 +1274,7 @@ select {
 /* message content */
 .message.message-note{
   background-color: rgba(241, 233, 244, 0.5);
+  flex-direction: row !important;
 }
 .message.message-note .message-container,
 .message.message-note.message-out .message-container{
