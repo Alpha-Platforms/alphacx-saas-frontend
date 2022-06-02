@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
-import '../conersations/conversation.css';
+import '../conversations/conversation.css';
 import '../../../styles/Setting.css';
 
 // import searchIcon from "../../../assets/imgF/Search.png";

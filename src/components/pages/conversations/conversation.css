@@ -1289,17 +1289,14 @@ select {
 .message.message-out .message-container{
   padding-left: 30px;
   padding-right: 30px;
-  flex-direction: row-reverse;
-  background-color: rgba(255, 159, 67, 0.1);
+  /* flex-direction: row-reverse; */
+  background-color: rgba(242, 225, 244, 0.33);
 }
 
 .message .message-container{
   margin-left: 0rem;
 }
-/*  */
-.message.message-out .message-text .message-title{
-  text-align: right !important;
-}
+
 .message .message-text {
   max-width: 100%;
 }
@@ -1391,6 +1388,7 @@ select {
 .message-footer {
   line-height: 1.3;
   margin-top: 0.25rem;
+  margin-left: 0.5rem;
   text-align: left;
 }
 .message-footer span {
@@ -1398,7 +1396,7 @@ select {
 }
 
 .message-out .message-footer {
-  text-align: right;
+  /* text-align: right; */
 }
 .message-inner {
   max-width: 100%;
