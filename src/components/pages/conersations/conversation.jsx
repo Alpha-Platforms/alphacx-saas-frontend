@@ -566,7 +566,10 @@ function Conversation({ user }) {
         setFilterTicketsState(value);
     };
 
+    console.log('replyType => ', replyType);
+
     const replyTicket = async (reply, attachment, type = replyType) => {
+        if (!reply?.richText?.trim() || !reply?.plainText?.trim()) return;
         scollPosSendMsg();
 
         // return console.log('%cconversation.jsx line:572 singleTicketFullInfo', 'color: white; background-color: #007acc;', singleTicketFullInfo);
