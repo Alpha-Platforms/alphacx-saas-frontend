@@ -1,8 +1,8 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/react-in-jsx-scope */
-/* eslint-disabled */
 // @ts-nocheck
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { NotificationManager } from 'react-notifications';
 import CreatableSelect from 'react-select/creatable';
@@ -17,6 +17,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import { useDispatch, useSelector } from 'react-redux';
+import SimpleReactValidator from 'simple-react-validator';
 // components
 // import ContactFieldList from './ContactFieldList';
 import TicketFieldList from './TicketFieldList';
@@ -58,6 +59,8 @@ function Fields() {
     const [deleteConfirm, setDeleteConfirm] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [actionId, setActionId] = useState('');
+    const [, forceUpdate] = useState();
+
     const dispatch = useDispatch();
     const customFieldFromStore = useSelector((state) => state.customField);
     const customFieldData = customFieldFromStore?.customFields;
@@ -70,6 +73,12 @@ function Fields() {
     //         setCustomFieldData(res?.data);
     //     }
     // };
+
+    const simpleValidator = useRef(
+        new SimpleReactValidator({
+            element: (message) => <div className="formErrorMsg">{message.replace(/(The|field)/gi, '').trim()}</div>,
+        }),
+    );
 
     // sort custom fields
     const sortCustomFields = (data) => {
@@ -237,56 +246,64 @@ function Fields() {
 
     // submit/create field
     const handleSubmit = async (e) => {
-        if (customFields.fieldName == '') return NotificationManager.error('Field name cannot be empty', 'Error', 4000);
-        if (customFields.fieldType == '') return NotificationManager.error('Field type is requied', 'Error', 4000);
-        let data = {};
-        if (customFieldOptions.selected === true) {
-            data = {
-                ...customFields,
-                fieldOptions: customFieldOptions.options,
-            };
-        } else {
-            data = { ...customFields };
-        }
-        setProcessing(true);
+        if (simpleValidator.current.allValid()) {
+            let data = {};
+            if (customFieldOptions.selected === true) {
+                data = {
+                    ...customFields,
+                    fieldOptions: customFieldOptions.options,
+                };
+            } else {
+                data = { ...customFields };
+            }
+            setProcessing(true);
 
-        const res = await httpPostMain(`custom-field`, data);
-        if (res.status === 'success') {
+            const res = await httpPostMain(`custom-field`, data);
+            if (res.status === 'success') {
+                setProcessing(false);
+                setModalShow(false);
+                // setCustomFieldData((prevState) => [...prevState, res?.data]);
+                dispatch(addCustomField(res?.data));
+                // console.log(res)
+                return NotificationManager.success('Custom field created successfully', 'Success', 4000);
+            }
             setProcessing(false);
-            setModalShow(false);
-            // setCustomFieldData((prevState) => [...prevState, res?.data]);
-            dispatch(addCustomField(res?.data));
             // console.log(res)
-            return NotificationManager.success('Custom field created successfully', 'Success', 4000);
+            return NotificationManager.error(res.er.message, 'Error', 4000);
         }
-        setProcessing(false);
-        // console.log(res)
-        return NotificationManager.error(res.er.message, 'Error', 4000);
+        // show all errors if exist
+        simpleValidator.current.showMessages();
+        // force update component to display error
+        return forceUpdate(1);
     };
 
     // edit field
     const handleEdit = async () => {
-        if (customFields.fieldName == '') return NotificationManager.error('Field name cannot be empty', 'Error', 4000);
-        if (customFields.fieldType == '') return NotificationManager.error('Field type is requied', 'Error', 4000);
-        let data = {};
-        if (customFieldOptions.selected === true) {
-            data = {
-                ...customFields,
-                fieldOptions: customFieldOptions.options,
-            };
-        } else {
-            data = { ...customFields };
-        }
-        setProcessing(true);
-        const res = await httpPatchMain(`custom-field/${actionId}`, data);
-        if (res.status === 'success') {
+        if (simpleValidator.current.allValid()) {
+            let data = {};
+            if (customFieldOptions.selected === true) {
+                data = {
+                    ...customFields,
+                    fieldOptions: customFieldOptions.options,
+                };
+            } else {
+                data = { ...customFields };
+            }
+            setProcessing(true);
+            const res = await httpPatchMain(`custom-field/${actionId}`, data);
+            if (res.status === 'success') {
+                setProcessing(false);
+                setModalShow(false);
+                dispatch(getCustomFields());
+                return NotificationManager.success('Custom field updated successfully', 'Success', 4000);
+            }
             setProcessing(false);
-            setModalShow(false);
-            dispatch(getCustomFields());
-            return NotificationManager.success('Custom field updated successfully', 'Success', 4000);
+            return NotificationManager.error(res.er.message, 'Error', 4000);
         }
-        setProcessing(false);
-        return NotificationManager.error(res.er.message, 'Error', 4000);
+        // show all errors if exist
+        simpleValidator.current.showMessages();
+        // force update component to display error
+        return forceUpdate(1);
     };
     // delete field
     const handleDelete = async () => {
@@ -418,6 +435,14 @@ function Fields() {
                                         name="fieldName"
                                         id="fieldName"
                                     />
+                                    {
+                                        /* simple validation */
+                                        simpleValidator.current.message(
+                                            'Field Name',
+                                            customFields?.fieldName,
+                                            'required|alpha_num_space',
+                                        )
+                                    }
                                 </Form.Group>
 
                                 <Form.Group className="form-group acx-form-group mt-3">
@@ -469,6 +494,14 @@ function Fields() {
                                         <option value="email">Email</option>
                                         <option value="tel">Phone</option>
                                     </Form.Select>
+                                    {
+                                        /* simple validation */
+                                        simpleValidator.current.message(
+                                            'Field Type',
+                                            customFields.fieldType,
+                                            'required',
+                                        )
+                                    }
                                 </Form.Group>
                                 <div id="allOptionsContainer" className={customFieldOptions.selected ? '' : 'd-none'}>
                                     <div className="mt-3" id="fieldOptionsWrapper">

@@ -332,7 +332,7 @@ function Navbar({ pageName, user }) {
                 // days left for plan expiration
                 const daysLeft = moment(tenantSubscription?.subscription?.end_date).diff(moment(new Date()), 'days');
 
-                if (daysLeft <= 8 && daysLeft >= 0) {
+                if (daysLeft <= 8 && daysLeft > 0) {
                     setNotif((prev) => ({
                         ...prev,
                         active: true,
@@ -381,7 +381,7 @@ function Navbar({ pageName, user }) {
                     {notif.active && (
                         <div className="sub-notif">
                             <span>
-                                Your {notif.plan} is ending in {notif.trialDaysLeft} days.
+                                Your {notif.plan} is ending in {notif.trialDaysLeft} {notif.trialDaysLeft > 1 ? 'days' : 'day'}.
                             </span>{' '}
                             <Link
                                 to="/settings/account?tab=subscription"

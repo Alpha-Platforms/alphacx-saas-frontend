@@ -88,7 +88,7 @@ function ArticleList() {
                             <img src={Folder} alt="" width="30px" /> <span className="ms-2 pt-1 ">{catName}</span>
                         </h3>
                         <div className="articles cat-articles">
-                            {articles.map((item, i) => (
+                            {articles?.filter((item) => item?.isPublished)?.map((item, i) => (
                                 <Link key={i} to={`${pageUrl}/${slugify(item?.title?.toLowerCase())}`}>
                                     <div className="article-link">
                                         <p className="title">

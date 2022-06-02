@@ -65,7 +65,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
     const getPlan = async () => {
         const res = await httpGet(`subscriptions/plans/${tenantId}`);
         if (res?.status === 'success') {
-            setPlan(res?.data[0]?.name === 'Alpha Plan' ? res?.data[0] : res?.data[1]);
+            // setPlan(res?.data[0]?.name === 'Alpha Plan' || res?.data[0]?.name === 'Free Plan' ? res?.data[0] : res?.data[1]);
             setPlans(res?.data);
         } else {
             setPlan({});
@@ -75,6 +75,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
     const getSubscription = async () => {
         const res = await httpGet(`subscriptions/${tenantId}`);
         if (res?.status === 'success') {
+            setPlan(res?.data?.plan);
             setSubscription(res?.data);
 
             window.localStorage.setItem('tenantSubscription', JSON.stringify(res?.data));
