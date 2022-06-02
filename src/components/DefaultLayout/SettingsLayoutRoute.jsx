@@ -79,7 +79,7 @@ function DefaultLayoutRoute({ component: Component, routeType, fullProps, pageNa
                 ) : valid == false ? (
                     (window.location.href = '/')
                 ) : // if your role have access
-                accessControlList[userRole].includes(pageName) ? (
+                accessControlList[userRole]?.includes(pageName) ? (
                     <DefaultLayout routeType={routeType} page={rest.page} fullProps={fullProps} pageName={pageName}>
                         <Component {...matchProps} />
                     </DefaultLayout>

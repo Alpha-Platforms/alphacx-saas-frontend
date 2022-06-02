@@ -860,16 +860,22 @@ select {
   order: 1 !important;
 }
 .editorClassName.rdw-editor-main{
-  overflow: scroll !important;
+  overflow: unset !important;
 }
 .editorClassName.rdw-editor-main .rdw-suggestion-dropdown{
   min-width: 200px;
   max-height: 250px;
   bottom: 110%;
   left: 0% !important;
-  box-shadow: 0px 0px 4px rgba(0, 98, 152, 0.1);
+  /* z-index: 999999; */
+  box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   transition: 0.25s ease-in;
+  /* border: 1px solid red; */
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
 }
 .editorClassName.rdw-editor-main .rdw-suggestion-dropdown::before{
   content: "Suggested contacts";
@@ -1268,6 +1274,7 @@ select {
 /* message content */
 .message.message-note{
   background-color: rgba(241, 233, 244, 0.5);
+  flex-direction: row !important;
 }
 .message.message-note .message-container,
 .message.message-note.message-out .message-container{
