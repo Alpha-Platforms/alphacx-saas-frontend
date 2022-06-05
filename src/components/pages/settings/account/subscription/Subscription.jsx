@@ -133,7 +133,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
     }, [subscription]);
 
     const handleActivateFreePlan = async () => {
-        if (!['Alpha Trial', 'Alpha Plan'].includes(subscription?.plan?.name)) {
+        if (!['Alpha Trial', 'Alpha Plan'].includes(subscription?.plan?.name) || true) {
             // user is not in trial or alpha plan
 
             // const res = await httpPatch(`subscriptions/free-plan`, { tenantId: window.localStorage.getItem('tenantId'), planId: subscription?.plan?.id || "" });
@@ -225,8 +225,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
                                         <div className="plan-selection">
                                             <div
                                                 className={`free-plan ${
-                                                    ['Alpha Trial', 'Alpha Plan'].includes(subscription?.plan?.name)
-                                                        ? 'free-plan-disabled'
+                                                    ['Alpha Trial', 'Alpha Plan'].includes(subscription?.plan?.name) && false ? 'free-plan-disabled'
                                                         : ''
                                                 }`}
                                             >
@@ -286,7 +285,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
                                                             className="btn btn-outline-primary"
                                                             disabled={['Alpha Trial', 'Alpha Plan'].includes(
                                                                 subscription?.plan?.name,
-                                                            )}
+                                                            ) && false}
                                                             onClick={() => handleActivateFreePlan()}
                                                         >
                                                             Activate
