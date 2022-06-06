@@ -23,7 +23,6 @@ import { getAdmins } from '../../../../../reduxstore/actions/adminActions';
 import { getSupervisors } from '../../../../../reduxstore/actions/supervisorActions';
 
 function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, supervisors, isUserAuthenticated }) {
-    const [plan, setPlan] = useState(null);
     const [tenantId] = useState(window.localStorage.getItem('tenantId'));
     const [domain] = useState(window.localStorage.getItem('domain'));
     const [tenantInfo, setTenantInfo] = useState(null);
@@ -72,17 +71,15 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
     const getPlan = async () => {
         const res = await httpGet(`subscriptions/plans/${tenantId}`);
         if (res?.status === 'success') {
-            // setPlan(res?.data[0]?.name === 'Alpha Plan' || res?.data[0]?.name === 'Free Plan' ? res?.data[0] : res?.data[1]);
             setPlans(res?.data);
         } else {
-            setPlan({});
+            setPlans({});
         }
     };
 
     const getSubscription = async () => {
         const res = await httpGet(`subscriptions/${tenantId}`);
         if (res?.status === 'success') {
-            setPlan(res?.data?.plan);
             setSubscription(res?.data);
 
             window.localStorage.setItem('tenantSubscription', JSON.stringify(res?.data));
@@ -118,14 +115,14 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
     }, []);
 
     useEffect(() => {
-        if (plan && Object.keys(plan || {}).length !== 0) {
+        if (subscription?.plan && Object.keys(subscription?.plan || {}).length !== 0) {
             setPlanState((prev) => ({
                 ...prev,
-                selectedPlan: { label: plan?.name, value: plan?.name },
+                selectedPlan: { label: subscription?.plan?.name, value: subscription?.plan?.name },
             }));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [plan]);
+    }, [subscription?.plan]);
 
     useEffect(() => {
         if (subscription) {
@@ -139,6 +136,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
         }
     }, [subscription]);
 
+    // eslint-disable-next-line consistent-return
     const handleActivateFreePlan = async () => {
         if (!['Alpha Trial', 'Alpha Plan'].includes(subscription?.plan?.name) || true) {
             // user is not in trial or alpha plan
@@ -164,24 +162,19 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
                     <MoonLoader loading color="#006298" size={30} />
                 </div>
             )}
-            {plan && tenantInfo ? (
+            {subscription?.plan && tenantInfo ? (
                 <div>
                     <div className="d-flex justify-content-between col-md-8 mb-4">
                         <h3 className="fs-6 text-black">Subscription Details</h3>
                     </div>
 
                     <div>
-                        <SubTop
-                            plan={plan}
-                            tenantInfo={tenantInfo}
-                            subscription={subscription}
-                            totalUsers={totalUsers}
-                        />
+                        <SubTop tenantInfo={tenantInfo} subscription={subscription} totalUsers={totalUsers} />
                     </div>
 
                     {true ? (
                         <>
-                            {Object.keys(plan).length !== 0 && (
+                            {Object.keys(subscription?.plan).length !== 0 && (
                                 <>
                                     {planState.selectingPlan ? (
                                         <div>
@@ -203,7 +196,6 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
                                             <div className="payment-sect-2">
                                                 <div>
                                                     <CurrentPlan
-                                                        plan={plan}
                                                         planState={planState}
                                                         tenantInfo={tenantInfo}
                                                         setPlanState={setPlanState}
@@ -218,7 +210,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
                                                                 planState={planState}
                                                                 setPlanState={setPlanState}
                                                                 tenantInfo={tenantInfo}
-                                                                plan={plan}
+                                                                subscription={subscription}
                                                             />
                                                         </div>
                                                     )}
@@ -350,7 +342,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
     );
 }
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
     isUsersLoaded: state.user.isUsersLoaded,
     agents: state.agent.agents,
     admins: state.admin.admins,
