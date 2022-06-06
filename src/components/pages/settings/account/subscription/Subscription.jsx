@@ -1,6 +1,12 @@
-/* eslint-disable */
+/* eslint-disable no-shadow */
+/* eslint-disable react/prop-types */
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable react/jsx-no-useless-fragment */
 // @ts-nocheck
 import { Fragment, useState, useEffect } from 'react';
+import { NotificationManager } from 'react-notifications';
+import { connect } from 'react-redux';
+import MoonLoader from 'react-spinners/MoonLoader';
 import SubTop, { getRealCurrency } from './components/SubTop';
 import CurrentPlan from './components/CurrentPlan';
 import Summary from './components/Summary';
@@ -9,12 +15,9 @@ import './Subscription.scss';
 import PaymentHistory from './components/PaymentHistory';
 import PaymentForm from './components/PaymentForm';
 import { httpGet, httpPatch } from '../../../../../helpers/httpMethods';
-import MoonLoader from 'react-spinners/MoonLoader';
 import { ReactComponent as TickIcon } from '../../../../../assets/icons/tick.svg';
 
 import { separateNum } from '../../../../../helper';
-import { NotificationManager } from 'react-notifications';
-import { connect } from 'react-redux';
 import { getAgents } from '../../../../../reduxstore/actions/agentActions';
 import { getAdmins } from '../../../../../reduxstore/actions/adminActions';
 import { getSupervisors } from '../../../../../reduxstore/actions/supervisorActions';
@@ -29,6 +32,21 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
     const [plans, setPlans] = useState(null);
     const [totalUsers, setTotalUsers] = useState(null);
 
+    const [planState, setPlanState] = useState({
+        numOfAgents: 0,
+        billingCycle: { label: 'Billing Monthly', value: 'monthly_amount' },
+        selectedPlan: { label: '', value: '' },
+        isUpdatingPlan: false,
+        flutterwaveConfig: null,
+        stripeConfig: null,
+        loading: false,
+        amount: null,
+        selectingPlan: false,
+        isVerifying: false,
+    });
+
+    console.log('%cSubscription.jsx line:32 plans', 'color: white; background-color: #007acc;', plans);
+
     useEffect(() => {
         if (isUserAuthenticated) {
             // get the first set of users
@@ -42,25 +60,14 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
 
     useEffect(() => {
         const realAdmins = Array.isArray(admins) ? admins.filter((item) => item?.isActivated === true) : [];
-        const realSupervisors = Array.isArray(supervisors) ? supervisors.filter((item) => item?.isActivated === true) : [];
+        const realSupervisors = Array.isArray(supervisors)
+            ? supervisors.filter((item) => item?.isActivated === true)
+            : [];
         const realAgents = Array.isArray(agents) ? agents.filter((item) => item?.isActivated === true) : [];
         const allUsers = [...realAdmins, ...realSupervisors, ...realAgents];
         setTotalUsers(allUsers);
-        setPlanState((prev) => ({ ...prev, numOfAgents: allUsers.length }))
+        setPlanState((prev) => ({ ...prev, numOfAgents: allUsers.length }));
     }, [admins, supervisors, agents]);
-
-    const [planState, setPlanState] = useState({
-        numOfAgents: 0,
-        billingCycle: { label: 'Billing Monthly', value: 'monthly_amount' },
-        selectedPlan: { label: '', value: '' },
-        isUpdatingPlan: false,
-        flutterwaveConfig: null,
-        stripeConfig: null,
-        loading: false,
-        amount: null,
-        selectingPlan: false,
-        isVerifying: false,
-    });
 
     const getPlan = async () => {
         const res = await httpGet(`subscriptions/plans/${tenantId}`);
@@ -182,6 +189,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
                                                 <small>
                                                     Plan selected: Alpha Plan &nbsp;{' '}
                                                     <button
+                                                        type="button"
                                                         className="btn"
                                                         onClick={() =>
                                                             setPlanState((prev) => ({ ...prev, selectingPlan: false }))
@@ -223,142 +231,102 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
                                         </div>
                                     ) : (
                                         <div className="plan-selection">
-                                            <div
-                                                className={`free-plan ${
-                                                    ['Alpha Trial', 'Alpha Plan'].includes(subscription?.plan?.name) && false ? 'free-plan-disabled'
-                                                        : ''
-                                                }`}
-                                            >
-                                                <div>
-                                                    <p>Free Plan</p>
-                                                    <h3>Free</h3>
-                                                </div>
-                                                <div>
-                                                    <ul>
-                                                        <li>
-                                                            <span>
-                                                                <TickIcon />
-                                                            </span>{' '}
-                                                            <span>Conversational Inbox</span>
-                                                        </li>
-                                                        <li>
-                                                            <span>
-                                                                <TickIcon />
-                                                            </span>{' '}
-                                                            <span>Embeddable Livechat Widget</span>
-                                                        </li>
-                                                        <li>
-                                                            <span>
-                                                                <TickIcon />
-                                                            </span>{' '}
-                                                            <span>
-                                                                <del>Facebook Integration</del>
-                                                            </span>
-                                                        </li>
-                                                        <li>
-                                                            <span>
-                                                                <TickIcon />
-                                                            </span>{' '}
-                                                            <span>
-                                                                <del>Whatsapp Integration</del>
-                                                            </span>
-                                                        </li>
-                                                        <li>
-                                                            <span>
-                                                                <TickIcon />
-                                                            </span>{' '}
-                                                            <span>
-                                                                <del>Automation & Escalation</del>
-                                                            </span>
-                                                        </li>
-                                                        <li>
-                                                            <span>
-                                                                <TickIcon />
-                                                            </span>{' '}
-                                                            <span>
-                                                                <del>Knowledge Base System</del>
-                                                            </span>
-                                                        </li>
-                                                    </ul>
+                                            {plans?.map((item) => (
+                                                <div
+                                                    className={`${
+                                                        item?.name === 'Free Plan' ? 'free-plan' : 'alpha-plan'
+                                                    } ${
+                                                        ['Alpha Trial', 'Alpha Plan'].includes(
+                                                            subscription?.plan?.name,
+                                                        ) && false
+                                                            ? 'free-plan-disabled'
+                                                            : ''
+                                                    }`}
+                                                >
                                                     <div>
-                                                        <button
-                                                            className="btn btn-outline-primary"
-                                                            disabled={['Alpha Trial', 'Alpha Plan'].includes(
-                                                                subscription?.plan?.name,
-                                                            ) && false}
-                                                            onClick={() => handleActivateFreePlan()}
-                                                        >
-                                                            Activate
-                                                        </button>
+                                                        <p>{item?.name}</p>
+                                                        {item?.name === 'Free Plan' ? (
+                                                            <h3>Free</h3>
+                                                        ) : (
+                                                            <h3>
+                                                                {getRealCurrency(item?.currency) === 'NGN' ? '₦' : '$'}
+                                                                {separateNum(item?.monthly_amount)}{' '}
+                                                                <small>per user / Month</small>
+                                                            </h3>
+                                                        )}
+                                                    </div>
+                                                    <div>
+                                                        <ul className="features-list">
+                                                            <li>
+                                                                <span>
+                                                                    <TickIcon />
+                                                                </span>{' '}
+                                                                <span>Conversational Inbox</span>
+                                                            </li>
+                                                            <li>
+                                                                <span>
+                                                                    <TickIcon />
+                                                                </span>{' '}
+                                                                <span>Embeddable Livechat Widget</span>
+                                                            </li>
+                                                            <li>
+                                                                <span>
+                                                                    <TickIcon />
+                                                                </span>{' '}
+                                                                <span>Facebook Integration</span>
+                                                            </li>
+                                                            <li>
+                                                                <span>
+                                                                    <TickIcon />
+                                                                </span>{' '}
+                                                                <span>Whatsapp Integration</span>
+                                                            </li>
+                                                            <li>
+                                                                <span>
+                                                                    <TickIcon />
+                                                                </span>{' '}
+                                                                <span>Automation & Escalation</span>
+                                                            </li>
+                                                            <li>
+                                                                <span>
+                                                                    <TickIcon />
+                                                                </span>{' '}
+                                                                <span>Knowledge Base System</span>
+                                                            </li>
+                                                        </ul>
+                                                        <div>
+                                                            {item?.name === 'Free Plan' ? (
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-outline-primary"
+                                                                    disabled={
+                                                                        ['Alpha Trial', 'Alpha Plan'].includes(
+                                                                            subscription?.plan?.name,
+                                                                        ) && false
+                                                                    }
+                                                                    onClick={() => handleActivateFreePlan()}
+                                                                >
+                                                                    Activate
+                                                                </button>
+                                                            ) : (
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn bg-at-blue-light"
+                                                                    style={{ color: 'white' }}
+                                                                    onClick={() =>
+                                                                        setPlanState((prev) => ({
+                                                                            ...prev,
+                                                                            selectingPlan: true,
+                                                                        }))
+                                                                    }
+                                                                >
+                                                                    Select Plan
+                                                                </button>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-
-                                            <div className="alpha-plan">
-                                                <div>
-                                                    <p>Alpha Plan</p>
-                                                    <h3>
-                                                        {getRealCurrency(tenantInfo?.currency || '') === 'NGN'
-                                                            ? '₦'
-                                                            : '$'}
-                                                        {separateNum(plan[planState?.billingCycle?.value])}{' '}
-                                                        <small>per user / Month</small>
-                                                    </h3>
-                                                </div>
-                                                <div>
-                                                    <ul>
-                                                        <li>
-                                                            <span>
-                                                                <TickIcon />
-                                                            </span>{' '}
-                                                            <span>Conversational Inbox</span>
-                                                        </li>
-                                                        <li>
-                                                            <span>
-                                                                <TickIcon />
-                                                            </span>{' '}
-                                                            <span>Embeddable Livechat Widget</span>
-                                                        </li>
-                                                        <li>
-                                                            <span>
-                                                                <TickIcon />
-                                                            </span>{' '}
-                                                            <span>Facebook Integration</span>
-                                                        </li>
-                                                        <li>
-                                                            <span>
-                                                                <TickIcon />
-                                                            </span>{' '}
-                                                            <span>Whatsapp Integration</span>
-                                                        </li>
-                                                        <li>
-                                                            <span>
-                                                                <TickIcon />
-                                                            </span>{' '}
-                                                            <span>Automation & Escalation</span>
-                                                        </li>
-                                                        <li>
-                                                            <span>
-                                                                <TickIcon />
-                                                            </span>{' '}
-                                                            <span>Knowledge Base System</span>
-                                                        </li>
-                                                    </ul>
-                                                    <div>
-                                                        <button
-                                                            className="btn bg-at-blue-light"
-                                                            onClick={() =>
-                                                                setPlanState((prev) => ({
-                                                                    ...prev,
-                                                                    selectingPlan: true,
-                                                                }))
-                                                            }
-                                                        >
-                                                            Select Plan
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            ))}
                                         </div>
                                     )}
                                     {paymentHistory && (
