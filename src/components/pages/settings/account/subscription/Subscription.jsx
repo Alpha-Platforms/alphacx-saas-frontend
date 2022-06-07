@@ -45,10 +45,6 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
         isVerifying: false,
     });
 
-    console.log('%cSubscription.jsx line:32 plans', 'color: white; background-color: #007acc;', plans);
-
-    console.log('%cSubscription.jsx line:49 planState', 'color: white; background-color: #26bfa5;', planState);
-
     useEffect(() => {
         if (isUserAuthenticated) {
             // get the first set of users
