@@ -7,6 +7,7 @@ import { Fragment, useState, useEffect } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { connect } from 'react-redux';
 import MoonLoader from 'react-spinners/MoonLoader';
+import moment from 'moment';
 import SubTop, { getRealCurrency } from './components/SubTop';
 import CurrentPlan from './components/CurrentPlan';
 import Summary from './components/Summary';
@@ -34,7 +35,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
     const [planState, setPlanState] = useState({
         numOfAgents: 0,
         billingCycle: { label: 'Billing Monthly', value: 'monthly_amount' },
-        selectedPlan: { label: '', value: '' },
+        selectedPlan: { name: '', id: '' },
         isUpdatingPlan: false,
         flutterwaveConfig: null,
         stripeConfig: null,
@@ -45,6 +46,8 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
     });
 
     console.log('%cSubscription.jsx line:32 plans', 'color: white; background-color: #007acc;', plans);
+
+    console.log('%cSubscription.jsx line:49 planState', 'color: white; background-color: #26bfa5;', planState);
 
     useEffect(() => {
         if (isUserAuthenticated) {
@@ -115,16 +118,6 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
     }, []);
 
     useEffect(() => {
-        if (subscription?.plan && Object.keys(subscription?.plan || {}).length !== 0) {
-            setPlanState((prev) => ({
-                ...prev,
-                selectedPlan: { label: subscription?.plan?.name, value: subscription?.plan?.name },
-            }));
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [subscription?.plan]);
-
-    useEffect(() => {
         if (subscription) {
             setPlanState((prev) => ({
                 ...prev,
@@ -136,9 +129,11 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
         }
     }, [subscription]);
 
+    const subExpired = moment(subscription?.subscription?.end_date).isBefore(new Date());
+
     // eslint-disable-next-line consistent-return
     const handleActivateFreePlan = async () => {
-        if (!['Alpha Trial', 'Alpha Plan'].includes(subscription?.plan?.name) || true) {
+        if (!(subExpired && subscription?.plan?.name !== 'Free Plan')) {
             // user is not in trial or alpha plan
 
             // const res = await httpPatch(`subscriptions/free-plan`, { tenantId: window.localStorage.getItem('tenantId'), planId: subscription?.plan?.id || "" });
@@ -228,9 +223,8 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
                                                     className={`${
                                                         item?.name === 'Free Plan' ? 'free-plan' : 'alpha-plan'
                                                     } ${
-                                                        ['Alpha Trial', 'Alpha Plan'].includes(
-                                                            subscription?.plan?.name,
-                                                        ) && false
+                                                        !(subExpired && subscription?.plan?.name !== 'Free Plan') &&
+                                                        item?.name === 'Free Plan'
                                                             ? 'free-plan-disabled'
                                                             : ''
                                                     }`}
@@ -292,9 +286,10 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
                                                                     type="button"
                                                                     className="btn btn-outline-primary"
                                                                     disabled={
-                                                                        ['Alpha Trial', 'Alpha Plan'].includes(
-                                                                            subscription?.plan?.name,
-                                                                        ) && false
+                                                                        !(
+                                                                            subExpired &&
+                                                                            subscription?.plan?.name !== 'Free Plan'
+                                                                        ) && item?.name === 'Free Plan'
                                                                     }
                                                                     onClick={() => handleActivateFreePlan()}
                                                                 >
@@ -309,6 +304,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
                                                                         setPlanState((prev) => ({
                                                                             ...prev,
                                                                             selectingPlan: true,
+                                                                            selectedPlan: item,
                                                                         }))
                                                                     }
                                                                 >

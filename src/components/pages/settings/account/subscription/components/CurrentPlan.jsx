@@ -4,7 +4,8 @@
 // @ts-nocheck
 import Select from 'react-select';
 import { useState, useEffect } from 'react';
-import moment from 'moment';
+import FormCheck from 'react-bootstrap/FormCheck';
+// import moment from 'moment';
 import { getRealCurrency } from './SubTop';
 import { httpPost } from '../../../../../../helpers/httpMethods';
 import { separateNum } from '../../../../../../helper';
@@ -13,15 +14,17 @@ import acxLogo from '../../../../../../assets/images/whitebg.jpg';
 
 function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalUsers }) {
     const [initiating, setInitiating] = useState(false);
+    const [actionType, setActionType] = useState('renew-plan');
 
     const handleInitiatePayment = async () => {
         setInitiating(true);
 
+        // moment(subscription?.subscription?.end_date).isAfter(new Date())
+
         const paymentInitEndpoint =
-            false &&
             ['monthly', 'yearly'].includes(subscription?.subscription?.interval) &&
-            subscription?.plan?.name?.toLowerCase() === 'alpha plan' &&
-            moment(subscription?.subscription?.end_date).isAfter(new Date())
+            subscription?.plan?.name?.toLowerCase() !== 'free plan' &&
+            subscription?.plan?.name?.toLowerCase() !== 'alpha trial'
                 ? `subscriptions/payment/initialize-subscription-update`
                 : `subscriptions/initialize-payment`;
 
@@ -35,7 +38,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                 : {
                       tenantId: window.localStorage.getItem('tenantId'),
                       subscriptionCategory: planState.billingCycle?.value === 'yearly_amount' ? 'yearly' : 'monthly',
-                      subscriptionTypeId: subscription?.plan?.id,
+                      subscriptionTypeId: planState?.selectedPlan?.id,
                       numOfUsers: planState?.numOfAgents,
                   };
 
@@ -118,8 +121,41 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
         setPlanState((prev) => ({ ...prev, numOfAgents: e.target.value }));
     };
 
+    const handleActionType = (e) => {
+        setActionType(e.target.id);
+    };
+
     return (
         <div className="currentplan-box">
+            <div className="mb-3">
+                <FormCheck
+                    onChange={handleActionType}
+                    inline
+                    label="Renew Plan"
+                    name="actiontype"
+                    type="radio"
+                    id="renew-plan"
+                    checked={actionType === 'renew-plan'}
+                />
+                <FormCheck
+                    onChange={handleActionType}
+                    inline
+                    label="Add Addiitonal Users"
+                    name="actiontype"
+                    type="radio"
+                    id="add-user"
+                    checked={actionType === 'add-user'}
+                />
+                <FormCheck
+                    onChange={handleActionType}
+                    inline
+                    label="Update Plan"
+                    name="actiontype"
+                    type="radio"
+                    id="update-plan"
+                    checked={actionType === 'update-plan'}
+                />
+            </div>
             <p className="mb-1">
                 <small>
                     <b>ⓘ</b> You can only pay for your number of active users ({totalUsers.length}) and above.
@@ -150,7 +186,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                                 id="numOfAgents"
                                 min={totalUsers.length}
                                 onChange={handleNumChange}
-                                disabled={planState.isUpdatingPlan}
+                                disabled={planState.isUpdatingPlan || actionType === 'renew-plan'}
                             />
                         </div>
                     </div>
@@ -166,6 +202,8 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                             className="billing-time-select"
                             value={planState.billingCycle}
                             isDisabled={
+                                actionType === 'renew-plan' ||
+                                actionType === 'add-user' ||
                                 initiating ||
                                 planState.isUpdatingPlan ||
                                 (subscription?.subscription?.interval === 'monthly' &&
@@ -190,14 +228,14 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
             </div>
 
             <p>
-                {separateNum(subscription?.plan?.monthly_amount)} {getRealCurrency(subscription?.plan?.currency || '')}{' '}
-                per agent / month
+                {separateNum(planState?.selectedPlan?.monthly_amount)}{' '}
+                {getRealCurrency(planState?.selectedPlan?.currency || '')} per agent / month
             </p>
 
             <div className="agent-count-select">
                 <div>
                     <span>{`${separateNum(
-                        planState.numOfAgents * (subscription?.plan?.[planState?.billingCycle?.value] || 0),
+                        planState.numOfAgents * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
                     )} ${getRealCurrency(tenantInfo?.currency || '')} / ${
                         planState?.billingCycle?.value === 'monthly_amount' ? 'month' : 'year'
                     }`}</span>
@@ -206,7 +244,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
 
             <div className="updateplan-btn-wrapper">
                 <button onClick={handleUpdatePlanBtn} type="button" disabled={initiating || planState.isUpdatingPlan}>
-                    {Object.keys(subscription?.plan || {}).length === 0 ? 'Select Plan' : 'Update Plan'}
+                    {Object.keys(planState?.selectedPlan || {}).length === 0 ? 'Select Plan' : 'Update Plan'}
                 </button>
 
                 {planState.isUpdatingPlan && (

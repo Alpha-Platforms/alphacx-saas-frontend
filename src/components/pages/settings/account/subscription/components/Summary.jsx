@@ -125,7 +125,7 @@ function Summary({ planState, setPlanState, subscription, tenantInfo }) {
                             : planState.numOfAgents * plan[planState?.billingCycle?.value],
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span> */}
                     <span>{`${separateNum(
-                        planState.numOfAgents * (subscription?.plan?.[planState?.billingCycle?.value] || 0),
+                        planState.numOfAgents * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
                 </div>
             </div>
@@ -139,9 +139,10 @@ function Summary({ planState, setPlanState, subscription, tenantInfo }) {
                         planState?.amount
                             ? Number(planState?.amount)
                                 ? Number(planState?.amount) -
-                                  planState.numOfAgents * (subscription?.plan?.[planState?.billingCycle?.value] || 0)
+                                  planState.numOfAgents *
+                                      (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0)
                                 : planState?.amount
-                            : planState.numOfAgents * (subscription?.plan?.[planState?.billingCycle?.value] || 0),
+                            : planState.numOfAgents * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
                 </div>
             </div>
@@ -156,7 +157,7 @@ function Summary({ planState, setPlanState, subscription, tenantInfo }) {
                     <span>{`${separateNum(
                         planState?.amount
                             ? planState?.amount
-                            : planState.numOfAgents * (subscription?.plan[planState?.billingCycle?.value] || 0),
+                            : planState.numOfAgents * (planState?.selectedPlan[planState?.billingCycle?.value] || 0),
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
                 </div>
             </div>
@@ -199,7 +200,7 @@ function Summary({ planState, setPlanState, subscription, tenantInfo }) {
                     <span>{`${separateNum(
                         planState?.amount
                             ? planState?.amount
-                            : planState.numOfAgents * (subscription?.plan?.[planState?.billingCycle?.value] || 0),
+                            : planState.numOfAgents * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
                 </div>
             </div>
