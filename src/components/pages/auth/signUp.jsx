@@ -54,8 +54,11 @@ function Registration() {
         password: '',
         companyName: '',
         domain: '',
-        country: 'Nigeria',
+        country: 'United States',
+        // country: 'Nigeria',
     });
+
+    const [acceptTerms, setAcceptTerms] = useState(false)
 
     
     //
@@ -105,15 +108,20 @@ function Registration() {
 
     //
     const handleChange = (e) => {
-        setUserInput((prev) => ({
-            ...prev,
-            [e.target.name]: e.target.value,
-        }));
+        if (e.target.name === 'acceptTerms') {
+            setAcceptTerms(e.target.checked)
+        } else {
+            setUserInput((prev) => ({
+                ...prev,
+                [e.target.name]: e.target.value,
+            }));
 
-        if (e.target.name === 'email') {
-            localStorage.setItem('tenantEmail', e.target.value);
+            if (e.target.name === 'email') {
+                localStorage.setItem('tenantEmail', e.target.value);
+            }
         }
     };
+
     //
     const handleRSChange = ({ value }, { name }) => {
         setUserInput({
@@ -134,7 +142,8 @@ function Registration() {
             Validate.noSpecialChars(e, userInput, setUserInput);
         }
     };
-    //
+
+    // registration function
     const handleSubmit = async (event) => {
         setLoading(true);
         event.preventDefault();
@@ -349,17 +358,27 @@ function Registration() {
                                                     value={defaultCountry}
                                                 />
                                             </Form.Group>
-                                            <div className="mb-2 submit-auth-btn">
-                                                <p className="mt-4">
+
+                                            <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                                                <Form.Check type="checkbox" name="acceptTerms" label="" className='d-inline-block' 
+                                                        onChange={(e) => handleChange(e)} />
                                                     By creating an account, you agree to our{' '}
                                                     <a href="https://alphacx.co/privacy-policy/">Terms of Service</a>{' '}
                                                     and have read and understood the{' '}
                                                     <a href="https://alphacx.co/privacy-policy/">Privacy Policy</a>.
-                                                </p>
+                                            </Form.Group>
+
+                                            <div className="mb-2 submit-auth-btn">
+                                                {/* <p className="mt-4">
+                                                    By creating an account, you agree to our{' '}
+                                                    <a href="https://alphacx.co/privacy-policy/">Terms of Service</a>{' '}
+                                                    and have read and understood the{' '}
+                                                    <a href="https://alphacx.co/privacy-policy/">Privacy Policy</a>.
+                                                </p> */}
                                                 <Button
                                                     type="submit"
                                                     onClick={handleSubmit}
-                                                    disabled={loading || domainChecking}
+                                                    disabled={loading || domainChecking || !acceptTerms}
                                                     className="w-100 mt-0"
                                                 >
                                                     {loading ? (
