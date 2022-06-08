@@ -17,7 +17,7 @@ export const getRealCurrency = (currency) => {
             return '';
     }
 };
-function SubTop({ plan, tenantInfo, subscription, totalUsers }) {
+function SubTop({ tenantInfo, subscription, totalUsers }) {
     return (
         <div className="subtop">
             <div>
