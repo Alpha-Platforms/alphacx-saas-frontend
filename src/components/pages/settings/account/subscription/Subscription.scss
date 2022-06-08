@@ -487,6 +487,12 @@
             }
         }
     }
+
+    .features-list {
+        & > li:not(:first-child):not(:nth-child(2)) {
+            text-decoration: line-through;
+        }
+    }
 }
 
 .alpha-plan {
