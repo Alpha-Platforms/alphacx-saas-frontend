@@ -1,27 +1,23 @@
-/* eslint-disable */
-import React, { useEffect, useState } from 'react';
+// @ts-nocheck
+/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-// react-bootstrap component
 import RSelect from 'react-select';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Carousel from 'react-bootstrap/Carousel';
 import Image from 'react-bootstrap/Image';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import InputGroup from 'react-bootstrap/InputGroup';
-//
+import SimpleReactValidator from 'simple-react-validator';
 import { NotificationManager } from 'react-notifications';
-// resource
 import { httpPost } from '../../../helpers/httpMethods';
 import { Validate } from '../../../helpers/validateInput';
 import { countries } from '../../shared/countries';
 import './login.css';
-// assets
-import Logo from '../../../assets/imgF/logo.png';
-import AlphaLogo from '../../../assets/imgF/alpha.png';
 import Symbol1 from '../../../assets/imgF/symbolAuth.png';
 import ThankYou from '../../../assets/imgF/thank-you.png';
 import LogoColoured from '../../../assets/svgicons/LogoColoured.svg';
@@ -31,22 +27,7 @@ import TicketsImg from '../../../assets/images/tickets.png';
 import ConversationsImg from '../../../assets/images/conversations.png';
 
 function Registration() {
-
-    const {search} = useLocation()
-
-    useEffect(() => {
-        const qparams = new URLSearchParams(search) // update to useSearchParams() when RR is upgraded to v6
-
-        const email = qparams.get('email')
-        const firstName = qparams.get('firstName')
-        const lastName = qparams.get('lastName')
-
-        if(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email)){ // if email isn't valid just ignore everything
-            setUserInput((prev) => ({...prev, email, firstName, lastName}))
-        }
-    }, [])
-
-    //
+    const { search } = useLocation();
     const [userInput, setUserInput] = useState({
         firstName: '',
         lastName: '',
@@ -58,9 +39,8 @@ function Registration() {
         // country: 'Nigeria',
     });
 
-    const [acceptTerms, setAcceptTerms] = useState(false)
+    const [acceptTerms, setAcceptTerms] = useState(false);
 
-    
     //
     const [passwordShown, setPasswordShown] = useState(false);
     const [validated, setValidated] = useState(false);
@@ -70,6 +50,38 @@ function Registration() {
     const [lockDomain, setLockDomain] = useState(false);
     const [defaultCountry, setDefaultCountry] = useState({});
     const [RSCountries, setRSCountries] = useState([]);
+    const [, forceUpdate] = useState();
+
+    const simpleValidator = useRef(
+        new SimpleReactValidator({
+            element: (message) => <div className="formErrorMsg">{message.replace(/(The|field)/gi, '').trim()}</div>,
+            // validators: {
+            //     available_domain: {
+            //         message: 'The This domain has been taken. Please choose another',
+            //         rule: (val, params, validator) => {
+            //             console.log('val => ', val);
+            //             console.log('params => ', params);
+            //             console.log('validator => ', validator);
+            //             return false;
+            //         },
+            //         required: true,
+            //     },
+            // },
+        }),
+    );
+
+    useEffect(() => {
+        const qparams = new URLSearchParams(search); // update to useSearchParams() when RR is upgraded to v6
+
+        const email = qparams.get('email');
+        const firstName = qparams.get('firstName');
+        const lastName = qparams.get('lastName');
+
+        if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email)) {
+            // if email isn't valid just ignore everything
+            setUserInput((prev) => ({ ...prev, email, firstName, lastName }));
+        }
+    }, []);
 
     useEffect(() => {
         setRSCountries(() =>
@@ -98,7 +110,11 @@ function Registration() {
                     ...userInput,
                     [e.target.name]: '',
                 });
-                NotificationManager.error('This domain has been taken. Please choose another', 'Domain not available', 4000);
+                NotificationManager.error(
+                    'This domain has been taken. Please choose another',
+                    'Domain not available',
+                    4000,
+                );
             } else {
                 setDomainChecking(false);
                 setLockDomain(true);
@@ -109,7 +125,7 @@ function Registration() {
     //
     const handleChange = (e) => {
         if (e.target.name === 'acceptTerms') {
-            setAcceptTerms(e.target.checked)
+            setAcceptTerms(e.target.checked);
         } else {
             setUserInput((prev) => ({
                 ...prev,
@@ -121,7 +137,6 @@ function Registration() {
             }
         }
     };
-
     //
     const handleRSChange = ({ value }, { name }) => {
         setUserInput({
@@ -131,55 +146,62 @@ function Registration() {
     };
 
     // ONBLUR VALIDATION
-    const handleBlur = (e) => {
-        if (e.target.name === 'email') {
-            Validate.email(e, userInput, setUserInput);
-        } else if (e.target.name === 'password') {
-            Validate.password(e, userInput, setUserInput);
-        } else if (e.target.name === 'firstName' || e.target.name === 'lastName' || e.target.name === 'companyName') {
-            Validate.length(e, userInput, setUserInput);
-        } else if (e.target.name === 'domain') {
-            Validate.noSpecialChars(e, userInput, setUserInput);
-        }
-    };
-
-    // registration function
+    // const handleBlur = (e) => {
+    //     if (e.target.name === 'email') {
+    //         Validate.email(e, userInput, setUserInput);
+    //     } else if (e.target.name === 'password') {
+    //         Validate.password(e, userInput, setUserInput);
+    //     } else if (e.target.name === 'firstName' || e.target.name === 'lastName' || e.target.name === 'companyName') {
+    //         Validate.length(e, userInput, setUserInput);
+    //     } else if (e.target.name === 'domain') {
+    //         Validate.noSpecialChars(e, userInput, setUserInput);
+    //     }
+    // };
+    //
     const handleSubmit = async (event) => {
-        setLoading(true);
-        event.preventDefault();
-        event.stopPropagation();
-        setValidated(true);
-        const data = {
-            domain: userInput.domain.toLowerCase(),
-            firstname: userInput.firstName,
-            lastname: userInput.lastName,
-            companyName: userInput.companyName,
-            email: userInput.email.toLowerCase(),
-            password: userInput.password,
-            country: userInput.country,
-            currency: userInput.country.toLowerCase() === 'nigeria' ? 'NGN' : 'USD',
-        };
+        if (simpleValidator.current.allValid()) {
+            setLoading(true);
+            event.preventDefault();
+            event.stopPropagation();
+            setValidated(true);
+            const data = {
+                domain: userInput.domain.toLowerCase(),
+                firstname: userInput.firstName,
+                lastname: userInput.lastName,
+                companyName: userInput.companyName,
+                email: userInput.email.toLowerCase(),
+                password: userInput.password,
+                country: userInput.country,
+                currency: userInput.country.toLowerCase() === 'nigeria' ? 'NGN' : 'USD',
+            };
 
-        const requiredData = {
-            ...data,
-        };
-        delete requiredData.companyName;
-        const hasEmpty = Object.values(requiredData).some((x) => x == null || x == '');
+            const requiredData = {
+                ...data,
+            };
+            delete requiredData.companyName;
+            const hasEmpty = Object.values(requiredData).some((x) => x == null || x === '');
 
-        if (hasEmpty) {
-            setLoading(false);
-            return NotificationManager.error('Please fill all required field', 4000);
-        }
+            if (hasEmpty) {
+                setLoading(false);
+                return NotificationManager.error('Please fill all required field', 4000);
+            }
 
-        const res = await httpPost('auth/register', data);
-        if (res.status === 'success') {
-            setLoading(false);
-            setIsVerified(true);
-            NotificationManager.success('Verification mail has been to you', 'Account Created!', 4000);
+            const res = await httpPost('auth/register', data);
+            if (res.status === 'success') {
+                setLoading(false);
+                setIsVerified(true);
+                NotificationManager.success('Verification mail has been to you', 'Account Created!', 4000);
+            } else {
+                setLoading(false);
+                NotificationManager.error(res?.er?.message, 'Error', 4000);
+            }
         } else {
-            setLoading(false);
-            NotificationManager.error(res?.er?.message, 'Error', 4000);
+            // show all errors if exist
+            simpleValidator.current.showMessages();
+            // force update component to display error
+            forceUpdate(1);
         }
+        return null;
     };
     return (
         <main className="auth-bg-dark min-vh-100 auth-main">
@@ -219,10 +241,17 @@ function Registration() {
                                                             name="firstName"
                                                             value={userInput.firstName}
                                                             onChange={(e) => handleChange(e)}
-                                                            onBlur={(e) => handleBlur(e)}
                                                             className="bg-light acx-form-control"
                                                             placeholder="First Name"
                                                         />
+                                                        {
+                                                            /* simple validation */
+                                                            simpleValidator.current.message(
+                                                                'First name',
+                                                                userInput.firstName,
+                                                                'required',
+                                                            )
+                                                        }
                                                     </Form.Group>
                                                 </Col>
                                                 <Col>
@@ -237,10 +266,17 @@ function Registration() {
                                                             name="lastName"
                                                             value={userInput.lastName}
                                                             onChange={(e) => handleChange(e)}
-                                                            onBlur={(e) => handleBlur(e)}
                                                             placeholder="Last Name"
                                                             className="bg-light acx-form-control"
                                                         />
+                                                        {
+                                                            /* simple validation */
+                                                            simpleValidator.current.message(
+                                                                'Last name',
+                                                                userInput.lastName,
+                                                                'required',
+                                                            )
+                                                        }
                                                     </Form.Group>
                                                 </Col>
                                             </Row>
@@ -254,11 +290,18 @@ function Registration() {
                                                     autoComplete="off"
                                                     className="bg-light acx-form-control"
                                                     onChange={(e) => handleChange(e)}
-                                                    onBlur={(e) => handleBlur(e)}
                                                     name="email"
                                                     value={userInput.email}
                                                     placeholder="Your work email"
                                                 />
+                                                {
+                                                    /* simple validation */
+                                                    simpleValidator.current.message(
+                                                        'Email',
+                                                        userInput.email,
+                                                        'required|email',
+                                                    )
+                                                }
                                             </Form.Group>
                                             <Form.Group className="mb-4 form-group acx-form-group">
                                                 <Form.Label visuallyHidden className="mb-1">
@@ -272,7 +315,6 @@ function Registration() {
                                                         className="bg-light acx-form-control"
                                                         placeholder="Password"
                                                         onChange={(e) => handleChange(e)}
-                                                        onBlur={(e) => handleBlur(e)}
                                                         name="password"
                                                         value={userInput.password}
                                                     />
@@ -286,6 +328,14 @@ function Registration() {
                                                         </Button>
                                                     </span>
                                                 </div>
+                                                {
+                                                    /* simple validation */
+                                                    simpleValidator.current.message(
+                                                        'Password',
+                                                        userInput.password,
+                                                        'required',
+                                                    )
+                                                }
                                             </Form.Group>
                                             <Form.Group className="mb-4 form-group acx-form-group">
                                                 <Form.Label visuallyHidden className="mb-1">
@@ -298,10 +348,17 @@ function Registration() {
                                                     placeholder="Company Name"
                                                     name="companyName"
                                                     onChange={(e) => handleChange(e)}
-                                                    onBlur={(e) => handleBlur(e)}
                                                     value={userInput.companyName}
                                                     className="bg-light acx-form-control"
                                                 />
+                                                {
+                                                    /* simple validation */
+                                                    simpleValidator.current.message(
+                                                        'Company name',
+                                                        userInput.companyName,
+                                                        'required',
+                                                    )
+                                                }
                                             </Form.Group>
                                             <Form.Group className="mb-4 form-group acx-form-group">
                                                 <Form.Label visuallyHidden className="mb-1">
@@ -341,7 +398,19 @@ function Registration() {
                                                         )}
                                                     </InputGroup.Text>
                                                 </InputGroup>
-                                                {userInput.domain && <small>Your URL will be <strong>{userInput.domain}.alphacx.co</strong></small>}
+                                                {userInput.domain && (
+                                                    <small>
+                                                        Your URL will be <strong>{userInput.domain}.alphacx.co</strong>
+                                                    </small>
+                                                )}
+                                                {
+                                                    /* simple validation */
+                                                    simpleValidator.current.message(
+                                                        'Domain',
+                                                        userInput.domain,
+                                                        'required|alpha_num|available_domain',
+                                                    )
+                                                }
                                             </Form.Group>
                                             <Form.Group className="mb-3 form-group acx-form-group">
                                                 <Form.Label visuallyHidden className="mb-1">
@@ -360,21 +429,36 @@ function Registration() {
                                             </Form.Group>
 
                                             <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                                <Form.Check type="checkbox" name="acceptTerms" label="" className='d-inline-block' 
-                                                        onChange={(e) => handleChange(e)} />
-                                                    By creating an account, you agree to our{' '}
-                                                    <a href="https://alphacx.co/privacy-policy/">Terms of Service</a>{' '}
-                                                    and have read and understood the{' '}
-                                                    <a href="https://alphacx.co/privacy-policy/">Privacy Policy</a>.
+                                                <Form.Check
+                                                    type="checkbox"
+                                                    name="acceptTerms"
+                                                    label=""
+                                                    className="d-inline-block"
+                                                    onChange={(e) => handleChange(e)}
+                                                />
+                                                By creating an account, you agree to our{' '}
+                                                <a href="https://alphacx.co/privacy-policy/" style={{ zIndex: 0 }}>
+                                                    Terms of Service
+                                                </a>{' '}
+                                                and have read and understood the{' '}
+                                                <a href="https://alphacx.co/privacy-policy/" style={{ zIndex: 0 }}>
+                                                    Privacy Policy
+                                                </a>
+                                                .
                                             </Form.Group>
 
                                             <div className="mb-2 submit-auth-btn">
                                                 {/* <p className="mt-4">
                                                     By creating an account, you agree to our{' '}
-                                                    <a href="https://alphacx.co/privacy-policy/">Terms of Service</a>{' '}
+                                                    <a href="https://alphacx.co/privacy-policy/" style={{ zIndex: 0 }}>
+                                                        Terms of Service
+                                                    </a>{' '}
                                                     and have read and understood the{' '}
-                                                    <a href="https://alphacx.co/privacy-policy/">Privacy Policy</a>.
-                                                </p> */}
+                                                    <a href="https://alphacx.co/privacy-policy/" style={{ zIndex: 0 }}>
+                                                        Privacy Policy
+                                                    </a>
+                                                    .
+                                            </p> */}
                                                 <Button
                                                     type="submit"
                                                     onClick={handleSubmit}

@@ -460,6 +460,8 @@
     display: flex;
     justify-content: center;
     margin: 60px 0;
+    grid-gap: 2rem;
+    gap: 2rem;
 
     & > div {
         width: 389px;
