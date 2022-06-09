@@ -39,9 +39,8 @@ function Registration() {
         // country: 'Nigeria',
     });
 
-    const [acceptTerms, setAcceptTerms] = useState(false)
+    const [acceptTerms, setAcceptTerms] = useState(false);
 
-    
     //
     const [passwordShown, setPasswordShown] = useState(false);
     const [validated, setValidated] = useState(false);
@@ -126,7 +125,7 @@ function Registration() {
     //
     const handleChange = (e) => {
         if (e.target.name === 'acceptTerms') {
-            setAcceptTerms(e.target.checked)
+            setAcceptTerms(e.target.checked);
         } else {
             setUserInput((prev) => ({
                 ...prev,
@@ -430,12 +429,22 @@ function Registration() {
                                             </Form.Group>
 
                                             <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                                <Form.Check type="checkbox" name="acceptTerms" label="" className='d-inline-block' 
-                                                        onChange={(e) => handleChange(e)} />
-                                                    By creating an account, you agree to our{' '}
-                                                    <a href="https://alphacx.co/privacy-policy/">Terms of Service</a>{' '}
-                                                    and have read and understood the{' '}
-                                                    <a href="https://alphacx.co/privacy-policy/">Privacy Policy</a>.
+                                                <Form.Check
+                                                    type="checkbox"
+                                                    name="acceptTerms"
+                                                    label=""
+                                                    className="d-inline-block"
+                                                    onChange={(e) => handleChange(e)}
+                                                />
+                                                By creating an account, you agree to our{' '}
+                                                <a href="https://alphacx.co/privacy-policy/" style={{ zIndex: 0 }}>
+                                                    Terms of Service
+                                                </a>{' '}
+                                                and have read and understood the{' '}
+                                                <a href="https://alphacx.co/privacy-policy/" style={{ zIndex: 0 }}>
+                                                    Privacy Policy
+                                                </a>
+                                                .
                                             </Form.Group>
 
                                             <div className="mb-2 submit-auth-btn">
@@ -449,7 +458,7 @@ function Registration() {
                                                         Privacy Policy
                                                     </a>
                                                     .
-                                                </p>
+                                            </p> */}
                                                 <Button
                                                     type="submit"
                                                     onClick={handleSubmit}
