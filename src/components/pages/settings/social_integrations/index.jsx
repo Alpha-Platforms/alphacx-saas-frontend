@@ -45,12 +45,18 @@ function SocialIntegrations({configs}) {
     if(configs.instagram_config?.id){setInstagramConnected(true)}
     if(configs.livechat_config){setLivechatConnected(true)}
     if(configs.whatsapp_config?.twillo_account_sid){setWhatsappConnected(true)}
+
+
+    console.log(configs)
     
+    console.log(Math.random())
+
   }, [configs])
 
   useEffect(() => {
-    getConfig();
+    // getConfig();
   }, []);
+  
   
   const getConfig = async () => {
     const res = await httpGetMain(`settings/config`);
@@ -152,7 +158,7 @@ function SocialIntegrations({configs}) {
                 <div className="me-2">
                   <h6 className="text-dark mb-0">Facebook</h6>
                   <p className={`acx-fs-8 lh-base mt-1 mb-2  text-muted ${facebookConnected && 'fw-bold'}`}>
-                    {!facebookConnected? "Connect your business Instagram Page" : configs.facebook_config?.page_name || 'Page not available'}
+                    {!facebookConnected? "Connect your Business Facebook Page" : configs.facebook_config?.page_name || 'Page not available'}
                   </p>
                 </div>
                 <div className="">
@@ -182,7 +188,7 @@ function SocialIntegrations({configs}) {
                 <div className="me-2">
                   <h6 className="text-dark mb-0">Instagram</h6>
                   <p className={`acx-fs-8 lh-base mt-1 mb-2  text-muted ${instagramConnected && 'fw-bold'}`}>
-                    {!instagramConnected? "Connect your business Instagram Page" : configs.instagram_config?.page_name}
+                    {!instagramConnected? "Connect your Business Instagram Page" : configs.instagram_config?.page_name}
                   </p>
                 </div>
                 <div className="">
