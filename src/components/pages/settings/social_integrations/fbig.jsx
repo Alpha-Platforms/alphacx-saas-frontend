@@ -3,7 +3,7 @@ import { hideLoader, showLoader } from 'components/helpers/loader';
 import { httpPatchMain } from 'helpers/httpMethods';
 import React, {useState, useEffect} from 'react'
 import { NotificationManager } from 'react-notifications';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, Redirect, useHistory } from 'react-router-dom';
 import "../settings.css";
 // img assets
 import facebookImg from "../../../../assets/imgF/Facebook.png";
@@ -26,17 +26,12 @@ const FBIntegration = ({location}) => {
     const history = useHistory()
     const [channel, setChannel] = useState("")
 
-
-
+    
     // const params = `domain=${window.localStorage.getItem('domain')}&id=${window.localStorage.getItem('token')}&uid=${window.localStorage.getItem('refreshToken')}`
     
 
-
-
     useEffect(() => {
-        const params = new URLSearchParams(location.search)      
-
-
+        const params = new URLSearchParams(location.search)
         const protocol = window.location.protocol
         const hostname = window.location.hostname.split(".").slice(1).join(".")
         const port = window.location.port
@@ -67,10 +62,11 @@ const FBIntegration = ({location}) => {
 
     }, [])
 
+  
     const redirectToPreviewPage = () => {
         setShowRedirectText(true)
         setTimeout(() => {
-            history.goBack()           
+            window.location.href = `${baseUrl}/settings/integrations`       
         }, 1000);
     }
 
@@ -92,15 +88,14 @@ const FBIntegration = ({location}) => {
         console.log("Response from request:", res)
         if (res) {
             hideLoader();
-            if (res.er) {
-                hideLoader();
+            
+            if (res.status === 'success') {
+                NotificationManager.success("Page successfully connected");
+                // Go back
+                redirectToPreviewPage()
+            } else {
                 return NotificationManager.error(res.er);
             }
-            localStorage.setItem("pageConnected", "true");
-            NotificationManager.success("Page successfully connected");
-
-            // Go back
-            redirectToPreviewPage()
         }
     // hideLoader();
     };
@@ -183,7 +178,7 @@ const FBIntegration = ({location}) => {
             </div>
         </div>
         <div className='pt-2'>
-            <button className='fs-6' onClick={() => history.goBack()}>
+            <button className='fs-6' onClick={() => window.location.href = `${baseUrl}/settings/integrations`}>
                 <img src={ArrowLeft} alt="ArrowLeft" /> Back</button>
         </div>
     </div>
