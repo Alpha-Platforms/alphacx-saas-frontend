@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/prop-types */
-/* eslint-disabled */
 // @ts-nocheck
 import React from 'react';
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
@@ -105,7 +104,7 @@ function FlutterWaveAction({ config, setPlanState }) {
     );
 }
 
-function Summary({ planState, setPlanState, plan, tenantInfo }) {
+function Summary({ planState, setPlanState, subscription, tenantInfo }) {
     return (
         <div className="summary-box">
             <h5>Summary</h5>
@@ -126,7 +125,7 @@ function Summary({ planState, setPlanState, plan, tenantInfo }) {
                             : planState.numOfAgents * plan[planState?.billingCycle?.value],
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span> */}
                     <span>{`${separateNum(
-                        planState.numOfAgents * plan[planState?.billingCycle?.value],
+                        planState.numOfAgents * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
                 </div>
             </div>
@@ -140,9 +139,10 @@ function Summary({ planState, setPlanState, plan, tenantInfo }) {
                         planState?.amount
                             ? Number(planState?.amount)
                                 ? Number(planState?.amount) -
-                                  planState.numOfAgents * plan[planState?.billingCycle?.value]
+                                  planState.numOfAgents *
+                                      (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0)
                                 : planState?.amount
-                            : planState.numOfAgents * plan[planState?.billingCycle?.value],
+                            : planState.numOfAgents * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
                 </div>
             </div>
@@ -157,7 +157,7 @@ function Summary({ planState, setPlanState, plan, tenantInfo }) {
                     <span>{`${separateNum(
                         planState?.amount
                             ? planState?.amount
-                            : planState.numOfAgents * plan[planState?.billingCycle?.value],
+                            : planState.numOfAgents * (planState?.selectedPlan[planState?.billingCycle?.value] || 0),
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
                 </div>
             </div>
@@ -172,7 +172,9 @@ function Summary({ planState, setPlanState, plan, tenantInfo }) {
                         name="coupoun"
                         placeholder="Enter Coupon Code"
                     />
-                    <button type="button" disabled>Apply</button>
+                    <button type="button" disabled>
+                        Apply
+                    </button>
                 </div>
             </div>
 
@@ -198,7 +200,7 @@ function Summary({ planState, setPlanState, plan, tenantInfo }) {
                     <span>{`${separateNum(
                         planState?.amount
                             ? planState?.amount
-                            : planState.numOfAgents * plan[planState?.billingCycle?.value],
+                            : planState.numOfAgents * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
                 </div>
             </div>
