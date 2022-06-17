@@ -1,10 +1,11 @@
-/* eslint-disable */
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable react/prop-types */
 // @ts-nocheck
+import dayjs from 'dayjs';
 import { ReactComponent as AccountIdIcon } from '../../../../../../assets/icons/accountid.svg';
 import { ReactComponent as OrgNameIcon } from '../../../../../../assets/icons/orgname.svg';
 import { ReactComponent as OrgDomainIcon } from '../../../../../../assets/icons/orgdomain.svg';
 import { ReactComponent as CurrentPlanIcon } from '../../../../../../assets/icons/currentplan.svg';
-import dayjs from 'dayjs';
 
 export const getRealCurrency = (currency) => {
     switch (currency.toLowerCase()) {
@@ -27,7 +28,7 @@ function SubTop({ tenantInfo, subscription, totalUsers }) {
                 </div>
                 <div>
                     <span>Organisation Name</span>
-                    <span>{!tenantInfo ? '...' : tenantInfo?.company_name || ''}</span>
+                    <span className="text-capitalize">{!tenantInfo ? '...' : tenantInfo?.company_name || ''}</span>
                 </div>
             </div>
 
@@ -37,7 +38,7 @@ function SubTop({ tenantInfo, subscription, totalUsers }) {
                 </div>
                 <div>
                     <span>Organisation Domain</span>
-                    <span>{!tenantInfo ? '...' : tenantInfo?.company_name || ''}</span>
+                    <span className="text-capitalize">{!tenantInfo ? '...' : tenantInfo?.company_name || ''}</span>
                 </div>
             </div>
 
@@ -53,7 +54,11 @@ function SubTop({ tenantInfo, subscription, totalUsers }) {
                             ? `(${getRealCurrency(tenantInfo?.currency || '')})`
                             : ''}
                     </span>
-                    {subscription?.subscription?.end_date && <span className="f-12">Exp: { dayjs(subscription?.subscription?.end_date).format('DD/MM/YYYY')}</span>}
+                    {subscription?.subscription?.end_date && (
+                        <span className="f-12">
+                            Exp: {dayjs(subscription?.subscription?.end_date).format('DD/MM/YYYY')}
+                        </span>
+                    )}
                 </div>
             </div>
 

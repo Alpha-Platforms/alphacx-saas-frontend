@@ -104,11 +104,8 @@ function FlutterWaveAction({ config, setPlanState }) {
     );
 }
 
-function Summary({ planState, setPlanState, tenantInfo, totalUsers }) {
-    const numOfAgentsToPayFor =
-        planState?.actionType === 'add-user'
-            ? planState.numOfAgents - (totalUsers?.length || 0)
-            : planState.numOfAgents;
+function Summary({ planState, setPlanState, tenantInfo }) {
+    const numOfAgentsToPayFor = planState.numOfAgents;
     return (
         <div className="summary-box">
             <h5>Summary</h5>
@@ -117,7 +114,7 @@ function Summary({ planState, setPlanState, tenantInfo, totalUsers }) {
 
             <div className="sbox-2">
                 <div>
-                    <span>Alpha</span>
+                    <span>{planState?.selectedPlan?.name}</span>
                     <span>
                         {numOfAgentsToPayFor} Agent{numOfAgentsToPayFor > 1 ? 's' : ''}
                     </span>

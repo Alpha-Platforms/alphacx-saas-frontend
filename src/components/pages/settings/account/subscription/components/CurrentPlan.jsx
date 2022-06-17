@@ -30,7 +30,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
             planState.actionType === 'add-user'
                 ? {
                       tenantId: window.localStorage.getItem('tenantId'),
-                      numOfUsers: planState.numOfAgents - (totalUsers?.length || 0),
+                      numOfUsers: planState.numOfAgents,
                   }
                 : {
                       tenantId: window.localStorage.getItem('tenantId'),
@@ -114,12 +114,18 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
     }, [initiating]);
 
     const handleNumChange = (e) => {
-        if (Number(e.target.value) < totalUsers?.length) return;
+        if (Number(e.target.value) < totalUsers?.length && planState?.actionType !== 'add-user') return;
+        if (Number(e.target.value) < 0 && planState?.actionType === 'add-user') return;
         setPlanState((prev) => ({ ...prev, numOfAgents: e.target.value }));
     };
 
     const handleActionType = (e) => {
-        setPlanState((prev) => ({ ...prev, actionType: e.target.id }));
+        const type = e.target.id;
+        setPlanState((prev) => ({
+            ...prev,
+            actionType: type,
+            numOfAgents: type === 'add-user' ? 0 : totalUsers?.length || 0,
+        }));
     };
 
     return (
@@ -181,7 +187,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                                 value={planState.numOfAgents}
                                 name="numOfAgents"
                                 id="numOfAgents"
-                                min={totalUsers.length}
+                                min={planState?.actionType === 'add-user' ? 0 : totalUsers.length}
                                 onChange={handleNumChange}
                                 disabled={planState.isUpdatingPlan || planState.actionType === 'renew-plan'}
                             />
@@ -228,9 +234,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
             <div className="agent-count-select">
                 <div>
                     <span>{`${separateNum(
-                        (planState.actionType === 'add-user'
-                            ? planState.numOfAgents - (totalUsers?.length || 0)
-                            : planState.numOfAgents) * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
+                        planState.numOfAgents * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
                     )} ${getRealCurrency(tenantInfo?.currency || '')} / ${
                         planState?.billingCycle?.value === 'monthly_amount' ? 'month' : 'year'
                     }`}</span>
@@ -244,7 +248,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                     disabled={
                         initiating ||
                         planState.isUpdatingPlan ||
-                        (planState.actionType === 'add-user' && (totalUsers?.length || 0) >= planState?.numOfAgents)
+                        (planState.actionType === 'add-user' && planState?.numOfAgents <= 0)
                     }
                 >
                     {Object.keys(planState?.selectedPlan || {}).length === 0 ? 'Select Plan' : 'Update Plan'}
