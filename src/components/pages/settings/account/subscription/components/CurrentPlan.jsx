@@ -22,18 +22,16 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
         // moment(subscription?.subscription?.end_date).isAfter(new Date())
 
         const paymentInitEndpoint =
-            ['monthly', 'yearly'].includes(subscription?.subscription?.interval) &&
-            subscription?.plan?.name?.toLowerCase() !== 'free plan' &&
-            subscription?.plan?.name?.toLowerCase() !== 'alpha trial'
+            ['monthly', 'yearly'].includes(subscription?.subscription?.interval) && actionType === 'add-user'
                 ? `subscriptions/payment/initialize-subscription-update`
                 : `subscriptions/initialize-payment`;
 
         // body data to initiate payment
         const initPaymentBody =
-            paymentInitEndpoint === 'subscriptions/payment/initialize-subscription-update'
+            actionType === 'add-user'
                 ? {
                       tenantId: window.localStorage.getItem('tenantId'),
-                      numOfUsers: planState?.numOfAgents,
+                      numOfUsers: planState.numOfAgents - (totalUsers?.length || 0),
                   }
                 : {
                       tenantId: window.localStorage.getItem('tenantId'),
@@ -231,7 +229,9 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
             <div className="agent-count-select">
                 <div>
                     <span>{`${separateNum(
-                        planState.numOfAgents * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
+                        (actionType === 'add-user'
+                            ? planState.numOfAgents - (totalUsers?.length || 0)
+                            : planState.numOfAgents) * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
                     )} ${getRealCurrency(tenantInfo?.currency || '')} / ${
                         planState?.billingCycle?.value === 'monthly_amount' ? 'month' : 'year'
                     }`}</span>
@@ -239,7 +239,15 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
             </div>
 
             <div className="updateplan-btn-wrapper">
-                <button onClick={handleUpdatePlanBtn} type="button" disabled={initiating || planState.isUpdatingPlan}>
+                <button
+                    onClick={handleUpdatePlanBtn}
+                    type="button"
+                    disabled={
+                        initiating ||
+                        planState.isUpdatingPlan ||
+                        (actionType === 'add-user' && (totalUsers?.length || 0) >= planState?.numOfAgents)
+                    }
+                >
                     {Object.keys(planState?.selectedPlan || {}).length === 0 ? 'Select Plan' : 'Update Plan'}
                 </button>
 

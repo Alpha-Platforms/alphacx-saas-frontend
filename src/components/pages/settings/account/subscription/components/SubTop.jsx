@@ -63,15 +63,15 @@ function SubTop({ tenantInfo, subscription, totalUsers }) {
                     <span>No of Users</span>
                     {/* <span>{subscription === null ? '...' : (subscription?.subscription?.no_of_users || 'N/A')}</span> */}
                     <span>
-                        {subscription === null
-                            ? '...'
+                        {!subscription
+                            ? 'N/A'
                             : `${totalUsers?.length} of ${
                                   subscription?.plan?.name === 'Alpha Trial'
                                       ? '∞'
                                       : subscription?.plan?.name === 'Free Plan'
                                       ? '3'
                                       : subscription?.subscription?.no_of_users || 'N/A'
-                              }`}
+                              } paid users.`}
                     </span>
                 </div>
             </div>
