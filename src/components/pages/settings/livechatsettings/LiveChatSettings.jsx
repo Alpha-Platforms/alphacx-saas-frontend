@@ -66,6 +66,12 @@ function LiveChatSettings({
     };
 
     useEffect(() => {
+      console.clear()
+      console.log(settings);
+    }, [settings])
+    
+
+    useEffect(() => {
         if (isUserAuthenticated) {
             // get the first set of users
             // getPaginatedUsers(50, 1);
@@ -190,8 +196,9 @@ function LiveChatSettings({
                         <span>Live Chat</span>
                     </h6>
                 </header>
-                <div className="d-flex justify-content-between flex-row">
-                    <h5 className="mt-3 mb-2 ">Live Chat Widget</h5>
+                <div className="">
+                    <h5 className="mt-3 mb-0 ">Live Chat Widget</h5>
+                    <small><a href="https://docs.alphacx.co/getting-started/channel-integration/setup-live-chat-widget" className='text-custom'>See How to Setup Livechat</a></small>
                 </div>
                 {!loading && (
                     <div>
@@ -269,9 +276,9 @@ function LiveChatSettings({
 
                                                     <div className="form-group mt-4">
                                                         <label className="f-14 mb-1">
-                                                            Widget's Host Name <br />
+                                                            Host Website <br />
                                                             <small>
-                                                                ({`E.g. "alphacx.co;sub.site.com;google.com"`})
+                                                                ({`E.g. "example.com or sub.example.com"`})
                                                             </small>
                                                         </label>
                                                         <input
@@ -280,7 +287,7 @@ function LiveChatSettings({
                                                             name="domains"
                                                             value={settings.domains}
                                                             value={settings.domains}
-                                                            // placeholder="alphacx.co;sub.site.com;google.com"
+                                                            // placeholder="alphacx.co; sub.example.com"
                                                             style={{ fontFamily: 'monospace' }}
                                                             required
                                                             onChange={handleInputChange}
@@ -303,10 +310,10 @@ function LiveChatSettings({
                                                     <div className="form-group mt-4">
                                                         <label className="f-14 mb-1">Color</label>
                                                         <div>
-                                                            <small>Select your widget color.</small>
+                                                            <small>Select your Widget color.</small>
                                                         </div>
                                                         <div className="d-flex my-2 mb-1 widgetcolor-wrapper">
-                                                            <span>{settings.theme || '#004882'}</span>
+                                                            <input value={settings.theme} name="theme" onChange={handleInputChange} className="form-control-plaintext" />
                                                             <input
                                                                 type="color"
                                                                 value={settings.theme}
@@ -317,7 +324,7 @@ function LiveChatSettings({
                                                             />
                                                         </div>
                                                         <div>
-                                                            <small>This is the primary color of your widget.</small>
+                                                            <small>Enter common colors (blue) or paste hex value (#036198)</small>
                                                         </div>
                                                     </div>
 
@@ -377,7 +384,7 @@ function LiveChatSettings({
                                                         </div>
                                                     </div>
                                                     <div className="preview-body">
-                                                        <div>
+                                                        <div className='p-4'>
                                                             <form className="preview-form">
                                                                 <div>
                                                                     <label htmlFor="fullname">
@@ -434,7 +441,11 @@ function LiveChatSettings({
                                                                 </div>
                                                             </form>
                                                         </div>
-                                                        {settings.footerBranding && (<div>
+                                                        {settings.footerBranding && (<div 
+                                                            style={{ 
+                                                                backgroundColor: `${settings.theme}1a` || 'rgba(25, 117, 188, 0.1)', 
+                                                                borderTopColor:  `${settings.theme}3b` || 'rgba(25, 117, 188, 0.23)', 
+                                                            }}>
                                                             <span>
                                                                 <svg
                                                                     width="17"
@@ -459,7 +470,7 @@ function LiveChatSettings({
                                                                     target="_blank"
                                                                     rel="noreferrer noopener"
                                                                 >
-                                                                    We care with AlphaCX
+                                                                    We care with AlphaCX {settings.theme }
                                                                 </a>
                                                             </span>
                                                         </div>)}
