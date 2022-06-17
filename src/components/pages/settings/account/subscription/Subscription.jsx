@@ -202,7 +202,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
                                                                 planState={planState}
                                                                 setPlanState={setPlanState}
                                                                 tenantInfo={tenantInfo}
-                                                                subscription={subscription}
+                                                                totalUsers={totalUsers}
                                                             />
                                                         </div>
                                                     )}

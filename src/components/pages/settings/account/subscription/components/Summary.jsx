@@ -104,7 +104,11 @@ function FlutterWaveAction({ config, setPlanState }) {
     );
 }
 
-function Summary({ planState, setPlanState, subscription, tenantInfo }) {
+function Summary({ planState, setPlanState, tenantInfo, totalUsers }) {
+    const numOfAgentsToPayFor =
+        planState?.actionType === 'add-user'
+            ? planState.numOfAgents - (totalUsers?.length || 0)
+            : planState.numOfAgents;
     return (
         <div className="summary-box">
             <h5>Summary</h5>
@@ -115,37 +119,40 @@ function Summary({ planState, setPlanState, subscription, tenantInfo }) {
                 <div>
                     <span>Alpha</span>
                     <span>
-                        {planState.numOfAgents} Agent{planState.numOfAgents > 1 ? 's' : ''}
+                        {numOfAgentsToPayFor} Agent{numOfAgentsToPayFor > 1 ? 's' : ''}
                     </span>
                 </div>
                 <div>
                     {/* <span>{`${separateNum(
                         planState?.amount
                             ? planState?.amount
-                            : planState.numOfAgents * plan[planState?.billingCycle?.value],
+                            : numOfAgentsToPayFor * plan[planState?.billingCycle?.value],
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span> */}
                     <span>{`${separateNum(
-                        planState.numOfAgents * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
+                        numOfAgentsToPayFor * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
                 </div>
             </div>
 
-            <div className="sbox-2 mt-3">
-                <div>
-                    <span>VAT</span>
+            {tenantInfo?.currency?.toUpperCase() === 'NGN' && (
+                <div className="sbox-2 mt-3">
+                    <div>
+                        <span>VAT</span>
+                    </div>
+                    <div>
+                        <span>{`${separateNum(
+                            planState?.amount
+                                ? Number(planState?.amount)
+                                    ? Number(planState?.amount) -
+                                      numOfAgentsToPayFor *
+                                          (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0)
+                                    : planState?.amount
+                                : numOfAgentsToPayFor *
+                                      (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
+                        )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
+                    </div>
                 </div>
-                <div>
-                    <span>{`${separateNum(
-                        planState?.amount
-                            ? Number(planState?.amount)
-                                ? Number(planState?.amount) -
-                                  planState.numOfAgents *
-                                      (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0)
-                                : planState?.amount
-                            : planState.numOfAgents * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
-                    )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
-                </div>
-            </div>
+            )}
 
             <div className="summary-divider" />
 
@@ -157,7 +164,7 @@ function Summary({ planState, setPlanState, subscription, tenantInfo }) {
                     <span>{`${separateNum(
                         planState?.amount
                             ? planState?.amount
-                            : planState.numOfAgents * (planState?.selectedPlan[planState?.billingCycle?.value] || 0),
+                            : numOfAgentsToPayFor * (planState?.selectedPlan[planState?.billingCycle?.value] || 0),
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
                 </div>
             </div>
@@ -200,7 +207,7 @@ function Summary({ planState, setPlanState, subscription, tenantInfo }) {
                     <span>{`${separateNum(
                         planState?.amount
                             ? planState?.amount
-                            : planState.numOfAgents * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
+                            : numOfAgentsToPayFor * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
                 </div>
             </div>
