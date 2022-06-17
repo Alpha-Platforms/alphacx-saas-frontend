@@ -14,7 +14,6 @@ import acxLogo from '../../../../../../assets/images/whitebg.jpg';
 
 function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalUsers }) {
     const [initiating, setInitiating] = useState(false);
-    const [actionType, setActionType] = useState('renew-plan');
 
     const handleInitiatePayment = async () => {
         setInitiating(true);
@@ -22,13 +21,13 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
         // moment(subscription?.subscription?.end_date).isAfter(new Date())
 
         const paymentInitEndpoint =
-            ['monthly', 'yearly'].includes(subscription?.subscription?.interval) && actionType === 'add-user'
+            ['monthly', 'yearly'].includes(subscription?.subscription?.interval) && planState.actionType === 'add-user'
                 ? `subscriptions/payment/initialize-subscription-update`
                 : `subscriptions/initialize-payment`;
 
         // body data to initiate payment
         const initPaymentBody =
-            actionType === 'add-user'
+            planState.actionType === 'add-user'
                 ? {
                       tenantId: window.localStorage.getItem('tenantId'),
                       numOfUsers: planState.numOfAgents - (totalUsers?.length || 0),
@@ -120,7 +119,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
     };
 
     const handleActionType = (e) => {
-        setActionType(e.target.id);
+        setPlanState((prev) => ({ ...prev, actionType: e.target.id }));
     };
 
     return (
@@ -133,7 +132,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                     name="actiontype"
                     type="radio"
                     id="renew-plan"
-                    checked={actionType === 'renew-plan'}
+                    checked={planState.actionType === 'renew-plan'}
                 />
                 <FormCheck
                     onChange={handleActionType}
@@ -142,7 +141,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                     name="actiontype"
                     type="radio"
                     id="add-user"
-                    checked={actionType === 'add-user'}
+                    checked={planState.actionType === 'add-user'}
                 />
                 <FormCheck
                     onChange={handleActionType}
@@ -151,7 +150,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                     name="actiontype"
                     type="radio"
                     id="update-plan"
-                    checked={actionType === 'update-plan'}
+                    checked={planState.actionType === 'update-plan'}
                 />
             </div>
             <p className="mb-1">
@@ -184,7 +183,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                                 id="numOfAgents"
                                 min={totalUsers.length}
                                 onChange={handleNumChange}
-                                disabled={planState.isUpdatingPlan || actionType === 'renew-plan'}
+                                disabled={planState.isUpdatingPlan || planState.actionType === 'renew-plan'}
                             />
                         </div>
                     </div>
@@ -200,8 +199,8 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                             className="billing-time-select"
                             value={planState.billingCycle}
                             isDisabled={
-                                actionType === 'renew-plan' ||
-                                actionType === 'add-user' ||
+                                planState.actionType === 'renew-plan' ||
+                                planState.actionType === 'add-user' ||
                                 initiating ||
                                 planState.isUpdatingPlan
                             }
@@ -229,7 +228,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
             <div className="agent-count-select">
                 <div>
                     <span>{`${separateNum(
-                        (actionType === 'add-user'
+                        (planState.actionType === 'add-user'
                             ? planState.numOfAgents - (totalUsers?.length || 0)
                             : planState.numOfAgents) * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
                     )} ${getRealCurrency(tenantInfo?.currency || '')} / ${
@@ -245,7 +244,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                     disabled={
                         initiating ||
                         planState.isUpdatingPlan ||
-                        (actionType === 'add-user' && (totalUsers?.length || 0) >= planState?.numOfAgents)
+                        (planState.actionType === 'add-user' && (totalUsers?.length || 0) >= planState?.numOfAgents)
                     }
                 >
                     {Object.keys(planState?.selectedPlan || {}).length === 0 ? 'Select Plan' : 'Update Plan'}

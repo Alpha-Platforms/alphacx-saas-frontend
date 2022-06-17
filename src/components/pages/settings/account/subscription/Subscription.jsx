@@ -43,6 +43,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
         amount: null,
         selectingPlan: false,
         isVerifying: false,
+        actionType: 'renew-plan',
     });
 
     useEffect(() => {
