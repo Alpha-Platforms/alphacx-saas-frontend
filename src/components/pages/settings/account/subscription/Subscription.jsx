@@ -234,7 +234,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
                                                             <h3>
                                                                 {getRealCurrency(item?.currency) === 'NGN' ? '₦' : '$'}
                                                                 {separateNum(item?.monthly_amount)}{' '}
-                                                                <small>per user / Month</small>
+                                                                <small className="fs-6">/ user / month</small>
                                                             </h3>
                                                         )}
                                                     </div>
@@ -262,7 +262,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
                                                                 <span>
                                                                     <TickIcon />
                                                                 </span>{' '}
-                                                                <span>Whatsapp Integration</span>
+                                                                <span>WhatsApp Integration</span>
                                                             </li>
                                                             <li>
                                                                 <span>

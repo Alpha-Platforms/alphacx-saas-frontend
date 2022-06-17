@@ -4,6 +4,7 @@ import { ReactComponent as AccountIdIcon } from '../../../../../../assets/icons/
 import { ReactComponent as OrgNameIcon } from '../../../../../../assets/icons/orgname.svg';
 import { ReactComponent as OrgDomainIcon } from '../../../../../../assets/icons/orgdomain.svg';
 import { ReactComponent as CurrentPlanIcon } from '../../../../../../assets/icons/currentplan.svg';
+import dayjs from 'dayjs';
 
 export const getRealCurrency = (currency) => {
     switch (currency.toLowerCase()) {
@@ -52,6 +53,7 @@ function SubTop({ tenantInfo, subscription, totalUsers }) {
                             ? `(${getRealCurrency(tenantInfo?.currency || '')})`
                             : ''}
                     </span>
+                    {subscription?.subscription?.end_date && <span className="f-12">Exp: { dayjs(subscription?.subscription?.end_date).format('DD/MM/YYYY')}</span>}
                 </div>
             </div>
 
