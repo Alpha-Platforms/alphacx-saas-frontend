@@ -205,11 +205,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                                 actionType === 'renew-plan' ||
                                 actionType === 'add-user' ||
                                 initiating ||
-                                planState.isUpdatingPlan ||
-                                (subscription?.subscription?.interval === 'monthly' &&
-                                    subscription?.plan?.name === 'Alpha Plan') ||
-                                (subscription?.subscription?.interval === 'yearly' &&
-                                    subscription?.plan?.name === 'Alpha Plan')
+                                planState.isUpdatingPlan
                             }
                             options={[
                                 {
