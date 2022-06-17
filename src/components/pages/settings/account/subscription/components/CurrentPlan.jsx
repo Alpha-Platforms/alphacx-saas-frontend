@@ -173,7 +173,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                             onChange={handlePlanChange}/>
                     </div> */}
                     <div>
-                        <label htmlFor="numOfAgents">Agents</label>
+                        <label htmlFor="numOfAgents">No. of Agents</label>
                         <div>
                             <input
                                 type="number"
@@ -222,7 +222,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
 
             <p>
                 {separateNum(planState?.selectedPlan?.monthly_amount)}{' '}
-                {getRealCurrency(planState?.selectedPlan?.currency || '')} per agent / month
+                {getRealCurrency(planState?.selectedPlan?.currency || '')} / agent / month
             </p>
 
             <div className="agent-count-select">

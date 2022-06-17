@@ -28,7 +28,6 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
     const [domain] = useState(window.localStorage.getItem('domain'));
     const [tenantInfo, setTenantInfo] = useState(null);
     const [subscription, setSubscription] = useState(null);
-    const [paymentHistory, setPaymentHistory] = useState(null);
     const [plans, setPlans] = useState(null);
     const [totalUsers, setTotalUsers] = useState(null);
 
@@ -88,15 +87,6 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
         }
     };
 
-    const getPaymentHistory = async () => {
-        const res = await httpGet(`subscriptions/payment/history/${tenantId}`);
-        if (res?.status === 'success') {
-            setPaymentHistory(res?.data);
-        } else {
-            setPaymentHistory({});
-        }
-    };
-
     const getTenantInfo = async () => {
         const res = await httpGet(`auth/tenant-info/${domain}`);
         if (res?.status === 'success') {
@@ -110,7 +100,6 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
         getPlan();
         getTenantInfo();
         getSubscription();
-        getPaymentHistory();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -314,11 +303,9 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
                                             ))}
                                         </div>
                                     )}
-                                    {paymentHistory && (
-                                        <div>
-                                            <PaymentHistory paymentHistory={paymentHistory} />
-                                        </div>
-                                    )}
+                                    <div>
+                                        <PaymentHistory tenantId={tenantId} />
+                                    </div>
                                 </>
                             )}
                         </>
