@@ -161,7 +161,12 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
             </div>
             <p className="mb-1">
                 <small>
-                    <b>ⓘ</b> You can only pay for your number of active users ({totalUsers.length}) and above.
+                    <b>ⓘ</b>{' '}
+                    {planState.actionType === 'renew-plan'
+                        ? 'You can only renew active users. To renew inactive users click here'
+                        : planState.actionType === 'add-user'
+                        ? 'Add number of additional user licenses you want.'
+                        : `You can only pay for your number of active users (${totalUsers.length}) and above.`}
                 </small>
             </p>
             <div className="cp-top">
