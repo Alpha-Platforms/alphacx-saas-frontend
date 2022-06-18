@@ -56,7 +56,7 @@ function SubTop({ tenantInfo, subscription, totalUsers }) {
                     </span>
                     {subscription?.subscription?.end_date && (
                         <span className="f-12">
-                            Exp: {dayjs(subscription?.subscription?.end_date).format('DD/MM/YYYY')}
+                            Ends: {dayjs(subscription?.subscription?.end_date).format('MMM DD, YYYY')}
                         </span>
                     )}
                 </div>
