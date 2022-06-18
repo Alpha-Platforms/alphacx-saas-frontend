@@ -124,7 +124,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
         setPlanState((prev) => ({
             ...prev,
             actionType: type,
-            numOfAgents: type === 'add-user' ? 0 : totalUsers?.length || 0,
+            numOfAgents: type === 'add-user' ? 1 : totalUsers?.length || 0,
         }));
     };
 
