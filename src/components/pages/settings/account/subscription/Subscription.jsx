@@ -76,7 +76,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
         }
     };
 
-    const getSubscription = async () => {
+    const getSubscription = async ({ reload } = { reload: false }) => {
         const res = await httpGet(`subscriptions/${tenantId}`);
         if (res?.status === 'success') {
             setSubscription(res?.data);
@@ -85,6 +85,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
         } else {
             setSubscription({});
         }
+        if (reload) window.location.href = `/settings/account?tab=subscription`;
     };
 
     const getTenantInfo = async () => {
@@ -192,6 +193,7 @@ function Subscription({ getAgents, getAdmins, getSupervisors, agents, admins, su
                                                                 setPlanState={setPlanState}
                                                                 tenantInfo={tenantInfo}
                                                                 totalUsers={totalUsers}
+                                                                getSubscription={getSubscription}
                                                             />
                                                         </div>
                                                     )}

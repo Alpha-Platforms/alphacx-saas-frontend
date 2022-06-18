@@ -10,7 +10,7 @@ import { httpPost } from '../../../../../../helpers/httpMethods';
 import { getRealCurrency } from './SubTop';
 import { separateNum } from '../../../../../../helper';
 
-function CheckoutForm({ setPlanState, planState }) {
+function CheckoutForm({ setPlanState, planState, getSubscription }) {
     const stripe = useStripe();
     const elements = useElements();
 
@@ -41,7 +41,8 @@ function CheckoutForm({ setPlanState, planState }) {
             setPlanState((prev) => ({ ...prev, isVerifying: false }));
             if (verifyPaymentRes?.status === 'success') {
                 NotificationManager.success('', 'Transaction successful', 4000);
-                window.location.href = `/settings/account?tab=subscription`;
+                getSubscription({ reload: true });
+                // window.location.href = `/settings/account?tab=subscription`;
                 // setPlanState(prev => ({...prev, isUpdatingPlan: false,
                 // stripeConfig: null, amount: null, setSelectingPlan: false}));
             }
@@ -61,7 +62,7 @@ function CheckoutForm({ setPlanState, planState }) {
     );
 }
 
-function FlutterWaveAction({ config, setPlanState }) {
+function FlutterWaveAction({ config, setPlanState, getSubscription }) {
     // use flutterwave react hook
     const handleFlutterPayment = useFlutterwave(config);
 
@@ -80,7 +81,8 @@ function FlutterWaveAction({ config, setPlanState }) {
 
                             if (verifyPaymentRes?.status === 'success') {
                                 NotificationManager.success('', 'Transaction successful', 4000);
-                                window.location.href = `/settings/account?tab=subscription`;
+                                getSubscription({ reload: true });
+                                // window.location.href = `/settings/account?tab=subscription`;
                                 // setPlanState(prev => ({...prev, isUpdatingPlan: false,
                                 // flutterwaveConfig: null, amount: null, selectingPlan: false}));
                             }
@@ -104,7 +106,7 @@ function FlutterWaveAction({ config, setPlanState }) {
     );
 }
 
-function Summary({ planState, setPlanState, tenantInfo }) {
+function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
     const numOfAgentsToPayFor = planState.numOfAgents;
     return (
         <div className="summary-box">
@@ -216,6 +218,7 @@ function Summary({ planState, setPlanState, tenantInfo }) {
                         planState={planState}
                         config={planState.flutterwaveConfig}
                         setPlanState={setPlanState}
+                        getSubscription={getSubscription}
                     />
                 )}
             </div>
@@ -225,7 +228,11 @@ function Summary({ planState, setPlanState, tenantInfo }) {
                         stripe={loadStripe(planState.stripeConfig?.STRIPE_PUBLIC_KEY)}
                         options={{ clientSecret: planState.stripeConfig?.clientSecret }}
                     >
-                        <CheckoutForm planState={planState} setPlanState={setPlanState} />
+                        <CheckoutForm
+                            planState={planState}
+                            setPlanState={setPlanState}
+                            getSubscription={getSubscription}
+                        />
                     </Elements>
                 )}
             </div>
