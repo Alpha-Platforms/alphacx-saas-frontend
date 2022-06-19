@@ -2,6 +2,7 @@
 /* eslint-disable react/prop-types */
 // @ts-nocheck
 import dayjs from 'dayjs';
+import moment from 'moment';
 import { ReactComponent as AccountIdIcon } from '../../../../../../assets/icons/accountid.svg';
 import { ReactComponent as OrgNameIcon } from '../../../../../../assets/icons/orgname.svg';
 import { ReactComponent as OrgDomainIcon } from '../../../../../../assets/icons/orgdomain.svg';
@@ -72,13 +73,15 @@ function SubTop({ tenantInfo, subscription, totalUsers }) {
                     <span>
                         {!subscription
                             ? 'N/A'
-                            : `${totalUsers?.length} of ${
+                            : `${totalUsers?.length} ${
                                   subscription?.plan?.name === 'Alpha Trial'
-                                      ? '∞'
+                                      ? 'of  ∞'
                                       : subscription?.plan?.name === 'Free Plan'
-                                      ? '3'
-                                      : subscription?.subscription?.no_of_users || 'N/A'
-                              } paid users.`}
+                                      ? 'of  3'
+                                      : moment(subscription?.subscription?.end_date).isBefore(new Date())
+                                      ? ''
+                                      : `of ${subscription?.subscription?.no_of_users || 'N/A'}`
+                              }`}
                     </span>
                 </div>
             </div>
