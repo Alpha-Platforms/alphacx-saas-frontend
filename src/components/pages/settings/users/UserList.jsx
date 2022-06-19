@@ -154,8 +154,13 @@ function UserList({
         }
     };
 
+    const tenantSubscription = JSON.parse(window.localStorage.getItem('tenantSubscription'));
+    const numOfSubUsers = tenantSubscription?.subscription?.no_of_users || 0;
+    
     function handleActiveChange() {
         const { name, isActivated, id } = this;
+        if (authenticatedUserRole !== 'Administrator' && authenticatedUserRole !== 'Supervisor') return;
+        if (combinedUsers.length >= numOfSubUsers) return;
 
         Swal.fire({
             title: isActivated ? 'Deactivate?' : 'Activate?',
@@ -167,15 +172,11 @@ function UserList({
             cancelButtonText: 'No',
         }).then((result) => {
             if (result.isConfirmed) {
-                console.log('Deactivate or Activated user');
                 changeActiveState(id, isActivated);
-            } else {
-                console.log('Do nothing');
             }
         });
     }
 
-    const tenantSubscription = JSON.parse(window.localStorage.getItem('tenantSubscription'));
 
     return (
         <div>
@@ -206,12 +207,12 @@ function UserList({
                             <br />
                         ) : (
                             <AccessControl>
-                                <button
+                                {tenantSubscription && <button
                                     className="btn btn-custom btn-sm px-4 bg-at-blue-light py-2"
                                     onClick={() => setCreateModalShow(true)}
                                 >
                                     New User
-                                </button>
+                                </button>}
                             </AccessControl>
                         )}
 
