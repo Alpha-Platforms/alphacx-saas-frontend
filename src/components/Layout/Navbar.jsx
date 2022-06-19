@@ -32,6 +32,8 @@ import { multiIncludes } from '../../helper';
 function DropDown() {
     const [createCustModalShow, setCreateCustModalShow] = useState(false);
     const [createTicketModalShow, setCreateTicketModalShow] = useState(false);
+    const tenantSubscription = JSON.parse(window.localStorage.getItem('tenantSubscription'));
+    const subExpired = moment(tenantSubscription?.subscription?.end_date).isBefore(new Date());
     return (
         <>
             <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown global-create-dropdown">
@@ -44,12 +46,20 @@ function DropDown() {
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                     <Dropdown.Item eventKey="1">
-                        <button type="button" onClick={() => setCreateTicketModalShow(true)}>
+                        <button
+                            type="button"
+                            disabled={subExpired}
+                            onClick={() => !subExpired && setCreateTicketModalShow(true)}
+                        >
                             Ticket
                         </button>
                     </Dropdown.Item>
                     <Dropdown.Item eventKey="2">
-                        <button type="button" onClick={() => setCreateCustModalShow(true)}>
+                        <button
+                            type="button"
+                            disabled={subExpired}
+                            onClick={() => !subExpired && setCreateCustModalShow(true)}
+                        >
                             Customer
                         </button>
                     </Dropdown.Item>
