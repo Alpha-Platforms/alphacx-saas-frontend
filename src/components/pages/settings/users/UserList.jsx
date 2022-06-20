@@ -160,7 +160,8 @@ function UserList({
     function handleActiveChange() {
         const { name, isActivated, id } = this;
         if (authenticatedUserRole !== 'Administrator' && authenticatedUserRole !== 'Supervisor') return;
-        if (combinedUsers.length >= numOfSubUsers) return;
+        const activatedUsers = combinedUsers.filter((user) => user?.isActivated);
+        if (activatedUsers.length >= numOfSubUsers) return;
 
         Swal.fire({
             title: isActivated ? 'Deactivate?' : 'Activate?',
