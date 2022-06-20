@@ -15,8 +15,6 @@ import { httpGet } from '../../../../../../helpers/httpMethods';
 function PaymentHistory({ tenantId }) {
     const [paymentHistory, setPaymentHistory] = useState(null);
 
-    console.log('payment history => ', paymentHistory);
-
     const getPaymentHistory = async (itemsPerPage, currentPage) => {
         const res = await httpGet(
             `subscriptions/payment/history/${tenantId}?per_page=${itemsPerPage}&page=${currentPage}`,

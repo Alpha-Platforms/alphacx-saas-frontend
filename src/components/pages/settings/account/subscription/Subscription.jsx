@@ -68,7 +68,6 @@ function Subscription({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
-    console.log('%cSubscription.jsx line:59 observers', 'color: white; background-color: #007acc;', observers);
 
     useEffect(() => {
         const realAdmins = Array.isArray(admins) ? admins.filter((item) => item?.isActivated === true) : [];
