@@ -37,7 +37,13 @@ function DropDown() {
     return (
         <>
             <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown global-create-dropdown">
-                <Dropdown.Toggle variant="" size="" className="btn acx-btn-primary" style={{ borderRadius: '.15rem' }}>
+                <Dropdown.Toggle
+                    disabled={subExpired}
+                    variant=""
+                    size=""
+                    className="btn acx-btn-primary"
+                    style={{ borderRadius: '.15rem' }}
+                >
                     <div style={{ padding: '.25rem .5rem' }}>
                         <PlusIcon />
                         <span className="px-2">Create</span>
