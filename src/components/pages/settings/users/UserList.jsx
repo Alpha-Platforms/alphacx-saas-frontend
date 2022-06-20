@@ -62,6 +62,8 @@ function UserList({
     const [combinedUsers, setCombinedUsers] = useState([]);
     const [canAddUser, setCanAddUser] = useState(false);
 
+    const activatedUsers = combinedUsers.filter((user) => user?.isActivated);
+
   
 
     useEffect(() => {
@@ -160,7 +162,6 @@ function UserList({
     function handleActiveChange() {
         const { name, isActivated, id } = this;
         if (authenticatedUserRole !== 'Administrator' && authenticatedUserRole !== 'Supervisor') return;
-        const activatedUsers = combinedUsers.filter((user) => user?.isActivated);
         if (activatedUsers.length >= numOfSubUsers) return;
 
         Swal.fire({
@@ -203,7 +204,7 @@ function UserList({
                     </div>
                     <div className="mt-3">
                         {(tenantSubscription?.plan?.name === 'Free Plan' && combinedUsers.length > 3) ||
-                        (tenantSubscription?.plan?.name === 'Alpha Plan' &&
+                        ((tenantSubscription?.plan?.name !== 'Free Plan' && tenantSubscription?.plan?.name !== 'Alpha Trial') &&
                             combinedUsers.length > tenantSubscription?.subscription?.no_of_users) ? (
                             <br />
                         ) : (
