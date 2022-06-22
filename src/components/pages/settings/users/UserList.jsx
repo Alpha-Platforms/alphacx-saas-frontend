@@ -139,10 +139,10 @@ function UserList({
         },
     });
 
-    const changeActiveState = async (id, isActivated) => {
+    const changeActiveState = async (id, isActivated, role) => {
         const userRes = await updateUser({
             id,
-            role: 'Agent',
+            role,
             isActivated: !isActivated,
             // isActivated: !isActivated ? true : "false"
         });
@@ -160,7 +160,7 @@ function UserList({
     const numOfSubUsers = tenantSubscription?.subscription?.no_of_users || 0;
     
     function handleActiveChange() {
-        const { name, isActivated, id } = this;
+        const { name, isActivated, id, role } = this;
         if (authenticatedUserRole !== 'Administrator' && authenticatedUserRole !== 'Supervisor') return;
         if (activatedUsers.length >= numOfSubUsers && !isActivated) return;
 
@@ -174,7 +174,7 @@ function UserList({
             cancelButtonText: 'No',
         }).then((result) => {
             if (result.isConfirmed) {
-                changeActiveState(id, isActivated);
+                changeActiveState(id, isActivated, role);
             }
         });
     }
@@ -350,6 +350,7 @@ function UserList({
                                                         name: rowData.name,
                                                         isActivated: rowData.isActivated,
                                                         id: rowData.userId,
+                                                        role: rowData.role,
                                                     })}
                                                     readOnly
                                                     type="checkbox"

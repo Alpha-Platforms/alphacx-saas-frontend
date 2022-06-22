@@ -412,7 +412,8 @@ function Conversation({ user }) {
                 console.log('Message from socket => ', eventData);
                 if (
                     (eventData?.type === 'liveStream' || eventData?.type === 'socketHook') &&
-                    eventData?.status === 'incoming'
+                    eventData?.status === 'incoming' &&
+                    !eventData?.data?.notification
                 ) {
                     const data = eventData?.data;
                     if (ticketId && data?.id === ticketId) {
@@ -565,8 +566,6 @@ function Conversation({ user }) {
         }
         setFilterTicketsState(value);
     };
-
-    console.log('replyType => ', replyType);
 
     const replyTicket = async (reply, attachment, type = replyType) => {
         if (!reply?.richText?.trim() || !reply?.plainText?.trim()) return;
