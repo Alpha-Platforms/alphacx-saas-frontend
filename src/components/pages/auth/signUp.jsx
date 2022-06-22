@@ -26,6 +26,8 @@ import ChartsImg from '../../../assets/images/charts.png';
 import TicketsImg from '../../../assets/images/tickets.png';
 import ConversationsImg from '../../../assets/images/conversations.png';
 
+let verifyDomainTimer;
+
 function Registration() {
     const { search } = useLocation();
     const [userInput, setUserInput] = useState({
@@ -43,7 +45,7 @@ function Registration() {
 
     //
     const [passwordShown, setPasswordShown] = useState(false);
-    const [validated, setValidated] = useState(false);
+    const [, setValidated] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isVerified, setIsVerified] = useState(false);
     const [domainChecking, setDomainChecking] = useState(false);
@@ -51,22 +53,37 @@ function Registration() {
     const [defaultCountry, setDefaultCountry] = useState({});
     const [RSCountries, setRSCountries] = useState([]);
     const [, forceUpdate] = useState();
+    const [domainAvail, setDomainAvail] = useState(false);
 
     const simpleValidator = useRef(
         new SimpleReactValidator({
             element: (message) => <div className="formErrorMsg">{message.replace(/(The|field)/gi, '').trim()}</div>,
-            // validators: {
-            //     available_domain: {
-            //         message: 'The This domain has been taken. Please choose another',
-            //         rule: (val, params, validator) => {
-            //             console.log('val => ', val);
-            //             console.log('params => ', params);
-            //             console.log('validator => ', validator);
-            //             return false;
-            //         },
-            //         required: true,
-            //     },
-            // },
+            validators: {
+                domain_available: {
+                    message: 'The :attribute taken. Choose a new one.',
+                    rule: (val) => {
+                        return Boolean(val?.domainAvail);
+                    },
+                },
+                domain_alpha_numeric: {
+                    message: 'The :attribute may only contain letters and numbers.',
+                    rule: (val, _, validator) => {
+                        return validator.helpers.testRegex(`${val?.val ? val?.val : ''}`, /^[A-Z0-9]*$/i);
+                    },
+                },
+                domain_required: {
+                    message: 'The :attribute field is required.',
+                    rule: (val) => {
+                        return Boolean(val?.val);
+                    },
+                },
+                domain_min_length: {
+                    message: 'The :attribute must have more than 3 characters.',
+                    rule: (val) => {
+                        return val?.val && val?.val?.length > 3;
+                    },
+                },
+            },
         }),
     );
 
@@ -99,26 +116,27 @@ function Registration() {
         setPasswordShown(!passwordShown);
     };
 
-    const verifyDomain = async (e) => {
-        if (!lockDomain && Validate.noSpecialChars(e, userInput, setUserInput)) {
-            const domain = userInput.domain.toLowerCase();
-            setDomainChecking(true);
-            const res = await httpPost(`auth/login`, { domain });
-            if (res.status === 'success') {
-                setDomainChecking(false);
-                setUserInput({
-                    ...userInput,
-                    [e.target.name]: '',
-                });
-                NotificationManager.error(
-                    'This domain has been taken. Please choose another',
-                    'Domain not available',
-                    4000,
-                );
-            } else {
+    const verifyDomain = async (domain) => {
+        if (domain.length > 3) {
+            try {
+                const res = await httpPost(`auth/login`, { domain });
+                if (res.status === 'success') {
+                    setDomainChecking(false);
+                    simpleValidator.current.showMessageFor('Domain');
+                    setLockDomain(false);
+                    setDomainAvail(false);
+                } else {
+                    setDomainChecking(false);
+                    setLockDomain(true);
+                    setDomainAvail(true);
+                }
+            } catch (e) {
                 setDomainChecking(false);
                 setLockDomain(true);
+                setDomainAvail(true);
             }
+        } else {
+            setDomainAvail(false);
         }
     };
 
@@ -129,11 +147,21 @@ function Registration() {
         } else {
             setUserInput((prev) => ({
                 ...prev,
-                [e.target.name]: e.target.value,
+                [e.target.name]: e.target?.name === 'domain' ? e.target.value?.toLowerCase() : e.target.value,
             }));
 
             if (e.target.name === 'email') {
                 localStorage.setItem('tenantEmail', e.target.value);
+            } else if (e.target.name === 'domain') {
+                clearTimeout(verifyDomainTimer);
+                if (e.target.value?.length > 3) {
+                    setDomainChecking(true);
+                    verifyDomainTimer = setTimeout(async () => {
+                        verifyDomain(e.target.value);
+                    }, 2000);
+                } else {
+                    setDomainChecking(false);
+                }
             }
         }
     };
@@ -370,11 +398,10 @@ function Registration() {
                                                         required
                                                         autoComplete="off"
                                                         placeholder="Domain"
-                                                        disabled={lockDomain}
+                                                        // disabled={lockDomain}
                                                         onChange={(e) => handleChange(e)}
                                                         name="domain"
-                                                        onMouseLeave={(e) => verifyDomain(e)}
-                                                        onBlur={(e) => verifyDomain(e)}
+                                                        // onBlur={(e) => verifyDomain(e)}
                                                         value={userInput.domain}
                                                         className="bg-light acx-form-control"
                                                     />
@@ -393,6 +420,11 @@ function Registration() {
                                                                 <i className="bi-check2-circle text-success" />
                                                                 <span> alphacx.co</span>
                                                             </span>
+                                                        ) : userInput.domain.length > 3 && !lockDomain ? (
+                                                            <span className="">
+                                                                <i className="bi-x-circle text-danger" />
+                                                                <span> alphacx.co</span>
+                                                            </span>
                                                         ) : (
                                                             '.alphacx.co'
                                                         )}
@@ -407,8 +439,11 @@ function Registration() {
                                                     /* simple validation */
                                                     simpleValidator.current.message(
                                                         'Domain',
-                                                        userInput.domain,
-                                                        'required|alpha_num|available_domain',
+                                                        {
+                                                            val: userInput.domain,
+                                                            domainAvail,
+                                                        },
+                                                        'domain_required|domain_min_length|domain_alpha_numeric|domain_available',
                                                     )
                                                 }
                                             </Form.Group>
