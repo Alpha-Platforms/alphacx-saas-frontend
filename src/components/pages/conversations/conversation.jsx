@@ -573,11 +573,9 @@ function Conversation({ user }) {
     useEffect(() => {
         if (convoMain) {
             const allMsgImgs = convoMain.querySelectorAll('img');
-            console.log('ALL MSG IMAGES => ', allMsgImgs);
             allMsgImgs.forEach((img) => {
-                console.log('image => ', img);
+                // eslint-disable-next-line func-names
                 img.onerror = function () {
-                    console.log('Image failed to load => ', img);
                     this.src = noimage;
                 };
             });
