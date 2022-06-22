@@ -496,8 +496,6 @@ function Conversation({ user }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ticketId, appSocket]);
 
-    console.log('msg history => ', msgHistory);
-
     useEffect(() => {
         setCustomFieldIsSet(false);
         setRSTicketCustomFields(null);
@@ -559,27 +557,32 @@ function Conversation({ user }) {
         //
         setCustomFieldIsSet(true);
         setCustomFieldsGroup([...groupedCustomFields]);
-        if (ticket?.length > 0) {
-            const loadedTicket = ticket[0];
-            if (loadedTicket?.channel?.toLowerCase() === 'instagram') {
-                setTimeout(() => {
-                    const convoMain = document.querySelector('#conversationMain');
-                    if (convoMain) {
-                        const allMsgImgs = convoMain.querySelectorAll('img');
-                        console.log('ALL MSG IMAGES => ', allMsgImgs);
-                        allMsgImgs.forEach(
-                            (img) =>
-                                // eslint-disable-next-line func-names
-                                (img.onerror = function () {
-                                    this.src = noimage;
-                                }),
-                        );
-                    }
-                }, 2000);
-            }
-        }
+        // if (ticket?.length > 0) {
+        //     const loadedTicket = ticket[0];
+        //     if (loadedTicket?.channel?.toLowerCase() === 'instagram') {
+        //         setTimeout(() => {
+
+        //         }, 2000);
+        //     }
+        // }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ticket]);
+
+    const convoMain = document.querySelector('#conversationMain');
+
+    useEffect(() => {
+        if (convoMain) {
+            const allMsgImgs = convoMain.querySelectorAll('img');
+            console.log('ALL MSG IMAGES => ', allMsgImgs);
+            allMsgImgs.forEach((img) => {
+                console.log('image => ', img);
+                img.onerror = function () {
+                    console.log('Image failed to load => ', img);
+                    this.src = noimage;
+                };
+            });
+        }
+    }, [convoMain]);
 
     const onEditorStateChange = (newEditorState) => {
         const plainText = newEditorState.getCurrentContent().getPlainText();
