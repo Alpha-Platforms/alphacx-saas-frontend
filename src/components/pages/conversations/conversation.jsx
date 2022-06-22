@@ -564,15 +564,18 @@ function Conversation({ user }) {
             if (loadedTicket?.channel?.toLowerCase() === 'instagram') {
                 setTimeout(() => {
                     const convoMain = document.querySelector('#conversationMain');
-                    const allMsgImgs = convoMain.querySelectorAll('img');
-                    allMsgImgs.forEach(
-                        (img) =>
-                            // eslint-disable-next-line func-names
-                            (img.onerror = function () {
-                                this.src = noimage;
-                            }),
-                    );
-                }, 1000);
+                    if (convoMain) {
+                        const allMsgImgs = convoMain.querySelectorAll('img');
+                        console.log('ALL MSG IMAGES => ', allMsgImgs);
+                        allMsgImgs.forEach(
+                            (img) =>
+                                // eslint-disable-next-line func-names
+                                (img.onerror = function () {
+                                    this.src = noimage;
+                                }),
+                        );
+                    }
+                }, 2000);
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
