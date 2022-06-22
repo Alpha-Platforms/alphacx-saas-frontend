@@ -421,16 +421,34 @@ function Conversation({ user }) {
                 ) {
                     const data = eventData?.data;
                     if (ticketId && data?.id === ticketId) {
-                        const reply = {
-                            ...data?.reply,
-                        };
-                        // set message history only when the
                         setMsgHistory((prev) => {
+                            const reply = {
+                                ...data?.reply,
+                            };
+                            if (data?.reply?.is_deleted) {
+                                return prev.filter((item) => item?.id !== data?.reply?.id);
+                            }
                             return [...prev, reply];
                         });
-                        scrollPosSendMsgList('#lastMsg');
+                        if (!data?.reply?.is_deleted) scrollPosSendMsgList('#lastMsg');
                     }
+
                     setTickets((prev) => {
+                        if (data?.reply?.is_deleted)
+                            return prev.map((ticketItem) => {
+                                if (ticketItem?.id === data?.id) {
+                                    const newTicket = {
+                                        ...ticketItem,
+                                        history: ticketItem.history?.filter((item) => item?.id !== data?.reply?.id),
+                                        __metaticketItem__: {
+                                            ...ticketItem?.__meta__,
+                                            history_count: Number(ticket?.__meta__?.history_count) - 1,
+                                        },
+                                    };
+                                    return newTicket;
+                                }
+                                return ticketItem;
+                            });
                         // get ticket from existing
                         const currentTicket = prev.find((item) => item?.id === data?.id);
                         if (currentTicket) {
@@ -477,6 +495,8 @@ function Conversation({ user }) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ticketId, appSocket]);
+
+    console.log('msg history => ', msgHistory);
 
     useEffect(() => {
         setCustomFieldIsSet(false);
