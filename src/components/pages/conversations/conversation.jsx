@@ -1,3 +1,6 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable react/no-this-in-sfc */
+/* eslint-disable no-return-assign */
 /* eslint-disable camelcase */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/no-danger */
@@ -52,6 +55,7 @@ import { accessControlFunctions } from '../../../config/accessControlList';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './conversation.css';
 import Socket from '../../../socket';
+import noimage from '../../../assets/images/noimage.png';
 
 function YouTubeGetID(url) {
     let ID = '';
@@ -535,6 +539,22 @@ function Conversation({ user }) {
         //
         setCustomFieldIsSet(true);
         setCustomFieldsGroup([...groupedCustomFields]);
+        if (ticket?.length > 0) {
+            const loadedTicket = ticket[0];
+            if (loadedTicket?.channel?.toLowerCase() === 'instagram') {
+                setTimeout(() => {
+                    const convoMain = document.querySelector('#conversationMain');
+                    const allMsgImgs = convoMain.querySelectorAll('img');
+                    allMsgImgs.forEach(
+                        (img) =>
+                            // eslint-disable-next-line func-names
+                            (img.onerror = function () {
+                                this.src = noimage;
+                            }),
+                    );
+                }, 1000);
+            }
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ticket]);
 
@@ -976,7 +996,7 @@ function Conversation({ user }) {
                                     </div>
                                 </div>
                                 {/* CHAT SECTION */}
-                                <div className="conversationsMain">
+                                <div className="conversationsMain" id="conversationMain">
                                     {AchiveMsges.length === 0 ? (
                                         ''
                                     ) : (
