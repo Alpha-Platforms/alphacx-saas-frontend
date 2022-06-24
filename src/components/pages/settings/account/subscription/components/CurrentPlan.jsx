@@ -9,7 +9,6 @@ import FormCheck from 'react-bootstrap/FormCheck';
 import { getRealCurrency } from './SubTop';
 import { httpPost } from '../../../../../../helpers/httpMethods';
 import { separateNum } from '../../../../../../helper';
-import acxLogo from '../../../../../../assets/images/whitebg.jpg';
 // import MoonLoader from 'react-spinners/MoonLoader';
 
 function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalUsers }) {
@@ -47,10 +46,6 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
             // console.log('INITIATE PAYMENT RESPONSE => ', initPaymentRes);
 
             setPlanState((prev) => ({ ...prev, isUpdatingPlan: true }));
-
-            // get current user from localStorage
-            const currentUser = JSON.parse(window.localStorage.getItem('user'));
-
             /* *
              * if currency is NGN, use flutterwave for payment, if currency is
              * USD, use stripe for payment
@@ -58,29 +53,9 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
              */
             if (getRealCurrency(tenantInfo?.currency || '') === 'NGN') {
                 // FLUTTERWAVE PAYMENT
-                const config = {
-                    public_key: initPaymentRes?.data?.FLW_PUBLIC_KEY,
-                    tx_ref: initPaymentRes?.data?.reference,
-                    amount: initPaymentRes?.data?.amount,
-                    currency: 'NGN',
-                    // payment_options: 'card,mobilemoney,ussd',
-                    payment_options: 'card',
-                    customer: {
-                        email: currentUser?.user?.email,
-                        phonenumber: currentUser?.user?.phone_number,
-                        name: `${currentUser?.user?.firstname || ''} ${currentUser?.user?.lastname || ''}`.trim(),
-                    },
-                    customizations: {
-                        title: 'AlphaCX',
-                        description: `Payment for ${planState.numOfAgents} agents`,
-                        logo: acxLogo,
-                    },
-                };
-
                 setPlanState((prev) => ({
                     ...prev,
-                    flutterwaveConfig: config,
-                    amount: initPaymentRes?.data?.amount,
+                    flutterwaveConfig: initPaymentRes?.data
                 }));
             } else if (getRealCurrency(tenantInfo?.currency || '') === 'USD') {
                 // STRIPE PAYMENT
