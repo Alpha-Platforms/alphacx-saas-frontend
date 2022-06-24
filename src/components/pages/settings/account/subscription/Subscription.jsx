@@ -134,7 +134,7 @@ function Subscription({
 
     // eslint-disable-next-line consistent-return
     const handleActivateFreePlan = async () => {
-        if (!(subExpired && subscription?.plan?.name !== 'Free Plan')) {
+        if (subExpired && subscription?.plan?.name !== 'Free Plan') {
             // user is not in trial or alpha plan
 
             // const res = await httpPatch(`subscriptions/free-plan`, { tenantId: window.localStorage.getItem('tenantId'), planId: subscription?.plan?.id || "" });
