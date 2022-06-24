@@ -70,7 +70,7 @@ function FlutterWaveAction({ planState, config, setPlanState, getSubscription })
     const configToUse = {
         public_key: config?.FLW_PUBLIC_KEY,
         tx_ref: config?.reference,
-        amount: config?.totalAmount,
+        amount: config?.totalAmount || config?.amount,
         currency: 'NGN',
         // payment_options: 'card,mobilemoney,ussd',
         payment_options: 'card',
@@ -153,8 +153,10 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
                         {`${
                             getRealCurrency(tenantInfo?.currency || '') === 'NGN'
                                 ? separateNum(
-                                      Number(planState?.flutterwaveConfig?.totalAmount) -
-                                          Number(planState?.flutterwaveConfig?.vat),
+                                      Number(
+                                          planState?.flutterwaveConfig?.totalAmount ||
+                                              planState?.flutterwaveConfig?.amount,
+                                      ) - Number(planState?.flutterwaveConfig?.vat),
                                   )
                                 : separateNum(
                                       Number(planState?.stripeConfig?.amount) - Number(planState?.stripeConfig?.vat),
@@ -188,7 +190,11 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
                 <div>
                     <span>{`${
                         getRealCurrency(tenantInfo?.currency || '') === 'NGN'
-                            ? separateNum(Number(planState?.flutterwaveConfig?.totalAmount))
+                            ? separateNum(
+                                  Number(
+                                      planState?.flutterwaveConfig?.totalAmount || planState?.flutterwaveConfig?.amount,
+                                  ),
+                              )
                             : separateNum(Number(planState?.stripeConfig?.amount))
                     } ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
                 </div>
@@ -231,7 +237,11 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
                 <div>
                     <span>{`${
                         getRealCurrency(tenantInfo?.currency || '') === 'NGN'
-                            ? separateNum(Number(planState?.flutterwaveConfig?.totalAmount))
+                            ? separateNum(
+                                  Number(
+                                      planState?.flutterwaveConfig?.totalAmount || planState?.flutterwaveConfig?.amount,
+                                  ),
+                              )
                             : separateNum(Number(planState?.stripeConfig?.amount))
                     } ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
                 </div>
