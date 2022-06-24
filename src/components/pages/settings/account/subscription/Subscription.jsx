@@ -35,7 +35,6 @@ function Subscription({
     observers,
     isUserAuthenticated,
 }) {
-
     const [tenantId] = useState(window.localStorage.getItem('tenantId'));
     const [domain] = useState(window.localStorage.getItem('domain'));
     const [tenantInfo, setTenantInfo] = useState(null);
@@ -134,7 +133,7 @@ function Subscription({
 
     // eslint-disable-next-line consistent-return
     const handleActivateFreePlan = async () => {
-        if (!(subExpired && subscription?.plan?.name !== 'Free Plan')) {
+        if (subExpired && subscription?.plan?.name !== 'Free Plan') {
             // user is not in trial or alpha plan
 
             // const res = await httpPatch(`subscriptions/free-plan`, { tenantId: window.localStorage.getItem('tenantId'), planId: subscription?.plan?.id || "" });
@@ -288,10 +287,8 @@ function Subscription({
                                                                     type="button"
                                                                     className="btn btn-outline-primary"
                                                                     disabled={
-                                                                        !(
-                                                                            subExpired &&
-                                                                            subscription?.plan?.name !== 'Free Plan'
-                                                                        ) && item?.name === 'Free Plan'
+                                                                        subExpired &&
+                                                                        subscription?.plan?.name !== 'Free Plan'
                                                                     }
                                                                     onClick={() => handleActivateFreePlan()}
                                                                 >
