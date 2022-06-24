@@ -150,14 +150,16 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
                             : numOfAgentsToPayFor * plan[planState?.billingCycle?.value],
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span> */}
                     <span>
-                        {getRealCurrency(tenantInfo?.currency || '') === 'NGN'
-                            ? separateNum(
-                                  Number(planState?.flutterwaveConfig?.totalAmount) -
-                                      Number(planState?.flutterwaveConfig?.vat),
-                              )
-                            : separateNum(
-                                  Number(planState?.stripeConfig?.amount) - Number(planState?.stripeConfig?.vat),
-                              )}
+                        {`${
+                            getRealCurrency(tenantInfo?.currency || '') === 'NGN'
+                                ? separateNum(
+                                      Number(planState?.flutterwaveConfig?.totalAmount) -
+                                          Number(planState?.flutterwaveConfig?.vat),
+                                  )
+                                : separateNum(
+                                      Number(planState?.stripeConfig?.amount) - Number(planState?.stripeConfig?.vat),
+                                  )
+                        } ${getRealCurrency(tenantInfo?.currency || '')}`}
                     </span>
                 </div>
             </div>
