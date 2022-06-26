@@ -8,6 +8,7 @@ import { NotificationManager } from 'react-notifications';
 import { connect } from 'react-redux';
 import MoonLoader from 'react-spinners/MoonLoader';
 import moment from 'moment';
+import { Modal } from 'react-responsive-modal';
 import SubTop, { getRealCurrency } from './components/SubTop';
 import CurrentPlan from './components/CurrentPlan';
 import Summary from './components/Summary';
@@ -35,13 +36,13 @@ function Subscription({
     observers,
     isUserAuthenticated,
 }) {
-
     const [tenantId] = useState(window.localStorage.getItem('tenantId'));
     const [domain] = useState(window.localStorage.getItem('domain'));
     const [tenantInfo, setTenantInfo] = useState(null);
     const [subscription, setSubscription] = useState(null);
     const [plans, setPlans] = useState(null);
     const [totalUsers, setTotalUsers] = useState(null);
+    const [openModal, setOpenModal] = useState(false);
 
     const [planState, setPlanState] = useState({
         numOfAgents: 0,
@@ -145,9 +146,10 @@ function Subscription({
             });
 
             if (res?.status === 'success') {
-                window.location.href = `/settings/account?tab=subscription`;
+                getSubscription({ reload: true });
                 return NotificationManager.success('', 'Successful', 4000);
             }
+            
         }
     };
 
@@ -287,13 +289,13 @@ function Subscription({
                                                                 <button
                                                                     type="button"
                                                                     className="btn btn-outline-primary"
-                                                                    disabled={
-                                                                        !(
+                                                                    disabled={!(
                                                                             subExpired &&
                                                                             subscription?.plan?.name !== 'Free Plan'
-                                                                        ) && item?.name === 'Free Plan'
+                                                                        ) &&
+                                                                        item?.name === 'Free Plan'
                                                                     }
-                                                                    onClick={() => handleActivateFreePlan()}
+                                                                    onClick={() => setOpenModal(true)}
                                                                 >
                                                                     Activate
                                                                 </button>
@@ -319,6 +321,27 @@ function Subscription({
                                             ))}
                                         </div>
                                     )}
+                                    <Modal open={openModal} onClose={() => setOpenModal(false)} center>
+                                        <div className="p-5 w-100">
+                                            <h6 className="mb-4">Are you sure you want to activate the free plan?</h6>
+                                            <div className="d-flex justify-content-center">
+                                                <button
+                                                    type="button"
+                                                    className="btn f-12 bg-outline-custom cancel px-4"
+                                                    onClick={() => setOpenModal(false)}
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="btn ms-2 f-12 bg-custom px-4"
+                                                    onClick={() => handleActivateFreePlan()}
+                                                >
+                                                    Confirm
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </Modal>
                                     <div>
                                         <PaymentHistory tenantId={tenantId} />
                                     </div>
