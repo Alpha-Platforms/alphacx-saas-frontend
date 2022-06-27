@@ -14,7 +14,6 @@ import acxLogo from '../../../../../../assets/images/whitebg.jpg';
 
 function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalUsers }) {
     const [initiating, setInitiating] = useState(false);
-    const [actionType, setActionType] = useState('renew-plan');
 
     const handleInitiatePayment = async () => {
         setInitiating(true);
@@ -22,18 +21,16 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
         // moment(subscription?.subscription?.end_date).isAfter(new Date())
 
         const paymentInitEndpoint =
-            ['monthly', 'yearly'].includes(subscription?.subscription?.interval) &&
-            subscription?.plan?.name?.toLowerCase() !== 'free plan' &&
-            subscription?.plan?.name?.toLowerCase() !== 'alpha trial'
+            ['monthly', 'yearly'].includes(subscription?.subscription?.interval) && planState.actionType === 'add-user'
                 ? `subscriptions/payment/initialize-subscription-update`
                 : `subscriptions/initialize-payment`;
 
         // body data to initiate payment
         const initPaymentBody =
-            paymentInitEndpoint === 'subscriptions/payment/initialize-subscription-update'
+            planState.actionType === 'add-user'
                 ? {
                       tenantId: window.localStorage.getItem('tenantId'),
-                      numOfUsers: planState?.numOfAgents,
+                      numOfUsers: planState.numOfAgents,
                   }
                 : {
                       tenantId: window.localStorage.getItem('tenantId'),
@@ -117,12 +114,18 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
     }, [initiating]);
 
     const handleNumChange = (e) => {
-        if (Number(e.target.value) < totalUsers?.length) return;
+        if (Number(e.target.value) < totalUsers?.length && planState?.actionType !== 'add-user') return;
+        if (Number(e.target.value) < 0 && planState?.actionType === 'add-user') return;
         setPlanState((prev) => ({ ...prev, numOfAgents: e.target.value }));
     };
 
     const handleActionType = (e) => {
-        setActionType(e.target.id);
+        const type = e.target.id;
+        setPlanState((prev) => ({
+            ...prev,
+            actionType: type,
+            numOfAgents: type === 'add-user' ? 1 : totalUsers?.length || 0,
+        }));
     };
 
     return (
@@ -135,7 +138,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                     name="actiontype"
                     type="radio"
                     id="renew-plan"
-                    checked={actionType === 'renew-plan'}
+                    checked={planState.actionType === 'renew-plan'}
                 />
                 <FormCheck
                     onChange={handleActionType}
@@ -144,7 +147,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                     name="actiontype"
                     type="radio"
                     id="add-user"
-                    checked={actionType === 'add-user'}
+                    checked={planState.actionType === 'add-user'}
                 />
                 <FormCheck
                     onChange={handleActionType}
@@ -153,12 +156,17 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                     name="actiontype"
                     type="radio"
                     id="update-plan"
-                    checked={actionType === 'update-plan'}
+                    checked={planState.actionType === 'update-plan'}
                 />
             </div>
             <p className="mb-1">
                 <small>
-                    <b>ⓘ</b> You can only pay for your number of active users ({totalUsers.length}) and above.
+                    <b>ⓘ</b>{' '}
+                    {planState.actionType === 'renew-plan'
+                        ? 'You can only renew active users. To renew inactive users click here'
+                        : planState.actionType === 'add-user'
+                        ? 'Add number of additional user licenses you want.'
+                        : `You can only pay for your number of active users (${totalUsers.length}) and above.`}
                 </small>
             </p>
             <div className="cp-top">
@@ -176,7 +184,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                             onChange={handlePlanChange}/>
                     </div> */}
                     <div>
-                        <label htmlFor="numOfAgents">Agents</label>
+                        <label htmlFor="numOfAgents">No. of Agents</label>
                         <div>
                             <input
                                 type="number"
@@ -184,9 +192,9 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                                 value={planState.numOfAgents}
                                 name="numOfAgents"
                                 id="numOfAgents"
-                                min={totalUsers.length}
+                                min={planState?.actionType === 'add-user' ? 0 : totalUsers.length}
                                 onChange={handleNumChange}
-                                disabled={planState.isUpdatingPlan || actionType === 'renew-plan'}
+                                disabled={planState.isUpdatingPlan || planState.actionType === 'renew-plan'}
                             />
                         </div>
                     </div>
@@ -202,14 +210,10 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                             className="billing-time-select"
                             value={planState.billingCycle}
                             isDisabled={
-                                actionType === 'renew-plan' ||
-                                actionType === 'add-user' ||
+                                planState.actionType === 'renew-plan' ||
+                                planState.actionType === 'add-user' ||
                                 initiating ||
-                                planState.isUpdatingPlan ||
-                                (subscription?.subscription?.interval === 'monthly' &&
-                                    subscription?.plan?.name === 'Alpha Plan') ||
-                                (subscription?.subscription?.interval === 'yearly' &&
-                                    subscription?.plan?.name === 'Alpha Plan')
+                                planState.isUpdatingPlan
                             }
                             options={[
                                 {
@@ -229,7 +233,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
 
             <p>
                 {separateNum(planState?.selectedPlan?.monthly_amount)}{' '}
-                {getRealCurrency(planState?.selectedPlan?.currency || '')} per agent / month
+                {getRealCurrency(planState?.selectedPlan?.currency || '')} / agent / month
             </p>
 
             <div className="agent-count-select">
@@ -243,7 +247,15 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
             </div>
 
             <div className="updateplan-btn-wrapper">
-                <button onClick={handleUpdatePlanBtn} type="button" disabled={initiating || planState.isUpdatingPlan}>
+                <button
+                    onClick={handleUpdatePlanBtn}
+                    type="button"
+                    disabled={
+                        initiating ||
+                        planState.isUpdatingPlan ||
+                        (planState.actionType === 'add-user' && planState?.numOfAgents <= 0)
+                    }
+                >
                     {Object.keys(planState?.selectedPlan || {}).length === 0 ? 'Select Plan' : 'Update Plan'}
                 </button>
 

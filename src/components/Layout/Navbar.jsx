@@ -1,4 +1,9 @@
-/* eslint-disable */
+/* eslint-disable consistent-return */
+/* eslint-disable array-callback-return */
+/* eslint-disable react/no-danger */
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable react/prop-types */
+/* eslint-disabled */
 // @ts-nocheck
 import React, { useEffect, useState, useContext, Fragment } from 'react';
 import { Link, NavLink, useHistory } from 'react-router-dom';
@@ -13,7 +18,7 @@ import { LayoutContext } from '../../context/layoutContext';
 import { NotificationBellEmpty, NotificationBellNew } from '../../assets/images/svgs';
 // import userIcon from "../../assets/images/user.png";
 import searchIcon from '../../assets/imgF/Search.png';
-import { HelpIcon, DowncaretIcon, PlusIcon } from '../../assets/SvgIconsSet.jsx';
+import { HelpIcon, DowncaretIcon, PlusIcon } from '../../assets/SvgIconsSet';
 import CreateTicketModal from '../pages/tickets/CreateTicketModal';
 import CreateCustomerModal from '../pages/customers/CreateCustomerModal';
 import DummyAvatar from '../../assets/images/dummyavatar.jpeg';
@@ -27,10 +32,18 @@ import { multiIncludes } from '../../helper';
 function DropDown() {
     const [createCustModalShow, setCreateCustModalShow] = useState(false);
     const [createTicketModalShow, setCreateTicketModalShow] = useState(false);
+    const tenantSubscription = JSON.parse(window.localStorage.getItem('tenantSubscription'));
+    const subExpired = moment(tenantSubscription?.subscription?.end_date).isBefore(new Date());
     return (
         <>
             <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown global-create-dropdown">
-                <Dropdown.Toggle variant="" size="" className="btn acx-btn-primary" style={{ borderRadius: '.15rem' }}>
+                <Dropdown.Toggle
+                    disabled={subExpired}
+                    variant=""
+                    size=""
+                    className="btn acx-btn-primary"
+                    style={{ borderRadius: '.15rem' }}
+                >
                     <div style={{ padding: '.25rem .5rem' }}>
                         <PlusIcon />
                         <span className="px-2">Create</span>
@@ -39,10 +52,22 @@ function DropDown() {
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                     <Dropdown.Item eventKey="1">
-                        <button onClick={() => setCreateTicketModalShow(true)}>Ticket</button>
+                        <button
+                            type="button"
+                            disabled={subExpired}
+                            onClick={() => !subExpired && setCreateTicketModalShow(true)}
+                        >
+                            Ticket
+                        </button>
                     </Dropdown.Item>
                     <Dropdown.Item eventKey="2">
-                        <button onClick={() => setCreateCustModalShow(true)}>Customer</button>
+                        <button
+                            type="button"
+                            disabled={subExpired}
+                            onClick={() => !subExpired && setCreateCustModalShow(true)}
+                        >
+                            Customer
+                        </button>
                     </Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
@@ -70,29 +95,23 @@ function Notification({ userId }) {
 
     useEffect(() => {
         notifications.map((item) => {
-            if (item.isRead == false) setIsUnreadNotificiations(false);
+            if (item.isRead === false) setIsUnreadNotificiations(false);
         });
     }, [notifications]);
 
-    useEffect(() => {
-        getNotifications();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userId]);
-
-    //
     function createMarkup(data) {
         return { __html: data };
     }
 
-    const markAllRead = (e) => {
+    const markAllRead = () => {
         httpPatchMain(`notifications_mark_all?userId=${userId}`)
-            .then((res) => {
+            .then(() => {
                 setNotifications([]);
                 setIsUnreadNotificiations(true);
                 setNotificationsLoaded(false);
                 return NotificationManager.success('All notifications marked read', 'Success', 4000);
             })
-            .catch((error) => console.log(error));
+            .catch((error) => console.error(error));
 
         // if (res.status === "success") {
         //   console.log(res.data);
@@ -115,8 +134,13 @@ function Notification({ userId }) {
         }
     };
 
-    const goToTicket = (e, data, index) => {
-        if (e.target.localName == 'a') {
+    useEffect(() => {
+        getNotifications();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [userId]);
+
+    const goToTicket = (e, data) => {
+        if (e.target.localName === 'a') {
             return;
         }
 
@@ -140,7 +164,7 @@ function Notification({ userId }) {
         // Mark notification as read when clicked
         httpPatchMain(`notifications/${data.notificationId}`, {
             isRead: true,
-        }).then(({ data }) => {
+        }).then(() => {
             // const notifs = [...notifications]
             // notifs[index] = data
             // setNotifications(notifs)
@@ -170,7 +194,7 @@ function Notification({ userId }) {
                         <div className="flex-grow-1">
                             <p
                                 className={`acx-text-gray-800 mb-0 ${
-                                    notifications.length == 0 || notifications == null || notifications == undefined
+                                    notifications.length === 0 || notifications == null || notifications === undefined
                                         ? 'text-center'
                                         : ''
                                 }`}
@@ -178,9 +202,9 @@ function Notification({ userId }) {
                                 Notifications
                             </p>
                         </div>
-                        {notifications.length == 0 ||
-                        notifications == null ||
-                        notifications == undefined ||
+                        {notifications.length === 0 ||
+                        notifications === null ||
+                        notifications === undefined ||
                         isUnreadNotificiations ? (
                             ''
                         ) : (
@@ -192,13 +216,13 @@ function Notification({ userId }) {
                         )}
                     </Dropdown.Header>
 
-                    {notificationsLoaded == false ? (
+                    {notificationsLoaded === false ? (
                         <NavDropdown.Item as="div">
                             <div className="d-flex justify-content-center align-items-center py-5 ps-1 notification-loader-indicator">
-                                <MoonLoader color="#0d4166" loading={notificationsLoaded == false} size={30} />
+                                <MoonLoader color="#0d4166" loading={notificationsLoaded === false} size={30} />
                             </div>
                         </NavDropdown.Item>
-                    ) : notifications.length == 0 || notifications == null || notifications == undefined ? (
+                    ) : notifications.length === 0 || notifications == null || notifications === undefined ? (
                         <NavDropdown.Item as="div">
                             <div className="d-flex flex-column justify-content-center align-items-center py-3">
                                 <h2 className="text-muted mb-2">
@@ -213,7 +237,7 @@ function Notification({ userId }) {
                                 .slice(0)
                                 .reverse()
                                 .map((data, index) => {
-                                    if ((!data.isRead && data.type == 'tickets') || data.type == 'mention') {
+                                    if ((!data.isRead && data.type === 'tickets') || data.type === 'mention') {
                                         return (
                                             <NavDropdown.Item
                                                 key={index}
@@ -237,13 +261,13 @@ function Notification({ userId }) {
                                                                 <span>
                                                                     {InitialsFromString(
                                                                         `${
-                                                                            data?.sender?.firstname == 'default' ||
+                                                                            data?.sender?.firstname === 'default' ||
                                                                             !data?.sender?.firstname
                                                                                 ? ''
                                                                                 : data?.sender?.firstname
                                                                         }`,
                                                                         `${
-                                                                            data?.sender?.lastname == 'default' ||
+                                                                            data?.sender?.lastname === 'default' ||
                                                                             !data?.sender?.lastname
                                                                                 ? ''
                                                                                 : data?.sender?.lastname
@@ -321,41 +345,63 @@ function Navbar({ pageName, user }) {
     const [notif, setNotif] = useState({
         active: false,
         trialDaysLeft: 0,
-        plan: '',
+        trialHoursLeft: 0,
+        trialMinutesLeft: 0,
+        planName: '',
+        subExpired: false,
     });
 
     useEffect(() => {
         const tenantSubscription = JSON.parse(window.localStorage.getItem('tenantSubscription'));
 
         if (tenantSubscription) {
-            if (tenantSubscription?.subscription?.is_trial || tenantSubscription?.plan?.name === 'Alpha Plan') {
-                // days left for plan expiration
-                const daysLeft = moment(tenantSubscription?.subscription?.end_date).diff(moment(new Date()), 'days');
+            if (tenantSubscription?.subscription?.is_trial || tenantSubscription?.plan?.name !== 'Free Plan') {
+                const endDate = tenantSubscription?.subscription?.end_date;
 
-                if (daysLeft <= 8 && daysLeft > 0) {
+                // days left for plan expiration
+                const daysLeft = moment(endDate).diff(moment(new Date()), 'days');
+                const hoursLeft = moment(endDate).diff(moment(new Date()), 'hours');
+                const minutesLeft = moment(endDate).diff(moment(new Date()), 'minutes');
+                const subExpired = moment(endDate).isBefore(new Date());
+
+                if (daysLeft <= 8) {
                     setNotif((prev) => ({
                         ...prev,
                         active: true,
                         trialDaysLeft: daysLeft,
-                        plan: tenantSubscription?.plan?.name,
+                        trialHoursLeft: hoursLeft,
+                        trialMinutesLeft: minutesLeft,
+                        planName: tenantSubscription?.plan?.name,
+                        subExpired,
                     }));
                 }
             }
         }
     }, []);
 
-    useEffect(() => {
-        getUserFromStorage();
-    }, [window.localStorage.getItem('user')]);
-
     const getUserFromStorage = () => {
         const lUser = localStorage.getItem('user');
-        if (lUser === undefined || lUser === null) {
-        } else {
+        if (lUser) {
             const parse = JSON.parse(lUser);
             // console.log(parse);
             setlocalUser(parse.user);
         }
+    };
+
+    useEffect(() => {
+        getUserFromStorage();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [window.localStorage.getItem('user')]);
+
+    const getActualTime = ({ trialDaysLeft, trialHoursLeft, trialMinutesLeft }) => {
+        const daysLeft = Math.abs(trialDaysLeft);
+        const hoursLeft = Math.abs(trialHoursLeft);
+        const minutesLeft = Math.abs(trialMinutesLeft);
+
+        if (daysLeft > 0) return `${daysLeft} ${daysLeft > 1 ? 'days' : 'day'}`;
+        if (hoursLeft > 0) return `${hoursLeft} ${hoursLeft > 1 ? 'hours' : 'hour'}`;
+        if (minutesLeft > 0) return `${minutesLeft} ${minutesLeft > 1 ? 'minutes' : 'minute'}`;
+        return 'less than a minute';
     };
 
     return (
@@ -380,9 +426,15 @@ function Navbar({ pageName, user }) {
                 >
                     {notif.active && (
                         <div className="sub-notif">
-                            <span>
-                                Your {notif.plan} is ending in {notif.trialDaysLeft} {notif.trialDaysLeft > 1 ? 'days' : 'day'}.
-                            </span>{' '}
+                            {!notif.subExpired ? (
+                                <span>
+                                    Your {notif.planName} is ending in {getActualTime(notif)}.
+                                </span>
+                            ) : (
+                                <span>
+                                    Your {notif.planName} has expired {getActualTime(notif)} ago.
+                                </span>
+                            )}{' '}
                             <Link
                                 to="/settings/account?tab=subscription"
                                 className="btn btn-sm bg-at-blue-light sub-notif-get"
@@ -390,6 +442,7 @@ function Navbar({ pageName, user }) {
                                 Get Alpha Plan Now
                             </Link>{' '}
                             <button
+                                type="button"
                                 onClick={() => setNotif((prev) => ({ ...prev, active: false }))}
                                 className="sub-notif-cancel btn"
                             >
@@ -476,7 +529,7 @@ function Navbar({ pageName, user }) {
     );
 }
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
     user: state.userAuth.user,
 });
 

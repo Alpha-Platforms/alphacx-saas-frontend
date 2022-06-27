@@ -62,6 +62,8 @@ function UserList({
     const [combinedUsers, setCombinedUsers] = useState([]);
     const [canAddUser, setCanAddUser] = useState(false);
 
+    const activatedUsers = combinedUsers.filter((user) => user?.isActivated);
+
   
 
     useEffect(() => {
@@ -137,10 +139,10 @@ function UserList({
         },
     });
 
-    const changeActiveState = async (id, isActivated) => {
+    const changeActiveState = async (id, isActivated, role) => {
         const userRes = await updateUser({
             id,
-            role: 'Agent',
+            role,
             isActivated: !isActivated,
             // isActivated: !isActivated ? true : "false"
         });
@@ -154,8 +156,13 @@ function UserList({
         }
     };
 
+    const tenantSubscription = JSON.parse(window.localStorage.getItem('tenantSubscription'));
+    const numOfSubUsers = tenantSubscription?.subscription?.no_of_users || 0;
+    
     function handleActiveChange() {
-        const { name, isActivated, id } = this;
+        const { name, isActivated, id, role } = this;
+        if (authenticatedUserRole !== 'Administrator' && authenticatedUserRole !== 'Supervisor') return;
+        if (activatedUsers.length >= numOfSubUsers && !isActivated) return;
 
         Swal.fire({
             title: isActivated ? 'Deactivate?' : 'Activate?',
@@ -167,15 +174,11 @@ function UserList({
             cancelButtonText: 'No',
         }).then((result) => {
             if (result.isConfirmed) {
-                console.log('Deactivate or Activated user');
-                changeActiveState(id, isActivated);
-            } else {
-                console.log('Do nothing');
+                changeActiveState(id, isActivated, role);
             }
         });
     }
 
-    const tenantSubscription = JSON.parse(window.localStorage.getItem('tenantSubscription'));
 
     return (
         <div>
@@ -201,17 +204,17 @@ function UserList({
                     </div>
                     <div className="mt-3">
                         {(tenantSubscription?.plan?.name === 'Free Plan' && combinedUsers.length > 3) ||
-                        (tenantSubscription?.plan?.name === 'Alpha Plan' &&
+                        ((tenantSubscription?.plan?.name !== 'Free Plan' && tenantSubscription?.plan?.name !== 'Alpha Trial') &&
                             combinedUsers.length > tenantSubscription?.subscription?.no_of_users) ? (
                             <br />
                         ) : (
                             <AccessControl>
-                                <button
+                                {tenantSubscription && <button
                                     className="btn btn-custom btn-sm px-4 bg-at-blue-light py-2"
                                     onClick={() => setCreateModalShow(true)}
                                 >
                                     New User
-                                </button>
+                                </button>}
                             </AccessControl>
                         )}
 
@@ -347,6 +350,7 @@ function UserList({
                                                         name: rowData.name,
                                                         isActivated: rowData.isActivated,
                                                         id: rowData.userId,
+                                                        role: rowData.role,
                                                     })}
                                                     readOnly
                                                     type="checkbox"

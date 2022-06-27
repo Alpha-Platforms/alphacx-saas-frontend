@@ -1,3 +1,6 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable react/no-this-in-sfc */
+/* eslint-disable no-return-assign */
 /* eslint-disable camelcase */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/no-danger */
@@ -52,6 +55,7 @@ import { accessControlFunctions } from '../../../config/accessControlList';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './conversation.css';
 import Socket from '../../../socket';
+import noimage from '../../../assets/images/noimage.png';
 
 function YouTubeGetID(url) {
     let ID = '';
@@ -412,20 +416,39 @@ function Conversation({ user }) {
                 console.log('Message from socket => ', eventData);
                 if (
                     (eventData?.type === 'liveStream' || eventData?.type === 'socketHook') &&
-                    eventData?.status === 'incoming'
+                    eventData?.status === 'incoming' &&
+                    !eventData?.data?.notification
                 ) {
                     const data = eventData?.data;
                     if (ticketId && data?.id === ticketId) {
-                        const reply = {
-                            ...data?.reply,
-                        };
-                        // set message history only when the
                         setMsgHistory((prev) => {
+                            const reply = {
+                                ...data?.reply,
+                            };
+                            if (data?.reply?.is_deleted) {
+                                return prev.filter((item) => item?.id !== data?.reply?.id);
+                            }
                             return [...prev, reply];
                         });
-                        scrollPosSendMsgList('#lastMsg');
+                        if (!data?.reply?.is_deleted) scrollPosSendMsgList('#lastMsg');
                     }
+
                     setTickets((prev) => {
+                        if (data?.reply?.is_deleted)
+                            return prev.map((ticketItem) => {
+                                if (ticketItem?.id === data?.id) {
+                                    const newTicket = {
+                                        ...ticketItem,
+                                        history: ticketItem.history?.filter((item) => item?.id !== data?.reply?.id),
+                                        __metaticketItem__: {
+                                            ...ticketItem?.__meta__,
+                                            history_count: Number(ticket?.__meta__?.history_count) - 1,
+                                        },
+                                    };
+                                    return newTicket;
+                                }
+                                return ticketItem;
+                            });
                         // get ticket from existing
                         const currentTicket = prev.find((item) => item?.id === data?.id);
                         if (currentTicket) {
@@ -534,8 +557,30 @@ function Conversation({ user }) {
         //
         setCustomFieldIsSet(true);
         setCustomFieldsGroup([...groupedCustomFields]);
+        // if (ticket?.length > 0) {
+        //     const loadedTicket = ticket[0];
+        //     if (loadedTicket?.channel?.toLowerCase() === 'instagram') {
+        //         setTimeout(() => {
+
+        //         }, 2000);
+        //     }
+        // }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ticket]);
+
+    const convoMain = document.querySelector('#conversationMain');
+
+    useEffect(() => {
+        if (convoMain) {
+            const allMsgImgs = convoMain.querySelectorAll('img');
+            allMsgImgs.forEach((img) => {
+                // eslint-disable-next-line func-names
+                img.onerror = function () {
+                    this.src = noimage;
+                };
+            });
+        }
+    }, [convoMain]);
 
     const onEditorStateChange = (newEditorState) => {
         const plainText = newEditorState.getCurrentContent().getPlainText();
@@ -565,8 +610,6 @@ function Conversation({ user }) {
         }
         setFilterTicketsState(value);
     };
-
-    console.log('replyType => ', replyType);
 
     const replyTicket = async (reply, attachment, type = replyType) => {
         if (!reply?.richText?.trim() || !reply?.plainText?.trim()) return;
@@ -977,7 +1020,7 @@ function Conversation({ user }) {
                                     </div>
                                 </div>
                                 {/* CHAT SECTION */}
-                                <div className="conversationsMain">
+                                <div className="conversationsMain" id="conversationMain">
                                     {AchiveMsges.length === 0 ? (
                                         ''
                                     ) : (

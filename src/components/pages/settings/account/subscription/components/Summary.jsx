@@ -10,7 +10,7 @@ import { httpPost } from '../../../../../../helpers/httpMethods';
 import { getRealCurrency } from './SubTop';
 import { separateNum } from '../../../../../../helper';
 
-function CheckoutForm({ setPlanState, planState }) {
+function CheckoutForm({ setPlanState, planState, getSubscription }) {
     const stripe = useStripe();
     const elements = useElements();
 
@@ -41,7 +41,8 @@ function CheckoutForm({ setPlanState, planState }) {
             setPlanState((prev) => ({ ...prev, isVerifying: false }));
             if (verifyPaymentRes?.status === 'success') {
                 NotificationManager.success('', 'Transaction successful', 4000);
-                window.location.href = `/settings/account?tab=subscription`;
+                getSubscription({ reload: true });
+                // window.location.href = `/settings/account?tab=subscription`;
                 // setPlanState(prev => ({...prev, isUpdatingPlan: false,
                 // stripeConfig: null, amount: null, setSelectingPlan: false}));
             }
@@ -61,7 +62,7 @@ function CheckoutForm({ setPlanState, planState }) {
     );
 }
 
-function FlutterWaveAction({ config, setPlanState }) {
+function FlutterWaveAction({ config, setPlanState, getSubscription }) {
     // use flutterwave react hook
     const handleFlutterPayment = useFlutterwave(config);
 
@@ -80,7 +81,8 @@ function FlutterWaveAction({ config, setPlanState }) {
 
                             if (verifyPaymentRes?.status === 'success') {
                                 NotificationManager.success('', 'Transaction successful', 4000);
-                                window.location.href = `/settings/account?tab=subscription`;
+                                getSubscription({ reload: true });
+                                // window.location.href = `/settings/account?tab=subscription`;
                                 // setPlanState(prev => ({...prev, isUpdatingPlan: false,
                                 // flutterwaveConfig: null, amount: null, selectingPlan: false}));
                             }
@@ -104,7 +106,8 @@ function FlutterWaveAction({ config, setPlanState }) {
     );
 }
 
-function Summary({ planState, setPlanState, subscription, tenantInfo }) {
+function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
+    const numOfAgentsToPayFor = planState.numOfAgents;
     return (
         <div className="summary-box">
             <h5>Summary</h5>
@@ -113,39 +116,42 @@ function Summary({ planState, setPlanState, subscription, tenantInfo }) {
 
             <div className="sbox-2">
                 <div>
-                    <span>Alpha</span>
+                    <span>{planState?.selectedPlan?.name}</span>
                     <span>
-                        {planState.numOfAgents} Agent{planState.numOfAgents > 1 ? 's' : ''}
+                        {numOfAgentsToPayFor} Agent{numOfAgentsToPayFor > 1 ? 's' : ''}
                     </span>
                 </div>
                 <div>
                     {/* <span>{`${separateNum(
                         planState?.amount
                             ? planState?.amount
-                            : planState.numOfAgents * plan[planState?.billingCycle?.value],
+                            : numOfAgentsToPayFor * plan[planState?.billingCycle?.value],
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span> */}
                     <span>{`${separateNum(
-                        planState.numOfAgents * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
+                        numOfAgentsToPayFor * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
                 </div>
             </div>
 
-            <div className="sbox-2 mt-3">
-                <div>
-                    <span>VAT</span>
+            {tenantInfo?.currency?.toUpperCase() === 'NGN' && (
+                <div className="sbox-2 mt-3">
+                    <div>
+                        <span>VAT</span>
+                    </div>
+                    <div>
+                        <span>{`${separateNum(
+                            planState?.amount
+                                ? Number(planState?.amount)
+                                    ? Number(planState?.amount) -
+                                      numOfAgentsToPayFor *
+                                          (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0)
+                                    : planState?.amount
+                                : numOfAgentsToPayFor *
+                                      (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
+                        )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
+                    </div>
                 </div>
-                <div>
-                    <span>{`${separateNum(
-                        planState?.amount
-                            ? Number(planState?.amount)
-                                ? Number(planState?.amount) -
-                                  planState.numOfAgents *
-                                      (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0)
-                                : planState?.amount
-                            : planState.numOfAgents * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
-                    )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
-                </div>
-            </div>
+            )}
 
             <div className="summary-divider" />
 
@@ -157,7 +163,7 @@ function Summary({ planState, setPlanState, subscription, tenantInfo }) {
                     <span>{`${separateNum(
                         planState?.amount
                             ? planState?.amount
-                            : planState.numOfAgents * (planState?.selectedPlan[planState?.billingCycle?.value] || 0),
+                            : numOfAgentsToPayFor * (planState?.selectedPlan[planState?.billingCycle?.value] || 0),
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
                 </div>
             </div>
@@ -200,7 +206,7 @@ function Summary({ planState, setPlanState, subscription, tenantInfo }) {
                     <span>{`${separateNum(
                         planState?.amount
                             ? planState?.amount
-                            : planState.numOfAgents * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
+                            : numOfAgentsToPayFor * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
                 </div>
             </div>
@@ -212,6 +218,7 @@ function Summary({ planState, setPlanState, subscription, tenantInfo }) {
                         planState={planState}
                         config={planState.flutterwaveConfig}
                         setPlanState={setPlanState}
+                        getSubscription={getSubscription}
                     />
                 )}
             </div>
@@ -221,7 +228,11 @@ function Summary({ planState, setPlanState, subscription, tenantInfo }) {
                         stripe={loadStripe(planState.stripeConfig?.STRIPE_PUBLIC_KEY)}
                         options={{ clientSecret: planState.stripeConfig?.clientSecret }}
                     >
-                        <CheckoutForm planState={planState} setPlanState={setPlanState} />
+                        <CheckoutForm
+                            planState={planState}
+                            setPlanState={setPlanState}
+                            getSubscription={getSubscription}
+                        />
                     </Elements>
                 )}
             </div>
