@@ -211,7 +211,7 @@ function SocialIntegrations({configs}) {
               </div>
               <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
                 <div className="me-2">
-                  <h6 className="text-dark mb-0">Twitter</h6>
+                  <h6 className="text-dark mb-0">Twitter<span  className='ms-1 text-white' style={{fontSize: '0.6rem', padding: '2px 4px', background: '#1da1f1', borderRadius: '2px', verticalAlign: 'middle'}}>Beta</span></h6>
                   <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
                     Receive and respond to Twitter direct messages as tickets
                   </p>
