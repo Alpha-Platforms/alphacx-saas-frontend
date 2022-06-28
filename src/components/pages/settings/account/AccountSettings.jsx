@@ -1,3 +1,6 @@
+/* eslint-disable react/no-this-in-sfc */
+/* eslint-disable no-lonely-if */
+/* eslint-disable no-undef */
 // @ts-nocheck
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -65,7 +68,7 @@ function AccountSettings() {
                 no_file_select_err: {
                     message: 'Error',
                     rule: (_, params) => {
-                        return !!params[0];
+                        return !params[0];
                     },
                     messageReplace: (_, params) => params[0],
                 },
@@ -143,6 +146,135 @@ function AccountSettings() {
 
     const triggerFileSelect = (fileRef) => {
         if (fileRef) fileRef?.current?.click();
+    };
+
+    const handleImgSelect = function (e, type) {
+        // store current input
+        const fileInput = e.target;
+
+        // create a store for the current dimension and default info
+        const maxReqDimensions = {
+            width: 1500,
+            height: 1500,
+        };
+
+        if (!fileInput.files.length) {
+            // No file is selected
+            type === 'app-icon'
+                ? setAppIcon((prev) => ({
+                      ...prev,
+                      msg: 'Click or drag file here to add',
+                      errorMsg: '',
+                      blob: '',
+                      image: '',
+                      imageFile: null,
+                  }))
+                : type === 'app-logo' &&
+                  setAppLogo((prev) => ({
+                      ...prev,
+                      msg: 'Click or drag file here to add',
+                      errorMsg: '',
+                      blob: '',
+                      image: '',
+                      imageFile: null,
+                  }));
+        } else {
+            // file selected
+
+            // check if selected file is an image
+            if (fileInput.files[0].type.indexOf('image/') === -1) {
+                // Selected file is not an image
+                type === 'app-icon'
+                    ? setAppIcon((prev) => ({
+                          ...prev,
+                          msg: 'Click or drag file here to add',
+                          errorMsg: 'Selected file is not an image',
+                          blob: '',
+                          image: '',
+                          imageFile: null,
+                      }))
+                    : type === 'app-logo' &&
+                      setAppLogo((prev) => ({
+                          ...prev,
+                          msg: 'Click or drag file here to add',
+                          errorMsg: 'Selected file is not an image',
+                          blob: '',
+                          image: '',
+                          imageFile: null,
+                      }));
+            } else {
+                // Selected file is an image
+                /*
+                 * read the selected image to get the file width and height
+                 */
+                // create a new file reader object
+                const reader = new FileReader();
+                reader.readAsDataURL(fileInput.files[0]);
+                reader.onload = function () {
+                    // when reader has loaded
+
+                    // create a new image object
+                    const currentImage = new Image();
+                    // set the source of the image to the base64 string from the file reader
+                    currentImage.src = this.result;
+
+                    currentImage.onload = function () {
+                        const [currentImageHeight, currentImageWidth] = [this.height, this.width];
+
+                        if (
+                            currentImageWidth > maxReqDimensions.width ||
+                            currentImageHeight > maxReqDimensions.height
+                        ) {
+                            // current selected image dimesions are not acceptable
+                            type === 'app-icon'
+                                ? setAppIcon((prev) => ({
+                                      ...prev,
+                                      msg: 'Click or drag file here to add',
+                                      errorMsg: `Selected image should have max dimension of ${maxReqDimensions.width}x${maxReqDimensions.height}`,
+                                      blob: '',
+                                      image: '',
+                                      imageFile: null,
+                                  }))
+                                : type === 'app-logo' &&
+                                  setAppLogo((prev) => ({
+                                      ...prev,
+                                      msg: 'Click or drag file here to add',
+                                      errorMsg: `Selected image should have max dimension of ${maxReqDimensions.width}x${maxReqDimensions.height}`,
+                                      blob: '',
+                                      image: '',
+                                      imageFile: null,
+                                  }));
+                        } else {
+                            // current selected image dimensions are acceptable
+                            const fileName = fileInput.files[0].name;
+                            const fileBlob = URL.createObjectURL(fileInput.files[0]);
+                            type === 'app-icon'
+                                ? setAppIcon((prev) => ({
+                                      ...prev,
+                                      msg: fileName,
+                                      errorMsg: '',
+                                      blob: fileBlob,
+                                      image: '',
+                                      imageFile: fileInput.files[0],
+                                  }))
+                                : type === 'app-logo' &&
+                                  setAppLogo((prev) => ({
+                                      ...prev,
+                                      msg: fileName,
+                                      errorMsg: '',
+                                      blob: fileBlob,
+                                      image: '',
+                                      imageFile: fileInput.files[0],
+                                  }));
+                            /* 
+                            when the image with the blob loads call the below method
+                            URL.revokeObjectURL(this.src);  where this.src is the blob created
+                            */
+                        }
+                    };
+                };
+            }
+        }
     };
 
     return (
