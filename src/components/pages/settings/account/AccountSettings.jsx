@@ -1,7 +1,7 @@
+/* eslint-disable camelcase */
 /* eslint-disable func-names */
 /* eslint-disable react/no-this-in-sfc */
 /* eslint-disable no-lonely-if */
-/* eslint-disable no-undef */
 // @ts-nocheck
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -14,12 +14,14 @@ import { NotificationManager } from 'react-notifications';
 import MoonLoader from 'react-spinners/MoonLoader';
 import RSelect from 'react-select';
 import SimpleReactValidator from 'simple-react-validator';
+import axios from 'axios';
 import { timezone } from '../../../shared/timezone';
 import { languages } from '../../../shared/languages';
 import { countries } from '../../../shared/countries';
 import { httpGet, httpPatch } from '../../../../helpers/httpMethods';
 import ImageDefault from '../../../../assets/svgicons/image-default.svg';
 import './AccountSettings.scss';
+import { config } from '../../../../config/keys';
 
 function AccountSettings() {
     const [accountLoading, setAccountLoading] = useState(false);
@@ -38,8 +40,10 @@ function AccountSettings() {
         region: '',
         language: '',
         two_factor: false,
-        app_color: '',
-        kb_hero_color: '',
+        branding: {
+            appColor: '',
+            kbHeroColor: '',
+        },
     });
 
     const appIconWrapper = useRef(null);
@@ -89,6 +93,14 @@ function AccountSettings() {
 
         if (res?.status === 'success') {
             setOrganisation((prev) => ({ ...prev, ...res?.data }));
+            setAppIcon((prev) => ({
+                ...prev,
+                image: res?.data?.branding?.appIcon || '',
+            }));
+            setAppLogo((prev) => ({
+                ...prev,
+                image: res?.data?.branding?.appLogo || '',
+            }));
         }
     };
 
@@ -106,7 +118,16 @@ function AccountSettings() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setOrganisation((prev) => ({ ...prev, [name]: value }));
+        if (['appColor', 'kbHeroColor'].includes(name)) {
+            return setOrganisation((prev) => ({
+                ...prev,
+                branding: {
+                    ...prev?.branding,
+                    [name]: value,
+                },
+            }));
+        }
+        return setOrganisation((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleRSChange = ({ value }, { name }) => {
@@ -114,8 +135,6 @@ function AccountSettings() {
     };
 
     const updateUserInfo = async (e) => {
-        console.log('shit valid => ', simpleValidator.current.allValid());
-        console.log('simpleValidator => ', simpleValidator);
         if (!simpleValidator.current.allValid()) {
             // show all errors if exist
             return simpleValidator.current.showMessages();
@@ -123,7 +142,85 @@ function AccountSettings() {
         e.preventDefault();
         setAccountLoading(true);
 
-        const { company_name, email, phone_number, address, website, profile, region, language } = organisation;
+        const { company_name, email, phone_number, address, website, profile, region, language, branding } =
+            organisation;
+
+        const gottenDomain = window.localStorage.getItem('domain');
+
+        if (appIcon.imageFile || appLogo.imageFile) {
+            const uploaders = [appIcon.imageFile, appLogo.imageFile]
+                .filter((x) => x)
+                .map((file) => {
+                    const data = new FormData();
+                    data.append('file', file);
+                    data.append('upload_preset', config.cloudinaryUploadPreset);
+                    data.append('cloud_name', config.cloudinaryCloudName);
+                    return axios.post(`${config.cloudinaryBaseUrl}/image/upload`, data);
+                });
+            return axios
+                .all(uploaders)
+                .then(
+                    axios.spread(async (...responses) => {
+                        const res1 = responses[0];
+                        const res2 = responses[1];
+                        const appIconImg = res1 && appIcon.imageFile ? res1?.data?.url : appIcon.image;
+                        const appLogoImg =
+                            res2 && appLogo.imageFile && uploaders.length === 2
+                                ? res2?.data?.url
+                                : res1 && appLogo.imageFile && uploaders.length === 1
+                                ? res1?.data?.url
+                                : appLogo.image;
+                        const payload = {
+                            phone_number,
+                            company_name,
+                            profile,
+                            email,
+                            address,
+                            website,
+                            language,
+                            region,
+                            branding: {
+                                appIcon: appIconImg,
+                                appLogo: appLogoImg,
+                                appColor: branding.appColor,
+                                kbHeroColor: branding.kbHeroColor,
+                            },
+                        };
+                        const res = await httpPatch(`auth/tenant-info/${gottenDomain}`, payload);
+
+                        setAccountLoading(false);
+
+                        if (res?.status === 'success') {
+                            setOrganisation((prev) => ({ ...prev, ...res?.data }));
+                            setAppIcon((prev) => ({
+                                ...prev,
+                                msg: 'Click or drag file here to add',
+                                errorMsg: '',
+                                blob: '',
+                                image: appIconImg,
+                                imageFile: null,
+                            }));
+                            setAppLogo((prev) => ({
+                                ...prev,
+                                msg: 'Click or drag file here to add',
+                                errorMsg: '',
+                                blob: '',
+                                image: appLogoImg,
+
+                                imageFile: null,
+                            }));
+                            NotificationManager.success(res?.success, 'Success', 4000);
+                        } else {
+                            NotificationManager.error(res?.er?.message, 'Error', 4000);
+                        }
+                    }),
+                )
+                .catch((errors) => {
+                    NotificationManager.error('', 'Failed', 4000);
+                    console.log('%cerror errors line:160 ', 'color: red; display: block; width: 100%;', errors);
+                });
+        }
+
         const payload = {
             phoneNumber: phone_number,
             companyName: company_name,
@@ -133,9 +230,14 @@ function AccountSettings() {
             website,
             language,
             region,
+            branding: {
+                appIcon: appIcon.image,
+                appLogo: appLogo.image,
+                appColor: branding.appColor,
+                kbHeroColor: branding.kbHeroColor,
+            },
         };
 
-        const gottenDomain = window.localStorage.getItem('domain');
         const res = await httpPatch(`auth/tenant-info/${gottenDomain}`, payload);
 
         setAccountLoading(false);
@@ -148,7 +250,7 @@ function AccountSettings() {
     };
 
     const triggerFileSelect = (fileRef) => {
-        if (fileRef) fileRef?.current?.click();
+        fileRef?.current?.click();
     };
 
     const clearSelectedImage = (type) => {
@@ -171,8 +273,6 @@ function AccountSettings() {
                   imageFile: null,
               }));
     };
-
-    // console.log('simple')
 
     const handleImgSelect = function (files, type) {
         // create a store for the current dimension and default info
@@ -509,17 +609,19 @@ function AccountSettings() {
                                         addDropSignal(appIconWrapper);
                                     }}
                                     onDragLeave={() => removeDropSignal(appIconWrapper)}
-                                    onDragEnd={() => removeSignal(appIconWrapper)}
+                                    onDragEnd={() => removeDropSignal(appIconWrapper)}
                                     onDrop={(e) => handleImageDrop(e, appIconFile, 'app-icon', appIconWrapper)}
                                     className="d-grid align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative"
                                 >
-                                    <button
-                                        type="button"
-                                        className="clear-upl-img"
-                                        onClick={() => clearSelectedImage('app-icon')}
-                                    >
-                                        ×
-                                    </button>
+                                    {(appIcon.errorMsg || appIcon.blob || appIcon.image || appIcon.imageFile) && (
+                                        <button
+                                            type="button"
+                                            className="clear-upl-img"
+                                            onClick={() => clearSelectedImage('app-icon')}
+                                        >
+                                            ×
+                                        </button>
+                                    )}
                                     <div
                                         onClick={() => triggerFileSelect(appIconFile)}
                                         style={{
@@ -545,7 +647,7 @@ function AccountSettings() {
                                             {appIcon.blob || appIcon.image ? (
                                                 <img
                                                     className="avatarImage"
-                                                    src={appIcon.image || appIcon.blob}
+                                                    src={appIcon.blob || appIcon.image}
                                                     alt=""
                                                     onLoad={() => appIcon.blob && URL.revokeObjectURL(appIcon.blob)}
                                                     style={{
@@ -598,17 +700,19 @@ function AccountSettings() {
                                         addDropSignal(appLogoWrapper);
                                     }}
                                     onDragLeave={() => removeDropSignal(appLogoWrapper)}
-                                    onDragEnd={() => removeSignal(appLogoWrapper)}
+                                    onDragEnd={() => removeDropSignal(appLogoWrapper)}
                                     onDrop={(e) => handleImageDrop(e, appLogoFile, 'app-logo', appLogoWrapper)}
                                     className="d-grid align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative drag-zone"
                                 >
-                                    <button
-                                        type="button"
-                                        className="clear-upl-img"
-                                        onClick={() => clearSelectedImage('app-logo')}
-                                    >
-                                        ×
-                                    </button>
+                                    {(appLogo.errorMsg || appLogo.blob || appLogo.image || appLogo.imageFile) && (
+                                        <button
+                                            type="button"
+                                            className="clear-upl-img"
+                                            onClick={() => clearSelectedImage('app-logo')}
+                                        >
+                                            ×
+                                        </button>
+                                    )}
                                     <div
                                         onClick={() => triggerFileSelect(appLogoFile)}
                                         style={{
@@ -634,7 +738,7 @@ function AccountSettings() {
                                             {appLogo.blob || appLogo.image ? (
                                                 <img
                                                     className="avatarImage"
-                                                    src={appLogo.image || appLogo.blob}
+                                                    src={appLogo.blob || appLogo.image}
                                                     alt=""
                                                     onLoad={() => appLogo.blob && URL.revokeObjectURL(appLogo.blob)}
                                                     style={{
@@ -686,11 +790,11 @@ function AccountSettings() {
                                     className="d-flex border justify-content-between align-items-center p-2"
                                     onClick={() => document.querySelector('.organisation_app_color')?.click()}
                                 >
-                                    <span>{organisation?.app_color || '#004882'}</span>
+                                    <span>{organisation.branding.appColor || '#000000'}</span>
                                     <input
                                         type="color"
-                                        value={organisation.app_color}
-                                        name="app_color"
+                                        value={organisation.branding.appColor}
+                                        name="appColor"
                                         onChange={handleChange}
                                         className="colorThemeInput"
                                         id="colorThemeInput"
@@ -703,11 +807,11 @@ function AccountSettings() {
                                     className="d-flex border justify-content-between align-items-center p-2"
                                     onClick={() => document.querySelector('.organisation_kb_hero_color')?.click()}
                                 >
-                                    <span>{organisation?.kb_hero_color || '#004882'}</span>
+                                    <span>{organisation.branding.kbHeroColor || '#000000'}</span>
                                     <input
                                         type="color"
-                                        value={organisation.kb_hero_color}
-                                        name="kb_hero_color"
+                                        value={organisation.branding.kbHeroColor}
+                                        name="kbHeroColor"
                                         onChange={handleChange}
                                         className="colorThemeInput organisation_kb_hero_color"
                                         id="colorThemeInput"
