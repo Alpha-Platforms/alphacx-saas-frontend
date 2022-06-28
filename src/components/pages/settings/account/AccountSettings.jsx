@@ -1,8 +1,9 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NotificationManager } from 'react-notifications';
 import MoonLoader from 'react-spinners/MoonLoader';
 import RSelect from 'react-select';
@@ -32,7 +33,26 @@ function AccountSettings() {
         two_factor: false,
     });
 
+    const appIconFile = useRef(null);
+    const appLogoFile = useRef(null);
+
     const [domain, setDomain] = useState('');
+
+    const [appIcon, setAppIcon] = useState({
+        msg: 'Click or drag file here to add',
+        errorMsg: '',
+        blob: '',
+        image: '',
+        imageFile: null,
+    });
+
+    const [appLogo, setAppLogo] = useState({
+        msg: 'Click or drag file here to add',
+        errorMsg: '',
+        blob: '',
+        image: '',
+        imageFile: null,
+    });
 
     const getUserInfo = async () => {
         setAccountLoading(true);
@@ -92,6 +112,10 @@ function AccountSettings() {
             return NotificationManager.success(res?.success, 'Success', 4000);
         }
         return NotificationManager.error(res?.er?.message, 'Error', 4000);
+    };
+
+    const triggerFileSelect = (fileRef) => {
+        if (fileRef) fileRef?.current?.click();
     };
 
     return (
@@ -280,7 +304,7 @@ function AccountSettings() {
                                         ×
                                     </button>
                                     <div
-                                        id=""
+                                        onClick={() => triggerFileSelect(appIconFile)}
                                         style={{
                                             width: '6rem',
                                             height: '6rem',
@@ -301,12 +325,12 @@ function AccountSettings() {
                                             }}
                                             className="ms-0 d-flex justify-content-between align-items-center"
                                         >
-                                            {false ? (
+                                            {appIcon.blob || appIcon.image ? (
                                                 <img
                                                     className="avatarImage"
-                                                    src=""
+                                                    src={appIcon.image || appIcon.blob}
                                                     alt=""
-                                                    // onLoad={() => uploadInfo.blob && URL.revokeObjectURL(uploadInfo.blob)}
+                                                    onLoad={() => appIcon.blob && URL.revokeObjectURL(appIcon.blob)}
                                                     style={{
                                                         maxWidth: '100%',
                                                         maxHeight: '100%',
@@ -324,14 +348,18 @@ function AccountSettings() {
                                             )}
                                         </div>
                                     </div>
-                                    <div className="h-100 d-inline-flex justify-content-center align-items-center">
+                                    <div
+                                        className="h-100 d-inline-flex justify-content-center align-items-center"
+                                        onClick={() => triggerFileSelect(appIconFile)}
+                                    >
                                         <input
                                             type="file"
-                                            name="accountLogo"
-                                            id="accountLogo"
+                                            name="app-icon"
+                                            id="app-icon"
+                                            ref={appIconFile}
                                             onChange={() => console.log('love')}
                                         />
-                                        <p className="mb-0">Add file or drag file here</p>
+                                        <p className="mb-0 user-select-none">{appIcon.msg}</p>
                                     </div>
                                 </div>
                             </div>
@@ -342,7 +370,7 @@ function AccountSettings() {
                                         ×
                                     </button>
                                     <div
-                                        id=""
+                                        onClick={() => triggerFileSelect(appLogoFile)}
                                         style={{
                                             width: '6rem',
                                             height: '6rem',
@@ -363,12 +391,12 @@ function AccountSettings() {
                                             }}
                                             className="ms-0 d-flex justify-content-between align-items-center"
                                         >
-                                            {false ? (
+                                            {appLogo.blob || appLogo.image ? (
                                                 <img
                                                     className="avatarImage"
-                                                    src=""
+                                                    src={appLogo.image || appLogo.blob}
                                                     alt=""
-                                                    // onLoad={() => uploadInfo.blob && URL.revokeObjectURL(uploadInfo.blob)}
+                                                    onLoad={() => appLogo.blob && URL.revokeObjectURL(appLogo.blob)}
                                                     style={{
                                                         maxWidth: '100%',
                                                         maxHeight: '100%',
@@ -386,14 +414,18 @@ function AccountSettings() {
                                             )}
                                         </div>
                                     </div>
-                                    <div className="h-100 d-inline-flex justify-content-center align-items-center">
+                                    <div
+                                        className="h-100 d-inline-flex justify-content-center align-items-center"
+                                        onClick={() => triggerFileSelect(appLogoFile)}
+                                    >
                                         <input
                                             type="file"
-                                            name="accountLogo"
-                                            id="accountLogo"
+                                            name="app-logo"
+                                            id="app-logo"
+                                            ref={appLogoFile}
                                             onChange={() => console.log('love')}
                                         />
-                                        <p className="mb-0">Add file or drag file here</p>
+                                        <p className="mb-0 user-select-none">{appLogo.msg}</p>
                                     </div>
                                 </div>
                             </div>
