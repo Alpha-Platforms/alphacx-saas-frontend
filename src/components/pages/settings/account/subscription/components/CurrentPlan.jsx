@@ -55,7 +55,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                 // FLUTTERWAVE PAYMENT
                 setPlanState((prev) => ({
                     ...prev,
-                    flutterwaveConfig: initPaymentRes?.data
+                    flutterwaveConfig: initPaymentRes?.data,
                 }));
             } else if (getRealCurrency(tenantInfo?.currency || '') === 'USD') {
                 // STRIPE PAYMENT
@@ -67,8 +67,13 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
         }
     };
 
+    const disableAfterActionBtnClick =
+        initiating || planState.isUpdatingPlan || (planState.actionType === 'add-user' && planState?.numOfAgents <= 0);
+
     const handleUpdatePlanBtn = () => {
         if (planState.numOfAgents <= 0) return window.document.getElementById('numOfAgents')?.focus();
+        // eslint-disable-next-line consistent-return
+        if (disableAfterActionBtnClick) return;
 
         return handleInitiatePayment();
     };
@@ -95,6 +100,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
     };
 
     const handleActionType = (e) => {
+        if (disableAfterActionBtnClick) return;
         const type = e.target.id;
         setPlanState((prev) => ({
             ...prev,
@@ -113,6 +119,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                     name="actiontype"
                     type="radio"
                     id="renew-plan"
+                    disabled={disableAfterActionBtnClick}
                     checked={planState.actionType === 'renew-plan'}
                 />
                 <FormCheck
@@ -122,6 +129,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                     name="actiontype"
                     type="radio"
                     id="add-user"
+                    disabled={disableAfterActionBtnClick}
                     checked={planState.actionType === 'add-user'}
                 />
                 <FormCheck
@@ -131,6 +139,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                     name="actiontype"
                     type="radio"
                     id="update-plan"
+                    disabled={disableAfterActionBtnClick}
                     checked={planState.actionType === 'update-plan'}
                 />
             </div>
@@ -222,15 +231,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
             </div>
 
             <div className="updateplan-btn-wrapper">
-                <button
-                    onClick={handleUpdatePlanBtn}
-                    type="button"
-                    disabled={
-                        initiating ||
-                        planState.isUpdatingPlan ||
-                        (planState.actionType === 'add-user' && planState?.numOfAgents <= 0)
-                    }
-                >
+                <button onClick={handleUpdatePlanBtn} type="button" disabled={disableAfterActionBtnClick}>
                     {Object.keys(planState?.selectedPlan || {}).length === 0 ? 'Select Plan' : 'Update Plan'}
                 </button>
 

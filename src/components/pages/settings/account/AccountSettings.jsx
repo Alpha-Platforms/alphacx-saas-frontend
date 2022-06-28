@@ -1,6 +1,8 @@
-/* eslint-disable */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { NotificationManager } from 'react-notifications';
 import MoonLoader from 'react-spinners/MoonLoader';
 import RSelect from 'react-select';
@@ -8,7 +10,7 @@ import { timezone } from '../../../shared/timezone';
 import { languages } from '../../../shared/languages';
 import { countries } from '../../../shared/countries';
 import { httpGet, httpPatch } from '../../../../helpers/httpMethods';
-import RightArrow from '../../../../assets/imgF/arrow_right.png';
+import ImageDefault from '../../../../assets/svgicons/image-default.svg';
 import './AccountSettings.scss';
 
 function AccountSettings() {
@@ -32,6 +34,17 @@ function AccountSettings() {
 
     const [domain, setDomain] = useState('');
 
+    const getUserInfo = async () => {
+        setAccountLoading(true);
+        const gottenDomain = window.localStorage.getItem('domain');
+        const res = await httpGet(`auth/tenant-info/${gottenDomain}`);
+        setAccountLoading(false);
+
+        if (res?.status === 'success') {
+            setOrganisation((prev) => ({ ...prev, ...res?.data }));
+        }
+    };
+
     useEffect(() => {
         getUserInfo();
         setRSCountries(() => countries.map((item) => ({ value: item.name, label: item.name })));
@@ -53,17 +66,6 @@ function AccountSettings() {
         setOrganisation((prev) => ({ ...prev, [name]: value }));
     };
 
-    const getUserInfo = async () => {
-        setAccountLoading(true);
-        const domain = window.localStorage.getItem('domain');
-        const res = await httpGet(`auth/tenant-info/${domain}`);
-        setAccountLoading(false);
-
-        if (res?.status === 'success') {
-            setOrganisation((prev) => ({ ...prev, ...res?.data }));
-        }
-    };
-
     const updateUserInfo = async (e) => {
         e.preventDefault();
         setAccountLoading(true);
@@ -80,8 +82,8 @@ function AccountSettings() {
             region,
         };
 
-        const domain = window.localStorage.getItem('domain');
-        const res = await httpPatch(`auth/tenant-info/${domain}`, payload);
+        const gottenDomain = window.localStorage.getItem('domain');
+        const res = await httpPatch(`auth/tenant-info/${gottenDomain}`, payload);
 
         setAccountLoading(false);
 
@@ -117,7 +119,6 @@ function AccountSettings() {
                     role="tabpanel"
                     aria-labelledby="pills-account-tab"
                 >
-                    {/* <!--* Start of Account Settings View --> */}
                     <div className="d-flex justify-content-between col-md-8">
                         <h3 className="fs-6 text-black">Account Settings</h3>
                     </div>
@@ -270,6 +271,134 @@ function AccountSettings() {
                                 value={defaultCountry}
                             />
                         </div>
+                        {/* Live */}
+                        <div className="row">
+                            <div className="mb-3 col-6">
+                                <label className="form-label">App Icon</label>
+                                <div className="d-grid mb-4 align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative">
+                                    <button type="button" className="clear-upl-img">
+                                        ×
+                                    </button>
+                                    <div
+                                        id=""
+                                        style={{
+                                            width: '6rem',
+                                            height: '6rem',
+                                            border: '1px dashed #dee2e6',
+                                        }}
+                                        className="
+                                            rounded-3
+                                            d-flex
+                                            justify-content-center
+                                            align-items-center
+                                            "
+                                    >
+                                        <div
+                                            style={{
+                                                justifyContent: 'center',
+                                                height: '100%',
+                                                width: '100%',
+                                            }}
+                                            className="ms-0 d-flex justify-content-between align-items-center"
+                                        >
+                                            {false ? (
+                                                <img
+                                                    className="avatarImage"
+                                                    src=""
+                                                    alt=""
+                                                    // onLoad={() => uploadInfo.blob && URL.revokeObjectURL(uploadInfo.blob)}
+                                                    style={{
+                                                        maxWidth: '100%',
+                                                        maxHeight: '100%',
+                                                    }}
+                                                />
+                                            ) : (
+                                                <img
+                                                    src={ImageDefault}
+                                                    alt=""
+                                                    style={{
+                                                        paddingLeft: '2.1rem',
+                                                    }}
+                                                    className="pe-none"
+                                                />
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="h-100 d-inline-flex justify-content-center align-items-center">
+                                        <input
+                                            type="file"
+                                            name="accountLogo"
+                                            id="accountLogo"
+                                            onChange={() => console.log('love')}
+                                        />
+                                        <p className="mb-0">Add file or drag file here</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mb-3 col-6">
+                                <label className="form-label">App Logo</label>
+                                <div className="d-grid mb-4 align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative">
+                                    <button type="button" className="clear-upl-img">
+                                        ×
+                                    </button>
+                                    <div
+                                        id=""
+                                        style={{
+                                            width: '6rem',
+                                            height: '6rem',
+                                            border: '1px dashed #dee2e6',
+                                        }}
+                                        className="
+                                            rounded-3
+                                            d-flex
+                                            justify-content-center
+                                            align-items-center
+                                            "
+                                    >
+                                        <div
+                                            style={{
+                                                justifyContent: 'center',
+                                                height: '100%',
+                                                width: '100%',
+                                            }}
+                                            className="ms-0 d-flex justify-content-between align-items-center"
+                                        >
+                                            {false ? (
+                                                <img
+                                                    className="avatarImage"
+                                                    src=""
+                                                    alt=""
+                                                    // onLoad={() => uploadInfo.blob && URL.revokeObjectURL(uploadInfo.blob)}
+                                                    style={{
+                                                        maxWidth: '100%',
+                                                        maxHeight: '100%',
+                                                    }}
+                                                />
+                                            ) : (
+                                                <img
+                                                    src={ImageDefault}
+                                                    alt=""
+                                                    style={{
+                                                        paddingLeft: '2.1rem',
+                                                    }}
+                                                    className="pe-none"
+                                                />
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="h-100 d-inline-flex justify-content-center align-items-center">
+                                        <input
+                                            type="file"
+                                            name="accountLogo"
+                                            id="accountLogo"
+                                            onChange={() => console.log('love')}
+                                        />
+                                        <p className="mb-0">Add file or drag file here</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* END */}
                     </div>
                     <div className="text-end col-md-8 mt-4 mb-4 pt-2 pb-3">
                         <button

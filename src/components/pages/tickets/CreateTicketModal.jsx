@@ -1090,7 +1090,7 @@ function CreateTicketModal({
         </Modal>
     );
 }
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
     priorities: state.priority.priorities,
     categories: state.category.categories,
     subCategories: state.subCategory.subCategories,
