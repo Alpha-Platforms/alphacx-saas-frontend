@@ -38,6 +38,8 @@ function AccountSettings() {
         region: '',
         language: '',
         two_factor: false,
+        app_color: '',
+        kb_hero_color: '',
     });
 
     const appIconWrapper = useRef(null);
@@ -677,6 +679,42 @@ function AccountSettings() {
                             </div>
                         </div>
                         {/* END */}
+                        <div className="row">
+                            <div className="form-group col-6 mb-3">
+                                <label className="f-14 mb-1">App Color</label>
+                                <div
+                                    className="d-flex border justify-content-between align-items-center p-2"
+                                    onClick={() => document.querySelector('.organisation_app_color')?.click()}
+                                >
+                                    <span>{organisation?.app_color || '#004882'}</span>
+                                    <input
+                                        type="color"
+                                        value={organisation.app_color}
+                                        name="app_color"
+                                        onChange={handleChange}
+                                        className="colorThemeInput"
+                                        id="colorThemeInput"
+                                    />
+                                </div>
+                            </div>
+                            <div className="form-group col-6 mb-3">
+                                <label className="f-14 mb-1">Knowledge Base Hero Color</label>
+                                <div
+                                    className="d-flex border justify-content-between align-items-center p-2"
+                                    onClick={() => document.querySelector('.organisation_kb_hero_color')?.click()}
+                                >
+                                    <span>{organisation?.kb_hero_color || '#004882'}</span>
+                                    <input
+                                        type="color"
+                                        value={organisation.kb_hero_color}
+                                        name="kb_hero_color"
+                                        onChange={handleChange}
+                                        className="colorThemeInput organisation_kb_hero_color"
+                                        id="colorThemeInput"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div className="text-end col-md-8 mt-4 mb-4 pt-2 pb-3">
                         <button
