@@ -43,7 +43,6 @@ function AccountSettings() {
     const appLogoFile = useRef(null);
 
     const [domain, setDomain] = useState('');
-    const [, forceUpdate] = useState();
 
     const [appIcon, setAppIcon] = useState({
         msg: 'Click or drag file here to add',
@@ -73,6 +72,7 @@ function AccountSettings() {
                     messageReplace: (_, params) => params[0],
                 },
             },
+            autoForceUpdate: true,
         }),
     );
 
@@ -113,9 +113,7 @@ function AccountSettings() {
         console.log('simpleValidator => ', simpleValidator);
         if (!simpleValidator.current.allValid()) {
             // show all errors if exist
-            simpleValidator.current.showMessages();
-            // force update component to display error
-            return forceUpdate((prev) => !prev);
+            return simpleValidator.current.showMessages();
         }
         e.preventDefault();
         setAccountLoading(true);
@@ -147,6 +145,29 @@ function AccountSettings() {
     const triggerFileSelect = (fileRef) => {
         if (fileRef) fileRef?.current?.click();
     };
+
+    const clearSelectedImage = (type) => {
+        type === 'app-icon'
+            ? setAppIcon((prev) => ({
+                  ...prev,
+                  msg: 'Click or drag file here to add',
+                  errorMsg: '',
+                  blob: '',
+                  image: '',
+                  imageFile: null,
+              }))
+            : type === 'app-logo' &&
+              setAppLogo((prev) => ({
+                  ...prev,
+                  msg: 'Click or drag file here to add',
+                  errorMsg: '',
+                  blob: '',
+                  image: '',
+                  imageFile: null,
+              }));
+    };
+
+    // console.log('simple')
 
     const handleImgSelect = function (e, type) {
         // store current input
@@ -202,6 +223,7 @@ function AccountSettings() {
                           image: '',
                           imageFile: null,
                       }));
+                simpleValidator.current.showMessageFor(type);
             } else {
                 // Selected file is an image
                 /*
@@ -244,6 +266,7 @@ function AccountSettings() {
                                       image: '',
                                       imageFile: null,
                                   }));
+                            simpleValidator.current.showMessageFor(type);
                         } else {
                             // current selected image dimensions are acceptable
                             const fileName = fileInput.files[0].name;
@@ -458,8 +481,12 @@ function AccountSettings() {
                         <div className="row">
                             <div className="mb-3 col-6">
                                 <label className="form-label">App Icon</label>
-                                <div className="d-grid mb-4 align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative">
-                                    <button type="button" className="clear-upl-img">
+                                <div className="d-grid align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative">
+                                    <button
+                                        type="button"
+                                        className="clear-upl-img"
+                                        onClick={() => clearSelectedImage('app-icon')}
+                                    >
                                         ×
                                     </button>
                                     <div
@@ -516,7 +543,7 @@ function AccountSettings() {
                                             name="app-icon"
                                             id="app-icon"
                                             ref={appIconFile}
-                                            onChange={() => console.log('love')}
+                                            onChange={(e) => handleImgSelect(e, 'app-icon')}
                                         />
                                         <p className="mb-0 user-select-none">{appIcon.msg}</p>
                                     </div>
@@ -524,7 +551,7 @@ function AccountSettings() {
                                 {
                                     /* simple validation */
                                     simpleValidator.current.message(
-                                        'App Icon',
+                                        'app-icon',
                                         appIcon,
                                         `no_file_select_err:${appIcon?.errorMsg}`,
                                     )
@@ -532,8 +559,12 @@ function AccountSettings() {
                             </div>
                             <div className="mb-3 col-6">
                                 <label className="form-label">App Logo</label>
-                                <div className="d-grid mb-4 align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative">
-                                    <button type="button" className="clear-upl-img">
+                                <div className="d-grid align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative">
+                                    <button
+                                        type="button"
+                                        className="clear-upl-img"
+                                        onClick={() => clearSelectedImage('app-logo')}
+                                    >
                                         ×
                                     </button>
                                     <div
@@ -590,7 +621,7 @@ function AccountSettings() {
                                             name="app-logo"
                                             id="app-logo"
                                             ref={appLogoFile}
-                                            onChange={() => console.log('love')}
+                                            onChange={(e) => handleImgSelect(e, 'app-logo')}
                                         />
                                         <p className="mb-0 user-select-none">{appLogo.msg}</p>
                                     </div>
@@ -598,7 +629,7 @@ function AccountSettings() {
                                 {
                                     /* simple validation */
                                     simpleValidator.current.message(
-                                        'App Logo',
+                                        'app-logo',
                                         appLogo,
                                         `no_file_select_err:${appLogo?.errorMsg}`,
                                     )
