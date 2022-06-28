@@ -1,3 +1,5 @@
+// @ts-nocheck
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -7,6 +9,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NotificationManager } from 'react-notifications';
 import MoonLoader from 'react-spinners/MoonLoader';
 import RSelect from 'react-select';
+import SimpleReactValidator from 'simple-react-validator';
 import { timezone } from '../../../shared/timezone';
 import { languages } from '../../../shared/languages';
 import { countries } from '../../../shared/countries';
@@ -37,6 +40,7 @@ function AccountSettings() {
     const appLogoFile = useRef(null);
 
     const [domain, setDomain] = useState('');
+    const [, forceUpdate] = useState();
 
     const [appIcon, setAppIcon] = useState({
         msg: 'Click or drag file here to add',
@@ -53,6 +57,21 @@ function AccountSettings() {
         image: '',
         imageFile: null,
     });
+
+    const simpleValidator = useRef(
+        new SimpleReactValidator({
+            element: (message) => <div className="formErrorMsg">{message}</div>,
+            validators: {
+                no_file_select_err: {
+                    message: 'Error',
+                    rule: (_, params) => {
+                        return !!params[0];
+                    },
+                    messageReplace: (_, params) => params[0],
+                },
+            },
+        }),
+    );
 
     const getUserInfo = async () => {
         setAccountLoading(true);
@@ -87,6 +106,14 @@ function AccountSettings() {
     };
 
     const updateUserInfo = async (e) => {
+        console.log('shit valid => ', simpleValidator.current.allValid());
+        console.log('simpleValidator => ', simpleValidator);
+        if (!simpleValidator.current.allValid()) {
+            // show all errors if exist
+            simpleValidator.current.showMessages();
+            // force update component to display error
+            return forceUpdate((prev) => !prev);
+        }
         e.preventDefault();
         setAccountLoading(true);
 
@@ -362,6 +389,14 @@ function AccountSettings() {
                                         <p className="mb-0 user-select-none">{appIcon.msg}</p>
                                     </div>
                                 </div>
+                                {
+                                    /* simple validation */
+                                    simpleValidator.current.message(
+                                        'App Icon',
+                                        appIcon,
+                                        `no_file_select_err:${appIcon?.errorMsg}`,
+                                    )
+                                }
                             </div>
                             <div className="mb-3 col-6">
                                 <label className="form-label">App Logo</label>
@@ -428,6 +463,14 @@ function AccountSettings() {
                                         <p className="mb-0 user-select-none">{appLogo.msg}</p>
                                     </div>
                                 </div>
+                                {
+                                    /* simple validation */
+                                    simpleValidator.current.message(
+                                        'App Logo',
+                                        appLogo,
+                                        `no_file_select_err:${appLogo?.errorMsg}`,
+                                    )
+                                }
                             </div>
                         </div>
                         {/* END */}
