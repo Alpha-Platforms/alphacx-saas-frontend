@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 /* eslint-disable react/no-this-in-sfc */
 /* eslint-disable no-lonely-if */
 /* eslint-disable no-undef */
@@ -39,6 +40,8 @@ function AccountSettings() {
         two_factor: false,
     });
 
+    const appIconWrapper = useRef(null);
+    const appLogoWrapper = useRef(null);
     const appIconFile = useRef(null);
     const appLogoFile = useRef(null);
 
@@ -169,17 +172,14 @@ function AccountSettings() {
 
     // console.log('simple')
 
-    const handleImgSelect = function (e, type) {
-        // store current input
-        const fileInput = e.target;
-
+    const handleImgSelect = function (files, type) {
         // create a store for the current dimension and default info
         const maxReqDimensions = {
             width: 1500,
             height: 1500,
         };
 
-        if (!fileInput.files.length) {
+        if (!files.length) {
             // No file is selected
             type === 'app-icon'
                 ? setAppIcon((prev) => ({
@@ -203,7 +203,7 @@ function AccountSettings() {
             // file selected
 
             // check if selected file is an image
-            if (fileInput.files[0].type.indexOf('image/') === -1) {
+            if (files[0].type.indexOf('image/') === -1) {
                 // Selected file is not an image
                 type === 'app-icon'
                     ? setAppIcon((prev) => ({
@@ -231,7 +231,7 @@ function AccountSettings() {
                  */
                 // create a new file reader object
                 const reader = new FileReader();
-                reader.readAsDataURL(fileInput.files[0]);
+                reader.readAsDataURL(files[0]);
                 reader.onload = function () {
                     // when reader has loaded
 
@@ -269,8 +269,8 @@ function AccountSettings() {
                             simpleValidator.current.showMessageFor(type);
                         } else {
                             // current selected image dimensions are acceptable
-                            const fileName = fileInput.files[0].name;
-                            const fileBlob = URL.createObjectURL(fileInput.files[0]);
+                            const fileName = files[0].name;
+                            const fileBlob = URL.createObjectURL(files[0]);
                             type === 'app-icon'
                                 ? setAppIcon((prev) => ({
                                       ...prev,
@@ -278,7 +278,7 @@ function AccountSettings() {
                                       errorMsg: '',
                                       blob: fileBlob,
                                       image: '',
-                                      imageFile: fileInput.files[0],
+                                      imageFile: files[0],
                                   }))
                                 : type === 'app-logo' &&
                                   setAppLogo((prev) => ({
@@ -287,7 +287,7 @@ function AccountSettings() {
                                       errorMsg: '',
                                       blob: fileBlob,
                                       image: '',
-                                      imageFile: fileInput.files[0],
+                                      imageFile: files[0],
                                   }));
                             /* 
                             when the image with the blob loads call the below method
@@ -297,6 +297,24 @@ function AccountSettings() {
                     };
                 };
             }
+        }
+    };
+
+    const addDropSignal = (elemRef) => {
+        elemRef?.current?.classList.add('drop-signal');
+    };
+
+    const removeDropSignal = (elemRef) => {
+        elemRef?.current?.classList.remove('drop-signal');
+    };
+
+    const handleImageDrop = (e, fileRef, type, elemRef) => {
+        e.preventDefault();
+        removeDropSignal(elemRef);
+        if (e?.dataTransfer?.files && fileRef) {
+            // eslint-disable-next-line no-param-reassign
+            fileRef.current.files = e.dataTransfer.files;
+            handleImgSelect(e.dataTransfer.files, type);
         }
     };
 
@@ -481,7 +499,18 @@ function AccountSettings() {
                         <div className="row">
                             <div className="mb-3 col-6">
                                 <label className="form-label">App Icon</label>
-                                <div className="d-grid align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative">
+                                <div
+                                    ref={appIconWrapper}
+                                    onDragOver={(e) => {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                        addDropSignal(appIconWrapper);
+                                    }}
+                                    onDragLeave={() => removeDropSignal(appIconWrapper)}
+                                    onDragEnd={() => removeSignal(appIconWrapper)}
+                                    onDrop={(e) => handleImageDrop(e, appIconFile, 'app-icon', appIconWrapper)}
+                                    className="d-grid align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative"
+                                >
                                     <button
                                         type="button"
                                         className="clear-upl-img"
@@ -543,7 +572,7 @@ function AccountSettings() {
                                             name="app-icon"
                                             id="app-icon"
                                             ref={appIconFile}
-                                            onChange={(e) => handleImgSelect(e, 'app-icon')}
+                                            onChange={(e) => handleImgSelect(e.target.files, 'app-icon')}
                                         />
                                         <p className="mb-0 user-select-none">{appIcon.msg}</p>
                                     </div>
@@ -559,7 +588,18 @@ function AccountSettings() {
                             </div>
                             <div className="mb-3 col-6">
                                 <label className="form-label">App Logo</label>
-                                <div className="d-grid align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative">
+                                <div
+                                    ref={appLogoWrapper}
+                                    onDragOver={(e) => {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                        addDropSignal(appLogoWrapper);
+                                    }}
+                                    onDragLeave={() => removeDropSignal(appLogoWrapper)}
+                                    onDragEnd={() => removeSignal(appLogoWrapper)}
+                                    onDrop={(e) => handleImageDrop(e, appLogoFile, 'app-logo', appLogoWrapper)}
+                                    className="d-grid align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative drag-zone"
+                                >
                                     <button
                                         type="button"
                                         className="clear-upl-img"
@@ -621,7 +661,7 @@ function AccountSettings() {
                                             name="app-logo"
                                             id="app-logo"
                                             ref={appLogoFile}
-                                            onChange={(e) => handleImgSelect(e, 'app-logo')}
+                                            onChange={(e) => handleImgSelect(e.target.files, 'app-logo')}
                                         />
                                         <p className="mb-0 user-select-none">{appLogo.msg}</p>
                                     </div>
