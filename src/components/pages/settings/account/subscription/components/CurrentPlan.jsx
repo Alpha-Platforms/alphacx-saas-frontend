@@ -96,6 +96,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
     const handleNumChange = (e) => {
         if (Number(e.target.value) < totalUsers?.length && planState?.actionType !== 'add-user') return;
         if (Number(e.target.value) < 0 && planState?.actionType === 'add-user') return;
+        if (planState?.actionType !== 'add-user') return;
         setPlanState((prev) => ({ ...prev, numOfAgents: e.target.value }));
     };
 
@@ -178,7 +179,11 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                                 id="numOfAgents"
                                 min={planState?.actionType === 'add-user' ? 0 : totalUsers.length}
                                 onChange={handleNumChange}
-                                disabled={planState.isUpdatingPlan || planState.actionType === 'renew-plan'}
+                                disabled={
+                                    planState.isUpdatingPlan ||
+                                    planState.actionType === 'renew-plan' ||
+                                    planState.actionType === 'update-plan'
+                                }
                             />
                         </div>
                     </div>
