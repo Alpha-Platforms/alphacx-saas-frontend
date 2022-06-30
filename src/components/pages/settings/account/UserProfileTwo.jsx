@@ -295,7 +295,7 @@ function UserProfileTwo({
             // No file is selected
             setUploadInfo((prev) => ({
                 ...prev,
-                msg: 'No file is slected',
+                msg: 'No file is selected',
                 error: true,
                 blob: null,
                 image: null,

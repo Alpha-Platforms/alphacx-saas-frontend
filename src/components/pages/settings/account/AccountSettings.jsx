@@ -1,15 +1,27 @@
-/* eslint-disable */
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+/* eslint-disable camelcase */
+/* eslint-disable func-names */
+/* eslint-disable react/no-this-in-sfc */
+/* eslint-disable no-lonely-if */
+// @ts-nocheck
+/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import React, { useState, useEffect, useRef } from 'react';
 import { NotificationManager } from 'react-notifications';
 import MoonLoader from 'react-spinners/MoonLoader';
 import RSelect from 'react-select';
+import SimpleReactValidator from 'simple-react-validator';
+import axios from 'axios';
 import { timezone } from '../../../shared/timezone';
 import { languages } from '../../../shared/languages';
 import { countries } from '../../../shared/countries';
 import { httpGet, httpPatch } from '../../../../helpers/httpMethods';
-import RightArrow from '../../../../assets/imgF/arrow_right.png';
+import ImageDefault from '../../../../assets/svgicons/image-default.svg';
 import './AccountSettings.scss';
+import { config } from '../../../../config/keys';
 
 function AccountSettings() {
     const [accountLoading, setAccountLoading] = useState(false);
@@ -28,9 +40,69 @@ function AccountSettings() {
         region: '',
         language: '',
         two_factor: false,
+        branding: {
+            appColor: '',
+            kbHeroColor: '',
+        },
     });
 
+    const appIconWrapper = useRef(null);
+    const appLogoWrapper = useRef(null);
+    const appIconFile = useRef(null);
+    const appLogoFile = useRef(null);
+
     const [domain, setDomain] = useState('');
+
+    const [appIcon, setAppIcon] = useState({
+        msg: 'Click or drag file here to add',
+        errorMsg: '',
+        blob: '',
+        image: '',
+        imageFile: null,
+    });
+
+    const [appLogo, setAppLogo] = useState({
+        msg: 'Click or drag file here to add',
+        errorMsg: '',
+        blob: '',
+        image: '',
+        imageFile: null,
+    });
+
+    const simpleValidator = useRef(
+        new SimpleReactValidator({
+            element: (message) => <div className="formErrorMsg">{message}</div>,
+            validators: {
+                no_file_select_err: {
+                    message: 'Error',
+                    rule: (_, params) => {
+                        return !params[0];
+                    },
+                    messageReplace: (_, params) => params[0],
+                },
+            },
+            autoForceUpdate: true,
+        }),
+    );
+
+    const getUserInfo = async () => {
+        setAccountLoading(true);
+        const gottenDomain = window.localStorage.getItem('domain');
+        const res = await httpGet(`auth/tenant-info/${gottenDomain}`);
+        setAccountLoading(false);
+
+        if (res?.status === 'success') {
+            setOrganisation((prev) => ({ ...prev, ...res?.data }));
+            setAppIcon((prev) => ({
+                ...prev,
+                image: res?.data?.branding?.appIcon || '',
+            }));
+            setAppLogo((prev) => ({
+                ...prev,
+                image: res?.data?.branding?.appLogo || '',
+            }));
+        }
+    };
 
     useEffect(() => {
         getUserInfo();
@@ -46,29 +118,109 @@ function AccountSettings() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setOrganisation((prev) => ({ ...prev, [name]: value }));
+        if (['appColor', 'kbHeroColor'].includes(name)) {
+            return setOrganisation((prev) => ({
+                ...prev,
+                branding: {
+                    ...prev?.branding,
+                    [name]: value,
+                },
+            }));
+        }
+        return setOrganisation((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleRSChange = ({ value }, { name }) => {
         setOrganisation((prev) => ({ ...prev, [name]: value }));
     };
 
-    const getUserInfo = async () => {
-        setAccountLoading(true);
-        const domain = window.localStorage.getItem('domain');
-        const res = await httpGet(`auth/tenant-info/${domain}`);
-        setAccountLoading(false);
-
-        if (res?.status === 'success') {
-            setOrganisation((prev) => ({ ...prev, ...res?.data }));
-        }
-    };
-
     const updateUserInfo = async (e) => {
+        if (!simpleValidator.current.allValid()) {
+            // show all errors if exist
+            return simpleValidator.current.showMessages();
+        }
         e.preventDefault();
         setAccountLoading(true);
 
-        const { company_name, email, phone_number, address, website, profile, region, language } = organisation;
+        const { company_name, email, phone_number, address, website, profile, region, language, branding } =
+            organisation;
+
+        const gottenDomain = window.localStorage.getItem('domain');
+
+        if (appIcon.imageFile || appLogo.imageFile) {
+            const uploaders = [appIcon.imageFile, appLogo.imageFile]
+                .filter((x) => x)
+                .map((file) => {
+                    const data = new FormData();
+                    data.append('file', file);
+                    data.append('upload_preset', config.cloudinaryUploadPreset);
+                    data.append('cloud_name', config.cloudinaryCloudName);
+                    return axios.post(`${config.cloudinaryBaseUrl}/image/upload`, data);
+                });
+            return axios
+                .all(uploaders)
+                .then(
+                    axios.spread(async (...responses) => {
+                        const res1 = responses[0];
+                        const res2 = responses[1];
+                        const appIconImg = res1 && appIcon.imageFile ? res1?.data?.url : appIcon.image;
+                        const appLogoImg =
+                            res2 && appLogo.imageFile && uploaders.length === 2
+                                ? res2?.data?.url
+                                : res1 && appLogo.imageFile && uploaders.length === 1
+                                ? res1?.data?.url
+                                : appLogo.image;
+                        const payload = {
+                            phone_number,
+                            company_name,
+                            profile,
+                            email,
+                            address,
+                            website,
+                            language,
+                            region,
+                            branding: {
+                                appIcon: appIconImg,
+                                appLogo: appLogoImg,
+                                appColor: branding.appColor,
+                                kbHeroColor: branding.kbHeroColor,
+                            },
+                        };
+                        const res = await httpPatch(`auth/tenant-info/${gottenDomain}`, payload);
+
+                        setAccountLoading(false);
+
+                        if (res?.status === 'success') {
+                            setOrganisation((prev) => ({ ...prev, ...res?.data }));
+                            setAppIcon((prev) => ({
+                                ...prev,
+                                msg: 'Click or drag file here to add',
+                                errorMsg: '',
+                                blob: '',
+                                image: appIconImg,
+                                imageFile: null,
+                            }));
+                            setAppLogo((prev) => ({
+                                ...prev,
+                                msg: 'Click or drag file here to add',
+                                errorMsg: '',
+                                blob: '',
+                                image: appLogoImg,
+
+                                imageFile: null,
+                            }));
+                            NotificationManager.success(res?.success, 'Success', 4000);
+                        } else {
+                            NotificationManager.error(res?.er?.message, 'Error', 4000);
+                        }
+                    }),
+                )
+                .catch((errors) => {
+                    NotificationManager.error('', 'Failed', 4000);
+                    console.log('%cerror errors line:160 ', 'color: red; display: block; width: 100%;', errors);
+                });
+        }
+
         const payload = {
             phoneNumber: phone_number,
             companyName: company_name,
@@ -78,10 +230,15 @@ function AccountSettings() {
             website,
             language,
             region,
+            branding: {
+                appIcon: appIcon.image,
+                appLogo: appLogo.image,
+                appColor: branding.appColor,
+                kbHeroColor: branding.kbHeroColor,
+            },
         };
 
-        const domain = window.localStorage.getItem('domain');
-        const res = await httpPatch(`auth/tenant-info/${domain}`, payload);
+        const res = await httpPatch(`auth/tenant-info/${gottenDomain}`, payload);
 
         setAccountLoading(false);
 
@@ -90,6 +247,177 @@ function AccountSettings() {
             return NotificationManager.success(res?.success, 'Success', 4000);
         }
         return NotificationManager.error(res?.er?.message, 'Error', 4000);
+    };
+
+    const triggerFileSelect = (fileRef) => {
+        fileRef?.current?.click();
+    };
+
+    const clearSelectedImage = (type) => {
+        type === 'app-icon'
+            ? setAppIcon((prev) => ({
+                  ...prev,
+                  msg: 'Click or drag file here to add',
+                  errorMsg: '',
+                  blob: '',
+                  image: '',
+                  imageFile: null,
+              }))
+            : type === 'app-logo' &&
+              setAppLogo((prev) => ({
+                  ...prev,
+                  msg: 'Click or drag file here to add',
+                  errorMsg: '',
+                  blob: '',
+                  image: '',
+                  imageFile: null,
+              }));
+    };
+
+    const handleImgSelect = function (files, type) {
+        // create a store for the current dimension and default info
+        const maxReqDimensions = {
+            width: 1500,
+            height: 1500,
+        };
+
+        if (!files.length) {
+            // No file is selected
+            type === 'app-icon'
+                ? setAppIcon((prev) => ({
+                      ...prev,
+                      msg: 'Click or drag file here to add',
+                      errorMsg: '',
+                      blob: '',
+                      image: '',
+                      imageFile: null,
+                  }))
+                : type === 'app-logo' &&
+                  setAppLogo((prev) => ({
+                      ...prev,
+                      msg: 'Click or drag file here to add',
+                      errorMsg: '',
+                      blob: '',
+                      image: '',
+                      imageFile: null,
+                  }));
+        } else {
+            // file selected
+
+            // check if selected file is an image
+            if (files[0].type.indexOf('image/') === -1) {
+                // Selected file is not an image
+                type === 'app-icon'
+                    ? setAppIcon((prev) => ({
+                          ...prev,
+                          msg: 'Click or drag file here to add',
+                          errorMsg: 'Selected file is not an image',
+                          blob: '',
+                          image: '',
+                          imageFile: null,
+                      }))
+                    : type === 'app-logo' &&
+                      setAppLogo((prev) => ({
+                          ...prev,
+                          msg: 'Click or drag file here to add',
+                          errorMsg: 'Selected file is not an image',
+                          blob: '',
+                          image: '',
+                          imageFile: null,
+                      }));
+                simpleValidator.current.showMessageFor(type);
+            } else {
+                // Selected file is an image
+                /*
+                 * read the selected image to get the file width and height
+                 */
+                // create a new file reader object
+                const reader = new FileReader();
+                reader.readAsDataURL(files[0]);
+                reader.onload = function () {
+                    // when reader has loaded
+
+                    // create a new image object
+                    const currentImage = new Image();
+                    // set the source of the image to the base64 string from the file reader
+                    currentImage.src = this.result;
+
+                    currentImage.onload = function () {
+                        const [currentImageHeight, currentImageWidth] = [this.height, this.width];
+
+                        if (
+                            currentImageWidth > maxReqDimensions.width ||
+                            currentImageHeight > maxReqDimensions.height
+                        ) {
+                            // current selected image dimesions are not acceptable
+                            type === 'app-icon'
+                                ? setAppIcon((prev) => ({
+                                      ...prev,
+                                      msg: 'Click or drag file here to add',
+                                      errorMsg: `Selected image should have max dimension of ${maxReqDimensions.width}x${maxReqDimensions.height}`,
+                                      blob: '',
+                                      image: '',
+                                      imageFile: null,
+                                  }))
+                                : type === 'app-logo' &&
+                                  setAppLogo((prev) => ({
+                                      ...prev,
+                                      msg: 'Click or drag file here to add',
+                                      errorMsg: `Selected image should have max dimension of ${maxReqDimensions.width}x${maxReqDimensions.height}`,
+                                      blob: '',
+                                      image: '',
+                                      imageFile: null,
+                                  }));
+                            simpleValidator.current.showMessageFor(type);
+                        } else {
+                            // current selected image dimensions are acceptable
+                            const fileName = files[0].name;
+                            const fileBlob = URL.createObjectURL(files[0]);
+                            type === 'app-icon'
+                                ? setAppIcon((prev) => ({
+                                      ...prev,
+                                      msg: fileName,
+                                      errorMsg: '',
+                                      blob: fileBlob,
+                                      image: '',
+                                      imageFile: files[0],
+                                  }))
+                                : type === 'app-logo' &&
+                                  setAppLogo((prev) => ({
+                                      ...prev,
+                                      msg: fileName,
+                                      errorMsg: '',
+                                      blob: fileBlob,
+                                      image: '',
+                                      imageFile: files[0],
+                                  }));
+                            /* 
+                            when the image with the blob loads call the below method
+                            URL.revokeObjectURL(this.src);  where this.src is the blob created
+                            */
+                        }
+                    };
+                };
+            }
+        }
+    };
+
+    const addDropSignal = (elemRef) => {
+        elemRef?.current?.classList.add('drop-signal');
+    };
+
+    const removeDropSignal = (elemRef) => {
+        elemRef?.current?.classList.remove('drop-signal');
+    };
+
+    const handleImageDrop = (e, fileRef, type, elemRef) => {
+        e.preventDefault();
+        removeDropSignal(elemRef);
+        if (e?.dataTransfer?.files && fileRef) {
+            // eslint-disable-next-line no-param-reassign
+            fileRef.current.files = e.dataTransfer.files;
+            handleImgSelect(e.dataTransfer.files, type);
+        }
     };
 
     return (
@@ -117,7 +445,6 @@ function AccountSettings() {
                     role="tabpanel"
                     aria-labelledby="pills-account-tab"
                 >
-                    {/* <!--* Start of Account Settings View --> */}
                     <div className="d-flex justify-content-between col-md-8">
                         <h3 className="fs-6 text-black">Account Settings</h3>
                     </div>
@@ -269,6 +596,228 @@ function AccountSettings() {
                                 onChange={handleRSChange}
                                 value={defaultCountry}
                             />
+                        </div>
+                        {/* Live */}
+                        <div className="row">
+                            <div className="mb-3 col-6">
+                                <label className="form-label">App Icon</label>
+                                <div
+                                    ref={appIconWrapper}
+                                    onDragOver={(e) => {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                        addDropSignal(appIconWrapper);
+                                    }}
+                                    onDragLeave={() => removeDropSignal(appIconWrapper)}
+                                    onDragEnd={() => removeDropSignal(appIconWrapper)}
+                                    onDrop={(e) => handleImageDrop(e, appIconFile, 'app-icon', appIconWrapper)}
+                                    className="d-grid align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative"
+                                >
+                                    {(appIcon.errorMsg || appIcon.blob || appIcon.image || appIcon.imageFile) && (
+                                        <button
+                                            type="button"
+                                            className="clear-upl-img"
+                                            onClick={() => clearSelectedImage('app-icon')}
+                                        >
+                                            ×
+                                        </button>
+                                    )}
+                                    <div
+                                        onClick={() => triggerFileSelect(appIconFile)}
+                                        style={{
+                                            width: '6rem',
+                                            height: '6rem',
+                                            border: '1px dashed #dee2e6',
+                                        }}
+                                        className="
+                                            rounded-3
+                                            d-flex
+                                            justify-content-center
+                                            align-items-center
+                                            "
+                                    >
+                                        <div
+                                            style={{
+                                                justifyContent: 'center',
+                                                height: '100%',
+                                                width: '100%',
+                                            }}
+                                            className="ms-0 d-flex justify-content-between align-items-center"
+                                        >
+                                            {appIcon.blob || appIcon.image ? (
+                                                <img
+                                                    className="avatarImage"
+                                                    src={appIcon.blob || appIcon.image}
+                                                    alt=""
+                                                    onLoad={() => appIcon.blob && URL.revokeObjectURL(appIcon.blob)}
+                                                    style={{
+                                                        maxWidth: '100%',
+                                                        maxHeight: '100%',
+                                                    }}
+                                                />
+                                            ) : (
+                                                <img
+                                                    src={ImageDefault}
+                                                    alt=""
+                                                    style={{
+                                                        paddingLeft: '2.1rem',
+                                                    }}
+                                                    className="pe-none"
+                                                />
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div
+                                        className="h-100 d-inline-flex justify-content-center align-items-center"
+                                        onClick={() => triggerFileSelect(appIconFile)}
+                                    >
+                                        <input
+                                            type="file"
+                                            name="app-icon"
+                                            id="app-icon"
+                                            ref={appIconFile}
+                                            onChange={(e) => handleImgSelect(e.target.files, 'app-icon')}
+                                        />
+                                        <p className="mb-0 user-select-none">{appIcon.msg}</p>
+                                    </div>
+                                </div>
+                                {
+                                    /* simple validation */
+                                    simpleValidator.current.message(
+                                        'app-icon',
+                                        appIcon,
+                                        `no_file_select_err:${appIcon?.errorMsg}`,
+                                    )
+                                }
+                            </div>
+                            <div className="mb-3 col-6">
+                                <label className="form-label">App Logo</label>
+                                <div
+                                    ref={appLogoWrapper}
+                                    onDragOver={(e) => {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                        addDropSignal(appLogoWrapper);
+                                    }}
+                                    onDragLeave={() => removeDropSignal(appLogoWrapper)}
+                                    onDragEnd={() => removeDropSignal(appLogoWrapper)}
+                                    onDrop={(e) => handleImageDrop(e, appLogoFile, 'app-logo', appLogoWrapper)}
+                                    className="d-grid align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative drag-zone"
+                                >
+                                    {(appLogo.errorMsg || appLogo.blob || appLogo.image || appLogo.imageFile) && (
+                                        <button
+                                            type="button"
+                                            className="clear-upl-img"
+                                            onClick={() => clearSelectedImage('app-logo')}
+                                        >
+                                            ×
+                                        </button>
+                                    )}
+                                    <div
+                                        onClick={() => triggerFileSelect(appLogoFile)}
+                                        style={{
+                                            width: '6rem',
+                                            height: '6rem',
+                                            border: '1px dashed #dee2e6',
+                                        }}
+                                        className="
+                                            rounded-3
+                                            d-flex
+                                            justify-content-center
+                                            align-items-center
+                                            "
+                                    >
+                                        <div
+                                            style={{
+                                                justifyContent: 'center',
+                                                height: '100%',
+                                                width: '100%',
+                                            }}
+                                            className="ms-0 d-flex justify-content-between align-items-center"
+                                        >
+                                            {appLogo.blob || appLogo.image ? (
+                                                <img
+                                                    className="avatarImage"
+                                                    src={appLogo.blob || appLogo.image}
+                                                    alt=""
+                                                    onLoad={() => appLogo.blob && URL.revokeObjectURL(appLogo.blob)}
+                                                    style={{
+                                                        maxWidth: '100%',
+                                                        maxHeight: '100%',
+                                                    }}
+                                                />
+                                            ) : (
+                                                <img
+                                                    src={ImageDefault}
+                                                    alt=""
+                                                    style={{
+                                                        paddingLeft: '2.1rem',
+                                                    }}
+                                                    className="pe-none"
+                                                />
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div
+                                        className="h-100 d-inline-flex justify-content-center align-items-center"
+                                        onClick={() => triggerFileSelect(appLogoFile)}
+                                    >
+                                        <input
+                                            type="file"
+                                            name="app-logo"
+                                            id="app-logo"
+                                            ref={appLogoFile}
+                                            onChange={(e) => handleImgSelect(e.target.files, 'app-logo')}
+                                        />
+                                        <p className="mb-0 user-select-none">{appLogo.msg}</p>
+                                    </div>
+                                </div>
+                                {
+                                    /* simple validation */
+                                    simpleValidator.current.message(
+                                        'app-logo',
+                                        appLogo,
+                                        `no_file_select_err:${appLogo?.errorMsg}`,
+                                    )
+                                }
+                            </div>
+                        </div>
+                        {/* END */}
+                        <div className="row">
+                            <div className="form-group col-6 mb-3">
+                                <label className="f-14 mb-1">App Color</label>
+                                <div
+                                    className="d-flex border justify-content-between align-items-center p-2"
+                                    onClick={() => document.querySelector('.organisation_app_color')?.click()}
+                                >
+                                    <span>{organisation.branding.appColor || '#000000'}</span>
+                                    <input
+                                        type="color"
+                                        value={organisation.branding.appColor}
+                                        name="appColor"
+                                        onChange={handleChange}
+                                        className="colorThemeInput"
+                                        id="colorThemeInput"
+                                    />
+                                </div>
+                            </div>
+                            <div className="form-group col-6 mb-3">
+                                <label className="f-14 mb-1">Knowledge Base Hero Color</label>
+                                <div
+                                    className="d-flex border justify-content-between align-items-center p-2"
+                                    onClick={() => document.querySelector('.organisation_kb_hero_color')?.click()}
+                                >
+                                    <span>{organisation.branding.kbHeroColor || '#000000'}</span>
+                                    <input
+                                        type="color"
+                                        value={organisation.branding.kbHeroColor}
+                                        name="kbHeroColor"
+                                        onChange={handleChange}
+                                        className="colorThemeInput organisation_kb_hero_color"
+                                        id="colorThemeInput"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className="text-end col-md-8 mt-4 mb-4 pt-2 pb-3">

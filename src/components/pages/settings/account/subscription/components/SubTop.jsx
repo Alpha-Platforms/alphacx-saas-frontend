@@ -50,10 +50,11 @@ function SubTop({ tenantInfo, subscription, totalUsers }) {
                 <div>
                     <span>Current Plan</span>
                     <span>
-                        {subscription?.plan?.name || ''}{' '}
-                        {getRealCurrency(tenantInfo?.currency || '')
-                            ? `(${getRealCurrency(tenantInfo?.currency || '')})`
-                            : ''}
+                        {`${subscription?.plan?.name} ${
+                            getRealCurrency(tenantInfo?.currency || '') === 'NGN'
+                                ? getRealCurrency(tenantInfo?.currency || '')
+                                : ''
+                        }`.trim()}
                     </span>
                     {subscription?.subscription?.end_date && (
                         <span className="f-12">

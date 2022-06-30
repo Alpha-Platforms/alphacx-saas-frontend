@@ -9,7 +9,6 @@ import FormCheck from 'react-bootstrap/FormCheck';
 import { getRealCurrency } from './SubTop';
 import { httpPost } from '../../../../../../helpers/httpMethods';
 import { separateNum } from '../../../../../../helper';
-import acxLogo from '../../../../../../assets/images/whitebg.jpg';
 // import MoonLoader from 'react-spinners/MoonLoader';
 
 function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalUsers }) {
@@ -47,10 +46,6 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
             // console.log('INITIATE PAYMENT RESPONSE => ', initPaymentRes);
 
             setPlanState((prev) => ({ ...prev, isUpdatingPlan: true }));
-
-            // get current user from localStorage
-            const currentUser = JSON.parse(window.localStorage.getItem('user'));
-
             /* *
              * if currency is NGN, use flutterwave for payment, if currency is
              * USD, use stripe for payment
@@ -58,29 +53,9 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
              */
             if (getRealCurrency(tenantInfo?.currency || '') === 'NGN') {
                 // FLUTTERWAVE PAYMENT
-                const config = {
-                    public_key: initPaymentRes?.data?.FLW_PUBLIC_KEY,
-                    tx_ref: initPaymentRes?.data?.reference,
-                    amount: initPaymentRes?.data?.amount,
-                    currency: 'NGN',
-                    // payment_options: 'card,mobilemoney,ussd',
-                    payment_options: 'card',
-                    customer: {
-                        email: currentUser?.user?.email,
-                        phonenumber: currentUser?.user?.phone_number,
-                        name: `${currentUser?.user?.firstname || ''} ${currentUser?.user?.lastname || ''}`.trim(),
-                    },
-                    customizations: {
-                        title: 'AlphaCX',
-                        description: `Payment for ${planState.numOfAgents} agents`,
-                        logo: acxLogo,
-                    },
-                };
-
                 setPlanState((prev) => ({
                     ...prev,
-                    flutterwaveConfig: config,
-                    amount: initPaymentRes?.data?.amount,
+                    flutterwaveConfig: initPaymentRes?.data,
                 }));
             } else if (getRealCurrency(tenantInfo?.currency || '') === 'USD') {
                 // STRIPE PAYMENT
@@ -92,8 +67,13 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
         }
     };
 
+    const disableAfterActionBtnClick =
+        initiating || planState.isUpdatingPlan || (planState.actionType === 'add-user' && planState?.numOfAgents <= 0);
+
     const handleUpdatePlanBtn = () => {
         if (planState.numOfAgents <= 0) return window.document.getElementById('numOfAgents')?.focus();
+        // eslint-disable-next-line consistent-return
+        if (disableAfterActionBtnClick) return;
 
         return handleInitiatePayment();
     };
@@ -116,10 +96,12 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
     const handleNumChange = (e) => {
         if (Number(e.target.value) < totalUsers?.length && planState?.actionType !== 'add-user') return;
         if (Number(e.target.value) < 0 && planState?.actionType === 'add-user') return;
+        if (planState?.actionType !== 'add-user') return;
         setPlanState((prev) => ({ ...prev, numOfAgents: e.target.value }));
     };
 
     const handleActionType = (e) => {
+        if (disableAfterActionBtnClick) return;
         const type = e.target.id;
         setPlanState((prev) => ({
             ...prev,
@@ -138,6 +120,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                     name="actiontype"
                     type="radio"
                     id="renew-plan"
+                    disabled={disableAfterActionBtnClick}
                     checked={planState.actionType === 'renew-plan'}
                 />
                 <FormCheck
@@ -147,6 +130,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                     name="actiontype"
                     type="radio"
                     id="add-user"
+                    disabled={disableAfterActionBtnClick}
                     checked={planState.actionType === 'add-user'}
                 />
                 <FormCheck
@@ -156,6 +140,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                     name="actiontype"
                     type="radio"
                     id="update-plan"
+                    disabled={disableAfterActionBtnClick}
                     checked={planState.actionType === 'update-plan'}
                 />
             </div>
@@ -194,7 +179,11 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                                 id="numOfAgents"
                                 min={planState?.actionType === 'add-user' ? 0 : totalUsers.length}
                                 onChange={handleNumChange}
-                                disabled={planState.isUpdatingPlan || planState.actionType === 'renew-plan'}
+                                disabled={
+                                    planState.isUpdatingPlan ||
+                                    planState.actionType === 'renew-plan' ||
+                                    planState.actionType === 'update-plan'
+                                }
                             />
                         </div>
                     </div>
@@ -247,15 +236,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
             </div>
 
             <div className="updateplan-btn-wrapper">
-                <button
-                    onClick={handleUpdatePlanBtn}
-                    type="button"
-                    disabled={
-                        initiating ||
-                        planState.isUpdatingPlan ||
-                        (planState.actionType === 'add-user' && planState?.numOfAgents <= 0)
-                    }
-                >
+                <button onClick={handleUpdatePlanBtn} type="button" disabled={disableAfterActionBtnClick}>
                     {Object.keys(planState?.selectedPlan || {}).length === 0 ? 'Select Plan' : 'Update Plan'}
                 </button>
 
