@@ -56,7 +56,7 @@ export default function SocialIntegrations() {
             // appId: "265267201741571",
             autoLogAppEvents: true,
             xfbml: true,
-            version: 'v11.0',
+            version: 'v14.0',
         });
 
         const CheckpageConnected = localStorage.getItem('pageConnected');

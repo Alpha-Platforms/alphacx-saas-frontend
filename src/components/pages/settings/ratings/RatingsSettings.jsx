@@ -18,13 +18,14 @@ import Logo from '../../../../assets/svgicons/Logo.svg';
 //
 import { httpPatchMain, httpGetMain } from '../../../../helpers/httpMethods';
 import '../settings.css';
+import Modal from 'react-responsive-modal';
 //
-import Feedback from './Feedback';
-//
+
+import RatingsForm from '../../../../components/pages/ratings/RatingsForm';
+
 const tenantDomain = localStorage.getItem('domain');
 
 export default function RatingsSettings() {
-    const [activePage, setActivePage] = useState('ratingsForm');
     const [processing, setProcessing] = useState(false);
     // form field
     const [ratingsData, setRatingsData] = useState({
@@ -32,6 +33,9 @@ export default function RatingsSettings() {
         ratingLabel: '',
         commentLabel: '',
     });
+
+    const [showModal, setShowModal] = useState(false)
+
     const history = useHistory();
 
     useEffect(() => {
@@ -74,6 +78,7 @@ export default function RatingsSettings() {
     };
 
     return (
+        <>
         <section className="ratings-page min-vh-100">
             <header id="mainContentHeader" className="breadcrumb">
                 <h6 className="text-muted f-14">
@@ -84,25 +89,8 @@ export default function RatingsSettings() {
                     <span>Ratings Form</span>
                 </h6>
             </header>
-            <div className="acx-tab">
-                <a
-                    href="#ratings-form"
-                    className={`acx-fs-14 ${activePage === 'ratingsForm' ? 'acx-active-tab' : ''}`}
-                    onClick={() => setActivePage('ratingsForm')}
-                >
-                    {' '}
-                    Ratings Form
-                </a>
-                <a
-                    href="#ratings-form"
-                    onClick={() => setActivePage('feedback')}
-                    className={`acx-fs-14 ${activePage === 'feedback' ? 'acx-active-tab' : ''}`}
-                >
-                    Feedback
-                </a>
-            </div>
+            
             <div className="">
-                {activePage === 'ratingsForm' ? (
                     <div className="mt-3 mb-5">
                         <Row className="justify-content-center">
                             <Col sm={10} md={8} lg={6}>
@@ -206,6 +194,15 @@ export default function RatingsSettings() {
                                     <div className="text-center">
                                         <Button
                                             type="submit"
+                                            onClick={() => setShowModal(true)}
+                                            disabled={processing}
+                                            className="px-4 acx-btn-primary acx-btn-outline-primary"
+                                        >
+                                           <span> Preview </span>
+                                        </Button>
+
+                                        <Button
+                                            type="submit"
                                             onClick={handleSubmit}
                                             disabled={processing}
                                             className="px-4 acx-btn-primary"
@@ -223,7 +220,7 @@ export default function RatingsSettings() {
                                                     Loading...
                                                 </span>
                                             ) : (
-                                                <span className="text-white"> Submit </span>
+                                                <span className="text-white"> Save </span>
                                             )}
                                         </Button>
                                     </div>
@@ -231,10 +228,7 @@ export default function RatingsSettings() {
                             </Col>
                         </Row>
                     </div>
-                ) : (
-                    ''
-                )}
-                {activePage === 'feedback' ? <Feedback /> : ''}
+                    
             </div>
             <footer className="">
                 <p className="text-center">
@@ -242,5 +236,17 @@ export default function RatingsSettings() {
                 </p>
             </footer>
         </section>
+        <Modal
+            // show={showModal}
+            // onHide={() => setCreateModalShow(false)}
+            open={showModal}
+            onClose={() => setShowModal(false)}
+            aria-labelledby="contained-modal-title-vcenter"
+            size="lg"
+            centered
+        >
+            <RatingsForm />
+        </Modal>
+    </>
     );
 }
