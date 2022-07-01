@@ -149,7 +149,6 @@ function Subscription({
                 getSubscription({ reload: true });
                 return NotificationManager.success('', 'Successful', 4000);
             }
-            
         }
     };
 
@@ -222,103 +221,107 @@ function Subscription({
                                         </div>
                                     ) : (
                                         <div className="plan-selection">
-                                            {plans?.map((item) => (
-                                                <div
-                                                    className={`${
-                                                        item?.name === 'Free Plan' ? 'free-plan' : 'alpha-plan'
-                                                    } ${
-                                                        !(subExpired && subscription?.plan?.name !== 'Free Plan') &&
-                                                        item?.name === 'Free Plan'
-                                                            ? 'free-plan-disabled'
-                                                            : ''
-                                                    }`}
-                                                >
-                                                    <div>
-                                                        <p>{item?.name}</p>
-                                                        {item?.name === 'Free Plan' ? (
-                                                            <h3>Free</h3>
-                                                        ) : (
-                                                            <h3>
-                                                                {getRealCurrency(item?.currency) === 'NGN' ? '₦' : '$'}
-                                                                {separateNum(item?.monthly_amount)}{' '}
-                                                                <small className="fs-6">/ user / month</small>
-                                                            </h3>
-                                                        )}
-                                                    </div>
-                                                    <div>
-                                                        <ul className="features-list">
-                                                            <li>
-                                                                <span>
-                                                                    <TickIcon />
-                                                                </span>{' '}
-                                                                <span>Conversational Inbox</span>
-                                                            </li>
-                                                            <li>
-                                                                <span>
-                                                                    <TickIcon />
-                                                                </span>{' '}
-                                                                <span>Embeddable Livechat Widget</span>
-                                                            </li>
-                                                            <li>
-                                                                <span>
-                                                                    <TickIcon />
-                                                                </span>{' '}
-                                                                <span>Facebook Integration</span>
-                                                            </li>
-                                                            <li>
-                                                                <span>
-                                                                    <TickIcon />
-                                                                </span>{' '}
-                                                                <span>WhatsApp Integration</span>
-                                                            </li>
-                                                            <li>
-                                                                <span>
-                                                                    <TickIcon />
-                                                                </span>{' '}
-                                                                <span>Automation & Escalation</span>
-                                                            </li>
-                                                            <li>
-                                                                <span>
-                                                                    <TickIcon />
-                                                                </span>{' '}
-                                                                <span>Knowledge Base System</span>
-                                                            </li>
-                                                        </ul>
+                                            {plans
+                                                ?.filter((item) => item?.plan_type === 'main')
+                                                .map((item) => (
+                                                    <div
+                                                        className={`${
+                                                            item?.name === 'Free Plan' ? 'free-plan' : 'alpha-plan'
+                                                        } ${
+                                                            !(subExpired && subscription?.plan?.name !== 'Free Plan') &&
+                                                            item?.name === 'Free Plan'
+                                                                ? 'free-plan-disabled'
+                                                                : ''
+                                                        }`}
+                                                    >
                                                         <div>
+                                                            <p>{item?.name}</p>
                                                             {item?.name === 'Free Plan' ? (
-                                                                <button
-                                                                    type="button"
-                                                                    className="btn btn-outline-primary"
-                                                                    disabled={!(
-                                                                            subExpired &&
-                                                                            subscription?.plan?.name !== 'Free Plan'
-                                                                        ) &&
-                                                                        item?.name === 'Free Plan'
-                                                                    }
-                                                                    onClick={() => setOpenModal(true)}
-                                                                >
-                                                                    Activate
-                                                                </button>
+                                                                <h3>Free</h3>
                                                             ) : (
-                                                                <button
-                                                                    type="button"
-                                                                    className="btn bg-at-blue-light"
-                                                                    style={{ color: 'white' }}
-                                                                    onClick={() =>
-                                                                        setPlanState((prev) => ({
-                                                                            ...prev,
-                                                                            selectingPlan: true,
-                                                                            selectedPlan: item,
-                                                                        }))
-                                                                    }
-                                                                >
-                                                                    Select Plan
-                                                                </button>
+                                                                <h3>
+                                                                    {getRealCurrency(item?.currency) === 'NGN'
+                                                                        ? '₦'
+                                                                        : '$'}
+                                                                    {separateNum(item?.monthly_amount)}{' '}
+                                                                    <small className="fs-6">/ user / month</small>
+                                                                </h3>
                                                             )}
                                                         </div>
+                                                        <div>
+                                                            <ul className="features-list">
+                                                                <li>
+                                                                    <span>
+                                                                        <TickIcon />
+                                                                    </span>{' '}
+                                                                    <span>Conversational Inbox</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span>
+                                                                        <TickIcon />
+                                                                    </span>{' '}
+                                                                    <span>Embeddable Livechat Widget</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span>
+                                                                        <TickIcon />
+                                                                    </span>{' '}
+                                                                    <span>Facebook Integration</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span>
+                                                                        <TickIcon />
+                                                                    </span>{' '}
+                                                                    <span>WhatsApp Integration</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span>
+                                                                        <TickIcon />
+                                                                    </span>{' '}
+                                                                    <span>Automation & Escalation</span>
+                                                                </li>
+                                                                <li>
+                                                                    <span>
+                                                                        <TickIcon />
+                                                                    </span>{' '}
+                                                                    <span>Knowledge Base System</span>
+                                                                </li>
+                                                            </ul>
+                                                            <div>
+                                                                {item?.name === 'Free Plan' ? (
+                                                                    <button
+                                                                        type="button"
+                                                                        className="btn btn-outline-primary"
+                                                                        disabled={
+                                                                            !(
+                                                                                subExpired &&
+                                                                                subscription?.plan?.name !== 'Free Plan'
+                                                                            ) && item?.name === 'Free Plan'
+                                                                        }
+                                                                        onClick={() => setOpenModal(true)}
+                                                                    >
+                                                                        Activate
+                                                                    </button>
+                                                                ) : (
+                                                                    <button
+                                                                        type="button"
+                                                                        className="btn bg-at-blue-light"
+                                                                        style={{ color: 'white' }}
+                                                                        onClick={() =>
+                                                                            setPlanState((prev) => ({
+                                                                                ...prev,
+                                                                                selectingPlan: true,
+                                                                                selectedPlan: item,
+                                                                            }))
+                                                                        }
+                                                                    >
+                                                                        Select Plan
+                                                                    </button>
+                                                                )}
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ))}
+                                                ))}
                                         </div>
                                     )}
                                     <Modal open={openModal} onClose={() => setOpenModal(false)} center>
