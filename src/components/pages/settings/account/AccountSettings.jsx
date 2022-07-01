@@ -45,6 +45,7 @@ function AccountSettings() {
             kbHeroColor: '',
         },
     });
+    const [, forceUpdate] = useState(false);
 
     const appIconWrapper = useRef(null);
     const appLogoWrapper = useRef(null);
@@ -81,7 +82,7 @@ function AccountSettings() {
                     messageReplace: (_, params) => params[0],
                 },
             },
-            autoForceUpdate: true,
+            // autoForceUpdate: true,
         }),
     );
 
@@ -92,7 +93,14 @@ function AccountSettings() {
         setAccountLoading(false);
 
         if (res?.status === 'success') {
-            setOrganisation((prev) => ({ ...prev, ...res?.data }));
+            setOrganisation((prev) => ({
+                ...prev,
+                ...res?.data,
+                branding: res?.data?.branding || {
+                    appColor: res?.data?.branding?.appColor || '',
+                    kbHeroColor: res?.data?.branding?.kbHeroColor || '',
+                },
+            }));
             setAppIcon((prev) => ({
                 ...prev,
                 image: res?.data?.branding?.appIcon || '',
@@ -137,7 +145,8 @@ function AccountSettings() {
     const updateUserInfo = async (e) => {
         if (!simpleValidator.current.allValid()) {
             // show all errors if exist
-            return simpleValidator.current.showMessages();
+            simpleValidator.current.showMessages();
+            return forceUpdate((prev) => !prev);
         }
         e.preventDefault();
         setAccountLoading(true);
@@ -182,8 +191,8 @@ function AccountSettings() {
                             branding: {
                                 appIcon: appIconImg,
                                 appLogo: appLogoImg,
-                                appColor: branding.appColor,
-                                kbHeroColor: branding.kbHeroColor,
+                                appColor: branding?.appColor,
+                                kbHeroColor: branding?.kbHeroColor,
                             },
                         };
                         const res = await httpPatch(`auth/tenant-info/${gottenDomain}`, payload);
@@ -233,8 +242,8 @@ function AccountSettings() {
             branding: {
                 appIcon: appIcon.image,
                 appLogo: appLogo.image,
-                appColor: branding.appColor,
-                kbHeroColor: branding.kbHeroColor,
+                appColor: branding?.appColor,
+                kbHeroColor: branding?.kbHeroColor,
             },
         };
 
@@ -326,6 +335,7 @@ function AccountSettings() {
                           imageFile: null,
                       }));
                 simpleValidator.current.showMessageFor(type);
+                forceUpdate((prev) => !prev);
             } else {
                 // Selected file is an image
                 /*
@@ -369,6 +379,7 @@ function AccountSettings() {
                                       imageFile: null,
                                   }));
                             simpleValidator.current.showMessageFor(type);
+                            forceUpdate((prev) => !prev);
                         } else {
                             // current selected image dimensions are acceptable
                             const fileName = files[0].name;
@@ -790,10 +801,10 @@ function AccountSettings() {
                                     className="d-flex border justify-content-between align-items-center p-2"
                                     onClick={() => document.querySelector('.organisation_app_color')?.click()}
                                 >
-                                    <span>{organisation.branding.appColor || '#000000'}</span>
+                                    <span>{organisation?.branding?.appColor || '#000000'}</span>
                                     <input
                                         type="color"
-                                        value={organisation.branding.appColor}
+                                        value={organisation?.branding?.appColor || '#000000'}
                                         name="appColor"
                                         onChange={handleChange}
                                         className="colorThemeInput"
@@ -807,10 +818,10 @@ function AccountSettings() {
                                     className="d-flex border justify-content-between align-items-center p-2"
                                     onClick={() => document.querySelector('.organisation_kb_hero_color')?.click()}
                                 >
-                                    <span>{organisation.branding.kbHeroColor || '#000000'}</span>
+                                    <span>{organisation?.branding?.kbHeroColor || '#000000'}</span>
                                     <input
                                         type="color"
-                                        value={organisation.branding.kbHeroColor}
+                                        value={organisation?.branding?.kbHeroColor || '#000000'}
                                         name="kbHeroColor"
                                         onChange={handleChange}
                                         className="colorThemeInput organisation_kb_hero_color"
