@@ -22,12 +22,15 @@ supportTickets: [
 
 const initialState = {
     supportTickets: [],
-    supportLoading: false,
-    supportLoaded: false,
 };
 
 const supportReducer = (state = initialState, action) => {
     switch (action.type) {
+        case types.CREATE_SUPPORT_TICKET:
+            return {
+                ...state,
+                supporTickets: [action.payload, ...state.supportTickets],
+            };
         default:
             return state;
     }

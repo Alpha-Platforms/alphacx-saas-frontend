@@ -37,12 +37,9 @@ import RoleLightIcon from '../../../assets/icons/role_light.svg';
 import LivechatIcon from '../../../assets/icons/chat-blue.svg';
 import DocumentIcon from '../../../assets/icons/doc-blue.svg';
 import RatingStar from '../../../assets/icons/Rating-Star.svg';
-
 import AccessControl from '../auth/accessControl.jsx';
-import ContactAlphcxModal from './ContactAlphcxModal';
 
 function SettingsHome({ signedUser }) {
-    const [contactSupportModalShow, setContactSupportModalShow] = useState(false);
 
     return (
         <Container fluid>
@@ -266,8 +263,7 @@ function SettingsHome({ signedUser }) {
                 <Col sm={6} md={4} className="settings-menu-item">
                     <div className="border rounded bg-light">
                         <Link
-                            to="#"
-                            onClick={() => setContactSupportModalShow(true)}
+                            to="/support"
                             className="d-block cursor text-decoration-none"
                             role="button"
                         >
@@ -286,11 +282,6 @@ function SettingsHome({ signedUser }) {
                     </div>
                 </Col>
             </Row>
-
-            <ContactAlphcxModal
-                contactSupportModalShow={contactSupportModalShow}
-                setContactSupportModalShow={setContactSupportModalShow}
-            />
         </Container>
     );
 }

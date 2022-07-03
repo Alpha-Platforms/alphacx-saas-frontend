@@ -7,10 +7,10 @@
     grid-template-columns: 30% 70%;
 
     & > .sconv__section {
-        padding-top: .5rem;
     }
-
+    
     & > .sconv__section--one {
+        padding-top: .5rem;
         border-right: 1px solid rgba(0,98,152,.1);
     }
 
