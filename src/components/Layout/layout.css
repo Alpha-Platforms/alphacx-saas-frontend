@@ -23,6 +23,11 @@
   /* margin-top: 0.5rem; */
 }
 
+.app-container.support-convo-page {
+  height: calc(100vh - 92px) !important;
+  overflow-y: hidden;
+}
+
 .navbar-wrap {
   height: 90px;
   position: fixed;

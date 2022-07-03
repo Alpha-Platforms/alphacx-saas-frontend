@@ -39,7 +39,7 @@ function Index({ user, isUserAuthenticated, ...props }) {
                 </div>
 
                 <Sidebar browserRouter={props.browserRouter} currentRoute={props.currentRoute} />
-                <section className={`app-container ${location.pathname === '/conversation' ? 'convo-page' : ''}`}>
+                <section className={`app-container ${location.pathname === '/support' ? 'support-convo-page' : ''}`}>
                     {props.children}
                 </section>
             </div>

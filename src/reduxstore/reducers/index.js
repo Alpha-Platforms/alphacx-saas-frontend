@@ -25,6 +25,7 @@ import slaReducer from './slaReducer';
 import emailTemplateReducer from './emailTemplateReducer';
 import channelReducer from './channelReducer';
 import customFieldReducer from './customFieldReducer';
+import supportReducer from './supportReducer';
 // ,
 const persistConfig = {
     key: 'alphacx_platform',
@@ -44,6 +45,7 @@ const persistConfig = {
         'sla',
         'emailTemplate',
         'channel',
+        'support',
     ],
 };
 
@@ -71,6 +73,7 @@ const rootReducer = combineReducers({
     emailTemplate: emailTemplateReducer,
     channel: channelReducer,
     customField: customFieldReducer,
+    support: supportReducer,
 });
 
 export default persistReducer(persistConfig, rootReducer);

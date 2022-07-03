@@ -17,6 +17,7 @@ import 'react-responsive-modal/styles.css';
 
 import HelpCenter from './components/pages/help_center/helpCenter';
 import Conversation from './components/pages/conversations/conversation';
+import SupportConversation from './components/pages/tenant-support/SupportConversation';
 import store, { persistor } from './reduxstore/store';
 import { loadUser } from './reduxstore/actions/userAuthActions';
 import { getPriorities } from './reduxstore/actions/priorityActions';
@@ -165,6 +166,12 @@ const SiteRouter = connect(mapStateToProps, {
                                     path="/conversation"
                                     component={Conversation}
                                     pageName="Conversations"
+                                />
+                                <DefaultLayoutRoute
+                                    exact
+                                    path="/support"
+                                    component={SupportConversation}
+                                    pageName="Support Conversation"
                                 />
                                 <DefaultLayoutRoute
                                     exact
