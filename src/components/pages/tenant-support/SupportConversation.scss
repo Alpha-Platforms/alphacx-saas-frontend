@@ -1,0 +1,45 @@
+.support-conversation {
+    border: 1px solid rgba(0,98,152,.1);
+    height: calc(100vh - 105px);
+    max-height: calc(100vh - 105px);
+    position: relative;
+    display: grid;
+    grid-template-columns: 30% 70%;
+
+    & > .sconv__section {
+        padding-top: .5rem;
+    }
+
+    & > .sconv__section--one {
+        border-right: 1px solid rgba(0,98,152,.1);
+    }
+
+    & > .sconv__section--two {
+        // border: 1px solid green;
+    }
+
+}   
+
+.support-message.message {
+    .message-container {
+        border-radius: 18px;
+        -webkit-border-radius: 18px;
+        -moz-border-radius: 18px;
+        -ms-border-radius: 18px;
+        -o-border-radius: 18px;
+    }
+    &:not(.message-out) {
+        .message-container {
+            border-top-left-radius: 0px;
+            margin-left: 0.5rem;
+            background-color: rgba(0, 98, 152, 0.1);
+        }
+    }
+    &.message-out {
+        .message-container {
+            border-top-right-radius: 0px;
+            margin-right: 0.5rem;
+            background-color: rgba(242, 225, 244, 0.5);
+        }
+    }
+}
