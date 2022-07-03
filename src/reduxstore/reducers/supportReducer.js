@@ -29,7 +29,7 @@ const supportReducer = (state = initialState, action) => {
         case types.CREATE_SUPPORT_TICKET:
             return {
                 ...state,
-                supporTickets: [action.payload, ...state.supportTickets],
+                supportTickets: [action.payload, ...state.supportTickets],
             };
         default:
             return state;
