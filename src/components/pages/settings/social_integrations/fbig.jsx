@@ -92,7 +92,7 @@ const FBIntegration = ({location}) => {
             if (res.status === 'success') {
                 NotificationManager.success("Page successfully connected");
                 // Go back
-                redirectToPreviewPage()
+                // redirectToPreviewPage()
             } else {
                 return NotificationManager.error(res.er);
             }
@@ -162,11 +162,11 @@ const FBIntegration = ({location}) => {
                             </div>
                         </div>
 
-                        <p className="mt-3">
-                            You need to create your business page or use an existing
-                            one.
-                            <br /> You need to be the Administrator of that page.
-                        </p>
+                        <ul className="mt-2">
+                            <li>You need to create your business page or use an existing one.</li>
+                            {channel === "instagram" && <li>Your Instagram business page must be connected to your Facebook Page</li>}
+                            <li>You need to be the Administrator of the Facebook Page.</li>
+                        </ul>                            
 
                         <div className="">
                             <button className="btn acx-btn-primary px-3 py-2" onClick={authFb} disabled={pageConnected}>
@@ -179,7 +179,7 @@ const FBIntegration = ({location}) => {
         </div>
         <div className='pt-2'>
             <button className='fs-6' onClick={() => window.location.href = `${baseUrl}/settings/integrations`}>
-                <img src={ArrowLeft} alt="ArrowLeft" /> Back</button>
+                <img src={ArrowLeft} alt="ArrowLeft" /> If not automatically redirected click here to go back</button>
         </div>
     </div>
     )
