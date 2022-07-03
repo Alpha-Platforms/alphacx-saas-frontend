@@ -198,7 +198,7 @@ function LiveChatSettings({
                 </header>
                 <div className="">
                     <h5 className="mt-3 mb-0 ">Live Chat Widget</h5>
-                    <small><a href="https://docs.alphacx.co/getting-started/channel-integration/setup-live-chat-widget" className='text-custom'>See How to Setup Livechat</a></small>
+                    <small><a href="https://docs.alphacx.co/getting-started/channel-integration/setup-live-chat-widget" target="_blank" className='text-custom'>See How to Setup Livechat</a></small>
                 </div>
                 {!loading && (
                     <div>
@@ -313,7 +313,7 @@ function LiveChatSettings({
                                                             <small>Select your Widget color.</small>
                                                         </div>
                                                         <div className="d-flex my-2 mb-1 widgetcolor-wrapper">
-                                                            <input value={settings.theme} name="theme" onChange={handleInputChange} className="form-control-plaintext" />
+                                                            <input value={settings.theme} name="theme" onChange={handleInputChange} className="border form-control-plaintext me-1 px-1 rounded" />
                                                             <input
                                                                 type="color"
                                                                 value={settings.theme}
