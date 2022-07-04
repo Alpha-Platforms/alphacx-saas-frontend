@@ -159,14 +159,12 @@ const SiteRouter = connect(mapStateToProps, {
                                 <Route exact path="/twitter-auth" component={TwitterAuth} /> {/* Customer Portal */}
                                 <Route exact path="/customer-portal/tickets" component={CustomerPortal} />
                                 <Route exact path="/no-customers" component={CustomersNull} />
-
-                                <DefaultLayoutRoute exact path="/dashboard" pageName="Dashboard" component={Dashboard} />
-                                
+                                <DefaultLayoutRoute exact path="/" component={Conversation} pageName="Conversations" />
                                 <DefaultLayoutRoute
                                     exact
-                                    path="/"
-                                    component={Conversation}
-                                    pageName="Conversations"
+                                    path="/dashboard"
+                                    pageName="Dashboard"
+                                    component={Dashboard}
                                 />
                                 <DefaultLayoutRoute
                                     exact
