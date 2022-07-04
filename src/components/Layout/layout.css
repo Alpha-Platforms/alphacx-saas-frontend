@@ -24,7 +24,8 @@
 }
 
 .app-container.support-convo-page {
-  height: calc(100vh - 92px) !important;
+  /* height: calc(100vh - 92px) !important; */
+  height: calc(100vh - 85px) !important;
   overflow-y: hidden;
 }
 

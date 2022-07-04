@@ -1,24 +1,28 @@
 .support-conversation {
+    --sc-height: calc(100vh - 98px);
+    --sc-header-height: 147px;
+    --sc-editor-height: 68px;
     border: 1px solid rgba(0,98,152,.1);
-    height: calc(100vh - 105px);
-    max-height: calc(100vh - 105px);
+    height: var(--sc-height);
+    max-height: var(--sc-height);
     position: relative;
     display: grid;
     grid-template-columns: 30% 70%;
 
-    & > .sconv__section {
-    }
-    
+    & > .sconv__section {}
+
     & > .sconv__section--one {
-        padding-top: .5rem;
+        padding-top: 0.5rem;
         border-right: 1px solid rgba(0,98,152,.1);
+        overflow-x: hidden;
     }
 
     & > .sconv__section--two {
         // border: 1px solid green;
+        position: relative;
     }
 
-}   
+}
 
 .support-message.message {
     .message-container {
@@ -30,16 +34,137 @@
     }
     &:not(.message-out) {
         .message-container {
-            border-top-left-radius: 0px;
+            border-top-left-radius: 0;
             margin-left: 0.5rem;
             background-color: rgba(0, 98, 152, 0.1);
         }
     }
     &.message-out {
         .message-container {
-            border-top-right-radius: 0px;
+            border-top-right-radius: 0;
             margin-right: 0.5rem;
             background-color: rgba(242, 225, 244, 0.5);
         }
+    }
+}
+
+.support-editor-box {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+
+    .conversationCommentBox {
+        padding: 10px 30px;
+    }
+
+    .DraftEditor-root {
+        height: 5rem !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        padding-top: 0.2rem;
+        background-color: white;
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        & {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+    }
+}
+
+.support-editor-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden;
+    /* top: auto !important;
+    bottom: 10px !important; */
+}
+
+.support-editor-wrapper {
+    border: solid rgba(0, 98, 152, 0.15) !important;
+    border-width: 1px !important;
+    height: 100% !important;
+    border-radius: 9px !important;
+    -webkit-border-radius: 9px !important;
+    -moz-border-radius: 9px !important;
+    -ms-border-radius: 9px !important;
+    -o-border-radius: 9px !important;
+}
+
+.support-editor-wrapper.rdw-editor-wrapper .rdw-emoji-modal {
+    bottom: 40px !important;
+    top: unset !important;
+    left: 0 !important;
+    box-shadow: 0 0 4px rgba(0, 98, 152, 0.1);
+    border-radius: 5px;
+    transition: 0.25s ease-in;
+}
+
+.support-editor.rdw-editor-main {
+    overflow: unset !important;
+}
+.support-editor.rdw-editor-main .rdw-suggestion-dropdown {
+    min-width: 200px;
+    max-height: 250px;
+    bottom: 110%;
+    left: 0 !important;
+    /* z-index: 999999; */
+    box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    transition: 0.25s ease-in;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+.support-editor.rdw-editor-main .rdw-suggestion-dropdown::before {
+    content: "Suggested contacts";
+    color: var(--color-primary);
+    background-color: white;
+    font-size: 1rem;
+    font-weight: 500;
+    width: 100%;
+    height: 40px;
+    position: sticky;
+    top: 0;
+    padding: 10px;
+}
+
+.support-editor.rdw-editor-main .rdw-suggestion-dropdown .rdw-suggestion-option {
+    white-space: nowrap;
+    border-width: 0 !important;
+    text-transform: capitalize!important;
+    display: inline-flex;
+    align-items: center;
+    transition: 0.25s ease-in;
+}
+
+.support-chat-area {
+    height: calc(var(--sc-height) - (var(--sc-editor-height) + var(--sc-header-height))) !important;
+    height: 10rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 1rem;
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    & {
+        -ms-overflow-style: none;
+        /* IE and Edge */
+        scrollbar-width: none;
+        /* Firefox */
     }
 }
