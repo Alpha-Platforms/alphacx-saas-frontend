@@ -46,21 +46,10 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                         <span className="sidebar-list--text small fst-italic">Collapse Menu</span>
                     </li>
 
-                    <li
-                        className={`sidebar-list--item ${
-                            currentRoute === '/' || currentRoute === '/tabs' ? 'active' : ''
-                        }`}
-                        onClick={() => browserRouter(`/`)}
-                    >
-                        <span className="sidebar-list--icon">
-                            <HomeIcon activeRoute={false} />
-                        </span>
-                        <span className="sidebar-list--text">Dashboard</span>
-                    </li>
 
                     <li
-                        onClick={() => browserRouter(`/conversation`)}
-                        className={`sidebar-list--item ${currentRoute === '/conversation' ? 'active' : ''}`}
+                        onClick={() => browserRouter(`/`)}
+                        className={`sidebar-list--item ${currentRoute === '/' ? 'active' : ''}`}
                     >
                         <span className="sidebar-list--icon">
                             <ClockIcon activeRoute={false} />
@@ -69,8 +58,20 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                     </li>
 
                     <li
+                        className={`sidebar-list--item ${
+                            currentRoute === '/dashboard' ? 'active' : ''
+                        }`}
+                        onClick={() => browserRouter(`/dashboard`)}
+                    >
+                        <span className="sidebar-list--icon">
+                            <HomeIcon activeRoute={false} />
+                        </span>
+                        <span className="sidebar-list--text">Dashboard</span>
+                    </li>
+
+                    <li
                         onClick={() => browserRouter(`/tickets`)}
-                        className={`sidebar-list--item ${currentRoute === '/tickets' ? 'active' : ''}`}
+                        className={`sidebar-list--item ${currentRoute.includes('/tickets') ? 'active' : ''}`}
                     >
                         <span className="sidebar-list--icon">
                             <CardIcon activeRoute={false} />
@@ -80,7 +81,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
 
                     <li
                         onClick={() => browserRouter(`/customers`)}
-                        className={`sidebar-list--item ${currentRoute === '/customers' ? 'active' : ''}`}
+                        className={`sidebar-list--item ${currentRoute.includes('/customers') ? 'active' : ''}`}
                     >
                         <span className="sidebar-list--icon">
                             <MoreIcon activeRoute={false} />
@@ -102,7 +103,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
 
                     <li
                         onClick={() => browserRouter(`/settings`)}
-                        className={`sidebar-list--item ${currentRoute === '/settings' ? 'active' : ''}`}
+                        className={`sidebar-list--item ${currentRoute.includes('/settings') ? 'active' : ''}`}
                     >
                         <span className="sidebar-list--icon">
                             <SettingsIcon activeRoute={false} />
