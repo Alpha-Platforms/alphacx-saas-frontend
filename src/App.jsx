@@ -81,6 +81,7 @@ import LiveChatSettings from './components/pages/settings/livechatsettings/LiveC
 import SmsSettings from './components/pages/settings/smssettings/smsSettings';
 import ReportsFilter from './components/pages/reports/ReportsFilter';
 import FBIGIntegration from './components/pages/settings/social_integrations/fbig';
+import AppsumoSignup from './components/pages/appsumo/signup';
 import Instagram from './components/pages/settings/social_integrations/Instagram';
 
 const mapStateToProps = (state) => ({ isUserAuthenticated: state.userAuth.isUserAuthenticated });
@@ -159,14 +160,12 @@ const SiteRouter = connect(mapStateToProps, {
                                 <Route exact path="/twitter-auth" component={TwitterAuth} /> {/* Customer Portal */}
                                 <Route exact path="/customer-portal/tickets" component={CustomerPortal} />
                                 <Route exact path="/no-customers" component={CustomersNull} />
-
-                                <DefaultLayoutRoute exact path="/dashboard" pageName="Dashboard" component={Dashboard} />
-                                
+                                <DefaultLayoutRoute exact path="/" component={Conversation} pageName="Conversations" />
                                 <DefaultLayoutRoute
                                     exact
-                                    path="/"
-                                    component={Conversation}
-                                    pageName="Conversations"
+                                    path="/dashboard"
+                                    pageName="Dashboard"
+                                    component={Dashboard}
                                 />
                                 <DefaultLayoutRoute
                                     exact
@@ -410,6 +409,12 @@ const SiteRouter = connect(mapStateToProps, {
                                     path="/integrations"
                                     pageName="Ratings and Feedback"
                                     component={FBIGIntegration}
+                                />
+                                <Route
+                                    exact
+                                    path="/appsumo"
+                                    pageName="Ratings and Feedback"
+                                    component={AppsumoSignup}
                                 />{' '}
                                 {/* ......settings pages end */}
                                 <Route>
