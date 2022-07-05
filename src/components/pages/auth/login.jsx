@@ -14,10 +14,15 @@ import { httpPost, httpPostMain, httpGet } from "../../../helpers/httpMethods";
 import { css } from "@emotion/react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { wordCapitalize } from "helper";
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 const override = css``;
 
-const Login = ({match: {params}}) => {
+const Login = () => {
+
+  const location = useLocation()
+  const params = new URLSearchParams(location.search)
+  const email = params.get('email')
+
   const [userInput, setUserInput] = useState({
     domain: "",
     email: "",
@@ -50,6 +55,13 @@ const Login = ({match: {params}}) => {
       if (token && refreshToken) {
         window.location.href = "/";
       }
+
+      if (email) {
+        setUserInput(prev => {
+          return {...prev, email}
+        })
+      }
+
     }, []);
 
 
@@ -164,6 +176,7 @@ const Login = ({match: {params}}) => {
   };
 
   return (
+    <>
     <div className="auth-container d-flex justify-content-center">
       <div className="symbol-wrap2">
         <img src={Symbol2} alt="" />
@@ -288,6 +301,11 @@ const Login = ({match: {params}}) => {
         <img src={Symbol1} alt="" />
       </div>
     </div>
+
+  
+
+    </>
+    
   );
 };
 
