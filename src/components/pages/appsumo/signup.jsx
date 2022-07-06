@@ -29,6 +29,7 @@ import '../auth/login.css';
 import Symbol1 from '../../../assets/imgF/symbolAuth.png';
 import ThankYou from '../../../assets/imgF/thank-you.png';
 import LogoColoured from '../../../assets/svgicons/LogoColoured.svg';
+import AppsumoLogo from '../../../assets/images/appsumo-logo.png';
 
 import { Modal } from 'react-responsive-modal';
 // import BarLoader from "react-spinners/BarLoader";
@@ -119,7 +120,7 @@ function Appsumo() {
 
             window.location.href = `${baseUrl}/login?email=${userData.email}`
             
-        }, 120000); // BE said it takes this amount of time
+        }, 110000); // BE said it takes this amount of time
       }
     }, [showModal])
     
@@ -281,10 +282,17 @@ function Appsumo() {
                                 {!isVerified && !showModal ? (
                                     <div className="flex-grow-1 d-flex flex-column justify-content-center">
                                         <div className="mb-4">
-                                            <div className="mb-3">
-                                                <Image src={LogoColoured} height="40" />
+                                            <div className="mb-3"  style={{height: '40px', display: 'flex', alignItems: 'center'}}>
+                                                <Image src={LogoColoured} style={{height: '100%'}} />
+                                                <span class="" style={{
+                                                    width: '1px',
+                                                    height: '100%',
+                                                    background: '#004882',
+                                                    margin: '0 12px',
+                                                }}></span>
+                                                <Image src={AppsumoLogo} style={{height: '68%'}} />
                                             </div>
-                                            <h1 className="acx-text-gray-700 fs-4">Hey Sumoling,</h1>
+                                            <h1 className="acx-text-gray-700 fs-4">Welcome Sumo-ling,</h1>
                                             <h1 className="acx-text-gray-700 fw-bold fs-4">Complete your account Activation</h1>
                                             <p className="text-muted mb-3">
                                                 Already have an account?{' '}
@@ -417,7 +425,7 @@ function Appsumo() {
                                                 </InputGroup>
                                                 {userInput.domain && (
                                                     <small>
-                                                        Your URL will be <strong>{userInput.domain}.alphacx.co</strong>
+                                                        Your unique URL will be <strong>{userInput.domain}.alphacx.co</strong>
                                                     </small>
                                                 )}
                                                 {
@@ -598,11 +606,7 @@ function Appsumo() {
 
                 <div className="m-5 mb-4 px-3" >
                     {/* <p>Hi Candice,</p> */}
-                    <p className="">Your <strong>AlphaCX Account</strong> is being setup. <br /> It will only take 90 seconds.</p>
-
-              
-                
-
+                    <p className="">Your <strong>AlphaCX Account</strong> is being setup. <br /> It will only take about 95 seconds.</p>
                     
                   </div>
 
