@@ -43,3 +43,5 @@ export const createSupportTicket = (body, success, failed) => async (dispatch) =
 };
 
 export const setSupportModalActive = (val) => ({ type: types.SET_SUPPORT_MODAL_ACTIVE, payload: val });
+
+export const falsifyJustCreated = (ticketId) => ({ type: types.FALSIFY_JUST_CREATED, payload: ticketId });
