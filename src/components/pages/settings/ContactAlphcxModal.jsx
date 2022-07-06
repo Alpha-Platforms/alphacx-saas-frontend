@@ -72,6 +72,8 @@ function ContactAlphcxModal() {
                 () => {
                     NotificationManager.success('Message sent sucessfully', 'Success', 3000);
                     setCreating(false);
+                    setNewMessage((prev) => ({ ...prev, subject: '', message: '', }));
+                    dispatch(setSupportModalActive(false));
                 },
                 (err) => {
                     NotificationManager.error(err?.response?.data?.message || '', 'Error', 3000);
