@@ -3,13 +3,13 @@
 /* eslint-disable react/prop-types */
 // @ts-nocheck
 import React, { useState, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Modal } from 'react-responsive-modal';
 import { NotificationManager } from 'react-notifications';
 import SimpleReactValidator from 'simple-react-validator';
-import { createSupportTicket } from '../../../reduxstore/actions/supportActions';
+import { createSupportTicket, setSupportModalActive } from '../../../reduxstore/actions/supportActions';
 
-function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalShow }) {
+function ContactAlphcxModal() {
     // create user modal
     const [creating, setCreating] = useState(false);
     const [newMessage, setNewMessage] = useState({
@@ -17,6 +17,8 @@ function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalSho
         message: '',
     });
     const [, forceUpdate] = useState(false);
+
+    const supportModalActive = useSelector((state) => state.support?.supportModalActive);
 
     const dispatch = useDispatch();
 
@@ -26,7 +28,7 @@ function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalSho
     };
 
     const handleModalHide = () => {
-        setContactSupportModalShow(false);
+        dispatch(setSupportModalActive(false));
     };
 
     const simpleValidator = useRef(
@@ -85,7 +87,7 @@ function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalSho
                 overlay: 'acx-overlay',
                 modal: 'acx-modal',
             }}
-            open={contactSupportModalShow}
+            open={supportModalActive}
             onClose={handleModalHide}
             aria-labelledby="contained-modal-title-vcenter"
             center

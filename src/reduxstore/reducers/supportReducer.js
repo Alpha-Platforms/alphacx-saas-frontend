@@ -11,6 +11,7 @@ supportTickets: [
             assignee: {},
             loading: '', // loading | loaded | error
             isAuthenticated: false,
+            justCreated: false
         },
         chat: {
             chat: [],
@@ -22,6 +23,8 @@ supportTickets: [
 
 const initialState = {
     supportTickets: [],
+    supportModalActive: false,
+    activeSupportTicket: null,
 };
 
 const supportReducer = (state = initialState, action) => {
@@ -30,6 +33,11 @@ const supportReducer = (state = initialState, action) => {
             return {
                 ...state,
                 supportTickets: [action.payload, ...state.supportTickets],
+            };
+        case types.SET_SUPPORT_MODAL_ACTIVE:
+            return {
+                ...state,
+                supportModalActive: action.payload,
             };
         default:
             return state;

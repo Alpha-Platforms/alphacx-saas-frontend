@@ -18,9 +18,11 @@ export const createSupportTicket = (body, success, failed) => async (dispatch) =
                 customer: {
                     customer: res.data?.data?.user || {},
                     ticket: res.data?.data?.ticket || {},
-                    assignee: res.data?.data?.assignee || {},
+                    assignee: Array.isArray(res.data?.data?.assignee) ? res.data?.data?.assignee[0] : {},
+                    token: res.data?.data?.token || {},
                     loading: 'loaded',
                     isAuthenticated: true,
+                    justCreated: true,
                 },
                 chat: {
                     chat: [],
@@ -39,3 +41,5 @@ export const createSupportTicket = (body, success, failed) => async (dispatch) =
         return failed && failed(err);
     }
 };
+
+export const setSupportModalActive = (val) => ({ type: types.SET_SUPPORT_MODAL_ACTIVE, payload: val });

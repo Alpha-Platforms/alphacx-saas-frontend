@@ -1,10 +1,12 @@
+/* eslint-disable react/prop-types */
 // @ts-nocheck
-import React, { useState } from 'react';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import { StarIconTicket } from '../../../assets/images/svgs';
-import ContactAlphcxModal from '../settings/ContactAlphcxModal';
+import { setSupportModalActive } from '../../../reduxstore/actions/supportActions';
 
 function SupportChatAreaHeader() {
-    const [contactSupportModalShow, setContactSupportModalShow] = useState(false);
+    const dispatch = useDispatch();
     return (
         <div>
             <div className="conversationHeaderV2">
@@ -20,17 +22,13 @@ function SupportChatAreaHeader() {
                         <button
                             type="button"
                             className="custormChatHeaderInfoAction"
-                            onClick={() => setContactSupportModalShow(true)}
+                            onClick={() => dispatch(setSupportModalActive(true))}
                         >
                             <StarIconTicket /> New Conversation
                         </button>
                     </div>
                 </div>
             </div>
-            <ContactAlphcxModal
-                contactSupportModalShow={contactSupportModalShow}
-                setContactSupportModalShow={setContactSupportModalShow}
-            />
         </div>
     );
 }
