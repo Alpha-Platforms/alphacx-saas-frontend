@@ -24,7 +24,6 @@ supportTickets: [
 const initialState = {
     supportTickets: [],
     supportModalActive: false,
-    activeSupportTicket: null,
 };
 
 const supportReducer = (state = initialState, action) => {

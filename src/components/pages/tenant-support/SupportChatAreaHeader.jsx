@@ -2,10 +2,11 @@
 // @ts-nocheck
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import dayjs from 'dayjs';
 import { StarIconTicket } from '../../../assets/images/svgs';
 import { setSupportModalActive } from '../../../reduxstore/actions/supportActions';
 
-function SupportChatAreaHeader() {
+function SupportChatAreaHeader({ activeSupportTicket }) {
     const dispatch = useDispatch();
     return (
         <div>
@@ -13,10 +14,17 @@ function SupportChatAreaHeader() {
                 <div className="conversationHeaderMainV2">
                     <div className="custormChatHeaderInfo">
                         <div className="custormChatHeaderInfoData my-3">
-                            <h1 className="mb-0">This is a subject</h1>
+                            <h1 className="mb-0">{activeSupportTicket?.customer?.ticket?.subject}</h1>
                             <p className="mb-0">
-                                Tijani Femi 4976375299158381@alphacx.co
-                                <span className="custormChatHeaderDot d-block" /> <span>12-01-2022</span>
+                                {`${activeSupportTicket?.customer?.assignee?.firstname || ''} ${
+                                    activeSupportTicket?.customer?.assignee?.lastname || ''
+                                }`.trim()}{' '}
+                                {activeSupportTicket?.customer?.customer?.email || ''}
+                                <span className="custormChatHeaderDot d-block" />{' '}
+                                <span>
+                                    {dayjs(activeSupportTicket?.customer?.ticket?.created_at).format('DD MMM, YYYY')} at{' '}
+                                    {dayjs(activeSupportTicket?.customer?.ticket?.created_at).format('hh:mm a')}
+                                </span>
                             </p>
                         </div>
                         <button

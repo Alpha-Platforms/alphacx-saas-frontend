@@ -1,3 +1,6 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/no-array-index-key */
 // @ts-nocheck
 import React from 'react';
@@ -5,20 +8,19 @@ import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import InitialsFromString from '../../helpers/InitialsFromString';
 
-function SupportMessageList() {
+function SupportMessageList({ activeSupportTicketId, setActiveSupportTicketId }) {
     const supportTickets = useSelector((state) => state.support?.supportTickets || []);
-    const activeSupportTicket = useSelector((state) => state.support?.activeSupportTicket);
+
     return (
         <div>
             {supportTickets.map((item, idx) => (
                 <div
                     className={`message-listmain ${
-                        activeSupportTicket?.customer?.ticket?.id === item?.customer?.ticket?.id
-                            ? 'message-listmain-active'
-                            : ''
+                        activeSupportTicketId === item?.customer?.ticket?.id ? 'message-listmain-active' : ''
                     }`}
                     id="msgListTop"
                     key={idx}
+                    onClick={() => setActiveSupportTicketId(item?.customer?.ticket?.id)}
                 >
                     <div className="message-user-img">
                         {true ? (

@@ -1,29 +1,23 @@
 // @ts-nocheck
-import React from 'react';
-import SupportChatArea from './SupportChatArea';
-import SupportChatAreaHeader from './SupportChatAreaHeader';
+import React, { useState } from 'react';
 import './SupportConversation.scss';
 import SupportMessageList from './SupportMessageList';
-import SupportEditorBox from './SupportEditorBox';
 import SupportNoChatFound from './SupportNoChatFound';
 import ContactAlphcxModal from '../settings/ContactAlphcxModal';
+import SupportChatFound from './SupportChatFound';
 
 function SupportConversation() {
+    const [activeSupportTicketId, setActiveSupportTicketId] = useState(null);
     return (
         <div className="support-conversation">
             <div className="sconv__section sconv__section--one">
-                <SupportMessageList />
+                <SupportMessageList
+                    activeSupportTicketId={activeSupportTicketId}
+                    setActiveSupportTicketId={setActiveSupportTicketId}
+                />
             </div>
             <div className="sconv__section sconv__section--two">
-                {true ? (
-                    <SupportNoChatFound />
-                ) : (
-                    <>
-                        <SupportChatAreaHeader />
-                        <SupportChatArea />
-                        <SupportEditorBox />
-                    </>
-                )}
+                {!activeSupportTicketId ? <SupportNoChatFound /> : <SupportChatFound />}
             </div>
             <ContactAlphcxModal />
         </div>
