@@ -39,7 +39,7 @@ import DocumentIcon from '../../../assets/icons/doc-blue.svg';
 import RatingStar from '../../../assets/icons/Rating-Star.svg';
 
 import AccessControl from '../auth/accessControl.jsx';
-import ContactAlphcxModal from './ContactAlphcxModal';
+import ContactAlphcxModal from './ContactAlphcxModal2';
 
 function SettingsHome({ signedUser }) {
     const [contactSupportModalShow, setContactSupportModalShow] = useState(false);
