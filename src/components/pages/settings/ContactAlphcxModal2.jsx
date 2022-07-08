@@ -16,13 +16,13 @@ function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalSho
         body: '',
     });
 
-    const supportEmailAddress = 'support@alphacx.co';
+    const supportEmailAddress = 'contact@alphacx.co';
     const supportCategories = [
         'Billing and Subscription',
         'Bugs and Feature Request',
         'How-To',
         'Partnership Enquiries',
-        'Feedback'
+        'Feedback',
     ];
 
     useEffect(() => {
