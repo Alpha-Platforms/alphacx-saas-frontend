@@ -17,6 +17,13 @@ function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalSho
     });
 
     const supportEmailAddress = 'support@alphacx.co';
+    const supportCategories = [
+        'Billing and Subscription',
+        'Bugs and Feature Request',
+        'How-To',
+        'Partnership Enquiries',
+        'Feedback'
+    ];
 
     useEffect(() => {
         if (newMessage.body && newMessage.category && newMessage.subject) {
@@ -108,11 +115,12 @@ function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalSho
                                 id="category"
                                 onChange={handleChange}
                             >
-                                <option disabled value="choose">Choose Issue Type </option>
-                                <option>Payment and Subscription</option>
-                                <option>Integrations</option>
-                                <option>Automation issues</option>
-                                <option>others</option>
+                                <option disabled value="choose">
+                                    Choose Issue Type{' '}
+                                </option>
+                                {supportCategories.map((i, index) => (
+                                    <option key={index}>{i}</option>
+                                ))}
                             </select>
                         </div>
                         <div className="col-12 mt-3">
