@@ -14,7 +14,7 @@ import Logo from '../../../assets/imgF/logo.png';
 import showPasswordImg from '../../../assets/imgF/Show.png';
 import Symbol1 from '../../../assets/imgF/symbolAuth.png';
 import Symbol2 from '../../../assets/imgF/symbolAuth2.png';
-import { httpPost, httpPostMain, httpGet } from '../../../helpers/httpMethods';
+import { httpPost, httpPostMain } from '../../../helpers/httpMethods';
 import { getSubscription } from '../../../reduxstore/actions/subscriptionAction';
 
 function Login() {
@@ -38,16 +38,6 @@ function Login() {
         return window.location.hostname.split('.');
     });
     const [environment] = useState(process.env.NODE_ENV);
-
-    // eslint-disable-next-line no-shadow
-    const getTenantSubscription = async (tenantId) => {
-        const res = await httpGet(`subscriptions/${tenantId}`);
-        if (res?.status === 'success') {
-            window.localStorage.setItem('tenantSubscription', JSON.stringify(res?.data));
-        } else {
-            // setSubscription({})
-        }
-    };
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -81,7 +71,6 @@ function Login() {
                 if (res?.status === 'success') {
                     window.localStorage.setItem('tenantId', res?.data?.id || '');
                     window.localStorage.setItem('tenantToken', res?.data?.token);
-                    getTenantSubscription(res?.data?.id);
                     dispatch(getSubscription(res?.data?.id));
                 }
             }

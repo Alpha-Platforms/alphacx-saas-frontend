@@ -9,6 +9,7 @@ import React, { useEffect, useState, useContext, Fragment } from 'react';
 import { Link, NavLink, useHistory } from 'react-router-dom';
 // import { AuthContext } from "../../context/authContext";
 import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { NotificationManager } from 'react-notifications';
 import MoonLoader from 'react-spinners/MoonLoader';
@@ -32,7 +33,7 @@ import { multiIncludes } from '../../helper';
 function DropDown() {
     const [createCustModalShow, setCreateCustModalShow] = useState(false);
     const [createTicketModalShow, setCreateTicketModalShow] = useState(false);
-    const tenantSubscription = JSON.parse(window.localStorage.getItem('tenantSubscription'));
+    const tenantSubscription = useSelector((state) => state?.subscription?.subscription);
     const subExpired = moment(tenantSubscription?.subscription?.end_date).isBefore(new Date());
     return (
         <>
@@ -341,6 +342,7 @@ function Notification({ userId }) {
 function Navbar({ pageName, user }) {
     const { appReduceSidebarWidth } = useContext(LayoutContext);
     const [localUser, setlocalUser] = useState({});
+    const tenantSubscription = useSelector((state) => state?.subscription?.subscription);
 
     const [notif, setNotif] = useState({
         active: false,
@@ -352,8 +354,6 @@ function Navbar({ pageName, user }) {
     });
 
     useEffect(() => {
-        const tenantSubscription = JSON.parse(window.localStorage.getItem('tenantSubscription'));
-
         if (tenantSubscription) {
             if (tenantSubscription?.subscription?.is_trial || tenantSubscription?.plan?.name !== 'Free Plan') {
                 const endDate = tenantSubscription?.subscription?.end_date;
@@ -377,6 +377,7 @@ function Navbar({ pageName, user }) {
                 }
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const getUserFromStorage = () => {
