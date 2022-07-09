@@ -7,10 +7,9 @@ import { NotificationManager } from 'react-notifications';
 import { httpGet, httpPostMain } from 'helpers/httpMethods';
 import dayjs from 'dayjs';
 import { connect } from 'react-redux';
-import { getAgents } from 'reduxstore/actions/agentActions';
 import { getAdmins } from 'reduxstore/actions/adminActions';
 
-function ContactAlphcxModalComponent({ contactSupportModalShow, setContactSupportModalShow, agents, admins, getAgents, getAdmins }) {
+function ContactAlphcxModalComponent({ contactSupportModalShow, setContactSupportModalShow, admins, getAdmins }) {
     // create user modal
     const [creating, setCreating] = useState(false);
     const [sendReady, setSendReady] = useState(false);
@@ -19,8 +18,6 @@ function ContactAlphcxModalComponent({ contactSupportModalShow, setContactSuppor
         category: '',
         body: '',
     });
-
-    // const [agents, setAgents] = useState({})
 
     const supportEmailAddress = 'contact@alphacx.co';
     const supportCategories = [
@@ -31,15 +28,10 @@ function ContactAlphcxModalComponent({ contactSupportModalShow, setContactSuppor
         'Feedback',
     ];
 
-    useEffect(() => {
-        getAgents(
-            (data) => console.log(data),
-            () => console.log("Request failed")
-        );
-        getAdmins();
-        console.log(agents, admins);
-    }, []);
-
+    // useEffect(() => {
+    //     getAdmins();
+    //     console.log(admins);
+    // }, []);
 
     useEffect(() => {
         if (newMessage.body && newMessage.category && newMessage.subject) {
@@ -200,8 +192,7 @@ function ContactAlphcxModalComponent({ contactSupportModalShow, setContactSuppor
 const mapStateToProps = (state) => {
     return {
         admins: state.admin.admins,
-        agents: state.agent.agents,
     };
 };
 
-export default connect(mapStateToProps, { getAgents, getAdmins })(ContactAlphcxModalComponent);
+export default connect(mapStateToProps, { getAdmins })(ContactAlphcxModalComponent);
