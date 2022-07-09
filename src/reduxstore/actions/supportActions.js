@@ -4,7 +4,7 @@ import { config } from '../../config/keys';
 import { returnErrors } from './errorActions';
 import * as types from '../types';
 
-const SUPPORT_DOMAIN = 'manager';
+export const SUPPORT_DOMAIN = 'manager';
 
 export const createSupportTicket = (body, success, failed) => async (dispatch) => {
     try {
