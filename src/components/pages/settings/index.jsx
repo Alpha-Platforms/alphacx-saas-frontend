@@ -37,6 +37,7 @@ import RoleLightIcon from '../../../assets/icons/role_light.svg';
 import LivechatIcon from '../../../assets/icons/chat-blue.svg';
 import DocumentIcon from '../../../assets/icons/doc-blue.svg';
 import RatingStar from '../../../assets/icons/Rating-Star.svg';
+
 import AccessControl from '../auth/accessControl.jsx';
 
 function SettingsHome({ signedUser }) {
@@ -282,6 +283,7 @@ function SettingsHome({ signedUser }) {
                     </div>
                 </Col>
             </Row>
+
         </Container>
     );
 }
