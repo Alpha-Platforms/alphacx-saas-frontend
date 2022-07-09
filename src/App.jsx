@@ -26,6 +26,7 @@ import { getGroups } from './reduxstore/actions/groupActions';
 import { getTags } from './reduxstore/actions/tagActions';
 import { getConfigs } from './reduxstore/actions/configActions';
 import { getCustomFields } from './reduxstore/actions/customFieldActions';
+import { getSubscription } from './reduxstore/actions/subscriptionAction';
 import CustomerList from './components/pages/customers/CustomerList';
 import CustomersNull from './components/pages/customers/CustomersNull';
 import Customer from './components/pages/customers/Customer';
@@ -95,6 +96,7 @@ const SiteRouter = connect(mapStateToProps, {
     getTags,
     getConfigs,
     getCustomFields,
+    getSubscription,
 })(
     ({
         loadUser,
@@ -106,6 +108,7 @@ const SiteRouter = connect(mapStateToProps, {
         getTags,
         getConfigs,
         getCustomFields,
+        getSubscription,
     }) => {
         const siteUser = JSON.parse(localStorage.getItem('user'));
 
@@ -123,6 +126,7 @@ const SiteRouter = connect(mapStateToProps, {
                 getTags();
                 getConfigs();
                 getCustomFields();
+                getSubscription();
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [isUserAuthenticated]);

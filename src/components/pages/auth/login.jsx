@@ -3,6 +3,7 @@
 // @ts-nocheck
 
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import './login.css';
 import { NotificationManager } from 'react-notifications';
 import { Link, useLocation } from 'react-router-dom';
@@ -14,9 +15,11 @@ import showPasswordImg from '../../../assets/imgF/Show.png';
 import Symbol1 from '../../../assets/imgF/symbolAuth.png';
 import Symbol2 from '../../../assets/imgF/symbolAuth2.png';
 import { httpPost, httpPostMain, httpGet } from '../../../helpers/httpMethods';
+import { getSubscription } from '../../../reduxstore/actions/subscriptionAction';
 
 function Login() {
     const location = useLocation();
+    const dispatch = useDispatch();
     const params = new URLSearchParams(location.search);
     const email = params.get('email');
 
@@ -79,6 +82,7 @@ function Login() {
                     window.localStorage.setItem('tenantId', res?.data?.id || '');
                     window.localStorage.setItem('tenantToken', res?.data?.token);
                     getTenantSubscription(res?.data?.id);
+                    dispatch(getSubscription(res?.data?.id));
                 }
             }
         })();
