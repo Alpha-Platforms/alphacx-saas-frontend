@@ -19,6 +19,7 @@ import {
     AppFullLogo,
     CollapseLeft,
 } from '../../assets/images/svgs';
+import { ReactComponent as DiscountWhite } from '../../assets/icons/Discount-White.svg';
 
 export default function Sidebar({ browserRouter, currentRoute }) {
     const {
@@ -109,6 +110,16 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                             <SettingsIcon activeRoute={false} />
                         </span>
                         <span className="sidebar-list--text">Settings</span>
+                    </li>
+
+                    <li
+                        onClick={() => browserRouter(`/settings`)}
+                        className={`sidebar-list--item ${currentRoute.includes('/appsumo') ? 'active' : ''}`}
+                    >
+                        <span className="sidebar-list--icon">
+                            <DiscountWhite />
+                        </span>
+                        <span className="sidebar-list--text">Appsumo</span>
                     </li>
                 </ul>
                 <ul className="sidebar-list mt-auto">
