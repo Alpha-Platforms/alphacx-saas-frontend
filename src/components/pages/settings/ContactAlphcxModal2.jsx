@@ -4,9 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-responsive-modal';
 import { NotificationManager } from 'react-notifications';
 // import { Prev } from 'react-bootstrap/esm/PageItem';
-import { httpPostMain } from 'helpers/httpMethods';
+import { httpGet, httpPostMain } from 'helpers/httpMethods';
+import dayjs from 'dayjs';
+import { connect } from 'react-redux';
+import { getAgents } from 'reduxstore/actions/agentActions';
+import { getAdmins } from 'reduxstore/actions/adminActions';
 
-function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalShow }) {
+function ContactAlphcxModalComponent({ contactSupportModalShow, setContactSupportModalShow, agents, admins, getAgents, getAdmins }) {
     // create user modal
     const [creating, setCreating] = useState(false);
     const [sendReady, setSendReady] = useState(false);
@@ -15,6 +19,8 @@ function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalSho
         category: '',
         body: '',
     });
+
+    // const [agents, setAgents] = useState({})
 
     const supportEmailAddress = 'contact@alphacx.co';
     const supportCategories = [
@@ -26,6 +32,16 @@ function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalSho
     ];
 
     useEffect(() => {
+        getAgents(
+            (data) => console.log(data),
+            () => console.log("Request failed")
+        );
+        getAdmins();
+        console.log(agents, admins);
+    }, []);
+
+
+    useEffect(() => {
         if (newMessage.body && newMessage.category && newMessage.subject) {
             setSendReady(true);
         } else {
@@ -34,18 +50,45 @@ function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalSho
     }, [newMessage]);
 
     const sendMessage = async () => {
-        const tenantEmail = localStorage.getItem('tenantEmail');
+        const tenantId = localStorage.getItem('tenantId');
         const domain = localStorage.getItem('domain');
+        const tenantRes = await httpGet(`auth/tenant-info/${domain}`);
+        const subRes = await httpGet(`subscriptions/${tenantId}`);
+
+        let tenantData = {};
+
+        if (tenantRes.status === 'success' && subRes.status === 'success') {
+            tenantData = {
+                company_name: tenantRes.data.company_name,
+                created_at: tenantRes.data.created_at,
+                website: tenantRes.data.website || '',
+                domain: tenantRes.data.domain,
+                email: tenantRes.data.email,
+                subscriptionPlan: subRes.data.plan.name,
+                users: subRes.data.subscription.totalActiveUsers,
+            };
+        } else {
+            setCreating(false);
+            setContactSupportModalShow(false);
+            return NotificationManager.error('An error occured, please, try again', 'Email Error', 4000);
+        }
+        const date = dayjs(tenantData.created_at).format('MMM DD, YYYY');
         const subject = `AlphaCX Tenant Support: ${newMessage.subject}`;
         const body = `
+            <h4 style='margin:0'>Message</h4>
+            <hr style='border:none; margin: 0; height: 2px; background-color: #7aafda'>
             <p>${newMessage.body}</p>
-            <hr>
+            <h4 style='margin:0'>Tenant Information</h4>
+            <hr style='border:none; margin: 0; height: 2px; background-color: #7aafda'>
+            <p>Subject: <span style='font-weight: bold'>${newMessage.subject}</span></p>
             <p>Category: <span style='font-weight: bold'>${newMessage.category}</span></p>
-            <p>Email: <span style='font-weight: bold'>${tenantEmail}</span></p>
-            <p>Domain: <span style='font-weight: bold'>${domain}</span></p>
+            <p>Email: <span style='font-weight: bold'>${tenantData.email}</span></p>
+            <p>Company Name: <span style='font-weight: bold'>${tenantData.company_name}</span></p>
+            <p>Domain: <span style='font-weight: bold'>${tenantData.domain}</span></p>
+            <p>Number of Users: <span style='font-weight: bold'>${tenantData.users}</span></p>
+            <p>Account created: <span style='font-weight: bold'>${date}</span></p>
+            <p>Subscription Plan: <span style='font-weight: bold'>${tenantData.subscriptionPlan}</span></p>
         `;
-        // Add tenant company name later
-
 
         setCreating(true);
         const res = await httpPostMain(`send-outgoing-mail`, {
@@ -154,4 +197,11 @@ function ContactAlphcxModal({ contactSupportModalShow, setContactSupportModalSho
     );
 }
 
-export default ContactAlphcxModal;
+const mapStateToProps = (state) => {
+    return {
+        admins: state.admin.admins,
+        agents: state.agent.agents,
+    };
+};
+
+export default connect(mapStateToProps, { getAgents, getAdmins })(ContactAlphcxModalComponent);
