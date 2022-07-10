@@ -84,6 +84,7 @@ import ReportsFilter from './components/pages/reports/ReportsFilter';
 import FBIGIntegration from './components/pages/settings/social_integrations/fbig';
 import AppsumoSignup from './components/pages/appsumo/signup';
 import Instagram from './components/pages/settings/social_integrations/Instagram';
+import AppsumoPlans from './components/pages/appsumo/AppsumoPlans';
 
 const mapStateToProps = (state) => ({ isUserAuthenticated: state.userAuth.isUserAuthenticated });
 
@@ -170,6 +171,12 @@ const SiteRouter = connect(mapStateToProps, {
                                     path="/dashboard"
                                     pageName="Dashboard"
                                     component={Dashboard}
+                                />
+                                <DefaultLayoutRoute
+                                    exact
+                                    path="/appsumo"
+                                    pageName="Appsumo Plans"
+                                    component={AppsumoPlans}
                                 />
                                 <DefaultLayoutRoute
                                     exact

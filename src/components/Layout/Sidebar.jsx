@@ -113,7 +113,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                     </li>
 
                     <li
-                        onClick={() => browserRouter(`/settings`)}
+                        onClick={() => browserRouter(`/appsumo`)}
                         className={`sidebar-list--item ${currentRoute.includes('/appsumo') ? 'active' : ''}`}
                     >
                         <span className="sidebar-list--icon">

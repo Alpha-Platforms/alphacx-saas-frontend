@@ -192,7 +192,7 @@ function Login() {
                         </div>
 
                         <div className="submit-auth-btn">
-                            <button type="button" disabled={loading || userInput.domain === ''} onClick={handleSubmit}>
+                            <button type="submit" disabled={loading || userInput.domain === ''} onClick={handleSubmit}>
                                 {' '}
                                 {loading ? <ClipLoader color={color} loading={loading} size={30} /> : 'Continue'}
                             </button>
@@ -239,7 +239,7 @@ function Login() {
 
                         <div className="submit-auth-btn">
                             <button
-                                type="button"
+                                type="submit"
                                 disabled={loading || userInput.email === '' || userInput.password === ''}
                                 onClick={handleSubmit}
                             >
