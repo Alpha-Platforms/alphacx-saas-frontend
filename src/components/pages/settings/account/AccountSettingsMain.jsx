@@ -1,4 +1,5 @@
-/* eslint-disable */
+/* eslint-disable react/prop-types */
+/* eslint-disable react/react-in-jsx-scope */
 // @ts-nocheck
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
@@ -8,17 +9,8 @@ import RightArrow from '../../../../assets/imgF/arrow_right.png';
 import Subscription from './subscription/Subscription';
 import AccountSettings from './AccountSettings';
 
-function AccountSettingsMain({ userRole, location }) {
+function AccountSettingsMain({ location, tenantSubscription }) {
     const [tabKey, setTabKey] = useState('acct-settings');
-    // const [tabKey, setTabKey] = useState("sub-payment");
-
-    // const [tabKey,
-    //     setTabKey] = useState("sub-payment");
-
-    // useEffect(() => {
-    //     console.clear()
-    //     console.log(userRole)
-    // }, [])
 
     useEffect(() => {
         if (new URLSearchParams(location.search).get('tab') === 'subscription') {
@@ -41,36 +33,40 @@ function AccountSettingsMain({ userRole, location }) {
                         <span>Account Settings</span>
                     </h6>
                 </div>
-                <div className="mt-3 mb-2">
-                    <ul className="nav nav-pills" id="fieldTabsSelector" role="tablist">
-                        <li className="nav-item" role="presentation">
-                            <button
-                                className={`nav-link px-0 me-5 ${tabKey === 'acct-settings' && 'active'} text-muted`}
-                                id="pills-customer-tab"
-                                type="button"
-                                role="tab"
-                                onClick={() => setTabKey('acct-settings')}
-                                aria-controls="customer-field-view"
-                                aria-selected="true"
-                            >
-                                Account Settings
-                            </button>
-                        </li>
-                        <li className="nav-item" role="presentation">
-                            <button
-                                className={`nav-link px-0 me-5 ${tabKey === 'sub-payment' && 'active'} text-muted`}
-                                id="pills-ticket-tab"
-                                onClick={() => setTabKey('sub-payment')}
-                                type="button"
-                                role="tab"
-                                aria-controls="ticket-categoriese-view"
-                                aria-selected="false"
-                            >
-                                Subscription and Payment
-                            </button>
-                        </li>
-                    </ul>
-                </div>
+                {tenantSubscription?.plan?.plan_type !== 'appsumo' && (
+                    <div className="mt-3 mb-2">
+                        <ul className="nav nav-pills" id="fieldTabsSelector" role="tablist">
+                            <li className="nav-item" role="presentation">
+                                <button
+                                    className={`nav-link px-0 me-5 ${
+                                        tabKey === 'acct-settings' && 'active'
+                                    } text-muted`}
+                                    id="pills-customer-tab"
+                                    type="button"
+                                    role="tab"
+                                    onClick={() => setTabKey('acct-settings')}
+                                    aria-controls="customer-field-view"
+                                    aria-selected="true"
+                                >
+                                    Account Settings
+                                </button>
+                            </li>
+                            <li className="nav-item" role="presentation">
+                                <button
+                                    className={`nav-link px-0 me-5 ${tabKey === 'sub-payment' && 'active'} text-muted`}
+                                    id="pills-ticket-tab"
+                                    onClick={() => setTabKey('sub-payment')}
+                                    type="button"
+                                    role="tab"
+                                    aria-controls="ticket-categoriese-view"
+                                    aria-selected="false"
+                                >
+                                    Subscription and Payment
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                )}
 
                 <div id="fieldTabsWrapper">
                     {/* Ticket History Tab */}
@@ -85,9 +81,11 @@ function AccountSettingsMain({ userRole, location }) {
                         </Tab>
 
                         {/* Ticket Field Tab */}
-                        <Tab eventKey="sub-payment" className="">
-                            <Subscription />
-                        </Tab>
+                        {tenantSubscription?.plan?.plan_type !== 'appsumo' && (
+                            <Tab eventKey="sub-payment" className="">
+                                <Subscription />
+                            </Tab>
+                        )}
                     </Tabs>
                 </div>
             </div>
@@ -97,5 +95,6 @@ function AccountSettingsMain({ userRole, location }) {
 
 const mapStateToProps = (state) => ({
     userRole: state.userAuth.user.role,
+    tenantSubscription: state?.subscription?.subscription,
 });
 export default connect(mapStateToProps)(AccountSettingsMain);
