@@ -1,13 +1,17 @@
-/* eslint-disable */
-import React, { useState, useContext, useEffect } from 'react';
+/* eslint-disable react/prop-types */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+// @ts-nocheck
+import React, { useState, useContext } from 'react';
 import { NotificationManager } from 'react-notifications';
 import Modal from 'react-responsive-modal';
-import AccessControl from 'components/pages/auth/accessControl';
+import { useSelector } from 'react-redux';
+import AccessControl from '../pages/auth/accessControl';
 import { LayoutContext } from '../../context/layoutContext';
 import {
     // appLogo,
     // dashboardIcon,
-    toggleIcon,
+    // toggleIcon,
     HomeIcon,
     ClockIcon,
     CardIcon,
@@ -30,6 +34,8 @@ export default function Sidebar({ browserRouter, currentRoute }) {
 
     const [isDeleteConfirmed, setIsDeleteConfirmed] = useState(false);
 
+    const tenantSubscription = useSelector((state) => state?.subscription?.subscription);
+
     return (
         <>
             <menu className={`sidebar-wrap ${appReduceSidebarWidth === true ? '' : 'collapsed'}`}>
@@ -43,10 +49,11 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                 </header>
                 <ul className="sidebar-list mb-auto">
                     <li onClick={() => reduceSidebarWidth()} className="sidebar-list--item">
-                        <span className={`sidebar-list--icon ${appReduceSidebarWidth === true ? '' : 'rotate-180'}`}>{<CollapseLeft />}</span>
+                        <span className={`sidebar-list--icon ${appReduceSidebarWidth === true ? '' : 'rotate-180'}`}>
+                            <CollapseLeft />
+                        </span>
                         <span className="sidebar-list--text small fst-italic">Collapse Menu</span>
                     </li>
-
 
                     <li
                         onClick={() => browserRouter(`/`)}
@@ -59,9 +66,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                     </li>
 
                     <li
-                        className={`sidebar-list--item ${
-                            currentRoute === '/dashboard' ? 'active' : ''
-                        }`}
+                        className={`sidebar-list--item ${currentRoute === '/dashboard' ? 'active' : ''}`}
                         onClick={() => browserRouter(`/dashboard`)}
                     >
                         <span className="sidebar-list--icon">
@@ -112,15 +117,17 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                         <span className="sidebar-list--text">Settings</span>
                     </li>
 
-                    <li
-                        onClick={() => browserRouter(`/appsumo`)}
-                        className={`sidebar-list--item ${currentRoute.includes('/appsumo') ? 'active' : ''}`}
-                    >
-                        <span className="sidebar-list--icon">
-                            <DiscountWhite />
-                        </span>
-                        <span className="sidebar-list--text">Appsumo</span>
-                    </li>
+                    {tenantSubscription?.plan?.plan_type === 'appsumo' && (
+                        <li
+                            onClick={() => browserRouter(`/appsumo-plans`)}
+                            className={`sidebar-list--item ${currentRoute.includes('/appsumo-plans') ? 'active' : ''}`}
+                        >
+                            <span className="sidebar-list--icon">
+                                <DiscountWhite />
+                            </span>
+                            <span className="sidebar-list--text">Appsumo</span>
+                        </li>
+                    )}
                 </ul>
                 <ul className="sidebar-list mt-auto">
                     <li onClick={() => setIsDeleteConfirmed(true)} className="sidebar-list--item">
@@ -136,12 +143,14 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                     <h6 className="mb-5">Are you sure you want to logout?</h6>
                     <div className="d-flex justify-content-center">
                         <button
+                            type="button"
                             className="btn btn-sm f-12 border cancel px-4"
                             onClick={() => setIsDeleteConfirmed(false)}
                         >
                             Cancel
                         </button>
                         <button
+                            type="button"
                             className="btn btn-sm ms-2 f-12 bg-custom px-4"
                             onClick={(e) => {
                                 e.preventDefault();

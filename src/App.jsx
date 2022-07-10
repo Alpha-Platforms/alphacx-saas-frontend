@@ -86,7 +86,10 @@ import AppsumoSignup from './components/pages/appsumo/signup';
 import Instagram from './components/pages/settings/social_integrations/Instagram';
 import AppsumoPlans from './components/pages/appsumo/AppsumoPlans';
 
-const mapStateToProps = (state) => ({ isUserAuthenticated: state.userAuth.isUserAuthenticated });
+const mapStateToProps = (state) => ({
+    isUserAuthenticated: state.userAuth.isUserAuthenticated,
+    tenantSubscription: state?.subscription?.subscription,
+});
 
 const SiteRouter = connect(mapStateToProps, {
     loadUser,
@@ -110,6 +113,7 @@ const SiteRouter = connect(mapStateToProps, {
         getConfigs,
         getCustomFields,
         getSubscription,
+        tenantSubscription,
     }) => {
         const siteUser = JSON.parse(localStorage.getItem('user'));
 
@@ -172,12 +176,14 @@ const SiteRouter = connect(mapStateToProps, {
                                     pageName="Dashboard"
                                     component={Dashboard}
                                 />
-                                <DefaultLayoutRoute
-                                    exact
-                                    path="/appsumo"
-                                    pageName="Appsumo Plans"
-                                    component={AppsumoPlans}
-                                />
+                                {tenantSubscription?.plan?.plan_type === 'appsumo' && (
+                                    <DefaultLayoutRoute
+                                        exact
+                                        path="/appsumo-plans"
+                                        pageName="Appsumo Plans"
+                                        component={AppsumoPlans}
+                                    />
+                                )}
                                 <DefaultLayoutRoute
                                     exact
                                     path="/customers"
