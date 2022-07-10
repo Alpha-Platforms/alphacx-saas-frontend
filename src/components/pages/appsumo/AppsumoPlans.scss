@@ -31,6 +31,14 @@
     gap: 42px;
     grid-gap: 42px;
     justify-content: space-between;
+    max-width: 100%;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 .appsumo__card {
