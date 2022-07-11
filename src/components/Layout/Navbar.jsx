@@ -6,7 +6,7 @@
 /* eslint-disabled */
 // @ts-nocheck
 import React, { useEffect, useState, useContext, Fragment } from 'react';
-import { Link, NavLink, useHistory } from 'react-router-dom';
+import { Link, NavLink, useHistory, useLocation } from 'react-router-dom';
 // import { AuthContext } from "../../context/authContext";
 import { connect } from 'react-redux';
 import { useSelector } from 'react-redux';
@@ -343,6 +343,7 @@ function Navbar({ pageName, user }) {
     const { appReduceSidebarWidth } = useContext(LayoutContext);
     const [localUser, setlocalUser] = useState({});
     const tenantSubscription = useSelector((state) => state?.subscription?.subscription);
+    const location = useLocation();
 
     const [notif, setNotif] = useState({
         active: false,
@@ -384,7 +385,7 @@ function Navbar({ pageName, user }) {
             }));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [shouldShowPlanExpiredNotif]);
+    }, [shouldShowPlanExpiredNotif, location.pathname]);
 
     useEffect(() => {
         if (shouldShowUserExceededNotif) {
@@ -393,7 +394,7 @@ function Navbar({ pageName, user }) {
                 showUserExceededNotif: true,
             }));
         }
-    }, [shouldShowUserExceededNotif]);
+    }, [shouldShowUserExceededNotif, location.pathname]);
 
     const getUserFromStorage = () => {
         const lUser = localStorage.getItem('user');
