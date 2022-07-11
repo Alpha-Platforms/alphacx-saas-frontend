@@ -449,6 +449,12 @@ function Navbar({ pageName, user }) {
                                 You have exceeded the number of users ({numOfSubUsers}) allowed by your plan. Kindly
                                 remove others.
                             </span>{' '}
+                            <Link
+                                to="/settings/account?tab=subscription"
+                                className="btn btn-sm bg-at-blue-light sub-notif-get"
+                            >
+                                Subscription
+                            </Link>{' '}
                             <button
                                 type="button"
                                 onClick={() => setNotif((prev) => ({ ...prev, showUserExceededNotif: false }))}
