@@ -2,6 +2,7 @@
 /* eslint-disable react/prop-types */
 // @ts-nocheck
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 import { NotificationManager } from 'react-notifications';
 import { loadStripe } from '@stripe/stripe-js';
@@ -14,6 +15,7 @@ import acxLogo from '../../../../../../assets/images/whitebg.jpg';
 function CheckoutForm({ setPlanState, planState, getSubscription }) {
     const stripe = useStripe();
     const elements = useElements();
+    const dispatch = useDispatch();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -42,7 +44,11 @@ function CheckoutForm({ setPlanState, planState, getSubscription }) {
             setPlanState((prev) => ({ ...prev, isVerifying: false }));
             if (verifyPaymentRes?.status === 'success') {
                 NotificationManager.success('', 'Transaction successful', 4000);
-                getSubscription({ reload: true });
+                dispatch(
+                    getSubscription(null, () => {
+                        window.location.href = `/settings/account?tab=subscription`;
+                    }),
+                );
                 // window.location.href = `/settings/account?tab=subscription`;
                 // setPlanState(prev => ({...prev, isUpdatingPlan: false,
                 // stripeConfig: null, amount: null, setSelectingPlan: false}));
@@ -64,8 +70,9 @@ function CheckoutForm({ setPlanState, planState, getSubscription }) {
 }
 
 function FlutterWaveAction({ planState, config, setPlanState, getSubscription }) {
+    const dispatch = useDispatch();
     // get current user from localStorage
-    const currentUser = JSON.parse(window.localStorage.getItem('user'));
+    const currentUser = useSelector((state) => state?.userAuth?.user);
 
     const configToUse = {
         public_key: config?.FLW_PUBLIC_KEY,
@@ -75,9 +82,9 @@ function FlutterWaveAction({ planState, config, setPlanState, getSubscription })
         // payment_options: 'card,mobilemoney,ussd',
         payment_options: 'card',
         customer: {
-            email: currentUser?.user?.email,
-            phonenumber: currentUser?.user?.phone_number,
-            name: `${currentUser?.user?.firstname || ''} ${currentUser?.user?.lastname || ''}`.trim(),
+            email: currentUser?.email,
+            phonenumber: currentUser?.phone_number,
+            name: `${currentUser?.firstname || ''} ${currentUser?.lastname || ''}`.trim(),
         },
         customizations: {
             title: 'AlphaCX',
@@ -103,7 +110,11 @@ function FlutterWaveAction({ planState, config, setPlanState, getSubscription })
 
                             if (verifyPaymentRes?.status === 'success') {
                                 NotificationManager.success('', 'Transaction successful', 4000);
-                                getSubscription({ reload: true });
+                                dispatch(
+                                    getSubscription(null, () => {
+                                        window.location.href = `/settings/account?tab=subscription`;
+                                    }),
+                                );
                                 // window.location.href = `/settings/account?tab=subscription`;
                                 // setPlanState(prev => ({...prev, isUpdatingPlan: false,
                                 // flutterwaveConfig: null, amount: null, selectingPlan: false}));
@@ -201,13 +212,14 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
             </div>
 
             <div className="sbox-4">
-                <label>Coupons</label>
+                <label htmlFor="coupoun">Coupons</label>
                 <div>
                     <input
                         disabled
                         type="text"
                         className="form-control"
                         name="coupoun"
+                        id="coupoun"
                         placeholder="Enter Coupon Code"
                     />
                     <button type="button" disabled>

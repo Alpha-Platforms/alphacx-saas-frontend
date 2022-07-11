@@ -1,24 +1,24 @@
-/* eslint-disable */
+/* eslint-disable no-shadow */
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable react/prop-types */
 // @ts-nocheck
 import { useState, useEffect } from 'react';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import MaterialTable from 'material-table';
-import { Dropdown } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import MoonLoader from 'react-spinners/MoonLoader';
 import { TablePagination } from '@material-ui/core';
 import { Link, useLocation } from 'react-router-dom';
 import moment from 'moment';
 import Swal from 'sweetalert2';
+import { NotificationManager } from 'react-notifications';
 import tableIcons from '../../../../assets/materialicons/tableIcons';
-import { getPaginatedUsers, updateUser } from '../../../../reduxstore/actions/userActions';
+import { updateUser } from '../../../../reduxstore/actions/userActions';
 import CreateUserModal from './components/CreateUserModal';
 import ImportUserModal from './components/ImportUserModal';
 import InviteUserModal from './components/InviteUserModal';
-import { ReactComponent as DotSvg } from '../../../../assets/icons/dots.svg';
-import { ReactComponent as DeleteSvg } from '../../../../assets/icons/Delete.svg';
-import { ReactComponent as DeleteGreySvg } from '../../../../assets/icons/Delete-grey.svg';
-import { ReactComponent as ArrowDownSvg } from '../../../../assets/icons/arrow-down.svg';
 // import {ReactComponent as CardDesignSvg} from '../../../../assets/icons/Card-Design.svg';
 import { wordCapitalize, getUserInitials } from '../../../../helper';
 
@@ -27,30 +27,27 @@ import { getAdmins } from '../../../../reduxstore/actions/adminActions';
 import { getSupervisors } from '../../../../reduxstore/actions/supervisorActions';
 import { getObservers } from '../../../../reduxstore/actions/observerActions';
 import '../../../../styles/Setting.css';
-import { NotificationManager } from 'react-notifications';
-import AccessControl from '../../auth/accessControl.jsx';
+import AccessControl from '../../auth/accessControl';
+import { getSubscription } from '../../../../reduxstore/actions/subscriptionAction';
 
 function UserList({
-    users,
     meta,
-    getPaginatedUsers,
-    isUsersLoaded,
     agents,
     admins,
     supervisors,
     observers,
     isAgentsLoaded,
-    // groups,
     negateActiveState,
     isAdminsLoaded,
     isSupervisorLoaded,
     isUserAuthenticated,
-    signedUser,
     getAgents,
     getAdmins,
     getSupervisors,
     getObservers,
     authenticatedUserRole,
+    tenantSubscription,
+    getSubscription,
 }) {
     //
     const location = useLocation();
@@ -58,13 +55,10 @@ function UserList({
     const [createModalShow, setCreateModalShow] = useState(false);
     const [inviteModalShow, setInviteModalShow] = useState(false);
     const [importModalShow, setImportModalShow] = useState(false);
-    const [userLoading, setUserLoading] = useState(false);
+    const [userLoading] = useState(false);
     const [combinedUsers, setCombinedUsers] = useState([]);
-    const [canAddUser, setCanAddUser] = useState(false);
 
-    const activatedUsers = combinedUsers.filter((user) => user?.isActivated);
-
-  
+    // const activatedUsers = combinedUsers.filter((user) => user?.isActivated);
 
     useEffect(() => {
         if (authenticatedUserRole === 'Administrator' || authenticatedUserRole === 'Supervisor') {
@@ -76,14 +70,13 @@ function UserList({
         } else {
             setCombinedUsers([...agents]);
         }
-        
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [admins, supervisors, agents, observers]);
 
     useEffect(() => {
         if (isUserAuthenticated) {
             // get the first set of users
-            // getPaginatedUsers(50, 1);
             getAgents();
             getSupervisors();
             getAdmins();
@@ -151,18 +144,20 @@ function UserList({
             NotificationManager.success('Info has been updated', 'Success');
             // getAgents()
             negateActiveState(id);
+            getSubscription();
         } else {
             NotificationManager.error('Something went wrong', 'Error');
         }
     };
 
-    const tenantSubscription = JSON.parse(window.localStorage.getItem('tenantSubscription'));
-    const numOfSubUsers = tenantSubscription?.subscription?.no_of_users || 0;
-    
+    const numOfSubUsers = tenantSubscription?.subscription?.no_of_users;
+    const totalNumberOfUsers = tenantSubscription?.subscription?.totalNumberOfUsers;
+    const totalActiveUsers = tenantSubscription?.subscription?.totalActiveUsers;
+
     function handleActiveChange() {
         const { name, isActivated, id, role } = this;
         if (authenticatedUserRole !== 'Administrator' && authenticatedUserRole !== 'Supervisor') return;
-        if (activatedUsers.length >= numOfSubUsers && !isActivated) return;
+        if (totalActiveUsers >= numOfSubUsers && !isActivated) return;
 
         Swal.fire({
             title: isActivated ? 'Deactivate?' : 'Activate?',
@@ -178,7 +173,6 @@ function UserList({
             }
         });
     }
-
 
     return (
         <div>
@@ -196,52 +190,31 @@ function UserList({
                         <span>Users</span>
                     </span>
                 </div>
-
                 <h5 className="my-3 f-16 fw-500 text-dark">User Management</h5>
                 <div className="d-flex justify-content-between align-items-center flex-row">
                     <div>
                         <p className="text-custom-gray f-12" />
                     </div>
                     <div className="mt-3">
-                        {(tenantSubscription?.plan?.name === 'Free Plan' && combinedUsers.length > 3) ||
-                        ((tenantSubscription?.plan?.name !== 'Free Plan' && tenantSubscription?.plan?.name !== 'Alpha Trial') &&
-                            combinedUsers.length > tenantSubscription?.subscription?.no_of_users) ? (
+                        {(tenantSubscription?.plan?.name === 'Free Plan' &&
+                            (totalActiveUsers.length > 3 || totalNumberOfUsers.length > 3)) ||
+                        (tenantSubscription?.plan?.name !== 'Free Plan' &&
+                            tenantSubscription?.plan?.name !== 'Alpha Trial' &&
+                            (totalActiveUsers > numOfSubUsers || totalNumberOfUsers > numOfSubUsers)) ? (
                             <br />
                         ) : (
                             <AccessControl>
-                                {tenantSubscription && <button
-                                    className="btn btn-custom btn-sm px-4 bg-at-blue-light py-2"
-                                    onClick={() => setCreateModalShow(true)}
-                                >
-                                    New User
-                                </button>}
+                                {tenantSubscription && (
+                                    <button
+                                        type="button"
+                                        className="btn btn-custom btn-sm px-4 bg-at-blue-light py-2"
+                                        onClick={() => setCreateModalShow(true)}
+                                    >
+                                        New User
+                                    </button>
+                                )}
                             </AccessControl>
                         )}
-
-                        {/* <Dropdown className="new-user-dropdown" id="new-user-dropdown">
-              <Dropdown.Toggle
-                id="dropdown-basic"
-                className="btn btn-custom btn-sm dropdown-toggle px-4 bg-at-blue-light py-2"
-              >
-                <span>New User</span> <ArrowDownSvg />
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu className="f-12">
-                <Dropdown.Item
-                  as="button"
-                  onClick={() => setCreateModalShow(true)}
-                >
-                  <span className="black-text">New User</span>
-                </Dropdown.Item>
-                <Dropdown.Item
-                  className="text-muted"
-                  as="button"
-                  onClick={() => setInviteModalShow(true)}
-                >
-                  Invite User
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown> */}
                     </div>
                 </div>
                 <div className="form-group">
@@ -298,41 +271,45 @@ function UserList({
                                     },
                                     {
                                         title: 'Team(s)',
-                                        render: (rowData) => {return rowData.group && (
-                                            <div className="table-tags">
-                                                <span
-                                                    className={`badge rounded-pill px-3 py-2 me-1 my-1 ${
-                                                        [
-                                                            'acx-bg-purple-30',
-                                                            'acx-bg-red-30',
-                                                            'acx-bg-blue-light-30',
-                                                            'acx-bg-green-30',
-                                                        ][Math.ceil(Math.random() * 3) - 1]
-                                                    }`}
-                                                >
-                                                    {rowData?.group[0]}
-                                                </span>
-                                                { rowData?.group?.length > 1 &&
-                                                    <span
-                                                        className={`badge rounded-pill px-3 py-2 me-1 my-1 ${
-                                                            [
-                                                                'acx-bg-purple-30',
-                                                                'acx-bg-red-30',
-                                                                'acx-bg-blue-light-30',
-                                                                'acx-bg-green-30',
-                                                            ][Math.ceil(Math.random() * 3) - 1]
-                                                        }`}
-                                                    >
-                                                        {rowData?.group[1]}
-                                                    </span>
-                                                }
-                                                { rowData?.group?.length > 2 &&
-                                                    <span className="badge rounded-pill text-muted border px-2 py-1 my-1">
-                                                       {`+${rowData?.group?.length - 2}`}
-                                                    </span>
-                                                }
-                                            </div>
-                                        )},
+                                        render: (rowData) => {
+                                            return (
+                                                rowData.group && (
+                                                    <div className="table-tags">
+                                                        <span
+                                                            className={`badge rounded-pill px-3 py-2 me-1 my-1 ${
+                                                                [
+                                                                    'acx-bg-purple-30',
+                                                                    'acx-bg-red-30',
+                                                                    'acx-bg-blue-light-30',
+                                                                    'acx-bg-green-30',
+                                                                ][Math.ceil(Math.random() * 3) - 1]
+                                                            }`}
+                                                        >
+                                                            {rowData?.group[0]}
+                                                        </span>
+                                                        {rowData?.group?.length > 1 && (
+                                                            <span
+                                                                className={`badge rounded-pill px-3 py-2 me-1 my-1 ${
+                                                                    [
+                                                                        'acx-bg-purple-30',
+                                                                        'acx-bg-red-30',
+                                                                        'acx-bg-blue-light-30',
+                                                                        'acx-bg-green-30',
+                                                                    ][Math.ceil(Math.random() * 3) - 1]
+                                                                }`}
+                                                            >
+                                                                {rowData?.group[1]}
+                                                            </span>
+                                                        )}
+                                                        {rowData?.group?.length > 2 && (
+                                                            <span className="badge rounded-pill text-muted border px-2 py-1 my-1">
+                                                                {`+${Number(rowData?.group?.length) - 2}`}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                )
+                                            );
+                                        },
                                     },
                                     {
                                         title: 'Created',
@@ -364,7 +341,6 @@ function UserList({
                                         firstname,
                                         lastname,
                                         role,
-                                        company,
                                         email,
                                         groups,
                                         created_at,
@@ -418,10 +394,8 @@ function UserList({
     );
 }
 
-const mapStateToProps = (state, ownProps) => ({
-    users: state.user.users,
+const mapStateToProps = (state) => ({
     meta: state.user.meta,
-    isUsersLoaded: state.user.isUsersLoaded,
     agents: state.agent.agents,
     admins: state.admin.admins,
     supervisors: state.supervisor.supervisors,
@@ -429,17 +403,16 @@ const mapStateToProps = (state, ownProps) => ({
     isAgentsLoaded: state.agent.isAgentsLoaded,
     isAdminsLoaded: state.admin.isAdminsLoaded,
     isSupervisorLoaded: state.supervisor.isSupervisorsLoaded,
-    // groups: state.group.groups,
     isUserAuthenticated: state.userAuth.isUserAuthenticated,
-    signedUser: state.userAuth.user,
     authenticatedUserRole: state.userAuth.user.role,
+    tenantSubscription: state?.subscription?.subscription,
 });
 
 export default connect(mapStateToProps, {
-    getPaginatedUsers,
     getAgents,
     getSupervisors,
     getAdmins,
     negateActiveState,
     getObservers,
+    getSubscription,
 })(UserList);

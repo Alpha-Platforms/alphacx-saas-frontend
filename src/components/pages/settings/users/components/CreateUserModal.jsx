@@ -10,6 +10,7 @@ import { textCapitalize } from 'helper';
 import { addAgent, getAgents, resetAgentCreated } from '../../../../../reduxstore/actions/agentActions';
 import { countrycodes } from '../../../../shared/countrycodes';
 import { Validate } from '../../../../../helpers/validateInput';
+import { getSubscription  } from '../../../../../reduxstore/actions/subscriptionAction';
 
 function CreateUserModal({
     createModalShow,
@@ -19,6 +20,7 @@ function CreateUserModal({
     addAgent,
     getAgents,
     resetAgentCreated,
+    getSubscription,
 }) {
     const [modalInputs, setModalInputs] = useState({
         firstName: '',
@@ -105,6 +107,7 @@ function CreateUserModal({
                     setCreateModalShow(false);
                     setCreatingUser(false);
                     NotificationManager.success(`${body?.role} created successfully`, 'Success', 4000);
+                    getSubscription();
                 },
                 (err) => {
                     setCreatingUser(false);
@@ -305,4 +308,4 @@ const mapStateToProps = (state, ownProps) => ({
     groups: state.group.groups,
 });
 
-export default connect(mapStateToProps, { resetAgentCreated, addAgent, getAgents })(CreateUserModal);
+export default connect(mapStateToProps, { resetAgentCreated, addAgent, getAgents, getSubscription })(CreateUserModal);

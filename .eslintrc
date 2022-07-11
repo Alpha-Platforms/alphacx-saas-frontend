@@ -4,10 +4,7 @@
         "es2021": true
     },
     "extends": [
-        "plugin:react/recommended",
-        "airbnb",
-        "airbnb/hooks",
-        "plugin:prettier/recommended"
+        "plugin:react/recommended", "airbnb", "airbnb/hooks", "plugin:prettier/recommended"
     ],
     "parserOptions": {
         "ecmaFeatures": {
@@ -20,14 +17,11 @@
             "presets": ["@babel/preset-react"]
         }
     },
-    "plugins": [
-        "react"
-    ],
+    "plugins": ["react"],
     "rules": {
         "prettier/prettier": [
-            "error",
-            {
-              "endOfLine": "auto"
+            "error", {
+                "endOfLine": "auto"
             }
         ],
         "no-nested-ternary": "off",
@@ -36,7 +30,21 @@
         "no-underscore-dangle": "off",
         "no-unused-expressions": "off",
         "camelcase": "warn",
-        "no-constant-condition": "off"
+        "no-constant-condition": "off",
+        "jsx-a11y/label-has-associated-control": [
+            "error", {
+                "required": {
+                    "some": ["nesting", "id"]
+                }
+            }
+        ],
+        "jsx-a11y/label-has-for": [
+            "error", {
+                "required": {
+                    "some": ["nesting", "id"]
+                }
+            }
+        ]
     },
     "parser": "@babel/eslint-parser"
 }
