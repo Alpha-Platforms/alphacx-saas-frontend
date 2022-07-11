@@ -28,6 +28,7 @@ import { getSupervisors } from '../../../../reduxstore/actions/supervisorActions
 import { getObservers } from '../../../../reduxstore/actions/observerActions';
 import '../../../../styles/Setting.css';
 import AccessControl from '../../auth/accessControl';
+import { getSubscription } from '../../../../reduxstore/actions/subscriptionAction';
 
 function UserList({
     meta,
@@ -46,6 +47,7 @@ function UserList({
     getObservers,
     authenticatedUserRole,
     tenantSubscription,
+    getSubscription,
 }) {
     //
     const location = useLocation();
@@ -56,7 +58,7 @@ function UserList({
     const [userLoading] = useState(false);
     const [combinedUsers, setCombinedUsers] = useState([]);
 
-    const activatedUsers = combinedUsers.filter((user) => user?.isActivated);
+    // const activatedUsers = combinedUsers.filter((user) => user?.isActivated);
 
     useEffect(() => {
         if (authenticatedUserRole === 'Administrator' || authenticatedUserRole === 'Supervisor') {
@@ -142,17 +144,20 @@ function UserList({
             NotificationManager.success('Info has been updated', 'Success');
             // getAgents()
             negateActiveState(id);
+            getSubscription();
         } else {
             NotificationManager.error('Something went wrong', 'Error');
         }
     };
 
-    const numOfSubUsers = tenantSubscription?.subscription?.no_of_users || 0;
+    const numOfSubUsers = tenantSubscription?.subscription?.no_of_users;
+    const totalNumberOfUsers = tenantSubscription?.subscription?.totalNumberOfUsers;
+    const totalActiveUsers = tenantSubscription?.subscription?.totalActiveUsers;
 
     function handleActiveChange() {
         const { name, isActivated, id, role } = this;
         if (authenticatedUserRole !== 'Administrator' && authenticatedUserRole !== 'Supervisor') return;
-        if (activatedUsers.length >= numOfSubUsers && !isActivated) return;
+        if (totalActiveUsers >= numOfSubUsers && !isActivated) return;
 
         Swal.fire({
             title: isActivated ? 'Deactivate?' : 'Activate?',
@@ -186,16 +191,23 @@ function UserList({
                     </span>
                 </div>
 
+                {/* 
+
+                if total_active.length > 3 
+                
+                 */}
+
                 <h5 className="my-3 f-16 fw-500 text-dark">User Management</h5>
                 <div className="d-flex justify-content-between align-items-center flex-row">
                     <div>
                         <p className="text-custom-gray f-12" />
                     </div>
                     <div className="mt-3">
-                        {(tenantSubscription?.plan?.name === 'Free Plan' && combinedUsers.length > 3) ||
+                        {(tenantSubscription?.plan?.name === 'Free Plan' &&
+                            (totalActiveUsers.length > 3 || totalNumberOfUsers.length > 3)) ||
                         (tenantSubscription?.plan?.name !== 'Free Plan' &&
                             tenantSubscription?.plan?.name !== 'Alpha Trial' &&
-                            combinedUsers.length > tenantSubscription?.subscription?.no_of_users) ? (
+                            (totalActiveUsers > numOfSubUsers || totalNumberOfUsers > numOfSubUsers)) ? (
                             <br />
                         ) : (
                             <AccessControl>
@@ -409,4 +421,5 @@ export default connect(mapStateToProps, {
     getAdmins,
     negateActiveState,
     getObservers,
+    getSubscription,
 })(UserList);
