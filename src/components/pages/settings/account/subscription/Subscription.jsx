@@ -5,7 +5,7 @@
 // @ts-nocheck
 import { Fragment, useState, useEffect } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import MoonLoader from 'react-spinners/MoonLoader';
 import moment from 'moment';
 import { Modal } from 'react-responsive-modal';
@@ -18,12 +18,12 @@ import PaymentHistory from './components/PaymentHistory';
 import PaymentForm from './components/PaymentForm';
 import { httpGet, httpPatch } from '../../../../../helpers/httpMethods';
 import { ReactComponent as TickIcon } from '../../../../../assets/icons/tick.svg';
-
 import { separateNum } from '../../../../../helper';
 import { getAgents } from '../../../../../reduxstore/actions/agentActions';
 import { getAdmins } from '../../../../../reduxstore/actions/adminActions';
 import { getSupervisors } from '../../../../../reduxstore/actions/supervisorActions';
 import { getObservers } from '../../../../../reduxstore/actions/observerActions';
+import { getSubscription } from '../../../../../reduxstore/actions/subscriptionAction';
 
 function Subscription({
     getAgents,
@@ -35,11 +35,11 @@ function Subscription({
     supervisors,
     observers,
     isUserAuthenticated,
+    subscription,
 }) {
     const [tenantId] = useState(window.localStorage.getItem('tenantId'));
     const [domain] = useState(window.localStorage.getItem('domain'));
     const [tenantInfo, setTenantInfo] = useState(null);
-    const [subscription, setSubscription] = useState(null);
     const [plans, setPlans] = useState(null);
     const [totalUsers, setTotalUsers] = useState(null);
     const [openModal, setOpenModal] = useState(false);
@@ -57,6 +57,8 @@ function Subscription({
         isVerifying: false,
         actionType: 'renew-plan',
     });
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (isUserAuthenticated) {
@@ -91,18 +93,6 @@ function Subscription({
         }
     };
 
-    const getSubscription = async ({ reload } = { reload: false }) => {
-        const res = await httpGet(`subscriptions/${tenantId}`);
-        if (res?.status === 'success') {
-            setSubscription(res?.data);
-
-            window.localStorage.setItem('tenantSubscription', JSON.stringify(res?.data));
-        } else {
-            setSubscription({});
-        }
-        if (reload) window.location.href = `/settings/account?tab=subscription`;
-    };
-
     const getTenantInfo = async () => {
         const res = await httpGet(`auth/tenant-info/${domain}`);
         if (res?.status === 'success') {
@@ -115,7 +105,6 @@ function Subscription({
     useEffect(() => {
         getPlan();
         getTenantInfo();
-        getSubscription();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -146,7 +135,11 @@ function Subscription({
             });
 
             if (res?.status === 'success') {
-                getSubscription({ reload: true });
+                dispatch(
+                    getSubscription(null, () => {
+                        window.location.href = `/settings/account?tab=subscription`;
+                    }),
+                );
                 return NotificationManager.success('', 'Successful', 4000);
             }
         }
@@ -374,6 +367,7 @@ const mapStateToProps = (state) => ({
     isAdminsLoaded: state.admin.isAdminsLoaded,
     isSupervisorLoaded: state.supervisor.isSupervisorsLoaded,
     isUserAuthenticated: state.userAuth.isUserAuthenticated,
+    subscription: state?.subscription?.subscription,
 });
 
 export default connect(mapStateToProps, { getSupervisors, getAdmins, getAgents, getObservers })(Subscription);

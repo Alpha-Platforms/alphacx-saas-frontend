@@ -165,10 +165,9 @@ export const getAcceptValue = (extArray, typesArray) => {
     return acceptValue;
 };
 
-export const redirectToSub = (history, location) => {
+export const redirectToSub = (history, location, tenantSubscription) => {
     // history is useHistory from react router dom
-    if (history && location && location.pathname !== '/settings/account') {
-        const tenantSubscription = JSON.parse(window.localStorage.getItem('tenantSubscription'));
+    if (history && location && tenantSubscription && tenantSubscription instanceof Function && location.pathname !== '/settings/account') {
         if (tenantSubscription && tenantSubscription?.subscription?.end_date) {
             if (moment(tenantSubscription?.subscription?.end_date).isBefore(new Date())) {
                 // subscrition has ended
@@ -265,13 +264,11 @@ export const refreshUserTokens = (redirectToLoginIfNoToken = false) => {
                 const domain = localStorage.getItem('domain');
                 const tenantId = localStorage.getItem('tenantId');
                 const tenantToken = localStorage.getItem('tenantToken');
-                const tenantSubscription = localStorage.getItem('tenantSubscription');
                 localStorage.clear();
                 onboardingSplash && localStorage.setItem('onboardingSplash', onboardingSplash);
                 domain && localStorage.setItem('domain', domain);
                 tenantId && localStorage.setItem('tenantId', tenantId);
                 tenantToken && localStorage.setItem('tenantToken', tenantToken);
-                tenantSubscription && localStorage.setItem('tenantSubscription', tenantSubscription);
                 window.location.href = '/login';
             }
             resolve();

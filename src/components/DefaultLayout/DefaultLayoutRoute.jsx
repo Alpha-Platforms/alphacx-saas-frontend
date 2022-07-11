@@ -2,7 +2,7 @@
 // @ts-nocheck
 import React, { useContext, useState, useEffect } from 'react';
 import { Route, useHistory, useLocation } from 'react-router-dom';
-import jwtDecode from 'jwt-decode';
+import { useSelector } from 'react-redux';
 import Layout from '../Layout/index.jsx';
 import { LayoutContext } from '../../context/layoutContext';
 import { redirectToSub, refreshUserTokens } from '../../helper';
@@ -35,13 +35,14 @@ function DefaultLayout({ children, routeType, pageName, ...rest }) {
 
 function DefaultLayoutRoute({ component: Component, routeType, fullProps, pageName, ...rest }) {
     const [valid, setValid] = useState('loading');
+    const tenantSubscription = useSelector((state) => state?.subscription?.subscription);
     const history = useHistory();
     const location = useLocation();
 
     useEffect(() => {
-        redirectToSub(history, location);
+        redirectToSub(history, location, tenantSubscription);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [JSON.parse(window.localStorage.getItem('tenantSubscription'))]);
+    }, [tenantSubscription]);
 
     useEffect(() => {
         setValid(true);
@@ -50,21 +51,6 @@ function DefaultLayoutRoute({ component: Component, routeType, fullProps, pageNa
         })();
     }, []);
 
-    // useEffect(() => {
-    //   ValidateToken();
-    // }, [valid]);
-    // const ValidateToken = () => {
-    //   let token = localStorage.getItem("token");
-    //   if (token == undefined || token == null || token == "") {
-    //     localStorage.clear();
-    //     return setValid(false);
-    //   }
-    //   if (jwtDecode(token).exp < Date.now() / 1000) {
-    //     localStorage.clear();
-    //     return setValid(false);
-    //   }
-    //   setValid(true);
-    // };
 
     return (
         <Route

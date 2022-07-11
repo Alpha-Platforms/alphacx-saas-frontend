@@ -9,6 +9,7 @@ import React, { useEffect, useState, useContext, Fragment } from 'react';
 import { Link, NavLink, useHistory } from 'react-router-dom';
 // import { AuthContext } from "../../context/authContext";
 import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { NotificationManager } from 'react-notifications';
 import MoonLoader from 'react-spinners/MoonLoader';
@@ -32,7 +33,7 @@ import { multiIncludes } from '../../helper';
 function DropDown() {
     const [createCustModalShow, setCreateCustModalShow] = useState(false);
     const [createTicketModalShow, setCreateTicketModalShow] = useState(false);
-    const tenantSubscription = JSON.parse(window.localStorage.getItem('tenantSubscription'));
+    const tenantSubscription = useSelector((state) => state?.subscription?.subscription);
     const subExpired = moment(tenantSubscription?.subscription?.end_date).isBefore(new Date());
     return (
         <>
@@ -341,6 +342,7 @@ function Notification({ userId }) {
 function Navbar({ pageName, user }) {
     const { appReduceSidebarWidth } = useContext(LayoutContext);
     const [localUser, setlocalUser] = useState({});
+    const tenantSubscription = useSelector((state) => state?.subscription?.subscription);
 
     const [notif, setNotif] = useState({
         active: false,
@@ -349,35 +351,49 @@ function Navbar({ pageName, user }) {
         trialMinutesLeft: 0,
         planName: '',
         subExpired: false,
+        showPlanExpiredNotif: false,
+        showUserExceededNotif: false,
     });
 
+    const numOfSubUsers = tenantSubscription?.subscription?.no_of_users;
+    const totalNumberOfUsers = tenantSubscription?.subscription?.totalNumberOfUsers;
+    const totalActiveUsers = tenantSubscription?.subscription?.totalActiveUsers;
+    const shouldShowUserExceededNotif =
+        (tenantSubscription?.plan?.name === 'Free Plan' &&
+            (totalActiveUsers.length > 3 || totalNumberOfUsers.length > 3)) ||
+        (tenantSubscription?.plan?.name !== 'Free Plan' &&
+            tenantSubscription?.plan?.name !== 'Alpha Trial' &&
+            (totalActiveUsers > numOfSubUsers || totalNumberOfUsers > numOfSubUsers));
+
+    const endDate = tenantSubscription?.subscription?.end_date;
+    const planName = tenantSubscription?.plan?.name;
+
+    // days left for plan expiration
+    const daysLeft = moment(endDate).diff(moment(new Date()), 'days');
+    const hoursLeft = moment(endDate).diff(moment(new Date()), 'hours');
+    const minutesLeft = moment(endDate).diff(moment(new Date()), 'minutes');
+    const subExpired = moment(endDate).isBefore(new Date());
+    const shouldShowPlanExpiredNotif =
+        (tenantSubscription?.subscription?.is_trial || tenantSubscription?.plan?.name !== 'Free Plan') && daysLeft <= 8;
+
     useEffect(() => {
-        const tenantSubscription = JSON.parse(window.localStorage.getItem('tenantSubscription'));
-
-        if (tenantSubscription) {
-            if (tenantSubscription?.subscription?.is_trial || tenantSubscription?.plan?.name !== 'Free Plan') {
-                const endDate = tenantSubscription?.subscription?.end_date;
-
-                // days left for plan expiration
-                const daysLeft = moment(endDate).diff(moment(new Date()), 'days');
-                const hoursLeft = moment(endDate).diff(moment(new Date()), 'hours');
-                const minutesLeft = moment(endDate).diff(moment(new Date()), 'minutes');
-                const subExpired = moment(endDate).isBefore(new Date());
-
-                if (daysLeft <= 8) {
-                    setNotif((prev) => ({
-                        ...prev,
-                        active: true,
-                        trialDaysLeft: daysLeft,
-                        trialHoursLeft: hoursLeft,
-                        trialMinutesLeft: minutesLeft,
-                        planName: tenantSubscription?.plan?.name,
-                        subExpired,
-                    }));
-                }
-            }
+        if (shouldShowPlanExpiredNotif) {
+            setNotif((prev) => ({
+                ...prev,
+                showPlanExpiredNotif: true,
+            }));
         }
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [shouldShowPlanExpiredNotif]);
+
+    useEffect(() => {
+        if (shouldShowUserExceededNotif) {
+            setNotif((prev) => ({
+                ...prev,
+                showUserExceededNotif: true,
+            }));
+        }
+    }, [shouldShowUserExceededNotif]);
 
     const getUserFromStorage = () => {
         const lUser = localStorage.getItem('user');
@@ -393,14 +409,14 @@ function Navbar({ pageName, user }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [window.localStorage.getItem('user')]);
 
-    const getActualTime = ({ trialDaysLeft, trialHoursLeft, trialMinutesLeft }) => {
-        const daysLeft = Math.abs(trialDaysLeft);
-        const hoursLeft = Math.abs(trialHoursLeft);
-        const minutesLeft = Math.abs(trialMinutesLeft);
+    const getActualTime = () => {
+        const _daysLeft = Math.abs(daysLeft);
+        const _hoursLeft = Math.abs(hoursLeft);
+        const _minutesLeft = Math.abs(minutesLeft);
 
-        if (daysLeft > 0) return `${daysLeft} ${daysLeft > 1 ? 'days' : 'day'}`;
-        if (hoursLeft > 0) return `${hoursLeft} ${hoursLeft > 1 ? 'hours' : 'hour'}`;
-        if (minutesLeft > 0) return `${minutesLeft} ${minutesLeft > 1 ? 'minutes' : 'minute'}`;
+        if (_daysLeft > 0) return `${_daysLeft} ${_daysLeft > 1 ? 'days' : 'day'}`;
+        if (_hoursLeft > 0) return `${_hoursLeft} ${_hoursLeft > 1 ? 'hours' : 'hour'}`;
+        if (_minutesLeft > 0) return `${_minutesLeft} ${_minutesLeft > 1 ? 'minutes' : 'minute'}`;
         return 'less than a minute';
     };
 
@@ -409,49 +425,76 @@ function Navbar({ pageName, user }) {
             id="navbar"
             className={`${
                 appReduceSidebarWidth === true
-                    ? notif.active
+                    ? notif.showPlanExpiredNotif || notif.showUserExceededNotif
                         ? 'section-wrap-nav section-wrap-nav-2'
                         : 'section-wrap-nav'
-                    : notif.active
+                    : notif.showPlanExpiredNotif || notif.showUserExceededNotif
                     ? 'section-wrap-nav section-wrap-nav-2 section-wrap-navPadding'
                     : 'section-wrap-nav section-wrap-navPadding'
             }`}
         >
             <div className="navbar-position">
                 <div
-                    style={{ height: notif.active ? `calc(90px + 3rem)` : '90px' }}
+                    style={{
+                        height:
+                            notif.showPlanExpiredNotif || notif.showUserExceededNotif ? `calc(90px + 3rem)` : '90px',
+                    }}
                     className={`${
                         appReduceSidebarWidth === true ? 'navbar-wrap' : 'navbar-wrap section-wrap-navWidth'
                     }`}
                 >
-                    {notif.active && (
+                    {notif.showUserExceededNotif ? (
                         <div className="sub-notif">
-                            {!notif.subExpired ? (
-                                <span>
-                                    Your {notif.planName} is ending in {getActualTime(notif)}.
-                                </span>
-                            ) : (
-                                <span>
-                                    Your {notif.planName} has expired {getActualTime(notif)} ago.
-                                </span>
-                            )}{' '}
-                            <Link
-                                to="/settings/account?tab=subscription"
-                                className="btn btn-sm bg-at-blue-light sub-notif-get"
-                            >
-                                Get Alpha Plan Now
-                            </Link>{' '}
+                            <span>
+                                You have exceeded the number of users ({numOfSubUsers}) allowed by your plan. Kindly
+                                remove others.
+                            </span>{' '}
                             <button
                                 type="button"
-                                onClick={() => setNotif((prev) => ({ ...prev, active: false }))}
+                                onClick={() => setNotif((prev) => ({ ...prev, showUserExceededNotif: false }))}
                                 className="sub-notif-cancel btn"
                             >
                                 ×
                             </button>
                         </div>
+                    ) : (
+                        notif.showPlanExpiredNotif && (
+                            <div className="sub-notif">
+                                {!subExpired ? (
+                                    <span>
+                                        Your {planName} is ending in {getActualTime()}.
+                                    </span>
+                                ) : (
+                                    <span>
+                                        Your {planName} has expired {getActualTime()} ago.
+                                    </span>
+                                )}{' '}
+                                <Link
+                                    to="/settings/account?tab=subscription"
+                                    className="btn btn-sm bg-at-blue-light sub-notif-get"
+                                >
+                                    Get Alpha Plan Now
+                                </Link>{' '}
+                                <button
+                                    type="button"
+                                    onClick={() => setNotif((prev) => ({ ...prev, showPlanExpiredNotif: false }))}
+                                    className="sub-notif-cancel btn"
+                                >
+                                    ×
+                                </button>
+                            </div>
+                        )
                     )}
 
-                    <div className="navbar-content" style={{ height: notif.active ? `calc(100% - 3rem)` : '100%' }}>
+                    <div
+                        className="navbar-content"
+                        style={{
+                            height:
+                                notif.showPlanExpiredNotif || notif.showUserExceededNotif
+                                    ? `calc(100% - 3rem)`
+                                    : '100%',
+                        }}
+                    >
                         <div className="pageTitle">
                             <span style={{ textTransform: 'capitalize' }}>{pageName}</span>
                         </div>
