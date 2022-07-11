@@ -190,13 +190,6 @@ function UserList({
                         <span>Users</span>
                     </span>
                 </div>
-
-                {/* 
-
-                if total_active.length > 3 
-                
-                 */}
-
                 <h5 className="my-3 f-16 fw-500 text-dark">User Management</h5>
                 <div className="d-flex justify-content-between align-items-center flex-row">
                     <div>
