@@ -172,7 +172,7 @@ export const redirectToSub = (history, location, tenantSubscription) => {
         const subExpired = moment(endDate).isBefore(new Date());
 
         const shouldShowUserExceededNotif =
-            (tenantSubscription?.plan?.name === 'Free Plan' && totalNumberOfUsers.length > 3) ||
+            (tenantSubscription?.plan?.name === 'Free Plan' && totalNumberOfUsers > 3) ||
             (tenantSubscription?.plan?.name !== 'Free Plan' &&
                 tenantSubscription?.plan?.name !== 'Alpha Trial' &&
                 totalNumberOfUsers > numOfSubUsers);

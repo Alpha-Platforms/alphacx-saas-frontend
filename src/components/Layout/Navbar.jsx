@@ -359,7 +359,7 @@ function Navbar({ pageName, user }) {
     const numOfSubUsers = tenantSubscription?.subscription?.no_of_users;
     const totalNumberOfUsers = tenantSubscription?.subscription?.totalNumberOfUsers;
     const shouldShowUserExceededNotif =
-        (tenantSubscription?.plan?.name === 'Free Plan' && totalNumberOfUsers.length > 3) ||
+        (tenantSubscription?.plan?.name === 'Free Plan' && totalNumberOfUsers > 3) ||
         (tenantSubscription?.plan?.name !== 'Free Plan' &&
             tenantSubscription?.plan?.name !== 'Alpha Trial' &&
             totalNumberOfUsers > numOfSubUsers);
