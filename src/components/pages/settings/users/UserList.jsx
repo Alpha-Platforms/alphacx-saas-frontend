@@ -196,11 +196,10 @@ function UserList({
                         <p className="text-custom-gray f-12" />
                     </div>
                     <div className="mt-3">
-                        {(tenantSubscription?.plan?.name === 'Free Plan' &&
-                            (totalActiveUsers.length > 3 || totalNumberOfUsers.length > 3)) ||
+                        {(tenantSubscription?.plan?.name === 'Free Plan' && totalNumberOfUsers.length > 3) ||
                         (tenantSubscription?.plan?.name !== 'Free Plan' &&
                             tenantSubscription?.plan?.name !== 'Alpha Trial' &&
-                            (totalActiveUsers > numOfSubUsers || totalNumberOfUsers > numOfSubUsers)) ? (
+                            totalNumberOfUsers > numOfSubUsers) ? (
                             <br />
                         ) : (
                             <AccessControl>

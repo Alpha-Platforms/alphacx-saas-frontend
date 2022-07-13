@@ -358,13 +358,11 @@ function Navbar({ pageName, user }) {
 
     const numOfSubUsers = tenantSubscription?.subscription?.no_of_users;
     const totalNumberOfUsers = tenantSubscription?.subscription?.totalNumberOfUsers;
-    const totalActiveUsers = tenantSubscription?.subscription?.totalActiveUsers;
     const shouldShowUserExceededNotif =
-        (tenantSubscription?.plan?.name === 'Free Plan' &&
-            (totalActiveUsers.length > 3 || totalNumberOfUsers.length > 3)) ||
+        (tenantSubscription?.plan?.name === 'Free Plan' && totalNumberOfUsers.length > 3) ||
         (tenantSubscription?.plan?.name !== 'Free Plan' &&
             tenantSubscription?.plan?.name !== 'Alpha Trial' &&
-            (totalActiveUsers > numOfSubUsers || totalNumberOfUsers > numOfSubUsers));
+            totalNumberOfUsers > numOfSubUsers);
 
     const endDate = tenantSubscription?.subscription?.end_date;
     const planName = tenantSubscription?.plan?.name;
