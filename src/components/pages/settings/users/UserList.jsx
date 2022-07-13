@@ -151,7 +151,7 @@ function UserList({
     };
 
     const numOfSubUsers = tenantSubscription?.subscription?.no_of_users;
-    const totalNumberOfUsers = tenantSubscription?.subscription?.totalNumberOfUsers;
+    const totalUsers = tenantSubscription?.subscription?.totalUsers;
     const totalActiveUsers = tenantSubscription?.subscription?.totalActiveUsers;
 
     function handleActiveChange() {
@@ -196,10 +196,10 @@ function UserList({
                         <p className="text-custom-gray f-12" />
                     </div>
                     <div className="mt-3">
-                        {(tenantSubscription?.plan?.name === 'Free Plan' && totalNumberOfUsers > 3) ||
+                        {(tenantSubscription?.plan?.name === 'Free Plan' && totalUsers > 3) ||
                         (tenantSubscription?.plan?.name !== 'Free Plan' &&
                             tenantSubscription?.plan?.name !== 'Alpha Trial' &&
-                            totalNumberOfUsers > numOfSubUsers) ? (
+                            totalUsers > numOfSubUsers) ? (
                             <br />
                         ) : (
                             <AccessControl>

@@ -357,12 +357,12 @@ function Navbar({ pageName, user }) {
     });
 
     const numOfSubUsers = tenantSubscription?.subscription?.no_of_users;
-    const totalNumberOfUsers = tenantSubscription?.subscription?.totalNumberOfUsers;
+    const totalUsers = tenantSubscription?.subscription?.totalUsers;
     const shouldShowUserExceededNotif =
-        (tenantSubscription?.plan?.name === 'Free Plan' && totalNumberOfUsers > 3) ||
+        (tenantSubscription?.plan?.name === 'Free Plan' && totalUsers > 3) ||
         (tenantSubscription?.plan?.name !== 'Free Plan' &&
             tenantSubscription?.plan?.name !== 'Alpha Trial' &&
-            totalNumberOfUsers > numOfSubUsers);
+            totalUsers > numOfSubUsers);
 
     const endDate = tenantSubscription?.subscription?.end_date;
     const planName = tenantSubscription?.plan?.name;
