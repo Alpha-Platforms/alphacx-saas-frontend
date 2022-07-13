@@ -1270,6 +1270,12 @@ select {
   flex-direction: row-reverse;
   flex-shrink: 0;
 }
+.message.message-out:not(.message-note){
+  margin-right: 16px;
+}
+.message:not(.message-out):not(.message.message-note) {
+  margin-left: 16px;
+}
 
 /* message content */
 .message.message-note{
@@ -1286,6 +1292,7 @@ select {
   align-items: flex-start;
   padding: 10px 20px;
   background-color: rgba(0, 98, 152, 0.05);
+  border-radius: 4px;
 }
 .message.message-out .message-container{
   padding-left: 30px;
