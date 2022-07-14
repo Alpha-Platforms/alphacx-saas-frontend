@@ -2,35 +2,13 @@
     padding-bottom: 125px;
 }
 
-.appsumo__section--one {
-    text-align: center;
-
-    & > h1 {
-        font-weight: 600;
-        font-size: 46px;
-        line-height: 59px;
-        letter-spacing: -0.02em;
-        color: #0E0E2C;
-        margin-bottom: 20px;
-    }
-
-    & > p {
-        max-width: 705px;
-        font-weight: 400;
-        font-size: 22px;
-        line-height: 29px;
-        color: #4A4A68;
-        margin: 0 auto;
-    }
-}
-
 .appsumo__section--two {
-    margin-top: 110px;
+    margin-top: 75px;
     display: grid;
-    grid-template-columns: repeat(3, 358px);
-    gap: 42px;
-    grid-gap: 42px;
-    justify-content: space-between;
+    grid-template-columns: repeat(3, auto);
+    gap: 36px;
+    grid-gap: 36px;
+    justify-content: center;
     max-width: 100%;
     overflow-x: auto;
     -ms-overflow-style: none;
@@ -42,13 +20,16 @@
 }
 
 .appsumo__card {
-    border-radius: 16px;
-    -webkit-border-radius: 16px;
-    -moz-border-radius: 16px;
-    -ms-border-radius: 16px;
-    -o-border-radius: 16px;
-    padding: 36px 24px;
-    // 
+    border-radius: 12px;
+    -webkit-border-radius: 12px;
+    -moz-border-radius: 12px;
+    -ms-border-radius: 12px;
+    -o-border-radius: 12px;
+    padding: 60px 50px;
+    
+    background-color: #D0EAFF;
+    color: #004882;
+
     & > h4:first-child {
         font-size: 25px;
         font-weight: 400;
@@ -68,15 +49,16 @@
     }
 
     & > .appsumo__card--cta {
-        display: block;
-        margin: 32px calc(33px - 24px);
-        width: calc(100% - 2 * calc(33px - 24px));
-        padding: 16px;
-        border-radius: 8px;
-        -webkit-border-radius: 8px;
-        -moz-border-radius: 8px;
-        -ms-border-radius: 8px;
-        -o-border-radius: 8px;
+        width: 100%;
+        margin-top: 20px;
+        padding: 10px 0;
+        border-radius: 6px;
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        -ms-border-radius: 6px;
+        -o-border-radius: 6px;
+        background-color: #004882;
+        color: #D0EAFF;
 }
 
     & > .appsumo__card--features {
@@ -96,28 +78,7 @@
 
 }
 
-.appsumo__card--free {
-    background-color: #D0EAFF;
-    color: #004882;
-
-    & > .appsumo__card--cta {
-        background-color: #004882;
-        color: #D0EAFF;
-    }
-}
-
-.appsumo__card--alpha {
-    background-color: #FFDAE3;
-    color: #C20C38;
-
-    & > .appsumo__card--cta {
-        background-color: #C20C38;
-        color: #D0EAFF;
-    }
-
-}
-
-.appsumo__card--enterprise {
+.appsumo__card:nth-child(even) {
     background: #0E0E2C;
     color: #FFFFFF;
 

@@ -22,6 +22,7 @@ function Login() {
     const dispatch = useDispatch();
     const params = new URLSearchParams(location.search);
     const email = params.get('email');
+    const activation = parseInt(params.get('activation'));
 
     const [userInput, setUserInput] = useState({
         domain: '',
@@ -92,6 +93,14 @@ function Login() {
         setUserInput({ ...userInput, [e.target.name]: e.target.value });
     };
 
+    const landingPage = () => {
+        if (activation) {
+            window.location.href = `/appsumo-plans`;
+        } else {
+            window.location.href = `/`;
+        }
+    };
+
     const submit = async () => {
         if (domain) {
             // PASSWORD LOGIN
@@ -111,7 +120,7 @@ function Login() {
                     window.localStorage.setItem('user', JSON.stringify(res.data));
                     window.localStorage.setItem('token', res.data.token);
                     window.localStorage.setItem('refreshToken', res.data.refreshToken);
-                    window.location.href = `/`;
+                    landingPage();
                 } else {
                     // Login fails
                     setLoading(false);
