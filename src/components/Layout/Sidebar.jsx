@@ -36,6 +36,22 @@ export default function Sidebar({ browserRouter, currentRoute }) {
 
     const tenantSubscription = useSelector((state) => state?.subscription?.subscription);
 
+    const numOfSubUsers = tenantSubscription?.subscription?.no_of_users;
+    const totalUsers = tenantSubscription?.subscription?.totalUsers;
+
+    const shouldShowUserExceededNotif =
+        (tenantSubscription?.plan?.name === 'Free Plan' && totalUsers > 3) ||
+        (tenantSubscription?.plan?.name !== 'Free Plan' &&
+            tenantSubscription?.plan?.name !== 'Alpha Trial' &&
+            totalUsers > numOfSubUsers);
+
+    const customBrowserRouter = (path) => {
+        if (!path) return;
+        /* Should not execute the router method if more users exists than allowed */
+        if (shouldShowUserExceededNotif) return;
+        browserRouter(path);
+    };
+
     return (
         <>
             <menu className={`sidebar-wrap ${appReduceSidebarWidth === true ? '' : 'collapsed'}`}>
@@ -56,7 +72,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                     </li>
 
                     <li
-                        onClick={() => browserRouter(`/`)}
+                        onClick={() => customBrowserRouter(`/`)}
                         className={`sidebar-list--item ${currentRoute === '/' ? 'active' : ''}`}
                     >
                         <span className="sidebar-list--icon">
@@ -67,7 +83,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
 
                     <li
                         className={`sidebar-list--item ${currentRoute === '/dashboard' ? 'active' : ''}`}
-                        onClick={() => browserRouter(`/dashboard`)}
+                        onClick={() => customBrowserRouter(`/dashboard`)}
                     >
                         <span className="sidebar-list--icon">
                             <HomeIcon activeRoute={false} />
@@ -76,7 +92,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                     </li>
 
                     <li
-                        onClick={() => browserRouter(`/tickets`)}
+                        onClick={() => customBrowserRouter(`/tickets`)}
                         className={`sidebar-list--item ${currentRoute.includes('/tickets') ? 'active' : ''}`}
                     >
                         <span className="sidebar-list--icon">
@@ -86,7 +102,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                     </li>
 
                     <li
-                        onClick={() => browserRouter(`/customers`)}
+                        onClick={() => customBrowserRouter(`/customers`)}
                         className={`sidebar-list--item ${currentRoute.includes('/customers') ? 'active' : ''}`}
                     >
                         <span className="sidebar-list--icon">
@@ -97,7 +113,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
 
                     <AccessControl>
                         <li
-                            onClick={() => browserRouter(`/reports`)}
+                            onClick={() => customBrowserRouter(`/reports`)}
                             className={`sidebar-list--item ${currentRoute === '/reports' ? 'active' : ''}`}
                         >
                             <span className="sidebar-list--icon">
@@ -108,7 +124,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                     </AccessControl>
 
                     <li
-                        onClick={() => browserRouter(`/settings`)}
+                        onClick={() => customBrowserRouter(`/settings`)}
                         className={`sidebar-list--item ${currentRoute.includes('/settings') ? 'active' : ''}`}
                     >
                         <span className="sidebar-list--icon">
@@ -119,7 +135,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
 
                     {tenantSubscription?.plan?.plan_type === 'appsumo' && (
                         <li
-                            onClick={() => browserRouter(`/appsumo-plans`)}
+                            onClick={() => customBrowserRouter(`/appsumo-plans`)}
                             className={`sidebar-list--item ${currentRoute.includes('/appsumo-plans') ? 'active' : ''}`}
                         >
                             <span className="sidebar-list--icon">
