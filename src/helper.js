@@ -1,4 +1,3 @@
-/* eslint-disable */
 // @ts-nocheck
 import { CsvBuilder } from 'filefy';
 import jsPDF from 'jspdf';
@@ -166,11 +165,22 @@ export const getAcceptValue = (extArray, typesArray) => {
 };
 
 export const redirectToSub = (history, location, tenantSubscription) => {
-    // history is useHistory from react router dom
-    if (history && location && tenantSubscription && tenantSubscription instanceof Function && location.pathname !== '/settings/account') {
-        if (tenantSubscription && tenantSubscription?.subscription?.end_date) {
-            if (moment(tenantSubscription?.subscription?.end_date).isBefore(new Date())) {
-                // subscrition has ended
+    if (tenantSubscription) {
+        const numOfSubUsers = tenantSubscription?.subscription?.no_of_users;
+        const totalUsers = tenantSubscription?.subscription?.totalUsers;
+        const endDate = tenantSubscription?.subscription?.end_date;
+        const subExpired = moment(endDate).isBefore(new Date());
+
+        const shouldShowUserExceededNotif =
+            (tenantSubscription?.plan?.name === 'Free Plan' && totalUsers > 3) ||
+            (tenantSubscription?.plan?.name !== 'Free Plan' &&
+                tenantSubscription?.plan?.name !== 'Alpha Trial' &&
+                totalUsers > numOfSubUsers);
+        // history is useHistory from react router dom
+        if (history && location && tenantSubscription && location.pathname !== '/settings/account') {
+            if (shouldShowUserExceededNotif && location.pathname !== '/settings/users') {
+                history.push('/settings/users');
+            } else if (subExpired) {
                 history.push('/settings/account?tab=subscription');
             }
         }
@@ -301,14 +311,14 @@ export const getHostNameFromUrl = (url = '') => {
         try {
             const { hostname } = new URL(url);
             return hostname;
-        } catch(err) {
+        } catch (err) {
             return '';
         }
     } else {
         try {
             const { hostname } = new URL(`https://${url}`);
             return hostname;
-        } catch(err) {
+        } catch (err) {
             return '';
         }
     }
@@ -316,5 +326,9 @@ export const getHostNameFromUrl = (url = '') => {
 
 export const getHostnamesFromString = (str = '') => {
     // string is semi-color separated
-    return str.split(';').map((url) => getHostNameFromUrl(url)).filter((item) => item).join(';');
-}
+    return str
+        .split(';')
+        .map((url) => getHostNameFromUrl(url))
+        .filter((item) => item)
+        .join(';');
+};

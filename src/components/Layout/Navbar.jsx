@@ -6,7 +6,7 @@
 /* eslint-disabled */
 // @ts-nocheck
 import React, { useEffect, useState, useContext, Fragment } from 'react';
-import { Link, NavLink, useHistory } from 'react-router-dom';
+import { Link, NavLink, useHistory, useLocation } from 'react-router-dom';
 // import { AuthContext } from "../../context/authContext";
 import { connect } from 'react-redux';
 import { useSelector } from 'react-redux';
@@ -343,6 +343,7 @@ function Navbar({ pageName, user }) {
     const { appReduceSidebarWidth } = useContext(LayoutContext);
     const [localUser, setlocalUser] = useState({});
     const tenantSubscription = useSelector((state) => state?.subscription?.subscription);
+    const location = useLocation();
 
     const [notif, setNotif] = useState({
         active: false,
@@ -356,14 +357,12 @@ function Navbar({ pageName, user }) {
     });
 
     const numOfSubUsers = tenantSubscription?.subscription?.no_of_users;
-    const totalNumberOfUsers = tenantSubscription?.subscription?.totalNumberOfUsers;
-    const totalActiveUsers = tenantSubscription?.subscription?.totalActiveUsers;
+    const totalUsers = tenantSubscription?.subscription?.totalUsers;
     const shouldShowUserExceededNotif =
-        (tenantSubscription?.plan?.name === 'Free Plan' &&
-            (totalActiveUsers.length > 3 || totalNumberOfUsers.length > 3)) ||
+        (tenantSubscription?.plan?.name === 'Free Plan' && totalUsers > 3) ||
         (tenantSubscription?.plan?.name !== 'Free Plan' &&
             tenantSubscription?.plan?.name !== 'Alpha Trial' &&
-            (totalActiveUsers > numOfSubUsers || totalNumberOfUsers > numOfSubUsers));
+            totalUsers > numOfSubUsers);
 
     const endDate = tenantSubscription?.subscription?.end_date;
     const planName = tenantSubscription?.plan?.name;
@@ -384,7 +383,7 @@ function Navbar({ pageName, user }) {
             }));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [shouldShowPlanExpiredNotif]);
+    }, [shouldShowPlanExpiredNotif, location.pathname]);
 
     useEffect(() => {
         if (shouldShowUserExceededNotif) {
@@ -393,7 +392,7 @@ function Navbar({ pageName, user }) {
                 showUserExceededNotif: true,
             }));
         }
-    }, [shouldShowUserExceededNotif]);
+    }, [shouldShowUserExceededNotif, location.pathname]);
 
     const getUserFromStorage = () => {
         const lUser = localStorage.getItem('user');
@@ -449,6 +448,12 @@ function Navbar({ pageName, user }) {
                                 You have exceeded the number of users ({numOfSubUsers}) allowed by your plan. Kindly
                                 remove others.
                             </span>{' '}
+                            <Link
+                                to="/settings/account?tab=subscription"
+                                className="btn btn-sm bg-at-blue-light sub-notif-get"
+                            >
+                                Subscription
+                            </Link>{' '}
                             <button
                                 type="button"
                                 onClick={() => setNotif((prev) => ({ ...prev, showUserExceededNotif: false }))}
