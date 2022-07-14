@@ -42,7 +42,7 @@ function DefaultLayoutRoute({ component: Component, routeType, fullProps, pageNa
     useEffect(() => {
         redirectToSub(history, location, tenantSubscription);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [tenantSubscription]);
+    }, [tenantSubscription, location.pathname]);
 
     useEffect(() => {
         setValid(true);
