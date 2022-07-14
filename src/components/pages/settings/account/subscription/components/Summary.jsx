@@ -172,7 +172,7 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
                                 : separateNum(
                                       Number(planState?.stripeConfig?.amount) - Number(planState?.stripeConfig?.vat),
                                   )
-                        } ${getRealCurrency(tenantInfo?.currency || '')}`}
+                        } ${getRealCurrency(tenantInfo?.currency || '')} 2cent`}
                     </span>
                 </div>
             </div>

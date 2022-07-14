@@ -332,3 +332,13 @@ export const getHostnamesFromString = (str = '') => {
         .filter((item) => item)
         .join(';');
 };
+
+export const centToDollarCent = (centValue) => {
+    const dollar = Math.trunc(centValue / 100);
+    const cent = Number(
+        Math.floor(centValue % 100)
+            .toString()
+            .slice(0, 2),
+    );
+    return [dollar, cent];
+};
