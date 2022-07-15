@@ -136,7 +136,7 @@ function Appsumo() {
         let logged = null;
 
         let itnv = setTimeout( async () => {
-            const res = await httpPost(`auth/login`, userData.domain);
+            const res = await httpPost(`auth/login`, {domain: userData.domain});
             logged = res.status === 'success';
 
             // const city = localStorage.getItem('city');
@@ -505,7 +505,7 @@ function Appsumo() {
                                         </Form>
                                     </div>
                                     
-                                ) : showModal? 
+                                ) : showModal?
                                 (
                                     <>                                    
 
@@ -530,9 +530,9 @@ function Appsumo() {
                                                     : 
                                                     (
                                                     <>
-                                                        <h5 className="mb-2 fw-light">New Account Setup</h5>
-                                                        <p className="text-center">Your <span className='text-at-blue-light'>AlphaCX Account</span> is being setup. <br /> It will only take 90 seconds.</p>
-                                                        <small className='text-at-blue-light'>You will be redirected when setup is complete</small>                                                        
+                                                        <h5 className="mb-2 fw-bold text-at-blue-light">New Account Setup</h5>
+                                                        <p className="text-center text-dark">Your <span className='fw-bold'>AlphaCX Account</span> is being setup.</p>
+                                                        <small className='text-dark'>You will be redirected when setup is complete</small>                                                        
                                                     </>
                                                     )
                                                 }
