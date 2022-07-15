@@ -94,7 +94,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
     }, [initiating]);
 
     const handleNumChange = (e) => {
-        if (Number(e.target.value) < totalUsers?.length && planState?.actionType !== 'add-user') return;
+        if (Number(e.target.value) < totalUsers && planState?.actionType !== 'add-user') return;
         if (Number(e.target.value) < 0 && planState?.actionType === 'add-user') return;
         if (planState?.actionType !== 'add-user') return;
         setPlanState((prev) => ({ ...prev, numOfAgents: e.target.value }));
@@ -106,7 +106,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
         setPlanState((prev) => ({
             ...prev,
             actionType: type,
-            numOfAgents: type === 'add-user' ? 1 : totalUsers?.length || 0,
+            numOfAgents: type === 'add-user' ? 1 : totalUsers || 0,
         }));
     };
 
@@ -151,7 +151,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                         ? 'You can only renew active users. To renew inactive users click here'
                         : planState.actionType === 'add-user'
                         ? 'Add number of additional user licenses you want.'
-                        : `You can only pay for your number of active users (${totalUsers.length}) and above.`}
+                        : `You can only pay for your number of active users (${totalUsers}) and above.`}
                 </small>
             </p>
             <div className="cp-top">
@@ -169,7 +169,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                             onChange={handlePlanChange}/>
                     </div> */}
                     <div>
-                        <label htmlFor="numOfAgents">No. of Agents</label>
+                        <label htmlFor="numOfAgents">Number of Users</label>
                         <div>
                             <input
                                 type="number"
@@ -177,7 +177,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                                 value={planState.numOfAgents}
                                 name="numOfAgents"
                                 id="numOfAgents"
-                                min={planState?.actionType === 'add-user' ? 0 : totalUsers.length}
+                                min={planState?.actionType === 'add-user' ? 0 : totalUsers}
                                 onChange={handleNumChange}
                                 disabled={
                                     planState.isUpdatingPlan ||
