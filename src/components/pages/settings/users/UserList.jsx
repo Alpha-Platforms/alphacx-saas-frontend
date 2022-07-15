@@ -13,6 +13,7 @@ import { TablePagination } from '@material-ui/core';
 import { Link, useLocation } from 'react-router-dom';
 import moment from 'moment';
 import Swal from 'sweetalert2';
+import { Modal } from 'react-responsive-modal';
 import { NotificationManager } from 'react-notifications';
 import tableIcons from '../../../../assets/materialicons/tableIcons';
 import { updateUser } from '../../../../reduxstore/actions/userActions';
@@ -29,6 +30,7 @@ import { getObservers } from '../../../../reduxstore/actions/observerActions';
 import '../../../../styles/Setting.css';
 import AccessControl from '../../auth/accessControl';
 import { getSubscription } from '../../../../reduxstore/actions/subscriptionAction';
+import { ReactComponent as DeleteRedIcon } from '../../../../assets/icons/Delete-red.svg';
 
 function UserList({
     meta,
@@ -57,6 +59,8 @@ function UserList({
     const [importModalShow, setImportModalShow] = useState(false);
     const [userLoading] = useState(false);
     const [combinedUsers, setCombinedUsers] = useState([]);
+    const [currentUserIdToDelete, setCurrentUserIdToDelete] = useState(null);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
     // const activatedUsers = combinedUsers.filter((user) => user?.isActivated);
 
@@ -173,6 +177,20 @@ function UserList({
             }
         });
     }
+
+    const handleUserDelete = () => {
+        console.log('user to delete => ', currentUserIdToDelete);
+    };
+
+    const triggerUserDelete = (id) => {
+        setCurrentUserIdToDelete(id);
+        setOpenDeleteModal(true);
+    };
+
+    const closeDeleteModal = () => {
+        setCurrentUserIdToDelete(null);
+        setOpenDeleteModal(false);
+    };
 
     return (
         <div>
@@ -331,6 +349,15 @@ function UserList({
                                                     readOnly
                                                     type="checkbox"
                                                 />
+                                                {!rowData.isActivated && (
+                                                    <button
+                                                        type="submit"
+                                                        className="user-delete-btn ms-2 d-inline-block"
+                                                        onClick={() => triggerUserDelete(rowData?.userId)}
+                                                    >
+                                                        <DeleteRedIcon />
+                                                    </button>
+                                                )}
                                             </div>
                                         ),
                                     },
@@ -378,6 +405,27 @@ function UserList({
                                 }}
                             />
                         </MuiThemeProvider>
+                        <Modal open={openDeleteModal} onClose={() => closeDeleteModal(false)} center>
+                            <div className="p-5 w-100">
+                                <h6 className="mb-4">Are you sure you want to delete this user?</h6>
+                                <div className="d-flex justify-content-center">
+                                    <button
+                                        type="button"
+                                        className="btn f-12 bg-outline-custom cancel px-4"
+                                        onClick={() => closeDeleteModal()}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn ms-2 f-12 bg-custom px-4"
+                                        onClick={() => handleUserDelete()}
+                                    >
+                                        Confirm
+                                    </button>
+                                </div>
+                            </div>
+                        </Modal>
                     </div>
                 ) : (
                     <div className="cust-table-loader">
