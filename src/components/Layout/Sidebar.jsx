@@ -141,7 +141,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                             <span className="sidebar-list--icon">
                                 <DiscountWhite />
                             </span>
-                            <span className="sidebar-list--text">Appsumo</span>
+                            <span className="sidebar-list--text">AppSumo Plans</span>
                         </li>
                     )}
                 </ul>

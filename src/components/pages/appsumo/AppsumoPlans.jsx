@@ -1,100 +1,137 @@
 /* eslint-disable react/no-array-index-key */
-import React from 'react';
+import { httpGet } from 'helpers/httpMethods';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
 import { TickeCircle } from '../../../assets/images/svgs';
 import './AppsumoPlans.scss';
+import CheckCircle from '../../../assets/icons/CheckCircle.svg';
 
-function AppsumoPlans() {
-    const freePlanFeatures = ['3 Users', 'Live Chat', 'Facebook Messenger', 'Instagram DM', '1000 Contact Limit'];
-    const alphaPlanFeatures = [
-        'Whatsapp Messaging',
-        'Facebook Messenger',
-        'Instagram Messaging',
-        'Email-to-ticket',
-        'Knowledge Base',
-        'Customer Feedback',
-        'Automation',
-        'Auto Ticket Distribution',
+function AppsumoPlans({ currentPlan }) {
+    const [plans, setPlans] = useState([{ name: '' }]);
+
+    const [productUrl, setProductUrl] = useState('');
+
+    useEffect(() => {
+        async function getAllPlans() {
+            const tenantId = localStorage.getItem('tenantId');
+            const res = await httpGet(`subscriptions/plans/${tenantId}`);
+            if (res?.status === 'success') {
+                setPlans(res.data);
+            }
+        }
+        getAllPlans();
+    }, []);
+
+    const freePlanFeatures = ['All above-listed features', 'All deal terms', '3 agent seats'];
+
+    const dealTerms = [
+        'Lifetime access to AlphaCX',
+        'All future Alpha Plan updates',
+        'No codes, no stacking—just choose the plan thats right for you',
+        'You must activate your license within 60 days of purchase',
+        'Ability to upgrade or downgrade between 3 license tiers',
+        'GDPR compliant',
+        'Only for new AlphaCX users who do not have existing accounts',
+        '60-day money-back guarantee, no matter the reason',
     ];
-    const enterprisePlanFeatures = [
-        'Everything in Alpha Plan',
-        'Unlimited Users',
+
+    const FeaturesIncluded = [
+        'Unlimited clients',
+        'Unlimited WhatsApp Messaging (powered by Twilio)',
+        'Unlimited Facebook Messenger',
+        'Unlimited Instagram Messaging',
+        'Unlimited email-to-ticket',
         'Unlimited Contacts',
+        'Knowledge Base',
+        'Ratings & Feedback',
+        'SLA Automation',
+        'Auto Ticket Distributuon',
+        'Report Export',
         'API Integration',
         'Team Structure',
-        'AD/LDAP Integration',
-        'Custom Email Signature',
-        'Customer Portal',
-        'Brand Theme',
-        'Private Hosted Option',
-        'Dedicated Account Manager',
     ];
+
     return (
-        <div className="appsumo-plans-page">
-            <div className="appsumo__section--one">
-                <h1>All-in-one Subscription Plan</h1>
-                <p>
-                    Get started with our all-in-one standard Alpha subscription; and an enterprise plan for
-                    organisations with specific needs.
-                </p>
+        <div className="appsumo-plans-page mt-5">
+            <div className="row mt-4  mx-3 flex justify-content-center">
+                <div className="col-5 bg-light rounded p-3 me-3">
+                    <p className="fw-bold ">Feature Included</p>
+                    <ul className="appsumo__card--features list-unstyled">
+                        {FeaturesIncluded.map((item, idx) => (
+                            <li key={idx} className="mb-2">
+                                <span>
+                                    <img
+                                        src={CheckCircle}
+                                        style={{ width: '14px', marginBottom: '3px' }}
+                                        alt="check icon"
+                                    />
+                                </span>
+                                <span>{item}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                <div className="col-5 bg-light rounded p-3">
+                    <p className="fw-bold ">Deal Terms</p>
+                    <ul className="appsumo__card--features list-unstyled">
+                        {dealTerms.map((item, idx) => (
+                            <li key={idx} className="mb-2">
+                                <span>
+                                    <img
+                                        src={CheckCircle}
+                                        style={{ width: '14px', marginBottom: '3px' }}
+                                        alt="check icon"
+                                    />
+                                </span>
+                                <span>{item}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
+
             <div className="appsumo__section--two">
-                <div className="appsumo__card--free appsumo__card">
-                    <h4>Free</h4>
-                    <h2>NGN 0</h2>
-                    <p>Forever free</p>
-                    <button className="appsumo__card--cta btn" type="button">
-                        Start Free Trial
-                    </button>
-                    <ul className="appsumo__card--features">
-                        {freePlanFeatures.map((item, idx) => (
-                            <li key={idx}>
-                                <span>
-                                    <TickeCircle color="#004882" />
-                                </span>
-                                <span>{item}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                <div className="appsumo__card--alpha appsumo__card">
-                    <h4>Alpha Plan</h4>
-                    <h2>$15</h2>
-                    <p>Per Agent/Month - Billed Annually</p>
-                    <button className="appsumo__card--cta btn" type="button">
-                        Start Free Trial
-                    </button>
-                    <ul className="appsumo__card--features">
-                        {alphaPlanFeatures.map((item, idx) => (
-                            <li key={idx}>
-                                <span>
-                                    <TickeCircle color="#C20C38" />
-                                </span>
-                                <span>{item}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                <div className="appsumo__card--enterprise appsumo__card">
-                    <h4>Enterprise Plan</h4>
-                    <h2>Customisation</h2>
-                    <p>Build the right plan </p>
-                    <button className="appsumo__card--cta btn" type="button">
-                        Contact Us
-                    </button>
-                    <ul className="appsumo__card--features">
-                        {enterprisePlanFeatures.map((item, idx) => (
-                            <li key={idx}>
-                                <span>
-                                    <TickeCircle color="#ffffff" />
-                                </span>
-                                <span>{item}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                {/* #0E0E2C */}
+                {plans.map((plan, index) => {
+                    if (plan.plan_type === 'appsumo') {
+                        return (
+                            <div className="appsumo__card" key={index}>
+                                <div className="text-center">
+                                    <h5>{plan.name}</h5>
+                                    <h5 className="fw-bold">${plan.yearly_amount} </h5>
+                                    <p>(One Time Purchase)</p>
+                                </div>
+                                <ul className="appsumo__card--features mt-4">
+                                    {freePlanFeatures.map((item, idx) => (
+                                        <li key={idx}>
+                                            <span>
+                                                <TickeCircle color={index % 2 === 0 ? '#004882' : '#ffffff'} />
+                                            </span>
+                                            <span>{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                                <a
+                                    href={`https://appsumo.com/${productUrl}`}
+                                    target="_blank"
+                                    className={`appsumo__card--cta btn ${plan.name === currentPlan ? 'disabled' : ''} `}
+                                    type="button" rel="noreferrer"
+                                >
+                                    {plan.name === currentPlan ? 'Current Plan' : 'Select Plan'}
+                                </a>
+                            </div>
+                        );
+                    }
+                })}
             </div>
         </div>
     );
 }
 
-export default AppsumoPlans;
+const mapStateToProps = (state) => {
+    return {
+        currentPlan: state.subscription.subscription.plan.name,
+    };
+};
+export default connect(mapStateToProps)(AppsumoPlans);

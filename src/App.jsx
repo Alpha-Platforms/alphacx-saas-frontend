@@ -180,13 +180,19 @@ const SiteRouter = connect(mapStateToProps, {
                                     <DefaultLayoutRoute
                                         exact
                                         path="/appsumo-plans"
-                                        pageName="Appsumo Plans"
+                                        pageName="Appsumo Plans and Features"
                                         component={AppsumoPlans}
                                     />
                                 )}
                                 <DefaultLayoutRoute
                                     exact
                                     path="/customers"
+                                    component={CustomerList}
+                                    pageName="Customers"
+                                />
+                                <DefaultLayoutRoute
+                                    exact
+                                    path="/tenants/remove"
                                     component={CustomerList}
                                     pageName="Customers"
                                 />
