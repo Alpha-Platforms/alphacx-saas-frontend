@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import { httpGet } from 'helpers/httpMethods';
+import { httpGet, httpPost } from 'helpers/httpMethods';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { TickeCircle } from '../../../assets/images/svgs';
@@ -8,18 +8,26 @@ import CheckCircle from '../../../assets/icons/CheckCircle.svg';
 
 function AppsumoPlans({ currentPlan }) {
     const [plans, setPlans] = useState([{ name: '' }]);
-
     const [productUrl, setProductUrl] = useState('');
+    const tenantId = localStorage.getItem('tenantId');
 
     useEffect(() => {
         async function getAllPlans() {
-            const tenantId = localStorage.getItem('tenantId');
             const res = await httpGet(`subscriptions/plans/${tenantId}`);
             if (res?.status === 'success') {
                 setPlans(res.data);
             }
         }
+
+        async function getAppsumoCustomerUuid() {
+            const res = await httpPost(`appsumo/customer/${tenantId}`);
+            if (res?.status === 'success') {
+                setProductUrl(res.data.invoice_item_uuid);
+            }
+        }
+
         getAllPlans();
+        getAppsumoCustomerUuid();
     }, []);
 
     const freePlanFeatures = ['All above-listed features', 'All deal terms', '3 agent seats'];
@@ -54,7 +62,7 @@ function AppsumoPlans({ currentPlan }) {
     return (
         <div className="appsumo-plans-page mt-5">
             <div className="row mt-4  mx-3 flex justify-content-center">
-                <div className="col-5 bg-light rounded p-3 me-3">
+                <div className="col-5 bg-light rounded p-4 me-3">
                     <p className="fw-bold ">Feature Included</p>
                     <ul className="appsumo__card--features list-unstyled">
                         {FeaturesIncluded.map((item, idx) => (
@@ -72,7 +80,7 @@ function AppsumoPlans({ currentPlan }) {
                     </ul>
                 </div>
 
-                <div className="col-5 bg-light rounded p-3">
+                <div className="col-5 bg-light rounded p-4">
                     <p className="fw-bold ">Deal Terms</p>
                     <ul className="appsumo__card--features list-unstyled">
                         {dealTerms.map((item, idx) => (
@@ -92,7 +100,6 @@ function AppsumoPlans({ currentPlan }) {
             </div>
 
             <div className="appsumo__section--two">
-                {/* #0E0E2C */}
                 {plans.map((plan, index) => {
                     if (plan.plan_type === 'appsumo') {
                         return (
@@ -113,10 +120,11 @@ function AppsumoPlans({ currentPlan }) {
                                     ))}
                                 </ul>
                                 <a
-                                    href={`https://appsumo.com/${productUrl}`}
+                                    href={`https://appsumo.com/account/redemption/${productUrl}`}
                                     target="_blank"
                                     className={`appsumo__card--cta btn ${plan.name === currentPlan ? 'disabled' : ''} `}
-                                    type="button" rel="noreferrer"
+                                    type="button"
+                                    rel="noreferrer"
                                 >
                                     {plan.name === currentPlan ? 'Current Plan' : 'Select Plan'}
                                 </a>
