@@ -1,8 +1,7 @@
 .subtop {
-    border: 1px solid red;
     display: flex;
     justify-content: space-between;
-    border: 1px solid rgba(218, 218, 218, 0.5);
+    border: 1px solid #e1e1e1;
     -webkit-filter: drop-shadow(0px 0px 5px rgba(0, 98, 152, 0.05));
     filter: drop-shadow(0px 0px 5px rgba(0, 98, 152, 0.05));
     border-radius: 2px;
@@ -521,7 +520,7 @@
     text-align: center;
     padding: 50px 60px;
     background: rgba(249, 252, 255, 0.03);
-    border: 0.5px solid #DADADA;
+    border: 0.5px solid #036298;
     box-sizing: border-box;
     border-radius: 8px;
     -webkit-border-radius: 8px;
