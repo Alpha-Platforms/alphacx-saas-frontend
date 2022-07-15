@@ -39,6 +39,7 @@ import ChartsImg from '../../../assets/images/charts.png';
 import TicketsImg from '../../../assets/images/tickets.png';
 import ConversationsImg from '../../../assets/images/conversations.png';
 import { Capitalize } from 'components/helpers/helpers';
+import Login from '../auth/login';
 
 const override = {
     display: "block",
@@ -102,29 +103,59 @@ function Appsumo() {
             }
         }
 
-     
+        // localStorage.setItem('city', '');
 
     }, []);
 
+    const redirectToLogin = () => {
+        setShowRirecting(true)
+        const protocol = window.location.protocol
+        const hostname = window.location.hostname.split(".").slice(1).join(".")
+        const port = window.location.port
+        const baseUrl = `${protocol}//${userData.domain}.${hostname}:${port}`
+        window.location.href = `${baseUrl}/login?activation=1&email=${userData.email}`
+    }
+
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
     useEffect(() => {
-      if (showModal) {
-        setTimeout(() => {
-            // redirect to login
+        if (showModal) {
 
-            setShowRirecting(true)
+            tryLogin(isLoggedIn);
+        }
+    }, [showModal]);
 
-            const protocol = window.location.protocol
-            const hostname = window.location.hostname.split(".").slice(1).join(".")
-            const port = window.location.port
-            const baseUrl = `${protocol}//${userData.domain}.${hostname}:${port}`
-
-            window.location.href = `${baseUrl}/login?email=${userData.email}`
+    const tryLogin = (isLogged) => {
+        let intv = 0;
+        if (isLogged){
+            clearInterval(intv);
+            return `interval ${intv} clear`;
+        }
             
-        }, 110000); // BE said it takes this amount of time
-      }
-    }, [showModal])
-    
+        console.log("Nope!!!");
+        let logged = null;
 
+        let itnv = setTimeout( async () => {
+            const res = await httpPost(`auth/login`, userData.domain);
+            logged = res.status === 'success';
+
+            // const city = localStorage.getItem('city');
+            // logged = city === 'lagos';
+
+            setIsLoggedIn(logged)
+            tryLogin(logged);
+        
+        }, 15000);
+
+        
+    };
+
+    useEffect(() => {
+      if (isLoggedIn) {
+        redirectToLogin();
+      }
+    }, [isLoggedIn]);
+    
 
     const simpleValidator = useRef(
         new SimpleReactValidator({
@@ -237,18 +268,8 @@ function Appsumo() {
                 password: userInput.password
             };
 
-            // console.clear();
-            // console.log(data);
-            // setShowModal(true)
-            // setUserData({email: userInput.email, domain: "juney"})
-            // return null;
-
             const res = await httpPost('appsumo/activate', data);
-
-            // console.clear();
-            // console.log(res);
-            // return null;
-
+            // const res = {status: 'success'};
             
             if (res.status === 'success') {
                 setUserData(res.data)
@@ -284,7 +305,7 @@ function Appsumo() {
                                         <div className="mb-4">
                                             <div className="mb-3"  style={{height: '40px', display: 'flex', alignItems: 'center'}}>
                                                 <Image src={LogoColoured} style={{height: '100%'}} />
-                                                <span class="" style={{
+                                                <span style={{
                                                     width: '1px',
                                                     height: '100%',
                                                     background: '#004882',

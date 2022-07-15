@@ -33,15 +33,14 @@
 }
 
 .nav-initials {
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
     display: flex;
     border-radius: 10rem;
     -webkit-border-radius: 10rem;
     -moz-border-radius: 10rem;
     -ms-border-radius: 10rem;
     -o-border-radius: 10rem;
-    font-size: 18px;
     justify-content: center;
     align-items: center;
     padding: 0;
