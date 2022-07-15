@@ -25,23 +25,11 @@ import { getSupervisors } from '../../../../../reduxstore/actions/supervisorActi
 import { getObservers } from '../../../../../reduxstore/actions/observerActions';
 import { getSubscription } from '../../../../../reduxstore/actions/subscriptionAction';
 
-function Subscription({
-    getAgents,
-    getAdmins,
-    getSupervisors,
-    getObservers,
-    agents,
-    admins,
-    supervisors,
-    observers,
-    isUserAuthenticated,
-    subscription,
-}) {
+function Subscription({ subscription }) {
     const [tenantId] = useState(window.localStorage.getItem('tenantId'));
     const [domain] = useState(window.localStorage.getItem('domain'));
     const [tenantInfo, setTenantInfo] = useState(null);
     const [plans, setPlans] = useState(null);
-    const [totalUsers, setTotalUsers] = useState(null);
     const [openModal, setOpenModal] = useState(false);
 
     const [planState, setPlanState] = useState({
@@ -60,29 +48,12 @@ function Subscription({
 
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (isUserAuthenticated) {
-            // get the first set of users
-            // getPaginatedUsers(50, 1);
-            getAgents();
-            getSupervisors();
-            getAdmins();
-            getObservers();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isUserAuthenticated]);
+    const totalUsers = subscription?.subscription?.totalUsers;
 
     useEffect(() => {
-        const realAdmins = Array.isArray(admins) ? admins.filter((item) => item?.isActivated === true) : [];
-        const realSupervisors = Array.isArray(supervisors)
-            ? supervisors.filter((item) => item?.isActivated === true)
-            : [];
-        const realAgents = Array.isArray(agents) ? agents.filter((item) => item?.isActivated === true) : [];
-        const realObservers = Array.isArray(observers) ? observers.filter((item) => item?.isActivated === true) : [];
-        const allUsers = [...realAdmins, ...realSupervisors, ...realAgents, ...realObservers];
-        setTotalUsers(allUsers);
-        setPlanState((prev) => ({ ...prev, numOfAgents: allUsers.length }));
-    }, [admins, supervisors, agents, observers]);
+        setPlanState((prev) => ({ ...prev, numOfAgents: totalUsers }));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const getPlan = async () => {
         const res = await httpGet(`subscriptions/plans/${tenantId}`);
@@ -200,7 +171,6 @@ function Subscription({
                                                                 planState={planState}
                                                                 setPlanState={setPlanState}
                                                                 tenantInfo={tenantInfo}
-                                                                totalUsers={totalUsers}
                                                                 getSubscription={getSubscription}
                                                             />
                                                         </div>
@@ -358,15 +328,6 @@ function Subscription({
 }
 
 const mapStateToProps = (state) => ({
-    isUsersLoaded: state.user.isUsersLoaded,
-    agents: state.agent.agents,
-    observers: state.observer.observers,
-    admins: state.admin.admins,
-    supervisors: state.supervisor.supervisors,
-    isAgentsLoaded: state.agent.isAgentsLoaded,
-    isAdminsLoaded: state.admin.isAdminsLoaded,
-    isSupervisorLoaded: state.supervisor.isSupervisorsLoaded,
-    isUserAuthenticated: state.userAuth.isUserAuthenticated,
     subscription: state?.subscription?.subscription,
 });
 

@@ -30,7 +30,7 @@ import { httpGetMain, httpPatchMain } from '../../helpers/httpMethods';
 import { accessControlFunctions } from '../../config/accessControlList';
 import { multiIncludes } from '../../helper';
 
-function DropDown() {
+function DropDown({ shouldShowUserExceededNotif }) {
     const [createCustModalShow, setCreateCustModalShow] = useState(false);
     const [createTicketModalShow, setCreateTicketModalShow] = useState(false);
     const tenantSubscription = useSelector((state) => state?.subscription?.subscription);
@@ -39,7 +39,7 @@ function DropDown() {
         <>
             <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown global-create-dropdown">
                 <Dropdown.Toggle
-                    disabled={subExpired}
+                    disabled={subExpired || shouldShowUserExceededNotif}
                     variant=""
                     size=""
                     className="btn acx-btn-primary"
@@ -56,7 +56,9 @@ function DropDown() {
                         <button
                             type="button"
                             disabled={subExpired}
-                            onClick={() => !subExpired && setCreateTicketModalShow(true)}
+                            onClick={() =>
+                                !subExpired && !shouldShowUserExceededNotif && setCreateTicketModalShow(true)
+                            }
                         >
                             Ticket
                         </button>
@@ -65,7 +67,7 @@ function DropDown() {
                         <button
                             type="button"
                             disabled={subExpired}
-                            onClick={() => !subExpired && setCreateCustModalShow(true)}
+                            onClick={() => !subExpired && !shouldShowUserExceededNotif && setCreateCustModalShow(true)}
                         >
                             Customer
                         </button>
@@ -538,7 +540,7 @@ function Navbar({ pageName, user }) {
                             {multiIncludes(accessControlFunctions[user?.role], [
                                 'create_ticket',
                                 'create_customer',
-                            ]) && <DropDown />}
+                            ]) && <DropDown shouldShowUserExceededNotif={shouldShowUserExceededNotif} />}
 
                             {/* <div style={{ width: "1.5" }}>
                   <BellIconNavbar />

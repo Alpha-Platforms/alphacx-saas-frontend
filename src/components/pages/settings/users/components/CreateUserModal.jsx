@@ -1,27 +1,22 @@
-/* eslint-disable */
+/* eslint-disable react/no-unstable-nested-components */
+/* eslint-disable react/prop-types */
+/* eslint-disable jsx-a11y/control-has-associated-label */
+/* eslint-disable react/react-in-jsx-scope */
 // @ts-nocheck
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 // import {Modal} from 'react-bootstrap';
 import { Modal } from 'react-responsive-modal';
 import { connect } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
 import RSelect from 'react-select';
-import { textCapitalize } from 'helper';
+import SimpleReactValidator from 'simple-react-validator';
+import { textCapitalize } from '../../../../../helper';
 import { addAgent, getAgents, resetAgentCreated } from '../../../../../reduxstore/actions/agentActions';
 import { countrycodes } from '../../../../shared/countrycodes';
 import { Validate } from '../../../../../helpers/validateInput';
-import { getSubscription  } from '../../../../../reduxstore/actions/subscriptionAction';
+import { getSubscription } from '../../../../../reduxstore/actions/subscriptionAction';
 
-function CreateUserModal({
-    createModalShow,
-    setCreateModalShow,
-    isAgentCreated,
-    groups,
-    addAgent,
-    getAgents,
-    resetAgentCreated,
-    getSubscription,
-}) {
+function CreateUserModal({ createModalShow, setCreateModalShow, groups, addAgent, getSubscription }) {
     const [modalInputs, setModalInputs] = useState({
         firstName: '',
         lastName: '',
@@ -36,10 +31,14 @@ function CreateUserModal({
 
     const [creatingUser, setCreatingUser] = useState(false);
     const [RSTeams, setRSTeams] = useState([]);
+    const [, forceUpdate] = useState(false);
 
-    useEffect(() => {
-        console.clear();
-    }, [modalInputs]);
+    const simpleValidator = useRef(
+        new SimpleReactValidator({
+            element: (message) => <div className="formErrorMsg">{message}</div>,
+            // autoForceUpdate: true,
+        }),
+    );
 
     // F U N C T I O N S
     const loadRSTeams = () => {
@@ -47,19 +46,6 @@ function CreateUserModal({
             return { label: textCapitalize(item.name), value: item.id };
         });
         setRSTeams(mappedTeams);
-    };
-
-    // ONBLUR VALIDATION
-    const handleBlur = (e) => {
-        if (e.target.name === 'email') {
-            Validate.email(e, modalInputs, setModalInputs);
-        } else if (e.target.name === 'password') {
-            Validate.password(e, modalInputs, setModalInputs);
-        } else if (e.target.name === 'firstName' || e.target.name === 'lastName') {
-            Validate.length(e, modalInputs, setModalInputs);
-        } else if (e.target.name === 'phoneNumber') {
-            Validate.ngPhone(e, modalInputs, setModalInputs);
-        }
     };
 
     const handleModalInput = (e) => {
@@ -82,39 +68,40 @@ function CreateUserModal({
     const handleUserCreation = () => {
         const { firstName, lastName, email, teams, role, phoneNumber } = modalInputs;
 
-        if (!firstName || !lastName || !email || teams.length === 0) {
-            // all field not available
-            NotificationManager.error('All fields are required', 'Error');
-        } else {
-            setCreatingUser(true);
-
-            const body = { firstName, lastName, email, groupIds: teams, role, phoneNumber };
-
-            // The request function
-            addAgent(
-                body,
-                () => {
-                    setModalInputs({
-                        firstName: '',
-                        lastName: '',
-                        email: '',
-                        avater: '',
-                        phoneNumber: '',
-                        description: '',
-                        teams: [],
-                        role: 'Agent',
-                    });
-                    setCreateModalShow(false);
-                    setCreatingUser(false);
-                    NotificationManager.success(`${body?.role} created successfully`, 'Success', 4000);
-                    getSubscription();
-                },
-                (err) => {
-                    setCreatingUser(false);
-                    NotificationManager.error(`${err}`, 'Error', 4000);
-                },
-            );
+        if (!simpleValidator.current.allValid()) {
+            // show all errors if exist
+            simpleValidator.current.showMessages();
+            return forceUpdate((prev) => !prev);
         }
+
+        setCreatingUser(true);
+
+        const body = { firstName, lastName, email, groupIds: teams, role, phoneNumber };
+
+        // The request function
+        return addAgent(
+            body,
+            () => {
+                setModalInputs({
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    avater: '',
+                    phoneNumber: '',
+                    description: '',
+                    teams: [],
+                    role: 'Agent',
+                });
+                setCreateModalShow(false);
+                setCreatingUser(false);
+                NotificationManager.success(`${body?.role} created successfully`, 'Success', 4000);
+                getSubscription();
+            },
+            (err) => {
+                setCreatingUser(false);
+                NotificationManager.error(`${err}`, 'Error', 4000);
+            },
+        );
     };
     /* 
     useEffect(() => {
@@ -139,6 +126,13 @@ function CreateUserModal({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAgentCreated]); */
+
+    const showValidateMessageFor = (type) => {
+        if (type) {
+            simpleValidator.current.showMessageFor(type);
+            forceUpdate((prev) => !prev);
+        }
+    };
 
     // create user modal
     return (
@@ -165,7 +159,7 @@ function CreateUserModal({
                         <div className="d-flex flex-row w-100 justify-content-between mt-3">
                             <div className="form-group w-100 me-2">
                                 <label className="f-12" htmlFor="fullName">
-                                    First Name
+                                    First Name <span className="text-danger">*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -174,12 +168,16 @@ function CreateUserModal({
                                     id="fullName"
                                     value={modalInputs.firstName}
                                     onChange={handleModalInput}
-                                    onBlur={(e) => handleBlur(e)}
+                                    onBlur={() => showValidateMessageFor('First name')}
                                 />
+                                {
+                                    /* simple validation */
+                                    simpleValidator.current.message('First name', modalInputs.firstName, 'required')
+                                }
                             </div>
                             <div className="form-group w-100 ms-2">
                                 <label className="f-12" htmlFor="fullName">
-                                    Last Name
+                                    Last Name <span className="text-danger">*</span>
                                 </label>
                                 <input
                                     type="text"
@@ -188,13 +186,17 @@ function CreateUserModal({
                                     name="lastName"
                                     value={modalInputs.lastName}
                                     onChange={handleModalInput}
-                                    onBlur={(e) => handleBlur(e)}
+                                    onBlur={() => showValidateMessageFor('Last name')}
                                 />
+                                {
+                                    /* simple validation */
+                                    simpleValidator.current.message('Last name', modalInputs.lastname, 'required')
+                                }
                             </div>
                         </div>
                         <div className="form-group mt-3">
                             <label className="f-12" htmlFor="email">
-                                Email Address
+                                Email Address <span className="text-danger">*</span>
                             </label>
                             <input
                                 type="email"
@@ -203,8 +205,12 @@ function CreateUserModal({
                                 name="email"
                                 value={modalInputs.email}
                                 onChange={handleModalInput}
-                                onBlur={(e) => handleBlur(e)}
+                                onBlur={() => showValidateMessageFor('Email')}
                             />
+                            {
+                                /* simple validation */
+                                simpleValidator.current.message('Email', modalInputs.email, 'required|email')
+                            }
                         </div>
                         <div className="mt-3">
                             <label htmlFor="workphone" className="form-label">
@@ -244,14 +250,18 @@ function CreateUserModal({
                                     ariaLabel="work phone"
                                     ariaDescribedby="workphone"
                                     onChange={handleModalInput}
-                                    onBlur={(e) => handleBlur(e)}
+                                    onBlur={() => showValidateMessageFor('Work phone')}
                                 />
+                                {
+                                    /* simple validation */
+                                    simpleValidator.current.message('Work phone', modalInputs.phoneNumber, 'phone')
+                                }
                             </div>
                         </div>
 
                         <div className="form-group mt-3">
                             <label className="f-12" htmlFor="email">
-                                Team(s)
+                                Team(s) <span className="text-danger">*</span>
                             </label>
                             <RSelect
                                 className=""
@@ -264,25 +274,37 @@ function CreateUserModal({
                                 options={RSTeams}
                                 onChange={handleModalRSInput}
                             />
+                            {
+                                /* simple validation */
+                                simpleValidator.current.message(
+                                    'Team(s)',
+                                    modalInputs.teams.length === 0 ? '' : 'has_value',
+                                    'required',
+                                )
+                            }
                         </div>
 
                         <div className="form-group mt-3">
                             <label className="f-12" htmlFor="level">
-                                Role
+                                Role <span className="text-danger">*</span>
                             </label>
                             <select
                                 name="role"
                                 className="form-select"
                                 onChange={handleModalInput}
                                 value={modalInputs.role}
+                                id="level"
                             >
-                                <option value="" />
                                 <option value="Administrator">Administrator</option>
                                 <option value="Supervisor">Supervisor</option>
                                 <option value="Agent">Agent</option>
                                 <option value="Observer">Observer</option>
                                 {/* {groups.map(({name, id}) => <option value={id}>{name}</option>)} */}
                             </select>
+                            {
+                                /* simple validation */
+                                simpleValidator.current.message('Role', modalInputs.role, 'required')
+                            }
                         </div>
                         <div className="text-end">
                             <button
@@ -303,7 +325,7 @@ function CreateUserModal({
     );
 }
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
     isAgentCreated: state.agent.isAgentCreated,
     groups: state.group.groups,
 });
