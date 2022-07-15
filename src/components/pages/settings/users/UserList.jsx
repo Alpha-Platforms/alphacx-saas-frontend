@@ -31,6 +31,7 @@ import '../../../../styles/Setting.css';
 import AccessControl from '../../auth/accessControl';
 import { getSubscription } from '../../../../reduxstore/actions/subscriptionAction';
 import { ReactComponent as DeleteRedIcon } from '../../../../assets/icons/Delete-red.svg';
+import { httpDelete } from '../../../../helpers/httpMethods';
 
 function UserList({
     meta,
@@ -178,18 +179,23 @@ function UserList({
         });
     }
 
-    const handleUserDelete = () => {
-        console.log('user to delete => ', currentUserIdToDelete);
+    const closeDeleteModal = () => {
+        setCurrentUserIdToDelete(null);
+        setOpenDeleteModal(false);
+    };
+
+    const handleUserDelete = async () => {
+        const res = await httpDelete(`users/${currentUserIdToDelete}`);
+        if (res?.status === 'success') {
+            NotificationManager.success('User deleted successfully', 'Success');
+            closeDeleteModal();
+            getSubscription();
+        }
     };
 
     const triggerUserDelete = (id) => {
         setCurrentUserIdToDelete(id);
         setOpenDeleteModal(true);
-    };
-
-    const closeDeleteModal = () => {
-        setCurrentUserIdToDelete(null);
-        setOpenDeleteModal(false);
     };
 
     return (
