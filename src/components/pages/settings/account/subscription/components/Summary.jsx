@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/prop-types */
 // @ts-nocheck
@@ -9,7 +10,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { CardElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
 import { httpPost } from '../../../../../../helpers/httpMethods';
 import { getRealCurrency } from './SubTop';
-import { separateNum } from '../../../../../../helper';
+import { separateNum, centToDollarCent } from '../../../../../../helper';
 import acxLogo from '../../../../../../assets/images/whitebg.jpg';
 
 function CheckoutForm({ setPlanState, planState, getSubscription }) {
@@ -170,9 +171,20 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
                                       ) - Number(planState?.flutterwaveConfig?.vat),
                                   )
                                 : separateNum(
-                                      Number(planState?.stripeConfig?.amount) - Number(planState?.stripeConfig?.vat),
+                                      centToDollarCent(
+                                          Number(planState?.stripeConfig?.amount - planState?.stripeConfig?.vat),
+                                      )[0],
                                   )
-                        } ${getRealCurrency(tenantInfo?.currency || '')}`}
+                        } ${getRealCurrency(tenantInfo?.currency || '')} ${
+                            getRealCurrency(tenantInfo?.currency || '') === 'USD'
+                                ? `${
+                                      centToDollarCent(
+                                          Number(planState?.stripeConfig?.amount) -
+                                              Number(planState?.stripeConfig?.vat),
+                                      )[1]
+                                  } Cents`
+                                : ''
+                        }`.trim()}
                     </span>
                 </div>
             </div>
@@ -199,15 +211,27 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
                     <span>Subtotal</span>
                 </div>
                 <div>
-                    <span>{`${
-                        getRealCurrency(tenantInfo?.currency || '') === 'NGN'
-                            ? separateNum(
-                                  Number(
-                                      planState?.flutterwaveConfig?.totalAmount || planState?.flutterwaveConfig?.amount,
-                                  ),
-                              )
-                            : separateNum(Number(planState?.stripeConfig?.amount))
-                    } ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
+                    <span>
+                        {`${
+                            getRealCurrency(tenantInfo?.currency || '') === 'NGN'
+                                ? separateNum(
+                                      Number(
+                                          planState?.flutterwaveConfig?.totalAmount ||
+                                              planState?.flutterwaveConfig?.amount,
+                                      ),
+                                  )
+                                : separateNum(centToDollarCent(Number(planState?.stripeConfig?.amount))[0])
+                        } ${getRealCurrency(tenantInfo?.currency || '')} ${
+                            getRealCurrency(tenantInfo?.currency || '') === 'USD'
+                                ? `${
+                                      centToDollarCent(
+                                          Number(planState?.stripeConfig?.amount) -
+                                              Number(planState?.stripeConfig?.vat),
+                                      )[1]
+                                  } Cents`
+                                : ''
+                        }`.trim()}
+                    </span>
                 </div>
             </div>
 
@@ -254,8 +278,12 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
                                       planState?.flutterwaveConfig?.totalAmount || planState?.flutterwaveConfig?.amount,
                                   ),
                               )
-                            : separateNum(Number(planState?.stripeConfig?.amount))
-                    } ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
+                            : separateNum(centToDollarCent(Number(planState?.stripeConfig?.amount))[0])
+                    } ${getRealCurrency(tenantInfo?.currency || '')} ${
+                        getRealCurrency(tenantInfo?.currency || '') === 'USD'
+                            ? `${centToDollarCent(Number(planState?.stripeConfig?.amount))[1]} Cents`
+                            : ''
+                    }`}</span>
                 </div>
             </div>
 

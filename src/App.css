@@ -1292,3 +1292,7 @@ a object {
 .form-check-input {
   margin-top: 0.2em !important;
 }
+
+.cancel-pointer {
+  pointer-events: none !important;
+}
