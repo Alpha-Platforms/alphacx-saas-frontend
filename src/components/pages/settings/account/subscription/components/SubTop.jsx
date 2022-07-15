@@ -74,11 +74,9 @@ function SubTop({ tenantInfo, subscription, totalUsers }) {
                     <span>
                         {!subscription
                             ? 'N/A'
-                            : `${totalUsers?.length} ${
+                            : `${totalUsers} ${
                                   subscription?.plan?.name === 'Alpha Trial'
-                                      ? 'of  ∞'
-                                      : subscription?.plan?.name === 'Free Plan'
-                                      ? 'of  3'
+                                      ? 'of ∞'
                                       : moment(subscription?.subscription?.end_date).isBefore(new Date())
                                       ? ''
                                       : `of ${subscription?.subscription?.no_of_users || 'N/A'}`
