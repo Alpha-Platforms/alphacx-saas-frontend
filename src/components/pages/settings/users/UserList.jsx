@@ -60,8 +60,12 @@ function UserList({
     const [importModalShow, setImportModalShow] = useState(false);
     const [userLoading] = useState(false);
     const [combinedUsers, setCombinedUsers] = useState([]);
-    const [currentUserIdToDelete, setCurrentUserIdToDelete] = useState(null);
+    const [currentUserToDelete, setCurrentUserToDelete] = useState({
+        id: '',
+        role: '',
+    });
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [deleting, setDeleting] = useState(false);
 
     // const activatedUsers = combinedUsers.filter((user) => user?.isActivated);
 
@@ -180,21 +184,45 @@ function UserList({
     }
 
     const closeDeleteModal = () => {
-        setCurrentUserIdToDelete(null);
+        setDeleting(false);
+        setCurrentUserToDelete({
+            id: '',
+            role: '',
+        });
         setOpenDeleteModal(false);
     };
 
     const handleUserDelete = async () => {
-        const res = await httpDelete(`users/${currentUserIdToDelete}`);
+        const { id, role } = currentUserToDelete;
+        setDeleting(true);
+        const res = await httpDelete(`users/${id}`);
         if (res?.status === 'success') {
+            switch (role) {
+                case 'Administrator':
+                    getAdmins();
+                    break;
+                case 'Supervisor':
+                    getSupervisors();
+                    break;
+                case 'Agent':
+                    getAgents();
+                    break;
+                case 'Observers':
+                    getObservers();
+                    break;
+                default:
+            }
             NotificationManager.success('User deleted successfully', 'Success');
             closeDeleteModal();
             getSubscription();
         }
     };
 
-    const triggerUserDelete = (id) => {
-        setCurrentUserIdToDelete(id);
+    const triggerUserDelete = (id, role) => {
+        setCurrentUserToDelete({
+            id,
+            role,
+        });
         setOpenDeleteModal(true);
     };
 
@@ -359,7 +387,7 @@ function UserList({
                                                     <button
                                                         type="submit"
                                                         className="user-delete-btn ms-2 d-inline-block"
-                                                        onClick={() => triggerUserDelete(rowData?.userId)}
+                                                        onClick={() => triggerUserDelete(rowData?.userId, rowData.role)}
                                                     >
                                                         <DeleteRedIcon />
                                                     </button>
@@ -425,9 +453,9 @@ function UserList({
                                     <button
                                         type="button"
                                         className="btn ms-2 f-12 bg-custom px-4"
-                                        onClick={() => handleUserDelete()}
+                                        onClick={() => !deleting && handleUserDelete()}
                                     >
-                                        Confirm
+                                        {deleting ? 'Deleting...' : 'Confirm'}
                                     </button>
                                 </div>
                             </div>
