@@ -190,7 +190,7 @@ function CreateUserModal({ createModalShow, setCreateModalShow, groups, addAgent
                                 />
                                 {
                                     /* simple validation */
-                                    simpleValidator.current.message('Last name', modalInputs.lastname, 'required')
+                                    simpleValidator.current.message('Last name', modalInputs.lastName, 'required')
                                 }
                             </div>
                         </div>

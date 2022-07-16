@@ -207,7 +207,7 @@ function UserList({
                 case 'Agent':
                     getAgents();
                     break;
-                case 'Observers':
+                case 'Observer':
                     getObservers();
                     break;
                 default:
@@ -248,10 +248,7 @@ function UserList({
                         <p className="text-custom-gray f-12" />
                     </div>
                     <div className="mt-3">
-                        {(tenantSubscription?.plan?.name === 'Free Plan' && totalUsers > 3) ||
-                        (tenantSubscription?.plan?.name !== 'Free Plan' &&
-                            tenantSubscription?.plan?.name !== 'Alpha Trial' &&
-                            totalUsers > numOfSubUsers) ? (
+                        {!tenantSubscription?.plan?.is_trial && totalUsers > numOfSubUsers ? (
                             <br />
                         ) : (
                             <AccessControl>

@@ -95,14 +95,14 @@ function Subscription({ subscription }) {
 
     // eslint-disable-next-line consistent-return
     const handleActivateFreePlan = async () => {
-        if (subExpired && subscription?.plan?.name !== 'Free Plan') {
+        if (subExpired && !subscription?.plan?.is_free) {
             // user is not in trial or alpha plan
 
             // const res = await httpPatch(`subscriptions/free-plan`, { tenantId: window.localStorage.getItem('tenantId'), planId: subscription?.plan?.id || "" });
 
             const res = await httpPatch(`subscriptions/free-plan`, {
                 tenantId: window.localStorage.getItem('tenantId'),
-                planId: Array.isArray(plans) ? plans.find((x) => x?.name === 'Free Plan')?.id : '',
+                planId: Array.isArray(plans) ? plans.find((x) => x?.is_free)?.id : '',
             });
 
             if (res?.status === 'success') {
@@ -188,18 +188,16 @@ function Subscription({ subscription }) {
                                                 ?.filter((item) => item?.plan_type === 'main')
                                                 .map((item) => (
                                                     <div
-                                                        className={`${
-                                                            item?.name === 'Free Plan' ? 'free-plan' : 'alpha-plan'
-                                                        } ${
-                                                            !(subExpired && subscription?.plan?.name !== 'Free Plan') &&
-                                                            item?.name === 'Free Plan'
+                                                        className={`${item?.is_free ? 'free-plan' : 'alpha-plan'} ${
+                                                            !(subExpired && !subscription?.plan?.is_free) &&
+                                                            item?.is_free
                                                                 ? 'free-plan-disabled'
                                                                 : ''
                                                         }`}
                                                     >
                                                         <div>
                                                             <p>{item?.name}</p>
-                                                            {item?.name === 'Free Plan' ? (
+                                                            {item?.is_free ? (
                                                                 <h3>Free</h3>
                                                             ) : (
                                                                 <h3>
@@ -251,15 +249,15 @@ function Subscription({ subscription }) {
                                                                 </li>
                                                             </ul>
                                                             <div>
-                                                                {item?.name === 'Free Plan' ? (
+                                                                {item?.is_free ? (
                                                                     <button
                                                                         type="button"
                                                                         className="btn btn-outline-primary"
                                                                         disabled={
                                                                             !(
                                                                                 subExpired &&
-                                                                                subscription?.plan?.name !== 'Free Plan'
-                                                                            ) && item?.name === 'Free Plan'
+                                                                                !subscription?.plan?.is_free
+                                                                            ) && item?.is_free
                                                                         }
                                                                         onClick={() => setOpenModal(true)}
                                                                     >
