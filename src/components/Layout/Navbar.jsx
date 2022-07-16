@@ -446,10 +446,14 @@ function Navbar({ pageName, user }) {
                                 remove others.
                             </span>{' '}
                             <Link
-                                to="/settings/account?tab=subscription"
+                                to={
+                                    location.pathname === '/settings/users'
+                                        ? '/settings/account?tab=subscription'
+                                        : '/settings/users'
+                                }
                                 className="btn btn-sm bg-at-blue-light sub-notif-get"
                             >
-                                Subscription
+                                {location.pathname === '/settings/users' ? 'Subscription' : 'Users'}
                             </Link>{' '}
                             <button
                                 type="button"
