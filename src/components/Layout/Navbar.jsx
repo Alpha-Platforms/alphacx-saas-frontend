@@ -360,11 +360,7 @@ function Navbar({ pageName, user }) {
 
     const numOfSubUsers = tenantSubscription?.subscription?.no_of_users;
     const totalUsers = tenantSubscription?.subscription?.totalUsers;
-    const shouldShowUserExceededNotif =
-        (tenantSubscription?.plan?.name === 'Free Plan' && totalUsers > 3) ||
-        (tenantSubscription?.plan?.name !== 'Free Plan' &&
-            tenantSubscription?.plan?.name !== 'Alpha Trial' &&
-            totalUsers > numOfSubUsers);
+    const shouldShowUserExceededNotif = !tenantSubscription?.plan?.is_trial && totalUsers > numOfSubUsers;
 
     const endDate = tenantSubscription?.subscription?.end_date;
     const planName = tenantSubscription?.plan?.name;
@@ -374,8 +370,7 @@ function Navbar({ pageName, user }) {
     const hoursLeft = moment(endDate).diff(moment(new Date()), 'hours');
     const minutesLeft = moment(endDate).diff(moment(new Date()), 'minutes');
     const subExpired = moment(endDate).isBefore(new Date());
-    const shouldShowPlanExpiredNotif =
-        (tenantSubscription?.subscription?.is_trial || tenantSubscription?.plan?.name !== 'Free Plan') && daysLeft <= 8;
+    const shouldShowPlanExpiredNotif = !tenantSubscription?.plan?.is_free && daysLeft <= 8;
 
     useEffect(() => {
         if (shouldShowPlanExpiredNotif) {
@@ -451,10 +446,14 @@ function Navbar({ pageName, user }) {
                                 remove others.
                             </span>{' '}
                             <Link
-                                to="/settings/account?tab=subscription"
+                                to={
+                                    location.pathname === '/settings/users'
+                                        ? '/settings/account?tab=subscription'
+                                        : '/settings/users'
+                                }
                                 className="btn btn-sm bg-at-blue-light sub-notif-get"
                             >
-                                Subscription
+                                {location.pathname === '/settings/users' ? 'Subscription' : 'Users'}
                             </Link>{' '}
                             <button
                                 type="button"

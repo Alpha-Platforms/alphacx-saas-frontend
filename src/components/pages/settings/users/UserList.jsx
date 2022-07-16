@@ -13,6 +13,7 @@ import { TablePagination } from '@material-ui/core';
 import { Link, useLocation } from 'react-router-dom';
 import moment from 'moment';
 import Swal from 'sweetalert2';
+import { Modal } from 'react-responsive-modal';
 import { NotificationManager } from 'react-notifications';
 import tableIcons from '../../../../assets/materialicons/tableIcons';
 import { updateUser } from '../../../../reduxstore/actions/userActions';
@@ -29,6 +30,8 @@ import { getObservers } from '../../../../reduxstore/actions/observerActions';
 import '../../../../styles/Setting.css';
 import AccessControl from '../../auth/accessControl';
 import { getSubscription } from '../../../../reduxstore/actions/subscriptionAction';
+import { ReactComponent as DeleteRedIcon } from '../../../../assets/icons/Delete-red.svg';
+import { httpDelete } from '../../../../helpers/httpMethods';
 
 function UserList({
     meta,
@@ -57,6 +60,12 @@ function UserList({
     const [importModalShow, setImportModalShow] = useState(false);
     const [userLoading] = useState(false);
     const [combinedUsers, setCombinedUsers] = useState([]);
+    const [currentUserToDelete, setCurrentUserToDelete] = useState({
+        id: '',
+        role: '',
+    });
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [deleting, setDeleting] = useState(false);
 
     // const activatedUsers = combinedUsers.filter((user) => user?.isActivated);
 
@@ -174,6 +183,49 @@ function UserList({
         });
     }
 
+    const closeDeleteModal = () => {
+        setDeleting(false);
+        setCurrentUserToDelete({
+            id: '',
+            role: '',
+        });
+        setOpenDeleteModal(false);
+    };
+
+    const handleUserDelete = async () => {
+        const { id, role } = currentUserToDelete;
+        setDeleting(true);
+        const res = await httpDelete(`users/${id}`);
+        if (res?.status === 'success') {
+            switch (role) {
+                case 'Administrator':
+                    getAdmins();
+                    break;
+                case 'Supervisor':
+                    getSupervisors();
+                    break;
+                case 'Agent':
+                    getAgents();
+                    break;
+                case 'Observer':
+                    getObservers();
+                    break;
+                default:
+            }
+            NotificationManager.success('User deleted successfully', 'Success');
+            closeDeleteModal();
+            getSubscription();
+        }
+    };
+
+    const triggerUserDelete = (id, role) => {
+        setCurrentUserToDelete({
+            id,
+            role,
+        });
+        setOpenDeleteModal(true);
+    };
+
     return (
         <div>
             {userLoading && (
@@ -196,10 +248,7 @@ function UserList({
                         <p className="text-custom-gray f-12" />
                     </div>
                     <div className="mt-3">
-                        {(tenantSubscription?.plan?.name === 'Free Plan' && totalUsers > 3) ||
-                        (tenantSubscription?.plan?.name !== 'Free Plan' &&
-                            tenantSubscription?.plan?.name !== 'Alpha Trial' &&
-                            totalUsers > numOfSubUsers) ? (
+                        {!tenantSubscription?.plan?.is_trial && totalUsers > numOfSubUsers ? (
                             <br />
                         ) : (
                             <AccessControl>
@@ -331,6 +380,15 @@ function UserList({
                                                     readOnly
                                                     type="checkbox"
                                                 />
+                                                {!rowData.isActivated && (
+                                                    <button
+                                                        type="submit"
+                                                        className="user-delete-btn ms-2 d-inline-block"
+                                                        onClick={() => triggerUserDelete(rowData?.userId, rowData.role)}
+                                                    >
+                                                        <DeleteRedIcon />
+                                                    </button>
+                                                )}
                                             </div>
                                         ),
                                     },
@@ -378,6 +436,27 @@ function UserList({
                                 }}
                             />
                         </MuiThemeProvider>
+                        <Modal open={openDeleteModal} onClose={() => closeDeleteModal(false)} center>
+                            <div className="p-5 w-100">
+                                <h6 className="mb-4">Are you sure you want to delete this user?</h6>
+                                <div className="d-flex justify-content-center">
+                                    <button
+                                        type="button"
+                                        className="btn f-12 bg-outline-custom cancel px-4"
+                                        onClick={() => closeDeleteModal()}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn ms-2 f-12 bg-custom px-4"
+                                        onClick={() => !deleting && handleUserDelete()}
+                                    >
+                                        {deleting ? 'Deleting...' : 'Confirm'}
+                                    </button>
+                                </div>
+                            </div>
+                        </Modal>
                     </div>
                 ) : (
                     <div className="cust-table-loader">

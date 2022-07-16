@@ -171,11 +171,7 @@ export const redirectToSub = (history, location, tenantSubscription) => {
         const endDate = tenantSubscription?.subscription?.end_date;
         const subExpired = moment(endDate).isBefore(new Date());
 
-        const shouldShowUserExceededNotif =
-            (tenantSubscription?.plan?.name === 'Free Plan' && totalUsers > 3) ||
-            (tenantSubscription?.plan?.name !== 'Free Plan' &&
-                tenantSubscription?.plan?.name !== 'Alpha Trial' &&
-                totalUsers > numOfSubUsers);
+        const shouldShowUserExceededNotif = !tenantSubscription?.plan?.is_trial && totalUsers > numOfSubUsers;
         // history is useHistory from react router dom
         if (history && location && tenantSubscription && location.pathname !== '/settings/account') {
             if (shouldShowUserExceededNotif && location.pathname !== '/settings/users') {
