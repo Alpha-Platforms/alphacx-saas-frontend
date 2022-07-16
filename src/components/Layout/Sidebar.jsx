@@ -39,11 +39,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
     const numOfSubUsers = tenantSubscription?.subscription?.no_of_users;
     const totalUsers = tenantSubscription?.subscription?.totalUsers;
 
-    const shouldShowUserExceededNotif =
-        (tenantSubscription?.plan?.name === 'Free Plan' && totalUsers > 3) ||
-        (tenantSubscription?.plan?.name !== 'Free Plan' &&
-            tenantSubscription?.plan?.name !== 'Alpha Trial' &&
-            totalUsers > numOfSubUsers);
+    const shouldShowUserExceededNotif = !tenantSubscription?.plan?.is_trial && totalUsers > numOfSubUsers;
 
     const customBrowserRouter = (path) => {
         if (!path) return;
