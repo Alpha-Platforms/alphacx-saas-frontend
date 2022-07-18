@@ -183,6 +183,7 @@ function UserList({
                 container: 'user-activation-container',
                 popup: 'user-activation-popup',
                 validationMessage: 'user-activation-validation-msg',
+                htmlContainer: 'user-activation-html-container',
             },
         }).then((result) => {
             if (result.isConfirmed) {
