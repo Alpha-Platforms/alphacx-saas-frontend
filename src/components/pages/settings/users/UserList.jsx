@@ -169,13 +169,21 @@ function UserList({
         if (totalActiveUsers >= numOfSubUsers && !isActivated) return;
 
         Swal.fire({
-            title: isActivated ? 'Deactivate?' : 'Activate?',
-            text: `Do you want to ${isActivated ? 'deactivate' : 'activate'} ${wordCapitalize(name)}`,
+            // title: isActivated ? 'Deactivate?' : 'Activate?',
+            title: '',
+            text: `Do you want to ${isActivated ? 'deactivate' : 'activate'} ${wordCapitalize(name)}?`,
             showCancelButton: true,
             confirmButtonColor: '#006298',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
+            cancelButtonColor: '#ffffff',
+            cancelButtonText: 'Cancel',
+            confirmButtonText: 'Confirm',
+            customClass: {
+                cancelButton: 'user-activation-cancel-btn',
+                confirmButton: 'user-activation-confirm-btn',
+                container: 'user-activation-container',
+                popup: 'user-activation-popup',
+                validationMessage: 'user-activation-validation-msg',
+            },
         }).then((result) => {
             if (result.isConfirmed) {
                 changeActiveState(id, isActivated, role);

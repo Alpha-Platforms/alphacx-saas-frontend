@@ -169,3 +169,16 @@
   border-radius: 0 !important;
 }
 
+.user-activation-cancel-btn, 
+.user-activation-confirm-btn {
+  font-size: 13px !important;
+}
+
+.user-activation-cancel-btn {
+  color: #006298 !important;
+}
+
+.user-activation-popup {
+  width: auto !important;
+  padding: 1rem 0.6rem 2rem !important;
+}
