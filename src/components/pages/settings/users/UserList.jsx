@@ -58,14 +58,8 @@ function UserList({
     const [createModalShow, setCreateModalShow] = useState(false);
     const [inviteModalShow, setInviteModalShow] = useState(false);
     const [importModalShow, setImportModalShow] = useState(false);
-    const [userLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [combinedUsers, setCombinedUsers] = useState([]);
-    const [currentUserToDelete, setCurrentUserToDelete] = useState({
-        id: '',
-        role: '',
-    });
-    const [openDeleteModal, setOpenDeleteModal] = useState(false);
-    const [deleting, setDeleting] = useState(false);
 
     // const activatedUsers = combinedUsers.filter((user) => user?.isActivated);
 
@@ -142,6 +136,7 @@ function UserList({
     });
 
     const changeActiveState = async (id, isActivated, role) => {
+        setLoading(true);
         const userRes = await updateUser({
             id,
             role,
@@ -157,6 +152,7 @@ function UserList({
         } else {
             NotificationManager.error('Something went wrong', 'Error');
         }
+        setLoading(false);
     };
 
     const numOfSubUsers = tenantSubscription?.subscription?.no_of_users;
@@ -167,15 +163,23 @@ function UserList({
         const { name, isActivated, id, role } = this;
         if (authenticatedUserRole !== 'Administrator' && authenticatedUserRole !== 'Supervisor') return;
         if (totalActiveUsers >= numOfSubUsers && !isActivated) return;
-
         Swal.fire({
-            title: isActivated ? 'Deactivate?' : 'Activate?',
-            text: `Do you want to ${isActivated ? 'deactivate' : 'activate'} ${wordCapitalize(name)}`,
+            // title: isActivated ? 'Deactivate?' : 'Activate?',
+            title: '',
+            text: `Do you want to ${isActivated ? 'deactivate' : 'activate'} ${wordCapitalize(name)}?`,
             showCancelButton: true,
             confirmButtonColor: '#006298',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
+            cancelButtonColor: '#ffffff',
+            cancelButtonText: 'Cancel',
+            confirmButtonText: 'Confirm',
+            customClass: {
+                cancelButton: 'user-activation-cancel-btn',
+                confirmButton: 'user-activation-confirm-btn',
+                container: 'user-activation-container',
+                popup: 'user-activation-popup',
+                validationMessage: 'user-activation-validation-msg',
+                htmlContainer: 'user-activation-html-container',
+            },
         }).then((result) => {
             if (result.isConfirmed) {
                 changeActiveState(id, isActivated, role);
@@ -183,18 +187,8 @@ function UserList({
         });
     }
 
-    const closeDeleteModal = () => {
-        setDeleting(false);
-        setCurrentUserToDelete({
-            id: '',
-            role: '',
-        });
-        setOpenDeleteModal(false);
-    };
-
-    const handleUserDelete = async () => {
-        const { id, role } = currentUserToDelete;
-        setDeleting(true);
+    const handleUserDelete = async (id, name, role) => {
+        setLoading(true);
         const res = await httpDelete(`users/${id}`);
         if (res?.status === 'success') {
             switch (role) {
@@ -213,24 +207,41 @@ function UserList({
                 default:
             }
             NotificationManager.success('User deleted successfully', 'Success');
-            closeDeleteModal();
             getSubscription();
         }
+        setLoading(false);
     };
 
-    const triggerUserDelete = (id, role) => {
-        setCurrentUserToDelete({
-            id,
-            role,
+    const triggerUserDelete = (id, name, role) => {
+        Swal.fire({
+            // title: isActivated ? 'Deactivate?' : 'Activate?',
+            title: '',
+            text: `Do you want to delete ${wordCapitalize(name)}?`,
+            showCancelButton: true,
+            confirmButtonColor: '#ff0e0e',
+            cancelButtonColor: '#ffffff',
+            cancelButtonText: 'Cancel',
+            confirmButtonText: 'Confirm',
+            customClass: {
+                cancelButton: 'user-activation-cancel-btn',
+                confirmButton: 'user-activation-confirm-btn',
+                container: 'user-activation-container',
+                popup: 'user-activation-popup',
+                validationMessage: 'user-activation-validation-msg',
+                htmlContainer: 'user-activation-html-container',
+            },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                handleUserDelete(id, name, role);
+            }
         });
-        setOpenDeleteModal(true);
     };
 
     return (
         <div>
-            {userLoading && (
+            {loading && (
                 <div className="cust-table-loader">
-                    <MoonLoader loading={userLoading} color="#006298" size={30} />
+                    <MoonLoader loading={loading} color="#006298" size={30} />
                 </div>
             )}
             <div className="card card-body bg-white border-0 p-0 mb-4">
@@ -384,7 +395,13 @@ function UserList({
                                                     <button
                                                         type="submit"
                                                         className="user-delete-btn ms-2 d-inline-block"
-                                                        onClick={() => triggerUserDelete(rowData?.userId, rowData.role)}
+                                                        onClick={() =>
+                                                            triggerUserDelete(
+                                                                rowData?.userId,
+                                                                rowData.name,
+                                                                rowData.role,
+                                                            )
+                                                        }
                                                     >
                                                         <DeleteRedIcon />
                                                     </button>
@@ -436,27 +453,6 @@ function UserList({
                                 }}
                             />
                         </MuiThemeProvider>
-                        <Modal open={openDeleteModal} onClose={() => closeDeleteModal(false)} center>
-                            <div className="p-5 w-100">
-                                <h6 className="mb-4">Are you sure you want to delete this user?</h6>
-                                <div className="d-flex justify-content-center">
-                                    <button
-                                        type="button"
-                                        className="btn f-12 bg-outline-custom cancel px-4"
-                                        onClick={() => closeDeleteModal()}
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn ms-2 f-12 bg-custom px-4"
-                                        onClick={() => !deleting && handleUserDelete()}
-                                    >
-                                        {deleting ? 'Deleting...' : 'Confirm'}
-                                    </button>
-                                </div>
-                            </div>
-                        </Modal>
                     </div>
                 ) : (
                     <div className="cust-table-loader">
