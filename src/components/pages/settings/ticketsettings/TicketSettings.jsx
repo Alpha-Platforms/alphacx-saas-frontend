@@ -47,19 +47,23 @@ function TicketSettings() {
                                 Ticket Distribution
                             </button>
                         </li>
-                        <li className="nav-item" role="presentation">
-                            <button
-                                className={`nav-link px-0 me-5 ${tabKey === 'ticket-status' && 'active'} text-muted`}
-                                id="pills-ticket-tab"
-                                onClick={() => setTabKey('ticket-status')}
-                                type="button"
-                                role="tab"
-                                aria-controls="ticket-categoriese-view"
-                                aria-selected="false"
-                            >
-                                Ticket Stage
-                            </button>
-                        </li>
+                        {hasFeatureAccess('status') && (
+                            <li className="nav-item" role="presentation">
+                                <button
+                                    className={`nav-link px-0 me-5 ${
+                                        tabKey === 'ticket-status' && 'active'
+                                    } text-muted`}
+                                    id="pills-ticket-tab"
+                                    onClick={() => setTabKey('ticket-status')}
+                                    type="button"
+                                    role="tab"
+                                    aria-controls="ticket-categoriese-view"
+                                    aria-selected="false"
+                                >
+                                    Ticket Stage
+                                </button>
+                            </li>
+                        )}
                         {hasFeatureAccess('categories') && (
                             <>
                                 <li className="nav-item px-0" role="presentation">
@@ -125,7 +129,7 @@ function TicketSettings() {
                         </Tab>
 
                         <Tab eventKey="ticket-status" className="">
-                            <TicketStatusTab />
+                            {hasFeatureAccess('status') && <TicketStatusTab />}
                         </Tab>
 
                         {/* Ticket Field Tab */}
