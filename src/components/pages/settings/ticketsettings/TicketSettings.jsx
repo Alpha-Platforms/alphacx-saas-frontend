@@ -1,29 +1,23 @@
-/* eslint-disable */
 // @ts-nocheck
-import { useState, useEffect } from 'react';
-//
+import React, { useState, useEffect } from 'react';
 import { Tabs, Tab } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
-//
 import ChannelsTab from './components/ChannelsTab';
 import NewCategoryTab from './components/NewCategoryTab';
 import TicketStatusTab from './components/TicketStatusTab';
 import TicketSettingsTab from './components/TicketSettingsTab';
 import TicketCategoriesTab from './components/TicketCategoriesTab';
-//
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
+import { hasFeatureAccess } from '../../../../helper';
 
-function TicketSettings(props) {
+function TicketSettings() {
     const location = useLocation();
-    //
-    const [tabKey, setTabKey] = useState('ticket-categories');
-    //
+    const [tabKey, setTabKey] = useState(hasFeatureAccess('categories') ? 'ticket-categories' : 'ticket-settings');
     useEffect(() => {
         if (location.state && location.state.hasOwnProperty('historyTabKey')) {
             setTabKey(location.state.historyTabKey);
         }
     }, [location]);
-    //
     return (
         <div>
             <div className="card card-body bg-white border-0 p-0 mb-4">
@@ -66,47 +60,55 @@ function TicketSettings(props) {
                                 Ticket Stage
                             </button>
                         </li>
-                        <li className="nav-item px-0" role="presentation">
-                            <button
-                                className={`nav-link px-0 me-5 ${
-                                    tabKey === 'ticket-categories' && 'active'
-                                } text-muted`}
-                                id="pills-ticket-tab"
-                                onClick={() => setTabKey('ticket-categories')}
-                                type="button"
-                                role="tab"
-                                aria-controls="ticket-categoriese-view"
-                                aria-selected="false"
-                            >
-                                Ticket Categories
-                            </button>
-                        </li>
-                        <li className="nav-item" role="presentation">
-                            <button
-                                className={`nav-link px-0 me-5 ${tabKey === 'new-category' && 'active'} text-muted`}
-                                id="pills-ticket-tab"
-                                onClick={() => setTabKey('new-category')}
-                                type="button"
-                                role="tab"
-                                aria-controls="ticket-categoriese-view"
-                                aria-selected="false"
-                            >
-                                Add Category
-                            </button>
-                        </li>
-                        <li className="nav-item" role="presentation">
-                            <button
-                                className={`nav-link px-0 ${tabKey === 'channels' && 'active'} text-muted`}
-                                id="pills-channels-tab"
-                                onClick={() => setTabKey('channels')}
-                                type="button"
-                                role="tab"
-                                aria-controls="ticket-channels-view"
-                                aria-selected="false"
-                            >
-                                Channels
-                            </button>
-                        </li>
+                        {hasFeatureAccess('categories') && (
+                            <>
+                                <li className="nav-item px-0" role="presentation">
+                                    <button
+                                        className={`nav-link px-0 me-5 ${
+                                            tabKey === 'ticket-categories' && 'active'
+                                        } text-muted`}
+                                        id="pills-ticket-tab"
+                                        onClick={() => setTabKey('ticket-categories')}
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="ticket-categoriese-view"
+                                        aria-selected="false"
+                                    >
+                                        Ticket Categories
+                                    </button>
+                                </li>
+                                <li className="nav-item" role="presentation">
+                                    <button
+                                        className={`nav-link px-0 me-5 ${
+                                            tabKey === 'new-category' && 'active'
+                                        } text-muted`}
+                                        id="pills-ticket-tab"
+                                        onClick={() => setTabKey('new-category')}
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="ticket-categoriese-view"
+                                        aria-selected="false"
+                                    >
+                                        Add Category
+                                    </button>
+                                </li>
+                            </>
+                        )}
+                        {hasFeatureAccess('channels') && (
+                            <li className="nav-item" role="presentation">
+                                <button
+                                    className={`nav-link px-0 ${tabKey === 'channels' && 'active'} text-muted`}
+                                    id="pills-channels-tab"
+                                    onClick={() => setTabKey('channels')}
+                                    type="button"
+                                    role="tab"
+                                    aria-controls="ticket-channels-view"
+                                    aria-selected="false"
+                                >
+                                    Channels
+                                </button>
+                            </li>
+                        )}
                     </ul>
                 </div>
 
@@ -122,20 +124,20 @@ function TicketSettings(props) {
                             <TicketSettingsTab />
                         </Tab>
 
-                        {/* Ticket Field Tab */}
-                        <Tab eventKey="ticket-categories" className="">
-                            <TicketCategoriesTab />
-                        </Tab>
-
                         <Tab eventKey="ticket-status" className="">
                             <TicketStatusTab />
                         </Tab>
 
-                        <Tab eventKey="new-category" className="">
-                            <NewCategoryTab />
+                        {/* Ticket Field Tab */}
+                        <Tab eventKey="ticket-categories" className="">
+                            {hasFeatureAccess('categories') && <TicketCategoriesTab />}
                         </Tab>
+                        <Tab eventKey="new-category" className="">
+                            {hasFeatureAccess('categories') && <NewCategoryTab />}
+                        </Tab>
+
                         <Tab eventKey="channels" className="">
-                            <ChannelsTab />
+                            {hasFeatureAccess('channels') && <ChannelsTab />}
                         </Tab>
                     </Tabs>
                 </div>
