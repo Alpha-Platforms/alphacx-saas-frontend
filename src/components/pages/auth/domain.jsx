@@ -106,7 +106,7 @@ function Login({ match, history }) {
                     </div>
 
                     <div className="haveAnAccou">
-                        <a href="/register">First time user? Sign up</a>
+                        <a href="/register">First Time user? Sign up</a>
                     </div>
 
                     <div className="submit-auth-btn">
