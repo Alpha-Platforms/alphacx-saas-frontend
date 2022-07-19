@@ -165,11 +165,13 @@ const SiteRouter = connect(mapStateToProps, {
                                     <Route exact path="/knowledge-base/:category/:slug" component={Article} />
                                 )}{' '}
                                 {/* help pages end */}
-                                <Route
-                                    exact
-                                    path="/feedback/:domain/:ticketId/:customerId"
-                                    component={RatingsForm}
-                                />{' '}
+                                {hasFeatureAccess('ratings') && (
+                                    <Route
+                                        exact
+                                        path="/feedback/:domain/:ticketId/:customerId"
+                                        component={RatingsForm}
+                                    />
+                                )}{' '}
                                 {/* help pages end */}
                                 <Route exact path="/account-verified" component={AccountVerified} />{' '}
                                 {/* Customer Portal */}
@@ -461,12 +463,14 @@ const SiteRouter = connect(mapStateToProps, {
                                         component={WhatsappIntegration}
                                     />
                                 )}
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/ratings"
-                                    pageName="Ratings and Feedback"
-                                    component={RatingsSettings}
-                                />
+                                {hasFeatureAccess('ratings') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/ratings"
+                                        pageName="Ratings and Feedback"
+                                        component={RatingsSettings}
+                                    />
+                                )}
                                 <Route exact path="/instagram" pageName="Ratings and Feedback" component={Instagram} />
                                 {(hasFeatureAccess('facebook') || hasFeatureAccess('instagram')) && (
                                     <Route

@@ -212,25 +212,27 @@ function SettingsHome({ signedUser }) {
                     </AccessControl>
                 )}
 
-                <AccessControl>
-                    <Col sm={6} md={4} className="settings-menu-item">
-                        <div className="border rounded bg-light">
-                            <Link to="settings/ratings" className="d-block cursor text-decoration-none">
-                                <div className="d-flex p-md-4">
-                                    <div className="">
-                                        <img src={ChartBlueIcon} alt="" />
+                {hasFeatureAccess('ratings') && (
+                    <AccessControl>
+                        <Col sm={6} md={4} className="settings-menu-item">
+                            <div className="border rounded bg-light">
+                                <Link to="settings/ratings" className="d-block cursor text-decoration-none">
+                                    <div className="d-flex p-md-4">
+                                        <div className="">
+                                            <img src={ChartBlueIcon} alt="" />
+                                        </div>
+                                        <div className="ms-3">
+                                            <h6 className="text-dark mb-0">Ratings and Review</h6>
+                                            <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                                                Setup ratings for customer feedback.
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="ms-3">
-                                        <h6 className="text-dark mb-0">Ratings and Review</h6>
-                                        <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                                            Setup ratings for customer feedback.
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </Col>
-                </AccessControl>
+                                </Link>
+                            </div>
+                        </Col>
+                    </AccessControl>
+                )}
 
                 {hasFeatureAccess('fields') && (
                     <AccessControl>
