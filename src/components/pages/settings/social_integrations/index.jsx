@@ -127,268 +127,282 @@ function SocialIntegrations({ configs }) {
             </div>
             <div className="row g-3 mt-4 mb-5">
                 {/* integration columns starts */}
-                <div className="col-md-4 col-sm-6 col-12">
-                    <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
-                        <Link to="/settings/integrations/whatsapp" className="d-block cursor text-decoration-none">
-                            <div className="d-flex align-items-start p-md-4 p-3">
-                                <div className="w">
-                                    <img src={whatsappImg} alt="" width="38" />
-                                </div>
-                                <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
-                                    <div className="me-2">
-                                        <h6 className="text-dark mb-0">WhatsApp by Twilio</h6>
-                                        <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
-                                            Connect your users via WhatsApp
-                                        </p>
+                {hasFeatureAccess('whatsapp') && (
+                    <div className="col-md-4 col-sm-6 col-12">
+                        <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
+                            <Link to="/settings/integrations/whatsapp" className="d-block cursor text-decoration-none">
+                                <div className="d-flex align-items-start p-md-4 p-3">
+                                    <div className="w">
+                                        <img src={whatsappImg} alt="" width="38" />
                                     </div>
-                                    <div className="">
-                                        <Badge
-                                            className={`${
-                                                !whatsappConnected
-                                                    ? 'acx-bg-primary  text-white'
-                                                    : 'acx-bg-gray-100 text-muted fw-light'
-                                            } px-3 py-2`}
-                                        >
-                                            {!whatsappConnected ? 'Connect' : 'Disconnect'}
-                                        </Badge>
-                                    </div>
-                                </div>
-                            </div>
-                        </Link>
-                    </div>
-                </div>
-
-                <div className="col-md-4 col-sm-6 col-12">
-                    <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
-                        {/* <Link to="/settings/integrations/facebook" className="d-block cursor text-decoration-none"> */}
-
-                        <a
-                            href="#"
-                            className="d-block cursor text-decoration-none"
-                            role="button"
-                            onClick={(e) => {
-                                setPlatform('facebook');
-                                facebookConnected ? setIsDeleteConfirmed(true) : goToConnector(e, 'facebook');
-                            }}
-                        >
-                            <div className="d-flex align-items-start p-md-4 p-3">
-                                <div className="w">
-                                    <img src={facebookImg} alt="" width="38" />
-                                </div>
-                                <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
-                                    <div className="me-2">
-                                        <h6 className="text-dark mb-0">Facebook</h6>
-                                        <p
-                                            className={`acx-fs-8 lh-base mt-1 mb-2  text-muted ${
-                                                facebookConnected && 'fw-bold'
-                                            }`}
-                                        >
-                                            {!facebookConnected
-                                                ? 'Connect your Business Facebook Page'
-                                                : configs.facebook_config?.page_name || 'Page not available'}
-                                        </p>
-                                    </div>
-                                    <div className="">
-                                        <Badge
-                                            className={`${
-                                                !facebookConnected
-                                                    ? 'acx-bg-primary  text-white'
-                                                    : 'acx-bg-gray-100 text-muted fw-light'
-                                            } px-3 py-2`}
-                                        >
-                                            {!facebookConnected ? 'Connect' : 'Disconnect'}
-                                        </Badge>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-                <div className="col-md-4 col-sm-6 col-12">
-                    <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
-                        {/* <Link to="/settings/integrations/facebook" className="d-block cursor text-decoration-none"> */}
-
-                        <a
-                            href="#"
-                            className="d-block cursor text-decoration-none"
-                            role="button"
-                            onClick={(e) => {
-                                setPlatform('instagram');
-                                instagramConnected ? setIsDeleteConfirmed(true) : goToConnector(e, 'instagram');
-                            }}
-                        >
-                            <div className="d-flex align-items-start p-md-4 p-3">
-                                <div className="w">
-                                    <img src={instagramImg} alt="" width="38" />
-                                </div>
-                                <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
-                                    <div className="me-2">
-                                        <h6 className="text-dark mb-0">Instagram</h6>
-                                        <p
-                                            className={`acx-fs-8 lh-base mt-1 mb-2  text-muted ${
-                                                instagramConnected && 'fw-bold'
-                                            }`}
-                                        >
-                                            {!instagramConnected
-                                                ? 'Connect your Business Instagram Page'
-                                                : configs.instagram_config?.page_name}
-                                        </p>
-                                    </div>
-                                    <div className="">
-                                        <Badge
-                                            className={`${
-                                                !instagramConnected
-                                                    ? 'acx-bg-primary  text-white'
-                                                    : 'acx-bg-gray-100 text-muted fw-light'
-                                            } px-3 py-2`}
-                                        >
-                                            {!instagramConnected ? 'Connect' : 'Disconnect'}
-                                        </Badge>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-                <div className="col-md-4 col-sm-6 col-12">
-                    <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
-                        <Link to="/settings/integrations/twitter" className="d-block cursor text-decoration-none">
-                            <div className="d-flex align-items-start p-md-4 p-3">
-                                <div className="w">
-                                    <img src={twitterImg} alt="" width="38" />
-                                </div>
-                                <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
-                                    <div className="me-2">
-                                        <h6 className="text-dark mb-0">
-                                            Twitter
-                                            <span
-                                                className="ms-1 text-white"
-                                                style={{
-                                                    fontSize: '0.6rem',
-                                                    padding: '2px 4px',
-                                                    background: '#1da1f1',
-                                                    borderRadius: '2px',
-                                                    verticalAlign: 'middle',
-                                                }}
+                                    <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
+                                        <div className="me-2">
+                                            <h6 className="text-dark mb-0">WhatsApp by Twilio</h6>
+                                            <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
+                                                Connect your users via WhatsApp
+                                            </p>
+                                        </div>
+                                        <div className="">
+                                            <Badge
+                                                className={`${
+                                                    !whatsappConnected
+                                                        ? 'acx-bg-primary  text-white'
+                                                        : 'acx-bg-gray-100 text-muted fw-light'
+                                                } px-3 py-2`}
                                             >
-                                                Beta
-                                            </span>
-                                        </h6>
-                                        <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
-                                            Receive and respond to Twitter direct messages as tickets
-                                        </p>
-                                    </div>
-                                    <div className="">
-                                        <Badge
-                                            className={`${
-                                                !smsConnected
-                                                    ? 'acx-bg-primary  text-white'
-                                                    : 'acx-bg-gray-100 text-muted fw-light'
-                                            } px-3 py-2`}
-                                        >
-                                            {!smsConnected ? 'Connect' : 'Disconnect'}
-                                        </Badge>
+                                                {!whatsappConnected ? 'Connect' : 'Disconnect'}
+                                            </Badge>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </Link>
+                            </Link>
+                        </div>
                     </div>
-                </div>
+                )}
 
-                <div className="col-md-4 col-sm-6 col-12">
-                    <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
-                        <Link to="/settings/integrations/sms" className="d-block cursor text-decoration-none">
-                            <div className="d-flex align-items-start p-md-4 p-3">
-                                <div className="w">
-                                    <img src={termiiImg} alt="" width="38" />
-                                </div>
-                                <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
-                                    <div className="me-2">
-                                        <h6 className="text-dark mb-0">SMS by Termii</h6>
-                                        <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
-                                            Connect your users via SMS
-                                        </p>
-                                    </div>
-                                    <div className="">
-                                        <Badge
-                                            className={`${
-                                                !smsConnected
-                                                    ? 'acx-bg-primary  text-white'
-                                                    : 'acx-bg-gray-100 text-muted fw-light'
-                                            } px-3 py-2`}
-                                        >
-                                            {!smsConnected ? 'Connect' : 'Disconnect'}
-                                        </Badge>
-                                    </div>
-                                </div>
-                            </div>
-                        </Link>
-                    </div>
-                </div>
+                {hasFeatureAccess('facebook') && (
+                    <div className="col-md-4 col-sm-6 col-12">
+                        <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
+                            {/* <Link to="/settings/integrations/facebook" className="d-block cursor text-decoration-none"> */}
 
-                <div className="col-md-4 col-sm-6 col-12">
-                    <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
-                        <Link to="/settings/integrations/email" className="d-block cursor text-decoration-none">
-                            <div className="d-flex align-items-start p-md-4 p-3">
-                                <div className="w">
-                                    <img src={MailLightIcon} alt="" width="38" />
-                                </div>
-                                <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
-                                    <div className="me-2">
-                                        <h6 className="text-dark mb-0">Email to Ticket</h6>
-                                        <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
-                                            Set up email to receive mails as tickets
-                                        </p>
+                            <a
+                                href="#"
+                                className="d-block cursor text-decoration-none"
+                                role="button"
+                                onClick={(e) => {
+                                    setPlatform('facebook');
+                                    facebookConnected ? setIsDeleteConfirmed(true) : goToConnector(e, 'facebook');
+                                }}
+                            >
+                                <div className="d-flex align-items-start p-md-4 p-3">
+                                    <div className="w">
+                                        <img src={facebookImg} alt="" width="38" />
                                     </div>
-                                    <div className="">
-                                        <Badge
-                                            className={`${
-                                                !emailConnected
-                                                    ? 'acx-bg-primary  text-white'
-                                                    : 'acx-bg-gray-100 text-muted fw-light'
-                                            } px-3 py-2`}
-                                        >
-                                            {!emailConnected ? 'Connect' : 'Disconnect'}
-                                        </Badge>
+                                    <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
+                                        <div className="me-2">
+                                            <h6 className="text-dark mb-0">Facebook</h6>
+                                            <p
+                                                className={`acx-fs-8 lh-base mt-1 mb-2  text-muted ${
+                                                    facebookConnected && 'fw-bold'
+                                                }`}
+                                            >
+                                                {!facebookConnected
+                                                    ? 'Connect your Business Facebook Page'
+                                                    : configs.facebook_config?.page_name || 'Page not available'}
+                                            </p>
+                                        </div>
+                                        <div className="">
+                                            <Badge
+                                                className={`${
+                                                    !facebookConnected
+                                                        ? 'acx-bg-primary  text-white'
+                                                        : 'acx-bg-gray-100 text-muted fw-light'
+                                                } px-3 py-2`}
+                                            >
+                                                {!facebookConnected ? 'Connect' : 'Disconnect'}
+                                            </Badge>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </Link>
+                            </a>
+                        </div>
                     </div>
-                </div>
+                )}
 
-                <div className="col-md-4 col-sm-6 col-12">
-                    <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
-                        <Link to="/settings/integrations/livechat" className="d-block cursor text-decoration-none">
-                            <div className="d-flex align-items-start p-md-4 p-3">
-                                <div className="w">
-                                    <img src={AccountLightIcon} alt="" width="34" />
-                                </div>
-                                <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
-                                    <div className="me-2">
-                                        <h6 className="text-dark mb-0"> Live Chat</h6>
-                                        <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
-                                            Configure livechat widget for your website and app
-                                        </p>
+                {hasFeatureAccess('instagram') && (
+                    <div className="col-md-4 col-sm-6 col-12">
+                        <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
+                            {/* <Link to="/settings/integrations/facebook" className="d-block cursor text-decoration-none"> */}
+
+                            <a
+                                href="#"
+                                className="d-block cursor text-decoration-none"
+                                role="button"
+                                onClick={(e) => {
+                                    setPlatform('instagram');
+                                    instagramConnected ? setIsDeleteConfirmed(true) : goToConnector(e, 'instagram');
+                                }}
+                            >
+                                <div className="d-flex align-items-start p-md-4 p-3">
+                                    <div className="w">
+                                        <img src={instagramImg} alt="" width="38" />
                                     </div>
-                                    <div className="">
-                                        <Badge
-                                            className={`${
-                                                !livechatConnected
-                                                    ? 'acx-bg-primary  text-white'
-                                                    : 'acx-bg-gray-100 text-muted fw-light'
-                                            } px-3 py-2`}
-                                        >
-                                            {!livechatConnected ? 'Connect' : 'Disconnect'}
-                                        </Badge>
+                                    <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
+                                        <div className="me-2">
+                                            <h6 className="text-dark mb-0">Instagram</h6>
+                                            <p
+                                                className={`acx-fs-8 lh-base mt-1 mb-2  text-muted ${
+                                                    instagramConnected && 'fw-bold'
+                                                }`}
+                                            >
+                                                {!instagramConnected
+                                                    ? 'Connect your Business Instagram Page'
+                                                    : configs.instagram_config?.page_name}
+                                            </p>
+                                        </div>
+                                        <div className="">
+                                            <Badge
+                                                className={`${
+                                                    !instagramConnected
+                                                        ? 'acx-bg-primary  text-white'
+                                                        : 'acx-bg-gray-100 text-muted fw-light'
+                                                } px-3 py-2`}
+                                            >
+                                                {!instagramConnected ? 'Connect' : 'Disconnect'}
+                                            </Badge>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </Link>
+                            </a>
+                        </div>
                     </div>
-                </div>
+                )}
+
+                {hasFeatureAccess('twitter') && (
+                    <div className="col-md-4 col-sm-6 col-12">
+                        <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
+                            <Link to="/settings/integrations/twitter" className="d-block cursor text-decoration-none">
+                                <div className="d-flex align-items-start p-md-4 p-3">
+                                    <div className="w">
+                                        <img src={twitterImg} alt="" width="38" />
+                                    </div>
+                                    <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
+                                        <div className="me-2">
+                                            <h6 className="text-dark mb-0">
+                                                Twitter
+                                                <span
+                                                    className="ms-1 text-white"
+                                                    style={{
+                                                        fontSize: '0.6rem',
+                                                        padding: '2px 4px',
+                                                        background: '#1da1f1',
+                                                        borderRadius: '2px',
+                                                        verticalAlign: 'middle',
+                                                    }}
+                                                >
+                                                    Beta
+                                                </span>
+                                            </h6>
+                                            <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
+                                                Receive and respond to Twitter direct messages as tickets
+                                            </p>
+                                        </div>
+                                        <div className="">
+                                            <Badge
+                                                className={`${
+                                                    !smsConnected
+                                                        ? 'acx-bg-primary  text-white'
+                                                        : 'acx-bg-gray-100 text-muted fw-light'
+                                                } px-3 py-2`}
+                                            >
+                                                {!smsConnected ? 'Connect' : 'Disconnect'}
+                                            </Badge>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
+                        </div>
+                    </div>
+                )}
+
+                {hasFeatureAccess('sms') && (
+                    <div className="col-md-4 col-sm-6 col-12">
+                        <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
+                            <Link to="/settings/integrations/sms" className="d-block cursor text-decoration-none">
+                                <div className="d-flex align-items-start p-md-4 p-3">
+                                    <div className="w">
+                                        <img src={termiiImg} alt="" width="38" />
+                                    </div>
+                                    <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
+                                        <div className="me-2">
+                                            <h6 className="text-dark mb-0">SMS by Termii</h6>
+                                            <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
+                                                Connect your users via SMS
+                                            </p>
+                                        </div>
+                                        <div className="">
+                                            <Badge
+                                                className={`${
+                                                    !smsConnected
+                                                        ? 'acx-bg-primary  text-white'
+                                                        : 'acx-bg-gray-100 text-muted fw-light'
+                                                } px-3 py-2`}
+                                            >
+                                                {!smsConnected ? 'Connect' : 'Disconnect'}
+                                            </Badge>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
+                        </div>
+                    </div>
+                )}
+
+                {hasFeatureAccess('email-to-ticket') && (
+                    <div className="col-md-4 col-sm-6 col-12">
+                        <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
+                            <Link to="/settings/integrations/email" className="d-block cursor text-decoration-none">
+                                <div className="d-flex align-items-start p-md-4 p-3">
+                                    <div className="w">
+                                        <img src={MailLightIcon} alt="" width="38" />
+                                    </div>
+                                    <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
+                                        <div className="me-2">
+                                            <h6 className="text-dark mb-0">Email to Ticket</h6>
+                                            <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
+                                                Set up email to receive mails as tickets
+                                            </p>
+                                        </div>
+                                        <div className="">
+                                            <Badge
+                                                className={`${
+                                                    !emailConnected
+                                                        ? 'acx-bg-primary  text-white'
+                                                        : 'acx-bg-gray-100 text-muted fw-light'
+                                                } px-3 py-2`}
+                                            >
+                                                {!emailConnected ? 'Connect' : 'Disconnect'}
+                                            </Badge>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
+                        </div>
+                    </div>
+                )}
+
+                {hasFeatureAccess('livechat') && (
+                    <div className="col-md-4 col-sm-6 col-12">
+                        <div className="setting-link-item border rounded bg-light h-100 app-hover-shadow">
+                            <Link to="/settings/integrations/livechat" className="d-block cursor text-decoration-none">
+                                <div className="d-flex align-items-start p-md-4 p-3">
+                                    <div className="w">
+                                        <img src={AccountLightIcon} alt="" width="34" />
+                                    </div>
+                                    <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
+                                        <div className="me-2">
+                                            <h6 className="text-dark mb-0"> Live Chat</h6>
+                                            <p className="acx-fs-8 lh-base mt-1 mb-2 text-muted">
+                                                Configure livechat widget for your website and app
+                                            </p>
+                                        </div>
+                                        <div className="">
+                                            <Badge
+                                                className={`${
+                                                    !livechatConnected
+                                                        ? 'acx-bg-primary  text-white'
+                                                        : 'acx-bg-gray-100 text-muted fw-light'
+                                                } px-3 py-2`}
+                                            >
+                                                {!livechatConnected ? 'Connect' : 'Disconnect'}
+                                            </Badge>
+                                        </div>
+                                    </div>
+                                </div>
+                            </Link>
+                        </div>
+                    </div>
+                )}
                 {/* integrations column ends */}
             </div>
             {/* confirm modal */}
