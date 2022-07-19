@@ -253,36 +253,44 @@ const SiteRouter = connect(mapStateToProps, {
                                     pageName="Account"
                                     component={AccountSettingsMain}
                                 />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/automations"
-                                    pageName="Automation Settings"
-                                    component={AutomationSettings}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/automation"
-                                    pageName="Automation Settings"
-                                    component={NewAutomationPolicy}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/automation/:automationId"
-                                    pageName="Automation Settings"
-                                    component={NewAutomationPolicy}
-                                />
+                                {hasFeatureAccess('sla') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/automations"
+                                        pageName="Automation Settings"
+                                        component={AutomationSettings}
+                                    />
+                                )}
+                                {hasFeatureAccess('sla') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/automation"
+                                        pageName="Automation Settings"
+                                        component={NewAutomationPolicy}
+                                    />
+                                )}
+                                {hasFeatureAccess('sla') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/automation/:automationId"
+                                        pageName="Automation Settings"
+                                        component={NewAutomationPolicy}
+                                    />
+                                )}
                                 <SettingsLayoutRoute
                                     exact
                                     path="/settings/users"
                                     pageName="User Settings"
                                     component={UserList}
                                 />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/teams"
-                                    pageName="Team Settings"
-                                    component={GroupList}
-                                />
+                                {hasFeatureAccess('teams') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/teams"
+                                        pageName="Team Settings"
+                                        component={GroupList}
+                                    />
+                                )}
                                 <SettingsLayoutRoute
                                     exact
                                     path="/settings/roles"
@@ -301,12 +309,14 @@ const SiteRouter = connect(mapStateToProps, {
                                     pageName="Settings"
                                     component={Form}
                                 />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/fields"
-                                    pageName="Fields Settings"
-                                    component={Fields}
-                                />
+                                {hasFeatureAccess('fields') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/fields"
+                                        pageName="Fields Settings"
+                                        component={Fields}
+                                    />
+                                )}
                                 <SettingsLayoutRoute
                                     exact
                                     path="/settings/knowledge-base"
