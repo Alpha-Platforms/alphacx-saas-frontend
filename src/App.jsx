@@ -85,6 +85,7 @@ import FBIGIntegration from './components/pages/settings/social_integrations/fbi
 import AppsumoSignup from './components/pages/appsumo/signup';
 import Instagram from './components/pages/settings/social_integrations/Instagram';
 import AppsumoPlans from './components/pages/appsumo/AppsumoPlans';
+import { hasFeatureAccess } from './helper';
 
 const mapStateToProps = (state) => ({
     isUserAuthenticated: state.userAuth.isUserAuthenticated,
@@ -373,53 +374,67 @@ const SiteRouter = connect(mapStateToProps, {
                                     pageName="Integration Settings"
                                     component={SocialIntegrations}
                                 />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/integrations/livechat"
-                                    pageName="Livechat Settings"
-                                    component={LiveChatSettings}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/integrations/sms"
-                                    pageName="SMS Integration"
-                                    component={SmsSettings}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/integrations/email"
-                                    pageName="Email Integration"
-                                    component={SettingsEmail}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/integrations/email/:action"
-                                    pageName="Email Integration"
-                                    component={SettingsEmail}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/integrations/facebook"
-                                    pageName="Facebook Integration"
-                                    component={FacebookIntegration}
-                                />
+                                {hasFeatureAccess('livechat') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/integrations/livechat"
+                                        pageName="Livechat Settings"
+                                        component={LiveChatSettings}
+                                    />
+                                )}
+                                {hasFeatureAccess('sms') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/integrations/sms"
+                                        pageName="SMS Integration"
+                                        component={SmsSettings}
+                                    />
+                                )}
+                                {hasFeatureAccess('email-to-ticket') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/integrations/email"
+                                        pageName="Email Integration"
+                                        component={SettingsEmail}
+                                    />
+                                )}
+                                {hasFeatureAccess('email-to-ticket') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/integrations/email/:action"
+                                        pageName="Email Integration"
+                                        component={SettingsEmail}
+                                    />
+                                )}
+                                {hasFeatureAccess('facebook') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/integrations/facebook"
+                                        pageName="Facebook Integration"
+                                        component={FacebookIntegration}
+                                    />
+                                )}
                                 {/* <SettingsLayoutRoute
                                 exact
                                 path="/settings/integrations/twitter"
                                 pageName="Twitter Integration"
                                 component={TwitterIntegration}/> */}
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/integrations/twitter"
-                                    pageName="Twitter Integration"
-                                    component={TwitterSignup}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/integrations/whatsapp"
-                                    pageName="Whatsapp Integration"
-                                    component={WhatsappIntegration}
-                                />
+                                {hasFeatureAccess('twitter') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/integrations/twitter"
+                                        pageName="Twitter Integration"
+                                        component={TwitterSignup}
+                                    />
+                                )}
+                                {hasFeatureAccess('whatsapp') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/integrations/whatsapp"
+                                        pageName="Whatsapp Integration"
+                                        component={WhatsappIntegration}
+                                    />
+                                )}
                                 <SettingsLayoutRoute
                                     exact
                                     path="/settings/ratings"
@@ -427,12 +442,14 @@ const SiteRouter = connect(mapStateToProps, {
                                     component={RatingsSettings}
                                 />
                                 <Route exact path="/instagram" pageName="Ratings and Feedback" component={Instagram} />
-                                <Route
-                                    exact
-                                    path="/integrations"
-                                    pageName="Ratings and Feedback"
-                                    component={FBIGIntegration}
-                                />
+                                {(hasFeatureAccess('facebook') || hasFeatureAccess('instagram')) && (
+                                    <Route
+                                        exact
+                                        path="/integrations"
+                                        pageName="Ratings and Feedback"
+                                        component={FBIGIntegration}
+                                    />
+                                )}
                                 <Route
                                     exact
                                     path="/appsumo"
