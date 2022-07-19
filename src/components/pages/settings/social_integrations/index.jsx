@@ -17,6 +17,7 @@ import { httpDeleteMain } from '../../../../helpers/httpMethods';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
 import AccountLightIcon from '../../../../assets/icons/Social-blurb.svg';
 import MailLightIcon from '../../../../assets/icons/mail_light.svg';
+import { hasFeatureAccess } from '../../../../helper';
 // import { hideLoader, showLoader } from '../../../helpers/loader';
 // import Breadcrumb from 'react-bootstrap/Breadcrumb';
 // import { hostname } from 'os';
