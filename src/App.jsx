@@ -155,9 +155,15 @@ const SiteRouter = connect(mapStateToProps, {
                                 <Route exact path="/reset-password/:resetToken" component={ResetPassword} />{' '}
                                 {/* reset password */}
                                 <Route exact path="/knowledge-base" component={HelpCenter} />
-                                <Route exact path="/knowledge-base/categories" component={ArticleCategoryList} />
-                                <Route exact path="/knowledge-base/:category" component={ArticleList} />
-                                <Route exact path="/knowledge-base/:category/:slug" component={Article} />{' '}
+                                {hasFeatureAccess('knowledgebase') && (
+                                    <Route exact path="/knowledge-base/categories" component={ArticleCategoryList} />
+                                )}
+                                {hasFeatureAccess('knowledgebase') && (
+                                    <Route exact path="/knowledge-base/:category" component={ArticleList} />
+                                )}
+                                {hasFeatureAccess('knowledgebase') && (
+                                    <Route exact path="/knowledge-base/:category/:slug" component={Article} />
+                                )}{' '}
                                 {/* help pages end */}
                                 <Route
                                     exact
@@ -317,30 +323,38 @@ const SiteRouter = connect(mapStateToProps, {
                                         component={Fields}
                                     />
                                 )}
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/knowledge-base"
-                                    pageName="Knowledge Base"
-                                    component={HelpCenterSettings}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/knowledge-base/categories"
-                                    pageName="Knowledge Base"
-                                    component={ArticleCategories}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/knowledge-base/article"
-                                    pageName="Knowledge Base"
-                                    component={NewArticle}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/knowledge-base/edit/:articleId"
-                                    pageName="Knowledge Base"
-                                    component={NewArticle}
-                                />
+                                {hasFeatureAccess('knowledgebase') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/knowledge-base"
+                                        pageName="Knowledge Base"
+                                        component={HelpCenterSettings}
+                                    />
+                                )}
+                                {hasFeatureAccess('knowledgebase') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/knowledge-base/categories"
+                                        pageName="Knowledge Base"
+                                        component={ArticleCategories}
+                                    />
+                                )}
+                                {hasFeatureAccess('knowledgebase') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/knowledge-base/article"
+                                        pageName="Knowledge Base"
+                                        component={NewArticle}
+                                    />
+                                )}
+                                {hasFeatureAccess('knowledgebase') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/knowledge-base/edit/:articleId"
+                                        pageName="Knowledge Base"
+                                        component={NewArticle}
+                                    />
+                                )}
                                 <SettingsLayoutRoute
                                     exact
                                     path="/settings/tickets"
