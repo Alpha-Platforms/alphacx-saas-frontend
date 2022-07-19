@@ -230,12 +230,14 @@ const SiteRouter = connect(mapStateToProps, {
                                     pageName="Settings Menu"
                                     component={SettingsHome}
                                 />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/reports"
-                                    pageName="Reports"
-                                    component={ReportsFilter}
-                                />
+                                {hasFeatureAccess('reports') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/reports"
+                                        pageName="Reports"
+                                        component={ReportsFilter}
+                                    />
+                                )}
                                 {/* <SettingsLayoutRoute
                                 exact
                                 path="/reports/filter"
