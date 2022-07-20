@@ -8,8 +8,7 @@
 import React, { useEffect, useState, useContext, Fragment } from 'react';
 import { Link, NavLink, useHistory, useLocation } from 'react-router-dom';
 // import { AuthContext } from "../../context/authContext";
-import { connect } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import moment from 'moment';
 import { NotificationManager } from 'react-notifications';
 import MoonLoader from 'react-spinners/MoonLoader';
@@ -28,7 +27,7 @@ import '../../styles/Navbar.css';
 import { httpGetMain, httpPatchMain } from '../../helpers/httpMethods';
 // import AccordionLink from "components/pages/help_center/components/accordion/AccordionLink";
 import { accessControlFunctions } from '../../config/accessControlList';
-import { multiIncludes } from '../../helper';
+import { hasFeatureAccess, multiIncludes } from '../../helper';
 
 function DropDown({ shouldShowUserExceededNotif }) {
     const [createCustModalShow, setCreateCustModalShow] = useState(false);
@@ -405,7 +404,7 @@ function Navbar({ pageName, user }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [window.localStorage.getItem('user')]);
 
-    const getActualTime = () => {
+    const actualSubTime = (() => {
         const _daysLeft = Math.abs(daysLeft);
         const _hoursLeft = Math.abs(hoursLeft);
         const _minutesLeft = Math.abs(minutesLeft);
@@ -413,8 +412,8 @@ function Navbar({ pageName, user }) {
         if (_daysLeft > 0) return `${_daysLeft} ${_daysLeft > 1 ? 'days' : 'day'}`;
         if (_hoursLeft > 0) return `${_hoursLeft} ${_hoursLeft > 1 ? 'hours' : 'hour'}`;
         if (_minutesLeft > 0) return `${_minutesLeft} ${_minutesLeft > 1 ? 'minutes' : 'minute'}`;
-        return 'less than a minute';
-    };
+        return '';
+    })();
 
     return (
         <div
@@ -468,11 +467,11 @@ function Navbar({ pageName, user }) {
                             <div className="sub-notif">
                                 {!subExpired ? (
                                     <span>
-                                        Your {planName} is ending in {getActualTime()}.
+                                        {actualSubTime ? `Your ${planName} is ending in ${actualSubTime}.` : '...'}
                                     </span>
                                 ) : (
                                     <span>
-                                        Your {planName} has expired {getActualTime()} ago.
+                                        {actualSubTime ? `Your ${planName} has expired ${actualSubTime} ago.` : '...'}
                                     </span>
                                 )}{' '}
                                 <Link
@@ -546,9 +545,11 @@ function Navbar({ pageName, user }) {
                 </div> */}
                             <Notification userId={user?.id} />
 
-                            <Link to="/knowledge-base" target="_blank">
-                                <HelpIcon />
-                            </Link>
+                            {hasFeatureAccess('knowledgebase') && (
+                                <Link to="/knowledge-base" target="_blank">
+                                    <HelpIcon />
+                                </Link>
+                            )}
 
                             <div>
                                 <Link to={`/settings/profile/${localUser?.id}`}>

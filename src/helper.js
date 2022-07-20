@@ -7,6 +7,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import dayjs from 'dayjs';
 import { config } from './config/keys';
+import store from './reduxstore/store';
 
 // function to return axios configuration with tenant token
 export const tenantTokenConfig = (getState) => {
@@ -330,13 +331,24 @@ export const getHostnamesFromString = (str = '') => {
 };
 
 export const centToDollarCent = (centValue) => {
-    console.log('centValue => ', centValue);
     const dollar = Math.trunc(centValue / 100);
     const cent = Number(
         Math.floor(centValue % 100)
             .toString()
             .slice(0, 2),
     );
-    console.log('dollar - cent => ', [dollar, cent]);
     return [dollar, cent];
+};
+
+/**
+ * check if a plan has a feature
+ */
+export const hasFeatureAccess = (feature) => {
+    const storeState = store.getState();
+    const features = storeState?.subscription?.subscription?.plan?.features;
+    if (features && Array.isArray(features) && feature) {
+        const justFeatures = features?.map((item) => item?.name?.toLowerCase());
+        if (justFeatures?.includes(feature?.toLowerCase())) return true;
+    }
+    return false;
 };

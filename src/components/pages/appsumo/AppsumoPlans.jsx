@@ -15,12 +15,20 @@ function AppsumoPlans({ currentPlan }) {
         async function getAllPlans() {
             const res = await httpGet(`subscriptions/plans/${tenantId}`);
             if (res?.status === 'success') {
-                setPlans(res.data);
+                const filterAndSorted = res.data
+                    .filter((item) => item.plan_type === 'appsumo')
+                    .sort((a, b) => {
+                        if (a.name > b.name) return 1;
+                        if (a.name < b.name) return -1;
+                        return 0;
+                    });
+                // console.log(filterAndSorted);
+                setPlans(filterAndSorted);
             }
         }
 
         async function getAppsumoCustomerUuid() {
-            const res = await httpPost(`appsumo/customer/${tenantId}`);
+            const res = await httpGet(`appsumo/customer/${tenantId}`);
             if (res?.status === 'success') {
                 setProductUrl(res.data.invoice_item_uuid);
             }
@@ -30,7 +38,11 @@ function AppsumoPlans({ currentPlan }) {
         getAppsumoCustomerUuid();
     }, []);
 
-    const freePlanFeatures = ['All above-listed features', 'All deal terms', '3 agent seats'];
+    const freePlanFeatures = [
+        'All above-listed features',
+        'All deal terms',
+        ['3 agent seats', '10 agent seats', 'unlimited'],
+    ];
 
     const dealTerms = [
         'Lifetime access to AlphaCX',
@@ -101,36 +113,36 @@ function AppsumoPlans({ currentPlan }) {
 
             <div className="appsumo__section--two">
                 {plans.map((plan, index) => {
-                    if (plan.plan_type === 'appsumo') {
-                        return (
-                            <div className="appsumo__card" key={index}>
-                                <div className="text-center">
-                                    <h5>{plan.name}</h5>
-                                    <h5 className="fw-bold">${plan.yearly_amount} </h5>
-                                    <p>(One Time Purchase)</p>
-                                </div>
-                                <ul className="appsumo__card--features mt-4">
-                                    {freePlanFeatures.map((item, idx) => (
+                    return (
+                        <div className="appsumo__card" key={index}>
+                            <div className="text-center">
+                                <h5>{plan.name}</h5>
+                                <h5 className="fw-bold">${plan.yearly_amount} </h5>
+                                <p>(One Time Purchase)</p>
+                            </div>
+                            <ul className="appsumo__card--features mt-4">
+                                {freePlanFeatures.map((item, idx) => {
+                                    return (
                                         <li key={idx}>
                                             <span>
                                                 <TickeCircle color={index % 2 === 0 ? '#004882' : '#ffffff'} />
                                             </span>
-                                            <span>{item}</span>
+                                            <span>{idx === 2 ? item[index] : item}</span>
                                         </li>
-                                    ))}
-                                </ul>
-                                <a
-                                    href={`https://appsumo.com/account/redemption/${productUrl}`}
-                                    target="_blank"
-                                    className={`appsumo__card--cta btn ${plan.name === currentPlan ? 'disabled' : ''} `}
-                                    type="button"
-                                    rel="noreferrer"
-                                >
-                                    {plan.name === currentPlan ? 'Current Plan' : 'Select Plan'}
-                                </a>
-                            </div>
-                        );
-                    }
+                                    );
+                                })}
+                            </ul>
+                            <a
+                                href={`https://appsumo.com/account/redemption/${productUrl}`}
+                                target="_blank"
+                                className={`appsumo__card--cta btn ${plan.name === currentPlan ? 'disabled' : ''} `}
+                                type="button"
+                                rel="noreferrer"
+                            >
+                                {plan.name === currentPlan ? 'Current Plan' : 'Select Plan'}
+                            </a>
+                        </div>
+                    );
                 })}
             </div>
         </div>
