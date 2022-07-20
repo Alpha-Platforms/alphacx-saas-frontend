@@ -50,7 +50,7 @@ import boldB from '../../../assets/imgF/boldB.png';
 import Smiley from '../../../assets/imgF/Smiley.png';
 import editorImg from '../../../assets/imgF/editorImg.png';
 import BackArrow from '../../../assets/imgF/back.png';
-import { multiIncludes, uuid } from '../../../helper';
+import { multiIncludes, uuid, hasFeatureAccess } from '../../../helper';
 import { accessControlFunctions } from '../../../config/accessControlList';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './conversation.css';
@@ -732,7 +732,7 @@ function Conversation({ user }) {
     }, [editorEditableBox, ReplyTicket]);
 
     const updateTicketStatus = async () => {
-        if (RSTicketStage.label === 'Closed') {
+        if (RSTicketStage.label === 'Closed' && hasFeatureAccess('rating')) {
             // get url and replace domain
             const baseUrl = window.location.origin;
             const completedUrl = `${baseUrl}/feedback/${localStorage.domain}/${ticket[0].id}/${ticket[0].customer.id}`;

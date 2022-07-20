@@ -212,7 +212,7 @@ function SettingsHome({ signedUser }) {
                     </AccessControl>
                 )}
 
-                {hasFeatureAccess('ratings') && (
+                {hasFeatureAccess('rating') && (
                     <AccessControl>
                         <Col sm={6} md={4} className="settings-menu-item">
                             <div className="border rounded bg-light">

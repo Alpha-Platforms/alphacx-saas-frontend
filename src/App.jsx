@@ -154,7 +154,7 @@ const SiteRouter = connect(mapStateToProps, {
                                 {/* forgot password */}
                                 <Route exact path="/reset-password/:resetToken" component={ResetPassword} />{' '}
                                 {/* reset password */}
-                                <Route exact path="/knowledge-base" component={HelpCenter} />
+                                {hasFeatureAccess('knowledgebase') && <Route exact path="/knowledge-base" component={HelpCenter} />}
                                 {hasFeatureAccess('knowledgebase') && (
                                     <Route exact path="/knowledge-base/categories" component={ArticleCategoryList} />
                                 )}
@@ -165,7 +165,7 @@ const SiteRouter = connect(mapStateToProps, {
                                     <Route exact path="/knowledge-base/:category/:slug" component={Article} />
                                 )}{' '}
                                 {/* help pages end */}
-                                {hasFeatureAccess('ratings') && (
+                                {hasFeatureAccess('rating') && (
                                     <Route
                                         exact
                                         path="/feedback/:domain/:ticketId/:customerId"
@@ -463,7 +463,7 @@ const SiteRouter = connect(mapStateToProps, {
                                         component={WhatsappIntegration}
                                     />
                                 )}
-                                {hasFeatureAccess('ratings') && (
+                                {hasFeatureAccess('rating') && (
                                     <SettingsLayoutRoute
                                         exact
                                         path="/settings/ratings"
