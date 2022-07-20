@@ -1,9 +1,8 @@
-/* eslint-disable */
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react/prop-types */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React, { useState } from 'react';
 import '../conversations/conversation.css';
 import '../../../styles/Setting.css';
-
-// import searchIcon from "../../../assets/imgF/Search.png";
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Container from 'react-bootstrap/Container';
@@ -12,34 +11,18 @@ import Col from 'react-bootstrap/Col';
 import AgentLightIcon from '../../../assets/icons/agent_light.svg';
 import AutomationIcon from '../../../assets/icons/Automation.svg';
 import ShieldIcon from '../../../assets/icons/Shield-Done.svg';
-import DepartmentLightIcon from '../../../assets/icons/department_light.svg';
 import FieldsLightIcon from '../../../assets/icons/fields_light.svg';
-import FormsLightIcon from '../../../assets/icons/forms_light.svg';
-import HierarchyLightIcon from '../../../assets/icons/heirarchy_light.svg';
-import LocationLightIcon from '../../../assets/icons/location_light.svg';
 import FolderBlueIcon from '../../../assets/icons/Folder-blue.svg';
-import ReportsLightIcon from '../../../assets/icons/reports_light.svg';
-import User3BlueIcon from '../../../assets/icons/3-User-blue.svg';
 import SendBlueIcon from '../../../assets/icons/Send-blue.svg';
-import SendBlueIcon2 from '../../../assets/icons/Activity-blue.svg';
-import ActivityBlueIcon from '../../../assets/icons/Search-blue.svg';
 import SearchBlueIcon from '../../../assets/icons/Database-blue.svg';
-import DatabaseBlueIcon from '../../../assets/icons/Message-BW.svg';
-import MessageBWIcon from '../../../assets/icons/account_light.svg';
 import AccountLightIcon from '../../../assets/icons/Social-blurb.svg';
 import SocialBlurbIcon from '../../../assets/icons/Chart-blue.svg';
 import ChartBlueIcon from '../../../assets/icons/Star-BW.svg';
-import StarBWIcon from '../../../assets/icons/User-BW.svg';
 import UserBWIcon from '../../../assets/icons/Discount-blue.svg';
-import DiscountBlueIcon from '../../../assets/icons/Touch-blue.svg';
-import HeartBWIcon from '../../../assets/icons/Heart-BW.svg';
-import RoleLightIcon from '../../../assets/icons/role_light.svg';
 import LivechatIcon from '../../../assets/icons/chat-blue.svg';
-import DocumentIcon from '../../../assets/icons/doc-blue.svg';
-import RatingStar from '../../../assets/icons/Rating-Star.svg';
-
-import AccessControl from '../auth/accessControl.jsx';
+import AccessControl from '../auth/accessControl';
 import ContactAlphcxModal from './ContactAlphcxModal2';
+import { hasFeatureAccess } from '../../../helper';
 
 function SettingsHome({ signedUser }) {
     const [contactSupportModalShow, setContactSupportModalShow] = useState(false);
@@ -83,25 +66,27 @@ function SettingsHome({ signedUser }) {
                     </div>
                 </Col>
 
-                <AccessControl>
-                    <Col sm={6} md={4} className="settings-menu-item">
-                        <div className="border rounded bg-light">
-                            <Link to="/settings/teams" className="d-block cursor text-decoration-none">
-                                <div className="d-flex p-md-4">
-                                    <div className="">
-                                        <img src={FolderBlueIcon} alt="" />
+                {hasFeatureAccess('teams') && (
+                    <AccessControl>
+                        <Col sm={6} md={4} className="settings-menu-item">
+                            <div className="border rounded bg-light">
+                                <Link to="/settings/teams" className="d-block cursor text-decoration-none">
+                                    <div className="d-flex p-md-4">
+                                        <div className="">
+                                            <img src={FolderBlueIcon} alt="" />
+                                        </div>
+                                        <div className="ms-3">
+                                            <h6 className="text-dark mb-0">Teams</h6>
+                                            <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                                                Manage the users in your organisation.
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="ms-3">
-                                        <h6 className="text-dark mb-0">Teams</h6>
-                                        <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                                            Manage the users in your organisation.
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </Col>
-                </AccessControl>
+                                </Link>
+                            </div>
+                        </Col>
+                    </AccessControl>
+                )}
 
                 <AccessControl>
                     <Col sm={6} md={4} className="settings-menu-item">
@@ -114,7 +99,7 @@ function SettingsHome({ signedUser }) {
                                     <div className="ms-3">
                                         <h6 className="text-dark mb-0">Account</h6>
                                         <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                                            Access and edit your organization's profile.
+                                            Access and edit your organization&apos;s profile.
                                         </p>
                                     </div>
                                 </div>
@@ -123,25 +108,27 @@ function SettingsHome({ signedUser }) {
                     </Col>
                 </AccessControl>
 
-                <AccessControl>
-                    <Col sm={6} md={4} className="settings-menu-item">
-                        <div className="border rounded bg-light">
-                            <Link to="settings/automations" className="d-block cursor text-decoration-none">
-                                <div className="d-flex p-md-4">
-                                    <div className="">
-                                        <img src={AutomationIcon} alt="" />
+                {hasFeatureAccess('sla') && (
+                    <AccessControl>
+                        <Col sm={6} md={4} className="settings-menu-item">
+                            <div className="border rounded bg-light">
+                                <Link to="settings/automations" className="d-block cursor text-decoration-none">
+                                    <div className="d-flex p-md-4">
+                                        <div className="">
+                                            <img src={AutomationIcon} alt="" />
+                                        </div>
+                                        <div className="ms-3">
+                                            <h6 className="text-dark mb-0">Automation</h6>
+                                            <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                                                Set notifications, responses, and their durations.
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="ms-3">
-                                        <h6 className="text-dark mb-0">Automation</h6>
-                                        <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                                            Set notifications, responses, and their durations.
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </Col>
-                </AccessControl>
+                                </Link>
+                            </div>
+                        </Col>
+                    </AccessControl>
+                )}
 
                 <AccessControl>
                     <Col sm={6} md={4} className="settings-menu-item">
@@ -203,65 +190,71 @@ function SettingsHome({ signedUser }) {
                     </Col>
                 </AccessControl>
 
-                <AccessControl>
-                    <Col sm={6} md={4} className="settings-menu-item">
-                        <div className="border rounded bg-light">
-                            <Link to="/settings/knowledge-base" className="d-block cursor text-decoration-none">
-                                <div className="d-flex p-md-4">
-                                    <div className="">
-                                        <img src={SearchBlueIcon} alt="" />
+                {hasFeatureAccess('knowledgebase') && (
+                    <AccessControl>
+                        <Col sm={6} md={4} className="settings-menu-item">
+                            <div className="border rounded bg-light">
+                                <Link to="/settings/knowledge-base" className="d-block cursor text-decoration-none">
+                                    <div className="d-flex p-md-4">
+                                        <div className="">
+                                            <img src={SearchBlueIcon} alt="" />
+                                        </div>
+                                        <div className="ms-3">
+                                            <h6 className="text-dark mb-0">Knowledge Base</h6>
+                                            <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                                                Create and manage information on your knowledge base.
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="ms-3">
-                                        <h6 className="text-dark mb-0">Knowledge Base</h6>
-                                        <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                                            Create and manage information on your knowledge base.
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </Col>
-                </AccessControl>
+                                </Link>
+                            </div>
+                        </Col>
+                    </AccessControl>
+                )}
 
-                <AccessControl>
-                    <Col sm={6} md={4} className="settings-menu-item">
-                        <div className="border rounded bg-light">
-                            <Link to="settings/ratings" className="d-block cursor text-decoration-none">
-                                <div className="d-flex p-md-4">
-                                    <div className="">
-                                        <img src={ChartBlueIcon} alt="" />
+                {hasFeatureAccess('rating') && (
+                    <AccessControl>
+                        <Col sm={6} md={4} className="settings-menu-item">
+                            <div className="border rounded bg-light">
+                                <Link to="settings/ratings" className="d-block cursor text-decoration-none">
+                                    <div className="d-flex p-md-4">
+                                        <div className="">
+                                            <img src={ChartBlueIcon} alt="" />
+                                        </div>
+                                        <div className="ms-3">
+                                            <h6 className="text-dark mb-0">Ratings and Review</h6>
+                                            <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                                                Setup ratings for customer feedback.
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="ms-3">
-                                        <h6 className="text-dark mb-0">Ratings and Review</h6>
-                                        <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                                            Setup ratings for customer feedback.
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </Col>
-                </AccessControl>
+                                </Link>
+                            </div>
+                        </Col>
+                    </AccessControl>
+                )}
 
-                <AccessControl>
-                    <Col sm={6} md={4} className="settings-menu-item">
-                        <div className="border rounded bg-light">
-                            <Link to="settings/fields" className="d-block cursor text-decoration-none">
-                                <div className="d-flex p-md-4">
-                                    <div className="">
-                                        <img src={FieldsLightIcon} alt="" />
+                {hasFeatureAccess('fields') && (
+                    <AccessControl>
+                        <Col sm={6} md={4} className="settings-menu-item">
+                            <div className="border rounded bg-light">
+                                <Link to="settings/fields" className="d-block cursor text-decoration-none">
+                                    <div className="d-flex p-md-4">
+                                        <div className="">
+                                            <img src={FieldsLightIcon} alt="" />
+                                        </div>
+                                        <div className="ms-3">
+                                            <h6 className="text-dark mb-0">Fields</h6>
+                                            <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
+                                                Setup fields for users, tickets and customers forms.
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="ms-3">
-                                        <h6 className="text-dark mb-0">Fields</h6>
-                                        <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
-                                            Setup fields for users, tickets and customers forms.
-                                        </p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    </Col>
-                </AccessControl>
+                                </Link>
+                            </div>
+                        </Col>
+                    </AccessControl>
+                )}
 
                 <Col sm={6} md={4} className="settings-menu-item">
                     <div className="border rounded bg-light">
@@ -295,7 +288,7 @@ function SettingsHome({ signedUser }) {
     );
 }
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
     signedUser: state.userAuth.user,
 });
 

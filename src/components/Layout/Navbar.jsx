@@ -8,8 +8,7 @@
 import React, { useEffect, useState, useContext, Fragment } from 'react';
 import { Link, NavLink, useHistory, useLocation } from 'react-router-dom';
 // import { AuthContext } from "../../context/authContext";
-import { connect } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import moment from 'moment';
 import { NotificationManager } from 'react-notifications';
 import MoonLoader from 'react-spinners/MoonLoader';
@@ -28,7 +27,7 @@ import '../../styles/Navbar.css';
 import { httpGetMain, httpPatchMain } from '../../helpers/httpMethods';
 // import AccordionLink from "components/pages/help_center/components/accordion/AccordionLink";
 import { accessControlFunctions } from '../../config/accessControlList';
-import { multiIncludes } from '../../helper';
+import { hasFeatureAccess, multiIncludes } from '../../helper';
 
 function DropDown({ shouldShowUserExceededNotif }) {
     const [createCustModalShow, setCreateCustModalShow] = useState(false);
@@ -546,9 +545,11 @@ function Navbar({ pageName, user }) {
                 </div> */}
                             <Notification userId={user?.id} />
 
-                            <Link to="/knowledge-base" target="_blank">
-                                <HelpIcon />
-                            </Link>
+                            {hasFeatureAccess('knowledgebase') && (
+                                <Link to="/knowledge-base" target="_blank">
+                                    <HelpIcon />
+                                </Link>
+                            )}
 
                             <div>
                                 <Link to={`/settings/profile/${localUser?.id}`}>

@@ -85,6 +85,7 @@ import FBIGIntegration from './components/pages/settings/social_integrations/fbi
 import AppsumoSignup from './components/pages/appsumo/signup';
 import Instagram from './components/pages/settings/social_integrations/Instagram';
 import AppsumoPlans from './components/pages/appsumo/AppsumoPlans';
+import { hasFeatureAccess } from './helper';
 
 const mapStateToProps = (state) => ({
     isUserAuthenticated: state.userAuth.isUserAuthenticated,
@@ -153,16 +154,24 @@ const SiteRouter = connect(mapStateToProps, {
                                 {/* forgot password */}
                                 <Route exact path="/reset-password/:resetToken" component={ResetPassword} />{' '}
                                 {/* reset password */}
-                                <Route exact path="/knowledge-base" component={HelpCenter} />
-                                <Route exact path="/knowledge-base/categories" component={ArticleCategoryList} />
-                                <Route exact path="/knowledge-base/:category" component={ArticleList} />
-                                <Route exact path="/knowledge-base/:category/:slug" component={Article} />{' '}
+                                {hasFeatureAccess('knowledgebase') && <Route exact path="/knowledge-base" component={HelpCenter} />}
+                                {hasFeatureAccess('knowledgebase') && (
+                                    <Route exact path="/knowledge-base/categories" component={ArticleCategoryList} />
+                                )}
+                                {hasFeatureAccess('knowledgebase') && (
+                                    <Route exact path="/knowledge-base/:category" component={ArticleList} />
+                                )}
+                                {hasFeatureAccess('knowledgebase') && (
+                                    <Route exact path="/knowledge-base/:category/:slug" component={Article} />
+                                )}{' '}
                                 {/* help pages end */}
-                                <Route
-                                    exact
-                                    path="/feedback/:domain/:ticketId/:customerId"
-                                    component={RatingsForm}
-                                />{' '}
+                                {hasFeatureAccess('rating') && (
+                                    <Route
+                                        exact
+                                        path="/feedback/:domain/:ticketId/:customerId"
+                                        component={RatingsForm}
+                                    />
+                                )}{' '}
                                 {/* help pages end */}
                                 <Route exact path="/account-verified" component={AccountVerified} />{' '}
                                 {/* Customer Portal */}
@@ -223,12 +232,14 @@ const SiteRouter = connect(mapStateToProps, {
                                     pageName="Settings Menu"
                                     component={SettingsHome}
                                 />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/reports"
-                                    pageName="Reports"
-                                    component={ReportsFilter}
-                                />
+                                {hasFeatureAccess('reports') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/reports"
+                                        pageName="Reports"
+                                        component={ReportsFilter}
+                                    />
+                                )}
                                 {/* <SettingsLayoutRoute
                                 exact
                                 path="/reports/filter"
@@ -252,36 +263,44 @@ const SiteRouter = connect(mapStateToProps, {
                                     pageName="Account"
                                     component={AccountSettingsMain}
                                 />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/automations"
-                                    pageName="Automation Settings"
-                                    component={AutomationSettings}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/automation"
-                                    pageName="Automation Settings"
-                                    component={NewAutomationPolicy}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/automation/:automationId"
-                                    pageName="Automation Settings"
-                                    component={NewAutomationPolicy}
-                                />
+                                {hasFeatureAccess('sla') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/automations"
+                                        pageName="Automation Settings"
+                                        component={AutomationSettings}
+                                    />
+                                )}
+                                {hasFeatureAccess('sla') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/automation"
+                                        pageName="Automation Settings"
+                                        component={NewAutomationPolicy}
+                                    />
+                                )}
+                                {hasFeatureAccess('sla') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/automation/:automationId"
+                                        pageName="Automation Settings"
+                                        component={NewAutomationPolicy}
+                                    />
+                                )}
                                 <SettingsLayoutRoute
                                     exact
                                     path="/settings/users"
                                     pageName="User Settings"
                                     component={UserList}
                                 />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/teams"
-                                    pageName="Team Settings"
-                                    component={GroupList}
-                                />
+                                {hasFeatureAccess('teams') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/teams"
+                                        pageName="Team Settings"
+                                        component={GroupList}
+                                    />
+                                )}
                                 <SettingsLayoutRoute
                                     exact
                                     path="/settings/roles"
@@ -300,36 +319,46 @@ const SiteRouter = connect(mapStateToProps, {
                                     pageName="Settings"
                                     component={Form}
                                 />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/fields"
-                                    pageName="Fields Settings"
-                                    component={Fields}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/knowledge-base"
-                                    pageName="Knowledge Base"
-                                    component={HelpCenterSettings}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/knowledge-base/categories"
-                                    pageName="Knowledge Base"
-                                    component={ArticleCategories}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/knowledge-base/article"
-                                    pageName="Knowledge Base"
-                                    component={NewArticle}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/knowledge-base/edit/:articleId"
-                                    pageName="Knowledge Base"
-                                    component={NewArticle}
-                                />
+                                {hasFeatureAccess('fields') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/fields"
+                                        pageName="Fields Settings"
+                                        component={Fields}
+                                    />
+                                )}
+                                {hasFeatureAccess('knowledgebase') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/knowledge-base"
+                                        pageName="Knowledge Base"
+                                        component={HelpCenterSettings}
+                                    />
+                                )}
+                                {hasFeatureAccess('knowledgebase') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/knowledge-base/categories"
+                                        pageName="Knowledge Base"
+                                        component={ArticleCategories}
+                                    />
+                                )}
+                                {hasFeatureAccess('knowledgebase') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/knowledge-base/article"
+                                        pageName="Knowledge Base"
+                                        component={NewArticle}
+                                    />
+                                )}
+                                {hasFeatureAccess('knowledgebase') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/knowledge-base/edit/:articleId"
+                                        pageName="Knowledge Base"
+                                        component={NewArticle}
+                                    />
+                                )}
                                 <SettingsLayoutRoute
                                     exact
                                     path="/settings/tickets"
@@ -373,66 +402,84 @@ const SiteRouter = connect(mapStateToProps, {
                                     pageName="Integration Settings"
                                     component={SocialIntegrations}
                                 />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/integrations/livechat"
-                                    pageName="Livechat Settings"
-                                    component={LiveChatSettings}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/integrations/sms"
-                                    pageName="SMS Integration"
-                                    component={SmsSettings}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/integrations/email"
-                                    pageName="Email Integration"
-                                    component={SettingsEmail}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/integrations/email/:action"
-                                    pageName="Email Integration"
-                                    component={SettingsEmail}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/integrations/facebook"
-                                    pageName="Facebook Integration"
-                                    component={FacebookIntegration}
-                                />
+                                {hasFeatureAccess('livechat') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/integrations/livechat"
+                                        pageName="Livechat Settings"
+                                        component={LiveChatSettings}
+                                    />
+                                )}
+                                {hasFeatureAccess('sms') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/integrations/sms"
+                                        pageName="SMS Integration"
+                                        component={SmsSettings}
+                                    />
+                                )}
+                                {hasFeatureAccess('email-to-ticket') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/integrations/email"
+                                        pageName="Email Integration"
+                                        component={SettingsEmail}
+                                    />
+                                )}
+                                {hasFeatureAccess('email-to-ticket') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/integrations/email/:action"
+                                        pageName="Email Integration"
+                                        component={SettingsEmail}
+                                    />
+                                )}
+                                {hasFeatureAccess('facebook') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/integrations/facebook"
+                                        pageName="Facebook Integration"
+                                        component={FacebookIntegration}
+                                    />
+                                )}
                                 {/* <SettingsLayoutRoute
                                 exact
                                 path="/settings/integrations/twitter"
                                 pageName="Twitter Integration"
                                 component={TwitterIntegration}/> */}
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/integrations/twitter"
-                                    pageName="Twitter Integration"
-                                    component={TwitterSignup}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/integrations/whatsapp"
-                                    pageName="Whatsapp Integration"
-                                    component={WhatsappIntegration}
-                                />
-                                <SettingsLayoutRoute
-                                    exact
-                                    path="/settings/ratings"
-                                    pageName="Ratings and Feedback"
-                                    component={RatingsSettings}
-                                />
+                                {hasFeatureAccess('twitter') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/integrations/twitter"
+                                        pageName="Twitter Integration"
+                                        component={TwitterSignup}
+                                    />
+                                )}
+                                {hasFeatureAccess('whatsapp') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/integrations/whatsapp"
+                                        pageName="Whatsapp Integration"
+                                        component={WhatsappIntegration}
+                                    />
+                                )}
+                                {hasFeatureAccess('rating') && (
+                                    <SettingsLayoutRoute
+                                        exact
+                                        path="/settings/ratings"
+                                        pageName="Ratings and Feedback"
+                                        component={RatingsSettings}
+                                    />
+                                )}
                                 <Route exact path="/instagram" pageName="Ratings and Feedback" component={Instagram} />
-                                <Route
-                                    exact
-                                    path="/integrations"
-                                    pageName="Ratings and Feedback"
-                                    component={FBIGIntegration}
-                                />
+                                {(hasFeatureAccess('facebook') || hasFeatureAccess('instagram')) && (
+                                    <Route
+                                        exact
+                                        path="/integrations"
+                                        pageName="Ratings and Feedback"
+                                        component={FBIGIntegration}
+                                    />
+                                )}
                                 <Route
                                     exact
                                     path="/appsumo"

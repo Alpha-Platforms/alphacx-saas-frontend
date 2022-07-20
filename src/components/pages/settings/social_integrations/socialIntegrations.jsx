@@ -12,7 +12,6 @@ import { hideLoader, showLoader } from '../../../helpers/loader';
 import RightArrow from '../../../assets/imgF/arrow_right.png';
 // console.log(window);
 const { FB } = window;
-
 export default function SocialIntegrations() {
     const [activeSocail, setActiveSocial] = useState('Whatsapp');
     const [FBData, setFBData] = useState({});

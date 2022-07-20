@@ -24,6 +24,7 @@ import {
     CollapseLeft,
 } from '../../assets/images/svgs';
 import { ReactComponent as DiscountWhite } from '../../assets/icons/Discount-White.svg';
+import { hasFeatureAccess } from '../../helper';
 
 export default function Sidebar({ browserRouter, currentRoute }) {
     const {
@@ -107,17 +108,19 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                         <span className="sidebar-list--text">Customers</span>
                     </li>
 
-                    <AccessControl>
-                        <li
-                            onClick={() => customBrowserRouter(`/reports`)}
-                            className={`sidebar-list--item ${currentRoute === '/reports' ? 'active' : ''}`}
-                        >
-                            <span className="sidebar-list--icon">
-                                <Graph activeRoute={false} />
-                            </span>
-                            <span className="sidebar-list--text">Reports</span>
-                        </li>
-                    </AccessControl>
+                    {hasFeatureAccess('reports') && (
+                        <AccessControl>
+                            <li
+                                onClick={() => customBrowserRouter(`/reports`)}
+                                className={`sidebar-list--item ${currentRoute === '/reports' ? 'active' : ''}`}
+                            >
+                                <span className="sidebar-list--icon">
+                                    <Graph activeRoute={false} />
+                                </span>
+                                <span className="sidebar-list--text">Reports</span>
+                            </li>
+                        </AccessControl>
+                    )}
 
                     <li
                         onClick={() => customBrowserRouter(`/settings`)}
