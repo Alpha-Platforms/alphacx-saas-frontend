@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
-import OnboardingModal from './components/OnboardingModal';
+import OnboardingModal from './components/Onboarding';
 import './layout.css';
 
 function Index({ user, isUserAuthenticated, ...props }) {
