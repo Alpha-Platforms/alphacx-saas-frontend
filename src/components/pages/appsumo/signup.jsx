@@ -138,15 +138,10 @@ function Appsumo() {
         let itnv = setTimeout( async () => {
             const res = await httpPost(`auth/login`, {domain: userData.domain});
             logged = res.status === 'success';
-
-            // const city = localStorage.getItem('city');
-            // logged = city === 'lagos';
-
             setIsLoggedIn(logged)
             tryLogin(logged);
         
-        }, 15000);
-
+        }, 10000);
         
     };
 
