@@ -154,7 +154,9 @@ const SiteRouter = connect(mapStateToProps, {
                                 {/* forgot password */}
                                 <Route exact path="/reset-password/:resetToken" component={ResetPassword} />{' '}
                                 {/* reset password */}
-                                {hasFeatureAccess('knowledgebase') && <Route exact path="/knowledge-base" component={HelpCenter} />}
+                                {hasFeatureAccess('knowledgebase') && (
+                                    <Route exact path="/knowledge-base" component={HelpCenter} />
+                                )}
                                 {hasFeatureAccess('knowledgebase') && (
                                     <Route exact path="/knowledge-base/categories" component={ArticleCategoryList} />
                                 )}
@@ -472,14 +474,12 @@ const SiteRouter = connect(mapStateToProps, {
                                     />
                                 )}
                                 <Route exact path="/instagram" pageName="Ratings and Feedback" component={Instagram} />
-                                {(hasFeatureAccess('facebook') || hasFeatureAccess('instagram')) && (
-                                    <Route
-                                        exact
-                                        path="/integrations"
-                                        pageName="Ratings and Feedback"
-                                        component={FBIGIntegration}
-                                    />
-                                )}
+                                <Route
+                                    exact
+                                    path="/integrations"
+                                    pageName="Ratings and Feedback"
+                                    component={FBIGIntegration}
+                                />
                                 <Route
                                     exact
                                     path="/appsumo"
@@ -496,7 +496,7 @@ const SiteRouter = connect(mapStateToProps, {
                                             height: '100vh',
                                         }}
                                     >
-                                        <h1>404 - Not Found</h1>
+                                        <h1>404 | Not Found</h1>
                                     </div>
                                 </Route>
                             </Switch>
