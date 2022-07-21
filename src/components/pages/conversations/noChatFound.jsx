@@ -6,8 +6,9 @@ export default function noChatFound({ value }) {
     return (
         <div className="no-chant-found-container">
             <img src={NoChatSvg} alt="" />
-            {/* <p>You have no active chat yet</p> */}
-            <p>{value}</p>
+            <p className="fw-bold">No Messages Yet</p>
+            <p className="small">Click <a href="/settings/integrations">here</a> to connect your channels</p>
+            {/* <p>{value}</p> */}
         </div>
     );
 }

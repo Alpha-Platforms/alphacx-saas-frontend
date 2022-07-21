@@ -69,6 +69,20 @@ function YouTubeGetID(url) {
     return ID;
 }
 
+function WelcomeText() {
+    return (
+        <div className="m-3">
+            <p className="fw-bold mb-1">Welcome on Board!</p>
+            <p className="small mb-1">
+                Welcome to AlphaCX! We’re excited to have you on board. We have the best product offerings made
+                specially for you.
+            </p>
+            <p className="small mb-1">Click <a href="#">here</a> to complete your onboarding process.</p>
+            <p className="small mb-1">While you’re at it, click here to view our latest product offerings.</p>
+        </div>
+    );
+}
+
 const youtubeRegex =
     /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/;
 
@@ -974,7 +988,7 @@ function Conversation({ user }) {
                         // style={showUserProfile ? { width: "calc(100% - 636px)" } : {}}
                     >
                         {firstTimeLoad ? (
-                            <NoChatFound value="Click on a ticket to get started" />
+                            <NoChatFound value="Click on a ticket to get started!" />
                         ) : loadSingleTicket ? (
                             <div
                                 style={{
@@ -1584,7 +1598,8 @@ function Conversation({ user }) {
                     {/* CHAT COL THREE */}
                     <div className="conversation-layout-col-three">
                         {firstTimeLoad ? (
-                            ''
+                            // <p>Lorem ipsum dolor sit amet.</p>
+                            <WelcomeText />
                         ) : loadSingleTicket ? (
                             <div
                                 style={{
