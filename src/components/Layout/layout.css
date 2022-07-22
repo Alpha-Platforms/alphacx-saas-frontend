@@ -93,7 +93,7 @@
 
 /*  */
 .ticket-status-dropdown .dropdown-menu{
-  transform : translate3d(0px, 31px, 0px) !important;
+  /* transform : translate3d(0px, 31px, 0px) !important; */
 }
 
 .sidebar-wrap {
