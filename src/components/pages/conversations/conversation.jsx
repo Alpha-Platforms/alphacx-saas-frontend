@@ -56,6 +56,10 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './conversation.css';
 import Socket from '../../../socket';
 import noimage from '../../../assets/images/noimage.png';
+import OnboardingModal from 'components/Layout/components/Onboarding';
+import AppNotification from 'components/Layout/Notification';
+
+// import OnboardingModal from './components/OnboardingModal';
 
 function YouTubeGetID(url) {
     let ID = '';
@@ -69,17 +73,26 @@ function YouTubeGetID(url) {
     return ID;
 }
 
-function WelcomeText() {
+function WelcomeText({ userId }) {
     return (
-        <div className="m-3">
-            <p className="fw-bold mb-1">Welcome on Board!</p>
-            <p className="small mb-1">
-                Welcome to AlphaCX! We’re excited to have you on board. We have the best product offerings made
-                specially for you.
-            </p>
-            <p className="small mb-1">Click <a href="#">here</a> to complete your onboarding process.</p>
-            <p className="small mb-1">While you’re at it, click here to view our latest product offerings.</p>
-        </div>
+        <>
+            <div className="m-3 mt-4">
+                <p className="fw-bold border-bottom hr-global mb-2">Welcome on Board!</p>
+                <p className="mb-1">
+                    Welcome to AlphaCX! We’re excited to have you on board. We have the best product offerings made
+                    specially for you.
+                </p>
+                <p className="mb-1">
+                    Click <a href="/settings/integrations">here</a> to complete your onboarding process.
+                </p>
+                <p className="mb-1">While you’re at it, click here to view our latest product offerings.</p>
+            </div>
+
+            <OnboardingModal />
+
+            <AppNotification userId={userId} />
+            {/* d13337dc-2aba-4e94-9a13-fd2d04cc77cb */}
+        </>
     );
 }
 
@@ -321,6 +334,12 @@ function Conversation({ user }) {
     function scollPosSendMsg() {
         window.location.href = '#msgListTop';
     }
+
+    const [ticketsExist, setTicketsExist] = useState(false);
+
+    useEffect(() => {
+        setTicketsExist(tickets.length > 0);
+    }, [tickets]);
 
     useEffect(() => {
         if (!multiIncludes(accessControlFunctions[user?.role], ['reply_conv'])) {
@@ -988,7 +1007,7 @@ function Conversation({ user }) {
                         // style={showUserProfile ? { width: "calc(100% - 636px)" } : {}}
                     >
                         {firstTimeLoad ? (
-                            <NoChatFound value="Click on a ticket to get started!" />
+                            <NoChatFound ticketsExist={ticketsExist} />
                         ) : loadSingleTicket ? (
                             <div
                                 style={{
@@ -1599,7 +1618,7 @@ function Conversation({ user }) {
                     <div className="conversation-layout-col-three">
                         {firstTimeLoad ? (
                             // <p>Lorem ipsum dolor sit amet.</p>
-                            <WelcomeText />
+                            <WelcomeText userId={user.id} />
                         ) : loadSingleTicket ? (
                             <div
                                 style={{

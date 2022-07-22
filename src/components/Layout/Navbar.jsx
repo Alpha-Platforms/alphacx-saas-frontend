@@ -114,15 +114,6 @@ function Notification({ userId }) {
                 return NotificationManager.success('All notifications marked read', 'Success', 4000);
             })
             .catch((error) => console.error(error));
-
-        // if (res.status === "success") {
-        //   console.log(res.data);
-        // return NotificationManager.success(res.data, "Error", 4000);
-        // } else {
-        //   console.log(res);
-        // return NotificationManager.error(res, "Error", 4000);
-        // }
-        // /v1/notifications_mark_all?userId=17c28cf6-c3d3-4bc3-91bd-60290cec8792
     };
 
     const getNotifications = async () => {
