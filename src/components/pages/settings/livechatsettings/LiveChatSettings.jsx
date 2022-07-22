@@ -1,6 +1,8 @@
-/* eslint-disable */
+/* eslint-disable react/prop-types */
+/* eslint-disable jsx-a11y/label-has-for */
+/* eslint-disable jsx-a11y/label-has-associated-control */
 // @ts-nocheck
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import SimpleCrypto from 'simple-crypto-js';
 import './LiveChatSettings.css';
@@ -14,15 +16,8 @@ import { getAgents } from '../../../../reduxstore/actions/agentActions';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
 import { getHostnamesFromString } from '../../../../helper';
 
-function LiveChatSettings({
-    livechatConfig,
-    isConfigLoaded,
-    isConfigLoading,
-    getLivechatConfig,
-    updateLivechatConfig,
-    getAgents,
-    isUserAuthenticated,
-}) {
+// eslint-disable-next-line no-shadow
+function LiveChatSettings({ getLivechatConfig, updateLivechatConfig, isUserAuthenticated }) {
     const [settings, setSettings] = useState({
         title: '',
         description: '',
@@ -34,10 +29,8 @@ function LiveChatSettings({
         footerBranding: true,
     });
 
-    console.log('%cLiveChatSettings.jsx line:37 settings', 'color: white; background-color: #007acc;', settings);
-
     const [loading, setLoading] = useState(true);
-    const [shouldRender, setShouldRender] = useState(false);
+    // const [shouldRender, setShouldRender] = useState(false);
 
     const [embedText, setEmbedText] = useState('Embed Script');
 
@@ -60,72 +53,99 @@ function LiveChatSettings({
         const settingsToEmbed = {
             ...JSON.parse(JSON.stringify(settings)),
             domains: getHostnamesFromString(value),
-        }
+        };
         setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
-        <script defer>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(JSON.stringify(settingsToEmbed))}'});</script>`);
+        <script defer>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(
+            JSON.stringify(settingsToEmbed),
+        )}'});</script>`);
     };
 
-    useEffect(() => {
-      console.clear()
-      console.log(settings);
-    }, [settings])
-    
+    // useEffect(() => {
+    //     console.clear();
+    //     console.log(settings);
+    // }, [settings]);
 
     useEffect(() => {
         if (isUserAuthenticated) {
             // get the first set of users
             // getPaginatedUsers(50, 1);
             setLoading(true);
-            getAgents(
-                (data) => {
-                    if (data?.users && data?.users?.length > 0) {
-                        setShouldRender(true);
-                        getLivechatConfig(
-                            (config) => {
-                                setLoading(false);
-                                console.log('config => ', config);
-                                const settingsFromConfig = {
-                                    title: config?.title || '',
-                                    description: config?.description || '',
-                                    initialText: config?.initialChat || '',
-                                    domains: config?.hostName || '',
-                                    theme: config?.color || '',
-                                    footerBranding: config?.footerBranding === false ? false : true,
-                                };
-                                setSettings((prev) => ({
-                                    ...prev,
-                                    ...settingsFromConfig,
-                                }));
-                                const settingsToEmbed = {
-                                    ...JSON.parse(JSON.stringify(settingsFromConfig)),
-                                    domains: getHostnamesFromString(settingsFromConfig?.domains),
-                                }
-                                console.log('settings to embed => ', settingsToEmbed);
-                                setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
-            <script defer>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(
-                JSON.stringify(settingsToEmbed),
-            )}'});</script>`);
-                            },
-                            () => {
-                                setLoading(false);
-                            },
-                        );
-                    } else {
-                        setLoading(false);
-                    }
+            getLivechatConfig(
+                (config) => {
+                    setLoading(false);
+                    // console.log('config => ', config);
+                    const settingsFromConfig = {
+                        title: config?.title || '',
+                        description: config?.description || '',
+                        initialText: config?.initialChat || '',
+                        domains: config?.hostName || '',
+                        theme: config?.color || '',
+                        footerBranding: config?.footerBranding !== false,
+                    };
+                    setSettings((prev) => ({
+                        ...prev,
+                        ...settingsFromConfig,
+                    }));
+                    const settingsToEmbed = {
+                        ...JSON.parse(JSON.stringify(settingsFromConfig)),
+                        domains: getHostnamesFromString(settingsFromConfig?.domains),
+                    };
+                    // console.log('settings to embed => ', settingsToEmbed);
+                    setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
+<script defer>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(
+                        JSON.stringify(settingsToEmbed),
+                    )}'});</script>`);
                 },
                 () => {
-                    // No agent found
                     setLoading(false);
                 },
             );
+            // getAgents(
+            //     (data) => {
+            //         if (data?.users && data?.users?.length > 0) {
+            //             setShouldRender(true);
+            //             getLivechatConfig(
+            //                 (config) => {
+            //                     setLoading(false);
+            //                     console.log('config => ', config);
+            //                     const settingsFromConfig = {
+            //                         title: config?.title || '',
+            //                         description: config?.description || '',
+            //                         initialText: config?.initialChat || '',
+            //                         domains: config?.hostName || '',
+            //                         theme: config?.color || '',
+            //                         footerBranding: config?.footerBranding === false ? false : true,
+            //                     };
+            //                     setSettings((prev) => ({
+            //                         ...prev,
+            //                         ...settingsFromConfig,
+            //                     }));
+            //                     const settingsToEmbed = {
+            //                         ...JSON.parse(JSON.stringify(settingsFromConfig)),
+            //                         domains: getHostnamesFromString(settingsFromConfig?.domains),
+            //                     }
+            //                     console.log('settings to embed => ', settingsToEmbed);
+            //                     setEmbedText(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
+            // <script defer>ACX.createLiveChatWidget({payload: '${simpleCrypto.encrypt(
+            //     JSON.stringify(settingsToEmbed),
+            // )}'});</script>`);
+            //                 },
+            //                 () => {
+            //                     setLoading(false);
+            //                 },
+            //             );
+            //         } else {
+            //             setLoading(false);
+            //         }
+            //     },
+            //     () => {
+            //         // No agent found
+            //         setLoading(false);
+            //     },
+            // );
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
-
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     const handleScriptCopy = () => {
         const { title, description, initialText, domains, theme, tenantDomain } = settings;
@@ -136,7 +156,7 @@ function LiveChatSettings({
             const settingsToEmbed = {
                 ...settings,
                 domains: getHostnamesFromString(settings.domains),
-            }
+            };
             const encryptedSettings = simpleCrypto.encrypt(JSON.stringify(settingsToEmbed));
             copy(`<script src="https://acxlivechat.s3.amazonaws.com/acx-livechat-widget.min.js"></script>
             <script defer>ACX.createLiveChatWidget({payload: '${encryptedSettings}'});</script>`);
@@ -144,6 +164,7 @@ function LiveChatSettings({
         }
     };
 
+    // eslint-disable-next-line consistent-return
     const handleConfigSave = () => {
         const { title, description, initialText, domains, theme, tenantDomain, footerBranding } = settings;
 
@@ -158,7 +179,7 @@ function LiveChatSettings({
             hostName: domains,
             color: theme,
             domain: tenantDomain,
-            footerBranding
+            footerBranding,
         };
 
         setLoading(true);
@@ -198,17 +219,20 @@ function LiveChatSettings({
                 </header>
                 <div className="">
                     <h5 className="mt-3 mb-0 ">Live Chat Widget</h5>
-                    <small><a href="https://docs.alphacx.co/getting-started/channel-integration/setup-live-chat-widget" target="_blank" className='text-custom'>See How to Setup Livechat</a></small>
+                    <small>
+                        <a
+                            href="https://docs.alphacx.co/getting-started/channel-integration/setup-live-chat-widget"
+                            target="_blank"
+                            className="text-custom"
+                            rel="noreferrer"
+                        >
+                            See How to Setup Livechat
+                        </a>
+                    </small>
                 </div>
                 {!loading && (
                     <div>
-                        {!shouldRender ? (
-                            <div>
-                                <br />
-                                You can't access the live chat widget until you have created at least one agent. Go to
-                                the <Link to="/settings/users">users settings page</Link> to create an agent.
-                            </div>
-                        ) : (
+                        {
                             <div className="mt-1 lcsettingslayout">
                                 <div className="livechat-column">
                                     <div>
@@ -277,15 +301,12 @@ function LiveChatSettings({
                                                     <div className="form-group mt-4">
                                                         <label className="f-14 mb-1">
                                                             Host Website <br />
-                                                            <small>
-                                                                ({`E.g. "example.com or sub.example.com"`})
-                                                            </small>
+                                                            <small>({`E.g. "example.com or sub.example.com"`})</small>
                                                         </label>
                                                         <input
                                                             type="text"
                                                             className="form-control form-control"
                                                             name="domains"
-                                                            value={settings.domains}
                                                             value={settings.domains}
                                                             // placeholder="alphacx.co; sub.example.com"
                                                             style={{ fontFamily: 'monospace' }}
@@ -313,7 +334,12 @@ function LiveChatSettings({
                                                             <small>Select your Widget color.</small>
                                                         </div>
                                                         <div className="d-flex my-2 mb-1 widgetcolor-wrapper">
-                                                            <input value={settings.theme} name="theme" onChange={handleInputChange} className="border form-control-plaintext me-1 px-1 rounded" />
+                                                            <input
+                                                                value={settings.theme}
+                                                                name="theme"
+                                                                onChange={handleInputChange}
+                                                                className="border form-control-plaintext me-1 px-1 rounded"
+                                                            />
                                                             <input
                                                                 type="color"
                                                                 value={settings.theme}
@@ -324,7 +350,9 @@ function LiveChatSettings({
                                                             />
                                                         </div>
                                                         <div>
-                                                            <small>Enter common colors (blue) or paste hex value (#036198)</small>
+                                                            <small>
+                                                                Enter common colors (blue) or paste hex value (#036198)
+                                                            </small>
                                                         </div>
                                                     </div>
 
@@ -347,6 +375,7 @@ function LiveChatSettings({
                                                         <div className="link-copy-box mb-1">
                                                             <span>{embedText}</span>{' '}
                                                             <button
+                                                                type="button"
                                                                 className="link-copy-btn"
                                                                 onClick={handleScriptCopy}
                                                             >
@@ -360,6 +389,7 @@ function LiveChatSettings({
                                                 </div>
                                                 <div className="my-3 mt-4">
                                                     <button
+                                                        type="button"
                                                         onClick={handleConfigSave}
                                                         className="btn btn-sm bg-at-blue-light px-3"
                                                         disabled={false}
@@ -384,7 +414,7 @@ function LiveChatSettings({
                                                         </div>
                                                     </div>
                                                     <div className="preview-body">
-                                                        <div className='p-4'>
+                                                        <div className="p-4">
                                                             <form className="preview-form">
                                                                 <div>
                                                                     <label htmlFor="fullname">
@@ -441,39 +471,46 @@ function LiveChatSettings({
                                                                 </div>
                                                             </form>
                                                         </div>
-                                                        {settings.footerBranding && (<div 
-                                                            style={{ 
-                                                                backgroundColor: `${settings.theme}1a` || 'rgba(25, 117, 188, 0.1)', 
-                                                                borderTopColor:  `${settings.theme}3b` || 'rgba(25, 117, 188, 0.23)', 
-                                                            }}>
-                                                            <span>
-                                                                <svg
-                                                                    width="17"
-                                                                    height="12"
-                                                                    viewBox="0 0 17 12"
-                                                                    fill="none"
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                >
-                                                                    <path
-                                                                        d="M2.57376 6.09584C2.57376 7.91997 4.01114 9.40329 5.77715 9.40329C6.31813 9.40491 6.85059 9.26408 7.32423 8.99409C7.79786 8.72409 8.19705 8.33385 8.48407 7.86023L9.3116 6.55488L9.31973 6.54299L11.1123 8.3944L11.11 8.39804L10.7849 8.93949C10.7698 8.96579 10.7548 8.99335 10.7396 9.01966L10.6089 9.23722C9.53268 10.9284 7.72725 11.9337 5.77715 11.9337C2.5911 11.9337 0 9.25624 0 5.96684C0 2.67744 2.5907 2.41603e-07 5.77715 2.41603e-07C6.73216 -0.000280476 7.67233 0.244066 8.51347 0.711158L8.55045 0.731585L10.8164 3.07072L16 8.42574L15.9973 12L8.25731 4.00308C8.12146 3.83178 7.9695 3.67483 7.80365 3.53452C7.79444 3.52613 7.78509 3.51899 7.77656 3.51186L7.74527 3.48667C7.18459 3.03103 6.49125 2.7845 5.77783 2.78713C4.01114 2.78741 2.57376 4.27198 2.57376 6.09584Z"
-                                                                        fill="#004882"
-                                                                    />
-                                                                    <path
-                                                                        d="M13.936 5L13.9398 4.99483L17 0H13.8453L12.0075 3.00079L12 3.01387L13.936 5Z"
-                                                                        fill="#C20C38"
-                                                                    />
-                                                                </svg>
-                                                            </span>
-                                                            <span>
-                                                                <a
-                                                                    href="https://alphacx.co"
-                                                                    target="_blank"
-                                                                    rel="noreferrer noopener"
-                                                                >
-                                                                    We care with AlphaCX {settings.theme }
-                                                                </a>
-                                                            </span>
-                                                        </div>)}
+                                                        {settings.footerBranding && (
+                                                            <div
+                                                                style={{
+                                                                    backgroundColor:
+                                                                        `${settings.theme}1a` ||
+                                                                        'rgba(25, 117, 188, 0.1)',
+                                                                    borderTopColor:
+                                                                        `${settings.theme}3b` ||
+                                                                        'rgba(25, 117, 188, 0.23)',
+                                                                }}
+                                                            >
+                                                                <span>
+                                                                    <svg
+                                                                        width="17"
+                                                                        height="12"
+                                                                        viewBox="0 0 17 12"
+                                                                        fill="none"
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                    >
+                                                                        <path
+                                                                            d="M2.57376 6.09584C2.57376 7.91997 4.01114 9.40329 5.77715 9.40329C6.31813 9.40491 6.85059 9.26408 7.32423 8.99409C7.79786 8.72409 8.19705 8.33385 8.48407 7.86023L9.3116 6.55488L9.31973 6.54299L11.1123 8.3944L11.11 8.39804L10.7849 8.93949C10.7698 8.96579 10.7548 8.99335 10.7396 9.01966L10.6089 9.23722C9.53268 10.9284 7.72725 11.9337 5.77715 11.9337C2.5911 11.9337 0 9.25624 0 5.96684C0 2.67744 2.5907 2.41603e-07 5.77715 2.41603e-07C6.73216 -0.000280476 7.67233 0.244066 8.51347 0.711158L8.55045 0.731585L10.8164 3.07072L16 8.42574L15.9973 12L8.25731 4.00308C8.12146 3.83178 7.9695 3.67483 7.80365 3.53452C7.79444 3.52613 7.78509 3.51899 7.77656 3.51186L7.74527 3.48667C7.18459 3.03103 6.49125 2.7845 5.77783 2.78713C4.01114 2.78741 2.57376 4.27198 2.57376 6.09584Z"
+                                                                            fill="#004882"
+                                                                        />
+                                                                        <path
+                                                                            d="M13.936 5L13.9398 4.99483L17 0H13.8453L12.0075 3.00079L12 3.01387L13.936 5Z"
+                                                                            fill="#C20C38"
+                                                                        />
+                                                                    </svg>
+                                                                </span>
+                                                                <span>
+                                                                    <a
+                                                                        href="https://alphacx.co"
+                                                                        target="_blank"
+                                                                        rel="noreferrer noopener"
+                                                                    >
+                                                                        We care with AlphaCX {settings.theme}
+                                                                    </a>
+                                                                </span>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </div>
                                             </div>
@@ -481,7 +518,7 @@ function LiveChatSettings({
                                     </div>
                                 </div>
                             </div>
-                        )}
+                        }
                     </div>
                 )}
             </div>
@@ -489,7 +526,7 @@ function LiveChatSettings({
     );
 }
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
     livechatConfig: state.livechat.livechatConfig,
     isConfigLoading: state.livechat.isConfigLoading,
     isConfigLoaded: state.livechat.isConfigLoaded,
