@@ -353,7 +353,7 @@ function Conversation({ user }) {
     useEffect(() => {
         (async () => {
             const initRes = await httpGetMain(`tickets?per_page=100`);
-            console.log('%cconversation.jsx line:341 initRes', 'color: white; background-color: #007acc;', initRes);
+            // console.log('%cconversation.jsx line:341 initRes', 'color: white; background-color: #007acc;', initRes);
             if (initRes?.status === 'success') {
                 setTickets(initRes?.data?.tickets || []);
                 setMeta(initRes?.data?.meta || {});
@@ -413,7 +413,7 @@ function Conversation({ user }) {
                 event.preventDefault();
                 event.stopPropagation();
                 const eventData = JSON.parse(event.data);
-                console.log('Message from socket => ', eventData);
+                // console.log('Message from socket => ', eventData);
                 if (
                     (eventData?.type === 'liveStream' || eventData?.type === 'socketHook') &&
                     eventData?.status === 'incoming' &&
@@ -589,24 +589,33 @@ function Conversation({ user }) {
         setReplyTicket({ plainText, richText });
     };
 
-    const filterTicket = (value, type) => {
+    // Filter chats bases on channel or status
+    // eslint-disable-next-line default-param-last
+    const filterTicket = async (value = '', type) => {
         if (type === 'channel') {
             setChannel(value);
 
-            /* 
-            FIXME:  handle with http if ought to
-            AppSocket.createConnection();
-            const data = { channel: value === 'All' ? '' : value, per_page: 100 };
-            AppSocket.io.emit(`ws_tickets`, data); */
+            const channelRes = await httpGetMain(
+                `tickets?${value && value.toUpperCase() !== 'ALL' ? `channel=${value}&` : ''}per_page=100`,
+            );
+            if (channelRes?.status === 'success') {
+                setTickets(channelRes?.data?.tickets || []);
+                setMeta(channelRes?.data?.meta || {});
+                setTicketsLoaded(true);
+            }
         }
 
         if (type === 'status') {
             setstatus(value);
-            /* 
-            FIXME:  handle with http if ought to
-            AppSocket.createConnection();
-            const data = { status: value === 'All' ? '' : value, per_page: 100 };
-            AppSocket.io.emit(`ws_tickets`, data); */
+
+            const statusRes = await httpGetMain(
+                `tickets?${value && value.toUpperCase() !== 'ALL' ? `status=${value}&` : ''}per_page=100`,
+            );
+            if (statusRes?.status === 'success') {
+                setTickets(statusRes?.data?.tickets || []);
+                setMeta(statusRes?.data?.meta || {});
+                setTicketsLoaded(true);
+            }
         }
         setFilterTicketsState(value);
     };
