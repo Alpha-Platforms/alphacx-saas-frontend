@@ -7,6 +7,19 @@ import truncateWithEllipses from '../../helpers/truncate';
 import { timeFormater } from '../../helpers/dateFormater';
 import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter';
 import InitialsFromString from '../../helpers/InitialsFromString';
+import ChatBubble from '../../../assets/svgicons/chatBubble.svg';
+
+function EmptyMessageList(){
+    return (
+        <div className="mt-5 mx-3 text-center">
+            <div className='mb-4'>
+                <img src={ChatBubble} alt="No message icon" />
+            </div>
+            <p className="mb-2">Hello there, you do not have any connected channels.</p>
+            <p className="">Click <a href="/settings/integrations">here</a> to connect your channels.</p>
+        </div>
+    );
+}
 
 export default function MessageList({
     tickets,
@@ -96,11 +109,7 @@ export default function MessageList({
                 </div>
             ) : Array.isArray(renderTicket) ? (
                 renderTicket.length == 0 ? (
-                    <div className="d-flex justify-content-center align-items-center pt-5 away">
-                        {<p className="text-center pt-5 lead h4">
-                        No tickets found
-                        </p>}{' '}
-                    </div>
+                    <EmptyMessageList />
                 ) : (
                     renderTicket.map((data, index) => {
                         const currentStatus = statuses?.find((item) => item?.id === data?.status?.id || item?.id === data?.status_id);

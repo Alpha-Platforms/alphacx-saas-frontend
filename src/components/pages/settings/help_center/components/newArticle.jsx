@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-param-reassign */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable react/no-unstable-nested-components */
@@ -36,6 +38,7 @@ function YouTubeGetID(url) {
     url = url.replace(/(>|<)/gi, '').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
     if (url[2] !== undefined) {
         ID = url[2].split(/[^0-9a-z_-]/i);
+        // eslint-disable-next-line prefer-destructuring
         ID = ID[0];
     } else {
         ID = url;
@@ -48,10 +51,10 @@ function NewArticle() {
 
     const initialState = EditorState.createWithContent(ContentState.createFromText(''));
 
-    const [compState, setCompState] = useState({
-        showCategories: false,
-        showTags: false,
-    });
+    // const [compState, setCompState] = useState({
+    //     showCategories: false,
+    //     showTags: false,
+    // });
 
     const [newPost, setNewPost] = useState({
         title: '',
@@ -69,7 +72,7 @@ function NewArticle() {
         loading: true,
         shouldRender: false,
     });
-    const [folders, setFolders] = useState([]);
+    const [, setFolders] = useState([]);
     const [editorState, setEditorState] = useState(initialState);
     const [flInfo, setFlInfo] = useState({ title: '', link: '', newWindow: false });
     const [postInfo, setPostInfo] = useState({
@@ -148,10 +151,11 @@ function NewArticle() {
         );
     }
 
+    // eslint-disable-next-line no-shadow
     const onEditorStateChange = (editorState) => {
         // handleDescriptionValidation(editorState);
 
-        const plainText = editorState.getCurrentContent().getPlainText();
+        // const plainText = editorState.getCurrentContent().getPlainText();
         const richText = draftToHtml(convertToRaw(editorState.getCurrentContent()));
         setEditorState(editorState);
         setNewPost({ ...newPost, richText });
@@ -179,7 +183,8 @@ function NewArticle() {
         // the img src we will use here will be what's needed
         // to preview it in the browser. This will be different than what
         // we will see in the index.md file we generate.
-        return new Promise(async (resolve, reject) => {
+        // eslint-disable-next-line no-async-promise-executor
+        return new Promise(async (resolve) => {
             const data = new FormData();
             data.append('file', file);
             data.append('upload_preset', process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET);
@@ -192,7 +197,7 @@ function NewArticle() {
                     // setEditorUploadImg(ReplyTicket.plainText + editorUploadImg + res.data?.url);
                     resolve({ data: { link: res.data?.url } });
                 })
-                .catch((err) => {
+                .catch(() => {
                     NotificationManager.error('Photo could not be uploaded', 'Error');
                 });
             // resolve({ data: { link: imageObject.localSrc } });
@@ -203,7 +208,8 @@ function NewArticle() {
     //    that can be added to an article
     const fetchCategories = async () => {
         const res = await httpGetMain('articles/categories');
-        if (res?.status == 'success') {
+        if (res?.status === 'success') {
+            // eslint-disable-next-line no-shadow
             const categories = res?.data;
             if (!categories || categories?.length === 0) {
                 setCatState((prev) => ({
@@ -241,7 +247,7 @@ function NewArticle() {
     const publishPost = async (id) => {
         const res = await httpPatchMain(`articles/${id}/publish`);
         setPolicyLoading(false);
-        if (res?.status == 'success') {
+        if (res?.status === 'success') {
             NotificationManager.success(res.message, 'Success', 5000);
 
             window.location.href = `/settings/knowledge-base`;
@@ -251,10 +257,11 @@ function NewArticle() {
     };
 
     // function to fetch article details if in edit mode
-    const fetchArticleDetails = async (categories) => {
+    const fetchArticleDetails = async () => {
         setPolicyLoading(true);
         const res = await httpGetMain(`article/${articleId}`);
-        if (res?.status == 'success') {
+        if (res?.status === 'success') {
+            // eslint-disable-next-line no-unsafe-optional-chaining
             const { title, body, folders } = res?.data;
             setPostInfo((prev) => ({
                 ...prev,
@@ -273,6 +280,7 @@ function NewArticle() {
             // convert rich text to plain text in editor
             // const blocksFromHTML = convertFromHTML(body);
             const blocksFromHTML = htmlToDraft(body);
+            // eslint-disable-next-line no-shadow
             const initialState = EditorState.createWithContent(
                 ContentState.createFromBlockArray(blocksFromHTML.contentBlocks, blocksFromHTML.entityMap),
             );
@@ -293,11 +301,12 @@ function NewArticle() {
             body: newPost.richText,
             folderId: newPost.folderId,
         };
+        // eslint-disable-next-line no-console
         console.clear();
 
         const res = await httpPostMain('articles', data);
 
-        if (res?.status == 'success') {
+        if (res?.status === 'success') {
             if (newPost?.publishGlobal) {
                 publishPost(res?.data?.id);
             }
@@ -357,6 +366,7 @@ function NewArticle() {
         return embeddedLink;
     };
 
+    // eslint-disable-next-line func-names
     const handleFileSelect = function (e) {
         // store current input
         const fileInput = e.target;
@@ -499,7 +509,8 @@ function NewArticle() {
                         });
                     })
                     .catch((err) => {
-                        console.log(err);
+                        // eslint-disable-next-line no-console
+                        console.err(err);
                         NotificationManager.error('File could not be uploaded', 'Error');
                         if (uploadBtn) {
                             uploadBtn.textContent = 'Upload';
@@ -565,7 +576,6 @@ function NewArticle() {
         const imageBtn = window.document.querySelector('.kb-art-link.rdw-link-wrapper + div');
 
         imageBtn.addEventListener('click', () => {
-            console.log('click');
             setTimeout(() => {
                 const imagePopup = window.document.querySelector(
                     '.kb-art-link.rdw-link-wrapper + div > div:nth-child(2)',
@@ -576,6 +586,7 @@ function NewArticle() {
                 }
             }, 10);
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -851,6 +862,7 @@ function NewArticle() {
                                         <div className="toogle mb-4">
                                             <p>Published globally</p>
                                             <button
+                                                type="button"
                                                 className={newPost.publishGlobal ? 'active' : ''}
                                                 onClick={handlePublish}
                                             >

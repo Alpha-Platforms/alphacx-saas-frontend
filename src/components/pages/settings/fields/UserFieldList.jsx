@@ -2,7 +2,7 @@
 // @ts-nocheck
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disabled */
-import { useState, Fragment, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { capitalize } from '@material-ui/core';
 //
 import Button from 'react-bootstrap/Button';

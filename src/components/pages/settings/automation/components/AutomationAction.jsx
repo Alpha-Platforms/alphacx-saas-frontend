@@ -21,6 +21,8 @@ function AutomationAction({
     generateActionTemplate,
 }) {
     const [deleteConfirm, setDeleteConfirm] = useState(false);
+    const [textToInsert, setTextToInsert] = useState('');
+    const [forceEditorUpdate, setForceEditorUpdate] = useState(false);
 
     const setActionState = (valObj) => {
         setActions((prev) =>
@@ -56,14 +58,14 @@ function AutomationAction({
         setActions((prev) => prev.filter((x) => x.id !== action.id));
     };
 
-    const insertPlaceholder = (i) => {
-        const shortCode = `{${availablePlaceholders[i]?.value}}`;
+    // const insertPlaceholder = (i) => {
+    //     const shortCode = `{${availablePlaceholders[i]?.value}}`;
 
-        setActionState({
-            body: `${action.body} ${shortCode} `,
-            placeholder: ` ${shortCode} `,
-        });
-    };
+    //     setActionState({
+    //         body: `${action.body} ${shortCode} `,
+    //         placeholder: ` ${shortCode} `,
+    //     });
+    // };
 
     const loadRecipients = () => {
         const mappedItems = [];
@@ -101,7 +103,7 @@ function AutomationAction({
         const { name, value } = e.target;
 
         if (name === 'days' || name === 'hours') {
-            console.log(value);
+            // console.log(value);
         }
 
         setActionState({
@@ -124,6 +126,12 @@ function AutomationAction({
             recipientValue: [],
         });
     };
+
+    const insertTextToEditor = (i) => {
+        const shortCode = `{${availablePlaceholders[i]?.value}}`;
+        setTextToInsert(`${shortCode}`);
+        setForceEditorUpdate((props) => !props);
+    }
 
     return (
         <>
@@ -234,7 +242,8 @@ function AutomationAction({
                         <label className="mb-1">Available Placeholders</label>
                         <div className="available-placeholders">
                             {availablePlaceholders.map((item, i) => (
-                                <p key={i} onClick={() => insertPlaceholder(i)}>
+                                // <p key={i} onClick={() => insertPlaceholder(i)}>
+                                <p key={i} onClick={() => insertTextToEditor(i)}>
                                     {item?.name}
                                 </p>
                             ))}
@@ -261,6 +270,8 @@ function AutomationAction({
                                 })
                             }
                             updateVal={actions.length}
+                            textToInsert={textToInsert}
+                            forceEditorUpdate={forceEditorUpdate}
                         />
                     </div>
                 </div>

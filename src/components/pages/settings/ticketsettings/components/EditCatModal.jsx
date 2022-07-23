@@ -1,11 +1,13 @@
-/* eslint-disable */
-import { useState, useEffect } from 'react';
+/* eslint-disable react/prop-types */
+// @ts-nocheck
+import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-responsive-modal';
 import { NotificationManager } from 'react-notifications';
 import { connect } from 'react-redux';
-import { updateCategory, getCategories } from '../../../../../reduxstore/actions/categoryActions';
+import { updateCategory, getPaginatedCategories } from '../../../../../reduxstore/actions/categoryActions';
 
-function EditCatModal({ createModalShow, setCreateModalShow, currentCatInfo, updateCategory, getCategories }) {
+// eslint-disable-next-line no-shadow
+function EditCatModal({ createModalShow, setCreateModalShow, currentCatInfo, updateCategory, getPaginatedCategories }) {
     const [modalInputs, setModalInputs] = useState({ id: '', catname: '' });
     const [editingCat, setEditingCat] = useState(false);
 
@@ -17,6 +19,7 @@ function EditCatModal({ createModalShow, setCreateModalShow, currentCatInfo, upd
                 catname: currentCatInfo?.name,
             }));
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [createModalShow]);
 
     const handleModalHide = () => {
@@ -40,7 +43,7 @@ function EditCatModal({ createModalShow, setCreateModalShow, currentCatInfo, upd
             { id, name: catname },
             () => {
                 NotificationManager.success('Category updated successfully', 'Success');
-                getCategories();
+                getPaginatedCategories(50, 1);
                 setCreateModalShow(false);
                 setEditingCat(false);
             },
@@ -92,6 +95,4 @@ function EditCatModal({ createModalShow, setCreateModalShow, currentCatInfo, upd
     );
 }
 
-const mapStateToProps = (state, ownProps) => ({});
-
-export default connect(mapStateToProps, { updateCategory, getCategories })(EditCatModal);
+export default connect(null, { updateCategory, getPaginatedCategories })(EditCatModal);

@@ -13,9 +13,10 @@ import SimpleReactValidator from 'simple-react-validator';
 import { textCapitalize } from '../../../../../helper';
 import { addAgent, getAgents, resetAgentCreated } from '../../../../../reduxstore/actions/agentActions';
 import { countrycodes } from '../../../../shared/countrycodes';
-import { Validate } from '../../../../../helpers/validateInput';
+// import { Validate } from '../../../../../helpers/validateInput';
 import { getSubscription } from '../../../../../reduxstore/actions/subscriptionAction';
 
+// eslint-disable-next-line no-shadow
 function CreateUserModal({ createModalShow, setCreateModalShow, groups, addAgent, getSubscription }) {
     const [modalInputs, setModalInputs] = useState({
         firstName: '',
@@ -236,8 +237,10 @@ function CreateUserModal({ createModalShow, setCreateModalShow, groups, addAgent
                                     >
                                         {countrycodes
                                             .sort((a, b) => Number(a.dial_code.slice(1)) - Number(b.dial_code.slice(1)))
-                                            .map((cc) => (
-                                                <option value={cc.dial_code}>{cc.dial_code}</option>
+                                            .map((cc, index) => (
+                                                <option value={cc.dial_code} key={index}>
+                                                    {cc.dial_code}
+                                                </option>
                                             ))}
                                     </select>
                                 </div>
@@ -247,7 +250,7 @@ function CreateUserModal({ createModalShow, setCreateModalShow, groups, addAgent
                                     name="phoneNumber"
                                     id="workphone"
                                     value={modalInputs.phoneNumber}
-                                    ariaLabel="work phone"
+                                    aria-label="work phone"
                                     ariaDescribedby="workphone"
                                     onChange={handleModalInput}
                                     onBlur={() => showValidateMessageFor('Work phone')}

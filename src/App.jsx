@@ -80,7 +80,7 @@ import Dashboard from './components/pages/dashboard/Dashboard';
 import AccountVerified from './components/pages/auth/verified';
 import LiveChatSettings from './components/pages/settings/livechatsettings/LiveChatSettings';
 import SmsSettings from './components/pages/settings/smssettings/smsSettings';
-import ReportsFilter from './components/pages/reports/ReportsFilter';
+import Reports from './components/pages/reports/Reports';
 import FBIGIntegration from './components/pages/settings/social_integrations/fbig';
 import AppsumoSignup from './components/pages/appsumo/signup';
 import Instagram from './components/pages/settings/social_integrations/Instagram';
@@ -91,6 +91,32 @@ const mapStateToProps = (state) => ({
     isUserAuthenticated: state.userAuth.isUserAuthenticated,
     tenantSubscription: state?.subscription?.subscription,
 });
+
+// proper 404 UI later
+function NotFound() {
+    return (
+        <div
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+            }}
+        >
+            <h3 style={{ marginRight: '25px' }}>404</h3>
+            <div style={{ paddingLeft: '25px', borderLeft: 'solid 1px', verticalAlign: 'middle' }}>
+                <p
+                    style={{
+                        padding: '16px 0',
+                        margin: '0',
+                    }}
+                >
+                    This page could not be found
+                </p>
+            </div>
+        </div>
+    );
+}
 
 const SiteRouter = connect(mapStateToProps, {
     loadUser,
@@ -154,7 +180,9 @@ const SiteRouter = connect(mapStateToProps, {
                                 {/* forgot password */}
                                 <Route exact path="/reset-password/:resetToken" component={ResetPassword} />{' '}
                                 {/* reset password */}
-                                {hasFeatureAccess('knowledgebase') && <Route exact path="/knowledge-base" component={HelpCenter} />}
+                                {hasFeatureAccess('knowledgebase') && (
+                                    <Route exact path="/knowledge-base" component={HelpCenter} />
+                                )}
                                 {hasFeatureAccess('knowledgebase') && (
                                     <Route exact path="/knowledge-base/categories" component={ArticleCategoryList} />
                                 )}
@@ -233,19 +261,8 @@ const SiteRouter = connect(mapStateToProps, {
                                     component={SettingsHome}
                                 />
                                 {hasFeatureAccess('reports') && (
-                                    <SettingsLayoutRoute
-                                        exact
-                                        path="/reports"
-                                        pageName="Reports"
-                                        component={ReportsFilter}
-                                    />
+                                    <SettingsLayoutRoute exact path="/reports" pageName="Reports" component={Reports} />
                                 )}
-                                {/* <SettingsLayoutRoute
-                                exact
-                                path="/reports/filter"
-                                pageName="Reports"
-                                component={ReportsFilter}
-                            /> */}
                                 {/* <SettingsLayoutRoute
                                 exact
                                 path="/settings/profile"
@@ -472,14 +489,12 @@ const SiteRouter = connect(mapStateToProps, {
                                     />
                                 )}
                                 <Route exact path="/instagram" pageName="Ratings and Feedback" component={Instagram} />
-                                {(hasFeatureAccess('facebook') || hasFeatureAccess('instagram')) && (
-                                    <Route
-                                        exact
-                                        path="/integrations"
-                                        pageName="Ratings and Feedback"
-                                        component={FBIGIntegration}
-                                    />
-                                )}
+                                <Route
+                                    exact
+                                    path="/integrations"
+                                    pageName="Ratings and Feedback"
+                                    component={FBIGIntegration}
+                                />
                                 <Route
                                     exact
                                     path="/appsumo"
@@ -488,16 +503,7 @@ const SiteRouter = connect(mapStateToProps, {
                                 />{' '}
                                 {/* ......settings pages end */}
                                 <Route>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            height: '100vh',
-                                        }}
-                                    >
-                                        <h1>404 - Not Found</h1>
-                                    </div>
+                                    <NotFound />
                                 </Route>
                             </Switch>
                         </SocketDataProvider>

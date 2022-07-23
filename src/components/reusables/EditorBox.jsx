@@ -1,9 +1,10 @@
-/* eslint-disable */
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react/prop-types */
+// @ts-nocheck
+import React, { useState, useEffect, useRef } from 'react';
 import { Editor } from 'react-draft-wysiwyg';
-import { EditorState, convertToRaw, ContentState } from 'draft-js';
+import { EditorState, convertToRaw, ContentState, Modifier } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
-import AddCategory from '../../assets/imgF/addCategory.png';
+// import AddCategory from '../../assets/imgF/addCategory.png';
 import boldB from '../../assets/imgF/boldB.png';
 import Smiley from '../../assets/imgF/Smiley.png';
 import editorImg from '../../assets/imgF/editorImg.png';
@@ -23,10 +24,57 @@ function EditorBox({
     setPlaceholder,
     updateVal,
     editorClassName,
+    textToInsert = '',
+    forceEditorUpdate,
 }) {
     const initialState = EditorState.createWithContent(ContentState.createFromText(text));
     const [editorState, setEditorState] = useState(initialState);
 
+    const editorRef = useRef(null);
+
+    // eslint-disable-next-line no-shadow
+    // const insertText = (text, editorState) => {
+    //     console.log('insert text');
+    //     const currentContent = editorState.getCurrentContent();
+    //     const currentSelection = editorState.getSelection();
+
+    //     const newContent = Modifier.replaceText(currentContent, currentSelection, text);
+
+    //     const newEditorState = EditorState.push(editorState, newContent, 'insert-characters');
+    //     return EditorState.forceSelection(newEditorState, newContent.getSelectionAfter());
+    // };
+
+    // eslint-disable-next-line no-shadow
+    const insertText = (text, editorState) => {
+        const contentState = Modifier.replaceText(
+            editorState.getCurrentContent(),
+            editorState.getSelection(),
+            text,
+            editorState.getCurrentInlineStyle(),
+        );
+        return EditorState.push(editorState, contentState, 'insert-characters');
+    };
+
+    const focusEditor = () => {
+        if (editorRef) {
+            editorRef.current?.focusEditor();
+        }
+    };
+
+    // eslint-disable-next-line no-shadow
+    const sendTextToEditor = (text) => {
+        setEditorState(insertText(text, editorState));
+        focusEditor();
+    };
+
+    useEffect(() => {
+        if (textToInsert) {
+            sendTextToEditor(textToInsert);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [textToInsert, forceEditorUpdate]);
+
+    // eslint-disable-next-line no-shadow
     const onEditorStateChange = (editorState) => {
         // handleDescriptionValidation(editorState);
 
@@ -59,7 +107,6 @@ function EditorBox({
         };
 
         uploadedImages.push(imageObject);
-        console.log(imageObject);
 
         // this.setState(uploadedImages: uploadedImages)
 
@@ -67,17 +114,19 @@ function EditorBox({
         // the img src we will use here will be what's needed
         // to preview it in the browser. This will be different than what
         // we will see in the index.md file we generate.
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             resolve({ data: { link: imageObject.localSrc } });
         });
     };
 
     useEffect(() => {
+        // eslint-disable-next-line no-shadow
         const initialState = EditorState.createWithContent(ContentState.createFromText(text));
         setEditorState(initialState);
         if (placeholder) {
             setPlaceholder('');
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [placeholder, updateVal]);
     return (
         <div
@@ -85,6 +134,7 @@ function EditorBox({
             className={editorClassName ? `${editorClassName}-container editor-Container` : 'editor-Container'}
         >
             <Editor
+                ref={editorRef}
                 editorState={editorState}
                 toolbar={{
                     options: [

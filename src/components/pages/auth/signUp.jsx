@@ -15,7 +15,6 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import SimpleReactValidator from 'simple-react-validator';
 import { NotificationManager } from 'react-notifications';
 import { httpPost } from '../../../helpers/httpMethods';
-import { Validate } from '../../../helpers/validateInput';
 import { countries } from '../../shared/countries';
 import './login.css';
 import Symbol1 from '../../../assets/imgF/symbolAuth.png';

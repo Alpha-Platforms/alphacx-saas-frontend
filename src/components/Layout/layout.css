@@ -93,7 +93,7 @@
 
 /*  */
 .ticket-status-dropdown .dropdown-menu{
-  transform : translate3d(0px, 31px, 0px) !important;
+  /* transform : translate3d(0px, 31px, 0px) !important; */
 }
 
 .sidebar-wrap {
@@ -396,7 +396,8 @@
   transform: translateX(-50%);
 }
 
-.acx-notification-nav-dropdown .dropdown-menu .dropdown-item{
+.acx-notification-nav-dropdown .dropdown-menu .dropdown-item,
+.acx-notification-item {
   padding-top: 14px;
   padding-bottom: 14px;
   transition: 0.25s ease-in;
@@ -405,7 +406,8 @@
   border-bottom: 0.8px solid rgba(0, 0, 0, 0.1);
 }
 
-.acx-notification-nav-dropdown .dropdown-menu .dropdown-item:hover{
+.acx-notification-nav-dropdown .dropdown-menu .dropdown-item:hover,
+.acx-notification-item:hover {
   cursor: pointer;
   background-color: rgba(0, 98, 152, 0.04);
 }

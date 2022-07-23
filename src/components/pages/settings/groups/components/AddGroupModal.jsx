@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-shadow */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-hooks/exhaustive-deps */
@@ -8,10 +9,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Modal } from 'react-responsive-modal';
 import { NotificationManager } from 'react-notifications';
-import MoonLoader from 'react-spinners/MoonLoader';
+// import MoonLoader from 'react-spinners/MoonLoader';
 import SimpleReactValidator from 'simple-react-validator';
 import { connect } from 'react-redux';
-import RSelect from 'react-select';
+// import RSelect from 'react-select';
 import AsyncSelect from 'react-select/async';
 import { httpPostMain, httpGetMain } from '../../../../../helpers/httpMethods';
 import { getGroups, updateGroup } from '../../../../../reduxstore/actions/groupActions';
@@ -20,6 +21,7 @@ import '../../../../../styles/ModalCustomStyle.css';
 let categoriesFetchTimer;
 
 const getSearchedCategories = async (userInput) => {
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve) => {
         // if (userInput.length < 1) resolve(['Search']);
         clearTimeout(categoriesFetchTimer);
@@ -46,7 +48,6 @@ function AddGroupModal({
     addGroupModalShow,
     setAddGroupModalShow,
     isEditing,
-    categories,
     groups,
     groupId,
     getGroups,
@@ -55,7 +56,7 @@ function AddGroupModal({
     // create user modal
     const [creating, setCreating] = useState(false);
     const [editing, setEditing] = useState(false);
-    const [RSCategories, setRSCategories] = useState([]);
+    // const [RSCategories, setRSCategories] = useState([]);
     const [newTeam, setNewTeam] = useState({
         name: '',
         description: '',
@@ -74,17 +75,14 @@ function AddGroupModal({
         setNewTeam({ ...newTeam, [name]: value });
     };
 
-    const loadRSCategoryOptions = () => {
-        const mappedTeams = categories.map((item) => {
-            return { label: item.name, value: item.id };
-        });
-        setRSCategories(mappedTeams);
-    };
+    // const loadRSCategoryOptions = () => {
+    //     const mappedTeams = categories.map((item) => {
+    //         return { label: item.name, value: item.id };
+    //     });
+    //     setRSCategories(mappedTeams);
+    // };
 
     const handleModalRSInput = (values, { name }) => {
-        console.log('values => ', values);
-        console.log('name => ', name);
-
         const temp = values.map((item) => {
             return item.value;
         });
@@ -129,6 +127,7 @@ function AddGroupModal({
                     return typeof value === 'object';
                 })
             ) {
+                // eslint-disable-next-line func-names
                 newCategoryIds = newTeam.categoryIds.reduce(function (result, object) {
                     result.push(object.value);
                     return result;

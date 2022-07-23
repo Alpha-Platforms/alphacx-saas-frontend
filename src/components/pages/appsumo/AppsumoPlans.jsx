@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable react/no-array-index-key */
-import { httpGet, httpPost } from 'helpers/httpMethods';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { httpGet } from '../../helpers/httpMethods';
 import { TickeCircle } from '../../../assets/images/svgs';
 import './AppsumoPlans.scss';
 import CheckCircle from '../../../assets/icons/CheckCircle.svg';
@@ -36,6 +37,7 @@ function AppsumoPlans({ currentPlan }) {
 
         getAllPlans();
         getAppsumoCustomerUuid();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const freePlanFeatures = [

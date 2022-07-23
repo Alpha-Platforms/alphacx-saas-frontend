@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // @ts-nocheck
 import { config } from './config/keys';
 // import { uuid } from './helper';

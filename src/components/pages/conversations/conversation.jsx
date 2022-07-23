@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable no-param-reassign */
 /* eslint-disable react/no-this-in-sfc */
 /* eslint-disable no-return-assign */
@@ -38,7 +40,7 @@ import searchIcon from '../../../assets/imgF/Search.png';
 import NoChatFound from './noChatFound';
 import { httpGetMain, httpPostMain, httpPatchMain } from '../../../helpers/httpMethods';
 import InitialsFromString from '../../helpers/InitialsFromString';
-import { SocketDataContext } from '../../../context/socket';
+// import { SocketDataContext } from '../../../context/socket';
 import { StarIconTicket, SendMsgIcon } from '../../../assets/images/svgs';
 import { dateFormater } from '../../helpers/dateFormater';
 import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter';
@@ -56,6 +58,10 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './conversation.css';
 import Socket from '../../../socket';
 import noimage from '../../../assets/images/noimage.png';
+import OnboardingModal from 'components/Layout/components/Onboarding';
+import AppNotification from 'components/Layout/Notification';
+
+// import OnboardingModal from './components/OnboardingModal';
 
 function YouTubeGetID(url) {
     let ID = '';
@@ -69,6 +75,30 @@ function YouTubeGetID(url) {
     return ID;
 }
 
+function WelcomeText({ userId }) {
+    return (
+        <>
+            <div className="m-3 mt-4">
+                <p className="fw-bold border-bottom hr-global mb-2">Welcome on Board!</p>
+                <p className="mb-1">
+                    We are excited you chose AlphaCX for your customer engagement. <br />
+                    AlphaCX is easy to use, however you can learn much more by going through our product{' '}
+                    <a href="#">documentation</a> or watching video <a href="#">tutorials</a>.
+                </p>
+                <p className="mb-1">
+                    You can also share your feedback or open a support ticket.
+                    <a href="/settings?opencontactmodal=1">here</a>
+                </p>
+            </div>
+
+            <OnboardingModal />
+
+            <AppNotification userId={userId} />
+            {/* d13337dc-2aba-4e94-9a13-fd2d04cc77cb */}
+        </>
+    );
+}
+
 const youtubeRegex =
     /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/;
 
@@ -79,7 +109,7 @@ function Conversation({ user }) {
     // const { AppSocket } = useContext(SocketDataContext);
     const [tickets, setTickets] = useState([]);
     const [ticketsLoaded, setTicketsLoaded] = useState(false);
-    const [meta, setMeta] = useState({});
+    const [, setMeta] = useState({});
     const [filterTicketsState, setFilterTicketsState] = useState('');
     const [ticket, setTicket] = useState([]);
     const [loadingTicks, setLoadingTicks] = useState(true);
@@ -115,9 +145,9 @@ function Conversation({ user }) {
         description: [],
         category: '',
     });
-    const [sendingReply, setSendingReply] = useState(false);
+    const [sendingReply] = useState(false);
     const [msgHistory, setMsgHistory] = useState([]);
-    const [wsTickets, setWsTickets] = useState([]);
+    // const [wsTickets, setWsTickets] = useState([]);
     const [TodayMsges, setTodayMsges] = useState([]);
     const [YesterdayMsges, setYesterdayMsges] = useState([]);
     const [AchiveMsges, setAchiveMsges] = useState([]);
@@ -180,7 +210,7 @@ function Conversation({ user }) {
         return NotificationManager.error(res.er.message, 'Error', 4000);
     };
 
-    const loadSingleMessage = async ({ id, customer, assignee, subject }) => {
+    const loadSingleMessage = async ({ id, customer, subject }) => {
         setAchiveMsges([]);
         getUser(customer.id);
         setLoadSingleTicket(true);
@@ -308,10 +338,17 @@ function Conversation({ user }) {
         window.location.href = '#msgListTop';
     }
 
+    const [ticketsExist, setTicketsExist] = useState(false);
+
+    useEffect(() => {
+        setTicketsExist(tickets.length > 0);
+    }, [tickets]);
+
     useEffect(() => {
         if (!multiIncludes(accessControlFunctions[user?.role], ['reply_conv'])) {
             setReplyType('note');
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -353,7 +390,7 @@ function Conversation({ user }) {
     useEffect(() => {
         (async () => {
             const initRes = await httpGetMain(`tickets?per_page=100`);
-            console.log('%cconversation.jsx line:341 initRes', 'color: white; background-color: #007acc;', initRes);
+            // console.log('%cconversation.jsx line:341 initRes', 'color: white; background-color: #007acc;', initRes);
             if (initRes?.status === 'success') {
                 setTickets(initRes?.data?.tickets || []);
                 setMeta(initRes?.data?.meta || {});
@@ -413,7 +450,7 @@ function Conversation({ user }) {
                 event.preventDefault();
                 event.stopPropagation();
                 const eventData = JSON.parse(event.data);
-                console.log('Message from socket => ', eventData);
+                // console.log('Message from socket => ', eventData);
                 if (
                     (eventData?.type === 'liveStream' || eventData?.type === 'socketHook') &&
                     eventData?.status === 'incoming' &&
@@ -589,24 +626,33 @@ function Conversation({ user }) {
         setReplyTicket({ plainText, richText });
     };
 
-    const filterTicket = (value, type) => {
+    // Filter chats bases on channel or status
+    // eslint-disable-next-line default-param-last
+    const filterTicket = async (value = '', type) => {
         if (type === 'channel') {
             setChannel(value);
 
-            /* 
-            FIXME:  handle with http if ought to
-            AppSocket.createConnection();
-            const data = { channel: value === 'All' ? '' : value, per_page: 100 };
-            AppSocket.io.emit(`ws_tickets`, data); */
+            const channelRes = await httpGetMain(
+                `tickets?${value && value.toUpperCase() !== 'ALL' ? `channel=${value}&` : ''}per_page=100`,
+            );
+            if (channelRes?.status === 'success') {
+                setTickets(channelRes?.data?.tickets || []);
+                setMeta(channelRes?.data?.meta || {});
+                setTicketsLoaded(true);
+            }
         }
 
         if (type === 'status') {
             setstatus(value);
-            /* 
-            FIXME:  handle with http if ought to
-            AppSocket.createConnection();
-            const data = { status: value === 'All' ? '' : value, per_page: 100 };
-            AppSocket.io.emit(`ws_tickets`, data); */
+
+            const statusRes = await httpGetMain(
+                `tickets?${value && value.toUpperCase() !== 'ALL' ? `status=${value}&` : ''}per_page=100`,
+            );
+            if (statusRes?.status === 'success') {
+                setTickets(statusRes?.data?.tickets || []);
+                setMeta(statusRes?.data?.meta || {});
+                setTicketsLoaded(true);
+            }
         }
         setFilterTicketsState(value);
     };
@@ -965,7 +1011,7 @@ function Conversation({ user }) {
                         // style={showUserProfile ? { width: "calc(100% - 636px)" } : {}}
                     >
                         {firstTimeLoad ? (
-                            <NoChatFound value="Click on a ticket to get started" />
+                            <NoChatFound ticketsExist={ticketsExist} />
                         ) : loadSingleTicket ? (
                             <div
                                 style={{
@@ -1575,7 +1621,8 @@ function Conversation({ user }) {
                     {/* CHAT COL THREE */}
                     <div className="conversation-layout-col-three">
                         {firstTimeLoad ? (
-                            ''
+                            // <p>Lorem ipsum dolor sit amet.</p>
+                            <WelcomeText userId={user.id} />
                         ) : loadSingleTicket ? (
                             <div
                                 style={{
