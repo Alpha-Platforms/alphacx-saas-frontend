@@ -106,14 +106,12 @@ function Notification({ userId }) {
     }
 
     const markAllRead = () => {
-        httpPatchMain(`notifications_mark_all?userId=${userId}`)
-            .then(() => {
-                setNotifications([]);
-                setIsUnreadNotificiations(true);
-                setNotificationsLoaded(false);
-                return NotificationManager.success('All notifications marked read', 'Success', 4000);
-            })
-            .catch((error) => console.error(error));
+        httpPatchMain(`notifications_mark_all?userId=${userId}`).then(() => {
+            setNotifications([]);
+            setIsUnreadNotificiations(true);
+            setNotificationsLoaded(false);
+            return NotificationManager.success('All notifications marked read', 'Success', 4000);
+        });
 
         // if (res.status === "success") {
         //   console.log(res.data);

@@ -21,9 +21,9 @@ import {
     getCurrentCustomer,
     addNewCustomer,
 } from '../../../reduxstore/actions/customerActions';
-import PinIcon from '../../../assets/icons/pin.svg';
+// import PinIcon from '../../../assets/icons/pin.svg';
 import { countrycodes } from '../../shared/countrycodes';
-import ImageDefault from '../../../assets/svgicons/image-default.svg';
+// import ImageDefault from '../../../assets/svgicons/image-default.svg';
 import { createTags } from '../../../reduxstore/actions/tagActions';
 import { config } from '../../../config/keys';
 
@@ -91,7 +91,8 @@ function CreateCustomerModal({
 
     useEffect(() => {
         if (createModalShow && isEditing && customerId) {
-            const { firstname, lastname, phone_number, email, organisation, tags, avatar } = customers.find(
+            // eslint-disable-next-line camelcase
+            const { firstname, lastname, phone_number, email, tags, avatar } = customers.find(
                 (cust) => cust.id === customerId,
             );
             setModalInputs((prev) => ({
@@ -161,6 +162,7 @@ function CreateCustomerModal({
                         }
                     })
                     .catch((err) => {
+                        // eslint-disable-next-line no-console
                         console.log(err);
                         NotificationManager.error('Photo could not be uploaded', 'Error');
                         setCreatingCust(false);
@@ -254,6 +256,7 @@ function CreateCustomerModal({
                         updateCustomer(customerId, newCustomer, custEditSuccess, custEditFail);
                     })
                     .catch((err) => {
+                        // eslint-disable-next-line no-console
                         console.log(err);
                         NotificationManager.error('Photo could not be uploaded', 'Error');
                         setCreatingCust(false);
@@ -292,6 +295,7 @@ function CreateCustomerModal({
 
     const handleTagCreation = (newTag) => {
         const realTags = Array.isArray(tags) ? tags : [];
+        // eslint-disable-next-line no-param-reassign
         newTag = newTag.toLowerCase();
         setTagSelectLoading(true);
         const newTags = [...realTags, newTag];
@@ -299,7 +303,7 @@ function CreateCustomerModal({
             newTags,
             (newTags, newTag) => {
                 // new tag created successfully
-                setSelectedTags((prev) => [...selectedTags, { value: newTag, label: newTag }]);
+                setSelectedTags(() => [...selectedTags, { value: newTag, label: newTag }]);
                 setTagSelectLoading(false);
             },
             () => {
@@ -323,98 +327,98 @@ function CreateCustomerModal({
         );
     }
 
-    const handleImgSelect = function (e) {
-        // store current input
-        const fileInput = e.target;
+    // const handleImgSelect = function (e) {
+    //     // store current input
+    //     const fileInput = e.target;
 
-        // create a store for the current dimension and default info
-        const maxReqDimensions = {
-            width: 1500,
-            height: 1500,
-        };
+    //     // create a store for the current dimension and default info
+    //     const maxReqDimensions = {
+    //         width: 1500,
+    //         height: 1500,
+    //     };
 
-        if (!fileInput.files.length) {
-            // No file is selected
-            setUploadInfo((prev) => ({
-                ...prev,
-                msg: 'No file is slected',
-                error: true,
-                blob: null,
-                image: null,
-                ownAvatar: '',
-            }));
-        } else {
-            // file selected
+    //     if (!fileInput.files.length) {
+    //         // No file is selected
+    //         setUploadInfo((prev) => ({
+    //             ...prev,
+    //             msg: 'No file is slected',
+    //             error: true,
+    //             blob: null,
+    //             image: null,
+    //             ownAvatar: '',
+    //         }));
+    //     } else {
+    //         // file selected
 
-            // check if selected file is an image
-            if (fileInput.files[0].type.indexOf('image/') === -1) {
-                // Selected file is not an image
-                setUploadInfo((prev) => ({
-                    ...prev,
-                    msg: 'Selected file is not an image',
-                    error: true,
-                    blob: null,
-                    image: null,
-                    ownAvatar: '',
-                }));
-            } else {
-                // Selected file is an image
-                /*
-                 * read the selected image to get the file width and height
-                 */
-                // create a new file reader object
-                const reader = new FileReader();
-                reader.readAsDataURL(fileInput.files[0]);
-                reader.onload = function (e) {
-                    // when reader has loaded
+    //         // check if selected file is an image
+    //         if (fileInput.files[0].type.indexOf('image/') === -1) {
+    //             // Selected file is not an image
+    //             setUploadInfo((prev) => ({
+    //                 ...prev,
+    //                 msg: 'Selected file is not an image',
+    //                 error: true,
+    //                 blob: null,
+    //                 image: null,
+    //                 ownAvatar: '',
+    //             }));
+    //         } else {
+    //             // Selected file is an image
+    //             /*
+    //              * read the selected image to get the file width and height
+    //              */
+    //             // create a new file reader object
+    //             const reader = new FileReader();
+    //             reader.readAsDataURL(fileInput.files[0]);
+    //             reader.onload = function (e) {
+    //                 // when reader has loaded
 
-                    // create a new image object
-                    const currentImage = new Image();
-                    // set the source of the image to the base64 string from the file reader
-                    currentImage.src = this.result;
+    //                 // create a new image object
+    //                 const currentImage = new Image();
+    //                 // set the source of the image to the base64 string from the file reader
+    //                 currentImage.src = this.result;
 
-                    currentImage.onload = function () {
-                        const [currentImageHeight, currentImageWidth] = [this.height, this.width];
+    //                 currentImage.onload = function () {
+    //                     const [currentImageHeight, currentImageWidth] = [this.height, this.width];
 
-                        if (
-                            currentImageWidth > maxReqDimensions.width ||
-                            currentImageHeight > maxReqDimensions.height
-                        ) {
-                            // current selected image dimesions are not acceptable
-                            setUploadInfo((prev) => ({
-                                ...prev,
-                                msg: `Selected image should have max dimension of ${maxReqDimensions.width}x${maxReqDimensions.height}`,
-                                error: true,
-                                blog: null,
-                                image: null,
-                            }));
-                        } else {
-                            // current selected image dimensions are acceptable
-                            const fileName = fileInput.files[0].name;
-                            const fileBlob = URL.createObjectURL(fileInput.files[0]);
+    //                     if (
+    //                         currentImageWidth > maxReqDimensions.width ||
+    //                         currentImageHeight > maxReqDimensions.height
+    //                     ) {
+    //                         // current selected image dimesions are not acceptable
+    //                         setUploadInfo((prev) => ({
+    //                             ...prev,
+    //                             msg: `Selected image should have max dimension of ${maxReqDimensions.width}x${maxReqDimensions.height}`,
+    //                             error: true,
+    //                             blog: null,
+    //                             image: null,
+    //                         }));
+    //                     } else {
+    //                         // current selected image dimensions are acceptable
+    //                         const fileName = fileInput.files[0].name;
+    //                         const fileBlob = URL.createObjectURL(fileInput.files[0]);
 
-                            setUploadInfo((prev) => ({
-                                ...prev,
-                                blob: fileBlob,
-                                msg: fileName,
-                                error: false,
-                                image: fileInput.files[0],
-                                ownAvatar: '',
-                            }));
-                            /* 
-                            when the image with the blob loads call the below method
-                            URL.revokeObjectURL(this.src);  where this.src is the blob created
-                            */
-                        }
-                    };
-                };
-            }
-        }
-    };
+    //                         setUploadInfo((prev) => ({
+    //                             ...prev,
+    //                             blob: fileBlob,
+    //                             msg: fileName,
+    //                             error: false,
+    //                             image: fileInput.files[0],
+    //                             ownAvatar: '',
+    //                         }));
+    //                         /*
+    //                         when the image with the blob loads call the below method
+    //                         URL.revokeObjectURL(this.src);  where this.src is the blob created
+    //                         */
+    //                     }
+    //                 };
+    //             };
+    //         }
+    //     }
+    // };
 
-    const workphoneChange = (e) => {
-        handleModalInput(e);
-    };
+    // const workphoneChange = (e) => {
+    //     handleModalInput(e);
+    // };
 
     return (
         <Modal
@@ -499,6 +503,7 @@ function CreateCustomerModal({
                                         {countrycodes
                                             .sort((a, b) => Number(a.dial_code.slice(1)) - Number(b.dial_code.slice(1)))
                                             .map((cc, index) => (
+                                                // eslint-disable-next-line react/no-array-index-key
                                                 <option key={index} value={cc.dial_code}>
                                                     {cc.dial_code}
                                                 </option>
@@ -550,6 +555,7 @@ function CreateCustomerModal({
                     </div>
                     <p
                         className="btn mt-3 mb-2 p-0 text-start"
+                        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
                         role="button"
                         style={{
                             fontSize: '0.8rem',
@@ -583,7 +589,7 @@ function CreateCustomerModal({
                                 <RSelect
                                     className="rselectfield"
                                     style={{ fontSize: '12px' }}
-                                    onChange={(value, actionMeta) => {
+                                    onChange={(value) => {
                                         handleTagSelection(value);
                                     }}
                                     isClearable={false}
@@ -595,6 +601,7 @@ function CreateCustomerModal({
                                     options={
                                         // populate 'options' prop from $agents, with names remapped
                                         tags?.map((item) => {
+                                            // eslint-disable-next-line no-param-reassign
                                             item = item?.toLowerCase();
                                             return { value: item, label: item };
                                         })
@@ -694,7 +701,7 @@ function CreateCustomerModal({
     );
 }
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
     tags: state.tag.tags?.tags_names?.tags,
     customers: state.customer.customers,
     custMeta: state.customer?.meta || {},

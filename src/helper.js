@@ -1,9 +1,12 @@
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable react/jsx-filename-extension */
 // @ts-nocheck
 import { CsvBuilder } from 'filefy';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import moment from 'moment';
 import axios from 'axios';
+// eslint-disable-next-line camelcase
 import jwt_decode from 'jwt-decode';
 import dayjs from 'dayjs';
 import { config } from './config/keys';
@@ -30,7 +33,7 @@ export const tenantTokenConfig = (getState) => {
 };
 
 // function to return axios configuration with user token
-export const userTokenConfig = (getState) => {
+export const userTokenConfig = () => {
     // get tenant tenantToken from local storage
     // const userToken = getState().userAuth.userToken;
     const userToken = window.localStorage.getItem('token');
@@ -52,6 +55,7 @@ export const userTokenConfig = (getState) => {
 };
 
 export const wordCapitalize = (word) => {
+    // eslint-disable-next-line no-unsafe-optional-chaining
     return `${word}`.charAt(0).toUpperCase() + word?.slice(1);
 };
 
@@ -76,6 +80,7 @@ export const exportTable = (exportColumns, exportData, exportType, fileName) => 
         const builder = new CsvBuilder(`${fileName}.csv`);
         builder.setColumns(exportColumnsTitle).addRows(exportDataFields).exportFile();
     } else if (exportType.toLowerCase() === 'pdf') {
+        // eslint-disable-next-line new-cap
         const doc = new jsPDF();
 
         doc.autoTable({
@@ -88,6 +93,7 @@ export const exportTable = (exportColumns, exportData, exportType, fileName) => 
 };
 
 export const getUserInitials = (name) => {
+    // eslint-disable-next-line no-param-reassign
     name = name.toUpperCase();
     const nameArr = name.split(' ');
     const firstInitial = nameArr[0] && nameArr[0][0];
@@ -98,12 +104,15 @@ export const getUserInitials = (name) => {
 
 export const uuid = () => {
     let dt = new Date().getTime();
-    const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    // eslint-disable-next-line func-names
+    const uuidValue = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        // eslint-disable-next-line no-bitwise
         const r = (dt + Math.random() * 16) % 16 | 0;
         dt = Math.floor(dt / 16);
+        // eslint-disable-next-line no-bitwise
         return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
     });
-    return uuid;
+    return uuidValue;
 };
 
 export const textCapitalize = (str = '') => {
@@ -118,6 +127,7 @@ export const shuffleArray = (array) => {
     // clone the array
     const clonedArray = JSON.parse(JSON.stringify(array));
     // randomly shuffle the array
+    // eslint-disable-next-line no-plusplus
     for (let i = clonedArray.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [clonedArray[i], clonedArray[j]] = [clonedArray[j], clonedArray[i]];
@@ -212,6 +222,7 @@ export const defaultTicketProperties = {
 const newAxios = axios.create();
 
 export const refreshUserTokens = (redirectToLoginIfNoToken = false) => {
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve) => {
         const token = localStorage.getItem('token');
         const refreshToken = localStorage.getItem('refreshToken');
@@ -242,7 +253,7 @@ export const refreshUserTokens = (redirectToLoginIfNoToken = false) => {
                     localStorage.setItem('token', newToken);
                     localStorage.setItem('refreshToken', newRefreshToken);
                     const localStorageUser = JSON.parse(window.localStorage.getItem('user'));
-                    if (localStorageUser & (typeof localStorageUser === 'object')) {
+                    if (localStorageUser && typeof localStorageUser === 'object') {
                         // overwrite tokens with new ones
                         localStorageUser.token = newToken;
                         localStorageUser.refreshToken = newRefreshToken;

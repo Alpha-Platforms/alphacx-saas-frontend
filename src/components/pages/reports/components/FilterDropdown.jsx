@@ -130,6 +130,7 @@ function DropdownInterval({ id, color, setFilters }) {
                 `start_date=${dayjs(startDate).format('MM-DD-YYYY')}&end_date=${dayjs(endDate).format('MM-DD-YYYY')}`,
             );
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [startDate, endDate, activate]);
 
     return (
@@ -187,6 +188,7 @@ function DropdownPersonnel({ id, color, setFilters }) {
                 setPersonnels(searchedAgents);
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchInput]);
 
     return (
@@ -237,6 +239,7 @@ function DropdownCategory({ id, color, setFilters }) {
                 setCategories(searchedAgents);
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchInput]);
 
     return (
@@ -279,6 +282,7 @@ function DropdownPriority({ id, color, setFilters }) {
                 setPriorities(searchedAgents);
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchInput]);
 
     return (
@@ -373,6 +377,7 @@ function FilterDropdown({ active, setFilters }) {
             // getAdmins();
             // getObservers();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
 
     return (
