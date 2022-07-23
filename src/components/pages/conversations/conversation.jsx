@@ -58,6 +58,10 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './conversation.css';
 import Socket from '../../../socket';
 import noimage from '../../../assets/images/noimage.png';
+import OnboardingModal from 'components/Layout/components/Onboarding';
+import AppNotification from 'components/Layout/Notification';
+
+// import OnboardingModal from './components/OnboardingModal';
 
 function YouTubeGetID(url) {
     let ID = '';
@@ -69,6 +73,30 @@ function YouTubeGetID(url) {
         ID = newUrl;
     }
     return ID;
+}
+
+function WelcomeText({ userId }) {
+    return (
+        <>
+            <div className="m-3 mt-4">
+                <p className="fw-bold border-bottom hr-global mb-2">Welcome on Board!</p>
+                <p className="mb-1">
+                    We are excited you chose AlphaCX for your customer engagement. <br />
+                    AlphaCX is easy to use, however you can learn much more by going through our product{' '}
+                    <a href="#">documentation</a> or watching video <a href="#">tutorials</a>.
+                </p>
+                <p className="mb-1">
+                    You can also share your feedback or open a support ticket.
+                    <a href="/settings?opencontactmodal=1">here</a>
+                </p>
+            </div>
+
+            <OnboardingModal />
+
+            <AppNotification userId={userId} />
+            {/* d13337dc-2aba-4e94-9a13-fd2d04cc77cb */}
+        </>
+    );
 }
 
 const youtubeRegex =
@@ -309,6 +337,12 @@ function Conversation({ user }) {
     function scollPosSendMsg() {
         window.location.href = '#msgListTop';
     }
+
+    const [ticketsExist, setTicketsExist] = useState(false);
+
+    useEffect(() => {
+        setTicketsExist(tickets.length > 0);
+    }, [tickets]);
 
     useEffect(() => {
         if (!multiIncludes(accessControlFunctions[user?.role], ['reply_conv'])) {
@@ -977,7 +1011,7 @@ function Conversation({ user }) {
                         // style={showUserProfile ? { width: "calc(100% - 636px)" } : {}}
                     >
                         {firstTimeLoad ? (
-                            <NoChatFound value="Click on a ticket to get started" />
+                            <NoChatFound ticketsExist={ticketsExist} />
                         ) : loadSingleTicket ? (
                             <div
                                 style={{
@@ -1587,7 +1621,8 @@ function Conversation({ user }) {
                     {/* CHAT COL THREE */}
                     <div className="conversation-layout-col-three">
                         {firstTimeLoad ? (
-                            ''
+                            // <p>Lorem ipsum dolor sit amet.</p>
+                            <WelcomeText userId={user.id} />
                         ) : loadSingleTicket ? (
                             <div
                                 style={{

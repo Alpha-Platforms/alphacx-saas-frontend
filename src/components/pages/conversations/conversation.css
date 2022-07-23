@@ -255,12 +255,10 @@
 }
 
 .no-chant-found-container img {
-  width: 100px;
-  height: 70px;
+  width: 125px;
 }
 
 .no-chant-found-container p {
-  font-size: 17px;
   margin-top: 10px;
   text-align: center;
 

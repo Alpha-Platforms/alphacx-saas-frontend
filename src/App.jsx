@@ -92,6 +92,32 @@ const mapStateToProps = (state) => ({
     tenantSubscription: state?.subscription?.subscription,
 });
 
+// proper 404 UI later
+function NotFound() {
+    return (
+        <div
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
+            }}
+        >
+            <h3 style={{ marginRight: '25px' }}>404</h3>
+            <div style={{ paddingLeft: '25px', borderLeft: 'solid 1px', verticalAlign: 'middle' }}>
+                <p
+                    style={{
+                        padding: '16px 0',
+                        margin: '0',
+                    }}
+                >
+                    This page could not be found
+                </p>
+            </div>
+        </div>
+    );
+}
+
 const SiteRouter = connect(mapStateToProps, {
     loadUser,
     getPriorities,
@@ -477,16 +503,7 @@ const SiteRouter = connect(mapStateToProps, {
                                 />{' '}
                                 {/* ......settings pages end */}
                                 <Route>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            height: '100vh',
-                                        }}
-                                    >
-                                        <h1>404 | Not Found</h1>
-                                    </div>
+                                    <NotFound />
                                 </Route>
                             </Switch>
                         </SocketDataProvider>

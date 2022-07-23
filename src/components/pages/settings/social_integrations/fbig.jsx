@@ -67,7 +67,7 @@ const FBIntegration = ({location}) => {
         setShowRedirectText(true)
         setTimeout(() => {
             window.location.href = `${baseUrl}/settings/integrations`       
-        }, 1000);
+        }, 500);
     }
 
     const handleConnectFBPage = async (channel, response) => {
@@ -92,7 +92,7 @@ const FBIntegration = ({location}) => {
             if (res.status === 'success') {
                 NotificationManager.success("Page successfully connected");
                 // Go back
-                // redirectToPreviewPage()
+                redirectToPreviewPage()
             } else {
                 return NotificationManager.error(res.er);
             }
