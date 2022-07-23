@@ -1,3 +1,5 @@
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/react-in-jsx-scope */
@@ -83,10 +85,10 @@ function Fields() {
     // sort custom fields
     const sortCustomFields = (data) => {
         const ticketResult = data.filter((observation) => {
-            return observation.belongs_to == 'ticket';
+            return observation.belongs_to === 'ticket';
         });
         const userResult = data.filter((observation) => {
-            return observation.belongs_to == 'user';
+            return observation.belongs_to === 'user';
         });
         setTicketFields(ticketResult);
         setUserFields(userResult);
@@ -96,12 +98,13 @@ function Fields() {
     const getFieldSections = (data) => {
         const filterEmptyArray = (a, b) => {
             return a.filter((e) => {
-                return e != b;
+                return e !== b;
             });
         };
 
+        // eslint-disable-next-line func-names
         const fieldSectionsResult = data.reduce(function (result, object) {
-            if (object.field_section != '') {
+            if (object.field_section !== '') {
                 result.push(object.field_section);
             }
             return result;
@@ -126,7 +129,7 @@ function Fields() {
             ...prevState,
             [name]: value,
         }));
-        if (name == 'fieldType' && value == 'select') {
+        if (name === 'fieldType' && value === 'select') {
             setCustomFieldOptions((prevState) => ({
                 ...prevState,
                 selected: true,
@@ -147,7 +150,7 @@ function Fields() {
     //
     const editCustomField = (id) => {
         const customField = customFieldData.find((x) => {
-            return x.id == id;
+            return x.id === id;
         });
         //
         setCustomFields((prevState) => ({
@@ -159,7 +162,7 @@ function Fields() {
             multipleOptions: customField.multiple_options,
             belongsTo: customField.belongs_to,
         }));
-        if (customField.field_type == 'select') {
+        if (customField.field_type === 'select') {
             setCustomFieldOptions((prevState) => ({
                 ...prevState,
                 selected: true,
@@ -178,7 +181,7 @@ function Fields() {
         setIsEdit(true);
         setModalShow(true);
     };
-    //
+
     const clearCustomFields = () => {
         setCustomFields((prevState) => ({
             ...prevState,
@@ -192,14 +195,14 @@ function Fields() {
     };
 
     //
-    const handleSwitch = (e) => {
+    const handleSwitch = () => {
         setCustomFields((prevState) => ({
             ...prevState,
             required: !customFields.required,
         }));
     };
     //
-    const handleMultiOptionSwitch = (e) => {
+    const handleMultiOptionSwitch = () => {
         setCustomFields((prevState) => ({
             ...prevState,
             multipleOptions: !customFields.multipleOptions,
@@ -245,7 +248,7 @@ function Fields() {
     };
 
     // submit/create field
-    const handleSubmit = async (e) => {
+    const handleSubmit = async () => {
         if (simpleValidator.current.allValid()) {
             let data = {};
             if (customFieldOptions.selected === true) {
@@ -264,6 +267,20 @@ function Fields() {
                 setModalShow(false);
                 // setCustomFieldData((prevState) => [...prevState, res?.data]);
                 dispatch(addCustomField(res?.data));
+                setCustomFields((prev) => ({
+                    ...prev,
+                    fieldName: '',
+                    fieldType: '',
+                    fieldSection: '',
+                    required: false,
+                    multipleOptions: false,
+                    belongsTo: tabKey.split('-')[0],
+                }));
+                setCustomFieldOptions((prevState) => ({
+                    ...prevState,
+                    selected: false,
+                    options: [''],
+                }));
                 // console.log(res)
                 return NotificationManager.success('Custom field created successfully', 'Success', 4000);
             }
@@ -660,7 +677,7 @@ function Fields() {
                             <i className="bi-info-circle" />
                         </h2>
                         <h5 className="">Are you sure?</h5>
-                        <p className="mb-3">You won't be able to revert this!</p>
+                        <p className="mb-3">You won&apos;t be able to revert this!</p>
                         <div className="d-flex justify-content-center">
                             <button
                                 type="button"

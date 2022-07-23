@@ -1,3 +1,6 @@
+/* eslint-disable camelcase */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable no-param-reassign */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/prop-types */
@@ -32,6 +35,7 @@ const tableTheme = createTheme({
     },
 });
 
+// eslint-disable-next-line consistent-return
 const getStatusColor = (status, id) => {
     /* switch (status) {
     case "Pending":
@@ -209,6 +213,7 @@ function ReportsFilter() {
 
         const ratingArr = [];
 
+        // eslint-disable-next-line no-plusplus
         for (let i = 1; i <= 5; i++) {
             if (i <= rating) {
                 ratingArr.push(true);
@@ -220,6 +225,7 @@ function ReportsFilter() {
         return (
             <div className="table-ratings">
                 {ratingArr.map((x, index) => (
+                    // eslint-disable-next-line react/no-array-index-key
                     <span key={index} className="table-ratings-span">
                         {x ? <StarYellowSvg /> : <StarUnactiveSvg />}
                     </span>
@@ -312,7 +318,7 @@ function ReportsFilter() {
                                   ticket_id,
                               }) => ({
                                   name: `${customer.firstname} ${
-                                      customer.lastname == 'default' ? '' : customer.lastname || ''
+                                      customer.lastname === 'default' ? '' : customer.lastname || ''
                                   }`,
                                   email: customer.email,
                                   subject,
@@ -339,7 +345,7 @@ function ReportsFilter() {
                 setLoading(false);
                 if (res?.status === 'success') {
                     const data = res?.data?.tickets?.map(
-                        ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id }) => ({
+                        ({ customer, subject, category, created_at, status, assignee, rating, ticket_id }) => ({
                             name: `${textCapitalize(customer?.firstname || '')} ${textCapitalize(
                                 customer.lastname === 'default' ? '' : customer.lastname ? customer?.lastname : '',
                             )}`,
@@ -370,17 +376,7 @@ function ReportsFilter() {
                     selectedRows.length !== 0
                         ? selectedRows
                         : ticketData.tickets.map(
-                              ({
-                                  customer,
-                                  subject,
-                                  id,
-                                  category,
-                                  created_at,
-                                  status,
-                                  assignee,
-                                  rating,
-                                  ticket_id,
-                              }) => ({
+                              ({ customer, subject, category, created_at, status, assignee, rating, ticket_id }) => ({
                                   name: textCapitalize(
                                       `${customer.firstname} ${
                                           customer.lastname === 'default' ? '' : customer.lastname || ''
@@ -411,7 +407,7 @@ function ReportsFilter() {
                 setLoading(false);
                 if (res?.status === 'success') {
                     const data = res?.data?.tickets?.map(
-                        ({ customer, subject, id, category, created_at, status, assignee, rating, ticket_id }) => ({
+                        ({ customer, subject, category, created_at, status, assignee, rating, ticket_id }) => ({
                             name: `${textCapitalize(customer?.firstname || 'Firstname')} ${textCapitalize(
                                 customer.lastname === 'default' ? '' : customer.lastname ? customer?.lastname : '',
                             )}`,

@@ -85,7 +85,8 @@
     "eject": "react-scripts eject",
     "lint": "eslint ./src/**/*.{js,jsx,ts,tsx} --max-warnings=0",
     "format": "eslint ./src/**/*.{js,jsx,ts,tsx} --fix",
-    "prettier-format": "prettier --config .prettierrc './src/**/*.{js,jsx,ts,tsx}' --write"
+    "prettier-format": "prettier --config .prettierrc './src/**/*.{js,jsx,ts,tsx}' --write",
+    "prepare": "husky install"
   },
   "resolutions": {
     "react-error-overlay": "6.0.9"
@@ -120,5 +121,10 @@
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.4.0",
     "prettier": "^2.6.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint"
+    }
   }
 }

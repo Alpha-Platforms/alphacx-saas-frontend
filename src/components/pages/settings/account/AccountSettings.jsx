@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable camelcase */
 /* eslint-disable func-names */
 /* eslint-disable react/no-this-in-sfc */
@@ -52,7 +53,7 @@ function AccountSettings() {
     const appIconFile = useRef(null);
     const appLogoFile = useRef(null);
 
-    const [domain, setDomain] = useState('');
+    const [, setDomain] = useState('');
 
     const [appIcon, setAppIcon] = useState({
         msg: 'Click or drag file here to add',
@@ -226,6 +227,7 @@ function AccountSettings() {
                 )
                 .catch((errors) => {
                     NotificationManager.error('', 'Failed', 4000);
+                    // eslint-disable-next-line no-console
                     console.log('%cerror errors line:160 ', 'color: red; display: block; width: 100%;', errors);
                 });
         }

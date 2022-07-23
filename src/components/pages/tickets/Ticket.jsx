@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+/* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -83,7 +85,7 @@ function scrollPosSendMsgList() {
     }
 }
 
-function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }) {
+function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }) {
     const { id } = useParams();
 
     const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(false);
@@ -104,7 +106,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         richText: '',
     });
     const [replyType, setReplyType] = useState('reply');
-    const [mentions, setMentions] = useState([]);
+    const [, setMentions] = useState([]);
     //
     const [Agents, setAgents] = useState([]);
     const [Statuses, setStatuses] = useState([]);
@@ -118,7 +120,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
     });
     const [sendingReply, setsendingReply] = useState(false);
     const [msgHistory, setMsgHistory] = useState([]);
-    const [noResponseFound, setNoResponseFound] = useState(true);
+    const [, setNoResponseFound] = useState(true);
     const [TodayMsges, setTodayMsges] = useState([]);
     const [YesterdayMsges, setYesterdayMsges] = useState([]);
     const [AchiveMsges, setAchiveMsges] = useState([]);
@@ -305,7 +307,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
     }, [ticket]);
 
     const sortMsges = (msgs) => {
-        const Today = [];
+        // const Today = [];
         const resultToday = msgs.filter((observation) => {
             return moment(observation.created_at).format('DD/MM/YYYY') === moment(new Date()).format('DD/MM/YYYY');
         });
@@ -339,6 +341,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         let agentMentions = [];
         if (replyType === 'note') {
             // reply.richText
+            // eslint-disable-next-line func-names
             agentMentions = Agents.reduce(function (result, object) {
                 if (reply.richText.includes(object?.id)) {
                     result.push(object.id);
@@ -547,8 +550,6 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         setRSTicketAssignee(ticket.assignee?.id);
     };
     function createMarkup(data) {
-        console.clear();
-        console.log(data);
         return { __html: data };
     }
     const checkRes = () => {
@@ -576,6 +577,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
         if (!multiIncludes(accessControlFunctions[user?.role], ['reply_conv'])) {
             setReplyType('note');
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -603,7 +605,7 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
     }, [statusOps]);
 
     const loadSingleMessage = async (currentTicket) => {
-        const { id, customer, subject, history } = currentTicket;
+        const { customer, subject, history } = currentTicket;
         setAchiveMsges([]);
         getUser(customer?.id);
         setSenderInfo({ customer, subject });
@@ -1664,9 +1666,8 @@ function Ticket({ isTicketLoaded, getCurrentTicket, isCurrentTicketLoaded, curre
     );
 }
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state) => ({
     tickets: state.ticket.tickets,
-    isTicketLoaded: state.ticket.isTicketLoaded,
     isCurrentTicketLoaded: state.ticket.isCurrentTicketLoaded,
     currentTicket: state.ticket.currentTicket,
     user: state.userAuth.user,
