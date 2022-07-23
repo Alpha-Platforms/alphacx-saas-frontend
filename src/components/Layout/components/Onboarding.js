@@ -46,6 +46,28 @@ function OnboardingModal({
 
     const [showOnboarding, setShowOnboarding] = useState(false)
 
+    const [facebookConnectPage, setFacebookConnectPage] = useState('');
+    const [instagramConnectPage, setInstagramConnectPage] = useState('');
+
+
+    useEffect(() => {      
+        const subdomain = 'app';
+        const path = 'integrations';
+        const params = `${window.localStorage.getItem('domain')}&id=${window.localStorage.getItem('token')}&uid=${window.localStorage.getItem('refreshToken')}`;
+        const { protocol } = window.location;        
+        const hostname = window.location.hostname.split('.').slice(1).join('.');
+        const { port } = window.location;
+        const url = `${protocol}//${subdomain}.${hostname}:${port}/${path}`;
+
+        setFacebookConnectPage(`${url}?channel=facebook&domain=${params}`)
+        setInstagramConnectPage(`${url}?channel=instagram&domain=${params}`)
+
+        console.log('isConfigsLoaded:', isConfigsLoaded)
+    }, []);
+
+
+    const gotoFbIgIntegration = ( channel) => window.location.href = channel;
+
     useEffect(() => {
         if (isUserAuthenticated) {
             // getAgents();
@@ -54,13 +76,11 @@ function OnboardingModal({
     }, [isUserAuthenticated]);
 
     useEffect(() => {
-        if (isCategoriesLoaded && isGroupsLoaded && isSlasLoaded && isConfigsLoaded) {
-            if (categories?.length == 0 || groups?.length == 0 || slas?.length == 0 || objectIsEmpty(configs)) {
+        // if (isAgentsLoaded && isSlasLoaded && isConfigsLoaded) {
+            if (agents?.length == 0 || Object.entries(configs?.facebook_config || {}).length == 0 || Object.entries(configs?.instagram_config || {}).length == 0 || Object.entries(configs?.livechat_config || {}).length == 0) {
                 setShowOnboarding(true)
-                console.log("lagos lagos");
             }
-        }
-        // isAgentsLoaded removed
+        // }
 
     }, [categories, groups, slas, agents, configs]);
     
@@ -68,12 +88,8 @@ function OnboardingModal({
         history.push({
             pathname: `${page}`,
             from: '/',
-            state,
+            state,            
         });
-    };
-    //
-    const objectIsEmpty = (obj) => {
-        return obj && Object.keys(obj).length === 0 && Object.getPrototypeOf(obj) === Object.prototype;
     };
 
     return (
@@ -82,48 +98,6 @@ function OnboardingModal({
                 <div>
                     <div className="">
                         <ListGroup defaultActiveKey="#link1" className="acx-list-group acx-list-group-gapped">
-                            <ListGroup.Item
-                                action
-                                onClick={() => gotToPage('/settings/tickets', { historyTabKey: 'new-category' })}
-                                disabled={isCategoriesLoaded ? categories?.length > 0 : false}
-                            >
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <div className="d-flex justify-content-start align-items-center list-item-icon">
-                                        <CreateTicketIcon />
-                                        <p className="small mb-0 ms-3 text-secondary">Create ticket categories</p>
-                                    </div>
-                                    <div className="">
-                                        {!isCategoriesLoaded ? (
-                                            <ArrowRightCircleIcon />
-                                        ) : categories?.length > 0 ? (
-                                            <CheckCircleFilledIcon />
-                                        ) : (
-                                            <ArrowRightCircleIcon />
-                                        )}
-                                    </div>
-                                </div>
-                            </ListGroup.Item>
-                            <ListGroup.Item
-                                action
-                                onClick={() => gotToPage('/settings/teams', { historyAddGroupModalShow: true })}
-                                disabled={isGroupsLoaded ? groups?.length > 0 : false}
-                            >
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <div className="d-flex justify-content-start align-items-center list-item-icon">
-                                        <CreateTeamIcon />
-                                        <p className="small mb-0 ms-3 text-secondary">Create a Team</p>
-                                    </div>
-                                    <div className="">
-                                        {!isGroupsLoaded ? (
-                                            <ArrowRightCircleIcon />
-                                        ) : groups?.length > 0 ? (
-                                            <CheckCircleFilledIcon />
-                                        ) : (
-                                            <ArrowRightCircleIcon />
-                                        )}
-                                    </div>
-                                </div>
-                            </ListGroup.Item>
                             <ListGroup.Item
                                 action
                                 onClick={() => gotToPage('/settings/users', { historyCreateModalShow: true })}
@@ -147,18 +121,18 @@ function OnboardingModal({
                             </ListGroup.Item>
                             <ListGroup.Item
                                 action
-                                onClick={() => gotToPage('/settings/integrations')}
-                                disabled={!objectIsEmpty(configs)}
+                                onClick={() => gotoFbIgIntegration(facebookConnectPage)}
+                                disabled={isConfigsLoaded ? Object.entries(configs?.facebook_config || {}).length > 0 : false}
                             >
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div className="d-flex justify-content-start align-items-center list-item-icon">
-                                        <TicketChannelIcon />
-                                        <p className="small mb-0 ms-3 text-secondary">Connect Ticket Channels</p>
+                                        <CreateUsersIcon />
+                                        <p className="small mb-0 ms-3 text-secondary">Connect Facebook</p>
                                     </div>
                                     <div className="">
                                         {!isConfigsLoaded ? (
                                             <ArrowRightCircleIcon />
-                                        ) : !objectIsEmpty(configs) ? (
+                                        ) : Object.entries(configs?.facebook_config || {}).length > 0 ? (
                                             <CheckCircleFilledIcon />
                                         ) : (
                                             <ArrowRightCircleIcon />
@@ -168,19 +142,40 @@ function OnboardingModal({
                             </ListGroup.Item>
                             <ListGroup.Item
                                 action
-                                onClick={() => gotToPage('/settings/automation')}
-                                disabled={isSlasLoaded ? slas?.length > 0 : false}
+                                onClick={() => gotoFbIgIntegration(instagramConnectPage)}
+                                disabled={isConfigsLoaded ? Object.entries(configs?.instagram_config || {}).length > 0 : false}
                             >
-                                {/* disabled */}
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div className="d-flex justify-content-start align-items-center list-item-icon">
-                                        <AutoSlaIcon />
-                                        <p className="small mb-0 ms-3 text-secondary">Automate SLAs and escalations</p>
+                                        <CreateUsersIcon />
+                                        <p className="small mb-0 ms-3 text-secondary">Connect Instagram</p>
                                     </div>
-                                    <div className="text-success">
-                                        {!isSlasLoaded ? (
+                                    <div className="">
+                                        {!isConfigsLoaded ? (
                                             <ArrowRightCircleIcon />
-                                        ) : slas?.length > 0 ? (
+                                        ) : Object.entries(configs?.instagram_config || {}).length > 0 ? (
+                                            <CheckCircleFilledIcon />
+                                        ) : (
+                                            <ArrowRightCircleIcon />
+                                        )}
+                                    </div>
+                                </div>
+                            </ListGroup.Item>
+
+                            <ListGroup.Item
+                                action
+                                onClick={() => gotToPage('/settings/integrations/livechat')}
+                                disabled={isConfigsLoaded ? Object.entries(configs?.livechat_config || {}).length > 0 : false}
+                            >
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <div className="d-flex justify-content-start align-items-center list-item-icon">
+                                        <TicketChannelIcon />
+                                        <p className="small mb-0 ms-3 text-secondary">Setup Livechat</p>
+                                    </div>
+                                    <div className="">
+                                        {!isConfigsLoaded ? (
+                                            <ArrowRightCircleIcon />
+                                            ) : Object.entries(configs?.livechat_config || {}).length > 0 ? (
                                             <CheckCircleFilledIcon />
                                         ) : (
                                             <ArrowRightCircleIcon />

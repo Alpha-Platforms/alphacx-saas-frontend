@@ -79,13 +79,14 @@ function WelcomeText({ userId }) {
             <div className="m-3 mt-4">
                 <p className="fw-bold border-bottom hr-global mb-2">Welcome on Board!</p>
                 <p className="mb-1">
-                    Welcome to AlphaCX! We’re excited to have you on board. We have the best product offerings made
-                    specially for you.
+                    We are excited you chose AlphaCX for your customer engagement. <br />
+                    AlphaCX is easy to use, however you can learn much more by going through our product{' '}
+                    <a href="#">documentation</a> or watching video <a href="#">tutorials</a>.
                 </p>
                 <p className="mb-1">
-                    Click <a href="/settings/integrations">here</a> to complete your onboarding process.
+                    You can also share your feedback or open a support ticket.
+                    <a href="/settings?opencontactmodal=1">here</a>
                 </p>
-                <p className="mb-1">While you’re at it, click here to view our latest product offerings.</p>
             </div>
 
             <OnboardingModal />
