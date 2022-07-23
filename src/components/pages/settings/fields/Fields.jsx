@@ -102,6 +102,7 @@ function Fields() {
             });
         };
 
+        // eslint-disable-next-line func-names
         const fieldSectionsResult = data.reduce(function (result, object) {
             if (object.field_section !== '') {
                 result.push(object.field_section);

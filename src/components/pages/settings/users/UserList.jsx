@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-shadow */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/react-in-jsx-scope */
@@ -13,7 +14,7 @@ import { TablePagination } from '@material-ui/core';
 import { Link, useLocation } from 'react-router-dom';
 import moment from 'moment';
 import Swal from 'sweetalert2';
-import { Modal } from 'react-responsive-modal';
+// import { Modal } from 'react-responsive-modal';
 import { NotificationManager } from 'react-notifications';
 import tableIcons from '../../../../assets/materialicons/tableIcons';
 import { updateUser } from '../../../../reduxstore/actions/userActions';

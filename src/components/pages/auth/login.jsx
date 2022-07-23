@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 // @ts-nocheck
-
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import './login.css';
@@ -22,6 +21,7 @@ function Login() {
     const dispatch = useDispatch();
     const params = new URLSearchParams(location.search);
     const email = params.get('email');
+    // eslint-disable-next-line radix
     const activation = parseInt(params.get('activation'));
 
     const [userInput, setUserInput] = useState({

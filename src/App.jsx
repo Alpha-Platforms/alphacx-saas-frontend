@@ -80,7 +80,7 @@ import Dashboard from './components/pages/dashboard/Dashboard';
 import AccountVerified from './components/pages/auth/verified';
 import LiveChatSettings from './components/pages/settings/livechatsettings/LiveChatSettings';
 import SmsSettings from './components/pages/settings/smssettings/smsSettings';
-import ReportsFilter from './components/pages/reports/ReportsFilter';
+import Reports from './components/pages/reports/Reports';
 import FBIGIntegration from './components/pages/settings/social_integrations/fbig';
 import AppsumoSignup from './components/pages/appsumo/signup';
 import Instagram from './components/pages/settings/social_integrations/Instagram';
@@ -261,19 +261,8 @@ const SiteRouter = connect(mapStateToProps, {
                                     component={SettingsHome}
                                 />
                                 {hasFeatureAccess('reports') && (
-                                    <SettingsLayoutRoute
-                                        exact
-                                        path="/reports"
-                                        pageName="Reports"
-                                        component={ReportsFilter}
-                                    />
+                                    <SettingsLayoutRoute exact path="/reports" pageName="Reports" component={Reports} />
                                 )}
-                                {/* <SettingsLayoutRoute
-                                exact
-                                path="/reports/filter"
-                                pageName="Reports"
-                                component={ReportsFilter}
-                            /> */}
                                 {/* <SettingsLayoutRoute
                                 exact
                                 path="/settings/profile"

@@ -56,6 +56,7 @@ function CheckoutForm({ setPlanState, planState, getSubscription }) {
             }
         } else {
             setPlanState((prev) => ({ ...prev, isVerifying: false }));
+            // eslint-disable-next-line no-console
             console.error(stripeRes?.error);
         }
     };

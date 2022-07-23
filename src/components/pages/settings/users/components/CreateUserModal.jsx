@@ -13,9 +13,10 @@ import SimpleReactValidator from 'simple-react-validator';
 import { textCapitalize } from '../../../../../helper';
 import { addAgent, getAgents, resetAgentCreated } from '../../../../../reduxstore/actions/agentActions';
 import { countrycodes } from '../../../../shared/countrycodes';
-import { Validate } from '../../../../../helpers/validateInput';
+// import { Validate } from '../../../../../helpers/validateInput';
 import { getSubscription } from '../../../../../reduxstore/actions/subscriptionAction';
 
+// eslint-disable-next-line no-shadow
 function CreateUserModal({ createModalShow, setCreateModalShow, groups, addAgent, getSubscription }) {
     const [modalInputs, setModalInputs] = useState({
         firstName: '',

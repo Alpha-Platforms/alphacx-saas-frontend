@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable no-param-reassign */
 /* eslint-disable react/no-this-in-sfc */
 /* eslint-disable no-return-assign */
@@ -38,7 +40,7 @@ import searchIcon from '../../../assets/imgF/Search.png';
 import NoChatFound from './noChatFound';
 import { httpGetMain, httpPostMain, httpPatchMain } from '../../../helpers/httpMethods';
 import InitialsFromString from '../../helpers/InitialsFromString';
-import { SocketDataContext } from '../../../context/socket';
+// import { SocketDataContext } from '../../../context/socket';
 import { StarIconTicket, SendMsgIcon } from '../../../assets/images/svgs';
 import { dateFormater } from '../../helpers/dateFormater';
 import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter';
@@ -107,7 +109,7 @@ function Conversation({ user }) {
     // const { AppSocket } = useContext(SocketDataContext);
     const [tickets, setTickets] = useState([]);
     const [ticketsLoaded, setTicketsLoaded] = useState(false);
-    const [meta, setMeta] = useState({});
+    const [, setMeta] = useState({});
     const [filterTicketsState, setFilterTicketsState] = useState('');
     const [ticket, setTicket] = useState([]);
     const [loadingTicks, setLoadingTicks] = useState(true);
@@ -143,9 +145,9 @@ function Conversation({ user }) {
         description: [],
         category: '',
     });
-    const [sendingReply, setSendingReply] = useState(false);
+    const [sendingReply] = useState(false);
     const [msgHistory, setMsgHistory] = useState([]);
-    const [wsTickets, setWsTickets] = useState([]);
+    // const [wsTickets, setWsTickets] = useState([]);
     const [TodayMsges, setTodayMsges] = useState([]);
     const [YesterdayMsges, setYesterdayMsges] = useState([]);
     const [AchiveMsges, setAchiveMsges] = useState([]);
@@ -208,7 +210,7 @@ function Conversation({ user }) {
         return NotificationManager.error(res.er.message, 'Error', 4000);
     };
 
-    const loadSingleMessage = async ({ id, customer, assignee, subject }) => {
+    const loadSingleMessage = async ({ id, customer, subject }) => {
         setAchiveMsges([]);
         getUser(customer.id);
         setLoadSingleTicket(true);
@@ -346,6 +348,7 @@ function Conversation({ user }) {
         if (!multiIncludes(accessControlFunctions[user?.role], ['reply_conv'])) {
             setReplyType('note');
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {

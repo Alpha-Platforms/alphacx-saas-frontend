@@ -1,15 +1,18 @@
+/* eslint-disable consistent-return */
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-responsive-modal';
 import { NotificationManager } from 'react-notifications';
-// import { Prev } from 'react-bootstrap/esm/PageItem';
-import { httpGet, httpPostMain } from 'helpers/httpMethods';
-import dayjs from 'dayjs';
 import { connect } from 'react-redux';
-import { getAdmins } from 'reduxstore/actions/adminActions';
+import dayjs from 'dayjs';
+// import { Prev } from 'react-bootstrap/esm/PageItem';
+// import { httpGet, httpPostMain } from 'helpers/httpMethods';
+import { httpGet, httpPostMain } from '../../../helpers/httpMethods';
+import { getAdmins } from '../../../reduxstore/actions/adminActions';
 
-function ContactAlphcxModalComponent({ contactSupportModalShow, setContactSupportModalShow, admins, getAdmins }) {
+function ContactAlphcxModalComponent({ contactSupportModalShow, setContactSupportModalShow }) {
     // create user modal
     const [creating, setCreating] = useState(false);
     const [sendReady, setSendReady] = useState(false);
@@ -124,7 +127,6 @@ function ContactAlphcxModalComponent({ contactSupportModalShow, setContactSuppor
                     <h6 className="fs-5 text-white p-3">Contact AlphaCX Support</h6>
                 </header>
                 <div className="saveTicketWrapModal bg-transparent pb-4">
-
                     <form action="">
                         <div className="col-12 mt-3">
                             <label className="form-label" htmlFor="groupName">

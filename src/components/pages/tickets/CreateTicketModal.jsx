@@ -1,3 +1,5 @@
+/* eslint-disable func-names */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -14,23 +16,17 @@ import axios from 'axios';
 import { Modal } from 'react-responsive-modal';
 import { connect } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
-import BeatLoader from 'react-spinners/BeatLoader';
 import RSelect from 'react-select';
 import RCreatable from 'react-select/creatable';
 import AsyncSelect from 'react-select/async';
 import SimpleReactValidator from 'simple-react-validator';
-import { getSubCategory } from '../../../reduxstore/actions/categoryActions';
-import {
-    getInstantSearchedCustomers,
-    getPaginatedCurrentCustomerTickets,
-} from '../../../reduxstore/actions/customerActions';
+import { getPaginatedCurrentCustomerTickets } from '../../../reduxstore/actions/customerActions';
 import { getPaginatedTickets, addTicket, resetTicketCreated } from '../../../reduxstore/actions/ticketActions';
 import PinIcon from '../../../assets/icons/pin.svg';
-import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter';
-import { httpGetMain, httpPostMain, httpPatchMain } from '../../../helpers/httpMethods';
+import { httpGetMain } from '../../../helpers/httpMethods';
 import { createTags } from '../../../reduxstore/actions/tagActions';
 import { getChannels, addChannel } from '../../../reduxstore/actions/channelActions';
-import { getAcceptValue, allowedFiles, wordCapitalize, defaultTicketProperties } from '../../../helper';
+import { getAcceptValue, allowedFiles, defaultTicketProperties } from '../../../helper';
 import { config } from '../../../config/keys';
 
 export const searchTypeChecker = (query) => {
@@ -50,6 +46,7 @@ let customerFetchTimer;
 export const getSearchedCustomers = async (userInput) => {
     const searchType = searchTypeChecker(userInput);
 
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve) => {
         if (userInput.length < 1) resolve([]);
         clearTimeout(customerFetchTimer);
@@ -75,6 +72,7 @@ export const getSearchedCustomers = async (userInput) => {
 let categoriesFetchTimer;
 
 const getSearchedCategories = async (userInput) => {
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve) => {
         if (userInput.length < 1) resolve([]);
         clearTimeout(categoriesFetchTimer);
@@ -103,37 +101,31 @@ function CreateTicketModal({
     categories,
     priorities,
     statuses,
-    agents,
-    groups,
     addTicket,
     isTicketCreated,
     getPaginatedTickets,
     resetTicketCreated,
-    customers,
     customerId,
     customer,
     isEditing = false,
-    // setChangingRow,
-    subCategories,
     tags,
     createTags,
     channels,
     getChannels,
-    addChannel,
     fromSingleCustomer,
-    getPaginatedCurrentCustomerTickets
+    getPaginatedCurrentCustomerTickets,
 }) {
     const [selectedTags, setSelectedTags] = useState([]);
     const [tagSelectLoading, setTagSelectLoading] = useState(false);
-    const [custSearch, setCustSearch] = useState({
+    const [, setCustSearch] = useState({
         gottenCust: [],
         term: '',
         openPreview: false,
         isLoading: false,
         isLoaded: false,
     });
-    const [subCatLoading, setSubCatLoading] = useState(false);
-    const [subCat, setSubCat] = useState(null);
+    const [, setSubCatLoading] = useState(false);
+    // const [subCat, setSubCat] = useState(null);
     const [creatingTicket, setCreatingTicket] = useState(false);
     // const [channels, setChannels] = useState([
     //     'Email',
@@ -152,7 +144,7 @@ function CreateTicketModal({
     // console.log('UPLOAD INFO => ', uploadInfo);
 
     // ref to customer input
-    const custInputRef = useRef(null);
+    // const custInputRef = useRef(null);
 
     const [modalInputs, setModalInputs] = useState({
         customer: '',
@@ -169,26 +161,26 @@ function CreateTicketModal({
         channel: '',
     });
 
-    const [Category, setCategory] = useState([]);
-    const [openSaveTicketModal, setopenSaveTicketModal] = useState(false);
+    // const [Category, setCategory] = useState([]);
+    // const [openSaveTicketModal, setopenSaveTicketModal] = useState(false);
 
     const [defaultStatus, setDefaultStatus] = useState([]);
     const [defaultPriority, setDefaultPriority] = useState([]);
 
     const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(false);
-    const [assignType, setAssignType] = useState('teams');
-    const [categoriesAndSubs, setCategoriesAndSubs] = useState([]);
+    // const [assignType, setAssignType] = useState('teams');
+    const [, setCategoriesAndSubs] = useState([]);
 
     /* UPDATE MODAL FORM VALUES */
-    const [RSCustomerName, setRSCustomerName] = useState('');
-    const [RSTicketCate, setRSTicketCate] = useState('');
-    const [RSTickeSubject, setRSTickeSubject] = useState('');
-    const [RSTicketStage, setRSTicketStage] = useState('');
-    const [RSTicketPriority, setRSTicketPriority] = useState('');
-    const [RSTicketRemarks, setRSTicketRemarks] = useState('');
-    const [RSTicketAssignedAgent, setRSTicketAssignedAgent] = useState('');
-    const [RSTicketDueDate, setRSTicketDueDate] = useState('');
-    const [RSTeams, setRSTeams] = useState([]);
+    // const [RSCustomerName, setRSCustomerName] = useState('');
+    // const [RSTicketCate, setRSTicketCate] = useState('');
+    // const [RSTickeSubject, setRSTickeSubject] = useState('');
+    // const [RSTicketStage, setRSTicketStage] = useState('');
+    // const [RSTicketPriority, setRSTicketPriority] = useState('');
+    // const [RSTicketRemarks, setRSTicketRemarks] = useState('');
+    // const [RSTicketAssignedAgent, setRSTicketAssignedAgent] = useState('');
+    // const [RSTicketDueDate, setRSTicketDueDate] = useState('');
+    // const [, setRSTeams] = useState([]);
 
     const [, forceUpdate] = useState();
 
@@ -227,28 +219,6 @@ function CreateTicketModal({
         }
     }, [createModalShow]);
 
-    useEffect(() => {
-        if (isTicketCreated) {
-            resetTicketCreated();
-            setCreateModalShow(false);
-            setCreatingTicket(false);
-            setSubCatLoading(false);
-            // setChangingRow(true);
-            getPaginatedTickets(50, 1);
-            setUploadInfo({
-                blob: null,
-                msg: 'Add file or drag file here.',
-                error: false,
-                image: null,
-                ownAvatar: '',
-            });
-        }
-
-        prepCategoriesAndSubs();
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isTicketCreated]);
-
     // = = = = = F U N C T I O N S = = = = = = //
 
     const handleRSInput = async ({ value }, { name }) => {
@@ -261,13 +231,13 @@ function CreateTicketModal({
         }));
     };
 
-    const handleRSCategoryInput = async (v) => {
-        setModalInputs((prevState) => ({
-            ...prevState,
-            category: v.subcate,
-            subcategory: v.value,
-        }));
-    };
+    // const handleRSCategoryInput = async (v) => {
+    //     setModalInputs((prevState) => ({
+    //         ...prevState,
+    //         category: v.subcate,
+    //         subcategory: v.value,
+    //     }));
+    // };
 
     const handleModalInput = async (e) => {
         const { name, value } = e.target;
@@ -294,7 +264,6 @@ function CreateTicketModal({
             description,
             assignee,
             group,
-            subcategory,
             dueDays,
             dueHours,
             channel,
@@ -354,7 +323,7 @@ function CreateTicketModal({
                             },
                         );
                     })
-                    .catch((err) => {
+                    .catch(() => {
                         // console.log(err);
                         NotificationManager.error('Photo could not be uploaded', 'Error');
                         setCreatingTicket(false);
@@ -437,19 +406,19 @@ function CreateTicketModal({
 
     // }
 
-    const handleCustClick = function () {
-        const { id, firstname, lastname } = this;
-        const custInput = custInputRef.current;
-        setModalInputs((prev) => ({
-            ...prev,
-            customer: id,
-        }));
-        custInput.value = `${wordCapitalize(firstname)} ${wordCapitalize(lastname)}`;
-        setCustSearch((prev) => ({
-            ...prev,
-            openPreview: false,
-        }));
-    };
+    // const handleCustClick = function () {
+    //     const { id, firstname, lastname } = this;
+    //     const custInput = custInputRef.current;
+    //     setModalInputs((prev) => ({
+    //         ...prev,
+    //         customer: id,
+    //     }));
+    //     custInput.value = `${wordCapitalize(firstname)} ${wordCapitalize(lastname)}`;
+    //     setCustSearch((prev) => ({
+    //         ...prev,
+    //         openPreview: false,
+    //     }));
+    // };
 
     const handleModalHide = () => {
         setCreateModalShow(false);
@@ -479,17 +448,40 @@ function CreateTicketModal({
         });
     };
 
-    const getTeams = async () => {
-        const res = await httpGetMain(`groups`);
-        if (res.status == 'success') {
-            setRSTeams(res?.data?.groups);
-        } else {
-            return NotificationManager.error(res.er.message, 'Error', 4000);
+    useEffect(() => {
+        if (isTicketCreated) {
+            resetTicketCreated();
+            setCreateModalShow(false);
+            setCreatingTicket(false);
+            setSubCatLoading(false);
+            // setChangingRow(true);
+            getPaginatedTickets(50, 1);
+            setUploadInfo({
+                blob: null,
+                msg: 'Add file or drag file here.',
+                error: false,
+                image: null,
+                ownAvatar: '',
+            });
         }
-    };
+
+        prepCategoriesAndSubs();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isTicketCreated]);
+
+    // const getTeams = async () => {
+    //     const res = await httpGetMain(`groups`);
+    //     if (res.status == 'success') {
+    //         setRSTeams(res?.data?.groups);
+    //     } else {
+    //         return NotificationManager.error(res.er.message, 'Error', 4000);
+    //     }
+    // };
 
     const handleTagCreation = (newTag) => {
         const realTags = Array.isArray(tags) ? tags : [];
+        // eslint-disable-next-line no-param-reassign
         newTag = newTag.toLowerCase();
         setTagSelectLoading(true);
         const newTags = [...realTags, newTag];
@@ -497,7 +489,7 @@ function CreateTicketModal({
             newTags,
             (newTags, newTag) => {
                 // new tag created successfully
-                setSelectedTags((prev) => [...selectedTags, { value: newTag, label: newTag }]);
+                setSelectedTags(() => [...selectedTags, { value: newTag, label: newTag }]);
                 setTagSelectLoading(false);
             },
             () => {
@@ -522,95 +514,96 @@ function CreateTicketModal({
         );
     }
 
-    const handleImgSelect = function (e) {
-        // store current input
-        const fileInput = e.target;
+    // const handleImgSelect = function (e) {
+    //     // store current input
+    //     const fileInput = e.target;
 
-        // create a store for the current dimension and default info
-        const maxReqDimensions = {
-            width: 1500,
-            height: 1500,
-        };
+    //     // create a store for the current dimension and default info
+    //     const maxReqDimensions = {
+    //         width: 1500,
+    //         height: 1500,
+    //     };
 
-        if (!fileInput.files.length) {
-            // No file is selected
-            setUploadInfo((prev) => ({
-                ...prev,
-                msg: 'No file is slected',
-                error: true,
-                blob: null,
-                image: null,
-                ownAvatar: '',
-            }));
-        } else {
-            // file selected
+    //     if (!fileInput.files.length) {
+    //         // No file is selected
+    //         setUploadInfo((prev) => ({
+    //             ...prev,
+    //             msg: 'No file is slected',
+    //             error: true,
+    //             blob: null,
+    //             image: null,
+    //             ownAvatar: '',
+    //         }));
+    //     } else {
+    //         // file selected
 
-            // check if selected file is an image
-            if (fileInput.files[0].type.indexOf('image/') === -1) {
-                // Selected file is not an image
-                setUploadInfo((prev) => ({
-                    ...prev,
-                    msg: 'Selected file is not an image',
-                    error: true,
-                    blob: null,
-                    image: null,
-                    ownAvatar: '',
-                }));
-            } else {
-                // Selected file is an image
-                /*
-                 * read the selected image to get the file width and height
-                 */
-                // create a new file reader object
-                const reader = new FileReader();
-                reader.readAsDataURL(fileInput.files[0]);
-                reader.onload = function (e) {
-                    // when reader has loaded
+    //         // check if selected file is an image
+    //         if (fileInput.files[0].type.indexOf('image/') === -1) {
+    //             // Selected file is not an image
+    //             setUploadInfo((prev) => ({
+    //                 ...prev,
+    //                 msg: 'Selected file is not an image',
+    //                 error: true,
+    //                 blob: null,
+    //                 image: null,
+    //                 ownAvatar: '',
+    //             }));
+    //         } else {
+    //             // Selected file is an image
+    //             /*
+    //              * read the selected image to get the file width and height
+    //              */
+    //             // create a new file reader object
+    //             const reader = new FileReader();
+    //             reader.readAsDataURL(fileInput.files[0]);
+    //             reader.onload = function (e) {
+    //                 // when reader has loaded
 
-                    // create a new image object
-                    const currentImage = new Image();
-                    // set the source of the image to the base64 string from the file reader
-                    currentImage.src = this.result;
+    //                 // create a new image object
+    //                 const currentImage = new Image();
+    //                 // set the source of the image to the base64 string from the file reader
+    //                 currentImage.src = this.result;
 
-                    currentImage.onload = function () {
-                        const [currentImageHeight, currentImageWidth] = [this.height, this.width];
+    //                 currentImage.onload = function () {
+    //                     const [currentImageHeight, currentImageWidth] = [this.height, this.width];
 
-                        if (
-                            currentImageWidth > maxReqDimensions.width ||
-                            currentImageHeight > maxReqDimensions.height
-                        ) {
-                            // current selected image dimesions are not acceptable
-                            setUploadInfo((prev) => ({
-                                ...prev,
-                                msg: `Selected image should have max dimension of ${maxReqDimensions.width}x${maxReqDimensions.height}`,
-                                error: true,
-                                blog: null,
-                                image: null,
-                            }));
-                        } else {
-                            // current selected image dimensions are acceptable
-                            const fileName = fileInput.files[0].name;
-                            const fileBlob = URL.createObjectURL(fileInput.files[0]);
+    //                     if (
+    //                         currentImageWidth > maxReqDimensions.width ||
+    //                         currentImageHeight > maxReqDimensions.height
+    //                     ) {
+    //                         // current selected image dimesions are not acceptable
+    //                         setUploadInfo((prev) => ({
+    //                             ...prev,
+    //                             msg: `Selected image should have max dimension of ${maxReqDimensions.width}x${maxReqDimensions.height}`,
+    //                             error: true,
+    //                             blog: null,
+    //                             image: null,
+    //                         }));
+    //                     } else {
+    //                         // current selected image dimensions are acceptable
+    //                         const fileName = fileInput.files[0].name;
+    //                         const fileBlob = URL.createObjectURL(fileInput.files[0]);
 
-                            setUploadInfo((prev) => ({
-                                ...prev,
-                                blob: fileBlob,
-                                msg: fileName,
-                                error: false,
-                                image: fileInput.files[0],
-                                ownAvatar: '',
-                            }));
-                            /* 
-                            when the image with the blob loads call the below method
-                            URL.revokeObjectURL(this.src);  where this.src is the blob created
-                            */
-                        }
-                    };
-                };
-            }
-        }
-    };
+    //                         setUploadInfo((prev) => ({
+    //                             ...prev,
+    //                             blob: fileBlob,
+    //                             msg: fileName,
+    //                             error: false,
+    //                             image: fileInput.files[0],
+    //                             ownAvatar: '',
+    //                         }));
+    //                         /*
+    //                         when the image with the blob loads call the below method
+    //                         URL.revokeObjectURL(this.src);  where this.src is the blob created
+    //                         */
+    //                     }
+    //                 };
+    //             };
+    //         }
+    //     }
+    // };
 
+    // eslint-disable-next-line func-names
     const handleFileSelect = function (e) {
         // store current input
         const fileInput = e.target;
@@ -648,7 +641,8 @@ function CreateTicketModal({
                 // create a new file reader object
                 const reader = new FileReader();
                 reader.readAsDataURL(fileInput.files[0]);
-                reader.onload = function (e) {
+                // eslint-disable-next-line func-names
+                reader.onload = function () {
                     // when reader has loaded
 
                     // create a new image object
@@ -1028,7 +1022,7 @@ function CreateTicketModal({
                                     <RCreatable
                                         className="rselectfield"
                                         style={{ fontSize: '12px' }}
-                                        onChange={(value, actionMeta) => {
+                                        onChange={(value) => {
                                             handleTagSelection(value);
                                         }}
                                         isClearable={false}
@@ -1040,6 +1034,7 @@ function CreateTicketModal({
                                         options={
                                             // populate 'options' prop from $agents, with names remapped
                                             tags?.map((item) => {
+                                                // eslint-disable-next-line no-param-reassign
                                                 item = item?.toLowerCase();
                                                 return { value: item, label: item };
                                             })

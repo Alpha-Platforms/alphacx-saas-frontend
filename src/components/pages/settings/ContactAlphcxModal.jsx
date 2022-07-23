@@ -1,5 +1,4 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-/* eslint-disable react/prop-types */
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-responsive-modal';
 import { NotificationManager } from 'react-notifications';
