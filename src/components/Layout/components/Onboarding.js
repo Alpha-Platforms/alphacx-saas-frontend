@@ -11,8 +11,7 @@ import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 //
 import { getAgents } from '../../../reduxstore/actions/agentActions';
-import { getSlas } from '../../../reduxstore/actions/slaActions';
-// import {getConfigs} from '../../../../reduxstore/actions/configActions';
+import {getConfigs} from '../../../reduxstore/actions/configActions';
 //
 import {
     CreateTicketIcon,
@@ -28,18 +27,14 @@ function OnboardingModal({
     user,
     isUserAuthenticated,
     categories,
-    isCategoriesLoaded,
     groups,
-    isGroupsLoaded,
     slas,
-    isSlasLoaded,
-    getSlas,
     agents,
-    isAgentsLoaded,
-    getAgents,
     configs,
+    isAgentsLoaded,
     isConfigsLoaded,
-    // getConfigs,
+    getAgents,
+    getConfigs,
 }) {
     //
     const history = useHistory();
@@ -48,6 +43,7 @@ function OnboardingModal({
 
     const [facebookConnectPage, setFacebookConnectPage] = useState('');
     const [instagramConnectPage, setInstagramConnectPage] = useState('');
+
 
 
     useEffect(() => {      
@@ -61,8 +57,6 @@ function OnboardingModal({
 
         setFacebookConnectPage(`${url}?channel=facebook&domain=${params}`)
         setInstagramConnectPage(`${url}?channel=instagram&domain=${params}`)
-
-        console.log('isConfigsLoaded:', isConfigsLoaded)
     }, []);
 
 
@@ -70,17 +64,17 @@ function OnboardingModal({
 
     useEffect(() => {
         if (isUserAuthenticated) {
-            // getAgents();
-            // getSlas();
+            getAgents();
+            getConfigs();
         }
     }, [isUserAuthenticated]);
 
     useEffect(() => {
-        // if (isAgentsLoaded && isSlasLoaded && isConfigsLoaded) {
+        if (isAgentsLoaded && isConfigsLoaded) {
             if (agents?.length == 0 || Object.entries(configs?.facebook_config || {}).length == 0 || Object.entries(configs?.instagram_config || {}).length == 0 || Object.entries(configs?.livechat_config || {}).length == 0) {
                 setShowOnboarding(true)
             }
-        // }
+        }
 
     }, [categories, groups, slas, agents, configs]);
     
@@ -88,13 +82,15 @@ function OnboardingModal({
         history.push({
             pathname: `${page}`,
             from: '/',
-            state,            
+            state,
         });
     };
 
+
     return (
         showOnboarding &&
-            (<div className='my-5 mx-3'>
+            (<div className="m-3">
+                <p className="fw-bold border-bottom hr-global mb-3">Onboarding Checklist</p>
                 <div>
                     <div className="">
                         <ListGroup defaultActiveKey="#link1" className="acx-list-group acx-list-group-gapped">
@@ -206,5 +202,5 @@ const mapStateToProps = (state, ownProps) => ({
     isConfigsLoaded: state.config.isConfigsLoaded,
 });
 
-export default connect(mapStateToProps, { getAgents, getSlas })(OnboardingModal);
+export default connect(mapStateToProps, { getAgents, getConfigs })(OnboardingModal);
 // getConfigs
