@@ -79,16 +79,6 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                     </li>
 
                     <li
-                        className={`sidebar-list--item ${currentRoute === '/dashboard' ? 'active' : ''}`}
-                        onClick={() => customBrowserRouter(`/dashboard`)}
-                    >
-                        <span className="sidebar-list--icon">
-                            <HomeIcon activeRoute={false} />
-                        </span>
-                        <span className="sidebar-list--text">Dashboard</span>
-                    </li>
-
-                    <li
                         onClick={() => customBrowserRouter(`/tickets`)}
                         className={`sidebar-list--item ${currentRoute.includes('/tickets') ? 'active' : ''}`}
                     >
