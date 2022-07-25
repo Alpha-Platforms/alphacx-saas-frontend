@@ -474,7 +474,7 @@ function ReportsFilter() {
     };
 
     return (
-        <div className="reports-filter-wrapper">
+        <div className="reports-filter-wrapper mb-5">
             <h2>Filter Options</h2>
             <p>Select the Add Filter button to filter and generate your reports</p>
             <div>

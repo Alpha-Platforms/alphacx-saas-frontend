@@ -34,7 +34,7 @@ function DashboardTwo({
     }, [isUserAuthenticated]);
 
     return (
-        <Container fluid>
+        <div>
             <>
                 {!isAnalyticsLoaded && !isNewAnalyticsLoaded ? (
                     <div className="text-center mt-4">
@@ -94,7 +94,7 @@ function DashboardTwo({
                     </div>
                 )}
             </>
-        </Container>
+        </div>
     );
 }
 

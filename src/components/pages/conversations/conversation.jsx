@@ -78,12 +78,19 @@ function YouTubeGetID(url) {
 function WelcomeText({ userId }) {
     return (
         <>
-            <div className="m-3 mt-4">
-                <p className="fw-bold border-bottom hr-global mb-2">Welcome on Board!</p>
+            <div className="m-3">
+                <p className="fw-bold border-bottom hr-global mb-3">Welcome on Board!</p>
                 <p className="mb-1">
-                    We are excited you chose AlphaCX for your customer engagement. <br />
-                    AlphaCX is easy to use, however you can learn much more by going through our product{' '}
-                    <a href="#">documentation</a> or watching video <a href="#">tutorials</a>.
+                    We are excited you chose AlphaCX for your customer engagement. AlphaCX is easy to use, however you
+                    can learn much more by going through our product{' '}
+                    <a href="https://docs.alphacx.co/" target="_blank" rel="noreferrer">
+                        documentation
+                    </a>{' '}
+                    or watching
+                    <a href="https://www.youtube.com/channel/UCeKcSs9E4Ly5i-1kT7luqfQ" target="_blank" rel="noreferrer">
+                        tutorials
+                    </a>
+                    .
                 </p>
                 <p className="mb-1">
                     You can also share your feedback or open a support ticket.
