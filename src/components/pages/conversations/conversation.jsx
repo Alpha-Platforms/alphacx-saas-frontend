@@ -35,16 +35,17 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { NotificationManager } from 'react-notifications';
 // import debounce from 'debounce';
-import MessageList from './messageList';
-import searchIcon from '../../../assets/imgF/Search.png';
-import NoChatFound from './noChatFound';
-import { httpGetMain, httpPostMain, httpPatchMain } from '../../../helpers/httpMethods';
+import OnboardingModal from 'components/Layout/components/Onboarding';
+import AppNotification from 'components/Layout/Notification';
 import InitialsFromString from '../../helpers/InitialsFromString';
 // import { SocketDataContext } from '../../../context/socket';
 import { StarIconTicket, SendMsgIcon } from '../../../assets/images/svgs';
 import { dateFormater } from '../../helpers/dateFormater';
 import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter';
 import UserProfile from './userProfile';
+import { httpGetMain, httpPostMain, httpPatchMain } from '../../../helpers/httpMethods';
+import searchIcon from '../../../assets/imgF/Search.png';
+import NoChatFound from './noChatFound';
 import LinkImg from '../../../assets/imgF/insertLink.png';
 import TextUnderline from '../../../assets/imgF/TextUnderline.png';
 import TextItalic from '../../../assets/imgF/TextItalic.png';
@@ -58,10 +59,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './conversation.css';
 import Socket from '../../../socket';
 import noimage from '../../../assets/images/noimage.png';
-import OnboardingModal from 'components/Layout/components/Onboarding';
-import AppNotification from 'components/Layout/Notification';
-
-// import OnboardingModal from './components/OnboardingModal';
+import MessageList from './messageList';
 
 function YouTubeGetID(url) {
     let ID = '';
@@ -86,22 +84,21 @@ function WelcomeText({ userId }) {
                     <a href="https://docs.alphacx.co/" target="_blank" rel="noreferrer">
                         documentation
                     </a>{' '}
-                    or watching
+                    or watching{' '}
                     <a href="https://www.youtube.com/channel/UCeKcSs9E4Ly5i-1kT7luqfQ" target="_blank" rel="noreferrer">
                         tutorials
                     </a>
                     .
                 </p>
                 <p className="mb-1">
-                    You can also share your feedback or open a support ticket.
-                    <a href="/settings?opencontactmodal=1">here</a>
+                    You can also share your feedback or open a support ticket{' '}
+                    <a href="/settings?opencontactmodal=1">here</a>.
                 </p>
             </div>
 
             <OnboardingModal />
 
             <AppNotification userId={userId} />
-            {/* d13337dc-2aba-4e94-9a13-fd2d04cc77cb */}
         </>
     );
 }
