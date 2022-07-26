@@ -12,7 +12,7 @@ import {
     // appLogo,
     // dashboardIcon,
     // toggleIcon,
-    HomeIcon,
+    // HomeIcon,
     ClockIcon,
     CardIcon,
     MoreIcon,

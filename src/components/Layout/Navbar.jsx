@@ -113,6 +113,7 @@ function Notification({ userId }) {
                 setNotificationsLoaded(false);
                 return NotificationManager.success('All notifications marked read', 'Success', 4000);
             })
+            // eslint-disable-next-line no-console
             .catch((error) => console.error(error));
     };
 
