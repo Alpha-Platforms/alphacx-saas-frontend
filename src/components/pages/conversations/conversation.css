@@ -1705,3 +1705,11 @@ span[class*="indicatorSeparator"] {
   border-radius: 0px !important;
   padding: 1px 0px !important;
 }
+
+.onboarding .list-group-item > div {
+  /* filter: opacity(0.25); */
+}
+
+.onboarding .list-item-icon img {
+  width: 27px;
+}

@@ -92,7 +92,7 @@ function WelcomeText({ userId }) {
                 </p>
                 <p className="mb-1">
                     You can also share your feedback or open a support ticket{' '}
-                    <a href="/settings?opencontactmodal=1">here</a>.
+                    <a href="/settings?opencontactmodal=open">here</a>.
                 </p>
             </div>
 
