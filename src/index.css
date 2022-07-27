@@ -88,7 +88,7 @@ button:focus {
 }
 .section-wrap {
   /* padding: 6px 52px 10px 240px; */
-  padding-left: 50px;
+  padding-left: 70px;
   position: relative;
   left: 194px;
   width: calc(100% - 194px);
@@ -96,7 +96,7 @@ button:focus {
 
 .reduceAppPadding {
   left: 16px !important;
-  width: calc(100% - 60px);
+  width: calc(100% - 42px);
 }
 
 .section-wrap-nav {

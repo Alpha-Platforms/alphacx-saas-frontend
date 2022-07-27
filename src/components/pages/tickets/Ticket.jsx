@@ -219,7 +219,7 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
         // get current ticket when component mounts
         getCurrentTicket(id);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [id]);
 
     useEffect(() => {
         if (currentTicket) {
@@ -714,7 +714,7 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
     return (
         <>
             {!isCurrentTicketLoaded ? (
-                <div className="single-cust-loader">
+                <div className="cust-table-loader">
                     <MoonLoader loading color="#006298" size={30} />
                 </div>
             ) : !currentTicket ? (
@@ -737,7 +737,7 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
 
                         {/* CHAT COL TWO */}
                         {firstTimeLoad ? (
-                            <div className="single-cust-loader">
+                            <div className="cust-table-loader">
                                 <MoonLoader loading color="#006298" size={30} />
                             </div>
                         ) : loadSingleTicket ? (

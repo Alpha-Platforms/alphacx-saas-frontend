@@ -1,3 +1,5 @@
+/* eslint-disable */
+// @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { httpGetMain, httpPatchMain } from 'helpers/httpMethods';

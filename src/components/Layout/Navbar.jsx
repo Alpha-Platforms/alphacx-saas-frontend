@@ -17,7 +17,6 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { LayoutContext } from '../../context/layoutContext';
 import { NotificationBellEmpty, NotificationBellNew } from '../../assets/images/svgs';
 // import userIcon from "../../assets/images/user.png";
-import searchIcon from '../../assets/imgF/Search.png';
 import { HelpIcon, DowncaretIcon, PlusIcon } from '../../assets/SvgIconsSet';
 import CreateTicketModal from '../pages/tickets/CreateTicketModal';
 import CreateCustomerModal from '../pages/customers/CreateCustomerModal';
@@ -28,6 +27,7 @@ import { httpGetMain, httpPatchMain } from '../../helpers/httpMethods';
 // import AccordionLink from "components/pages/help_center/components/accordion/AccordionLink";
 import { accessControlFunctions } from '../../config/accessControlList';
 import { hasFeatureAccess, multiIncludes } from '../../helper';
+import GlobalSearch from './components/GlobalSearch';
 
 function DropDown({ shouldShowUserExceededNotif }) {
     const [createCustModalShow, setCreateCustModalShow] = useState(false);
@@ -113,6 +113,7 @@ function Notification({ userId }) {
                 setNotificationsLoaded(false);
                 return NotificationManager.success('All notifications marked read', 'Success', 4000);
             })
+            // eslint-disable-next-line no-console
             .catch((error) => console.error(error));
     };
 
@@ -495,36 +496,7 @@ function Navbar({ pageName, user }) {
                             <span style={{ textTransform: 'capitalize' }}>{pageName}</span>
                         </div>
                         <div className="navbar-right-content align-items-center d-flex gap-3">
-                            <form>
-                                <div>
-                                    <input
-                                        placeholder="Search"
-                                        type="text"
-                                        style={{
-                                            width: '100%',
-                                            borderRadius: 3,
-                                            border: 'solid 0.5px #ddd',
-                                            padding: '0.35rem 2rem',
-                                            backgroundImage: `url(${searchIcon})`,
-                                            backgroundRepeat: 'no-repeat',
-                                            backgroundSize: '14px',
-                                            backgroundPosition: '10px 50%',
-                                        }}
-                                    />
-
-                                    <div>
-                                        <img
-                                            src={searchIcon}
-                                            alt=""
-                                            style={{
-                                                height: '10px',
-                                                width: '10px',
-                                                display: 'none',
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            </form>
+                            <GlobalSearch />
 
                             {multiIncludes(accessControlFunctions[user?.role], [
                                 'create_ticket',
