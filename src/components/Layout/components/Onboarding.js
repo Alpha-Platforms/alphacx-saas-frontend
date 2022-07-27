@@ -22,13 +22,15 @@ import {
     ArrowRightCircleIcon,
     CheckCircleFilledIcon,
 } from '../../../assets/OnboardingIcons';
+import UserGroup from '../../../assets/imgF/user-group.png'
+import Facebook from '../../../assets/imgF/facebook-outline.png'
+import Instagram from '../../../assets/imgF/instagram-outline.png'
+import Livechat from '../../../assets/imgF/livechat.png'
+import Email from '../../../assets/imgF/email-outline.png'
 
 function OnboardingModal({
     user,
     isUserAuthenticated,
-    categories,
-    groups,
-    slas,
     agents,
     configs,
     isAgentsLoaded,
@@ -57,6 +59,8 @@ function OnboardingModal({
 
         setFacebookConnectPage(`${url}?channel=facebook&domain=${params}`)
         setInstagramConnectPage(`${url}?channel=instagram&domain=${params}`)
+
+        console.log("configs", configs)
     }, []);
 
 
@@ -71,12 +75,12 @@ function OnboardingModal({
 
     useEffect(() => {
         if (isAgentsLoaded && isConfigsLoaded) {
-            if (agents?.length == 0 || Object.entries(configs?.facebook_config || {}).length == 0 || Object.entries(configs?.instagram_config || {}).length == 0 || Object.entries(configs?.livechat_config || {}).length == 0) {
+            if (agents?.length == 0 || Object.entries(configs?.facebook_config || {}).length == 0 || Object.entries(configs?.instagram_config || {}).length == 0 || Object.entries(configs?.livechat_config || {}).length == 0 || Object.entries(configs?.email_config || {}).length == 0) {
                 setShowOnboarding(true)
             }
         }
 
-    }, [categories, groups, slas, agents, configs]);
+    }, [agents, configs]);
     
     const gotToPage = (page, state = {}) => {
         history.push({
@@ -89,7 +93,7 @@ function OnboardingModal({
 
     return (
         showOnboarding &&
-            (<div className="m-3">
+            (<div className="m-3 onboarding">
                 <p className="fw-bold border-bottom hr-global mb-3">Onboarding Checklist</p>
                 <div>
                     <div className="">
@@ -101,7 +105,7 @@ function OnboardingModal({
                             >
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div className="d-flex justify-content-start align-items-center list-item-icon">
-                                        <CreateUsersIcon />
+                                        <img src={UserGroup} alt="user group icon" />
                                         <p className="small mb-0 ms-3 text-secondary">Create Users</p>
                                     </div>
                                     <div className="">
@@ -122,7 +126,7 @@ function OnboardingModal({
                             >
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div className="d-flex justify-content-start align-items-center list-item-icon">
-                                        <CreateUsersIcon />
+                                        <img src={Facebook} alt="Facebook icon" />
                                         <p className="small mb-0 ms-3 text-secondary">Connect Facebook</p>
                                     </div>
                                     <div className="">
@@ -143,7 +147,7 @@ function OnboardingModal({
                             >
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div className="d-flex justify-content-start align-items-center list-item-icon">
-                                        <CreateUsersIcon />
+                                        <img src={Instagram} alt="Instagram icon" />
                                         <p className="small mb-0 ms-3 text-secondary">Connect Instagram</p>
                                     </div>
                                     <div className="">
@@ -165,13 +169,35 @@ function OnboardingModal({
                             >
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div className="d-flex justify-content-start align-items-center list-item-icon">
-                                        <TicketChannelIcon />
+                                        <img src={Livechat} alt="Livechat icon" />
                                         <p className="small mb-0 ms-3 text-secondary">Setup Livechat</p>
                                     </div>
                                     <div className="">
                                         {!isConfigsLoaded ? (
                                             <ArrowRightCircleIcon />
                                             ) : Object.entries(configs?.livechat_config || {}).length > 0 ? (
+                                            <CheckCircleFilledIcon />
+                                        ) : (
+                                            <ArrowRightCircleIcon />
+                                        )}
+                                    </div>
+                                </div>
+                            </ListGroup.Item>
+
+                            <ListGroup.Item
+                                action
+                                onClick={() => gotToPage('/settings/integrations/livechat')}
+                                disabled={isConfigsLoaded ? Object.entries(configs?.email_config || {}).length > 0 : false}
+                            >
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <div className="d-flex justify-content-start align-items-center list-item-icon">
+                                        <img src={Email} alt="Email icon" />
+                                        <p className="small mb-0 ms-3 text-secondary">Setup Email</p>
+                                    </div>
+                                    <div className="">
+                                        {!isConfigsLoaded ? (
+                                            <ArrowRightCircleIcon />
+                                            ) : Object.entries(configs?.email_config || {}).length > 0 ? (
                                             <CheckCircleFilledIcon />
                                         ) : (
                                             <ArrowRightCircleIcon />
