@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../conversations/conversation.css';
 import '../../../styles/Setting.css';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -26,6 +26,16 @@ import { hasFeatureAccess } from '../../../helper';
 
 function SettingsHome({ signedUser }) {
     const [contactSupportModalShow, setContactSupportModalShow] = useState(false);
+    const { search } = useLocation();
+
+    useEffect(() => {
+        const qp = new URLSearchParams(search);
+        const contactModalAction = qp.get('opencontactmodal');
+
+        if (contactModalAction === 'open') {
+            setContactSupportModalShow(true);
+        }
+    }, []);
 
     return (
         <Container fluid>
