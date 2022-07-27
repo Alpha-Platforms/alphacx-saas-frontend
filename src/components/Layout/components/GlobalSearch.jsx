@@ -2,8 +2,10 @@
 // @ts-nocheck
 import React, { useState, useRef, useEffect } from 'react';
 import MoonLoader from 'react-spinners/MoonLoader';
+import { Link } from 'react-router-dom';
 import { httpGetMain } from '../../../helpers/httpMethods';
 import searchIcon from '../../../assets/imgF/Search.png';
+import { isObjectEmpty, getUserInitials } from '../../../helper';
 import './GlobalSearch.scss';
 
 let globalSearchTimer;
@@ -28,28 +30,25 @@ const getGlobalSearchResult = async (userInput) => {
 };
 
 function GlobalSearch() {
-    const [dropdownActive, setDropdownActive] = useState(true);
+    const [dropdownActive, setDropdownActive] = useState(false);
     const [searchResult, setSearchResult] = useState({});
     const [loading, setLoading] = useState(false);
 
     const searchRef = useRef(null);
 
-    // const clearInput = () => {
-    //     if (searchRef?.current?.value) {
-    //         searchRef.current.value = '';
-    //         console.log('input cleared');
-    //     }
-    // };
+    const clearInput = () => {
+        if (searchRef?.current?.value) {
+            searchRef.current.value = '';
+        }
+    };
 
     const handleGlobalSearch = async (e) => {
         !dropdownActive && setDropdownActive(true);
         !loading && setLoading(true);
         const userInput = e.target.value;
-        console.log('userInput => ', userInput);
         const result = await getGlobalSearchResult(userInput);
-        loading && setLoading(false);
+        setLoading(false);
         setSearchResult(result);
-        console.log('searchVal => ', result);
     };
 
     useEffect(() => {
@@ -58,6 +57,7 @@ function GlobalSearch() {
             if (globalSearch) {
                 if (!globalSearch.contains(e.target)) {
                     dropdownActive && setDropdownActive(false);
+                    clearInput();
                 }
             }
         };
@@ -66,8 +66,6 @@ function GlobalSearch() {
 
         return () => window.document.removeEventListener('click', handleDocClick, true);
     }, [dropdownActive]);
-
-    console.log('search result => ', searchResult);
 
     return (
         <form className="global-search" id="global-search">
@@ -96,25 +94,51 @@ function GlobalSearch() {
                             <MoonLoader size={15} color="#006298" />
                         </div>
                     )}
-                    {searchResult?.users && (
+                    <div className="search-result-title-box">
+                        <h5>Search Results</h5>
+                    </div>
+                    {!isObjectEmpty(searchResult?.users) && (
                         <div className="searched searched-users">
-                            <h4>Users</h4>
+                            <h6>Users</h6>
                             <ul>
                                 {searchResult?.users?.map((user) => (
-                                    <li>{user?.firstname}</li>
+                                    <li>
+                                        <div className="d-flex user-initials-sm align-items-center">
+                                            <div>
+                                                <div className="user-initials blue">
+                                                    {user.avatar ? (
+                                                        <img src={user?.avatar} className="cust-avatar" alt="" />
+                                                    ) : (
+                                                        getUserInitials(`${user.firstname} ${user.lastname}`)
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div className="ms-2">
+                                                <Link
+                                                    to={`/customers/${user.id}`}
+                                                    style={{ textTransform: 'capitalize' }}
+                                                >{`${user.firstname} ${user.lastname}`}</Link>
+                                            </div>
+                                        </div>
+                                    </li>
                                 ))}
                             </ul>
                         </div>
                     )}
-                    {searchResult?.tickets && (
+                    {!isObjectEmpty(searchResult?.tickets) && (
                         <div className="searched searched-tickets">
-                            <h4>Tickets</h4>
+                            <h6>Tickets</h6>
                             <ul>
                                 {searchResult?.tickets?.map((item) => (
-                                    <li>{item?.subject}</li>
+                                    <li>
+                                        <Link to={`/tickets/${item?.id}`}>{item?.subject}</Link>
+                                    </li>
                                 ))}
                             </ul>
                         </div>
+                    )}
+                    {isObjectEmpty(searchResult?.users) && isObjectEmpty(searchResult?.tickets) && (
+                        <div className="no-result-found">No result found</div>
                     )}
                 </div>
             </div>
