@@ -7,9 +7,9 @@
 .app-container {
   background-color: #fff;
   position: relative;
-  left: 40px !important;
+  /* left: 40px !important; */
   top: 66px !important;
-  width: calc(100vw - 40px);
+  /* width: calc(100vw - 40px); */
   height: calc(100vh - 75px);
   padding-bottom: 30px;
   padding: 0;

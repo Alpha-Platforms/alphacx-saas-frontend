@@ -76,7 +76,6 @@ import EditEmailTemplate from './components/pages/settings/notifications/compone
 import CannedResponsesSettings from './components/pages/settings/canned_responses/CannedResponsesSettings';
 import NewCannedResponse from './components/pages/settings/canned_responses/components/NewCannedResponse';
 import CustomerPortal from './components/pages/help_center/customer_portal/CustomerPortal';
-import Dashboard from './components/pages/dashboard/Dashboard';
 import AccountVerified from './components/pages/auth/verified';
 import LiveChatSettings from './components/pages/settings/livechatsettings/LiveChatSettings';
 import SmsSettings from './components/pages/settings/smssettings/smsSettings';
