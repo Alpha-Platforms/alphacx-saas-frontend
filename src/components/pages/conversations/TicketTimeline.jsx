@@ -54,7 +54,9 @@ export default function TicketTimeline({ ticket, UserInfo, isTicketDetails, time
     // console.log('ticketAttachments => ', ticketAttachments);
 
     return (
-        <div style={{ width: '100%', height: '100%' }}>
+        <div className='zeelz' style={{ width: '100%', height: '100%', borderLeft: '1px solid rgb(241, 241, 241)' }}>
+
+
             <div className="user-profile-conversation-page tktimeline-wrapper">
                 {timeLine ? (
                     <div className="container-timeline">
@@ -138,7 +140,16 @@ export default function TicketTimeline({ ticket, UserInfo, isTicketDetails, time
             </div>
 
             <div className="ticket-attachment">
-                <h6>Attachments</h6>
+                <div className="d-flex justify-content-center border-top border-bottom mx-2 pt-2">                    
+                    <p
+                        style={{
+                            fontSize: '11px',
+                            textAlign: 'center'
+                        }}
+                    >
+                        Attachments
+                    </p>
+                </div>
 
                 <ul className="attach-wrapper">
                     {ticketAttachments.map((attach) => {

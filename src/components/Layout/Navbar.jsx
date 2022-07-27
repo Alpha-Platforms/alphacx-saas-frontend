@@ -140,7 +140,7 @@ function Notification({ userId }) {
 
         if (data?.ticketId) {
             history.push({
-                pathname: `/conversation`,
+                pathname: `/`,
                 from: 'notifications',
                 state: {
                     ticketId: data?.ticketId,
@@ -150,7 +150,7 @@ function Notification({ userId }) {
             });
         } else {
             history.push({
-                pathname: '/conversation',
+                pathname: '/',
                 from: 'notifications',
             });
         }
@@ -315,15 +315,6 @@ function Notification({ userId }) {
                                         );
                                     }
                                 })}
-                            <NavDropdown.Item
-                                as={NavLink}
-                                to="/conversation"
-                                className="acx-link-primary position-sticky d-block bottom-0 bg-white border-top"
-                            >
-                                <div className="text-center">
-                                    <p className="text-muted mb-0">View all notifications</p>
-                                </div>
-                            </NavDropdown.Item>
                         </>
                     )}
                 </>
