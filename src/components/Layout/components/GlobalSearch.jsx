@@ -67,6 +67,11 @@ function GlobalSearch() {
         return () => window.document.removeEventListener('click', handleDocClick, true);
     }, [dropdownActive]);
 
+    const closeDropdown = () => {
+        dropdownActive && setDropdownActive(false);
+        clearInput();
+    };
+
     return (
         <form className="global-search" id="global-search">
             <div className="global-search-input-wrapper">
@@ -117,6 +122,7 @@ function GlobalSearch() {
                                                 <Link
                                                     to={`/customers/${user.id}`}
                                                     style={{ textTransform: 'capitalize' }}
+                                                    onClick={closeDropdown}
                                                 >{`${user.firstname} ${user.lastname}`}</Link>
                                             </div>
                                         </div>
@@ -131,7 +137,9 @@ function GlobalSearch() {
                             <ul>
                                 {searchResult?.tickets?.map((item) => (
                                     <li>
-                                        <Link to={`/tickets/${item?.id}`}>{item?.subject}</Link>
+                                        <Link onClick={closeDropdown} to={`/tickets/${item?.id}`}>
+                                            {item?.subject}
+                                        </Link>
                                     </li>
                                 ))}
                             </ul>

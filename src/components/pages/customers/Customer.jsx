@@ -50,7 +50,7 @@ function Customer({ isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoade
     useEffect(() => {
         getCurrentCustomer(id);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isCustomerLoaded]);
+    }, [isCustomerLoaded, id]);
 
     const getStatusColor = (status) => {
         let output;
@@ -92,7 +92,7 @@ function Customer({ isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoade
     return (
         <>
             {!isCurrentCustomerLoaded ? (
-                <div className="single-cust-loader">
+                <div className="cust-table-loader">
                     <MoonLoader loading color="#006298" size={30} />
                 </div>
             ) : !currentCustomer ? (
