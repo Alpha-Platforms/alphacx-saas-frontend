@@ -61,7 +61,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                     </span>
                 </header>
                 <ul className="sidebar-list mb-auto">
-                    <li onClick={() => reduceSidebarWidth()} className="sidebar-list--item">
+                    <li onClick={() => reduceSidebarWidth()} className="sidebar-list--item ps-3">
                         <span className={`sidebar-list--icon ${appReduceSidebarWidth === true ? '' : 'rotate-180'}`}>
                             <CollapseLeft />
                         </span>
@@ -128,7 +128,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                             className={`sidebar-list--item ${currentRoute.includes('/appsumo-plans') ? 'active' : ''}`}
                         >
                             <span className="sidebar-list--icon">
-                                <DiscountWhite />
+                                <DiscountWhite activeRoute={false} />
                             </span>
                             <span className="sidebar-list--text">AppSumo Plans</span>
                         </li>

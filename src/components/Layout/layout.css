@@ -196,9 +196,12 @@
   .sidebar-list
   li.sidebar-list--item
   span.sidebar-list--text {
-  width: 0px !important;
+  /* width: 0px !important;
+  overflow: hidden !important; */
+  width: auto !important;
+  visibility: hidden !important;
   padding-left: 0px;
-  overflow: hidden !important;
+  white-space: nowrap;
 }
 .sidebar-wrap .sidebar-list li.sidebar-list--item span {
   transition: 0.25s ease-in;

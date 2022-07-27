@@ -2,7 +2,7 @@
 /* eslint-disable react/no-array-index-key */
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { httpGet } from '../../helpers/httpMethods';
+import { httpGet } from '../../../helpers/httpMethods';
 import { TickeCircle } from '../../../assets/images/svgs';
 import './AppsumoPlans.scss';
 import CheckCircle from '../../../assets/icons/CheckCircle.svg';
