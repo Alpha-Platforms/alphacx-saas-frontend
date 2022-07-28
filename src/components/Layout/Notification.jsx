@@ -93,7 +93,7 @@ function AppNotification({ userId }) {
 
     return (
         <div className="m-3">
-            {!isUnreadNotificiations && <p className="fw-bold border-bottom hr-global mb-2">Notifications</p>}
+            {!isUnreadNotificiations && <p className="fw-bold border-bottom mb-2">Notifications</p>}
             {notifications
                 .slice(0)
                 .reverse()
@@ -113,7 +113,7 @@ function AppNotification({ userId }) {
                                         index,
                                     )
                                 }
-                                className="acx-notification-item border-bottom rounded mb-1"
+                                className="acx-notification-item border-bottom px-2 mb-1"
                             >
                                 <div className="d-flex justify-content-start align-items-start">
                                     <div className="me-3 flex-shrink-0 avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center acx-bg-affair-800">
