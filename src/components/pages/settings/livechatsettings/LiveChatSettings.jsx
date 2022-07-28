@@ -506,7 +506,7 @@ function LiveChatSettings({ getLivechatConfig, updateLivechatConfig, isUserAuthe
                                                                         target="_blank"
                                                                         rel="noreferrer noopener"
                                                                     >
-                                                                        We care with AlphaCX {settings.theme}
+                                                                        We care with AlphaCX
                                                                     </a>
                                                                 </span>
                                                             </div>
