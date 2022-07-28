@@ -77,7 +77,7 @@ function WelcomeText({ userId }) {
     return (
         <>
             <div className="m-3">
-                <p className="fw-bold border-bottom hr-global mb-3">Welcome on Board!</p>
+                <p className="fw-bold border-bottom mb-3">Welcome on Board!</p>
                 <p className="mb-1">
                     We are excited you chose AlphaCX for your customer engagement. AlphaCX is easy to use, however you
                     can learn much more by going through our product{' '}

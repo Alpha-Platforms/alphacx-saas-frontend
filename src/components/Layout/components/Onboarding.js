@@ -94,7 +94,7 @@ function OnboardingModal({
     return (
         showOnboarding &&
             (<div className="m-3 onboarding">
-                <p className="fw-bold border-bottom hr-global mb-3">Onboarding Checklist</p>
+                <p className="fw-bold border-bottom mb-3">Onboarding Checklist</p>
                 <div>
                     <div className="">
                         <ListGroup defaultActiveKey="#link1" className="acx-list-group acx-list-group-gapped">
