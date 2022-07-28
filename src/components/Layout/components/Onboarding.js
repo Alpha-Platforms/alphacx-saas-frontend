@@ -186,7 +186,7 @@ function OnboardingModal({
 
                             <ListGroup.Item
                                 action
-                                onClick={() => gotToPage('/settings/integrations/livechat')}
+                                onClick={() => gotToPage('/settings/integrations/email/email-form')}
                                 disabled={isConfigsLoaded ? Object.entries(configs?.email_config || {}).length > 0 : false}
                             >
                                 <div className="d-flex justify-content-between align-items-center">
