@@ -812,7 +812,7 @@ function Conversation({ user }) {
             const channelData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
             AppSocket.io.emit(`ws_tickets`, channelData); */
 
-            return NotificationManager.success('Ticket status successfully updated', 'Success');
+            return NotificationManager.success('Conversation status successfully updated', 'Success');
         }
         return NotificationManager.error(statusRes.er.message, 'Error', 4000);
     };
@@ -1128,7 +1128,7 @@ function Conversation({ user }) {
                                     </div>
 
                                     <div className="msgAssingedToee3">
-                                        Ticket Status has been marked as <span> {ticket[0].status.status}</span>
+                                        Conversation Status has been marked as <span> {ticket[0].status.status}</span>
                                     </div>
 
                                     <div className="">

@@ -33,7 +33,7 @@ function TicketStatusTab({ statuses }) {
                 <div style={gtcCol} className="mb-4 mt-4 d-grid align-items-start">
                     <div>
                         <label htmlFor="ticket-supplt" className="form-label d-inline-block">
-                            Ticket Stage:
+                            Conversation Stage:
                         </label>
                     </div>
                     <div>

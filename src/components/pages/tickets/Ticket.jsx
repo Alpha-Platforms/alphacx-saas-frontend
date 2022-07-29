@@ -528,7 +528,7 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
                 user: ticket?.assignee,
             };
             setMsgHistory((item) => [...item, replyData]);
-            return NotificationManager.success('Ticket status successfully updated', 'Success');
+            return NotificationManager.success('Conversation status successfully updated', 'Success');
         }
         setStatusOps(true);
         return NotificationManager.error(statusRes.er.message, 'Error', 4000);
@@ -718,7 +718,7 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
                     <MoonLoader loading color="#006298" size={30} />
                 </div>
             ) : !currentTicket ? (
-                <div>No Ticket Found.</div>
+                <div>No Conversation Found.</div>
             ) : (
                 <div
                     id="ticketDetailsWrapper"
@@ -831,7 +831,7 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
                                     </div>
 
                                     <div className="msgAssingedToee3">
-                                        Ticket Status has been marked as <span> {ticket.status.status}</span>
+                                        Conversation Status has been marked as <span> {ticket.status.status}</span>
                                     </div>
 
                                     <div className="">
@@ -1068,7 +1068,7 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
                                     {TodayMsges.map((data) => {
                                         return (
                                             <Fragment key={data.id}>
-                                                {data?.response.includes('Ticket Stage has been marked') ||
+                                                {data?.response.includes('Conversation Stage has been marked') ||
                                                 data?.statusAction ? (
                                                     <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
                                                         <span> {`${data?.response}`}</span>

@@ -61,7 +61,7 @@ function PieChartCard({ values, colors, labels }) {
     return (
         <div className="pie-chart">
             <div className="top-section">
-                <p>Ticket Status</p>
+                <p>Conversation Status</p>
             </div>
             {/* <Chart width={170} height={170} series={series}>
         <Transform method={["transpose", "stack"]}>
