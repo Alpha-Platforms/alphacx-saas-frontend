@@ -105,7 +105,7 @@ export const getUserInitials = (name) => {
 export const uuid = () => {
     let dt = new Date().getTime();
     // eslint-disable-next-line func-names
-    const uuidValue = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    const uuidValue = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'?.replace(/[xy]/g, function (c) {
         // eslint-disable-next-line no-bitwise
         const r = (dt + Math.random() * 16) % 16 | 0;
         dt = Math.floor(dt / 16);
@@ -116,11 +116,11 @@ export const uuid = () => {
 };
 
 export const textCapitalize = (str = '') => {
-    return str ? str.toLowerCase().replace(/(^|\s)\S/g, (L) => L.toUpperCase()) : '';
+    return str ? str.toLowerCase()?.replace(/(^|\s)\S/g, (L) => L.toUpperCase()) : '';
 };
 
 export const slugify = (str = '') => {
-    return str ? str.toLowerCase().replace(/\W+/gi, ' ').replace(/_/gi, ' ').trim().replace(/\s+/gi, '-') : '';
+    return str ? str.toLowerCase()?.replace(/\W+/gi, ' ')?.replace(/_/gi, ' ').trim()?.replace(/\s+/gi, '-') : '';
 };
 
 export const shuffleArray = (array) => {
@@ -197,7 +197,7 @@ export const redirectToSub = (history, location, tenantSubscription) => {
 export const separateNum = (num) => {
     if (typeof num !== 'number') return num;
 
-    return num.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
+    return num.toString()?.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
 };
 
 //
