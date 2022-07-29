@@ -12,7 +12,7 @@ function Timeline() {
                     </div>
                     <div>
                         <p>
-                            <Link to="#">Olamide Adeleke</Link>&nbsp;changed ticket status from In progress to Closed
+                            <Link to="#">Olamide Adeleke</Link>&nbsp;changed conversation status from In progress to Closed
                         </p>
                     </div>
                 </li>

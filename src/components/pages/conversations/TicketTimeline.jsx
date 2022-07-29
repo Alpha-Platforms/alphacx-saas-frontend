@@ -123,8 +123,8 @@ export default function TicketTimeline({ ticket, UserInfo, isTicketDetails, time
                                         <div className="timeLinehashtags flex-column align-items-start">
                                             <div>
                                                 <a href={`#${data?.id}`} className="acx-link-primary d-block">
-                                                    Ticket{' '}
-                                                    {`${data.response.replace('Ticket Stage has been marked as ', '')}`}
+                                                    Conversation{' '}
+                                                    {`${data.response.replace('Conversation Stage has been marked as ', '')}`}
                                                 </a>
                                             </div>
                                             <div>{dateFormater(data.created_at)}</div>
@@ -140,7 +140,7 @@ export default function TicketTimeline({ ticket, UserInfo, isTicketDetails, time
             </div>
 
             <div className="ticket-attachment">
-                <div className="d-flex justify-content-center border-top border-bottom mx-2 pt-2">                    
+                <div className="d-flex justify-content-center border-top mx-2 pt-2">                    
                     <p
                         style={{
                             fontSize: '11px',

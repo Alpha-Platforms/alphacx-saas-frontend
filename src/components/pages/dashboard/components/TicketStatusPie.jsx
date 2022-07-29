@@ -39,7 +39,7 @@ function TicketStatusPie({ newAnalytics }) {
     return (
         <div>
             <div className="dashboard-box-top my-3 px-2">
-                <div>Ticket status</div>
+                <div>Conversation status</div>
                 <div>
                     {/* <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
                         <Dropdown.Toggle variant="transparent" size="sm">

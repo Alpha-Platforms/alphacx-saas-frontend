@@ -377,7 +377,7 @@ function TicketLineGraph({ analytics }) {
     return (
         <div>
             <div className="dashboard-box-top ps-2 pt-3">
-                <div>Ticket Sources</div>
+                <div>Conversation Sources</div>
                 <div>
                     {/* <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
                         <Dropdown.Toggle variant="transparent" size="sm">
