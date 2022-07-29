@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable consistent-return */
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable no-param-reassign */
@@ -60,6 +61,7 @@ import './conversation.css';
 import Socket from '../../../socket';
 import noimage from '../../../assets/images/noimage.png';
 import MessageList from './messageList';
+import useNavigatorOnLine from '../../../hooks/useNavigatorOnline';
 
 function YouTubeGetID(url) {
     let ID = '';
@@ -182,8 +184,8 @@ function Conversation({ user }) {
     const [attachments, setAttachments] = useState([]);
     const location = useLocation();
     const [appSocket, setAppSocket] = useState(null);
-    const [connectionClosed, setConnectionClosed] = useState(false);
     const [generatedUuid] = useState(uuid());
+    const isOnline = useNavigatorOnLine();
 
     // youtube player options
     const youtubePlayerOptions = {
@@ -407,7 +409,7 @@ function Conversation({ user }) {
         })();
     }, []);
 
-    const loggedInUser = JSON.parse(window.localStorage.getItem('user') || '{}')?.user;
+    // const loggedInUser = JSON.parse(window.localStorage.getItem('user') || '{}')?.user;
     const domain = window.localStorage.getItem('domain');
     const tenantId = window.localStorage.getItem('tenantId');
 
@@ -417,36 +419,14 @@ function Conversation({ user }) {
     }, []);
 
     useEffect(() => {
-        setConnectionClosed(false);
         /* create a socket connection */
-        if (appSocket) {
+        if (appSocket && isOnline) {
             appSocket.createConnection();
-
-            appSocket?.socket.addEventListener('close', () => {
-                setConnectionClosed(true);
-                // console.log('%csocket.js WebSocket has closed: ', 'color: white; background-color: #007acc;', event);
-                if (navigator.onLine) {
-                    setAppSocket(new Socket(loggedInUser?.id, domain, tenantId));
-                }
-            });
         }
 
-        return () => appSocket?.socket.close();
+        return () => appSocket?.socket?.close();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [appSocket]);
-
-    useEffect(() => {
-        const newConnection = () => {
-            if (connectionClosed) {
-                setAppSocket(new Socket(loggedInUser?.id, domain, tenantId));
-            }
-        };
-
-        window.document.addEventListener('online', newConnection);
-
-        return () => window.document.removeEventListener('online', newConnection);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [connectionClosed]);
+    }, [appSocket, isOnline]);
 
     useEffect(() => {
         if (appSocket?.socket) {

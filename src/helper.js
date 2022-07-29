@@ -369,3 +369,6 @@ export const isObjectEmpty = (obj) => {
 
     return Object.keys(obj).length === 0;
 };
+
+export const getOnLineStatus = () =>
+    typeof navigator !== 'undefined' && typeof navigator.onLine === 'boolean' ? navigator.onLine : true;
