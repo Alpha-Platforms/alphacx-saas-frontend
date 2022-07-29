@@ -85,7 +85,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                         <span className="sidebar-list--icon">
                             <CardIcon activeRoute={false} />
                         </span>
-                        <span className="sidebar-list--text">Tickets</span>
+                        <span className="sidebar-list--text">Conversations</span>
                     </li>
 
                     <li

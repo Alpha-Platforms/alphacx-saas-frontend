@@ -149,7 +149,7 @@ function SettingsHome({ signedUser }) {
                                         <img src={AccountLightIcon} alt="" />
                                     </div>
                                     <div className="ms-3">
-                                        <h6 className="text-dark mb-0">Ticket Settings</h6>
+                                        <h6 className="text-dark mb-0">Conversation Settings</h6>
                                         <p className="acx-fs-8 mb-0 lh-base mt-1 text-muted">
                                             Manage ticket types and distribution.
                                         </p>
