@@ -831,7 +831,7 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
                                     </div>
 
                                     <div className="msgAssingedToee3">
-                                        Ticket Status has been marked as <span> {ticket.status.status}</span>
+                                        Ticket Status has been marked as <span> {ticket?.status?.status}</span>
                                     </div>
 
                                     <div className="">

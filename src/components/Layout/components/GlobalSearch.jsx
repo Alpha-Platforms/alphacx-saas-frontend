@@ -34,6 +34,9 @@ function GlobalSearch() {
     const [searchResult, setSearchResult] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    const searchUsers = searchResult?.users?.filter((user) => user?.role !== 'Customer');
+    const searchCustomers = searchResult?.users?.filter((user) => user?.role === 'Customer');
+
     const searchRef = useRef(null);
 
     const clearInput = () => {
@@ -116,11 +119,42 @@ function GlobalSearch() {
                             <h5>Search Results</h5>
                         </div>
                     )}
-                    {!isObjectEmpty(searchResult?.users) && (
+                    {!isObjectEmpty(searchCustomers) && (
+                        <div className="searched searched-users">
+                            <h6>Customers</h6>
+                            <ul>
+                                {searchCustomers?.map((user) => (
+                                    <li key={uuid()}>
+                                        <div className="d-flex user-initials-sm align-items-center">
+                                            <div>
+                                                <div className="user-initials blue">
+                                                    {user.avatar ? (
+                                                        <img src={user?.avatar} className="cust-avatar" alt="" />
+                                                    ) : (
+                                                        getUserInitials(`${user.firstname} ${user.lastname}`)
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div className="ms-2">
+                                                <Link
+                                                    to={`/${
+                                                        user?.role === 'Customer' ? 'customers' : 'settings/profile'
+                                                    }/${user?.id}`}
+                                                    style={{ textTransform: 'capitalize' }}
+                                                    onClick={closeDropdown}
+                                                >{`${user.firstname} ${user.lastname}`}</Link>
+                                            </div>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                    {!isObjectEmpty(searchUsers) && (
                         <div className="searched searched-users">
                             <h6>Users</h6>
                             <ul>
-                                {searchResult?.users?.map((user) => (
+                                {searchUsers?.map((user) => (
                                     <li key={uuid()}>
                                         <div className="d-flex user-initials-sm align-items-center">
                                             <div>
