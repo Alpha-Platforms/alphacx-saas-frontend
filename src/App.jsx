@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-shadow */
 // @ts-nocheck
 import React, { useEffect } from 'react';
@@ -27,7 +28,7 @@ import { getTags } from './reduxstore/actions/tagActions';
 import { getConfigs } from './reduxstore/actions/configActions';
 import { getCustomFields } from './reduxstore/actions/customFieldActions';
 import { getSubscription } from './reduxstore/actions/subscriptionAction';
-import { setAppSocket } from './reduxstore/actions/socketActions';
+import { setAppSocket, setSocketMessage } from './reduxstore/actions/socketActions';
 import CustomerList from './components/pages/customers/CustomerList';
 import CustomersNull from './components/pages/customers/CustomersNull';
 import Customer from './components/pages/customers/Customer';
@@ -131,6 +132,7 @@ const SiteRouter = connect(mapStateToProps, {
     getCustomFields,
     getSubscription,
     setAppSocket,
+    setSocketMessage,
 })(
     ({
         loadUser,
@@ -146,6 +148,7 @@ const SiteRouter = connect(mapStateToProps, {
         tenantSubscription,
         appSocket,
         setAppSocket,
+        setSocketMessage,
     }) => {
         const isOnline = useNavigatorOnLine();
 
@@ -180,6 +183,16 @@ const SiteRouter = connect(mapStateToProps, {
             return () => appSocket?.socket?.close();
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [appSocket, isOnline]);
+
+        useEffect(() => {
+            if (appSocket?.socket) {
+                appSocket.socket.onmessage = (event) => {
+                    const eventData = JSON.parse(event.data);
+                    setSocketMessage(eventData);
+                };
+            }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [appSocket]);
 
         // PLEASE, IF YOU UPDATE any 'pageName' reflect it in src/config/accessControlList.js
         return (

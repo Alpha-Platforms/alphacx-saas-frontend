@@ -93,6 +93,7 @@ function Notification({ userId }) {
     const [notifications, setNotifications] = useState([]);
     const [notificationsLoaded, setNotificationsLoaded] = useState(false);
     const [isUnreadNotificiations, setIsUnreadNotificiations] = useState(true);
+    const socketMessage = useSelector((state) => state?.socket?.socketMessage);
     const history = useHistory();
 
     useEffect(() => {
@@ -100,6 +101,15 @@ function Notification({ userId }) {
             if (item.isRead === false) setIsUnreadNotificiations(false);
         });
     }, [notifications]);
+
+    useEffect(() => {
+        if (socketMessage) {
+            const eventData = socketMessage;
+            if (eventData?.type === 'socketHook' && eventData?.status === 'incoming' && eventData?.data?.notification) {
+                setNotifications((prev) => [...prev, eventData?.data?.notification]);
+            }
+        }
+    }, [socketMessage]);
 
     function createMarkup(data) {
         return { __html: data };
@@ -377,7 +387,6 @@ function Navbar({ pageName, user }) {
         const lUser = localStorage.getItem('user');
         if (lUser) {
             const parse = JSON.parse(lUser);
-            // console.log(parse);
             setlocalUser(parse.user);
         }
     };

@@ -10,3 +10,7 @@ export const setAppSocket = () => {
 
     return { type: types.SET_APP_SOCKET, payload: new Socket(uuid(), domain, tenantId) };
 };
+
+export const setSocketMessage = (message) => {
+    return { type: types.SET_SOCKET_MESSAGE, payload: message };
+};

@@ -2,7 +2,8 @@
 import * as types from '../types';
 
 const initialState = {
-    appSocket: null
+    appSocket: null,
+    socketMessage: null,
 };
 
 // export the post reducer
@@ -12,6 +13,11 @@ const tagReducer = (state = initialState, action) => {
             return {
                 ...state,
                 appSocket: action.payload,
+            };
+        case types.SET_SOCKET_MESSAGE:
+            return {
+                ...state,
+                socketMessage: action.payload,
             };
         default:
             return state;
