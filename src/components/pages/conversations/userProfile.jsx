@@ -103,7 +103,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                         <span className="psvgIcon">
                                             <UserProfileIcon1 />
                                         </span>{' '}
-                                        Ticket ID
+                                        Conversation ID
                                     </p>
 
                                     <p style={{ textTransform: 'uppercase' }}>
@@ -249,7 +249,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                     <li className="ms-0">
                                         <CircleIcon color="rgba(108, 65, 129, 0.25)" icon={TicketIdIcon} />
                                         <div>
-                                            <p className="pb-0 mb-0 f-12 text-muted op-9">Ticket ID</p>
+                                            <p className="pb-0 mb-0 f-12 text-muted op-9">Conversation ID</p>
                                             <p className="text-muted f-13 text-uppercase" title={`${ticket[0]?.id}`}>
                                                 #{ticket[0]?.ticket_id}
                                             </p>

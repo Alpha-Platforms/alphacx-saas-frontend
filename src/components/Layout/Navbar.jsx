@@ -46,7 +46,7 @@ function DropDown({ shouldShowUserExceededNotif }) {
                 >
                     <div style={{ padding: '.25rem .5rem' }}>
                         <PlusIcon />
-                        <span className="px-2">Create</span>
+                        <span className="ps-2 pe-4">Create</span>
                         <DowncaretIcon />
                     </div>
                 </Dropdown.Toggle>
@@ -59,7 +59,7 @@ function DropDown({ shouldShowUserExceededNotif }) {
                                 !subExpired && !shouldShowUserExceededNotif && setCreateTicketModalShow(true)
                             }
                         >
-                            Ticket
+                            Conversation
                         </button>
                     </Dropdown.Item>
                     <Dropdown.Item eventKey="2">

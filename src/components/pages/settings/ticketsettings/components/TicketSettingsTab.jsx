@@ -27,7 +27,7 @@ function TicketSettingsTab({ statuses }) {
                     <div className="">
                         <div>
                             <label htmlFor="ticket-distribution" className="form-label">
-                                Ticket Distribution:
+                            Conversation Distribution:
                             </label>
                         </div>
                         <div>
@@ -50,7 +50,7 @@ function TicketSettingsTab({ statuses }) {
                     <div className="">
                         <div>
                             <label htmlFor="ticket-closes" className="form-label">
-                                Ticket autoclose after
+                                Conversation autoclose after
                             </label>
                         </div>
                         <div

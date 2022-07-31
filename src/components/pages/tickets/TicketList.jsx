@@ -229,7 +229,7 @@ function TicketList({ isTicketsLoaded, tickets, meta, getPaginatedTickets, isUse
             ),
         },
         {
-            title: 'Ticket ID',
+            title: 'Conversation ID',
             field: 'ticketId',
             width: '40%',
             render: (rowData) => (

@@ -29,7 +29,7 @@ function TicketSettings() {
                         <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
                         {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
                             className="img-fluid mx-2 me-3"></object> */}
-                        <span>Ticket</span>
+                        <span>Conversation</span>
                     </h6>
                 </div>
                 <div className="mt-4">
@@ -44,7 +44,7 @@ function TicketSettings() {
                                 aria-controls="customer-field-view"
                                 aria-selected="true"
                             >
-                                Ticket Distribution
+                                Conversation Distribution
                             </button>
                         </li>
                         {hasFeatureAccess('status') && (
@@ -60,7 +60,7 @@ function TicketSettings() {
                                     aria-controls="ticket-categoriese-view"
                                     aria-selected="false"
                                 >
-                                    Ticket Stage
+                                    Conversation Stage
                                 </button>
                             </li>
                         )}
@@ -78,7 +78,7 @@ function TicketSettings() {
                                         aria-controls="ticket-categoriese-view"
                                         aria-selected="false"
                                     >
-                                        Ticket Categories
+                                        Conversation Categories
                                     </button>
                                 </li>
                                 <li className="nav-item" role="presentation">

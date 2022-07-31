@@ -18,7 +18,7 @@ function noChatFound({ ticketsExist }) {
             ticketsExist ? 
                 <div>
                     <p className="fw-bold">Get Started</p>
-                    <p className="">Click on a ticket to get started</p>
+                    <p className="">Click on a conversation to get started</p>
                 </div>
                 :
                 <div>
