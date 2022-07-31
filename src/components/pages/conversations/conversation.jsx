@@ -54,14 +54,15 @@ import boldB from '../../../assets/imgF/boldB.png';
 import Smiley from '../../../assets/imgF/Smiley.png';
 import editorImg from '../../../assets/imgF/editorImg.png';
 import BackArrow from '../../../assets/imgF/back.png';
+// eslint-disable-next-line no-unused-vars
 import { multiIncludes, uuid, hasFeatureAccess } from '../../../helper';
 import { accessControlFunctions } from '../../../config/accessControlList';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './conversation.css';
-import Socket from '../../../socket';
+// import Socket from '../../../socket';
 import noimage from '../../../assets/images/noimage.png';
 import MessageList from './messageList';
-import useNavigatorOnLine from '../../../hooks/useNavigatorOnline';
+// import useNavigatorOnLine from '../../../hooks/useNavigatorOnline';
 
 function YouTubeGetID(url) {
     let ID = '';
@@ -108,9 +109,7 @@ function WelcomeText({ userId }) {
 const youtubeRegex =
     /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/;
 
-// let appSocket;
-
-function Conversation({ user }) {
+function Conversation({ user, appSocket }) {
     const initialState = EditorState.createWithContent(ContentState.createFromText(''));
     // const { AppSocket } = useContext(SocketDataContext);
     const [tickets, setTickets] = useState([]);
@@ -183,9 +182,9 @@ function Conversation({ user }) {
     const [editorUploadImg, setEditorUploadImg] = useState('');
     const [attachments, setAttachments] = useState([]);
     const location = useLocation();
-    const [appSocket, setAppSocket] = useState(null);
-    const [generatedUuid] = useState(uuid());
-    const isOnline = useNavigatorOnLine();
+    // const [appSocket, setAppSocket] = useState(null);
+    // const [generatedUuid] = useState(uuid());
+    // const isOnline = useNavigatorOnLine();
 
     // youtube player options
     const youtubePlayerOptions = {
@@ -410,23 +409,23 @@ function Conversation({ user }) {
     }, []);
 
     // const loggedInUser = JSON.parse(window.localStorage.getItem('user') || '{}')?.user;
-    const domain = window.localStorage.getItem('domain');
-    const tenantId = window.localStorage.getItem('tenantId');
+    // const domain = window.localStorage.getItem('domain');
+    // const tenantId = window.localStorage.getItem('tenantId');
 
-    useEffect(() => {
-        setAppSocket(new Socket(generatedUuid, domain, tenantId));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // useEffect(() => {
+    //     setAppSocket(new Socket(generatedUuid, domain, tenantId));
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
 
-    useEffect(() => {
-        /* create a socket connection */
-        if (appSocket && isOnline) {
-            appSocket.createConnection();
-        }
+    // useEffect(() => {
+    //     /* create a socket connection */
+    //     if (appSocket && isOnline) {
+    //         appSocket.createConnection();
+    //     }
 
-        return () => appSocket?.socket?.close();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [appSocket, isOnline]);
+    //     return () => appSocket?.socket?.close();
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [appSocket, isOnline]);
 
     useEffect(() => {
         if (appSocket?.socket) {
@@ -1977,5 +1976,6 @@ function Conversation({ user }) {
 
 const mapStateToProps = (state) => ({
     user: state.userAuth.user,
+    appSocket: state.socket.appSocket,
 });
 export default connect(mapStateToProps)(Conversation);

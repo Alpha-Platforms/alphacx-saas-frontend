@@ -27,6 +27,7 @@ import { getTags } from './reduxstore/actions/tagActions';
 import { getConfigs } from './reduxstore/actions/configActions';
 import { getCustomFields } from './reduxstore/actions/customFieldActions';
 import { getSubscription } from './reduxstore/actions/subscriptionAction';
+import { setAppSocket } from './reduxstore/actions/socketActions';
 import CustomerList from './components/pages/customers/CustomerList';
 import CustomersNull from './components/pages/customers/CustomersNull';
 import Customer from './components/pages/customers/Customer';
@@ -85,10 +86,12 @@ import AppsumoSignup from './components/pages/appsumo/signup';
 import Instagram from './components/pages/settings/social_integrations/Instagram';
 import AppsumoPlans from './components/pages/appsumo/AppsumoPlans';
 import { hasFeatureAccess } from './helper';
+import useNavigatorOnLine from './hooks/useNavigatorOnline';
 
 const mapStateToProps = (state) => ({
     isUserAuthenticated: state.userAuth.isUserAuthenticated,
     tenantSubscription: state?.subscription?.subscription,
+    appSocket: state?.socket?.appSocket,
 });
 
 // proper 404 UI later
@@ -127,6 +130,7 @@ const SiteRouter = connect(mapStateToProps, {
     getConfigs,
     getCustomFields,
     getSubscription,
+    setAppSocket,
 })(
     ({
         loadUser,
@@ -140,7 +144,11 @@ const SiteRouter = connect(mapStateToProps, {
         getCustomFields,
         getSubscription,
         tenantSubscription,
+        appSocket,
+        setAppSocket,
     }) => {
+        const isOnline = useNavigatorOnLine();
+
         const siteUser = JSON.parse(localStorage.getItem('user'));
 
         useEffect(() => {
@@ -158,12 +166,22 @@ const SiteRouter = connect(mapStateToProps, {
                 getConfigs();
                 getCustomFields();
                 getSubscription();
+                setAppSocket();
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [isUserAuthenticated]);
 
-        // PLEASE, IF YOU UPDATE any 'pageName' reflect it in src/config/accessControlList.js
+        useEffect(() => {
+            /* create a socket connection */
+            if (appSocket && isOnline) {
+                appSocket?.createConnection();
+            }
 
+            return () => appSocket?.socket?.close();
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [appSocket, isOnline]);
+
+        // PLEASE, IF YOU UPDATE any 'pageName' reflect it in src/config/accessControlList.js
         return (
             <BrowserRouter>
                 {/* Scroll Restoration */}
