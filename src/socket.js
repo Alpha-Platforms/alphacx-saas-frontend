@@ -70,26 +70,26 @@ class Socket {
      * @memberof Socket
      */
     createConnection() {
-        console.log('CALLING CREATE CONNECTION');
+        // console.log('CALLING CREATE CONNECTION');
         if ((this.socket && this.socket?.readyState === 1) || (navigator && !navigator.onLine)) return;
-        console.log('CREATE CONNECTION SUCCESSFUL');
+        // console.log('CREATE CONNECTION SUCCESSFUL');
 
         this.socket = new WebSocket(this.socketUrl);
 
         // listen for connection
         this.socket.addEventListener('open', (event) => {
-            console.log('Connection is open => ', event);
+            // console.log('Connection is open => ', event);
 
             this.sendAuthyMessage();
         });
 
         this.socket?.addEventListener('close', (event) => {
-            console.log('%csocket.js WebSocket has closed: ', 'color: white; background-color: #007acc;', event);
+            // console.log('%csocket.js WebSocket has closed: ', 'color: white; background-color: #007acc;', event);
             this.createConnection();
         });
 
         this.socket.addEventListener('error', (event) => {
-            console.log('%cerror socket.js WebSocket Error', 'color: red; display: block; width: 100%;', event);
+            // console.log('%cerror socket.js WebSocket Error', 'color: red; display: block; width: 100%;', event);
         });
     }
 
@@ -112,7 +112,7 @@ class Socket {
             },
         };
 
-        console.log('%csocket.js line:106 LIVESTREAM MESSAGE', 'color: white; background-color: #007acc;', msgObj);
+        // console.log('%csocket.js line:106 LIVESTREAM MESSAGE', 'color: white; background-color: #007acc;', msgObj);
 
         this.socket.send(JSON.stringify(msgObj, null, 4));
     }
@@ -127,7 +127,7 @@ class Socket {
             },
         };
 
-        console.log('%csocket.js line:121 AUTHY MESSAGE', 'color: white; background-color: #007acc;', msgObj);
+        // console.log('%csocket.js line:121 AUTHY MESSAGE', 'color: white; background-color: #007acc;', msgObj);
         this.socket.send(JSON.stringify(msgObj));
     }
 }
