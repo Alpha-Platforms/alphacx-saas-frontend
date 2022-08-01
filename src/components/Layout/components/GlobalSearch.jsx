@@ -5,7 +5,7 @@ import MoonLoader from 'react-spinners/MoonLoader';
 import { Link } from 'react-router-dom';
 import { httpGetMain } from '../../../helpers/httpMethods';
 import searchIcon from '../../../assets/imgF/Search.png';
-import { isObjectEmpty, getUserInitials } from '../../../helper';
+import { isObjectEmpty, getUserInitials, uuid } from '../../../helper';
 import './GlobalSearch.scss';
 
 let globalSearchTimer;
@@ -31,8 +31,11 @@ const getGlobalSearchResult = async (userInput) => {
 
 function GlobalSearch() {
     const [dropdownActive, setDropdownActive] = useState(false);
-    const [searchResult, setSearchResult] = useState({});
+    const [searchResult, setSearchResult] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    const searchUsers = searchResult?.users?.filter((user) => user?.role !== 'Customer');
+    const searchCustomers = searchResult?.users?.filter((user) => user?.role === 'Customer');
 
     const searchRef = useRef(null);
 
@@ -93,21 +96,35 @@ function GlobalSearch() {
                 />
             </div>
             <div className="global-search-dropdown-wrapper">
-                <div className={`global-search-dropdown ${dropdownActive ? 'active' : ''}`}>
+                <div
+                    className={`global-search-dropdown ${dropdownActive ? 'active' : ''} ${
+                        isObjectEmpty(searchResult?.users) && isObjectEmpty(searchResult?.tickets) && loading
+                            ? 'loading'
+                            : ''
+                    }`}
+                >
                     {loading && (
                         <div className="global-search-loader">
                             <MoonLoader size={15} color="#006298" />
                         </div>
                     )}
-                    <div className="search-result-title-box">
-                        <h5>Search Results</h5>
-                    </div>
-                    {!isObjectEmpty(searchResult?.users) && (
+                    {(!isObjectEmpty(searchResult?.users) || !isObjectEmpty(searchResult?.tickets)) && (
+                        <div
+                            className={`search-result-title-box ${
+                                isObjectEmpty(searchResult?.users) && isObjectEmpty(searchResult?.tickets) && loading
+                                    ? 'loading'
+                                    : ''
+                            }`}
+                        >
+                            <h5>Search Results</h5>
+                        </div>
+                    )}
+                    {!isObjectEmpty(searchCustomers) && (
                         <div className="searched searched-users">
-                            <h6>Users</h6>
+                            <h6>Customers</h6>
                             <ul>
-                                {searchResult?.users?.map((user) => (
-                                    <li>
+                                {searchCustomers?.map((user) => (
+                                    <li key={uuid()}>
                                         <div className="d-flex user-initials-sm align-items-center">
                                             <div>
                                                 <div className="user-initials blue">
@@ -120,7 +137,40 @@ function GlobalSearch() {
                                             </div>
                                             <div className="ms-2">
                                                 <Link
-                                                    to={`/customers/${user.id}`}
+                                                    to={`/${
+                                                        user?.role === 'Customer' ? 'customers' : 'settings/profile'
+                                                    }/${user?.id}`}
+                                                    style={{ textTransform: 'capitalize' }}
+                                                    onClick={closeDropdown}
+                                                >{`${user.firstname} ${user.lastname}`}</Link>
+                                            </div>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                    {!isObjectEmpty(searchUsers) && (
+                        <div className="searched searched-users">
+                            <h6>Users</h6>
+                            <ul>
+                                {searchUsers?.map((user) => (
+                                    <li key={uuid()}>
+                                        <div className="d-flex user-initials-sm align-items-center">
+                                            <div>
+                                                <div className="user-initials blue">
+                                                    {user.avatar ? (
+                                                        <img src={user?.avatar} className="cust-avatar" alt="" />
+                                                    ) : (
+                                                        getUserInitials(`${user.firstname} ${user.lastname}`)
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div className="ms-2">
+                                                <Link
+                                                    to={`/${
+                                                        user?.role === 'Customer' ? 'customers' : 'settings/profile'
+                                                    }/${user?.id}`}
                                                     style={{ textTransform: 'capitalize' }}
                                                     onClick={closeDropdown}
                                                 >{`${user.firstname} ${user.lastname}`}</Link>
@@ -145,7 +195,7 @@ function GlobalSearch() {
                             </ul>
                         </div>
                     )}
-                    {isObjectEmpty(searchResult?.users) && isObjectEmpty(searchResult?.tickets) && (
+                    {isObjectEmpty(searchResult?.users) && isObjectEmpty(searchResult?.tickets) && !loading && (
                         <div className="no-result-found">No result found</div>
                     )}
                 </div>

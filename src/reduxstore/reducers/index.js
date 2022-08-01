@@ -26,6 +26,7 @@ import emailTemplateReducer from './emailTemplateReducer';
 import channelReducer from './channelReducer';
 import customFieldReducer from './customFieldReducer';
 import subscriptionReducer from './subscriptionReducer';
+import socketReducer from './socketReducer';
 // ,
 const persistConfig = {
     key: 'alphacx_platform',
@@ -74,6 +75,7 @@ const rootReducer = combineReducers({
     channel: channelReducer,
     customField: customFieldReducer,
     subscription: subscriptionReducer,
+    socket: socketReducer,
 });
 
 export default persistReducer(persistConfig, rootReducer);
