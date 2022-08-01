@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable consistent-return */
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable no-param-reassign */
@@ -53,13 +54,15 @@ import boldB from '../../../assets/imgF/boldB.png';
 import Smiley from '../../../assets/imgF/Smiley.png';
 import editorImg from '../../../assets/imgF/editorImg.png';
 import BackArrow from '../../../assets/imgF/back.png';
+// eslint-disable-next-line no-unused-vars
 import { multiIncludes, uuid, hasFeatureAccess } from '../../../helper';
 import { accessControlFunctions } from '../../../config/accessControlList';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './conversation.css';
-import Socket from '../../../socket';
+// import Socket from '../../../socket';
 import noimage from '../../../assets/images/noimage.png';
 import MessageList from './messageList';
+// import useNavigatorOnLine from '../../../hooks/useNavigatorOnline';
 
 function YouTubeGetID(url) {
     let ID = '';
@@ -106,9 +109,7 @@ function WelcomeText({ userId }) {
 const youtubeRegex =
     /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/;
 
-// let appSocket;
-
-function Conversation({ user }) {
+function Conversation({ user, appSocket, socketMessage }) {
     const initialState = EditorState.createWithContent(ContentState.createFromText(''));
     // const { AppSocket } = useContext(SocketDataContext);
     const [tickets, setTickets] = useState([]);
@@ -181,9 +182,9 @@ function Conversation({ user }) {
     const [editorUploadImg, setEditorUploadImg] = useState('');
     const [attachments, setAttachments] = useState([]);
     const location = useLocation();
-    const [appSocket, setAppSocket] = useState(null);
-    const [connectionClosed, setConnectionClosed] = useState(false);
-    const [generatedUuid] = useState(uuid());
+    // const [appSocket, setAppSocket] = useState(null);
+    // const [generatedUuid] = useState(uuid());
+    // const isOnline = useNavigatorOnLine();
 
     // youtube player options
     const youtubePlayerOptions = {
@@ -399,143 +400,93 @@ function Conversation({ user }) {
                 setTickets(initRes?.data?.tickets || []);
                 setMeta(initRes?.data?.meta || {});
                 setTicketsLoaded(true);
-                // const res = await httpGetMain(`tickets?per_page=${initRes?.data?.meta?.totalItems}`);
-                // if (res?.status === 'success') {
-                //     console.log('%cconversation.jsx line:345 res', 'color: white; background-color: #007acc;', res);
-                // }
             }
         })();
     }, []);
 
-    const loggedInUser = JSON.parse(window.localStorage.getItem('user') || '{}')?.user;
-    const domain = window.localStorage.getItem('domain');
-    const tenantId = window.localStorage.getItem('tenantId');
-
     useEffect(() => {
-        setAppSocket(new Socket(generatedUuid, domain, tenantId));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    useEffect(() => {
-        setConnectionClosed(false);
-        /* create a socket connection */
-        if (appSocket) {
-            appSocket.createConnection();
-
-            appSocket?.socket.addEventListener('close', () => {
-                setConnectionClosed(true);
-                // console.log('%csocket.js WebSocket has closed: ', 'color: white; background-color: #007acc;', event);
-                if (navigator.onLine) {
-                    setAppSocket(new Socket(loggedInUser?.id, domain, tenantId));
-                }
-            });
-        }
-
-        return () => appSocket?.socket.close();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [appSocket]);
-
-    useEffect(() => {
-        const newConnection = () => {
-            if (connectionClosed) {
-                setAppSocket(new Socket(loggedInUser?.id, domain, tenantId));
-            }
-        };
-
-        window.document.addEventListener('online', newConnection);
-
-        return () => window.document.removeEventListener('online', newConnection);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [connectionClosed]);
-
-    useEffect(() => {
-        if (appSocket?.socket) {
-            appSocket.socket.onmessage = (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                const eventData = JSON.parse(event.data);
-                // console.log('Message from socket => ', eventData);
-                if (
-                    (eventData?.type === 'liveStream' || eventData?.type === 'socketHook') &&
-                    eventData?.status === 'incoming' &&
-                    !eventData?.data?.notification
-                ) {
-                    const data = eventData?.data;
-                    if (ticketId && data?.id === ticketId) {
-                        setMsgHistory((prev) => {
-                            const reply = {
-                                ...data?.reply,
-                            };
-                            if (data?.reply?.is_deleted) {
-                                return prev.filter((item) => item?.id !== data?.reply?.id);
-                            }
-                            return [...prev, reply];
-                        });
-                        if (!data?.reply?.is_deleted) scrollPosSendMsgList('#lastMsg');
-                    }
-
-                    setTickets((prev) => {
-                        if (data?.reply?.is_deleted)
-                            return prev.map((ticketItem) => {
-                                if (ticketItem?.id === data?.id) {
-                                    const newTicket = {
-                                        ...ticketItem,
-                                        history: ticketItem.history?.filter((item) => item?.id !== data?.reply?.id),
-                                        __metaticketItem__: {
-                                            ...ticketItem?.__meta__,
-                                            history_count: Number(ticket?.__meta__?.history_count) - 1,
-                                        },
-                                    };
-                                    return newTicket;
-                                }
-                                return ticketItem;
-                            });
-                        // get ticket from existing
-                        const currentTicket = prev.find((item) => item?.id === data?.id);
-                        if (currentTicket) {
-                            // ticket of `data` exists
-                            // add new message history and update read count and push to first item in the array
-                            const newCurrentTicket = {
-                                ...currentTicket,
-                                history: Array.isArray(data?.history)
-                                    ? [...data.history, ...currentTicket.history]
-                                    : data?.reply
-                                    ? [data?.reply, ...currentTicket.history]
-                                    : [...currentTicket.history],
-                                __meta__: {
-                                    history_count:
-                                        Number(currentTicket?.__meta__?.history_count) >= 0
-                                            ? Number(currentTicket.__meta__.history_count) + 1
-                                            : 1,
-                                    unRead:
-                                        Number(currentTicket.__meta__.unRead) >= 0
-                                            ? Number(currentTicket.__meta__.unRead) + 1
-                                            : 1,
-                                },
-                            };
-                            // remove current ticke from the tickets
-                            const remainingTickets = prev.filter((item) => item?.id !== data?.id);
-                            // make first item in the array
-                            return [newCurrentTicket, ...remainingTickets];
+        if (socketMessage) {
+            const eventData = socketMessage;
+            if (
+                (eventData?.type === 'liveStream' || eventData?.type === 'socketHook') &&
+                eventData?.status === 'incoming' &&
+                !eventData?.data?.notification
+            ) {
+                const data = eventData?.data;
+                if (ticketId && data?.id === ticketId) {
+                    setMsgHistory((prev) => {
+                        const reply = {
+                            ...data?.reply,
+                        };
+                        if (data?.reply?.is_deleted) {
+                            return prev.filter((item) => item?.id !== data?.reply?.id);
                         }
-                        // ticket of `data` does not exist
-                        const newTicket = {
-                            customer: data?.reply?.user,
-                            history: [data?.reply],
-                            ...data,
+                        return [...prev, reply];
+                    });
+                    if (!data?.reply?.is_deleted) scrollPosSendMsgList('#lastMsg');
+                }
+
+                setTickets((prev) => {
+                    if (data?.reply?.is_deleted)
+                        return prev.map((ticketItem) => {
+                            if (ticketItem?.id === data?.id) {
+                                const newTicket = {
+                                    ...ticketItem,
+                                    history: ticketItem.history?.filter((item) => item?.id !== data?.reply?.id),
+                                    __metaticketItem__: {
+                                        ...ticketItem?.__meta__,
+                                        history_count: Number(ticket?.__meta__?.history_count) - 1,
+                                    },
+                                };
+                                return newTicket;
+                            }
+                            return ticketItem;
+                        });
+                    // get ticket from existing
+                    const currentTicket = prev.find((item) => item?.id === data?.id);
+                    if (currentTicket) {
+                        // ticket of `data` exists
+                        // add new message history and update read count and push to first item in the array
+                        const newCurrentTicket = {
+                            ...currentTicket,
+                            history: Array.isArray(data?.history)
+                                ? [...data.history, ...currentTicket.history]
+                                : data?.reply
+                                ? [data?.reply, ...currentTicket.history]
+                                : [...currentTicket.history],
                             __meta__: {
-                                history_count: 1,
-                                unRead: 1,
+                                history_count:
+                                    Number(currentTicket?.__meta__?.history_count) >= 0
+                                        ? Number(currentTicket.__meta__.history_count) + 1
+                                        : 1,
+                                unRead:
+                                    Number(currentTicket.__meta__.unRead) >= 0
+                                        ? Number(currentTicket.__meta__.unRead) + 1
+                                        : 1,
                             },
                         };
-                        // add as first item
-                        return [newTicket, ...prev];
-                    });
-                }
-            };
+                        // remove current ticke from the tickets
+                        const remainingTickets = prev.filter((item) => item?.id !== data?.id);
+                        // make first item in the array
+                        return [newCurrentTicket, ...remainingTickets];
+                    }
+                    // ticket of `data` does not exist
+                    const newTicket = {
+                        customer: data?.reply?.user,
+                        history: [data?.reply],
+                        ...data,
+                        __meta__: {
+                            history_count: 1,
+                            unRead: 1,
+                        },
+                    };
+                    // add as first item
+                    return [newTicket, ...prev];
+                });
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ticketId, appSocket]);
+    }, [socketMessage, ticketId]);
 
     useEffect(() => {
         setCustomFieldIsSet(false);
@@ -1997,5 +1948,7 @@ function Conversation({ user }) {
 
 const mapStateToProps = (state) => ({
     user: state.userAuth.user,
+    appSocket: state.socket.appSocket,
+    socketMessage: state.socket?.socketMessage,
 });
 export default connect(mapStateToProps)(Conversation);

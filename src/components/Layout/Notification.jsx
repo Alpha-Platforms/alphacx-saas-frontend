@@ -2,6 +2,7 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
 import { httpGetMain, httpPatchMain } from 'helpers/httpMethods';
 import { NavLink, useHistory } from 'react-router-dom';
 import { NavDropdown } from 'react-bootstrap';
@@ -16,13 +17,25 @@ function AppNotification({ userId }) {
     const [notifications, setNotifications] = useState([]);
     const [notificationsLoaded, setNotificationsLoaded] = useState(false);
     const [isUnreadNotificiations, setIsUnreadNotificiations] = useState(true);
+    const socketMessage = useSelector((state) => state.socket?.socketMessage);
     const history = useHistory();
+
+    // console.log('APPNOTIFICATION NOTIFICATIONS => ', notifications);
 
     useEffect(() => {
         notifications.map((item) => {
             if (item.isRead === false) setIsUnreadNotificiations(false);
         });
     }, [notifications]);
+
+    useEffect(() => {
+        if (socketMessage) {
+            const eventData = socketMessage;
+            if (eventData?.type === 'socketHook' && eventData?.status === 'incoming' && eventData?.data?.notification) {
+                setNotifications((prev) => [...prev, eventData?.data?.notification]);
+            }
+        }
+    }, [socketMessage]);
 
     function createMarkup(data) {
         return { __html: data };

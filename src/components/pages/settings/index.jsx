@@ -35,6 +35,7 @@ function SettingsHome({ signedUser }) {
         if (contactModalAction === 'open') {
             setContactSupportModalShow(true);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
