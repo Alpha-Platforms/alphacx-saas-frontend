@@ -18,7 +18,11 @@ const FB = window.FB
 const FBIntegration = ({location}) => {
 
     const [FBData, setFBData] = useState({});
-    const [pageConnected, setPageConnected] = useState(false);
+    const [pageConnectStatus, setPageConnectStatus] = useState({
+        loading: false,
+        connected: false
+    });
+    // const [pageConnected, setPageConnectStatus] = useState(false);
     const [domain, setDomain] = useState("")
     const [baseUrl, setBaseUrl] = useState("")
     // const [domain, setDomain] = useState("")
@@ -90,25 +94,26 @@ const FBIntegration = ({location}) => {
             hideLoader();
             
             if (res.status === 'success') {
+                setPageConnectStatus((prev) => ({...prev, connected: true}));
                 NotificationManager.success("Page successfully connected");
                 // Go back
-                redirectToPreviewPage()
+                redirectToPreviewPage();
             } else {
-                return NotificationManager.error(res.er);
+                // res.er.error
+                return NotificationManager.error("Integration failed, please try again");
             }
         }
     // hideLoader();
     };
 
 
-
     const authFb = () => {
-        FB.login(function (response) {
+        setPageConnectStatus((prev) => ({...prev, loading: true}));
+        FB.login(function (response){
             if (response.authResponse && response.authResponse !== "undefined." && response.authResponse !== undefined) {
                 setFBData(response?.authResponse);
                 console.log(response.authResponse);
                 handleConnectFBPage(channel, response?.authResponse);
-                setPageConnected(true);
                 FB.api("/me", function (response) {
                     // console.log("FB.api response:", response)
                 });
@@ -127,7 +132,7 @@ const FBIntegration = ({location}) => {
 
 
     return (
-        <div className="container" style={{marginTop: "5rem"}}>
+        <div className="d-flex container flex-column justify-content-center" style={{height: "100vh"}}>
             
             {showRedirectText && <div className="py-3 fs-5 text-end">Redirecting...</div>}
 
@@ -169,18 +174,20 @@ const FBIntegration = ({location}) => {
                         </ul>                            
 
                         <div className="">
-                            <button className="btn acx-btn-primary px-3 py-2" onClick={authFb} disabled={pageConnected}>
-                                {pageConnected ? "Page Connected" : "Connect Page"}
+                            <button className="btn acx-btn-primary px-3 py-2" onClick={authFb} disabled={pageConnectStatus.loading || pageConnectStatus.connected}>
+                                {pageConnectStatus.connected ? "Page Connected" : "Connect Page"}
                             </button>
                         </div>
                     </div>
                 </section>
             </div>
         </div>
-        <div className='pt-2'>
-            <button className='fs-6' onClick={() => window.location.href = `${baseUrl}/settings/integrations`}>
-                <img src={ArrowLeft} alt="ArrowLeft" /> If not automatically redirected click here to go back</button>
-        </div>
+        {pageConnectStatus.connected && (
+            <div className='pt-2'>
+                <button className='fs-6' onClick={() => window.location.href = `${baseUrl}/settings/integrations`}>
+                    <img src={ArrowLeft} alt="ArrowLeft" /> If not automatically redirected click here to go back</button>
+            </div>
+        )}
     </div>
     )
 }
