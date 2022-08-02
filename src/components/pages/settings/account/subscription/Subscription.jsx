@@ -185,7 +185,7 @@ function Subscription({ subscription }) {
                                     ) : (
                                         <div className="plan-selection">
                                             {plans
-                                                ?.filter((item) => item?.plan_type === 'main')
+                                                ?.filter((item) => item?.plan_type === 'main' && !item?.is_trial)
                                                 .map((item) => (
                                                     <div
                                                         className={`${item?.is_free ? 'free-plan' : 'alpha-plan'} ${
