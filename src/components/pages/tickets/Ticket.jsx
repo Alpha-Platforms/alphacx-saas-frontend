@@ -38,7 +38,7 @@ import Smiley from '../../../assets/imgF/Smiley.png';
 import BackArrow from '../../../assets/imgF/back.png';
 import editorImg from '../../../assets/imgF/editorImg.png';
 import LinkImg from '../../../assets/imgF/insertLink.png';
-import { multiIncludes, uuid } from '../../../helper';
+import { multiIncludes } from '../../../helper';
 import UserProfile from '../conversations/userProfile';
 import TicketTimeline from '../conversations/TicketTimeline';
 import { dateFormater } from '../../helpers/dateFormater';
@@ -52,7 +52,6 @@ import TextUnderline from '../../../assets/imgF/TextUnderline.png';
 import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter';
 import { httpGetMain, httpPostMain, httpPatchMain } from '../../../helpers/httpMethods';
 import { accessControlFunctions } from '../../../config/accessControlList';
-import Socket from '../../../socket';
 
 function YouTubeGetID(url) {
     let ID = '';
@@ -85,7 +84,7 @@ function scrollPosSendMsgList() {
     }
 }
 
-function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }) {
+function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user, appSocket, socketMessage }) {
     const { id } = useParams();
 
     const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(false);
@@ -142,78 +141,30 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
     const [attachments, setAttachments] = useState([]);
     const [statusUpdateFailed, setStatusUpdateFailed] = useState(false);
     const [statusOps, setStatusOps] = useState(false);
-    const [appSocket, setAppSocket] = useState(null);
-    const [generatedUuid] = useState(uuid());
-    const [connectionClosed, setConnectionClosed] = useState(false);
-
-    const loggedInUser = JSON.parse(window.localStorage.getItem('user') || '{}')?.user;
-    const domain = window.localStorage.getItem('domain');
-    const tenantId = window.localStorage.getItem('tenantId');
 
     useEffect(() => {
-        setAppSocket(new Socket(generatedUuid, domain, tenantId));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    useEffect(() => {
-        setConnectionClosed(false);
-        /* create a socket connection */
-        if (appSocket) {
-            appSocket.createConnection();
-
-            appSocket?.socket.addEventListener('close', () => {
-                setConnectionClosed(true);
-                // console.log('%csocket.js WebSocket has closed: ', 'color: white; background-color: #007acc;', event);
-                if (navigator.onLine) {
-                    setAppSocket(new Socket(loggedInUser?.id, domain, tenantId));
+        if (socketMessage) {
+            const eventData = socketMessage;
+            // console.log('Message from socket => ', eventData);
+            if (
+                (eventData?.type === 'liveStream' || eventData?.type === 'socketHook') &&
+                eventData?.status === 'incoming'
+            ) {
+                const data = eventData?.data;
+                if (currentTicket?.id && data?.id === currentTicket?.id) {
+                    const reply = {
+                        ...data?.reply,
+                    };
+                    // set message history only when the
+                    setMsgHistory((prev) => {
+                        return [...prev, reply];
+                    });
+                    scrollPosSendMsgList();
                 }
-            });
-        }
-
-        return () => appSocket?.socket.close();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [appSocket]);
-
-    useEffect(() => {
-        const newConnection = () => {
-            if (connectionClosed) {
-                setAppSocket(new Socket(loggedInUser?.id, domain, tenantId));
             }
-        };
-
-        window.document.addEventListener('online', newConnection);
-
-        return () => window.document.removeEventListener('online', newConnection);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [connectionClosed]);
-
-    useEffect(() => {
-        if (appSocket?.socket) {
-            appSocket.socket.onmessage = (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                const eventData = JSON.parse(event.data);
-                // console.log('Message from socket => ', eventData);
-                if (
-                    (eventData?.type === 'liveStream' || eventData?.type === 'socketHook') &&
-                    eventData?.status === 'incoming'
-                ) {
-                    const data = eventData?.data;
-                    if (currentTicket?.id && data?.id === currentTicket?.id) {
-                        const reply = {
-                            ...data?.reply,
-                        };
-                        // set message history only when the
-                        setMsgHistory((prev) => {
-                            return [...prev, reply];
-                        });
-                        scrollPosSendMsgList();
-                    }
-                }
-            };
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentTicket?.id, appSocket]);
+    }, [currentTicket?.id, socketMessage]);
 
     useEffect(() => {
         // get current ticket when component mounts
@@ -648,13 +599,14 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
                 setProcessing(false);
                 closeSaveTicketModal();
                 NotificationManager.success('Ticket successfully updated', 'Success');
-                const ticketRes = await httpGetMain(`tickets/${ticket.id}`);
-                if (ticketRes.status === 'success') {
-                    setTicket(ticketRes?.data);
-                } else {
-                    setLoadSingleTicket(false);
-                    NotificationManager.info('please refresh your page to see changes');
-                }
+                getCurrentTicket(id);
+                // const ticketRes = await httpGetMain(`tickets/${ticket.id}`);
+                // if (ticketRes.status === 'success') {
+                //     setTicket(ticketRes?.data);
+                // } else {
+                //     setLoadSingleTicket(false);
+                //     NotificationManager.info('please refresh your page to see changes');
+                // }
             } else {
                 setProcessing(false);
                 NotificationManager.error(res.er.message, 'Error', 4000);
@@ -831,7 +783,7 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
                                     </div>
 
                                     <div className="msgAssingedToee3">
-                                        Conversation Status has been marked as <span> {ticket.status.status}</span>
+                                        Conversation Status has been marked as <span> {ticket?.status?.status}</span>
                                     </div>
 
                                     <div className="">
@@ -1169,7 +1121,7 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
                                     {/* <div id="lastMsg" /> */}
                                 </div>
                                 {/* CHAT COMMENT BOX SECTION */}
-                                {ticket.status.status === 'Closed' ? (
+                                {ticket?.status?.status === 'Closed' ? (
                                     ''
                                 ) : (
                                     <div id="ticketConvoEditorBox" className="conversationCommentBox">
@@ -1193,8 +1145,8 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
                                                 </Tabs>
                                             </div>
                                             <Editor
-                                                disabled={ticket.status.status === 'Closed'}
-                                                readOnly={ticket.status.status === 'Closed'}
+                                                disabled={ticket?.status?.status === 'Closed'}
+                                                readOnly={ticket?.status?.status === 'Closed'}
                                                 editorState={editorState}
                                                 toolbar={{
                                                     options:
@@ -1292,7 +1244,7 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
                                             <div className="sendMsg">
                                                 <button
                                                     type="button"
-                                                    disabled={sendingReply ? true : ticket.status.status === 'Closed'}
+                                                    disabled={sendingReply ? true : ticket?.status?.status === 'Closed'}
                                                     onClick={() => replyTicket(ReplyTicket, 'attachment')}
                                                 >
                                                     <SendMsgIcon /> Send
@@ -1671,6 +1623,8 @@ const mapStateToProps = (state) => ({
     isCurrentTicketLoaded: state.ticket.isCurrentTicketLoaded,
     currentTicket: state.ticket.currentTicket,
     user: state.userAuth.user,
+    appSocket: state.socket.appSocket,
+    socketMessage: state.socket?.socketMessage,
 });
 
 export default connect(mapStateToProps, { getCurrentTicket })(Ticket);

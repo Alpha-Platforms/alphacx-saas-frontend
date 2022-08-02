@@ -312,6 +312,20 @@ function Fields() {
                 setProcessing(false);
                 setModalShow(false);
                 dispatch(getCustomFields());
+                setCustomFields((prev) => ({
+                    ...prev,
+                    fieldName: '',
+                    fieldType: '',
+                    fieldSection: '',
+                    required: false,
+                    multipleOptions: false,
+                    belongsTo: tabKey.split('-')[0],
+                }));
+                setCustomFieldOptions((prevState) => ({
+                    ...prevState,
+                    selected: false,
+                    options: [''],
+                }));
                 return NotificationManager.success('Custom field updated successfully', 'Success', 4000);
             }
             setProcessing(false);

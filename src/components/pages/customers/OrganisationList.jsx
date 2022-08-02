@@ -6,7 +6,6 @@ import { ReactComponent as EditSvg } from '../../../assets/svgicons/Edit.svg';
 import { ReactComponent as MoreSvg } from '../../../assets/svgicons/more.svg';
 import { ReactComponent as ImportSvg } from '../../../assets/svgicons/import.svg';
 import { ReactComponent as DeleteSvg } from '../../../assets/svgicons/Delete.svg';
-import SideNavBar from '../../Layout/SideNavBar';
 // import {Link} from 'react-router-dom';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 

@@ -117,6 +117,9 @@ function NotFound() {
                     This page could not be found
                 </p>
             </div>
+            <a href="/" className="border border-secondary btn-outline-secondary ms-2 px-3 py-1">
+                Home
+            </a>
         </div>
     );
 }
@@ -180,7 +183,7 @@ const SiteRouter = connect(mapStateToProps, {
                 appSocket?.createConnection();
             }
 
-            return () => appSocket?.socket?.close();
+            return () => appSocket?.closeConnection();
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [appSocket, isOnline]);
 
