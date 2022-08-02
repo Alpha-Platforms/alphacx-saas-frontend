@@ -249,9 +249,6 @@ function Conversation({ user, appSocket, socketMessage }) {
         tickets: [],
     });
     const location = useLocation();
-    // const [appSocket, setAppSocket] = useState(null);
-    // const [generatedUuid] = useState(uuid());
-    // const isOnline = useNavigatorOnLine();
 
     const searchThroughTickets = async (e) => {
         const userInput = e.target.value;
