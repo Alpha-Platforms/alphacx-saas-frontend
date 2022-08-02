@@ -34,7 +34,8 @@ export default function MessageList({
     setActiveChat,
     scrollPosSendMsgList,
     statuses,
-    ticketsLoaded
+    ticketsLoaded,
+    searchedTickets
 }) {
     const [renderTicket, setRenderTicket] = useState([]);
     const [loadingTickets, setLoadingTickets] = useState(true);
@@ -110,8 +111,8 @@ export default function MessageList({
             ) : Array.isArray(renderTicket) ? (
                 renderTicket.length == 0 ? (
                     <EmptyMessageList />
-                ) : (
-                    renderTicket.map((data, index) => {
+                ) : (searchedTickets.active && searchedTickets.tickets.length === 0) ? <div className="text-center mt-5 px-2">No Ticket Found</div> : (
+                    (searchedTickets.active ? searchedTickets.tickets : renderTicket).map((data, index) => {
                         const currentStatus = statuses?.find((item) => item?.id === data?.status?.id || item?.id === data?.status_id);
                         return (
                             <div

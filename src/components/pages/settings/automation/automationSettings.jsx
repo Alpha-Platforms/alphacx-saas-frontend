@@ -17,6 +17,8 @@ import { ReactComponent as DotSvg } from '../../../../assets/icons/dots.svg';
 import tableIcons from '../../../../assets/materialicons/tableIcons';
 import TripleDot from '../../../../assets/imgF/triple_dot.png';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
+import { ReactComponent as DeleteRedIcon } from '../../../../assets/icons/Delete-red.svg';
+import { ReactComponent as EditIcon } from '../../../../assets/icons/Edit.svg';
 
 function AutomationSettings() {
     const history = useHistory();
@@ -79,32 +81,54 @@ function AutomationSettings() {
             field: 'dropdownAction',
             width: '50px',
             render: (rowData) => (
-                <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown email-dropdown">
-                    <Dropdown.Toggle variant="transparent" size="sm">
-                        <span className="cust-table-dots">
-                            <DotSvg />
-                        </span>
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                        <Dropdown.Item
-                            eventKey="1"
-                            onClick={() =>
-                                history.push(`/settings/automation/${automationPolicies[rowData.tableData.id].id}`)
-                            }
-                        >
-                            <span>Edit</span>
-                        </Dropdown.Item>
-                        <Dropdown.Item
-                            eventKey="2"
-                            onClick={() => {
+                <div className="form-check form-switch">
+                    <button
+                        type="submit"
+                        className="user-delete-btn me-2 d-inline-block"
+                        onClick={() => 
+                            history.push(`/settings/automation/${automationPolicies[rowData.tableData.id].id}`)
+                        }
+                    >
+                        <EditIcon />
+                    </button>
+                    <button
+                        type="submit"
+                        className="user-delete-btn ms-3 d-inline-block"
+                        onClick={() => {
                                 setOpenDeleteActionModal(true);
                                 setDeleteUrl(automationPolicies[rowData.tableData.id].id);
-                            }}
-                        >
-                            <span className="black-text">Delete</span>
-                        </Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
+                            }
+                        }
+                    >
+                        <DeleteRedIcon />
+                    </button>
+                </div>
+                // <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown email-dropdown">
+                //     <Dropdown.Toggle variant="transparent" size="sm">
+                //         <span className="cust-table-dots">
+                //             <DotSvg />
+                //         </span>
+                //     </Dropdown.Toggle>
+                //     <Dropdown.Menu>
+                //         <Dropdown.Item
+                //             eventKey="1"
+                //             onClick={() =>
+                //                 history.push(`/settings/automation/${automationPolicies[rowData.tableData.id].id}`)
+                //             }
+                //         >
+                //             <span>Edit</span>
+                //         </Dropdown.Item>
+                //         <Dropdown.Item
+                //             eventKey="2"
+                //             onClick={() => {
+                //                 setOpenDeleteActionModal(true);
+                //                 setDeleteUrl(automationPolicies[rowData.tableData.id].id);
+                //             }}
+                //         >
+                //             <span className="black-text">Delete</span>
+                //         </Dropdown.Item>
+                //     </Dropdown.Menu>
+                // </Dropdown>
             ),
         },
     ];
@@ -142,8 +166,6 @@ function AutomationSettings() {
 
         setPolicyLoading(false);
 
-        console.log('SLA DELETION RESPONSE => ', res);
-
         if (res?.status === 'success') {
             NotificationManager.success(res?.message, 'Success');
 
@@ -164,7 +186,6 @@ function AutomationSettings() {
         setPolicyLoading(false);
         if (res?.status === 'success') {
             // console.clear();
-            // console.log(res?.data?.agreement);
 
             setTableMeta(res?.data?.meta);
             setAutomationPolicies(res?.data?.agreement);
@@ -232,7 +253,7 @@ function AutomationSettings() {
                     </div>
 
                     <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
-                        <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table acx-ticket-table fit-content p-4">
+                        <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table acx-ticket-table fit-content p-4 acx-automation-table">
                             <MuiThemeProvider theme={tableTheme}>
                                 <MaterialTable
                                     columns={tableColumns}
