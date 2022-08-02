@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { httpGet } from '../../../helpers/httpMethods';
 import { TickeCircle } from '../../../assets/images/svgs';
 import './AppsumoPlans.scss';
-import CheckCircle from '../../../assets/icons/CheckCircle.svg';
+import FormCheckIcon from '../../../assets/icons/form-check.svg';
 
 function AppsumoPlans({ currentPlan }) {
     const [plans, setPlans] = useState([{ name: '' }]);
@@ -75,16 +75,16 @@ function AppsumoPlans({ currentPlan }) {
 
     return (
         <div className="appsumo-plans-page mt-5">
-            <div className="row mt-4  mx-3 flex justify-content-center">
-                <div className="col-5 bg-light rounded p-4 me-3">
-                    <p className="fw-bold ">Feature Included</p>
-                    <ul className="appsumo__card--features list-unstyled">
+            <div className="row mt-4  mx-5 flex justify-content-center">
+                <div className="border col-5 p-0">
+                    <p className="bg-at-blue-light fw-bold p-3">Feature Included</p>
+                    <ul className="appsumo__card--features list-unstyled p-3">
                         {FeaturesIncluded.map((item, idx) => (
                             <li key={idx} className="mb-2">
                                 <span>
                                     <img
-                                        src={CheckCircle}
-                                        style={{ width: '14px', marginBottom: '3px' }}
+                                        src={FormCheckIcon}
+                                        style={{ marginRight: '4px', marginBottom: '3px' }}
                                         alt="check icon"
                                     />
                                 </span>
@@ -94,15 +94,15 @@ function AppsumoPlans({ currentPlan }) {
                     </ul>
                 </div>
 
-                <div className="col-5 bg-light rounded p-4">
-                    <p className="fw-bold ">Deal Terms</p>
-                    <ul className="appsumo__card--features list-unstyled">
+                <div className="border col-5 p-0">
+                    <p className="bg-at-blue-lighter fw-bold p-3">Deal Terms</p>
+                    <ul className="appsumo__card--features list-unstyled p-3">
                         {dealTerms.map((item, idx) => (
                             <li key={idx} className="mb-2">
                                 <span>
                                     <img
-                                        src={CheckCircle}
-                                        style={{ width: '14px', marginBottom: '3px' }}
+                                        src={FormCheckIcon}
+                                        style={{ marginRight: '4px', marginBottom: '3px' }}
                                         alt="check icon"
                                     />
                                 </span>
