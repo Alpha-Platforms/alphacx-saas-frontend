@@ -4,7 +4,6 @@ import { Modal } from 'react-bootstrap';
 import { ReactComponent as TicketStarSvg } from '../../../assets/svgicons/Ticket-Star.svg';
 import { ReactComponent as TicketsEmptySvg } from '../../../assets/svgicons/tickets-empty.svg';
 import { ReactComponent as UploadSvg } from '../../../assets/svgicons/Upload.svg';
-import SideNavBar from '../../Layout/SideNavBar';
 
 function CustomersNull() {
     const [createModalShow, setCreateModalShow] = useState(false);
