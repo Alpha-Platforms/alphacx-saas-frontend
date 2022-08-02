@@ -99,7 +99,7 @@ export default function RatingsSettings() {
                                         className="mb-3 form-group acx-form-group p-3 rounded-4 acx-bg-alpha-blue-50 border"
                                         controlId="firstMessage"
                                     >
-                                        <Form.Label>Rating label goes here...</Form.Label>
+                                        <Form.Label>Rating Label</Form.Label>
                                         <Form.Control
                                             required
                                             type="text"
@@ -107,7 +107,7 @@ export default function RatingsSettings() {
                                             onChange={(e) =>
                                                 setRatingsData({ ...ratingsData, ratingLabel: e.target.value })
                                             }
-                                            placeholder="Enter ratings label"
+                                            placeholder="Kindly rate us"
                                         />
                                         <Form.Text className="text-muted" />
                                     </Form.Group>
@@ -129,7 +129,7 @@ export default function RatingsSettings() {
                                         className="mb-3 form-group acx-form-group p-3 rounded-4 acx-bg-alpha-blue-50 border"
                                         controlId="secondMessage"
                                     >
-                                        <Form.Label>Comment label goes here...</Form.Label>
+                                        <Form.Label>Comment Label</Form.Label>
                                         <Form.Control
                                             required
                                             type="text"
@@ -137,7 +137,7 @@ export default function RatingsSettings() {
                                             onChange={(e) =>
                                                 setRatingsData({ ...ratingsData, commentLabel: e.target.value })
                                             }
-                                            placeholder="Enter comment label"
+                                            placeholder="Comment Label"
                                         />
                                     </Form.Group>
                                     <Form.Group className="mb-3 form-group acx-form-group" controlId="improveMessage">
@@ -155,7 +155,7 @@ export default function RatingsSettings() {
                                         className="mb-3 form-group acx-form-group p-3 rounded-4 acx-bg-alpha-blue-50 border"
                                         controlId="thirdMessage"
                                     >
-                                        <Form.Label>NPS label goes here...</Form.Label>
+                                        <Form.Label>Recommend Label (NPS)</Form.Label>
                                         <Form.Control
                                             required
                                             type="text"
@@ -163,7 +163,7 @@ export default function RatingsSettings() {
                                             onChange={(e) =>
                                                 setRatingsData({ ...ratingsData, npsLabel: e.target.value })
                                             }
-                                            placeholder="Enter NPS label"
+                                            placeholder="How likely are you to recommend us"
                                         />
                                     </Form.Group>
                                     <div className="mb-5">
