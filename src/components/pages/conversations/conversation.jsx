@@ -109,6 +109,69 @@ function WelcomeText({ userId }) {
 const youtubeRegex =
     /(?:https?:\/\/)?(?:www\.|m\.)?youtu(?:\.be\/|be.com\/\S*(?:watch|embed)(?:(?:(?=\/[^&\s\?]+(?!\S))\/)|(?:\S*v=|v\/)))([^&\s\?]+)/;
 
+let filterTicketsTimer;
+
+const filterThroughTickets = async (tickets, userInput) => {
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (resolve) => {
+        if (userInput.length < 1 || !Array.isArray(tickets)) resolve([]);
+        clearTimeout(filterTicketsTimer);
+        filterTicketsTimer = setTimeout(async () => {
+            try {
+                const filteredTickets = tickets?.filter((item) => {
+                    if (
+                        JSON.stringify(item?.subject || '')
+                            ?.toLowerCase()
+                            ?.includes(userInput) ||
+                        JSON.stringify(item?.description || '')
+                            ?.toLowerCase()
+                            ?.includes(userInput) ||
+                        JSON.stringify(item?.plain_description || '')
+                            ?.toLowerCase()
+                            ?.includes(userInput) ||
+                        JSON.stringify(item?.channel || '')
+                            ?.toLowerCase()
+                            ?.includes(userInput) ||
+                        JSON.stringify(`${item?.assignee?.firstname} ${item?.assignee?.lastname}`.trim())
+                            ?.toLowerCase()
+                            ?.includes(userInput) ||
+                        JSON.stringify(item?.assignee?.phone_number || '')
+                            ?.toLowerCase()
+                            ?.includes(userInput) ||
+                        JSON.stringify(item?.assignee?.email || '')
+                            ?.toLowerCase()
+                            ?.includes(userInput) ||
+                        JSON.stringify(`${item?.customer?.firstname} ${item?.customer?.lastname}`.trim())
+                            ?.toLowerCase()
+                            ?.includes(userInput) ||
+                        JSON.stringify(item?.customer?.phone_number || '')
+                            ?.toLowerCase()
+                            ?.includes(userInput) ||
+                        JSON.stringify(item?.customer?.email || '')
+                            ?.toLowerCase()
+                            ?.includes(userInput) ||
+                        JSON.stringify(item?.status?.status || '')
+                            ?.toLowerCase()
+                            ?.includes(userInput) ||
+                        JSON.stringify(item?.category?.name || '')
+                            ?.toLowerCase()
+                            ?.includes(userInput) ||
+                        JSON.stringify(item?.priority?.name || '')
+                            ?.toLowerCase()
+                            ?.includes(userInput)
+                    ) {
+                        return true;
+                    }
+                    return false;
+                });
+                resolve(filteredTickets);
+            } catch (err) {
+                resolve([]);
+            }
+        }, 1500);
+    });
+};
+
 function Conversation({ user, appSocket, socketMessage }) {
     const initialState = EditorState.createWithContent(ContentState.createFromText(''));
     // const { AppSocket } = useContext(SocketDataContext);
@@ -181,10 +244,32 @@ function Conversation({ user, appSocket, socketMessage }) {
     const [scrollPosition, setScrollPosition] = useState('#lastMsg');
     const [editorUploadImg, setEditorUploadImg] = useState('');
     const [attachments, setAttachments] = useState([]);
+    const [searchedTickets, setSearchedTickets] = useState({
+        active: false,
+        tickets: [],
+    });
     const location = useLocation();
     // const [appSocket, setAppSocket] = useState(null);
     // const [generatedUuid] = useState(uuid());
     // const isOnline = useNavigatorOnLine();
+
+    const searchThroughTickets = async (e) => {
+        const userInput = e.target.value;
+        if (userInput?.length < 1) {
+            setSearchedTickets((prev) => ({
+                ...prev,
+                active: false,
+                tickets: [],
+            }));
+        } else {
+            const result = await filterThroughTickets(tickets, userInput);
+            setSearchedTickets((prev) => ({
+                ...prev,
+                active: true,
+                tickets: result,
+            }));
+        }
+    };
 
     // youtube player options
     const youtubePlayerOptions = {
@@ -934,7 +1019,7 @@ function Conversation({ user, appSocket, socketMessage }) {
                         <div className="search-chat-con">
                             <form>
                                 <div className="hjdwc">
-                                    <input placeholder="Search" type="text" />
+                                    <input placeholder="Search" type="text" onChange={searchThroughTickets} />
                                     <div className="search-chat-searchIcon">
                                         <img src={searchIcon} alt="" />
                                     </div>
@@ -955,6 +1040,7 @@ function Conversation({ user, appSocket, socketMessage }) {
                             setTicketId={setTicketId}
                             statuses={Statuses}
                             ticketsLoaded={ticketsLoaded}
+                            searchedTickets={searchedTickets}
                         />
                     </div>
 
