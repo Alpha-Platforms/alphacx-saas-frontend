@@ -183,7 +183,7 @@ const SiteRouter = connect(mapStateToProps, {
                 appSocket?.createConnection();
             }
 
-            return () => appSocket?.socket?.close();
+            return () => appSocket?.closeConnection();
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [appSocket, isOnline]);
 
