@@ -648,13 +648,14 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
                 setProcessing(false);
                 closeSaveTicketModal();
                 NotificationManager.success('Ticket successfully updated', 'Success');
-                const ticketRes = await httpGetMain(`tickets/${ticket.id}`);
-                if (ticketRes.status === 'success') {
-                    setTicket(ticketRes?.data);
-                } else {
-                    setLoadSingleTicket(false);
-                    NotificationManager.info('please refresh your page to see changes');
-                }
+                getCurrentTicket(id);
+                // const ticketRes = await httpGetMain(`tickets/${ticket.id}`);
+                // if (ticketRes.status === 'success') {
+                //     setTicket(ticketRes?.data);
+                // } else {
+                //     setLoadSingleTicket(false);
+                //     NotificationManager.info('please refresh your page to see changes');
+                // }
             } else {
                 setProcessing(false);
                 NotificationManager.error(res.er.message, 'Error', 4000);
@@ -831,7 +832,7 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
                                     </div>
 
                                     <div className="msgAssingedToee3">
-                                        Conversation Status has been marked as <span> {ticket.status.status}</span>
+                                        Conversation Status has been marked as <span> {ticket?.status?.status}</span>
                                     </div>
 
                                     <div className="">
@@ -1169,7 +1170,7 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
                                     {/* <div id="lastMsg" /> */}
                                 </div>
                                 {/* CHAT COMMENT BOX SECTION */}
-                                {ticket.status.status === 'Closed' ? (
+                                {ticket?.status?.status === 'Closed' ? (
                                     ''
                                 ) : (
                                     <div id="ticketConvoEditorBox" className="conversationCommentBox">
@@ -1193,8 +1194,8 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
                                                 </Tabs>
                                             </div>
                                             <Editor
-                                                disabled={ticket.status.status === 'Closed'}
-                                                readOnly={ticket.status.status === 'Closed'}
+                                                disabled={ticket?.status?.status === 'Closed'}
+                                                readOnly={ticket?.status?.status === 'Closed'}
                                                 editorState={editorState}
                                                 toolbar={{
                                                     options:
@@ -1292,7 +1293,7 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user }
                                             <div className="sendMsg">
                                                 <button
                                                     type="button"
-                                                    disabled={sendingReply ? true : ticket.status.status === 'Closed'}
+                                                    disabled={sendingReply ? true : ticket?.status?.status === 'Closed'}
                                                     onClick={() => replyTicket(ReplyTicket, 'attachment')}
                                                 >
                                                     <SendMsgIcon /> Send
