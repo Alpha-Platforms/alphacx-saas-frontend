@@ -40,16 +40,7 @@ function ArticleList() {
         if (res === invalidTenant) {
             setShouldReturn404(true);
         } else if (res?.status == 'success') {
-            const folders = res?.data?.folders;
-            let articles = [];
-            for (let index = 0; index < folders.length; index++) {
-                articles = [...articles, ...folders[index].articles];
-            }
-            // console.clear();
-            // console.log("articles", articles);
-            // console.log(pageUrl);
-
-            setArticles(articles);
+            setArticles(res?.data?.articles);
         } else {
             // return NotificationManager.error(res?.er?.message, "Error", 4000);
             return NotificationManager.error('', 'No Articles Found', 4000);
