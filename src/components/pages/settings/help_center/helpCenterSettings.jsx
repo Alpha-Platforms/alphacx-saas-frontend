@@ -94,13 +94,21 @@ function HelpCenterSettings() {
         console.log(rowData);
 
         Swal.fire({
-            title: isPublished ? 'Unpublish?' : 'Publish?',
+            title: '',
             text: `Do you want to ${isPublished ? 'unpublish' : 'publish'} "${title}"?`,
             showCancelButton: true,
-            confirmButtonColor: '#006298',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
+            confirmButtonColor: isPublished ? '#ff0e0e' : '#006298',
+            cancelButtonColor: '#ffffff',
+            cancelButtonText: 'Cancel',
+            confirmButtonText: 'Confirm',
+            customClass: {
+                cancelButton: 'user-activation-cancel-btn',
+                confirmButton: 'user-activation-confirm-btn',
+                container: 'user-activation-container',
+                popup: 'user-activation-popup',
+                validationMessage: 'user-activation-validation-msg',
+                htmlContainer: 'user-activation-html-container',
+            }
         }).then((result) => {
             if (result.isConfirmed) {
                 if (isPublished) {
