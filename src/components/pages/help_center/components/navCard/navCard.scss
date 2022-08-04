@@ -28,6 +28,13 @@
     height: 100%;
     width: 100%;
     cursor: pointer;
+    position: relative;
+
+    & > .article-count {
+      position: absolute;
+      right: -0.5rem;
+      bottom: -0.8rem;
+    }
 
     & > div:nth-child(2) {
       margin-left: 1rem;

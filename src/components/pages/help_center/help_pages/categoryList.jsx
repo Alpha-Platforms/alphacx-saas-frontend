@@ -12,7 +12,7 @@ import HelpNavBar from '../../../Layout/helpNavBar';
 import TopBar from '../components/topBar/topBar';
 import { faqs, navigation } from '../faq';
 import './articleList.scss';
-import { slugify, textCapitalize } from '../../../../helper';
+import { slugify } from '../../../../helper';
 import { ReactComponent as Folder } from '../../../../assets/icons/Folder.svg';
 
 function ArticleCategoryList() {
@@ -65,8 +65,11 @@ function ArticleCategoryList() {
                                 <Link key={i} to={`/knowledge-base/${slugify(item?.name?.toLowerCase())}`}>
                                     <div className="article-link category-link">
                                         <p className="title">
-                                            <Folder />{' '}
-                                            <span className="d-inline-block ms-2">{textCapitalize(item?.name)}</span>
+                                            <div>
+                                                <Folder />{' '}
+                                                <span className="d-inline-block ms-2">{item?.name}</span>
+                                            </div>
+                                            <span className="d-inline-block ms-2">{item?.folders[0]?.__meta__?.totalPublishedArticles} Article{Number(item?.folders[0]?.__meta__?.totalPublishedArticles) > 1 ? 's' : ''}</span>
                                         </p>
                                         {/* <p className="description">{item.solution}</p> */}
                                     </div>

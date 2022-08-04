@@ -96,7 +96,7 @@ function HelpCenter() {
                         ) : (
                             <div className="navigation-cards">
                                 <div className="nav-cards">
-                                    {categories?.slice(0, 6)?.map((cat, i) => (
+                                    {categories?.slice(0, 8)?.map((cat, i) => (
                                         <NavCard
                                             key={`item-${i + 1}`}
                                             icon={icons[i]}
@@ -107,7 +107,7 @@ function HelpCenter() {
                                         />
                                     ))}
                                 </div>
-                                {categories.length > 6 && (
+                                {categories.length > 8 && (
                                     <div>
                                         <Link
                                             to="/knowledge-base/categories"
