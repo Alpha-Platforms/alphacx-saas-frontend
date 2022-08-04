@@ -43,6 +43,7 @@ import './styles/Custom.css';
 import { SocketDataProvider } from './context/socket';
 import ArticleList from './components/pages/help_center/help_pages/articleList';
 import ArticleCategoryList from './components/pages/help_center/help_pages/categoryList';
+// eslint-disable-next-line import/no-cycle
 import Article from './components/pages/help_center/help_pages/article';
 // import EmailSettings from "./components/pages/settings/social_integrations/email";
 import SettingsEmail from './components/pages/settings/social_integrations/email';
@@ -96,7 +97,8 @@ const mapStateToProps = (state) => ({
 });
 
 // proper 404 UI later
-function NotFound() {
+// eslint-disable-next-line react/prop-types
+export function NotFound({ showCta }) {
     return (
         <div
             style={{
@@ -117,9 +119,11 @@ function NotFound() {
                     This page could not be found
                 </p>
             </div>
-            <a href="/" className="border border-secondary btn-outline-secondary ms-2 px-3 py-1">
-                Home
-            </a>
+            {showCta && (
+                <a href="/" className="border border-secondary btn-outline-secondary ms-2 px-3 py-1">
+                    Home
+                </a>
+            )}
         </div>
     );
 }
@@ -515,7 +519,7 @@ const SiteRouter = connect(mapStateToProps, {
                                 />{' '}
                                 {/* ......settings pages end */}
                                 <Route>
-                                    <NotFound />
+                                    <NotFound showCta />
                                 </Route>
                             </Switch>
                         </SocketDataProvider>

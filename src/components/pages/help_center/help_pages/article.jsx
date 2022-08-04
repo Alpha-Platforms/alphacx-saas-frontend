@@ -16,6 +16,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { NotificationManager } from 'react-notifications';
 import MoonLoader from 'react-spinners/MoonLoader';
 import { uuid } from '../../../../helper';
+import { NotFound } from '../../../../App';
 //
 
 function Article() {
@@ -51,11 +52,12 @@ function Article() {
         setPolicyLoading(false);
         if (res === invalidTenant) {
             setShouldReturn404(true);
-        } else if (res?.status == 'success') {
+        } else if (res?.status == 'success' && res?.data?.isPublished) {
             setArticleContent(res?.data);
             fetchCategory(res?.data?.folders[0].id);
         } else {
-            return NotificationManager.error(res?.er?.message, 'Error', 4000);
+            setShouldReturn404(true);
+            // return NotificationManager.error(res?.er?.message, 'Error', 4000);
         }
     };
     useEffect(() => {
@@ -129,18 +131,7 @@ function Article() {
                         </div>
                     </div>
                 </>
-            ) : (
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: '100vh',
-                    }}
-                >
-                    <h1>404 - Tenant Not Found</h1>
-                </div>
-            )}
+            ) : <NotFound showCta={false} />}
         </>
     );
 }
