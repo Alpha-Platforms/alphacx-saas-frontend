@@ -213,26 +213,11 @@ const SiteRouter = connect(mapStateToProps, {
                                 {/* forgot password */}
                                 <Route exact path="/reset-password/:resetToken" component={ResetPassword} />{' '}
                                 {/* reset password */}
-                                {hasFeatureAccess('knowledgebase') && (
-                                    <Route exact path="/knowledge-base" component={HelpCenter} />
-                                )}
-                                {hasFeatureAccess('knowledgebase') && (
-                                    <Route exact path="/knowledge-base/categories" component={ArticleCategoryList} />
-                                )}
-                                {hasFeatureAccess('knowledgebase') && (
-                                    <Route exact path="/knowledge-base/:category" component={ArticleList} />
-                                )}
-                                {hasFeatureAccess('knowledgebase') && (
-                                    <Route exact path="/knowledge-base/:category/:slug" component={Article} />
-                                )}{' '}
-                                {/* help pages end */}
-                                {hasFeatureAccess('rating') && (
-                                    <Route
-                                        exact
-                                        path="/feedback/:domain/:ticketId/:customerId"
-                                        component={RatingsForm}
-                                    />
-                                )}{' '}
+                                <Route exact path="/knowledge-base" component={HelpCenter} />
+                                <Route exact path="/knowledge-base/categories" component={ArticleCategoryList} />
+                                <Route exact path="/knowledge-base/:category" component={ArticleList} />
+                                <Route exact path="/knowledge-base/:category/:slug" component={Article} />
+                                <Route exact path="/feedback/:domain/:ticketId/:customerId" component={RatingsForm} />
                                 {/* help pages end */}
                                 <Route exact path="/account-verified" component={AccountVerified} />{' '}
                                 {/* Customer Portal */}
