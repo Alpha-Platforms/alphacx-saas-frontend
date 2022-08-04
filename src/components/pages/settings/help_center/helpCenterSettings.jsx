@@ -289,7 +289,7 @@ function HelpCenterSettings() {
                 </div>
 
                 <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
-                    <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table acx-ticket-table p-4">
+                    <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table kb-settings-table acx-ticket-table p-4">
                         <MuiThemeProvider theme={tableTheme}>
                             <MaterialTable
                                 columns={tableColumns}
