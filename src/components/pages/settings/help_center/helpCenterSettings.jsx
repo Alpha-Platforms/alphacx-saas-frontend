@@ -13,7 +13,7 @@ import '../../../../styles/Ticket.css';
 import MoonLoader from 'react-spinners/MoonLoader';
 import Swal from 'sweetalert2';
 import moment from 'moment';
-import { wordCapitalize } from '../../../../helper';
+// import { wordCapitalize } from '../../../../helper';
 import { ReactComponent as DotSvg } from '../../../../assets/icons/dots.svg';
 import tableIcons from '../../../../assets/materialicons/tableIcons';
 import { httpGetMain, httpPatchMain } from '../../../../helpers/httpMethods';
@@ -95,7 +95,7 @@ function HelpCenterSettings() {
 
         Swal.fire({
             title: isPublished ? 'Unpublish?' : 'Publish?',
-            text: `Do you want to ${isPublished ? 'unpublish' : 'publish'} "${wordCapitalize(title)}"?`,
+            text: `Do you want to ${isPublished ? 'unpublish' : 'publish'} "${title}"?`,
             showCancelButton: true,
             confirmButtonColor: '#006298',
             cancelButtonColor: '#d33',
@@ -163,8 +163,8 @@ function HelpCenterSettings() {
         //   field: "views",
         // },
         {
-            title: 'Account Owner',
-            field: 'author',
+            title: 'Category',
+            field: 'category',
         },
         {
             title: 'Created at',
@@ -287,11 +287,11 @@ function HelpCenterSettings() {
                                 columns={tableColumns}
                                 title=""
                                 icons={tableIcons}
-                                data={articles?.map(({ title, created_at, updated_at, isPublished }) => ({
+                                data={articles?.map(({ title, created_at, updated_at, isPublished, folder }) => ({
                                     title,
                                     isPublished,
                                     views: '100',
-                                    author: 'Dabo Etela',
+                                    category: folder?.category?.name,
                                     created_at: moment(created_at).format('DD MMM, YYYY'),
                                     modified_at: moment(updated_at).format('DD MMM, YYYY'),
                                 }))}
