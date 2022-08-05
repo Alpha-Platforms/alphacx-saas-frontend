@@ -28,7 +28,8 @@ import { getTags } from './reduxstore/actions/tagActions';
 import { getConfigs } from './reduxstore/actions/configActions';
 import { getCustomFields } from './reduxstore/actions/customFieldActions';
 import { getSubscription } from './reduxstore/actions/subscriptionAction';
-import { setAppSocket, setSocketMessage } from './reduxstore/actions/socketActions';
+import { resetSocketMessage, setAppSocket, setSocketMessage } from './reduxstore/actions/socketActions';
+import { setAudioInstance } from './reduxstore/actions/audioActions';
 import CustomerList from './components/pages/customers/CustomerList';
 import CustomersNull from './components/pages/customers/CustomersNull';
 import Customer from './components/pages/customers/Customer';
@@ -108,6 +109,8 @@ const SiteRouter = connect(mapStateToProps, {
     getSubscription,
     setAppSocket,
     setSocketMessage,
+    setAudioInstance,
+    resetSocketMessage,
 })(
     ({
         loadUser,
@@ -124,6 +127,8 @@ const SiteRouter = connect(mapStateToProps, {
         appSocket,
         setAppSocket,
         setSocketMessage,
+        setAudioInstance,
+        resetSocketMessage,
     }) => {
         const isOnline = useNavigatorOnLine();
 
@@ -145,6 +150,7 @@ const SiteRouter = connect(mapStateToProps, {
                 getCustomFields();
                 getSubscription();
                 setAppSocket();
+                setAudioInstance();
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [isUserAuthenticated]);
@@ -164,6 +170,7 @@ const SiteRouter = connect(mapStateToProps, {
                 appSocket.socket.onmessage = (event) => {
                     const eventData = JSON.parse(event.data);
                     setSocketMessage(eventData);
+                    setTimeout(() => resetSocketMessage(), 1000);
                 };
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps

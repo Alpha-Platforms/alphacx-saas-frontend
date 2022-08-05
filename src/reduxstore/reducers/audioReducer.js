@@ -11,7 +11,7 @@ const tagReducer = (state = initialState, action) => {
         case types.SET_AUDIO_INSTANCE:
             return {
                 ...state,
-                appSocket: action.payload,
+                audioInstance: action.payload,
             };
         default:
             return state;

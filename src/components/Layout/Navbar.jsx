@@ -94,6 +94,7 @@ function Notification({ userId }) {
     const [notificationsLoaded, setNotificationsLoaded] = useState(false);
     const [isUnreadNotificiations, setIsUnreadNotificiations] = useState(true);
     const socketMessage = useSelector((state) => state?.socket?.socketMessage);
+    const audioInstance = useSelector((state) => state?.audio?.audioInstance);
     const history = useHistory();
 
     useEffect(() => {
@@ -108,8 +109,16 @@ function Notification({ userId }) {
             if (eventData?.type === 'socketHook' && eventData?.status === 'incoming' && eventData?.data?.notification) {
                 setNotifications((prev) => [...prev, eventData?.data?.notification]);
             }
+            if (
+                (eventData?.type === 'liveStream' || eventData?.type === 'socketHook') &&
+                eventData?.status === 'incoming' &&
+                !eventData?.data?.notification &&
+                audioInstance
+            ) {
+                audioInstance.play();
+            }
         }
-    }, [socketMessage]);
+    }, [socketMessage, audioInstance]);
 
     function createMarkup(data) {
         return { __html: data };

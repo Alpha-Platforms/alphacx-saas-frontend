@@ -27,6 +27,7 @@ import channelReducer from './channelReducer';
 import customFieldReducer from './customFieldReducer';
 import subscriptionReducer from './subscriptionReducer';
 import socketReducer from './socketReducer';
+import audioReducer from './audioReducer';
 // ,
 const persistConfig = {
     key: 'alphacx_platform',
@@ -76,6 +77,7 @@ const rootReducer = combineReducers({
     customField: customFieldReducer,
     subscription: subscriptionReducer,
     socket: socketReducer,
+    audio: audioReducer
 });
 
 export default persistReducer(persistConfig, rootReducer);
