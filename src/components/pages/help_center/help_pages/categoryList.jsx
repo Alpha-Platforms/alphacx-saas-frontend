@@ -14,6 +14,7 @@ import { faqs, navigation } from '../faq';
 import './articleList.scss';
 import { slugify } from '../../../../helper';
 import { ReactComponent as Folder } from '../../../../assets/icons/Folder.svg';
+import NotFound from '../../error/NotFound';
 
 function ArticleCategoryList() {
     const query = useQuery();
@@ -85,18 +86,7 @@ function ArticleCategoryList() {
                                 </div> */}
                     </div>
                 </>
-            ) : (
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: '100vh',
-                    }}
-                >
-                    <h1>404 - Tenant Not Found</h1>
-                </div>
-            )}
+            ) : <NotFound showCta={false} />}
         </>
     );
 }

@@ -15,6 +15,7 @@ import './articleList.scss';
 import { slugify } from '../../../../helper';
 import { ReactComponent as Paper } from '../../../../assets/icons/Paper.svg';
 import Folder from '../../../../assets/icons/Folder.svg';
+import NotFound from '../../error/NotFound';
 
 function ArticleList() {
     const query = useQuery();
@@ -98,18 +99,7 @@ function ArticleList() {
           </div> */}
                     </div>
                 </>
-            ) : (
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: '100vh',
-                    }}
-                >
-                    <h1>404 - Tenant Not Found</h1>
-                </div>
-            )}
+            ) : <NotFound showCta={false} />}
         </>
     );
 }

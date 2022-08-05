@@ -16,8 +16,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { NotificationManager } from 'react-notifications';
 import MoonLoader from 'react-spinners/MoonLoader';
 import { uuid } from '../../../../helper';
-import { NotFound } from '../../../../App';
-//
+import NotFound from '../../error/NotFound';
 
 function Article() {
     const { slug } = useParams();

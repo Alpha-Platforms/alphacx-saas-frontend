@@ -43,7 +43,6 @@ import './styles/Custom.css';
 import { SocketDataProvider } from './context/socket';
 import ArticleList from './components/pages/help_center/help_pages/articleList';
 import ArticleCategoryList from './components/pages/help_center/help_pages/categoryList';
-// eslint-disable-next-line import/no-cycle
 import Article from './components/pages/help_center/help_pages/article';
 // import EmailSettings from "./components/pages/settings/social_integrations/email";
 import SettingsEmail from './components/pages/settings/social_integrations/email';
@@ -89,44 +88,13 @@ import Instagram from './components/pages/settings/social_integrations/Instagram
 import AppsumoPlans from './components/pages/appsumo/AppsumoPlans';
 import { hasFeatureAccess } from './helper';
 import useNavigatorOnLine from './hooks/useNavigatorOnline';
+import NotFound from './components/pages/error/NotFound';
 
 const mapStateToProps = (state) => ({
     isUserAuthenticated: state.userAuth.isUserAuthenticated,
     tenantSubscription: state?.subscription?.subscription,
     appSocket: state?.socket?.appSocket,
 });
-
-// proper 404 UI later
-// eslint-disable-next-line react/prop-types
-export function NotFound({ showCta }) {
-    return (
-        <div
-            style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100vh',
-            }}
-        >
-            <h3 style={{ marginRight: '25px' }}>404</h3>
-            <div style={{ paddingLeft: '25px', borderLeft: 'solid 1px', verticalAlign: 'middle' }}>
-                <p
-                    style={{
-                        padding: '16px 0',
-                        margin: '0',
-                    }}
-                >
-                    This page could not be found
-                </p>
-            </div>
-            {showCta && (
-                <a href="/" className="border border-secondary btn-outline-secondary ms-2 px-3 py-1">
-                    Home
-                </a>
-            )}
-        </div>
-    );
-}
 
 const SiteRouter = connect(mapStateToProps, {
     loadUser,

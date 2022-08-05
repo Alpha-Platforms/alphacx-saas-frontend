@@ -13,12 +13,14 @@ import { NotificationManager } from 'react-notifications';
 import MoonLoader from 'react-spinners/MoonLoader';
 import { Link } from 'react-router-dom';
 import { shuffleArray } from '../../../helper';
+import NotFound from '../error/NotFound';
 
 function HelpCenter() {
     const [categories, setCategories] = useState([]);
     const [shouldReturn404, setShouldReturn404] = useState(false);
     const [loading, setLoading] = useState(true);
     const [articles, setArticles] = useState([]);
+    const [popularArticle, setPopularArticle] = useState([]);
     const icons = ['work', 'account', 'subscription', 'users', 'settings', 'document'];
     const [search, setSearch] = useState('');
 
@@ -33,7 +35,6 @@ function HelpCenter() {
             setShouldReturn404(true);
         } else if (res?.status == 'success') {
             const categories = res?.data;
-            console.clear();
             setCategories(categories);
             const articles = [];
             categories.forEach((cat, idx) => {
@@ -43,8 +44,19 @@ function HelpCenter() {
                     });
                 });
             });
-            // console.clear();
             setArticles(articles);
+        } else {
+            return NotificationManager.error(res?.er?.message, 'Error', 4000);
+        }
+    };
+
+    const fetchPopularArticles = async () => {
+        const res = await httpGetMainKB('articles/most-popular');
+        setLoading(false);
+        if (res === invalidTenant) {
+            setShouldReturn404(true);
+        } else if (res?.status == 'success') {
+            setPopularArticle(res?.data);
         } else {
             return NotificationManager.error(res?.er?.message, 'Error', 4000);
         }
@@ -52,6 +64,7 @@ function HelpCenter() {
 
     useEffect(() => {
         fetchCategories();
+        fetchPopularArticles();
     }, []);
     return (
         <>
@@ -118,37 +131,24 @@ function HelpCenter() {
                                     </div>
                                 )}
 
-                                <div className="popular-questions">
+                                {Array.isArray(popularArticle) && popularArticle?.length > 0 && <div className="popular-questions">
                                     <h3>Most Popular Articles</h3>
                                     <div className="accordions">
-                                        {shuffleArray(articles)
-                                            ?.slice(0, 5)
-                                            .map((item) => (
+                                        {popularArticle?.map((item) => (
                                                 <AccordionLink
                                                     key={item.id}
                                                     question={item.title}
                                                     solution={item.solution}
-                                                    category={item.catName}
+                                                    category={item.folder?.category?.name}
                                                 />
                                             ))}
                                     </div>
-                                </div>
+                                </div>}
                             </div>
                         )}
                     </div>
                 </>
-            ) : (
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: '100vh',
-                    }}
-                >
-                    <h1>404 - Tenant Not Found</h1>
-                </div>
-            )}
+            ) : <NotFound showCta={false} />}
         </>
     );
 }
