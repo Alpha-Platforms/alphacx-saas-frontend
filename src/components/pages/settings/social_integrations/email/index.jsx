@@ -11,6 +11,7 @@ import RightArrow from '../../../../../assets/imgF/arrow_right.png';
 import tableIcons from '../../../../../assets/materialicons/tableIcons';
 import NewSupportEmail from './components/NewSupportEmail';
 import { ReactComponent as DotSvg } from '../../../../../assets/icons/dots.svg';
+import { ReactComponent as EditIcon } from '../../../../../assets/icons/Edit.svg';
 
 import './settingsEmail.scss';
 
@@ -61,15 +62,14 @@ function EmailSettings({ configs, isConfigsLoaded }) {
         {
             title: '',
             field: 'dropdownAction',
-            render: (rowData) => (<button 
-                className='btn border bg-light py-0 px-3' 
+            render: (rowData) => (<button
                 onClick={() => 
                     history.push(
                         `/settings/integrations/email/email-form${
                             rowData?.idx === 1 ? '?type=outgoing' : ''
                         }`,
                     )
-                }>Edit</button>
+                }><EditIcon /></button>
                         
                             
             ),

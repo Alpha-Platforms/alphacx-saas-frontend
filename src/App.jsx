@@ -28,7 +28,8 @@ import { getTags } from './reduxstore/actions/tagActions';
 import { getConfigs } from './reduxstore/actions/configActions';
 import { getCustomFields } from './reduxstore/actions/customFieldActions';
 import { getSubscription } from './reduxstore/actions/subscriptionAction';
-import { setAppSocket, setSocketMessage } from './reduxstore/actions/socketActions';
+import { resetSocketMessage, setAppSocket, setSocketMessage } from './reduxstore/actions/socketActions';
+import { setAudioInstance } from './reduxstore/actions/audioActions';
 import CustomerList from './components/pages/customers/CustomerList';
 import CustomersNull from './components/pages/customers/CustomersNull';
 import Customer from './components/pages/customers/Customer';
@@ -88,41 +89,13 @@ import Instagram from './components/pages/settings/social_integrations/Instagram
 import AppsumoPlans from './components/pages/appsumo/AppsumoPlans';
 import { hasFeatureAccess } from './helper';
 import useNavigatorOnLine from './hooks/useNavigatorOnline';
+import NotFound from './components/pages/error/NotFound';
 
 const mapStateToProps = (state) => ({
     isUserAuthenticated: state.userAuth.isUserAuthenticated,
     tenantSubscription: state?.subscription?.subscription,
     appSocket: state?.socket?.appSocket,
 });
-
-// proper 404 UI later
-function NotFound() {
-    return (
-        <div
-            style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100vh',
-            }}
-        >
-            <h3 style={{ marginRight: '25px' }}>404</h3>
-            <div style={{ paddingLeft: '25px', borderLeft: 'solid 1px', verticalAlign: 'middle' }}>
-                <p
-                    style={{
-                        padding: '16px 0',
-                        margin: '0',
-                    }}
-                >
-                    This page could not be found
-                </p>
-            </div>
-            <a href="/" className="border border-secondary btn-outline-secondary ms-2 px-3 py-1">
-                Home
-            </a>
-        </div>
-    );
-}
 
 const SiteRouter = connect(mapStateToProps, {
     loadUser,
@@ -136,6 +109,8 @@ const SiteRouter = connect(mapStateToProps, {
     getSubscription,
     setAppSocket,
     setSocketMessage,
+    setAudioInstance,
+    resetSocketMessage,
 })(
     ({
         loadUser,
@@ -152,6 +127,8 @@ const SiteRouter = connect(mapStateToProps, {
         appSocket,
         setAppSocket,
         setSocketMessage,
+        setAudioInstance,
+        resetSocketMessage,
     }) => {
         const isOnline = useNavigatorOnLine();
 
@@ -173,6 +150,7 @@ const SiteRouter = connect(mapStateToProps, {
                 getCustomFields();
                 getSubscription();
                 setAppSocket();
+                setAudioInstance();
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [isUserAuthenticated]);
@@ -192,6 +170,7 @@ const SiteRouter = connect(mapStateToProps, {
                 appSocket.socket.onmessage = (event) => {
                     const eventData = JSON.parse(event.data);
                     setSocketMessage(eventData);
+                    setTimeout(() => resetSocketMessage(), 1000);
                 };
             }
             // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -213,26 +192,11 @@ const SiteRouter = connect(mapStateToProps, {
                                 {/* forgot password */}
                                 <Route exact path="/reset-password/:resetToken" component={ResetPassword} />{' '}
                                 {/* reset password */}
-                                {hasFeatureAccess('knowledgebase') && (
-                                    <Route exact path="/knowledge-base" component={HelpCenter} />
-                                )}
-                                {hasFeatureAccess('knowledgebase') && (
-                                    <Route exact path="/knowledge-base/categories" component={ArticleCategoryList} />
-                                )}
-                                {hasFeatureAccess('knowledgebase') && (
-                                    <Route exact path="/knowledge-base/:category" component={ArticleList} />
-                                )}
-                                {hasFeatureAccess('knowledgebase') && (
-                                    <Route exact path="/knowledge-base/:category/:slug" component={Article} />
-                                )}{' '}
-                                {/* help pages end */}
-                                {hasFeatureAccess('rating') && (
-                                    <Route
-                                        exact
-                                        path="/feedback/:domain/:ticketId/:customerId"
-                                        component={RatingsForm}
-                                    />
-                                )}{' '}
+                                <Route exact path="/knowledge-base" component={HelpCenter} />
+                                <Route exact path="/knowledge-base/categories" component={ArticleCategoryList} />
+                                <Route exact path="/knowledge-base/:category" component={ArticleList} />
+                                <Route exact path="/knowledge-base/:category/:slug" component={Article} />
+                                <Route exact path="/feedback/:domain/:ticketId/:customerId" component={RatingsForm} />
                                 {/* help pages end */}
                                 <Route exact path="/account-verified" component={AccountVerified} />{' '}
                                 {/* Customer Portal */}
@@ -530,7 +494,7 @@ const SiteRouter = connect(mapStateToProps, {
                                 />{' '}
                                 {/* ......settings pages end */}
                                 <Route>
-                                    <NotFound />
+                                    <NotFound showCta />
                                 </Route>
                             </Switch>
                         </SocketDataProvider>

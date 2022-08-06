@@ -14,16 +14,12 @@ function NavCard({ title, icon, folders, id }) {
                     <Folder />
                 </div>
                 <div>
-                    <p className="title">{textCapitalize(title)}</p>
+                    <p className="title">{title}</p>
                     <div className="description">
                         <p>{folders[0]?.name}</p>
-                        {/* {folders.map((item, i) => {
-              return ( 
-              <p key={i}>dd{item.name}dd</p>
-            )
-            })} */}
                     </div>
                 </div>
+                <p className="article-count">{folders[0]?.__meta__?.totalPublishedArticles} Article{Number(folders[0]?.__meta__?.totalPublishedArticles) > 1 ? 's' : ''}</p>
             </Link>
         </div>
     );

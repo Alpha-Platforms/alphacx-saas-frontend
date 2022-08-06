@@ -41,6 +41,7 @@
 
 
 #alphacxMTable.acx-user-table tbody tr:empty,
+#alphacxMTable.kb-settings-table tbody tr:empty,
 #alphacxMTable.fit-content tbody tr:empty {
     display: none !important;
 }

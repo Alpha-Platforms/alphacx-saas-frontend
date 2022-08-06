@@ -12,9 +12,10 @@ import HelpNavBar from '../../../Layout/helpNavBar';
 import TopBar from '../components/topBar/topBar';
 import { faqs, navigation } from '../faq';
 import './articleList.scss';
-import { slugify, textCapitalize } from '../../../../helper';
+import { slugify } from '../../../../helper';
 import { ReactComponent as Paper } from '../../../../assets/icons/Paper.svg';
 import Folder from '../../../../assets/icons/Folder.svg';
+import NotFound from '../../error/NotFound';
 
 function ArticleList() {
     const query = useQuery();
@@ -40,16 +41,8 @@ function ArticleList() {
         if (res === invalidTenant) {
             setShouldReturn404(true);
         } else if (res?.status == 'success') {
-            const folders = res?.data?.folders;
-            let articles = [];
-            for (let index = 0; index < folders.length; index++) {
-                articles = [...articles, ...folders[index].articles];
-            }
-            // console.clear();
-            // console.log("articles", articles);
-            // console.log(pageUrl);
-
-            setArticles(articles);
+            setArticles(res?.data?.articles);
+            setCatName(res?.data?.name);
         } else {
             // return NotificationManager.error(res?.er?.message, "Error", 4000);
             return NotificationManager.error('', 'No Articles Found', 4000);
@@ -57,10 +50,6 @@ function ArticleList() {
     };
 
     useEffect(() => {
-        const pagelinks = location.pathname.split('/');
-        // console.log("links from article", );
-        setCatName(textCapitalize(pagelinks[pagelinks.length - 1]?.replaceAll('-', ' ')));
-
         fetchAllArticles();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -110,18 +99,7 @@ function ArticleList() {
           </div> */}
                     </div>
                 </>
-            ) : (
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: '100vh',
-                    }}
-                >
-                    <h1>404 - Tenant Not Found</h1>
-                </div>
-            )}
+            ) : <NotFound showCta={false} />}
         </>
     );
 }

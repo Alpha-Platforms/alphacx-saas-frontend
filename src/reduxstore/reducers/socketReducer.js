@@ -19,6 +19,11 @@ const tagReducer = (state = initialState, action) => {
                 ...state,
                 socketMessage: action.payload,
             };
+        case types.RESET_SOCKET_MESSAGE:
+            return {
+                ...state,
+                socketMessage: null,
+            };
         default:
             return state;
     }
