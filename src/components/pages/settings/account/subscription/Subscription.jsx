@@ -147,26 +147,6 @@ function Subscription({ subscription }) {
                                         <div>
                                             <div className="payment-sect-2">
                                                 <div>
-                                                    <p className="current-plan-text d-flex justify-content-between align-items-center">
-                                                        <span>
-                                                            <strong>
-                                                                {planState.selectedPlan?.name?.replace('(USD)', '')}{' '}
-                                                                &nbsp;{' '}
-                                                            </strong>
-                                                        </span>
-                                                        <button
-                                                            type="button"
-                                                            className="btn btn-outline-dark border border-1 mb-2"
-                                                            onClick={() =>
-                                                                setPlanState((prev) => ({
-                                                                    ...prev,
-                                                                    selectingPlan: false,
-                                                                }))
-                                                            }
-                                                        >
-                                                            ✖
-                                                        </button>
-                                                    </p>
                                                     <CurrentPlan
                                                         planState={planState}
                                                         tenantInfo={tenantInfo}

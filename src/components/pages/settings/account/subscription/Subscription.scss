@@ -75,7 +75,7 @@
 .updateplan-btn-wrapper {
     & > button {
         border-radius: 4px;
-        padding: 11px;
+        padding: 8px 16px;
         -webkit-border-radius: 4px;
         -moz-border-radius: 4px;
         -ms-border-radius: 4px;
@@ -83,12 +83,13 @@
         font-size: 14px;
         line-height: 19px;
     }
-    & > button:nth-child(1) {
+    & > button.confirm {
         color: white;
         background: var(--at-blue-light);
     }
-    & > button:nth-child(2) {
+    & > button.cancel {
         background-color: rgba(0, 0, 0, 0.1);
+        padding: 8px 24px;
         margin-left: 1rem;
         color: var(--at-blue-light);
     }
