@@ -138,10 +138,9 @@ function AutomationAction({
             <div className="card mt-2 mb-4">
                 <div className="card-body border-0 p-3 automation-action">
                     <div className="d-flex  flex-column assign">
-                        <label htmlFor="channel">Send</label>
+                        <label htmlFor="channel mb-1">Notification Channel</label>
 
                         <RSelect
-                            className="select-light-blue"
                             id="channel"
                             name="action"
                             openMenuOnFocus

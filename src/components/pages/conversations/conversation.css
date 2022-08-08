@@ -153,38 +153,23 @@
   position: relative;
   top: 8px;
 }
-.msg-badges div:first-child {
-  /* background: rgba(81, 183, 79, 0.08);
-  color: #51b74f; */
+
+.msg-badges div {
   font-size: 9px;
   margin-right: 5px;
-
-  width: 56px;
-  height: 21px;
-
-  /* border: 1px solid #006298; */
-  box-sizing: border-box;
-  border-radius: 5px;
+  padding: 1px 10px;
+  border-radius: 3px;
   text-align: center;
   line-height: 20px;
-  overflow: hidden;
 }
 
 .msg-badges div:last-child {
   background: rgba(81, 183, 79, 0.08);
   color: #51b74f;
-  font-size: 9px;
-  margin-right: 5px;
-
-  width: 56px;
-  height: 21px;
-
-  /* border: 1px solid #006298; */
-  box-sizing: border-box;
-  border-radius: 5px;
-  text-align: center;
-  line-height: 20px;
-  overflow: hidden;
+}
+.msg-badges div:first-child {
+  background: rgba(3, 98, 152, 0.08);
+  color: #036298;
 }
 
 .message-user-time {

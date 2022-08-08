@@ -822,10 +822,19 @@ button.dropdown-toggle {
   color: #fff;
 }
 
-.global-create-dropdown .dropdown-menu.show > .dropdown-item:first-child {
+.help-dropdown .dropdown-menu.show > a:hover {
+  background-color: #f4f4f4;
+}
+
+.global-create-dropdown .dropdown-menu.show > .dropdown-item:first-child,
+.help-dropdown .dropdown-menu.show > a:first-child {
   border-bottom: solid 1px #f4f4f4;
 }
 
 .rotate-180 {
   transform: rotate(180deg);
+}
+
+.help-dropdown .dropdown-menu.show {
+  margin-left: -50%;
 }

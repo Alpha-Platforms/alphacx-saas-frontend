@@ -48,3 +48,7 @@
     color: white;
     padding-top: 2px;
 }
+
+.dropdown-toggle::after {
+    content: none!important;
+}
