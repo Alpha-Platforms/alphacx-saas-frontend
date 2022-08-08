@@ -94,6 +94,7 @@ function Notification({ userId }) {
     const [notificationsLoaded, setNotificationsLoaded] = useState(false);
     const [isUnreadNotificiations, setIsUnreadNotificiations] = useState(true);
     const socketMessage = useSelector((state) => state?.socket?.socketMessage);
+    const audioInstance = useSelector((state) => state?.audio?.audioInstance);
     const history = useHistory();
 
     useEffect(() => {
@@ -108,8 +109,16 @@ function Notification({ userId }) {
             if (eventData?.type === 'socketHook' && eventData?.status === 'incoming' && eventData?.data?.notification) {
                 setNotifications((prev) => [...prev, eventData?.data?.notification]);
             }
+            if (
+                (eventData?.type === 'liveStream' || eventData?.type === 'socketHook') &&
+                eventData?.status === 'incoming' &&
+                !eventData?.data?.notification &&
+                audioInstance
+            ) {
+                audioInstance.play();
+            }
         }
-    }, [socketMessage]);
+    }, [socketMessage, audioInstance]);
 
     function createMarkup(data) {
         return { __html: data };
@@ -502,16 +511,39 @@ function Navbar({ pageName, user }) {
                                 'create_ticket',
                                 'create_customer',
                             ]) && <DropDown shouldShowUserExceededNotif={shouldShowUserExceededNotif} />}
-
-                            {/* <div style={{ width: "1.5" }}>
-                  <BellIconNavbar />
-                </div> */}
                             <Notification userId={user?.id} />
 
                             {hasFeatureAccess('knowledgebase') && (
-                                <Link to="/knowledge-base" target="_blank">
-                                    <HelpIcon />
-                                </Link>
+                                // <Link to="/knowledge-base" target="_blank">
+                                //     <HelpIcon />
+                                // </Link>
+                                <Dropdown className="ticket-status-dropdown help-dropdown">
+                                    <Dropdown.Toggle
+                                        variant=""
+                                        size=""
+                                        className="btn"
+                                        style={{ borderRadius: '.15rem' }}
+                                    >
+                                        <div style={{ padding: '.25rem .5rem' }}>
+                                            <HelpIcon />
+                                        </div>
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                        <Link
+                                            to={{ pathname: 'https://docs.alphacx.co' }}
+                                            target="_blank"
+                                            className="px-3 py-1 w-100 text-center"
+                                        >
+                                            Docs
+                                        </Link>
+                                        <Link
+                                            to="/settings?opencontactmodal=open"
+                                            className="px-3 py-1 w-100 text-center"
+                                        >
+                                            Support
+                                        </Link>
+                                    </Dropdown.Menu>
+                                </Dropdown>
                             )}
 
                             <div>

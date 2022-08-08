@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './NotificationSettings.scss';
 import { Dropdown } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
@@ -19,6 +19,8 @@ import { config } from '../../../../config/keys';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
 import TripleDot from '../../../../assets/imgF/triple_dot.png';
 import { getEmailTemplates } from '../../../../reduxstore/actions/emailTemplateActions';
+import { ReactComponent as DeleteRedIcon } from '../../../../assets/icons/Delete-red.svg';
+import { ReactComponent as EditIcon } from '../../../../assets/icons/Edit.svg';
 
 function NotificationSettings({ getEmailTemplates, isEmailTemplatesLoaded, emailTemplates }) {
     const history = useHistory();
@@ -90,23 +92,40 @@ function NotificationSettings({ getEmailTemplates, isEmailTemplatesLoaded, email
             title: 'Action',
             field: 'dropdownAction',
             render: (rowData) => (
-                <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
-                    <Dropdown.Toggle variant="transparent" size="sm">
-                        <span className="cust-table-dots">
-                            <DotSvg />
-                        </span>
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>
-                        <Dropdown.Item eventKey="1">
-                            <Link to={`/settings/notifications/email-template/${rowData?.dropdownAction}`}>
-                                <span className="black-text">Edit</span>
-                            </Link>
-                        </Dropdown.Item>
-                        <Dropdown.Item eventKey="2">
-                            <span className="black-text">Delete</span>
-                        </Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
+                <div className="form-check form-switch">
+                    <button
+                        type="submit"
+                        className="user-delete-btn me-2 d-inline-block"
+                        onClick={() => 
+                            history.push(`/settings/notifications/email-template/${rowData?.dropdownAction}`)
+                        }
+                    >
+                        <EditIcon />
+                    </button>
+                    <button
+                        type="submit"
+                        className="user-delete-btn ms-3 d-inline-block"
+                    >
+                        <DeleteRedIcon />
+                    </button>
+                </div>
+                // <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
+                //     <Dropdown.Toggle variant="transparent" size="sm">
+                //         <span className="cust-table-dots">
+                //             <DotSvg />
+                //         </span>
+                //     </Dropdown.Toggle>
+                //     <Dropdown.Menu>
+                //         <Dropdown.Item eventKey="1">
+                //             <Link to={`/settings/notifications/email-template/${rowData?.dropdownAction}`}>
+                //                 <span className="black-text">Edit</span>
+                //             </Link>
+                //         </Dropdown.Item>
+                //         <Dropdown.Item eventKey="2">
+                //             <span className="black-text">Delete</span>
+                //         </Dropdown.Item>
+                //     </Dropdown.Menu>
+                // </Dropdown>
             ),
         },
     ];

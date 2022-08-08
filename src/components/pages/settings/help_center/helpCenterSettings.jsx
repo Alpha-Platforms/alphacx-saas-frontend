@@ -13,7 +13,7 @@ import '../../../../styles/Ticket.css';
 import MoonLoader from 'react-spinners/MoonLoader';
 import Swal from 'sweetalert2';
 import moment from 'moment';
-import { wordCapitalize } from '../../../../helper';
+// import { wordCapitalize } from '../../../../helper';
 import { ReactComponent as DotSvg } from '../../../../assets/icons/dots.svg';
 import tableIcons from '../../../../assets/materialicons/tableIcons';
 import { httpGetMain, httpPatchMain } from '../../../../helpers/httpMethods';
@@ -94,13 +94,21 @@ function HelpCenterSettings() {
         console.log(rowData);
 
         Swal.fire({
-            title: isPublished ? 'Unpublish?' : 'Publish?',
-            text: `Do you want to ${isPublished ? 'unpublish' : 'publish'} "${wordCapitalize(title)}"?`,
+            title: '',
+            text: `Do you want to ${isPublished ? 'unpublish' : 'publish'} "${title}"?`,
             showCancelButton: true,
-            confirmButtonColor: '#006298',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
+            confirmButtonColor: isPublished ? '#ff0e0e' : '#006298',
+            cancelButtonColor: '#ffffff',
+            cancelButtonText: 'Cancel',
+            confirmButtonText: 'Confirm',
+            customClass: {
+                cancelButton: 'user-activation-cancel-btn',
+                confirmButton: 'user-activation-confirm-btn',
+                container: 'user-activation-container',
+                popup: 'user-activation-popup',
+                validationMessage: 'user-activation-validation-msg',
+                htmlContainer: 'user-activation-html-container',
+            }
         }).then((result) => {
             if (result.isConfirmed) {
                 if (isPublished) {
@@ -163,8 +171,8 @@ function HelpCenterSettings() {
         //   field: "views",
         // },
         {
-            title: 'Account Owner',
-            field: 'author',
+            title: 'Category',
+            field: 'category',
         },
         {
             title: 'Created at',
@@ -271,27 +279,30 @@ function HelpCenterSettings() {
                 <div className="d-flex justify-content-between flex-row">
                     <h5 className="mt-3 mb-4 fs-6 fw-bold">Knowledge Base Settings</h5>
                     <div>
-                        <Link className="btn btn-primary btn-sm py-1 ms-2" to="/settings/knowledge-base/categories">
-                            <span>Categories</span>
-                        </Link>
                         <Link className="btn btn-primary btn-sm ms-2 py-1" to="/settings/knowledge-base/article">
                             <span>New Article</span>
+                        </Link>
+                        <Link className="btn btn-primary btn-sm py-1 ms-2" to="/settings/knowledge-base/categories">
+                            <span>Categories</span>
+                        </Link>                        
+                        <Link className="btn btn-primary btn-sm py-1 ms-2" to="/knowledge-base/" target="_blank">
+                            <span>View KB</span>
                         </Link>
                     </div>
                 </div>
 
                 <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
-                    <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table acx-ticket-table p-4">
+                    <div id="alphacxMTable" className="pb-5 acx-ticket-cust-table kb-settings-table acx-ticket-table p-4">
                         <MuiThemeProvider theme={tableTheme}>
                             <MaterialTable
                                 columns={tableColumns}
                                 title=""
                                 icons={tableIcons}
-                                data={articles?.map(({ title, created_at, updated_at, isPublished }) => ({
+                                data={articles?.map(({ title, created_at, updated_at, isPublished, folder }) => ({
                                     title,
                                     isPublished,
                                     views: '100',
-                                    author: 'Dabo Etela',
+                                    category: folder?.category?.name,
                                     created_at: moment(created_at).format('DD MMM, YYYY'),
                                     modified_at: moment(updated_at).format('DD MMM, YYYY'),
                                 }))}

@@ -14,3 +14,7 @@ export const setAppSocket = () => {
 export const setSocketMessage = (message) => {
     return { type: types.SET_SOCKET_MESSAGE, payload: message };
 };
+
+export const resetSocketMessage = (message) => {
+    return { type: types.RESET_SOCKET_MESSAGE, payload: message };
+};
