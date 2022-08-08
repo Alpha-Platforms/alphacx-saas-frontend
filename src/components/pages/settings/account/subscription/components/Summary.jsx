@@ -233,7 +233,10 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
                     <span>0%</span>
                 </div>
                 <div>
-                    <span>{getRealCurrencyv2(tenantInfo?.currency || '')}0.00</span>
+                    <span>
+                        {getRealCurrencyv2(tenantInfo?.currency || '')}
+                        {getRealCurrency(tenantInfo?.currency || '') === 'NGN' ? '0' : '0.00'}
+                    </span>
                 </div>
             </div>
 
