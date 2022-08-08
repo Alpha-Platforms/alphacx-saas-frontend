@@ -9,7 +9,7 @@ import { connect, useDispatch } from 'react-redux';
 import MoonLoader from 'react-spinners/MoonLoader';
 import moment from 'moment';
 import { Modal } from 'react-responsive-modal';
-import SubTop, { getRealCurrency } from './components/SubTop';
+import SubTop, { getRealCurrency, getRealCurrencyv2 } from './components/SubTop';
 import CurrentPlan from './components/CurrentPlan';
 import Summary from './components/Summary';
 import BillingDetails from './components/BillingDetails';
@@ -31,6 +31,7 @@ function Subscription({ subscription }) {
     const [tenantInfo, setTenantInfo] = useState(null);
     const [plans, setPlans] = useState(null);
     const [openModal, setOpenModal] = useState(false);
+    const [isPlanSelectionYearly, setIsPlanSelectionMonthly] = useState(false);
 
     const [planState, setPlanState] = useState({
         numOfAgents: 0,
@@ -193,7 +194,12 @@ function Subscription({ subscription }) {
                                                 <div>
                                                     <span>Montly</span>
                                                     <div className="custom-toggle-wrapper d-inline-block">
-                                                        <input type="checkbox" id="switch" />
+                                                        <input
+                                                            type="checkbox"
+                                                            id="switch"
+                                                            onChange={() => setIsPlanSelectionMonthly((prev) => !prev)}
+                                                            checked={isPlanSelectionYearly}
+                                                        />
                                                         <label htmlFor="switch">Toggle</label>
                                                     </div>
                                                     <span>
@@ -219,11 +225,16 @@ function Subscription({ subscription }) {
                                                                     <h3>Free</h3>
                                                                 ) : (
                                                                     <h3>
-                                                                        {getRealCurrency(item?.currency) === 'NGN'
-                                                                            ? '₦'
-                                                                            : '$'}
-                                                                        {separateNum(item?.monthly_amount)}{' '}
-                                                                        <small className="fs-6">/ user / month</small>
+                                                                        {getRealCurrencyv2(item?.currency)}
+                                                                        {separateNum(
+                                                                            isPlanSelectionYearly
+                                                                                ? item?.yearly_amount
+                                                                                : item?.monthly_amount,
+                                                                        )}{' '}
+                                                                        <small className="fs-6">
+                                                                            / user /{' '}
+                                                                            {isPlanSelectionYearly ? 'year' : 'month'}
+                                                                        </small>
                                                                     </h3>
                                                                 )}
                                                             </div>
