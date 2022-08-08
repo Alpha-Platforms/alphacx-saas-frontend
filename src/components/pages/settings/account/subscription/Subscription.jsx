@@ -56,6 +56,7 @@ function Subscription({ subscription }) {
             ...prev,
             numOfAgents: totalUsers,
             selectingPlan: !(subscription?.plan?.is_free || subscription?.plan?.is_trial),
+            selectedPlan: subscription?.plan,
         }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
