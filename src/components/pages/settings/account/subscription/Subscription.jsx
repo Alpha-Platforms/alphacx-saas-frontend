@@ -9,7 +9,7 @@ import { connect, useDispatch } from 'react-redux';
 import MoonLoader from 'react-spinners/MoonLoader';
 import moment from 'moment';
 import { Modal } from 'react-responsive-modal';
-import SubTop, { getRealCurrency, getRealCurrencyv2 } from './components/SubTop';
+import SubTop, { getRealCurrencyv2 } from './components/SubTop';
 import CurrentPlan from './components/CurrentPlan';
 import Summary from './components/Summary';
 import BillingDetails from './components/BillingDetails';
@@ -52,7 +52,11 @@ function Subscription({ subscription }) {
     const totalUsers = subscription?.subscription?.totalUsers;
 
     useEffect(() => {
-        setPlanState((prev) => ({ ...prev, numOfAgents: totalUsers }));
+        setPlanState((prev) => ({
+            ...prev,
+            numOfAgents: totalUsers,
+            selectingPlan: !(subscription?.plan?.is_free || subscription?.plan?.is_trial),
+        }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
