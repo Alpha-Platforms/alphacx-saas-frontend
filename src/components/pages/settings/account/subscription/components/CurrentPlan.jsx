@@ -31,12 +31,14 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                 ? {
                       tenantId: window.localStorage.getItem('tenantId'),
                       numOfUsers: planState.numOfAgents,
+                      platform: 'ps',
                   }
                 : {
                       tenantId: window.localStorage.getItem('tenantId'),
                       subscriptionCategory: planState.billingCycle?.value === 'yearly_amount' ? 'yearly' : 'monthly',
                       subscriptionTypeId: planState?.selectedPlan?.id,
                       numOfUsers: planState?.numOfAgents,
+                      platform: 'ps',
                   };
 
         const initPaymentRes = await httpPost(paymentInitEndpoint, initPaymentBody);
@@ -56,7 +58,8 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                 // FLUTTERWAVE PAYMENT
                 setPlanState((prev) => ({
                     ...prev,
-                    flutterwaveConfig: initPaymentRes?.data,
+                    // flutterwaveConfig: initPaymentRes?.data,
+                    paystackConfig: initPaymentRes?.data,
                 }));
             } else if (getRealCurrency(tenantInfo?.currency || '') === 'USD') {
                 // STRIPE PAYMENT
@@ -277,6 +280,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                                         ...prev,
                                         isUpdatingPlan: false,
                                         flutterwaveConfig: null,
+                                        paystackConfig: null,
                                         stripeConfig: null,
                                         amount: null,
                                     }))

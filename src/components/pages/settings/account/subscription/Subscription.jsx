@@ -18,7 +18,7 @@ import PaymentHistory from './components/PaymentHistory';
 import PaymentForm from './components/PaymentForm';
 import { httpGet, httpPatch } from '../../../../../helpers/httpMethods';
 import { ReactComponent as TickIcon } from '../../../../../assets/icons/tick.svg';
-import { separateNum } from '../../../../../helper';
+import { separateNum, uuid } from '../../../../../helper';
 import { getAgents } from '../../../../../reduxstore/actions/agentActions';
 import { getAdmins } from '../../../../../reduxstore/actions/adminActions';
 import { getSupervisors } from '../../../../../reduxstore/actions/supervisorActions';
@@ -39,6 +39,7 @@ function Subscription({ subscription }) {
         selectedPlan: { name: '', id: '' },
         isUpdatingPlan: false,
         flutterwaveConfig: null,
+        paystackConfig: null,
         stripeConfig: null,
         loading: false,
         amount: null,
@@ -156,7 +157,9 @@ function Subscription({ subscription }) {
                                                     />
                                                 </div>
                                                 {planState.isUpdatingPlan &&
-                                                    (planState.flutterwaveConfig || planState.stripeConfig) && (
+                                                    (planState.flutterwaveConfig ||
+                                                        planState.paystackConfig ||
+                                                        planState.stripeConfig) && (
                                                         <div>
                                                             <Summary
                                                                 planState={planState}
@@ -197,6 +200,7 @@ function Subscription({ subscription }) {
                                                     ?.filter((item) => item?.plan_type === 'main' && !item?.is_trial)
                                                     .map((item) => (
                                                         <div
+                                                            key={uuid()}
                                                             className={`${item?.is_free ? 'free-plan' : 'alpha-plan'} ${
                                                                 !(subExpired && !subscription?.plan?.is_free) &&
                                                                 item?.is_free
