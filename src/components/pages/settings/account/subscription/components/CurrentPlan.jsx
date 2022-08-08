@@ -7,7 +7,7 @@ import Select from 'react-select';
 import { useState, useEffect } from 'react';
 import FormCheck from 'react-bootstrap/FormCheck';
 // import moment from 'moment';
-import { getRealCurrency } from './SubTop';
+import { getRealCurrency, getRealCurrencyv2 } from './SubTop';
 import { httpPost } from '../../../../../../helpers/httpMethods';
 import { separateNum } from '../../../../../../helper';
 // import MoonLoader from 'react-spinners/MoonLoader';
@@ -222,41 +222,42 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
             </div>
 
             <p>
-                {separateNum(planState?.selectedPlan?.monthly_amount)}{' '}
-                {getRealCurrency(planState?.selectedPlan?.currency || '')} / agent / month
+                {getRealCurrencyv2(planState?.selectedPlan?.currency || '')}
+                {separateNum(planState?.selectedPlan?.monthly_amount)} / agent / month
             </p>
 
-            <div className="agent-count-select">
-                <div>
-                    <span>{`${separateNum(
-                        planState.numOfAgents * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
-                    )} ${getRealCurrency(tenantInfo?.currency || '')} / ${
-                        planState?.billingCycle?.value === 'monthly_amount' ? 'month' : 'year'
-                    }`}</span>
+            <div className="d-flex justify-content-between align-items-center mt-5">
+                <div className="agent-count-select">
+                    <div>
+                        <span>{`${getRealCurrencyv2(tenantInfo?.currency || '')}${separateNum(
+                            planState.numOfAgents * (planState?.selectedPlan?.[planState?.billingCycle?.value] || 0),
+                        )} / ${planState?.billingCycle?.value === 'monthly_amount' ? 'month' : 'year'}`}</span>
+                    </div>
                 </div>
-            </div>
 
-            <div className="updateplan-btn-wrapper">
-                <button onClick={handleUpdatePlanBtn} type="button" disabled={disableAfterActionBtnClick}>
-                    {Object.keys(planState?.selectedPlan || {}).length === 0 ? 'Select Plan' : 'Update Plan'}
-                </button>
-
-                {planState.isUpdatingPlan && (
-                    <button
-                        onClick={() =>
-                            setPlanState((prev) => ({
-                                ...prev,
-                                isUpdatingPlan: false,
-                                flutterwaveConfig: null,
-                                stripeConfig: null,
-                                amount: null,
-                            }))
-                        }
-                        type="button"
-                    >
-                        Cancel
+                <div className="updateplan-btn-wrapper">
+                    <button onClick={handleUpdatePlanBtn} type="button" disabled={disableAfterActionBtnClick}>
+                        Continue to Payment
+                        {/* {Object.keys(planState?.selectedPlan || {}).length === 0 ? 'Select Plan' : 'Update Plan'} */}
                     </button>
-                )}
+
+                    {planState.isUpdatingPlan && (
+                        <button
+                            onClick={() =>
+                                setPlanState((prev) => ({
+                                    ...prev,
+                                    isUpdatingPlan: false,
+                                    flutterwaveConfig: null,
+                                    stripeConfig: null,
+                                    amount: null,
+                                }))
+                            }
+                            type="button"
+                        >
+                            Cancel
+                        </button>
+                    )}
+                </div>
             </div>
         </div>
     );
