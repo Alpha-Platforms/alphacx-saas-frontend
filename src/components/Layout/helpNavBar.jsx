@@ -15,27 +15,28 @@ function HelpNavBar({ activeBG }) {
                 <img src={AlphaLogo} alt="" />
                 <img src={Logo} alt="" />
             </div>
-            <div className="nav-links">
-                {/* <p className="link">FAQ</p> */}
-                {/* <Link to="/knowledge-base/tickets">
-          <p className="link">Submit a ticket</p>
-        </Link> */}
+            {/* COMMENTED TOP LINKS */}
+            {/* <div className="nav-links">
+                <p className="link">FAQ</p>
+                <Link to="/knowledge-base/tickets">
+                  <p className="link">Submit a ticket</p>
+                </Link>
                 <Link to="/register">
                     <p className="link">Sign in</p>
                 </Link>
-                {/* <Link to={`#`}>
-            <img
-              src={ManImg}
-              alt=""
-              style={{
-                width: 30,
-                borderRadius: "50%",
-                marginLeft: '2rem',
-                transform: 'translateY(-0.3rem)'
-              }}
-            />
-          </Link> */}
-            </div>
+                <Link to={`#`}>
+                  <img
+                    src={ManImg}
+                    alt=""
+                    style={{
+                      width: 30,
+                      borderRadius: "50%",
+                      marginLeft: '2rem',
+                      transform: 'translateY(-0.3rem)'
+                    }}
+                  />
+                </Link>
+            </div> */}
         </div>
     );
 }
