@@ -472,7 +472,11 @@ function Navbar({ pageName, user }) {
                                     </span>
                                 ) : (
                                     <span>
-                                        {actualSubTime ? `Your ${planName} has expired ${actualSubTime} ago.` : '...'}
+                                        {actualSubTime
+                                            ? `Your ${planName} has expired ${
+                                                  Math.abs(daysLeft) > 0 ? `${actualSubTime} ago` : ''
+                                              }.`
+                                            : '...'}
                                     </span>
                                 )}{' '}
                                 <Link

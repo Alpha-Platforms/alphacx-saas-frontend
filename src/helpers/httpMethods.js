@@ -5,14 +5,18 @@
 import { NotificationManager } from 'react-notifications';
 import { parseDomain, ParseResultType } from 'parse-domain';
 import { customAxios as axios } from '../helper';
+import { config } from '../config/keys';
 
 // if (process.env.REACT_APP_ENVIRONMENT === 'cardinal') {
 //   export let baseUrl = process.env.REACT_APP_AUTH_BASE_URL_CARDINAL;
 //   export let baseUrlMain = process.env.REACT_APP_API_BASE_URL_CARDINAL;
 
 // } else {
-export const baseUrl = process.env.REACT_APP_AUTH_BASE_URL;
-export const baseUrlMain = process.env.REACT_APP_API_BASE_URL;
+// export const baseUrl = process.env.REACT_APP_AUTH_BASE_URL;
+// export const baseUrlMain = process.env.REACT_APP_API_BASE_URL;
+const { authBaseUrl, stagingBaseUrl } = config;
+export const baseUrl = authBaseUrl;
+export const baseUrlMain = stagingBaseUrl;
 
 export const invalidTenant = 'invalid-tenant';
 

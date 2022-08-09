@@ -351,6 +351,12 @@ export const centToDollarCent = (centValue) => {
     return [dollar, cent];
 };
 
+export const centToDollarCentv2 = (centValue) => {
+    const dollar = separateNum(Math.trunc(centValue / 100));
+    const cent = (centValue / 100).toFixed(2).toString().split('.').slice(-1);
+    return `${dollar}.${cent}`;
+};
+
 /**
  * check if a plan has a feature
  */

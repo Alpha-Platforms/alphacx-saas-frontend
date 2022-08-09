@@ -9,7 +9,7 @@ import { connect, useDispatch } from 'react-redux';
 import MoonLoader from 'react-spinners/MoonLoader';
 import moment from 'moment';
 import { Modal } from 'react-responsive-modal';
-import SubTop, { getRealCurrency } from './components/SubTop';
+import SubTop, { getRealCurrencyv2 } from './components/SubTop';
 import CurrentPlan from './components/CurrentPlan';
 import Summary from './components/Summary';
 import BillingDetails from './components/BillingDetails';
@@ -18,7 +18,7 @@ import PaymentHistory from './components/PaymentHistory';
 import PaymentForm from './components/PaymentForm';
 import { httpGet, httpPatch } from '../../../../../helpers/httpMethods';
 import { ReactComponent as TickIcon } from '../../../../../assets/icons/tick.svg';
-import { separateNum } from '../../../../../helper';
+import { separateNum, uuid } from '../../../../../helper';
 import { getAgents } from '../../../../../reduxstore/actions/agentActions';
 import { getAdmins } from '../../../../../reduxstore/actions/adminActions';
 import { getSupervisors } from '../../../../../reduxstore/actions/supervisorActions';
@@ -31,6 +31,7 @@ function Subscription({ subscription }) {
     const [tenantInfo, setTenantInfo] = useState(null);
     const [plans, setPlans] = useState(null);
     const [openModal, setOpenModal] = useState(false);
+    const [isPlanSelectionYearly, setIsPlanSelectionMonthly] = useState(false);
 
     const [planState, setPlanState] = useState({
         numOfAgents: 0,
@@ -38,6 +39,7 @@ function Subscription({ subscription }) {
         selectedPlan: { name: '', id: '' },
         isUpdatingPlan: false,
         flutterwaveConfig: null,
+        paystackConfig: null,
         stripeConfig: null,
         loading: false,
         amount: null,
@@ -51,7 +53,12 @@ function Subscription({ subscription }) {
     const totalUsers = subscription?.subscription?.totalUsers;
 
     useEffect(() => {
-        setPlanState((prev) => ({ ...prev, numOfAgents: totalUsers }));
+        setPlanState((prev) => ({
+            ...prev,
+            numOfAgents: totalUsers,
+            selectingPlan: !(subscription?.plan?.is_free || subscription?.plan?.is_trial),
+            selectedPlan: subscription?.plan,
+        }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -139,21 +146,6 @@ function Subscription({ subscription }) {
                                 <>
                                     {planState.selectingPlan ? (
                                         <div>
-                                            <p className="current-plan-text">
-                                                <small>
-                                                    Plan selected: Alpha Plan &nbsp;{' '}
-                                                    <button
-                                                        type="button"
-                                                        className="btn"
-                                                        onClick={() =>
-                                                            setPlanState((prev) => ({ ...prev, selectingPlan: false }))
-                                                        }
-                                                    >
-                                                        ✖
-                                                    </button>
-                                                </small>
-                                            </p>
-
                                             <div className="payment-sect-2">
                                                 <div>
                                                     <CurrentPlan
@@ -165,7 +157,9 @@ function Subscription({ subscription }) {
                                                     />
                                                 </div>
                                                 {planState.isUpdatingPlan &&
-                                                    (planState.flutterwaveConfig || planState.stripeConfig) && (
+                                                    (planState.flutterwaveConfig ||
+                                                        planState.paystackConfig ||
+                                                        planState.stripeConfig) && (
                                                         <div>
                                                             <Summary
                                                                 planState={planState}
@@ -184,105 +178,130 @@ function Subscription({ subscription }) {
                                         </div>
                                     ) : (
                                         <div className="plan-selection">
-                                            {plans
-                                                ?.filter((item) => item?.plan_type === 'main' && !item?.is_trial)
-                                                .map((item) => (
-                                                    <div
-                                                        className={`${item?.is_free ? 'free-plan' : 'alpha-plan'} ${
-                                                            !(subExpired && !subscription?.plan?.is_free) &&
-                                                            item?.is_free
-                                                                ? 'free-plan-disabled'
-                                                                : ''
-                                                        }`}
-                                                    >
-                                                        <div>
-                                                            <p>{item?.name}</p>
-                                                            {item?.is_free ? (
-                                                                <h3>Free</h3>
-                                                            ) : (
-                                                                <h3>
-                                                                    {getRealCurrency(item?.currency) === 'NGN'
-                                                                        ? '₦'
-                                                                        : '$'}
-                                                                    {separateNum(item?.monthly_amount)}{' '}
-                                                                    <small className="fs-6">/ user / month</small>
-                                                                </h3>
-                                                            )}
-                                                        </div>
-                                                        <div>
-                                                            <ul className="features-list">
-                                                                <li>
-                                                                    <span>
-                                                                        <TickIcon />
-                                                                    </span>{' '}
-                                                                    <span>Conversational Inbox</span>
-                                                                </li>
-                                                                <li>
-                                                                    <span>
-                                                                        <TickIcon />
-                                                                    </span>{' '}
-                                                                    <span>Embeddable Livechat Widget</span>
-                                                                </li>
-                                                                <li>
-                                                                    <span>
-                                                                        <TickIcon />
-                                                                    </span>{' '}
-                                                                    <span>Facebook Integration</span>
-                                                                </li>
-                                                                <li>
-                                                                    <span>
-                                                                        <TickIcon />
-                                                                    </span>{' '}
-                                                                    <span>WhatsApp Integration</span>
-                                                                </li>
-                                                                <li>
-                                                                    <span>
-                                                                        <TickIcon />
-                                                                    </span>{' '}
-                                                                    <span>Automation & Escalation</span>
-                                                                </li>
-                                                                <li>
-                                                                    <span>
-                                                                        <TickIcon />
-                                                                    </span>{' '}
-                                                                    <span>Knowledge Base System</span>
-                                                                </li>
-                                                            </ul>
+                                            <div className="duration-toggle-wrapper">
+                                                <div>
+                                                    <span>Montly</span>
+                                                    <div className="custom-toggle-wrapper d-inline-block">
+                                                        <input
+                                                            type="checkbox"
+                                                            id="switch"
+                                                            onChange={() => setIsPlanSelectionMonthly((prev) => !prev)}
+                                                            checked={isPlanSelectionYearly}
+                                                        />
+                                                        <label htmlFor="switch">Toggle</label>
+                                                    </div>
+                                                    <span>
+                                                        Annual <span>25% off</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="plan-selection-body">
+                                                {plans
+                                                    ?.filter((item) => item?.plan_type === 'main' && !item?.is_trial)
+                                                    .map((item) => (
+                                                        <div
+                                                            key={uuid()}
+                                                            className={`${item?.is_free ? 'free-plan' : 'alpha-plan'} ${
+                                                                !(subExpired && !subscription?.plan?.is_free) &&
+                                                                item?.is_free
+                                                                    ? 'free-plan-disabled'
+                                                                    : ''
+                                                            }`}
+                                                        >
                                                             <div>
+                                                                <p>{item?.name}</p>
                                                                 {item?.is_free ? (
-                                                                    <button
-                                                                        type="button"
-                                                                        className="btn btn-outline-primary"
-                                                                        disabled={
-                                                                            !(
-                                                                                subExpired &&
-                                                                                !subscription?.plan?.is_free
-                                                                            ) && item?.is_free
-                                                                        }
-                                                                        onClick={() => setOpenModal(true)}
-                                                                    >
-                                                                        Activate
-                                                                    </button>
+                                                                    <h3>Free</h3>
                                                                 ) : (
-                                                                    <button
-                                                                        type="button"
-                                                                        className="btn bg-at-blue-light"
-                                                                        style={{ color: 'white' }}
-                                                                        onClick={() =>
-                                                                            setPlanState((prev) => ({
-                                                                                ...prev,
-                                                                                selectingPlan: true,
-                                                                                selectedPlan: item,
-                                                                            }))
-                                                                        }
-                                                                    >
-                                                                        Select Plan
-                                                                    </button>
+                                                                    <h3>
+                                                                        {getRealCurrencyv2(item?.currency)}
+                                                                        {separateNum(
+                                                                            isPlanSelectionYearly
+                                                                                ? item?.yearly_amount
+                                                                                : item?.monthly_amount,
+                                                                        )}{' '}
+                                                                        <small className="fs-6">
+                                                                            / user /{' '}
+                                                                            {isPlanSelectionYearly ? 'year' : 'month'}
+                                                                        </small>
+                                                                    </h3>
                                                                 )}
                                                             </div>
+                                                            <div>
+                                                                <ul className="features-list">
+                                                                    <li>
+                                                                        <span>
+                                                                            <TickIcon />
+                                                                        </span>{' '}
+                                                                        <span>Conversational Inbox</span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>
+                                                                            <TickIcon />
+                                                                        </span>{' '}
+                                                                        <span>Embeddable Livechat Widget</span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>
+                                                                            <TickIcon />
+                                                                        </span>{' '}
+                                                                        <span>Facebook Integration</span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>
+                                                                            <TickIcon />
+                                                                        </span>{' '}
+                                                                        <span>WhatsApp Integration</span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>
+                                                                            <TickIcon />
+                                                                        </span>{' '}
+                                                                        <span>Automation & Escalation</span>
+                                                                    </li>
+                                                                    <li>
+                                                                        <span>
+                                                                            <TickIcon />
+                                                                        </span>{' '}
+                                                                        <span>Knowledge Base System</span>
+                                                                    </li>
+                                                                </ul>
+                                                                <div>
+                                                                    {item?.is_free ? (
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn btn-outline-primary"
+                                                                            disabled={
+                                                                                !(
+                                                                                    subExpired &&
+                                                                                    !subscription?.plan?.is_free
+                                                                                ) && item?.is_free
+                                                                            }
+                                                                            onClick={() => setOpenModal(true)}
+                                                                        >
+                                                                            Activate
+                                                                        </button>
+                                                                    ) : (
+                                                                        <button
+                                                                            type="button"
+                                                                            className="btn bg-at-blue-light"
+                                                                            style={{ color: 'white' }}
+                                                                            onClick={() =>
+                                                                                setPlanState((prev) => ({
+                                                                                    ...prev,
+                                                                                    selectingPlan: true,
+                                                                                    selectedPlan: item,
+                                                                                }))
+                                                                            }
+                                                                        >
+                                                                            Select Plan
+                                                                        </button>
+                                                                    )}
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                ))}
+                                                    ))}
+                                            </div>
                                         </div>
                                     )}
                                     <Modal open={openModal} onClose={() => setOpenModal(false)} center>
