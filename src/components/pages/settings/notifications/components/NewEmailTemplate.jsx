@@ -68,10 +68,6 @@ function NewEmailTemplate({ addEmailTemplate }) {
         });
     };
 
-    const submitEmailTemplate = async () => {
-        console.clear();
-    };
-
     const history = useHistory();
 
     const redirectUser = () => {
@@ -162,7 +158,7 @@ function NewEmailTemplate({ addEmailTemplate }) {
                                     value={newTemplate.type || ''}
                                     onChange={handleChange}
                                 >
-                                    <option disabled selected>
+                                    <option value="">
                                         Select category
                                     </option>
                                     <option value="statusAutoResponse">Status Auto Response</option>

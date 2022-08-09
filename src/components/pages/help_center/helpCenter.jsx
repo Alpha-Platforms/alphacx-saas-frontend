@@ -78,7 +78,8 @@ function HelpCenter() {
                     <div className="help-center">
                         <div className="search-container">
                             <img src={LogoBG} alt="" className="logo-bg" />
-                            <h3>How can we help?</h3>
+                            {/* COMMENT SEARCH FIELD */}
+                            {/* <h3>How can we help?</h3>
                             <div className="searchbar">
                                 <div className="icon">
                                     <SearchIconNavbr />
@@ -94,7 +95,7 @@ function HelpCenter() {
                                         <SendIcon size={30} />
                                     </button>
                                 </form>
-                            </div>
+                            </div> */}
                         </div>
                         {categories.length === 0 ? (
                             <div

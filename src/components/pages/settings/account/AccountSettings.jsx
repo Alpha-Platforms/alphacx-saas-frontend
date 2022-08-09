@@ -610,235 +610,237 @@ function AccountSettings() {
                                 value={defaultCountry}
                             />
                         </div>
-                        {/* Live */}
-                        <div className="row">
-                            <div className="mb-3 col-6">
-                                <label className="form-label">App Icon</label>
-                                <div
-                                    ref={appIconWrapper}
-                                    onDragOver={(e) => {
-                                        e.stopPropagation();
-                                        e.preventDefault();
-                                        addDropSignal(appIconWrapper);
-                                    }}
-                                    onDragLeave={() => removeDropSignal(appIconWrapper)}
-                                    onDragEnd={() => removeDropSignal(appIconWrapper)}
-                                    onDrop={(e) => handleImageDrop(e, appIconFile, 'app-icon', appIconWrapper)}
-                                    className="d-grid align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative"
-                                >
-                                    {(appIcon.errorMsg || appIcon.blob || appIcon.image || appIcon.imageFile) && (
-                                        <button
-                                            type="button"
-                                            className="clear-upl-img"
-                                            onClick={() => clearSelectedImage('app-icon')}
-                                        >
-                                            ×
-                                        </button>
-                                    )}
-                                    <div
-                                        onClick={() => triggerFileSelect(appIconFile)}
-                                        style={{
-                                            width: '6rem',
-                                            height: '6rem',
-                                            border: '1px dashed #dee2e6',
-                                        }}
-                                        className="
-                                            rounded-3
-                                            d-flex
-                                            justify-content-center
-                                            align-items-center
-                                            "
-                                    >
+                        {/* BRANDING FIELDS TURNED OFF */}
+                        {false && (
+                            <>
+                                <div className="row">
+                                    <div className="mb-3 col-6">
+                                        <label className="form-label">App Icon</label>
                                         <div
-                                            style={{
-                                                justifyContent: 'center',
-                                                height: '100%',
-                                                width: '100%',
+                                            ref={appIconWrapper}
+                                            onDragOver={(e) => {
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                                addDropSignal(appIconWrapper);
                                             }}
-                                            className="ms-0 d-flex justify-content-between align-items-center"
+                                            onDragLeave={() => removeDropSignal(appIconWrapper)}
+                                            onDragEnd={() => removeDropSignal(appIconWrapper)}
+                                            onDrop={(e) => handleImageDrop(e, appIconFile, 'app-icon', appIconWrapper)}
+                                            className="d-grid align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative"
                                         >
-                                            {appIcon.blob || appIcon.image ? (
-                                                <img
-                                                    className="avatarImage"
-                                                    src={appIcon.blob || appIcon.image}
-                                                    alt=""
-                                                    onLoad={() => appIcon.blob && URL.revokeObjectURL(appIcon.blob)}
-                                                    style={{
-                                                        maxWidth: '100%',
-                                                        maxHeight: '100%',
-                                                    }}
-                                                />
-                                            ) : (
-                                                <img
-                                                    src={ImageDefault}
-                                                    alt=""
-                                                    style={{
-                                                        paddingLeft: '2.1rem',
-                                                    }}
-                                                    className="pe-none"
-                                                />
+                                            {(appIcon.errorMsg || appIcon.blob || appIcon.image || appIcon.imageFile) && (
+                                                <button
+                                                    type="button"
+                                                    className="clear-upl-img"
+                                                    onClick={() => clearSelectedImage('app-icon')}
+                                                >
+                                                    ×
+                                                </button>
                                             )}
+                                            <div
+                                                onClick={() => triggerFileSelect(appIconFile)}
+                                                style={{
+                                                    width: '6rem',
+                                                    height: '6rem',
+                                                    border: '1px dashed #dee2e6',
+                                                }}
+                                                className="
+                                                    rounded-3
+                                                    d-flex
+                                                    justify-content-center
+                                                    align-items-center
+                                                    "
+                                            >
+                                                <div
+                                                    style={{
+                                                        justifyContent: 'center',
+                                                        height: '100%',
+                                                        width: '100%',
+                                                    }}
+                                                    className="ms-0 d-flex justify-content-between align-items-center"
+                                                >
+                                                    {appIcon.blob || appIcon.image ? (
+                                                        <img
+                                                            className="avatarImage"
+                                                            src={appIcon.blob || appIcon.image}
+                                                            alt=""
+                                                            onLoad={() => appIcon.blob && URL.revokeObjectURL(appIcon.blob)}
+                                                            style={{
+                                                                maxWidth: '100%',
+                                                                maxHeight: '100%',
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <img
+                                                            src={ImageDefault}
+                                                            alt=""
+                                                            style={{
+                                                                paddingLeft: '2.1rem',
+                                                            }}
+                                                            className="pe-none"
+                                                        />
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div
+                                                className="h-100 d-inline-flex justify-content-center align-items-center"
+                                                onClick={() => triggerFileSelect(appIconFile)}
+                                            >
+                                                <input
+                                                    type="file"
+                                                    name="app-icon"
+                                                    id="app-icon"
+                                                    ref={appIconFile}
+                                                    onChange={(e) => handleImgSelect(e.target.files, 'app-icon')}
+                                                />
+                                                <p className="mb-0 user-select-none">{appIcon.msg}</p>
+                                            </div>
+                                        </div>
+                                        {
+                                            /* simple validation */
+                                            simpleValidator.current.message(
+                                                'app-icon',
+                                                appIcon,
+                                                `no_file_select_err:${appIcon?.errorMsg}`,
+                                            )
+                                        }
+                                    </div>
+                                    <div className="mb-3 col-6">
+                                        <label className="form-label">App Logo</label>
+                                        <div
+                                            ref={appLogoWrapper}
+                                            onDragOver={(e) => {
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                                addDropSignal(appLogoWrapper);
+                                            }}
+                                            onDragLeave={() => removeDropSignal(appLogoWrapper)}
+                                            onDragEnd={() => removeDropSignal(appLogoWrapper)}
+                                            onDrop={(e) => handleImageDrop(e, appLogoFile, 'app-logo', appLogoWrapper)}
+                                            className="d-grid align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative drag-zone"
+                                        >
+                                            {(appLogo.errorMsg || appLogo.blob || appLogo.image || appLogo.imageFile) && (
+                                                <button
+                                                    type="button"
+                                                    className="clear-upl-img"
+                                                    onClick={() => clearSelectedImage('app-logo')}
+                                                >
+                                                    ×
+                                                </button>
+                                            )}
+                                            <div
+                                                onClick={() => triggerFileSelect(appLogoFile)}
+                                                style={{
+                                                    width: '6rem',
+                                                    height: '6rem',
+                                                    border: '1px dashed #dee2e6',
+                                                }}
+                                                className="
+                                                    rounded-3
+                                                    d-flex
+                                                    justify-content-center
+                                                    align-items-center
+                                                    "
+                                            >
+                                                <div
+                                                    style={{
+                                                        justifyContent: 'center',
+                                                        height: '100%',
+                                                        width: '100%',
+                                                    }}
+                                                    className="ms-0 d-flex justify-content-between align-items-center"
+                                                >
+                                                    {appLogo.blob || appLogo.image ? (
+                                                        <img
+                                                            className="avatarImage"
+                                                            src={appLogo.blob || appLogo.image}
+                                                            alt=""
+                                                            onLoad={() => appLogo.blob && URL.revokeObjectURL(appLogo.blob)}
+                                                            style={{
+                                                                maxWidth: '100%',
+                                                                maxHeight: '100%',
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <img
+                                                            src={ImageDefault}
+                                                            alt=""
+                                                            style={{
+                                                                paddingLeft: '2.1rem',
+                                                            }}
+                                                            className="pe-none"
+                                                        />
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <div
+                                                className="h-100 d-inline-flex justify-content-center align-items-center"
+                                                onClick={() => triggerFileSelect(appLogoFile)}
+                                            >
+                                                <input
+                                                    type="file"
+                                                    name="app-logo"
+                                                    id="app-logo"
+                                                    ref={appLogoFile}
+                                                    onChange={(e) => handleImgSelect(e.target.files, 'app-logo')}
+                                                />
+                                                <p className="mb-0 user-select-none">{appLogo.msg}</p>
+                                            </div>
+                                        </div>
+                                        {
+                                            /* simple validation */
+                                            simpleValidator.current.message(
+                                                'app-logo',
+                                                appLogo,
+                                                `no_file_select_err:${appLogo?.errorMsg}`,
+                                            )
+                                        }
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="form-group col-6 mb-3">
+                                        <label className="f-14 mb-1">App Color</label>
+                                        <div
+                                            className="d-flex border justify-content-between align-items-center p-2"
+                                            onClick={() => document.querySelector('.organisation_app_color')?.click()}
+                                        >
+                                            <span>{organisation?.branding?.appColor || '#000000'}</span>
+                                            <input
+                                                type="color"
+                                                value={organisation?.branding?.appColor || '#000000'}
+                                                name="appColor"
+                                                onChange={handleChange}
+                                                className="colorThemeInput"
+                                                id="colorThemeInput"
+                                            />
                                         </div>
                                     </div>
-                                    <div
-                                        className="h-100 d-inline-flex justify-content-center align-items-center"
-                                        onClick={() => triggerFileSelect(appIconFile)}
-                                    >
-                                        <input
-                                            type="file"
-                                            name="app-icon"
-                                            id="app-icon"
-                                            ref={appIconFile}
-                                            onChange={(e) => handleImgSelect(e.target.files, 'app-icon')}
-                                        />
-                                        <p className="mb-0 user-select-none">{appIcon.msg}</p>
-                                    </div>
-                                </div>
-                                {
-                                    /* simple validation */
-                                    simpleValidator.current.message(
-                                        'app-icon',
-                                        appIcon,
-                                        `no_file_select_err:${appIcon?.errorMsg}`,
-                                    )
-                                }
-                            </div>
-                            <div className="mb-3 col-6">
-                                <label className="form-label">App Logo</label>
-                                <div
-                                    ref={appLogoWrapper}
-                                    onDragOver={(e) => {
-                                        e.stopPropagation();
-                                        e.preventDefault();
-                                        addDropSignal(appLogoWrapper);
-                                    }}
-                                    onDragLeave={() => removeDropSignal(appLogoWrapper)}
-                                    onDragEnd={() => removeDropSignal(appLogoWrapper)}
-                                    onDrop={(e) => handleImageDrop(e, appLogoFile, 'app-logo', appLogoWrapper)}
-                                    className="d-grid align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative drag-zone"
-                                >
-                                    {(appLogo.errorMsg || appLogo.blob || appLogo.image || appLogo.imageFile) && (
-                                        <button
-                                            type="button"
-                                            className="clear-upl-img"
-                                            onClick={() => clearSelectedImage('app-logo')}
-                                        >
-                                            ×
-                                        </button>
-                                    )}
-                                    <div
-                                        onClick={() => triggerFileSelect(appLogoFile)}
-                                        style={{
-                                            width: '6rem',
-                                            height: '6rem',
-                                            border: '1px dashed #dee2e6',
-                                        }}
-                                        className="
-                                            rounded-3
-                                            d-flex
-                                            justify-content-center
-                                            align-items-center
-                                            "
-                                    >
+                                    <div className="form-group col-6 mb-3">
+                                        <label className="f-14 mb-1">Knowledge Base Hero Color</label>
                                         <div
-                                            style={{
-                                                justifyContent: 'center',
-                                                height: '100%',
-                                                width: '100%',
-                                            }}
-                                            className="ms-0 d-flex justify-content-between align-items-center"
+                                            className="d-flex border justify-content-between align-items-center p-2"
+                                            onClick={() => document.querySelector('.organisation_kb_hero_color')?.click()}
                                         >
-                                            {appLogo.blob || appLogo.image ? (
-                                                <img
-                                                    className="avatarImage"
-                                                    src={appLogo.blob || appLogo.image}
-                                                    alt=""
-                                                    onLoad={() => appLogo.blob && URL.revokeObjectURL(appLogo.blob)}
-                                                    style={{
-                                                        maxWidth: '100%',
-                                                        maxHeight: '100%',
-                                                    }}
-                                                />
-                                            ) : (
-                                                <img
-                                                    src={ImageDefault}
-                                                    alt=""
-                                                    style={{
-                                                        paddingLeft: '2.1rem',
-                                                    }}
-                                                    className="pe-none"
-                                                />
-                                            )}
+                                            <span>{organisation?.branding?.kbHeroColor || '#000000'}</span>
+                                            <input
+                                                type="color"
+                                                value={organisation?.branding?.kbHeroColor || '#000000'}
+                                                name="kbHeroColor"
+                                                onChange={handleChange}
+                                                className="colorThemeInput organisation_kb_hero_color"
+                                                id="colorThemeInput"
+                                            />
                                         </div>
                                     </div>
-                                    <div
-                                        className="h-100 d-inline-flex justify-content-center align-items-center"
-                                        onClick={() => triggerFileSelect(appLogoFile)}
-                                    >
-                                        <input
-                                            type="file"
-                                            name="app-logo"
-                                            id="app-logo"
-                                            ref={appLogoFile}
-                                            onChange={(e) => handleImgSelect(e.target.files, 'app-logo')}
-                                        />
-                                        <p className="mb-0 user-select-none">{appLogo.msg}</p>
-                                    </div>
                                 </div>
-                                {
-                                    /* simple validation */
-                                    simpleValidator.current.message(
-                                        'app-logo',
-                                        appLogo,
-                                        `no_file_select_err:${appLogo?.errorMsg}`,
-                                    )
-                                }
-                            </div>
-                        </div>
-                        {/* END */}
-                        <div className="row">
-                            <div className="form-group col-6 mb-3">
-                                <label className="f-14 mb-1">App Color</label>
-                                <div
-                                    className="d-flex border justify-content-between align-items-center p-2"
-                                    onClick={() => document.querySelector('.organisation_app_color')?.click()}
-                                >
-                                    <span>{organisation?.branding?.appColor || '#000000'}</span>
-                                    <input
-                                        type="color"
-                                        value={organisation?.branding?.appColor || '#000000'}
-                                        name="appColor"
-                                        onChange={handleChange}
-                                        className="colorThemeInput"
-                                        id="colorThemeInput"
-                                    />
-                                </div>
-                            </div>
-                            <div className="form-group col-6 mb-3">
-                                <label className="f-14 mb-1">Knowledge Base Hero Color</label>
-                                <div
-                                    className="d-flex border justify-content-between align-items-center p-2"
-                                    onClick={() => document.querySelector('.organisation_kb_hero_color')?.click()}
-                                >
-                                    <span>{organisation?.branding?.kbHeroColor || '#000000'}</span>
-                                    <input
-                                        type="color"
-                                        value={organisation?.branding?.kbHeroColor || '#000000'}
-                                        name="kbHeroColor"
-                                        onChange={handleChange}
-                                        className="colorThemeInput organisation_kb_hero_color"
-                                        id="colorThemeInput"
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                            </>
+                        )}
                     </div>
                     <div className="text-end col-md-8 mt-4 mb-4 pt-2 pb-3">
                         <button
                             type="button"
                             className="btn btn-sm bg-at-blue-light text-white px-4"
                             onClick={updateUserInfo}
-                            // disabled={true}
                         >
                             Save Changes
                         </button>

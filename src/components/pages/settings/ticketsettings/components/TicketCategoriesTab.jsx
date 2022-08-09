@@ -172,27 +172,15 @@ function TicketCategoriesTab({
                                         title: '',
                                         field: 'action',
                                         render: (rowData) => (
-                                            <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
-                                                <Dropdown.Toggle variant="transparent" size="sm">
-                                                    <span className="cust-table-dots">
-                                                        <DotSvg />
-                                                    </span>
-                                                </Dropdown.Toggle>
-                                                <Dropdown.Menu>
-                                                    <Dropdown.Item
-                                                        eventKey="1"
-                                                        onClick={openModal.bind({
-                                                            id: rowData.catId,
-                                                            name: rowData.category,
-                                                        })}
-                                                    >
-                                                        <span className="black-text">Edit</span>
-                                                    </Dropdown.Item>
-                                                    <Dropdown.Item eventKey="2">
-                                                        <span className="black-text">Delete</span>
-                                                    </Dropdown.Item>
-                                                </Dropdown.Menu>
-                                            </Dropdown>
+                                            <button
+                                                onClick={openModal.bind({
+                                                    id: rowData.catId,
+                                                    name: rowData.category,
+                                                })}
+                                                className="deleteFieldBtn btn no-focus btn-link d-flex align-items-center pe-0 me-0"
+                                            >
+                                                <EditGreySvg />
+                                            </button>
                                         ),
                                     },
                                 ]}

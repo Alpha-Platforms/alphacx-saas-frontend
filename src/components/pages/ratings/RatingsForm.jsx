@@ -34,12 +34,12 @@ export default function RatingsForm() {
     //
     const [showModal, setShowModal] = useState(false);
     //
-    const { domain, ticketId, customerId } = useParams();
+    const { ticketId, customerId } = useParams();
     //
 
     useEffect(() => {
-        getRatingConfig(domain);
-    }, [domain]);
+        getRatingConfig(location.hostname.split('.')[0]);
+    }, [ticketId, customerId ]);
 
     const getRatingConfig = async (domain) => {
         const headers = {
@@ -79,7 +79,7 @@ export default function RatingsForm() {
             comment,
         };
         const headers = {
-            domain,
+            domain: location.hostname.split('.')[0],
         };
         const res = await httpPostNoAuth(`ratings`, data, headers);
         if (res?.status === 'success') {
