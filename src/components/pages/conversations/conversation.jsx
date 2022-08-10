@@ -76,10 +76,10 @@ function YouTubeGetID(url) {
     return ID;
 }
 
-function WelcomeText({ userId }) {
+function RightPane({ userId, showOnboarding }) {
     return (
         <>
-            <div className="m-3">
+            <div className="border mt-3 p-3 rounded">
                 <p className="fw-bold border-bottom mb-3">Welcome on Board!</p>
                 <p className="mb-1">
                     We are excited you chose AlphaCX for your customer engagement. AlphaCX is easy to use, however you
@@ -99,9 +99,8 @@ function WelcomeText({ userId }) {
                 </p>
             </div>
 
-            <OnboardingModal />
-
-            <AppNotification userId={userId} />
+            <OnboardingModal showOnboarding={showOnboarding} />
+            {!showOnboarding && <AppNotification userId={userId} />}
         </>
     );
 }
@@ -172,7 +171,7 @@ const filterThroughTickets = async (tickets, userInput) => {
     });
 };
 
-function Conversation({ user, appSocket, socketMessage }) {
+function Conversation({ user, appSocket, socketMessage, agents, configs, isAgentsLoaded, isConfigsLoaded }) {
     const initialState = EditorState.createWithContent(ContentState.createFromText(''));
     // const { AppSocket } = useContext(SocketDataContext);
     const [tickets, setTickets] = useState([]);
@@ -249,6 +248,23 @@ function Conversation({ user, appSocket, socketMessage }) {
         tickets: [],
     });
     const location = useLocation();
+
+    const [showOnboarding, setShowOnboarding] = useState(false);
+
+    useEffect(() => {
+        if (isAgentsLoaded && isConfigsLoaded) {
+            if (
+                agents?.length === 0 ||
+                Object.entries(configs?.facebook_config || {}).length === 0 ||
+                Object.entries(configs?.instagram_config || {}).length === 0 ||
+                Object.entries(configs?.livechat_config || {}).length === 0 ||
+                Object.entries(configs?.email_config || {}).length === 0
+            ) {
+                setShowOnboarding(true);
+            }
+        }
+
+    }, [agents, configs]);
 
     const searchThroughTickets = async (e) => {
         const userInput = e.target.value;
@@ -1660,7 +1676,7 @@ function Conversation({ user, appSocket, socketMessage }) {
                     <div className="conversation-layout-col-three">
                         {firstTimeLoad ? (
                             // <p>Lorem ipsum dolor sit amet.</p>
-                            <WelcomeText userId={user.id} />
+                            <RightPane userId={user.id} showOnboarding={showOnboarding} />
                         ) : loadSingleTicket ? (
                             <div
                                 style={{
@@ -1987,21 +2003,6 @@ function Conversation({ user, appSocket, socketMessage }) {
                                     ) : (
                                         ''
                                     )}
-                                    {/* <div className="col-12 mt-3">
-                    <label htmlFor="title" className="form-label">Attachment (If Any)</label>
-                    <div
-                        id="ticket-ath-box"
-                        className="border border-1 d-block text-center f-14 p-3 position-relative">
-                        <img src={PinIcon} alt=""/>
-                        <span className="text-at-blue-light">Add file</span>&nbsp;
-                        <span>or drag file here</span>
-                        <input type="file" 
-                          className="position-absolute top-0 bottom-0 end-0 start-0 w-100 h-100" 
-                          style={{ "zIndex": 1200 }}
-                          // onChange={} 
-                          />
-                    </div>
-                  </div> */}
                                 </div>
                             )}
                             <div className="text-end mt-3">
@@ -2033,5 +2034,9 @@ const mapStateToProps = (state) => ({
     user: state.userAuth.user,
     appSocket: state.socket.appSocket,
     socketMessage: state.socket?.socketMessage,
+    agents: state.agent.agents,
+    isAgentsLoaded: state.agent.isAgentsLoaded,
+    configs: state.config.configs,
+    isConfigsLoaded: state.config.isConfigsLoaded,
 });
 export default connect(mapStateToProps)(Conversation);
