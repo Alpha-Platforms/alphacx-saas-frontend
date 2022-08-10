@@ -1019,7 +1019,7 @@ select {
   width: 25%;
   height: 100%;
   overflow: hidden;
-  border-left: 1px solid rgba(0, 98, 152, 0.1);
+  /* border-left: 1px solid rgba(0, 98, 152, 0.1); */
 }
 
 .conversation-layout-col-three::-webkit-scrollbar {

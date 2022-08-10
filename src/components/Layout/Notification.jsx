@@ -105,7 +105,7 @@ function AppNotification({ userId }) {
     };
 
     return (
-        <div className="h-50 m-3 overflow-scroll">
+        <div className="h-50 border mt-3 p-3 rounded overflow-scroll">
             {!isUnreadNotificiations && <p className="fw-bold border-bottom mb-2">Notifications</p>}
             {notifications
                 .slice(0)

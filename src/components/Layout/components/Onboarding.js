@@ -37,11 +37,10 @@ function OnboardingModal({
     isConfigsLoaded,
     getAgents,
     getConfigs,
+    showOnboarding
 }) {
     //
     const history = useHistory();
-
-    const [showOnboarding, setShowOnboarding] = useState(false)
 
     const [facebookConnectPage, setFacebookConnectPage] = useState('');
     const [instagramConnectPage, setInstagramConnectPage] = useState('');
@@ -72,15 +71,6 @@ function OnboardingModal({
             getConfigs();
         }
     }, [isUserAuthenticated]);
-
-    useEffect(() => {
-        if (isAgentsLoaded && isConfigsLoaded) {
-            if (agents?.length == 0 || Object.entries(configs?.facebook_config || {}).length == 0 || Object.entries(configs?.instagram_config || {}).length == 0 || Object.entries(configs?.livechat_config || {}).length == 0 || Object.entries(configs?.email_config || {}).length == 0) {
-                setShowOnboarding(true)
-            }
-        }
-
-    }, [agents, configs]);
     
     const gotToPage = (page, state = {}) => {
         history.push({
@@ -93,7 +83,7 @@ function OnboardingModal({
 
     return (
         showOnboarding &&
-            (<div className="m-3 onboarding">
+            (<div className="border mt-3 p-3 rounded onboarding">
                 <p className="fw-bold border-bottom mb-3">Onboarding Checklist</p>
                 <div>
                     <div className="">
