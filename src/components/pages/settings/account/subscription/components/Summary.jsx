@@ -2,16 +2,21 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/prop-types */
 // @ts-nocheck
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
+import { usePaystackPayment } from 'react-paystack';
 import { NotificationManager } from 'react-notifications';
 import { loadStripe } from '@stripe/stripe-js';
+import ClipLoader from 'react-spinners/ClipLoader';
 import { CardElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
 import { httpPost } from '../../../../../../helpers/httpMethods';
-import { getRealCurrency } from './SubTop';
-import { separateNum, centToDollarCent } from '../../../../../../helper';
+import { getRealCurrency, getRealCurrencyv2 } from './SubTop';
+import { separateNum, centToDollarCentv2 } from '../../../../../../helper';
 import acxLogo from '../../../../../../assets/images/whitebg.jpg';
+import { config } from '../../../../../../config/keys';
+
+const { paystackPublicKey, flutterwavePublicKey } = config;
 
 function CheckoutForm({ setPlanState, planState, getSubscription }) {
     const stripe = useStripe();
@@ -71,15 +76,16 @@ function CheckoutForm({ setPlanState, planState, getSubscription }) {
     );
 }
 
+// eslint-disable-next-line no-shadow
 function FlutterWaveAction({ planState, config, setPlanState, getSubscription }) {
     const dispatch = useDispatch();
     // get current user from localStorage
     const currentUser = useSelector((state) => state?.userAuth?.user);
 
     const configToUse = {
-        public_key: config?.FLW_PUBLIC_KEY,
+        public_key: flutterwavePublicKey,
         tx_ref: config?.reference,
-        amount: config?.totalAmount || config?.amount,
+        amount: Number(config?.amount + config?.vat),
         currency: 'NGN',
         // payment_options: 'card,mobilemoney,ussd',
         payment_options: 'card',
@@ -141,6 +147,78 @@ function FlutterWaveAction({ planState, config, setPlanState, getSubscription })
     );
 }
 
+// eslint-disable-next-line no-shadow
+function PayStackAction({ config, setPlanState, getSubscription }) {
+    const [paying, setPaying] = useState(false);
+    const dispatch = useDispatch();
+    // get current user from localStorage
+    const currentUser = useSelector((state) => state?.userAuth?.user);
+
+    const configToUse = {
+        reference: config?.reference,
+        email: currentUser?.email,
+        amount: Number(config?.amount + config?.vat) * 100,
+        publicKey: paystackPublicKey,
+    };
+
+    const initializePayment = usePaystackPayment(configToUse);
+
+    const verifyPayment = async (payload) => {
+        const verifyPaymentRes = await httpPost(`subscriptions/verify-payment`, payload);
+        setPlanState((prev) => ({ ...prev, isVerifying: false }));
+
+        if (verifyPaymentRes?.status === 'success') {
+            NotificationManager.success('', 'Transaction successful', 4000);
+            dispatch(
+                getSubscription(null, () => {
+                    window.location.href = `/settings/account?tab=subscription`;
+                }),
+            );
+        } else {
+            NotificationManager.error('', 'An error occured', 4000);
+        }
+    };
+
+    const paymentSuccess = (reference) => {
+        const verifyPayload = {
+            tx_ref: config?.reference,
+            reference: reference?.reference,
+            amount: Number(config?.amount + config?.vat) * 100,
+            auto_renew: true,
+            currency: 'NGN',
+        };
+
+        verifyPayment(verifyPayload);
+    };
+
+    const handleClose = () => {
+        setPlanState((prev) => ({
+            ...prev,
+            isUpdatingPlan: false,
+            paystackConfig: null,
+            amount: null,
+        }));
+    };
+
+    const handleClick = () => {
+        initializePayment(paymentSuccess, handleClose);
+        setPaying(true);
+    };
+    return (
+        <div>
+            <button type="submit" className="paystack-payment-btn" onClick={handleClick}>
+                {paying && (
+                    <div className="d-inline-flex justify-content-center align-items-center">
+                        <ClipLoader color="#ffffff" size={15} />
+                    </div>
+                )}{' '}
+                {/* <ClipLoader size={15} loading color="#FFFFFF" /> */}
+                <span>Make Payment</span>
+            </button>
+        </div>
+    );
+}
+
 function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
     const numOfAgentsToPayFor = planState.numOfAgents;
     return (
@@ -163,28 +241,14 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
                             : numOfAgentsToPayFor * plan[planState?.billingCycle?.value],
                     )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span> */}
                     <span>
-                        {`${
-                            getRealCurrency(tenantInfo?.currency || '') === 'NGN'
-                                ? separateNum(
-                                      Number(
-                                          planState?.flutterwaveConfig?.totalAmount ||
-                                              planState?.flutterwaveConfig?.amount,
-                                      ) - Number(planState?.flutterwaveConfig?.vat),
-                                  )
-                                : separateNum(
-                                      centToDollarCent(
-                                          Number(planState?.stripeConfig?.amount - planState?.stripeConfig?.vat),
-                                      )[0],
-                                  )
-                        } ${getRealCurrency(tenantInfo?.currency || '')} ${
-                            getRealCurrency(tenantInfo?.currency || '') === 'USD'
-                                ? `${
-                                      centToDollarCent(
-                                          Number(planState?.stripeConfig?.amount) -
-                                              Number(planState?.stripeConfig?.vat),
-                                      )[1]
-                                  } Cents`
-                                : ''
+                        {`${getRealCurrencyv2(tenantInfo?.currency || '')}${
+                            getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState?.flutterwaveConfig
+                                ? separateNum(Number(planState?.flutterwaveConfig?.amount))
+                                : getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState?.paystackConfig
+                                ? separateNum(Number(planState?.paystackConfig?.amount))
+                                : getRealCurrency(tenantInfo?.currency || '') === 'USD'
+                                ? centToDollarCentv2(Number(planState?.stripeConfig?.amount))
+                                : 'N/A'
                         }`.trim()}
                     </span>
                 </div>
@@ -196,11 +260,15 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
                         <span>VAT</span>
                     </div>
                     <div>
-                        <span>{`${
-                            getRealCurrency(tenantInfo?.currency || '') === 'NGN'
+                        <span>{`${getRealCurrencyv2(tenantInfo?.currency || '')}${
+                            getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState?.flutterwaveConfig
                                 ? separateNum(Number(planState?.flutterwaveConfig?.vat))
-                                : separateNum(Number(planState?.stripeConfig?.vat))
-                        } ${getRealCurrency(tenantInfo?.currency || '')}`}</span>
+                                : getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState?.paystackConfig
+                                ? separateNum(Number(planState?.paystackConfig?.vat))
+                                : getRealCurrency(tenantInfo?.currency || '') === 'USD'
+                                ? centToDollarCentv2(Number(planState?.stripeConfig?.vat))
+                                : 'N/A'
+                        }`}</span>
                     </div>
                 </div>
             )}
@@ -213,24 +281,20 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
                 </div>
                 <div>
                     <span>
-                        {`${
-                            getRealCurrency(tenantInfo?.currency || '') === 'NGN'
+                        {`${getRealCurrencyv2(tenantInfo?.currency || '')}${
+                            getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState.flutterwaveConfig
                                 ? separateNum(
-                                      Number(
-                                          planState?.flutterwaveConfig?.totalAmount ||
-                                              planState?.flutterwaveConfig?.amount,
-                                      ),
+                                      Number(planState?.flutterwaveConfig?.amount + planState?.flutterwaveConfig?.vat),
                                   )
-                                : separateNum(centToDollarCent(Number(planState?.stripeConfig?.amount))[0])
-                        } ${getRealCurrency(tenantInfo?.currency || '')} ${
-                            getRealCurrency(tenantInfo?.currency || '') === 'USD'
-                                ? `${
-                                      centToDollarCent(
-                                          Number(planState?.stripeConfig?.amount) -
-                                              Number(planState?.stripeConfig?.vat),
-                                      )[1]
-                                  } Cents`
-                                : ''
+                                : getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState.paystackConfig
+                                ? separateNum(
+                                      Number(planState?.paystackConfig?.amount + planState?.paystackConfig?.vat),
+                                  )
+                                : getRealCurrency(tenantInfo?.currency || '') === 'USD'
+                                ? centToDollarCentv2(
+                                      Number(planState?.stripeConfig?.amount + planState?.stripeConfig?.vat),
+                                  )
+                                : 'N/A'
                         }`.trim()}
                     </span>
                 </div>
@@ -261,7 +325,10 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
                     <span>0%</span>
                 </div>
                 <div>
-                    <span>0 {getRealCurrency(tenantInfo?.currency || '')}</span>
+                    <span>
+                        {getRealCurrencyv2(tenantInfo?.currency || '')}
+                        {getRealCurrency(tenantInfo?.currency || '') === 'NGN' ? '0' : '0.00'}
+                    </span>
                 </div>
             </div>
 
@@ -272,28 +339,40 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
                     <span>Total</span>
                 </div>
                 <div>
-                    <span>{`${
-                        getRealCurrency(tenantInfo?.currency || '') === 'NGN'
-                            ? separateNum(
-                                  Number(
-                                      planState?.flutterwaveConfig?.totalAmount || planState?.flutterwaveConfig?.amount,
-                                  ),
-                              )
-                            : separateNum(centToDollarCent(Number(planState?.stripeConfig?.amount))[0])
-                    } ${getRealCurrency(tenantInfo?.currency || '')} ${
-                        getRealCurrency(tenantInfo?.currency || '') === 'USD'
-                            ? `${centToDollarCent(Number(planState?.stripeConfig?.amount))[1]} Cents`
-                            : ''
-                    }`}</span>
+                    <span>
+                        {`${getRealCurrencyv2(tenantInfo?.currency || '')}${
+                            getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState.flutterwaveConfig
+                                ? separateNum(
+                                      Number(planState?.flutterwaveConfig?.amount + planState?.flutterwaveConfig?.vat),
+                                  )
+                                : getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState.paystackConfig
+                                ? separateNum(
+                                      Number(planState?.paystackConfig?.amount + planState?.paystackConfig?.vat),
+                                  )
+                                : getRealCurrency(tenantInfo?.currency || '') === 'USD'
+                                ? centToDollarCentv2(
+                                      Number(planState?.stripeConfig?.amount + planState?.stripeConfig?.vat),
+                                  )
+                                : 'N/A'
+                        }`.trim()}
+                    </span>
                 </div>
             </div>
 
             <div className="sbox-7">
-                {/* {!flutterwaveConfig && <button onClick={handleInitiatePayment}>{ !isContinuing ? 'Continue' : <MoonLoader color={"#ffffff"} size={30} height={14} width={2} margin={1} />}</button>} */}
+                {/* {!flutterwaveConfig && <button onClick={handleInitiatePayment}>{ !isContinuing ? 'Continue' : <ClipLoader color={"#ffffff"} size={30} height={14} width={2} margin={1} />}</button>} */}
                 {planState.flutterwaveConfig && (
                     <FlutterWaveAction
                         planState={planState}
                         config={planState.flutterwaveConfig}
+                        setPlanState={setPlanState}
+                        getSubscription={getSubscription}
+                    />
+                )}
+                {planState.paystackConfig && (
+                    <PayStackAction
+                        planState={planState}
+                        config={planState.paystackConfig}
                         setPlanState={setPlanState}
                         getSubscription={getSubscription}
                     />

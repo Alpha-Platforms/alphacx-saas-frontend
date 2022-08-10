@@ -20,6 +20,20 @@ export const getRealCurrency = (currency) => {
             return '';
     }
 };
+
+export const getRealCurrencyv2 = (currency) => {
+    switch (currency.toLowerCase()) {
+        case 'naira':
+        case 'ngn':
+            return '₦';
+        case 'usd':
+        case 'dollar':
+            return '$';
+        default:
+            return '';
+    }
+};
+
 function SubTop({ tenantInfo, subscription, totalUsers }) {
     return (
         <div className="subtop">
