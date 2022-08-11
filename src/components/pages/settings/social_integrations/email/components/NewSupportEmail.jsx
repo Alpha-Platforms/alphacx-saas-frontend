@@ -6,10 +6,11 @@ import { NotificationManager } from 'react-notifications';
 import { Modal } from 'react-responsive-modal';
 import { Link, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { httpPatchMain } from '../../../../../../helpers/httpMethods';
+import { httpPatchMain, httpPostMain } from '../../../../../../helpers/httpMethods';
 import RightArrow from '../../../../../../assets/imgF/arrow_right.png';
 import UseOwnEmail from './UseOwnEmail';
 import { getConfigs } from '../../../../../../reduxstore/actions/configActions';
+import { ClipLoader } from 'react-spinners';
 
 function NewSupportEmail({ configs, getConfigs }) {
     const { search } = useLocation();
@@ -19,6 +20,7 @@ function NewSupportEmail({ configs, getConfigs }) {
     const [activateSaveBtn, setActivateSaveBtn] = useState(false);
     const [show, setShow] = useState(false);
     const [passwordChanged, setPasswordChanged] = useState(false);
+    const [checkingConnection, setCheckingConnection] = useState(false)
     const [emailState, setEmailState] = useState({
         activeRadio: 'own-server',
         mailServer: 'incoming-only',
@@ -52,6 +54,18 @@ function NewSupportEmail({ configs, getConfigs }) {
         }
     }, [type]);
 
+    useEffect(() => {        
+        const { email, port, tls, host, password } = emailState.emailConfig;
+        if(email && port && host && password){
+            console.log(emailState.emailConfig);
+            setActivateSaveBtn(true)
+        } else if(activateSaveBtn) {
+            console.log("no activate");
+            setActivateSaveBtn(false)
+        }
+    }, [emailState.emailConfig])
+    
+
     useEffect(() => {
         if (configs) {
             setEmailState((prev) => ({
@@ -78,8 +92,7 @@ function NewSupportEmail({ configs, getConfigs }) {
             }));
         }
     }, [configs]);
-
-
+    
     const handleClose = () => {
         setShow(false);
         window.location.href = '/settings/integrations/email';
@@ -97,28 +110,36 @@ function NewSupportEmail({ configs, getConfigs }) {
             // console.log('Executing incoming only');
             const { email, port, tls, host, password } = emailState.emailConfig;
 
-            if (email && port && host && password) {
-                const data = {
-                    email_config: {
-                        email,
-                        password,
-                        host,
-                        port: Number(port),
-                        tls,
-                    },
-                };
+            const data = {
+                email_config: {
+                    email,
+                    password,
+                    host,
+                    port: Number(port),
+                    tls,
+                },
+            };
 
+            setCheckingConnection(true)
+            const resp = await httpPostMain('settings/verify-incoming-config', JSON.stringify(data));
+
+            if(resp?.status === 'success'){
                 const res = await httpPatchMain('settings/email-config', JSON.stringify(data));
 
                 if (res?.status === 'success') {
                     handleShow();
                     getConfigs();
                 } else {
-                    return NotificationManager.error(res?.er?.message, 'Error', 4000);
+                    NotificationManager.error(res?.er?.message, 'Error', 4000);
                 }
             } else {
-                NotificationManager.error('Fill up required fields', 'Error', 4000);
+                // connect invalid
+                setActivateSaveBtn(false)
+                NotificationManager.error('Your IMAP parameters are invalid', 'Invalid Parameters', 4000);
             }
+            setCheckingConnection(false)
+
+            
         } else {
             // console.log('executing outgoing only');
             const { email, password, port, tls, host, from, apiKey, type } = emailState.outgoingEmailConfig;
@@ -256,7 +277,8 @@ function NewSupportEmail({ configs, getConfigs }) {
                                 disabled={!activateSaveBtn}
                                 // disabled
                             >
-                                Save
+                                {checkingConnection ? <span className="valign-middle-spinner"><ClipLoader size={18} color="#FFF" />{' Checking Connection'}</span> : 'Save'}
+                                
                             </button>
                         </div>
                        
@@ -265,30 +287,16 @@ function NewSupportEmail({ configs, getConfigs }) {
             </div>
 
             <Modal open={show} onClose={handleClose} center>
-                <div
-                    // className="modal fade"
-                    id="successModal"
-                    tabIndex="-1"
-                    aria-labelledby="successModal"
-                    aria-hidden="false"
-                >
-                    <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content p-4 border-0">
-                            <div className="modal-body text-center">
-                                <div className="text-center">
-                                    {/* <object data="../assets/alphatickets/icons/sucess.svg" className="img-fluid"></object> */}
-                                    <h5 className="mt-4">Successful</h5>
-                                    <p className="text-center">Email has been edited successfully</p>
-                                    <Link
-                                        to="/settings/integrations/email"
-                                        className="btn btn-sm bg-at-blue text-white px-5 f-16"
-                                        id="continue"
-                                    >
-                                        Continue
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
+                <div className="p-5 w-100">
+                    <h6 className="mb-5">Your mail server setup was sucess</h6>
+                    <div className="d-flex justify-content-center">
+                        <Link
+                            to="/settings/integrations/email"
+                            className="btn btn-sm bg-at-blue-light text-white px-5 f-16"
+                            id="continue"
+                        >
+                            Continue
+                        </Link>
                     </div>
                 </div>
             </Modal>

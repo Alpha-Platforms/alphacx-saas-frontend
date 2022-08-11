@@ -79,24 +79,30 @@ function YouTubeGetID(url) {
 function RightPane({ userId, showOnboarding }) {
     return (
         <>
-            <div className="border mt-3 p-3 rounded">
-                <p className="fw-bold border-bottom mb-3">Welcome on Board!</p>
-                <p className="mb-1">
-                    We are excited you chose AlphaCX for your customer engagement. AlphaCX is easy to use, however you
-                    can learn much more by going through our product{' '}
-                    <a href="https://docs.alphacx.co/" target="_blank" rel="noreferrer">
-                        documentation
-                    </a>{' '}
-                    or watching{' '}
-                    <a href="https://www.youtube.com/channel/UCeKcSs9E4Ly5i-1kT7luqfQ" target="_blank" rel="noreferrer">
-                        tutorials
-                    </a>
-                    .
-                </p>
-                <p className="mb-1">
-                    You can also share your feedback or open a support ticket{' '}
-                    <a href="/settings?opencontactmodal=open">here</a>.
-                </p>
+            <div className="border mt-3 rounded">
+                <p className="bg-light border-bottom px-3 py-2">Welcome on Board!</p>
+                <div className="p-3">
+                    <p className="mb-1">
+                        We are excited you chose AlphaCX for your customer engagement. AlphaCX is easy to use, however
+                        you can learn much more by going through our product{' '}
+                        <a href="https://docs.alphacx.co/" target="_blank" rel="noreferrer">
+                            documentation
+                        </a>{' '}
+                        or watching{' '}
+                        <a
+                            href="https://www.youtube.com/channel/UCeKcSs9E4Ly5i-1kT7luqfQ"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            tutorials
+                        </a>
+                        .
+                    </p>
+                    <p className="mb-1">
+                        You can also share your feedback or open a support ticket{' '}
+                        <a href="/settings?opencontactmodal=open">here</a>.
+                    </p>
+                </div>
             </div>
 
             <OnboardingModal showOnboarding={showOnboarding} />
@@ -252,7 +258,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
     const [showOnboarding, setShowOnboarding] = useState(false);
 
     useEffect(() => {
-        if (isAgentsLoaded && isConfigsLoaded) {
+        if (user.role === 'Administrator' && isAgentsLoaded && isConfigsLoaded) {
             if (
                 agents?.length === 0 ||
                 Object.entries(configs?.facebook_config || {}).length === 0 ||
@@ -263,7 +269,6 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                 setShowOnboarding(true);
             }
         }
-
     }, [agents, configs]);
 
     const searchThroughTickets = async (e) => {

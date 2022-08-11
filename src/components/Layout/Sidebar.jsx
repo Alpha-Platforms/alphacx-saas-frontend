@@ -75,7 +75,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                         <span className="sidebar-list--icon">
                             <ClockIcon activeRoute={false} />
                         </span>
-                        <span className="sidebar-list--text">Conversations</span>
+                        <span className="sidebar-list--text">Inbox</span>
                     </li>
 
                     <li
