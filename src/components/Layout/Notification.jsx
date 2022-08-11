@@ -105,8 +105,8 @@ function AppNotification({ userId }) {
     };
 
     return (
-        <div className="h-50 border mt-3 p-3 rounded overflow-scroll">
-            {!isUnreadNotificiations && <p className="fw-bold border-bottom mb-2">Notifications</p>}
+        <div className="h-50 border mt-3 rounded overflow-scroll">
+            {!isUnreadNotificiations && <p className="bg-light border-bottom px-3 py-2">Notifications</p>}
             {notifications
                 .slice(0)
                 .reverse()
