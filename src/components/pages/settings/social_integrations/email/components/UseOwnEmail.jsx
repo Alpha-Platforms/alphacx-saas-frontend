@@ -137,7 +137,7 @@ function UseOwnEmail({ emailState, setEmailState, setActivateSaveBtn }) {
                                     <input
                                         type="number"
                                         className="form-control"
-                                        placeholder="997"
+                                        placeholder="993"
                                         min={0}
                                         name="port"
                                         value={emailState.emailConfig.port || ''}
@@ -249,13 +249,13 @@ function UseOwnEmail({ emailState, setEmailState, setActivateSaveBtn }) {
                                         />
                                         <p className="description-text f-12 text-muted mt-1">
                                             <small>
-                                                This serves as your Return-to address e.g bayo@yourcompany.com
+                                                This serves as your Return-to Address
                                             </small>
                                         </p>
                                     </div>
                                     <div className="form-group mt-2 col-6">
                                         <label className="form-label">
-                                            Password <span className="text-danger">*</span>
+                                            Your Password <span className="text-danger">*</span>
                                         </label>
                                         <input
                                             type="password"
@@ -284,7 +284,7 @@ function UseOwnEmail({ emailState, setEmailState, setActivateSaveBtn }) {
                                                 id="outgoing-host"
                                             />
                                             <p className="description-text f-12 text-muted mt-1">
-                                                SMTP server name to fetch the details
+                                                SMTP server URL to fetch the details
                                             </p>
                                         </div>
                                     </div>
@@ -299,7 +299,7 @@ function UseOwnEmail({ emailState, setEmailState, setActivateSaveBtn }) {
                                                 name="port"
                                                 value={emailState.outgoingEmailConfig.port || ''}
                                                 onChange={handleOutgoingConfig}
-                                                placeholder="997"
+                                                placeholder="993"
                                             />
                                         </div>
                                     </div>
@@ -322,7 +322,6 @@ function UseOwnEmail({ emailState, setEmailState, setActivateSaveBtn }) {
                                                 id="outgoing-from"
                                             />
                                             <p className="description-text f-12 text-muted mt-1">
-                                                {/* SMTP server name to fetch the details */}
                                             </p>
                                         </div>
                                     </div>
