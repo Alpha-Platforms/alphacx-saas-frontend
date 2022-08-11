@@ -83,9 +83,9 @@ function OnboardingModal({
 
     return (
         showOnboarding &&
-            (<div className="border mt-3 p-3 rounded onboarding">
-                <p className="fw-bold border-bottom mb-3">Onboarding Checklist</p>
-                <div>
+            (<div className="border mt-3 rounded onboarding">
+                <p className="bg-light border-bottom px-3 py-2">Onboarding Checklist</p>
+                <div className="p-3">
                     <div className="">
                         <ListGroup defaultActiveKey="#link1" className="acx-list-group acx-list-group-gapped">
                             <ListGroup.Item
