@@ -55,7 +55,7 @@ import Smiley from '../../../assets/imgF/Smiley.png';
 import editorImg from '../../../assets/imgF/editorImg.png';
 import BackArrow from '../../../assets/imgF/back.png';
 // eslint-disable-next-line no-unused-vars
-import { multiIncludes, uuid, hasFeatureAccess } from '../../../helper';
+import { multiIncludes, uuid, hasFeatureAccess, scrollToView } from '../../../helper';
 import { accessControlFunctions } from '../../../config/accessControlList';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './conversation.css';
@@ -269,6 +269,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                 setShowOnboarding(true);
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [agents, configs]);
 
     const searchThroughTickets = async (e) => {
@@ -297,15 +298,6 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             // https://developers.google.com/youtube/player_parameters
             autoplay: 0,
         },
-    };
-
-    /**
-     *
-     *
-     * @param {*} [e=scrollPosition] # + id of element you want to scroll to
-     */
-    const scrollPosSendMsgList = (e = scrollPosition) => {
-        window.location.href = e;
     };
 
     const getUser = async (id) => {
@@ -363,7 +355,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             AppSocket.io.emit(`ws_tickets`, ticketsData); */
 
             setLoadSingleTicket(false);
-            return scrollPosSendMsgList(scrollPosition);
+            return scrollToView(scrollPosition);
         }
         setLoadSingleTicket(false);
         return NotificationManager.error(res.er.message, 'Error', 4000);
@@ -468,7 +460,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             setTicketId(location.state.ticketId);
             setActiveChat(location.state.ticketId);
             setScrollPosition(`#${location.state.ticketHistoryId}`);
-            scrollPosSendMsgList(`#${location.state.ticketHistoryId}`);
+            scrollToView(`#${location.state.ticketHistoryId}`);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tickets, location]);
@@ -526,7 +518,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                         }
                         return [...prev, reply];
                     });
-                    if (!data?.reply?.is_deleted) scrollPosSendMsgList('#lastMsg');
+                    if (!data?.reply?.is_deleted) scrollToView('#lastMsg');
                 }
 
                 setTickets((prev) => {
@@ -789,7 +781,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             }
             return prev;
         });
-        scrollPosSendMsgList();
+        scrollToView();
         const currentTicket = JSON.parse(JSON.stringify(singleTicketFullInfo));
         // remove history property from object before sending via socket
         Reflect.deleteProperty(currentTicket, 'history');
@@ -1054,7 +1046,6 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                             filterTicketsState={filterTicketsState}
                             activeChat={activeChat}
                             setActiveChat={setActiveChat}
-                            scrollPosSendMsgList={scrollPosSendMsgList}
                             setTicketId={setTicketId}
                             statuses={Statuses}
                             ticketsLoaded={ticketsLoaded}

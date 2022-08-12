@@ -8,6 +8,7 @@ import { timeFormater } from '../../helpers/dateFormater';
 import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter';
 import InitialsFromString from '../../helpers/InitialsFromString';
 import ChatBubble from '../../../assets/svgicons/chatBubble.svg';
+import { scrollToView } from '../../../helper';
 
 function EmptyMessageList(){
     return (
@@ -32,7 +33,6 @@ export default function MessageList({
     filterTicketsState,
     activeChat,
     setActiveChat,
-    scrollPosSendMsgList,
     statuses,
     ticketsLoaded,
     searchedTickets
@@ -121,7 +121,7 @@ export default function MessageList({
                                     data?.id === activeChat ? 'message-listmain-active' : ''
                                 }`}
                                 onClick={() => {
-                                    scrollPosSendMsgList('#lastMsg');
+                                    scrollToView('#lastMsg');
                                     loadSingleMessage(data);
                                     setSingleTicketFullInfo(data);
                                     setTicketId(data?.id);

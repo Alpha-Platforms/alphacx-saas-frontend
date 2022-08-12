@@ -10,7 +10,8 @@
   /* left: 40px !important; */
   top: 66px !important;
   /* width: calc(100vw - 40px); */
-  height: calc(100vh - 75px);
+  /* height: calc(100vh - 75px); */
+  height: calc(100vh - 90px);
   padding-bottom: 30px;
   padding: 0;
   transition: 0.25s cubic-bezier(0.075, 0.82, 0.165, 1);
