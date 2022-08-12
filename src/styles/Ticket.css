@@ -345,13 +345,13 @@ background: transparent;
 }
 
 .ticket-attachment {
-    height: 150px;
+    max-height: 150px;
 }
 
 .attach-wrapper {
     padding-left: 0;
     padding-top: 0.2rem;
-    height: 120px;
+    max-height: 120px;
     overflow: auto;
 }
 

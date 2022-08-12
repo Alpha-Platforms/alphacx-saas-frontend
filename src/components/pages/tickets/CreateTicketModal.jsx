@@ -26,7 +26,7 @@ import PinIcon from '../../../assets/icons/pin.svg';
 import { httpGetMain } from '../../../helpers/httpMethods';
 import { createTags } from '../../../reduxstore/actions/tagActions';
 import { getChannels, addChannel } from '../../../reduxstore/actions/channelActions';
-import { getAcceptValue, allowedFiles, defaultTicketProperties } from '../../../helper';
+import { getAcceptValue, allowedFiles, defaultTicketProperties, createEvent } from '../../../helper';
 import { config } from '../../../config/keys';
 
 export const searchTypeChecker = (query) => {
@@ -75,7 +75,7 @@ let categoriesFetchTimer;
 const getSearchedCategories = async (userInput) => {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve) => {
-        if (userInput.length < 1) resolve([]);
+        if (userInput.length < 0) resolve([]);
         clearTimeout(categoriesFetchTimer);
         categoriesFetchTimer = setTimeout(async () => {
             try {
@@ -456,7 +456,9 @@ function CreateTicketModal({
             setCreatingTicket(false);
             setSubCatLoading(false);
             // setChangingRow(true);
-            getPaginatedTickets(50, 1);
+            getPaginatedTickets(50, 1, (data) => {
+                createEvent('newticket', data?.tickets?.[0]);
+            });
             setUploadInfo({
                 blob: null,
                 msg: 'Add file or drag file here.',
@@ -809,6 +811,8 @@ function CreateTicketModal({
                                 name="category"
                                 placeholder="Type to search"
                                 onChange={handleRSInput}
+                                defaultOptions
+                                // defaultValue={categories?.map((item) => ({ label: item?.name, value: item.id }))}
                             />
                             {
                                 /* simple validation */

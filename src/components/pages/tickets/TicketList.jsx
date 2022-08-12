@@ -221,7 +221,7 @@ function TicketList({ isTicketsLoaded, tickets, meta, getPaginatedTickets, isUse
     const tableColumns = [
         {
             title: 'Name',
-            field: 'contact',
+            field: 'name',
             render: (rowData) => (
                 <Link to={`/customers/${rowData.customerId}`} style={{ textTransform: 'capitalize' }}>
                     {rowData.name}
