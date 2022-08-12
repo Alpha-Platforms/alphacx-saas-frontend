@@ -9,7 +9,7 @@ import { ReactComponent as TypeDocx } from '../../../assets/icons/Filetypedocx.s
 import { ReactComponent as TypeXlsx } from '../../../assets/icons/Filetypexlsx.svg';
 import { ReactComponent as TypeImg } from '../../../assets/icons/Filetypeimg.svg';
 
-function TicketAttachment({ ticket }) {
+function TicketAttachment({ ticket, className }) {
     const [lightboxState, setLightboxState] = useState({
         idx: 0,
         isOpen: false,
@@ -37,7 +37,7 @@ function TicketAttachment({ ticket }) {
     // console.log('ticketAttachments => ', ticketAttachments);
 
     return (
-        <div className="ticket-attachment">
+        <div className={`ticket-attachment ${className ?? ''}`.trim()}>
             <div className="d-flex justify-content-center border-top mx-2 pt-2">
                 <p
                     style={{
