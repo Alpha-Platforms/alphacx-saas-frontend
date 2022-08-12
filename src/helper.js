@@ -379,7 +379,7 @@ export const isObjectEmpty = (obj) => {
 export const getOnLineStatus = () =>
     typeof navigator !== 'undefined' && typeof navigator.onLine === 'boolean' ? navigator.onLine : true;
 
-export const scrollToView = (elemSelector = '#lastMsg') => {
+export const scrollToView = (elemSelector) => {
     const elem = window.document.querySelector(elemSelector);
     if (elem) {
         elem.scrollIntoView();
