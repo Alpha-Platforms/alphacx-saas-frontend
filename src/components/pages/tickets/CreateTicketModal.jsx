@@ -75,7 +75,7 @@ let categoriesFetchTimer;
 const getSearchedCategories = async (userInput) => {
     // eslint-disable-next-line no-async-promise-executor
     return new Promise(async (resolve) => {
-        if (userInput.length < 1) resolve([]);
+        if (userInput.length < 0) resolve([]);
         clearTimeout(categoriesFetchTimer);
         categoriesFetchTimer = setTimeout(async () => {
             try {
@@ -809,6 +809,8 @@ function CreateTicketModal({
                                 name="category"
                                 placeholder="Type to search"
                                 onChange={handleRSInput}
+                                defaultOptions
+                                // defaultValue={categories?.map((item) => ({ label: item?.name, value: item.id }))}
                             />
                             {
                                 /* simple validation */
