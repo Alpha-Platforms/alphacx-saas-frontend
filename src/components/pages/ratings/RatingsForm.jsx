@@ -45,7 +45,7 @@ export default function RatingsForm() {
         const headers = {
             domain,
         };
-        const res = await httpGetMainNoAuth(`settings/config?type=rating`, headers);
+        const res = await httpGetMainNoAuth(`settings/rating-config`, headers);
         if (res?.status === 'success') {
             setRatingsConfig({
                 ...ratingsConfig,
@@ -171,7 +171,7 @@ export default function RatingsForm() {
                                         type="submit"
                                         onClick={handleSubmit}
                                         size="lg"
-                                        disabled={processing}
+                                        disabled={processing || !ticketId && !customerId}
                                         className="acx-btn-primary px-4"
                                     >
                                         {processing ? (

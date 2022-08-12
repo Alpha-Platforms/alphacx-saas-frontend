@@ -21,8 +21,6 @@ import '../settings.css';
 import Modal from 'react-responsive-modal';
 //
 
-import RatingsForm from '../../../../components/pages/ratings/RatingsForm';
-
 const tenantDomain = localStorage.getItem('domain');
 
 export default function RatingsSettings() {
@@ -33,8 +31,6 @@ export default function RatingsSettings() {
         ratingLabel: '',
         commentLabel: '',
     });
-
-    const [showModal, setShowModal] = useState(false)
 
     const history = useHistory();
 
@@ -194,15 +190,6 @@ export default function RatingsSettings() {
                                     <div className="text-center">
                                         <Button
                                             type="submit"
-                                            onClick={() => setShowModal(true)}
-                                            disabled={processing}
-                                            className="px-4 acx-btn-primary acx-btn-outline-primary"
-                                        >
-                                           <span> Preview </span>
-                                        </Button>
-
-                                        <Button
-                                            type="submit"
                                             onClick={handleSubmit}
                                             disabled={processing}
                                             className="px-4 acx-btn-primary"
@@ -236,17 +223,6 @@ export default function RatingsSettings() {
                 </p>
             </footer>
         </section>
-        <Modal
-            // show={showModal}
-            // onHide={() => setCreateModalShow(false)}
-            open={showModal}
-            onClose={() => setShowModal(false)}
-            aria-labelledby="contained-modal-title-vcenter"
-            size="lg"
-            centered
-        >
-            <RatingsForm />
-        </Modal>
     </>
     );
 }
