@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* eslint-disable */
 import { NotificationManager } from 'react-notifications';
 import { customAxios as axios, userTokenConfig } from '../../helper';
@@ -48,7 +49,7 @@ export const getPaginatedTickets = (itemsPerPage, currentPage, success, failed) 
                 type: types.GET_TICKETS,
                 payload: res.data && res.data.status === 'success' ? res.data?.data : {},
             });
-            success && success();
+            success && success(res.data?.data || {});
         })
         .catch((err) => {
             dispatch({

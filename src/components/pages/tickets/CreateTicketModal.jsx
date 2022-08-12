@@ -26,7 +26,7 @@ import PinIcon from '../../../assets/icons/pin.svg';
 import { httpGetMain } from '../../../helpers/httpMethods';
 import { createTags } from '../../../reduxstore/actions/tagActions';
 import { getChannels, addChannel } from '../../../reduxstore/actions/channelActions';
-import { getAcceptValue, allowedFiles, defaultTicketProperties } from '../../../helper';
+import { getAcceptValue, allowedFiles, defaultTicketProperties, createEvent } from '../../../helper';
 import { config } from '../../../config/keys';
 
 export const searchTypeChecker = (query) => {
@@ -456,7 +456,9 @@ function CreateTicketModal({
             setCreatingTicket(false);
             setSubCatLoading(false);
             // setChangingRow(true);
-            getPaginatedTickets(50, 1);
+            getPaginatedTickets(50, 1, (data) => {
+                createEvent('newticket', data?.tickets?.[0]);
+            });
             setUploadInfo({
                 blob: null,
                 msg: 'Add file or drag file here.',

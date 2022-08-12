@@ -54,8 +54,15 @@ import boldB from '../../../assets/imgF/boldB.png';
 import Smiley from '../../../assets/imgF/Smiley.png';
 import editorImg from '../../../assets/imgF/editorImg.png';
 import BackArrow from '../../../assets/imgF/back.png';
-// eslint-disable-next-line no-unused-vars
-import { multiIncludes, uuid, hasFeatureAccess, scrollToView } from '../../../helper';
+import {
+    multiIncludes,
+    // eslint-disable-next-line no-unused-vars
+    uuid,
+    hasFeatureAccess,
+    scrollToView,
+    subscribeToEvent,
+    unsuscribeFromEvent,
+} from '../../../helper';
 import { accessControlFunctions } from '../../../config/accessControlList';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './conversation.css';
@@ -448,6 +455,11 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
         if (!multiIncludes(accessControlFunctions[user?.role], ['reply_conv'])) {
             setReplyType('note');
         }
+        const onCreateNewTicket = (event) => {
+            if (event.detail) setTickets((prev) => [event.detail, ...prev]);
+        };
+        subscribeToEvent('newticket', onCreateNewTicket);
+        return () => unsuscribeFromEvent('newticket', onCreateNewTicket);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -493,6 +505,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             // console.log('%cconversation.jsx line:341 initRes', 'color: white; background-color: #007acc;', initRes);
             if (initRes?.status === 'success') {
                 setTickets(initRes?.data?.tickets || []);
+                /* setMeta is a useless dispatcher, meta not needed. TODO: remove dispatcher */
                 setMeta(initRes?.data?.meta || {});
                 setTicketsLoaded(true);
             }

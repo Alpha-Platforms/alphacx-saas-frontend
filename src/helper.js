@@ -385,3 +385,21 @@ export const scrollToView = (elemSelector = '#lastMsg') => {
         elem.scrollIntoView();
     }
 };
+
+export const isValidObject = (obj) => {
+    return obj.constructor.toString().indexOf('Object') > -1;
+};
+
+export const subscribeToEvent = (eventName, listener) => {
+    window.document.addEventListener(eventName, listener);
+};
+
+export const unsuscribeFromEvent = (eventName, listener) => {
+    window.document.removeEventListener(eventName, listener);
+};
+
+export const createEvent = (eventName, data, options = {}) => {
+    const eventOptions = options && isValidObject(options) ? options : {};
+    const event = new CustomEvent(eventName, { detail: data, ...eventOptions });
+    window.document.dispatchEvent(event);
+};
