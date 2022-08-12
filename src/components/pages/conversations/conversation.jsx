@@ -269,6 +269,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                 setShowOnboarding(true);
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [agents, configs]);
 
     const searchThroughTickets = async (e) => {
