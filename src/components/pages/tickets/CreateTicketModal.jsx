@@ -57,7 +57,8 @@ export const getSearchedCustomers = async (userInput) => {
                 if (res.status === 'success') {
                     const remappedData = [];
                     res.data.users.forEach((item) => {
-                        remappedData.push({ label: `${item.firstname} ${item.lastname}`, value: item.id });
+                        if (item?.role === 'Customer')
+                            remappedData.push({ label: `${item.firstname} ${item.lastname}`, value: item.id });
                     });
                     resolve(remappedData);
                 }

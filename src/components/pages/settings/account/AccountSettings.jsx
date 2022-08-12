@@ -628,7 +628,10 @@ function AccountSettings() {
                                             onDrop={(e) => handleImageDrop(e, appIconFile, 'app-icon', appIconWrapper)}
                                             className="d-grid align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative"
                                         >
-                                            {(appIcon.errorMsg || appIcon.blob || appIcon.image || appIcon.imageFile) && (
+                                            {(appIcon.errorMsg ||
+                                                appIcon.blob ||
+                                                appIcon.image ||
+                                                appIcon.imageFile) && (
                                                 <button
                                                     type="button"
                                                     className="clear-upl-img"
@@ -664,7 +667,9 @@ function AccountSettings() {
                                                             className="avatarImage"
                                                             src={appIcon.blob || appIcon.image}
                                                             alt=""
-                                                            onLoad={() => appIcon.blob && URL.revokeObjectURL(appIcon.blob)}
+                                                            onLoad={() =>
+                                                                appIcon.blob && URL.revokeObjectURL(appIcon.blob)
+                                                            }
                                                             style={{
                                                                 maxWidth: '100%',
                                                                 maxHeight: '100%',
@@ -719,7 +724,10 @@ function AccountSettings() {
                                             onDrop={(e) => handleImageDrop(e, appLogoFile, 'app-logo', appLogoWrapper)}
                                             className="d-grid align-items-center border rounded-3 p-2 act-set-img-upload-wrapper position-relative drag-zone"
                                         >
-                                            {(appLogo.errorMsg || appLogo.blob || appLogo.image || appLogo.imageFile) && (
+                                            {(appLogo.errorMsg ||
+                                                appLogo.blob ||
+                                                appLogo.image ||
+                                                appLogo.imageFile) && (
                                                 <button
                                                     type="button"
                                                     className="clear-upl-img"
@@ -755,7 +763,9 @@ function AccountSettings() {
                                                             className="avatarImage"
                                                             src={appLogo.blob || appLogo.image}
                                                             alt=""
-                                                            onLoad={() => appLogo.blob && URL.revokeObjectURL(appLogo.blob)}
+                                                            onLoad={() =>
+                                                                appLogo.blob && URL.revokeObjectURL(appLogo.blob)
+                                                            }
                                                             style={{
                                                                 maxWidth: '100%',
                                                                 maxHeight: '100%',
@@ -819,7 +829,9 @@ function AccountSettings() {
                                         <label className="f-14 mb-1">Knowledge Base Hero Color</label>
                                         <div
                                             className="d-flex border justify-content-between align-items-center p-2"
-                                            onClick={() => document.querySelector('.organisation_kb_hero_color')?.click()}
+                                            onClick={() =>
+                                                document.querySelector('.organisation_kb_hero_color')?.click()
+                                            }
                                         >
                                             <span>{organisation?.branding?.kbHeroColor || '#000000'}</span>
                                             <input

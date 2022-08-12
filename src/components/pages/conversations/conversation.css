@@ -14,8 +14,10 @@
 }
 .conversation-wrap {
   width: 100%;
-  height: calc(100vh - 74px);
-  max-height: calc(100vh - 74px);
+  /* height: calc(100vh - 74px);
+  max-height: calc(100vh - 74px); */
+  height: calc(100vh - 97px);
+  max-height: calc(100vh - 97px);
   background-color: white;
   border-radius: 4px;
   position: relative;
@@ -1697,4 +1699,8 @@ span[class*="indicatorSeparator"] {
 
 .onboarding .list-item-icon img {
   width: 27px;
+}
+
+#conversationMain {
+  position: relative;
 }
