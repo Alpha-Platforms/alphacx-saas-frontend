@@ -54,8 +54,18 @@ import boldB from '../../../assets/imgF/boldB.png';
 import Smiley from '../../../assets/imgF/Smiley.png';
 import editorImg from '../../../assets/imgF/editorImg.png';
 import BackArrow from '../../../assets/imgF/back.png';
-// eslint-disable-next-line no-unused-vars
-import { multiIncludes, uuid, hasFeatureAccess, scrollToView } from '../../../helper';
+import {
+    multiIncludes,
+    // eslint-disable-next-line no-unused-vars
+    uuid,
+    hasFeatureAccess,
+    scrollToTop,
+    scrollToBottom,
+    // eslint-disable-next-line no-unused-vars
+    scrollToView,
+    subscribeToEvent,
+    unsuscribeFromEvent,
+} from '../../../helper';
 import { accessControlFunctions } from '../../../config/accessControlList';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './conversation.css';
@@ -245,8 +255,6 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
     //
     const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(false);
     const [addHist, setAddHist] = useState(false);
-    // scroll position
-    const [scrollPosition, setScrollPosition] = useState('#lastMsg');
     const [editorUploadImg, setEditorUploadImg] = useState('');
     const [attachments, setAttachments] = useState([]);
     const [searchedTickets, setSearchedTickets] = useState({
@@ -355,7 +363,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             AppSocket.io.emit(`ws_tickets`, ticketsData); */
 
             setLoadSingleTicket(false);
-            return scrollToView(scrollPosition);
+            return scrollToBottom('#conversationMain');
         }
         setLoadSingleTicket(false);
         return NotificationManager.error(res.er.message, 'Error', 4000);
@@ -434,20 +442,22 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
         setAchiveMsges(resultAchive);
     };
 
-    function scollPosSendMsg() {
-        window.location.href = '#msgListTop';
-    }
-
     const [ticketsExist, setTicketsExist] = useState(false);
 
     useEffect(() => {
         setTicketsExist(tickets.length > 0);
+        scrollToTop('#messageListContainer');
     }, [tickets]);
 
     useEffect(() => {
         if (!multiIncludes(accessControlFunctions[user?.role], ['reply_conv'])) {
             setReplyType('note');
         }
+        const onCreateNewTicket = (event) => {
+            if (event.detail) setTickets((prev) => [event.detail, ...prev]);
+        };
+        subscribeToEvent('newticket', onCreateNewTicket);
+        return () => unsuscribeFromEvent('newticket', onCreateNewTicket);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -459,8 +469,10 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             loadSingleMessage(currentTicket);
             setTicketId(location.state.ticketId);
             setActiveChat(location.state.ticketId);
-            setScrollPosition(`#${location.state.ticketHistoryId}`);
-            scrollToView(`#${location.state.ticketHistoryId}`);
+            /* No idea what this does */
+            if (location.state.ticketHistoryId) {
+                scrollToView(`#${location.state.ticketHistoryId}`);
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [tickets, location]);
@@ -475,6 +487,9 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
 
     useEffect(() => {
         sortMsges(msgHistory);
+        setTimeout(() => {
+            scrollToBottom('#conversationMain');
+        }, 500);
     }, [msgHistory]);
 
     useEffect(() => {
@@ -493,6 +508,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             // console.log('%cconversation.jsx line:341 initRes', 'color: white; background-color: #007acc;', initRes);
             if (initRes?.status === 'success') {
                 setTickets(initRes?.data?.tickets || []);
+                /* setMeta is a useless dispatcher, meta not needed. TODO: remove dispatcher */
                 setMeta(initRes?.data?.meta || {});
                 setTicketsLoaded(true);
             }
@@ -518,7 +534,6 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                         }
                         return [...prev, reply];
                     });
-                    if (!data?.reply?.is_deleted) scrollToView('#lastMsg');
                 }
 
                 setTickets((prev) => {
@@ -709,7 +724,6 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
 
     const replyTicket = async (reply, attachment, type = replyType) => {
         if (!reply?.richText?.trim() || !reply?.plainText?.trim()) return;
-        scollPosSendMsg();
 
         // return console.log('%cconversation.jsx line:572 singleTicketFullInfo', 'color: white; background-color: #007acc;', singleTicketFullInfo);
         // console.log(singleTicketFullInfo);
@@ -781,7 +795,6 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             }
             return prev;
         });
-        scrollToView();
         const currentTicket = JSON.parse(JSON.stringify(singleTicketFullInfo));
         // remove history property from object before sending via socket
         Reflect.deleteProperty(currentTicket, 'history');
@@ -794,7 +807,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                 reply: replyData,
             },
         };
-        appSocket.sendLiveStreamMessage(msgObj);
+        if (replyType === 'reply') appSocket.sendLiveStreamMessage(msgObj);
         const res = await httpPostMain(`tickets/${singleTicketFullInfo.id}/replies`, data);
         // deep copy the currently loaded ticket
 

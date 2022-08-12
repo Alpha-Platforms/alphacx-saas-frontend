@@ -1,4 +1,5 @@
 /* eslint-disable */
+// @ts-nocheck
 import React, { useState, useEffect, Fragment } from 'react';
 import { capitalize } from '@material-ui/core';
 import { Link } from 'react-router-dom';
@@ -16,8 +17,9 @@ import TicketCategoriesIcon from '../../../assets/icons/Ticketcategory.svg';
 import TicketDueDateIcon from '../../../assets/icons/ticketduedate.svg';
 import TicketSourceIcon from '../../../assets/icons/ticketsource.svg';
 import { dateFormater } from '../../helpers/dateFormater';
+import TicketAttachment from './TicketAttachment';
 
-export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLine = true }) {
+export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLine = true, showAttachment = true }) {
     const [timeStampsMsg, setTimeStampsMsg] = useState([]);
     const [tags, setTags] = useState([
         <div style={{ color: '#662D91', background: '#F8EEFF' }}>High Value</div>,
@@ -389,7 +391,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                         </div>
                     </div>
                 </div>
-                {timeLine ? (
+                {timeLine && (
                     <div className="container-timeline">
                         <div className="box">
                             <div className="borderContaner">
@@ -465,9 +467,8 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                             );
                         })}
                     </div>
-                ) : (
-                    ''
                 )}
+                {showAttachment && <TicketAttachment ticket={ticket} />}
             </div>
         </div>
     );

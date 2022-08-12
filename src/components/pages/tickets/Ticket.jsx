@@ -678,7 +678,13 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user, 
                     className="d-grid mb-0"
                 >
                     <div className="pt-2" style={{ backgroundColor: '#fafafa', borderRight: '1px solid #f1f1f1' }}>
-                        <UserProfile UserInfo={UserInfo} ticket={[currentTicket]} isTicketDetails timeLine={false} />
+                        <UserProfile
+                            UserInfo={UserInfo}
+                            ticket={[currentTicket]}
+                            isTicketDetails
+                            timeLine={false}
+                            showAttachment={false}
+                        />
                     </div>
                     <div
                         id="ticketDetailsRightPane"

@@ -102,7 +102,7 @@ export default function MessageList({
     };
 
     return (
-        <div className="message-list-container">
+        <div className="message-list-container" id="messageListContainer">
             {loadingTickets || !ticketsLoaded ? (
                 <div className="d-flex justify-content-center align-items-center pt-5 away">
                     {' '}

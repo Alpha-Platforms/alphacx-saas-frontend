@@ -379,9 +379,41 @@ export const isObjectEmpty = (obj) => {
 export const getOnLineStatus = () =>
     typeof navigator !== 'undefined' && typeof navigator.onLine === 'boolean' ? navigator.onLine : true;
 
-export const scrollToView = (elemSelector = '#lastMsg') => {
+export const scrollToView = (elemSelector) => {
     const elem = window.document.querySelector(elemSelector);
     if (elem) {
         elem.scrollIntoView();
     }
+};
+
+export const scrollToTop = (elemSelector) => {
+    const elem = window.document.querySelector(elemSelector);
+    if (elem) {
+        elem.scrollTo(0, 0);
+    }
+};
+
+export const scrollToBottom = (elemSelector) => {
+    const elem = window.document.querySelector(elemSelector);
+    if (elem) {
+        elem.scrollTop = elem.scrollHeight;
+    }
+};
+
+export const isValidObject = (obj) => {
+    return obj.constructor.toString().indexOf('Object') > -1;
+};
+
+export const subscribeToEvent = (eventName, listener) => {
+    window.document.addEventListener(eventName, listener);
+};
+
+export const unsuscribeFromEvent = (eventName, listener) => {
+    window.document.removeEventListener(eventName, listener);
+};
+
+export const createEvent = (eventName, data, options = {}) => {
+    const eventOptions = options && isValidObject(options) ? options : {};
+    const event = new CustomEvent(eventName, { detail: data, ...eventOptions });
+    window.document.dispatchEvent(event);
 };
