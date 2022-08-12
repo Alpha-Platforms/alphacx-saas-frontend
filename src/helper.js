@@ -386,6 +386,20 @@ export const scrollToView = (elemSelector = '#lastMsg') => {
     }
 };
 
+export const scrollToTop = (elemSelector) => {
+    const elem = window.document.querySelector(elemSelector);
+    if (elem) {
+        elem.scrollTo(0, 0);
+    }
+};
+
+export const scrollToBottom = (elemSelector) => {
+    const elem = window.document.querySelector(elemSelector);
+    if (elem) {
+        elem.scrollTop = elem.scrollHeight;
+    }
+};
+
 export const isValidObject = (obj) => {
     return obj.constructor.toString().indexOf('Object') > -1;
 };
