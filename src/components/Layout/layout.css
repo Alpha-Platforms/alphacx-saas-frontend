@@ -836,5 +836,6 @@ button.dropdown-toggle {
 }
 
 .help-dropdown .dropdown-menu.show {
-  margin-left: -50%;
+  margin-left: calc(-50% - 14px);
+  padding: 0;
 }

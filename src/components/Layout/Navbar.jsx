@@ -536,15 +536,15 @@ function Navbar({ pageName, user }) {
                                         <Link
                                             to={{ pathname: 'https://docs.alphacx.co' }}
                                             target="_blank"
-                                            className="px-3 py-1 w-100 text-center"
+                                            className="p-2 w-100 text-at-blue"
                                         >
-                                            Docs
+                                            Documentation
                                         </Link>
                                         <Link
                                             to="/settings?opencontactmodal=open"
-                                            className="px-3 py-1 w-100 text-center"
+                                            className="p-2 w-100 text-at-blue whitespace-nowrap"
                                         >
-                                            Support
+                                            Contact Support
                                         </Link>
                                     </Dropdown.Menu>
                                 </Dropdown>
