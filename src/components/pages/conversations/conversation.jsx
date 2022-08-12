@@ -807,7 +807,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                 reply: replyData,
             },
         };
-        appSocket.sendLiveStreamMessage(msgObj);
+        if (replyType === 'reply') appSocket.sendLiveStreamMessage(msgObj);
         const res = await httpPostMain(`tickets/${singleTicketFullInfo.id}/replies`, data);
         // deep copy the currently loaded ticket
 
