@@ -446,7 +446,6 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
 
     useEffect(() => {
         setTicketsExist(tickets.length > 0);
-        scrollToTop('#messageListContainer');
     }, [tickets]);
 
     useEffect(() => {
@@ -534,6 +533,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                         }
                         return [...prev, reply];
                     });
+                    scrollToTop('#messageListContainer');
                 }
 
                 setTickets((prev) => {
