@@ -844,7 +844,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
         if (RSTicketStage.label === 'Closed' && hasFeatureAccess('rating')) {
             // get url and replace domain
             const baseUrl = window.location.origin;
-            const completedUrl = `${baseUrl}/feedback/${localStorage.domain}/${ticket[0].id}/${ticket[0].customer.id}`;
+            const completedUrl = `${baseUrl}/feedback/${ticket[0].id}/${ticket[0].customer.id}`;
             const richText = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation : <a target='_blank' href='${completedUrl}'>Click here to rate us</a></p>`;
             const reply = {
                 richText,
