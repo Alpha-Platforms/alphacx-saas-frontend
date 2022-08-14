@@ -459,7 +459,7 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user, 
         if (RSTicketStage.label === 'Closed') {
             // get url and replace domain
             const base_url = window.location.origin;
-            const complete_url = `${base_url}/feedback/${localStorage.domain}/${ticket.id}/${ticket.customer.id}`;
+            const complete_url = `${base_url}/feedback/${ticket.id}/${ticket.customer.id}`;
             const rich_text = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation : <a target='_blank' href='${complete_url}'>Click here to rate us</a></p>`;
             const ReplyTicket = {
                 richText: rich_text,
