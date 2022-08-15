@@ -5,6 +5,7 @@
 import React, { useState, useContext } from 'react';
 import { NotificationManager } from 'react-notifications';
 import Modal from 'react-responsive-modal';
+import moment from 'moment';
 import { useSelector } from 'react-redux';
 import AccessControl from '../pages/auth/accessControl';
 import { LayoutContext } from '../../context/layoutContext';
@@ -41,11 +42,13 @@ export default function Sidebar({ browserRouter, currentRoute }) {
     const totalUsers = tenantSubscription?.subscription?.totalUsers;
 
     const shouldShowUserExceededNotif = !tenantSubscription?.plan?.is_trial && totalUsers > numOfSubUsers;
+    const endDate = tenantSubscription?.subscription?.end_date;
+    const subExpired = moment(endDate).isBefore(new Date());
 
     const customBrowserRouter = (path) => {
         if (!path) return;
         /* Should not execute the router method if more users exists than allowed */
-        if (shouldShowUserExceededNotif) return;
+        if (shouldShowUserExceededNotif || subExpired) return;
         browserRouter(path);
     };
 

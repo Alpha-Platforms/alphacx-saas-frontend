@@ -14,6 +14,8 @@ import DeleteIcon from '../../../../../assets/icons/Delete.svg';
 import RightArrow from '../../../../../assets/imgF/arrow_right.png';
 //
 import { getCurrentEmailTemplate, updateEmailTemplate } from '../../../../../reduxstore/actions/emailTemplateActions';
+
+import allPlaceholders from './placeholders'
 //
 import './newEmailTemplate.scss';
 import '../NotificationSettings.scss';
@@ -26,34 +28,8 @@ function EditEmailTemplate({
 }) {
     //
     const { id } = useParams();
-    //
-    const availablePlaceholders = [
-        {
-            title: 'Ticket',
-            placeHolder: 'ticketId',
-        },
-        {
-            title: 'Customer',
-            placeHolder: 'customerName',
-        },
-        {
-            title: 'Status',
-            placeHolder: 'status',
-        },
-        {
-            title: 'Category',
-            placeHolder: 'categoryName',
-        },
-        {
-            title: 'Agent',
-            placeHolder: 'agentName',
-        },
-        {
-            title: 'SLA Duration',
-            placeHolder: 'slaDuration',
-        },
-    ];
-    // const availablePlaceholders = ["ticket", "customer", "status", "category"];
+
+    const [specificPlaceholders, setSpecificPlaceholders] = useState([]);
     const [placeholder, setPlaceholder] = useState('');
     const [custLoading, setCustLoading] = useState(false);
     const [newTemplate, setNewTemplate] = useState({ title: '', subject: '', text: '', type: '' });
@@ -81,14 +57,22 @@ function EditEmailTemplate({
         }
     }, [id]);
 
+    useEffect(() => {
+        getPlaceholders(currentEmailTemplate.type);
+    }, [currentEmailTemplate])
+    
+
     const insertPlaceholder = (i) => {
-        const shortCode = `{${availablePlaceholders[i].placeHolder}}`;
+        const shortCode = `{${specificPlaceholders[i].placeHolder}}`;
         setNewTemplate({
             ...newTemplate,
             text: `${newTemplate.text} ${shortCode} `,
         });
         setPlaceholder(` ${shortCode} `);
     };
+    const getPlaceholders = (value) => {
+        if(value) setSpecificPlaceholders(allPlaceholders[value]);
+    }
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -210,7 +194,7 @@ function EditEmailTemplate({
                             <div className="form-group mt-3 mb-4">
                                 <label className="f-14 mb-1">Available Placeholders</label>
                                 <div className="available-placeholders">
-                                    {availablePlaceholders.map((item, i) => (
+                                    {specificPlaceholders.map((item, i) => (
                                         <p key={i} onClick={() => insertPlaceholder(i)}>
                                             {item.title}
                                         </p>
