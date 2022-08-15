@@ -374,22 +374,18 @@ function Navbar({ pageName, user }) {
     const shouldShowPlanExpiredNotif = !tenantSubscription?.plan?.is_free && daysLeft <= 8;
 
     useEffect(() => {
-        if (shouldShowPlanExpiredNotif) {
-            setNotif((prev) => ({
-                ...prev,
-                showPlanExpiredNotif: true,
-            }));
-        }
+        setNotif((prev) => ({
+            ...prev,
+            showPlanExpiredNotif: shouldShowPlanExpiredNotif,
+        }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [shouldShowPlanExpiredNotif, location.pathname]);
 
     useEffect(() => {
-        if (shouldShowUserExceededNotif) {
-            setNotif((prev) => ({
-                ...prev,
-                showUserExceededNotif: true,
-            }));
-        }
+        setNotif((prev) => ({
+            ...prev,
+            showUserExceededNotif: shouldShowUserExceededNotif,
+        }));
     }, [shouldShowUserExceededNotif, location.pathname]);
 
     const getUserFromStorage = () => {
