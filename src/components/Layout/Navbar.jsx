@@ -467,13 +467,7 @@ function Navbar({ pageName, user }) {
                                         {actualSubTime ? `Your ${planName} is ending in ${actualSubTime}.` : '...'}
                                     </span>
                                 ) : (
-                                    <span>
-                                        {actualSubTime
-                                            ? `Your ${planName} has expired ${
-                                                  Math.abs(daysLeft) > 0 ? `${actualSubTime} ago` : ''
-                                              }.`
-                                            : '...'}
-                                    </span>
+                                    <span>Your {planName} has expired</span>
                                 )}{' '}
                                 <Link
                                     to="/settings/account?tab=subscription"
