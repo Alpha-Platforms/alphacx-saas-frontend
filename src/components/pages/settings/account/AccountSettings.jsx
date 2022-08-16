@@ -610,8 +610,8 @@ function AccountSettings() {
                                 value={defaultCountry}
                             />
                         </div>
-                        {/* BRANDING FIELDS TURNED OFF */}
-                        {false && (
+                        {/* BRANDING FIELDS TURNED ON */}
+                        {true && (
                             <>
                                 <div className="row">
                                     <div className="mb-3 col-6">
