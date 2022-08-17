@@ -29,7 +29,8 @@ import subscriptionReducer from './subscriptionReducer';
 import socketReducer from './socketReducer';
 import audioReducer from './audioReducer';
 import kbReducer from './kbReducer';
-// ,
+import tenantInfoReducer from './tenantInfoReducer';
+
 const persistConfig = {
     key: 'alphacx_platform',
     storage,
@@ -50,6 +51,7 @@ const persistConfig = {
         'channel',
         'subscription',
         'kb',
+        'tenantInfo',
     ],
 };
 
@@ -81,6 +83,7 @@ const rootReducer = combineReducers({
     socket: socketReducer,
     audio: audioReducer,
     kb: kbReducer,
+    tenantInfo: tenantInfoReducer,
 });
 
 export default persistReducer(persistConfig, rootReducer);

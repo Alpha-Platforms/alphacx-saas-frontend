@@ -15,6 +15,7 @@ import Symbol1 from '../../../assets/imgF/symbolAuth.png';
 import Symbol2 from '../../../assets/imgF/symbolAuth2.png';
 import { httpPost, httpPostMain } from '../../../helpers/httpMethods';
 import { getSubscription } from '../../../reduxstore/actions/subscriptionAction';
+import { getTenantInfo } from '../../../reduxstore/actions/tenantInfoActions';
 
 function Login() {
     const location = useLocation();
@@ -40,6 +41,13 @@ function Login() {
     });
     const [environment] = useState(process.env.NODE_ENV);
 
+    const hostLength = hostName.length;
+    const hostn = hostName[0].toLowerCase();
+    const isConsideredDomain =
+        (hostName[hostLength - 2] === 'alphacx' && hostName[0] !== 'app') ||
+        (hostName[hostLength - 2] === 'qustomar' && hostLength === 3) ||
+        (hostName[hostLength - 1] === 'localhost' && hostLength !== 1);
+
     useEffect(() => {
         const token = localStorage.getItem('token');
         const refreshToken = localStorage.getItem('refreshToken');
@@ -57,14 +65,7 @@ function Login() {
 
     useEffect(() => {
         (async () => {
-            const hostLength = hostName.length;
-
-            if (
-                (hostName[hostLength - 2] === 'alphacx' && hostName[0] !== 'app') ||
-                (hostName[hostLength - 2] === 'qustomar' && hostLength === 3) ||
-                (hostName[hostLength - 1] === 'localhost' && hostLength !== 1)
-            ) {
-                const hostn = hostName[0].toLowerCase();
+            if (isConsideredDomain) {
                 setDomain(hostn);
 
                 const res = await httpPost(`auth/login`, { domain: hostn });
@@ -73,6 +74,7 @@ function Login() {
                     window.localStorage.setItem('tenantId', res?.data?.id || '');
                     window.localStorage.setItem('tenantToken', res?.data?.token);
                     dispatch(getSubscription(res?.data?.id));
+                    dispatch(getTenantInfo(hostn));
                 }
             }
         })();
@@ -163,9 +165,11 @@ function Login() {
 
     return (
         <div className="auth-container d-flex justify-content-center">
-            <div className="symbol-wrap2">
-                <img src={Symbol2} alt="" />
-            </div>
+            {!isConsideredDomain && (
+                <div className="symbol-wrap2">
+                    <img src={Symbol2} alt="" />
+                </div>
+            )}
             <div className="login-logo">
                 <img src={AlphaLogo} alt="" /> <img src={Logo} alt="" />
             </div>
@@ -267,9 +271,11 @@ function Login() {
                 )}
             </div>
 
-            <div className="symbol-wrap">
-                <img src={Symbol1} alt="" />
-            </div>
+            {!isConsideredDomain && (
+                <div className="symbol-wrap">
+                    <img src={Symbol1} alt="" />
+                </div>
+            )}
         </div>
     );
 }
