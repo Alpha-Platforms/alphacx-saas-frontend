@@ -421,6 +421,9 @@ export const createEvent = (eventName, data, options = {}) => {
 
 /**
  * Lighten (+ve) or darken (-ve) color.
+ *
+ * @param {string} col Color
+ * @param {number} amt Intensity of light
  */
 export const lightenColor = (col = '#000000', amt = 0) => {
     let usePound = false;
@@ -449,4 +452,46 @@ export const lightenColor = (col = '#000000', amt = 0) => {
     else if (g < 0) g = 0;
 
     return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16);
+};
+
+export const isHexColor = (color) => {
+    const hexColorRegex = /^#([0-9a-f]{3}){1,2}$/i;
+    return hexColorRegex.test(color);
+};
+
+/**
+ * Reurns style with branding color and background-color
+ *
+ * @param {object | array} options obj = { col: number, bgCol: number, kb: boolean } arr = ['icon', 'logo']
+ *
+ * @returns {object} style {color: string, backgroundColor: string }
+ */
+export const brandingKit = (options) => {
+    const storeState = store.getState();
+    const defaultColor = '#006298';
+    const branding = storeState?.tenantInfo?.tenantInfo?.branding;
+    const appColor = branding?.appColor || defaultColor;
+    const kbHeroColor = branding?.kbHeroColor || defaultColor;
+    const appIcon = branding?.appIcon || '';
+    const appLogo = branding?.appLogo || '';
+    if (Array.isArray(options)) {
+        return options?.map((item) => {
+            if (item === 'icon') return appIcon;
+            if (item === 'logo') return appLogo;
+            return '';
+        });
+    }
+    if (isValidObject(options)) {
+        const colorToUse = options?.kb ? kbHeroColor : appColor;
+        const validColor = isHexColor(colorToUse) ? colorToUse : defaultColor;
+        const style = {};
+        if (options.hasOwnProperty('c')) {
+            style.color = lightenColor(validColor, typeof options?.col === 'number' ? options?.col : 0);
+        }
+        if (options.hasOwnProperty('b')) {
+            style.backgroundColor = lightenColor(validColor, typeof options?.bgCol === 'number' ? options.bgCol : 0);
+        }
+        return style;
+    }
+    return null;
 };

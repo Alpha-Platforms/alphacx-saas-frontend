@@ -13,6 +13,10 @@
   --appYellow: #edb538;
   --appRoleText: #334d6e;
   --btnColor: #eed5ba;
+
+  /* BRANDING */
+  --branding-app-color: #006298;
+  --branding-kbhero-color: #006298;
 }
 
 * {

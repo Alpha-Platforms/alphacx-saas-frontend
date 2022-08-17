@@ -8,7 +8,8 @@ import { connect } from 'react-redux';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import AgentLightIcon from '../../../assets/icons/agent_light.svg';
+import { ReactComponent as AgentLightIcon2 } from '../../../assets/icons/agent_light.svg';
+
 import AutomationIcon from '../../../assets/icons/Automation.svg';
 import ShieldIcon from '../../../assets/icons/Shield-Done.svg';
 import FieldsLightIcon from '../../../assets/icons/fields_light.svg';
@@ -47,7 +48,8 @@ function SettingsHome({ signedUser }) {
                             <Link to="/settings/users" className="d-block cursor text-decoration-none">
                                 <div className="d-flex p-md-4">
                                     <div className="">
-                                        <img src={AgentLightIcon} alt="" />
+                                        {/* <img src={AgentLightIcon} alt="" /> */}
+                                        <AgentLightIcon2 fill="red" />
                                     </div>
                                     <div className="ms-3">
                                         <h6 className="text-dark mb-0">Users</h6>
