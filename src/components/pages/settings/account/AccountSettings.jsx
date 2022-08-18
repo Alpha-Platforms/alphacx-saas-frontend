@@ -16,6 +16,7 @@ import MoonLoader from 'react-spinners/MoonLoader';
 import RSelect from 'react-select';
 import SimpleReactValidator from 'simple-react-validator';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
 import { timezone } from '../../../shared/timezone';
 import { languages } from '../../../shared/languages';
 import { countries } from '../../../shared/countries';
@@ -23,6 +24,7 @@ import { httpGet, httpPatch } from '../../../../helpers/httpMethods';
 import ImageDefault from '../../../../assets/svgicons/image-default.svg';
 import './AccountSettings.scss';
 import { config } from '../../../../config/keys';
+import { setTenantInfo } from '../../../../reduxstore/actions/tenantInfoActions';
 
 function AccountSettings() {
     const [accountLoading, setAccountLoading] = useState(false);
@@ -47,6 +49,7 @@ function AccountSettings() {
         },
     });
     const [, forceUpdate] = useState(false);
+    const dispatch = useDispatch();
 
     const appIconWrapper = useRef(null);
     const appLogoWrapper = useRef(null);
@@ -202,6 +205,7 @@ function AccountSettings() {
 
                         if (res?.status === 'success') {
                             setOrganisation((prev) => ({ ...prev, ...res?.data }));
+                            dispatch(setTenantInfo(res?.data));
                             setAppIcon((prev) => ({
                                 ...prev,
                                 msg: 'Click or drag file here to add',
@@ -255,6 +259,7 @@ function AccountSettings() {
 
         if (res?.status === 'success') {
             setOrganisation((prev) => ({ ...prev, ...res?.data }));
+            dispatch(setTenantInfo(res?.data));
             return NotificationManager.success(res?.success, 'Success', 4000);
         }
         return NotificationManager.error(res?.er?.message, 'Error', 4000);

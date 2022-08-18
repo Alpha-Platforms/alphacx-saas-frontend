@@ -2,8 +2,8 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { css } from '@emotion/css';
+import { useDispatch } from 'react-redux';
 import './login.css';
 import { NotificationManager } from 'react-notifications';
 import { Link, useLocation } from 'react-router-dom';
@@ -165,11 +165,7 @@ function Login() {
     };
 
     return (
-        <div
-            className={`auth-container d-flex justify-content-center ${css`
-                background-color: ${brandKit({ bgCol: 0 })?.backgroundColor} !important;
-            `}`}
-        >
+        <div className={`auth-container d-flex justify-content-center ${css({ ...brandKit({ bgCol: -20 }) })}`}>
             {!isConsideredDomain && (
                 <div className="symbol-wrap2">
                     <img src={Symbol2} alt="" />

@@ -2,7 +2,7 @@
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background-color: #0d4166;
+  /* In favour of branding => background-color: #0d4166; */
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -17,9 +17,6 @@
 
 .auth-container::-webkit-scrollbar {
   opacity: 0 !important;
-}
-
-.login-logo {
 }
 
 .login-logo img:first-child {

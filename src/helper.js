@@ -499,7 +499,7 @@ export const brandKit = (options) => {
         if (options.hasOwnProperty('bgCol')) {
             style.backgroundColor = lightenColor(validColor, typeof options?.bgCol === 'number' ? options.bgCol : 0);
         }
-        // console.log('object called with style => ', style);
+        console.log('object called with style => ', style);
         return style;
     }
     return null;

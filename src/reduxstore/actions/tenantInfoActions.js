@@ -19,3 +19,12 @@ export const getTenantInfo = (tenantDomain, success, failed) => async (dispatch)
         }
     }
 };
+
+export const setTenantInfo = (newTenantInfo) => {
+    if (newTenantInfo)
+        return {
+            type: types.GET_TENANT_INFO,
+            payload: newTenantInfo,
+        };
+    return {};
+};
