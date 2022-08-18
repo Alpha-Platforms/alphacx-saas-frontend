@@ -5,6 +5,7 @@ import { httpGet } from '../../helpers/httpMethods';
 
 export const getTenantInfo = (tenantDomain, success, failed) => async (dispatch) => {
     // eslint-disable-next-line no-param-reassign
+    if (!tenantDomain) tenantDomain = window.localStorage.getItem('domain');
     if (tenantDomain) {
         const res = await httpGet(`auth/tenant-info/${tenantDomain}`);
         if (res?.status === 'success') {
