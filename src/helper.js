@@ -12,6 +12,8 @@ import jwt_decode from 'jwt-decode';
 import dayjs from 'dayjs';
 import { config } from './config/keys';
 import store from './reduxstore/store';
+import AlpacxLogoMain from './assets/images/alphacx-logo-main.png';
+import AlpacxIconMain from './assets/images/alphacx-app-icon-white.png';
 
 // function to return axios configuration with tenant token
 export const tenantTokenConfig = (getState) => {
@@ -480,8 +482,8 @@ export const brandKit = (options) => {
     const branding = storeState?.tenantInfo?.tenantInfo?.branding;
     const appColor = branding?.appColor || defaultColor;
     const kbHeroColor = branding?.kbHeroColor || defaultColor;
-    const appIcon = branding?.appIcon || '';
-    const appLogo = branding?.appLogo || '';
+    const appIcon = branding?.appIcon || AlpacxIconMain;
+    const appLogo = branding?.appLogo || AlpacxLogoMain;
     if (Array.isArray(options)) {
         return options?.map((item) => {
             if (item === 'icon') return appIcon;
@@ -499,6 +501,7 @@ export const brandKit = (options) => {
         if (options.hasOwnProperty('bgCol')) {
             style.backgroundColor = lightenColor(validColor, typeof options?.bgCol === 'number' ? options.bgCol : 0);
         }
+        // eslint-disable-next-line no-console
         console.log('object called with style => ', style);
         return style;
     }

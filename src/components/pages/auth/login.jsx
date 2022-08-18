@@ -9,8 +9,7 @@ import { NotificationManager } from 'react-notifications';
 import { Link, useLocation } from 'react-router-dom';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { wordCapitalize, brandKit } from '../../../helper';
-import AlphaLogo from '../../../assets/imgF/alpha.png';
-import Logo from '../../../assets/imgF/logo.png';
+import AlphaLogoMain from '../../../assets/images/alphacx-logo-main.png';
 import showPasswordImg from '../../../assets/imgF/Show.png';
 import Symbol1 from '../../../assets/imgF/symbolAuth.png';
 import Symbol2 from '../../../assets/imgF/symbolAuth2.png';
@@ -171,8 +170,8 @@ function Login() {
                     <img src={Symbol2} alt="" />
                 </div>
             )}
-            <div className="login-logo">
-                <img src={AlphaLogo} alt="" /> <img src={Logo} alt="" />
+            <div className="login-logo-main">
+                <img src={AlphaLogoMain} alt="" />
             </div>
 
             <div className="login-container">
@@ -206,7 +205,14 @@ function Login() {
                         </div>
 
                         <div className="submit-auth-btn">
-                            <button type="submit" disabled={loading || userInput.domain === ''} onClick={handleSubmit}>
+                            <button
+                                type="submit"
+                                disabled={loading || userInput.domain === ''}
+                                onClick={handleSubmit}
+                                className={css({
+                                    ...brandKit({ bgCol: -20 }),
+                                })}
+                            >
                                 {' '}
                                 {loading ? <ClipLoader color={color} loading={loading} size={30} /> : 'Continue'}
                             </button>
@@ -256,6 +262,12 @@ function Login() {
                                 type="submit"
                                 disabled={loading || userInput.email === '' || userInput.password === ''}
                                 onClick={handleSubmit}
+                                className={css({
+                                    ...brandKit({ bgCol: 10 }),
+                                    '&:hover, &:focus': {
+                                        ...brandKit({ bgCol: -20 }),
+                                    },
+                                })}
                             >
                                 {' '}
                                 {loading ? <ClipLoader color={color} loading={loading} size={30} /> : 'Login'}
