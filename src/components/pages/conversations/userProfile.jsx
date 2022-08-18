@@ -3,6 +3,7 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { capitalize } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import { css } from '@emotion/css';
 import { CancelIconC, UserProfileIcon1, UserProfileIcon2, UserProfileIcon3 } from '../../../assets/images/svgs';
 
 import userImg from '../../../assets/imgF/user.png';
@@ -18,6 +19,7 @@ import TicketDueDateIcon from '../../../assets/icons/ticketduedate.svg';
 import TicketSourceIcon from '../../../assets/icons/ticketsource.svg';
 import { dateFormater } from '../../helpers/dateFormater';
 import TicketAttachment from './TicketAttachment';
+import { brandKit } from '../../../helper';
 
 export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLine = true, showAttachment = true }) {
     const [timeStampsMsg, setTimeStampsMsg] = useState([]);
@@ -64,7 +66,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                             <img src={ticket[0]?.customer?.avatar} alt="" />
                         ) : (
                             // <img src={userImg} alt="" />
-                            <div className="userProfilePicConNoImgj">
+                            <div className={`userProfilePicConNoImgj ${css({ ...brandKit({ bgCol: 0 }) })}`}>
                                 <p className="text-capitalize" style={{ fontSize: '30px!important' }}>
                                     {InitialsFromString(
                                         `${
@@ -138,7 +140,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                                 style={{
                                                     width: '30px',
                                                     height: '30px',
-                                                    borderRadius: '50%',
+                                                    borderRadius: '100%',
                                                     marginRight: '2px',
                                                 }}
                                             />
@@ -209,7 +211,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                                 style={{
                                                     width: '30px',
                                                     height: '30px',
-                                                    borderRadius: '50%',
+                                                    borderRadius: '100%',
                                                     marginRight: '2px',
                                                 }}
                                             />
@@ -269,7 +271,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                     </li>
 
                                     <li className="ms-0">
-                                        <CircleIcon color="rgba(7, 150, 247, 0.25)" icon={TicketStageIcon} />
+                                        <CircleIcon color="rgba(7, 1100, 247, 0.25)" icon={TicketStageIcon} />
                                         <div>
                                             <p className="pb-0 mb-0 f-12 text-muted op-9">Stage</p>
                                             <p className="text-muted f-13">{ticket[0]?.status?.status}</p>
@@ -395,8 +397,8 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                     <div className="container-timeline">
                         <div className="box">
                             <div className="borderContaner">
-                                <div className="circle" />
-                                <div className="img" />
+                                <div className={`circle ${css({ ...brandKit({ bgCol: 100 }) })}`} />
+                                <div className={`img ${css({ ...brandKit({ bgCol: 100 }) })}`} />
                             </div>
                             <div className="textTimeLineSec">
                                 <span>
@@ -419,8 +421,8 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                         ) : (
                             <div className="box">
                                 <div className="borderContaner">
-                                    <div className="circle" />
-                                    <div className="img" />
+                                    <div className={`circle ${css({ ...brandKit({ bgCol: 100 }) })}`} />
+                                    <div className={`img ${css({ ...brandKit({ bgCol: 100 }) })}`} />
                                 </div>
                                 <div className="textTimeLineSec">
                                     <span>
@@ -443,8 +445,8 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                             return (
                                 <div key={data.id} className="box">
                                     <div className="borderContaner">
-                                        <div className="circle" />
-                                        <div className="img" />
+                                        <div className={`circle ${css({ ...brandKit({ bgCol: 100 }) })}`} />
+                                        <div className={`img ${css({ ...brandKit({ bgCol: 100 }) })}`} />
                                     </div>
                                     <div className="textTimeLineSec">
                                         <span>

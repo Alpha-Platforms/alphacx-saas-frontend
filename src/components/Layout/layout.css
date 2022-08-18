@@ -103,7 +103,7 @@
   width: 240px;
   position: fixed;
   z-index: 55;
-  background: linear-gradient(180deg, #0074b3 -93.06%, #1a1d33 100%);
+  /* background: linear-gradient(180deg, #0074b3 -93.06%, #1a1d33 100%); // TO FAVOUR BRANDING */
   /* transition: all 400ms ease-in; */
   display: flex;
   flex-direction: column;

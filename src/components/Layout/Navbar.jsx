@@ -14,6 +14,7 @@ import { NotificationManager } from 'react-notifications';
 import MoonLoader from 'react-spinners/MoonLoader';
 import Dropdown from 'react-bootstrap/Dropdown';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { css } from '@emotion/css';
 import { LayoutContext } from '../../context/layoutContext';
 import { NotificationBellEmpty, NotificationBellNew } from '../../assets/images/svgs';
 // import userIcon from "../../assets/images/user.png";
@@ -26,7 +27,7 @@ import '../../styles/Navbar.css';
 import { httpGetMain, httpPatchMain } from '../../helpers/httpMethods';
 // import AccordionLink from "components/pages/help_center/components/accordion/AccordionLink";
 import { accessControlFunctions } from '../../config/accessControlList';
-import { hasFeatureAccess, multiIncludes } from '../../helper';
+import { hasFeatureAccess, multiIncludes, brandKit } from '../../helper';
 import GlobalSearch from './components/GlobalSearch';
 
 function DropDown({ shouldShowUserExceededNotif }) {
@@ -41,7 +42,12 @@ function DropDown({ shouldShowUserExceededNotif }) {
                     disabled={subExpired || shouldShowUserExceededNotif}
                     variant=""
                     size=""
-                    className="btn acx-btn-primary"
+                    className={`btn ${css({
+                        ...brandKit({ bgCol: 0 }),
+                        color: 'white',
+                        borderRadius: '4px !important',
+                        '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                    })}`}
                     style={{ borderRadius: '.15rem' }}
                 >
                     <div style={{ padding: '.25rem .5rem' }}>
