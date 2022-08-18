@@ -9,7 +9,6 @@ import { NotificationManager } from 'react-notifications';
 import { Link, useLocation } from 'react-router-dom';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { wordCapitalize, brandKit } from '../../../helper';
-import AlphaLogoMain from '../../../assets/images/alphacx-logo-main.png';
 import showPasswordImg from '../../../assets/imgF/Show.png';
 import Symbol1 from '../../../assets/imgF/symbolAuth.png';
 import Symbol2 from '../../../assets/imgF/symbolAuth2.png';
@@ -171,7 +170,7 @@ function Login() {
                 </div>
             )}
             <div className="login-logo-main">
-                <img src={AlphaLogoMain} alt="" />
+                <img src={brandKit(['logo'])[0]} alt="" />
             </div>
 
             <div className="login-container">
