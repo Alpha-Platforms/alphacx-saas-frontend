@@ -8,7 +8,6 @@ import { NotificationManager } from 'react-notifications';
 import { connect } from 'react-redux';
 import MoonLoader from 'react-spinners/MoonLoader';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { css } from '@emotion/react';
 import { getSmsConfig, updateSmsConfig } from '../../../../reduxstore/actions/smsActions';
 
 function SmsSettings({
@@ -35,7 +34,6 @@ function SmsSettings({
         }));
     };
 
-    const override = css``;
     const [color, setColor] = useState('#ffffff');
 
     useEffect(() => {
@@ -144,7 +142,7 @@ function SmsSettings({
                                         {loading ? (
                                             <>
                                                 <span>Saving changes...</span>
-                                                <ClipLoader color={color} loading={loading} css={override} size={15} />
+                                                <ClipLoader color={color} loading={loading} size={15} />
                                             </>
                                         ) : (
                                             'Save Changes'

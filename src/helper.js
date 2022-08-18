@@ -450,8 +450,14 @@ export const lightenColor = (col = '#000000', amt = 0) => {
 
     if (g > 255) g = 255;
     else if (g < 0) g = 0;
+    const hexVal = (g | (b << 8) | (r << 16)).toString(16);
+    let newHexVal = hexVal;
 
-    return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16);
+    for (let i = 0; i < 6 - hexVal.length; i += 1) {
+        newHexVal = `0${newHexVal}`;
+    }
+
+    return (usePound ? '#' : '') + newHexVal;
 };
 
 export const isHexColor = (color) => {
@@ -460,14 +466,15 @@ export const isHexColor = (color) => {
 };
 
 /**
- * Get all branding information from the store
+ * Get all branding information from the store.
+ * +ve lightens or -ve darkens.
  *
- * @param {object | array} options obj = { col: number, bgCol: number, kb: boolean } arr = ['icon', 'logo']
+ * @param {object | array} options obj = { col: (number), bgCol: number, kb: boolean } arr = ['icon', 'logo']
  *
  * @returns {object} object arguement ? { color: string, backgroundColor: string }
  * @returns {array} array argument ? ['icon', 'logo']
  */
-export const brandingKit = (options) => {
+export const brandKit = (options) => {
     const storeState = store.getState();
     const defaultColor = '#006298';
     const branding = storeState?.tenantInfo?.tenantInfo?.branding;
@@ -486,12 +493,13 @@ export const brandingKit = (options) => {
         const colorToUse = options?.kb ? kbHeroColor : appColor;
         const validColor = isHexColor(colorToUse) ? colorToUse : defaultColor;
         const style = {};
-        if (options.hasOwnProperty('c')) {
+        if (options.hasOwnProperty('col')) {
             style.color = lightenColor(validColor, typeof options?.col === 'number' ? options?.col : 0);
         }
-        if (options.hasOwnProperty('b')) {
+        if (options.hasOwnProperty('bgCol')) {
             style.backgroundColor = lightenColor(validColor, typeof options?.bgCol === 'number' ? options.bgCol : 0);
         }
+        // console.log('object called with style => ', style);
         return style;
     }
     return null;

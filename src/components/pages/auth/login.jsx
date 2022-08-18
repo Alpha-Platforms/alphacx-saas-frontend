@@ -3,11 +3,12 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { css } from '@emotion/css';
 import './login.css';
 import { NotificationManager } from 'react-notifications';
 import { Link, useLocation } from 'react-router-dom';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { wordCapitalize } from '../../../helper';
+import { wordCapitalize, brandKit } from '../../../helper';
 import AlphaLogo from '../../../assets/imgF/alpha.png';
 import Logo from '../../../assets/imgF/logo.png';
 import showPasswordImg from '../../../assets/imgF/Show.png';
@@ -164,7 +165,11 @@ function Login() {
     };
 
     return (
-        <div className="auth-container d-flex justify-content-center">
+        <div
+            className={`auth-container d-flex justify-content-center ${css`
+                background-color: ${brandKit({ bgCol: 0 })?.backgroundColor} !important;
+            `}`}
+        >
             {!isConsideredDomain && (
                 <div className="symbol-wrap2">
                     <img src={Symbol2} alt="" />
