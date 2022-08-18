@@ -460,11 +460,12 @@ export const isHexColor = (color) => {
 };
 
 /**
- * Reurns style with branding color and background-color
+ * Get all branding information from the store
  *
  * @param {object | array} options obj = { col: number, bgCol: number, kb: boolean } arr = ['icon', 'logo']
  *
- * @returns {object} style {color: string, backgroundColor: string }
+ * @returns {object} object arguement ? { color: string, backgroundColor: string }
+ * @returns {array} array argument ? ['icon', 'logo']
  */
 export const brandingKit = (options) => {
     const storeState = store.getState();
