@@ -10,20 +10,20 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { ReactComponent as AgentLightIcon2 } from '../../../assets/icons/agent_light.svg';
 
-import AutomationIcon from '../../../assets/icons/Automation.svg';
-import ShieldIcon from '../../../assets/icons/Shield-Done.svg';
-import FieldsLightIcon from '../../../assets/icons/fields_light.svg';
-import FolderBlueIcon from '../../../assets/icons/Folder-blue.svg';
-import SendBlueIcon from '../../../assets/icons/Send-blue.svg';
-import SearchBlueIcon from '../../../assets/icons/Database-blue.svg';
-import AccountLightIcon from '../../../assets/icons/Social-blurb.svg';
-import SocialBlurbIcon from '../../../assets/icons/Chart-blue.svg';
-import ChartBlueIcon from '../../../assets/icons/Star-BW.svg';
-import UserBWIcon from '../../../assets/icons/Discount-blue.svg';
-import LivechatIcon from '../../../assets/icons/chat-blue.svg';
+import { ReactComponent as AutomationIcon } from '../../../assets/icons/Automation.svg';
+import { ReactComponent as ShieldIcon } from '../../../assets/icons/Shield-Done.svg';
+import { ReactComponent as FieldsLightIcon } from '../../../assets/icons/fields_light.svg';
+import { ReactComponent as FolderBlueIcon } from '../../../assets/icons/Folder-blue.svg';
+import { ReactComponent as SendBlueIcon } from '../../../assets/icons/Send-blue.svg';
+import { ReactComponent as SearchBlueIcon } from '../../../assets/icons/Database-blue.svg';
+import { ReactComponent as AccountLightIcon } from '../../../assets/icons/Social-blurb.svg';
+import { ReactComponent as SocialBlurbIcon } from '../../../assets/icons/Chart-blue.svg';
+import { ReactComponent as ChartBlueIcon } from '../../../assets/icons/Star-BW.svg';
+import { ReactComponent as UserBWIcon } from '../../../assets/icons/Discount-blue.svg';
+import { ReactComponent as LivechatIcon } from '../../../assets/icons/chat-blue.svg';
 import AccessControl from '../auth/accessControl';
 import ContactAlphcxModal from './ContactAlphcxModal2';
-import { hasFeatureAccess } from '../../../helper';
+import { hasFeatureAccess, brandKit } from '../../../helper';
 
 function SettingsHome({ signedUser }) {
     const [contactSupportModalShow, setContactSupportModalShow] = useState(false);
@@ -49,7 +49,7 @@ function SettingsHome({ signedUser }) {
                                 <div className="d-flex p-md-4">
                                     <div className="">
                                         {/* <img src={AgentLightIcon} alt="" /> */}
-                                        <AgentLightIcon2 fill="red" />
+                                        <AgentLightIcon2 fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                     </div>
                                     <div className="ms-3">
                                         <h6 className="text-dark mb-0">Users</h6>
@@ -68,7 +68,7 @@ function SettingsHome({ signedUser }) {
                         <Link to={`/settings/profile/${signedUser.id}`} className="d-block cursor text-decoration-none">
                             <div className="d-flex p-md-4">
                                 <div className="">
-                                    <img src={UserBWIcon} alt="" />
+                                    <UserBWIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                 </div>
                                 <div className="ms-3">
                                     <h6 className="text-dark mb-0">Profile Settings</h6>
@@ -86,7 +86,7 @@ function SettingsHome({ signedUser }) {
                                 <Link to="/settings/teams" className="d-block cursor text-decoration-none">
                                     <div className="d-flex p-md-4">
                                         <div className="">
-                                            <img src={FolderBlueIcon} alt="" />
+                                            <FolderBlueIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                         </div>
                                         <div className="ms-3">
                                             <h6 className="text-dark mb-0">Teams</h6>
@@ -107,7 +107,7 @@ function SettingsHome({ signedUser }) {
                             <Link to="/settings/account" className="d-block cursor text-decoration-none">
                                 <div className="d-flex p-md-4">
                                     <div className="">
-                                        <img src={ShieldIcon} alt="" />
+                                        <ShieldIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                     </div>
                                     <div className="ms-3">
                                         <h6 className="text-dark mb-0">Account</h6>
@@ -128,7 +128,7 @@ function SettingsHome({ signedUser }) {
                                 <Link to="settings/automations" className="d-block cursor text-decoration-none">
                                     <div className="d-flex p-md-4">
                                         <div className="">
-                                            <img src={AutomationIcon} alt="" />
+                                            <AutomationIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                         </div>
                                         <div className="ms-3">
                                             <h6 className="text-dark mb-0">Automation</h6>
@@ -149,7 +149,7 @@ function SettingsHome({ signedUser }) {
                             <Link to="/settings/tickets" className="d-block cursor text-decoration-none">
                                 <div className="d-flex p-md-4">
                                     <div className="">
-                                        <img src={AccountLightIcon} alt="" />
+                                        <AccountLightIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                     </div>
                                     <div className="ms-3">
                                         <h6 className="text-dark mb-0">Conversation Settings</h6>
@@ -169,7 +169,7 @@ function SettingsHome({ signedUser }) {
                             <Link to="/settings/integrations" className="d-block cursor text-decoration-none">
                                 <div className="d-flex p-md-4">
                                     <div className="">
-                                        <img src={SocialBlurbIcon} alt="" />
+                                        <SocialBlurbIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                     </div>
                                     <div className="ms-3">
                                         <h6 className="text-dark mb-0">Integrations</h6>
@@ -189,7 +189,7 @@ function SettingsHome({ signedUser }) {
                             <Link to="/settings/notifications" className="d-block cursor text-decoration-none">
                                 <div className="d-flex p-md-4">
                                     <div className="">
-                                        <img src={SendBlueIcon} alt="" />
+                                        <SendBlueIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                     </div>
                                     <div className="ms-3">
                                         <h6 className="text-dark mb-0">Notifications</h6>
@@ -210,7 +210,7 @@ function SettingsHome({ signedUser }) {
                                 <Link to="/settings/knowledge-base" className="d-block cursor text-decoration-none">
                                     <div className="d-flex p-md-4">
                                         <div className="">
-                                            <img src={SearchBlueIcon} alt="" />
+                                            <SearchBlueIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                         </div>
                                         <div className="ms-3">
                                             <h6 className="text-dark mb-0">Knowledge Base</h6>
@@ -232,7 +232,7 @@ function SettingsHome({ signedUser }) {
                                 <Link to="settings/ratings" className="d-block cursor text-decoration-none">
                                     <div className="d-flex p-md-4">
                                         <div className="">
-                                            <img src={ChartBlueIcon} alt="" />
+                                            <ChartBlueIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                         </div>
                                         <div className="ms-3">
                                             <h6 className="text-dark mb-0">Ratings and Review</h6>
@@ -254,7 +254,7 @@ function SettingsHome({ signedUser }) {
                                 <Link to="settings/fields" className="d-block cursor text-decoration-none">
                                     <div className="d-flex p-md-4">
                                         <div className="">
-                                            <img src={FieldsLightIcon} alt="" />
+                                            <FieldsLightIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                         </div>
                                         <div className="ms-3">
                                             <h6 className="text-dark mb-0">Fields</h6>
@@ -279,7 +279,7 @@ function SettingsHome({ signedUser }) {
                         >
                             <div className="d-flex p-md-4">
                                 <div className="">
-                                    <img src={LivechatIcon} alt="" />
+                                    <LivechatIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                 </div>
                                 <div className="ms-3">
                                     <h6 className="text-dark mb-0">Contact AlphaCX</h6>
