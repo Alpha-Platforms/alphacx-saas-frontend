@@ -7,6 +7,7 @@ import { NotificationManager } from 'react-notifications';
 import Modal from 'react-responsive-modal';
 import moment from 'moment';
 import { useSelector } from 'react-redux';
+import { css } from '@emotion/css';
 import AccessControl from '../pages/auth/accessControl';
 import { LayoutContext } from '../../context/layoutContext';
 import {
@@ -20,12 +21,10 @@ import {
     LogoutIcon,
     Graph,
     SettingsIcon,
-    AppLogo,
-    AppFullLogo,
     CollapseLeft,
 } from '../../assets/images/svgs';
 import { ReactComponent as DiscountWhite } from '../../assets/icons/Discount-White.svg';
-import { hasFeatureAccess } from '../../helper';
+import { hasFeatureAccess, brandKit } from '../../helper';
 
 export default function Sidebar({ browserRouter, currentRoute }) {
     const {
@@ -54,13 +53,25 @@ export default function Sidebar({ browserRouter, currentRoute }) {
 
     return (
         <>
-            <menu className={`sidebar-wrap ${appReduceSidebarWidth === true ? '' : 'collapsed'}`}>
-                <header className="sidebar-header">
+            <menu
+                className={`sidebar-wrap ${appReduceSidebarWidth === true ? '' : 'collapsed'} ${css`
+                    background: linear-gradient(
+                        180deg,
+                        ${brandKit({ bgCol: 0 })?.backgroundColor} -93.06%,
+                        ${brandKit({ bgCol: -130 })?.backgroundColor} 100%
+                    );
+                `}`}
+            >
+                <header
+                    className={`sidebar-header ${css({
+                        ...brandKit({ bgCol: 10 }),
+                    })}`}
+                >
                     <span className="sidebar-header--full-logo">
-                        <AppFullLogo />
+                        <img src={brandKit(['logo'])[0]} alt="App logo" />
                     </span>
                     <span className="sidebar-header--logo">
-                        <AppLogo />
+                        <img src={brandKit(['icon'])[0]} alt="App icon" />
                     </span>
                 </header>
                 <ul className="sidebar-list mb-auto">
