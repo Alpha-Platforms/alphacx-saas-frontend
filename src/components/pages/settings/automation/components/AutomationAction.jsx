@@ -40,7 +40,6 @@ function AutomationAction({
 
     const [actionChannels] = useState([
         { label: 'Email', value: 'email' },
-        { label: 'SMS', value: 'sms' },
     ]);
 
     // F U N C T I O N S
