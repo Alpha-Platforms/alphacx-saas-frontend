@@ -9,12 +9,14 @@ import MoonLoader from 'react-spinners/MoonLoader';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import RSelect from 'react-select';
+import { css } from '@emotion/css';
 import { getCurrentAgent, getAgents } from '../../../../reduxstore/actions/agentActions';
 import { updateUser, updateUserPassword } from '../../../../reduxstore/actions/userActions';
 import ImageDefault from '../../../../assets/svgicons/image-default.svg';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
 import showPasswordImg from "../../../../assets/imgF/Show.png";
 import { config } from '../../../../config/keys';
+import { brandKit } from '../../../../helper';
 // import {isAdminRole} from "components/pages/auth/accessControl";
 
 function UserProfileTwo({
@@ -374,14 +376,15 @@ function UserProfileTwo({
         <div className="account-settings">
             {accountLoading && (
                 <div className={`cust-table-loader ${accountLoading && 'add-loader-opacity'}`}>
-                    <MoonLoader loading={accountLoading} color="#006298" size={30} />
+                    <MoonLoader loading={accountLoading} color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
 
             {!isCurrentAgentLoaded ? (
-                <div className="single-cust-loader">
-                    <MoonLoader loading color="#006298" size={30} />
-                </div>
+                <div className="d-flex justify-content-center align-items-center pt-5 away">
+                {' '}
+                <MoonLoader color={brandKit({ bgCol: 0 })?.backgroundColor} loading size={30} />
+            </div>
             ) : !currentAgent ? (
                 <div>
                     <h3 className="text-center">User Not Found.</h3>
@@ -610,7 +613,11 @@ function UserProfileTwo({
                                     <div>
                                         <label
                                             htmlFor="uploadPersonalPhotoInput"
-                                            className="btn btn-sm bg-at-blue-light px-4 py-1 mb-2 mt-1"
+                                            className={`btn btn-sm px-3 py-1 mb-2 mt-1 ${css({
+                                                ...brandKit({ bgCol: 0 }),
+                                                color: 'white',
+                                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                            })}`}
                                             onClick={() => document.getElementById('accountLogo').click()}
                                         >
                                             Upload Photo
@@ -639,7 +646,11 @@ function UserProfileTwo({
                             <div className="mb-5 text-end">
                                 <button
                                     type="button"
-                                    className="btn btn-sm bg-at-blue-light text-white px-4"
+                                    className={`btn btn-sm text-white px-3 py-1 ${css({
+                                        ...brandKit({ bgCol: 0 }),
+                                        color: 'white',
+                                        '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                    })}`}
                                     onClick={updateUserInfo}
                                 >
                                     Save Changes
