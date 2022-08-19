@@ -9,7 +9,8 @@ import MoonLoader from 'react-spinners/MoonLoader';
 import { TablePagination } from '@material-ui/core';
 import { Link, useLocation } from 'react-router-dom';
 import { NotificationManager } from 'react-notifications';
-import { wordCapitalize } from 'helper';
+import { css } from '@emotion/css';
+import { wordCapitalize, brandKit } from '../../../../helper';
 import tableIcons from '../../../../assets/materialicons/tableIcons';
 import { getPaginatedUsers } from '../../../../reduxstore/actions/userActions';
 // import moment from 'moment';,
@@ -186,7 +187,11 @@ function GroupList({ groups, categories, isGroupsLoaded, authenticatedUser, dele
                             <button
                                 onClick={handleGroupAdd}
                                 type="button"
-                                className="btn btn-sm bg-at-blue-light px-md-3 mx-1"
+                                className={`btn btn-sm px-md-3 mx-1 py-1 ${css({
+                                    ...brandKit({ bgCol: 0 }),
+                                    color: 'white',
+                                    '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                })}`}
                             >
                                 &nbsp;Add Team
                             </button>
@@ -337,7 +342,11 @@ function GroupList({ groups, categories, isGroupsLoaded, authenticatedUser, dele
                             Cancel
                         </button>
                         <button
-                            className="btn btn-sm ms-2 f-12 bg-custom px-4"
+                            className={`btn btn-sm ms-2 f-12 bg-custom px-4 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`}
                             onClick={(e) => {
                                 e.preventDefault();
                                 initiateDeleteGroup(groupToDelete);
