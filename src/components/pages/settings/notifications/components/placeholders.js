@@ -57,7 +57,7 @@ const allPlaceholders = {
         {
             title: 'Subject',
             placeHolder: 'subject',
-        }
+        },
     ],
     ticketStatusClosed: [
         {

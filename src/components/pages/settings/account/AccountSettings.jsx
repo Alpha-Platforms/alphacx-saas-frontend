@@ -268,6 +268,13 @@ function AccountSettings() {
         fileRef?.current?.click();
     };
 
+    // {zone.offset > 0 ? `GMT +${zone.offset}`  : zone.offset < 0  ? `GMT ${zone.offset}`  : `GMT`}
+
+
+    const tzOffsetter = (tz) => {
+        return tz > 0 ? `GMT +${tz}` : tz < 0 ? `GMT ${tz}` : `GMT`;
+    };
+
     const clearSelectedImage = (type) => {
         type === 'app-icon'
             ? setAppIcon((prev) => ({
@@ -578,14 +585,8 @@ function AccountSettings() {
                                 >
                                     <option>Select Time Zone</option>
                                     {timezones.map((zone, i) => (
-                                        <option key={i} value={zone.value}>
-                                            {zone.value}(
-                                                {zone.offset > 0
-                                                ? `GMT +${zone.offset}`
-                                                : zone.offset < 0
-                                                ? `GMT ${zone.offset}`
-                                                : `GMT`}
-                                            )
+                                        <option key={i} value={`${zone.value} ${tzOffsetter(zone.offset)}`}>
+                                            {`${zone.value} ${tzOffsetter(zone.offset)}`}
                                         </option>
                                     ))}
                                 </select>
