@@ -4,12 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-responsive-modal';
 import { connect } from 'react-redux';
 import RSelect from 'react-select';
+import { css } from '@emotion/css';
 import EditorBox from '../../../../reusables/EditorBox';
-import DeleteIcon from '../../../../../assets/icons/Delete.svg';
-import AddIcon from '../../../../../assets/icons/add.svg';
+import {ReactComponent as DeleteIcon} from '../../../../../assets/icons/Delete.svg';
+import {ReactComponent as AddIcon} from '../../../../../assets/icons/add.svg';
 
 import { httpGetMain } from '../../../../../helpers/httpMethods';
-import { uuid } from '../../../../../helper';
+import { uuid, brandKit } from '../../../../../helper';
 
 function AutomationAction({
     availablePlaceholders,
@@ -197,27 +198,29 @@ function AutomationAction({
                         <div className="d-flex">
                             <div className="form-check">
                                 <input
-                                    className="form-check-input"
-                                    name="recipientType"
+                                    className={`form-check-input ${css({ '&:checked': { ...brandKit({ bgCol: 0 }) } })}`}
+                                    name={`recipientType-${action.id}`}
+                                    id={`recipientType-${action.id}-agent`}
                                     type="radio"
                                     value="agent"
                                     checked={action.recipientType === 'agent'}
                                     onClick={handleRecipientTypeChange}
                                 />
-                                <label className="form-check-label f-14" htmlFor="radio-2">
+                                <label className="form-check-label f-14" htmlFor={`recipientType-${action.id}-agent`}>
                                     Agents
                                 </label>
                             </div>
                             <div className="form-check" style={{ marginLeft: 10 }}>
                                 <input
-                                    className="form-check-input"
-                                    name="recipientType"
+                                    className={`form-check-input ${css({ '&:checked': { ...brandKit({ bgCol: 0 }) } })}`}
+                                    name={`recipientType-${action.id}`}
+                                    id={`recipientType-${action.id}-team`}
                                     type="radio"
                                     value="group"
                                     checked={action.recipientType === 'group'}
                                     onClick={handleRecipientTypeChange}
                                 />
-                                <label className="form-check-label f-14" htmlFor="radio-2">
+                                <label className="form-check-label f-14" htmlFor={`recipientType-${action.id}-team`}>
                                     Teams
                                 </label>
                             </div>
@@ -242,10 +245,14 @@ function AutomationAction({
                         <div className="available-placeholders">
                             {availablePlaceholders.map((item, i) => (
                                 // <p key={i} onClick={() => insertPlaceholder(i)}>
-                                <p key={i} onClick={() => insertTextToEditor(i)}>
+                                <button type="button" key={i} onClick={() => insertTextToEditor(i)} className={`btn ${css({
+                                    ...brandKit({ col: 0 }),
+                                    border: `1px solid ${brandKit({ col: 0 })?.color} !important`,
+                                    '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                })}`}>
                                     {item?.name}
-                                </p>
-                            ))}
+                                </button>
+                        ))}
                         </div>
                     </div>
 
@@ -274,21 +281,21 @@ function AutomationAction({
                         />
                     </div>
                 </div>
-                <div className="card-footer bg-light px-3 py-3" id="customer-choice">
-                    <button className="addNewResolution" onClick={addAction}>
-                        <img src={AddIcon} alt="" className="img-fluid me-1 mt-n5 " />
-                        New Action
+                <div className="card-footer bg-light px-3 py-3 d-flex align-items-center" id="customer-choice">
+                    <button className="addNewResolution d-inline-flex justify-content-center align-items-center" onClick={addAction}>
+                        <AddIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} /> <span className="ms-1">New Action</span>
                     </button>
 
                     {actions.length > 1 && (
                         <button
-                            className="delete-resolution mx-4"
+                            className="delete-resolution mx-4 d-inline-flex justify-content-center align-items-center pt-1"
                             onClick={(e) => {
                                 e.preventDefault();
                                 setDeleteConfirm(true);
                             }}
                         >
-                            <img src={DeleteIcon} alt="" className="img-fluid me-1 mt-n5 " /> Delete Action
+                            {/* <img src={DeleteIcon} alt="" className="img-fluid me-1 mt-n5 " /> Delete Action */}
+                            <DeleteIcon stroke="red" /> <span className="ms-1">Delete Action</span>
                         </button>
                     )}
                 </div>
@@ -299,13 +306,17 @@ function AutomationAction({
                     <h6 className="mb-5">Are you sure you want to delete this Action?</h6>
                     <div className="float-end mb-5">
                         <button
-                            className="btn btn-sm f-12 bg-outline-custom cancel px-4"
+                            className="btn btn-sm f-12 border cancel px-4"
                             onClick={() => setDeleteConfirm(false)}
                         >
                             Cancel
                         </button>
                         <button
-                            className="btn btn-sm ms-2 f-12 bg-custom px-4"
+                            className={`btn btn-sm ms-2 f-12 px-4 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`}
                             onClick={(e) => {
                                 deleteAction(e);
                                 setDeleteConfirm(false);

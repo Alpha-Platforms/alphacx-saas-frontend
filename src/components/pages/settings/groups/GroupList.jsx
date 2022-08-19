@@ -155,7 +155,7 @@ function GroupList({ groups, categories, isGroupsLoaded, authenticatedUser, dele
         <div>
             {groupsLoading && (
                 <div className="cust-table-loader">
-                    <MoonLoader loading={groupsLoading} color="#006298" size={30} />
+                    <MoonLoader loading={groupsLoading} color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
             <div className="card card-body bg-white p-0 border-0">

@@ -17,6 +17,7 @@ import RSelect from 'react-select';
 import SimpleReactValidator from 'simple-react-validator';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
+import { css } from '@emotion/css';
 import { timezone } from '../../../shared/timezone';
 import { languages } from '../../../shared/languages';
 import { countries } from '../../../shared/countries';
@@ -25,6 +26,7 @@ import ImageDefault from '../../../../assets/svgicons/image-default.svg';
 import './AccountSettings.scss';
 import { config } from '../../../../config/keys';
 import { setTenantInfo } from '../../../../reduxstore/actions/tenantInfoActions';
+import { brandKit } from '../../../../helper';
 
 function AccountSettings() {
     const [accountLoading, setAccountLoading] = useState(false);
@@ -856,7 +858,11 @@ function AccountSettings() {
                     <div className="text-end col-md-8 mt-4 mb-4 pt-2 pb-3">
                         <button
                             type="button"
-                            className="btn btn-sm bg-at-blue-light text-white px-4"
+                            className={`btn btn-sm text-white px-4 py-1 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`}
                             onClick={updateUserInfo}
                         >
                             Save Changes
