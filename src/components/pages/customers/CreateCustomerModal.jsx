@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import RSelect from 'react-select/creatable';
 import axios from 'axios';
 import SimpleReactValidator from 'simple-react-validator';
+import { css } from '@emotion/css';
 import {
     addCustomer,
     getPaginatedCustomers,
@@ -26,6 +27,7 @@ import { countrycodes } from '../../shared/countrycodes';
 // import ImageDefault from '../../../assets/svgicons/image-default.svg';
 import { createTags } from '../../../reduxstore/actions/tagActions';
 import { config } from '../../../config/keys';
+import { brandKit } from '../../../helper';
 
 function CreateCustomerModal({
     createModalShow,
@@ -677,7 +679,11 @@ function CreateCustomerModal({
                         {!isEditing ? (
                             <button
                                 type="button"
-                                className="btn bg-at-blue-light  py-1 px-4"
+                                className={`btn py-1 px-4 ${css({
+                                    ...brandKit({ bgCol: 0 }),
+                                    color: 'white',
+                                    '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                })}`}
                                 disabled={creatingCust}
                                 onClick={handleCustomerCreation}
                             >
@@ -686,7 +692,11 @@ function CreateCustomerModal({
                         ) : (
                             <button
                                 type="button"
-                                className="btn bg-at-blue-light  py-1 px-4"
+                                className={`btn bg-at-blue-light  py-1 px-4 ${css({
+                                    ...brandKit({ bgCol: 0 }),
+                                    color: 'white',
+                                    '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                })}`}
                                 disabled={editingCust}
                                 onClick={handleCustomerEdit}
                             >

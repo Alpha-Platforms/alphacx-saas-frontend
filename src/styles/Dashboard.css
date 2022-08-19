@@ -198,7 +198,7 @@
 }
 
 .legend-input:checked {
-  background-color: var(--at-blue);
+  /* background-color: var(--at-blue); TO FAVOUR BRANDING */
 }
 
 .legend-bg-blue {

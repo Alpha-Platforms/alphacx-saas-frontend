@@ -20,13 +20,14 @@ import RSelect from 'react-select';
 import RCreatable from 'react-select/creatable';
 import AsyncSelect from 'react-select/async';
 import SimpleReactValidator from 'simple-react-validator';
+import { css } from '@emotion/css';
 import { getPaginatedCurrentCustomerTickets } from '../../../reduxstore/actions/customerActions';
 import { getPaginatedTickets, addTicket, resetTicketCreated } from '../../../reduxstore/actions/ticketActions';
 import PinIcon from '../../../assets/icons/pin.svg';
 import { httpGetMain } from '../../../helpers/httpMethods';
 import { createTags } from '../../../reduxstore/actions/tagActions';
 import { getChannels, addChannel } from '../../../reduxstore/actions/channelActions';
-import { getAcceptValue, allowedFiles, defaultTicketProperties, createEvent } from '../../../helper';
+import { getAcceptValue, allowedFiles, defaultTicketProperties, createEvent, brandKit } from '../../../helper';
 import { config } from '../../../config/keys';
 
 export const searchTypeChecker = (query) => {
@@ -1079,7 +1080,11 @@ function CreateTicketModal({
                             type="button"
                             onClick={handleTicketCreation}
                             disabled={creatingTicket}
-                            className="btn bg-at-blue-light  py-1 px-4"
+                            className={`btn py-1 px-4 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`}
                         >
                             {creatingTicket ? 'Creating...' : 'Create'}
                         </button>

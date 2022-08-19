@@ -50,6 +50,14 @@ body > iframe:not([src])[style] {
   display: none !important;
 }
 
+button {
+  transition: all 0.2s ease-in-out !important;
+  -webkit-transition: all 0.2s ease-in-out !important;
+  -moz-transition: all 0.2s ease-in-out !important;
+  -ms-transition: all 0.2s ease-in-out !important;
+  -o-transition: all 0.2s ease-in-out !important;
+}
+
 select {
   -webkit-appearance: none !important;
   -moz-appearance: none !important;

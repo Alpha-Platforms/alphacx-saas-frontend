@@ -10,6 +10,7 @@ import moment from 'moment';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import { NotificationManager } from 'react-notifications';
+import { css } from '@emotion/css';
 import { ReactComponent as UploadSvg } from '../../../assets/svgicons/Upload.svg';
 import { ReactComponent as ImportSvg } from '../../../assets/svgicons/import.svg';
 import TicketStarIcon from '../../../assets/svgicons/Ticket-Star.svg';
@@ -34,7 +35,7 @@ import { Modal } from 'react-responsive-modal';
 // Be sure to include styles at some point, probably during your bootstraping
 import '@trendmicro/react-buttons/dist/react-buttons.css';
 import '@trendmicro/react-dropdown/dist/react-dropdown.css';
-import { multiIncludes } from '../../../helper';
+import { multiIncludes, brandKit } from '../../../helper';
 import { accessControlFunctions } from '../../../config/accessControlList';
 // import { Button, ButtonGroup, ButtonToolbar } from '@trendmicro/react-buttons';
 
@@ -540,7 +541,7 @@ function TicketList({ isTicketsLoaded, tickets, meta, getPaginatedTickets, isUse
         <div>
             {(ticketLoading || loading) && (
                 <div className={`cust-table-loader ${ticketLoading && 'add-loader-opacity'}`}>
-                    <MoonLoader loading color="#006298" size={30} />
+                    <MoonLoader loading color={brandKit({ bgCol: 0 })?.backgroundcolor} size={30} />
                 </div>
             )}
             <div className="ticket-table-wrapper">

@@ -1123,6 +1123,8 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                     type="button"
                                                     className={`custormChatHeaderInfoAction ${css({
                                                         ...brandKit({ bgCol: 0 }),
+                                                        color: 'white',
+                                                        '&:hover': { ...brandKit({ bgCol: 30 }) },
                                                     })}`}
                                                     onClick={closeSaveTicketModal}
                                                 >
@@ -1679,7 +1681,11 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                             <div className="sendMsg">
                                                 <button
                                                     type="button"
-                                                    className={css({ ...brandKit({ bgCol: 0 }) })}
+                                                    className={css({
+                                                        ...brandKit({ bgCol: 0 }),
+                                                        color: 'white',
+                                                        '&:hover': { ...brandKit({ bgCol: 30 }) },
+                                                    })}
                                                     disabled={
                                                         sendingReply ? true : ticket[0].status.status === 'Closed'
                                                     }

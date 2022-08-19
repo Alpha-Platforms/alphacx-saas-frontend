@@ -3,9 +3,10 @@
 import { Line } from 'react-chartjs-2';
 import { Dropdown } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
+import { css } from '@emotion/css';
 import moment from 'moment';
 
-function TicketLineGraph({ analytics }) {
+function TicketLineGraph({ analytics, brandingBg }) {
     window.acxTickets = analytics?.allTickets;
 
     const emailTickets = analytics?.allTickets?.filter((x) => x.channel === 'email') || [];
@@ -404,7 +405,7 @@ function TicketLineGraph({ analytics }) {
                 <div className="mx-3 my-2">
                     <div className="form-check form-switch d-flex justify-content-center">
                         <input
-                            className="legendInput legend-input form-check-input form-check-input-lg mt-1"
+                            className={`legendInput legend-input form-check-input form-check-input-lg mt-1 ${css({ '&:checked': { ...brandingBg } })}`}
                             type="checkbox"
                             onChange={handleChartToggle}
                             id="emailLegend"
@@ -422,7 +423,7 @@ function TicketLineGraph({ analytics }) {
                 <div className="mx-3 my-2">
                     <div className="form-check form-switch d-flex justify-content-center">
                         <input
-                            className="legendInput legend-input form-check-input form-check-input-lg mt-1"
+                            className={`legendInput legend-input form-check-input form-check-input-lg mt-1 ${css({ '&:checked': { ...brandingBg } })}`}
                             type="checkbox"
                             onChange={handleChartToggle}
                             id="livechatLegend"
@@ -457,7 +458,7 @@ function TicketLineGraph({ analytics }) {
                 <div className="mx-3 my-2">
                     <div className="form-check form-switch d-flex justify-content-center">
                         <input
-                            className="legendInput legend-input form-check-input form-check-input-lg mt-1"
+                            className={`legendInput legend-input form-check-input form-check-input-lg mt-1 ${css({ '&:checked': { ...brandingBg } })}`}
                             type="checkbox"
                             onChange={handleChartToggle}
                             id="whatsappLegend"
@@ -475,7 +476,7 @@ function TicketLineGraph({ analytics }) {
                 <div className="mx-3 my-2">
                     <div className="form-check form-switch d-flex justify-content-center">
                         <input
-                            className="legendInput legend-input form-check-input form-check-input-lg mt-1"
+                            className={`legendInput legend-input form-check-input form-check-input-lg mt-1 ${css({ '&:checked': { ...brandingBg } })}`}
                             type="checkbox"
                             onChange={handleChartToggle}
                             id="facebookLegend"
@@ -493,7 +494,7 @@ function TicketLineGraph({ analytics }) {
                 <div className="mx-3 my-2">
                     <div className="form-check form-switch d-flex justify-content-center">
                         <input
-                            className="legendInput legend-input form-check-input form-check-input-lg mt-1"
+                            className={`legendInput legend-input form-check-input form-check-input-lg mt-1 ${css({ '&:checked': { ...brandingBg } })}`}
                             type="checkbox"
                             onChange={handleChartToggle}
                             id="servicePortalLegend"
