@@ -137,7 +137,6 @@ function AccountSettings() {
                 },
             }));
         }
-        console.log(name, value)
         return setOrganisation((prev) => ({ ...prev, [name]: value }));
     };
 
@@ -269,7 +268,6 @@ function AccountSettings() {
     };
 
     // {zone.offset > 0 ? `GMT +${zone.offset}`  : zone.offset < 0  ? `GMT ${zone.offset}`  : `GMT`}
-
 
     const tzOffsetter = (tz) => {
         return tz > 0 ? `GMT +${tz}` : tz < 0 ? `GMT ${tz}` : `GMT`;
