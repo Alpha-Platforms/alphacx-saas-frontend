@@ -858,7 +858,7 @@ function AccountSettings() {
                     <div className="text-end col-md-8 mt-4 mb-4 pt-2 pb-3">
                         <button
                             type="button"
-                            className={`btn btn-sm text-white px-4 py-1 ${css({
+                            className={`btn btn-sm text-white px-3 ${css({
                                 ...brandKit({ bgCol: 0 }),
                                 color: 'white',
                                 '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },

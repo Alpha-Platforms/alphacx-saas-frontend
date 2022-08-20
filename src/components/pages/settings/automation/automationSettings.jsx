@@ -249,7 +249,7 @@ function AutomationSettings() {
                                 First matching automation policy will be applied to tickets wuth matching conditions
                             </p>
                         </div>
-                        <Link className={`btn btn-sm bg-custom ${css({
+                        <Link className={`btn btn-sm bg-custom px-3 ${css({
                                 ...brandKit({ bgCol: 0 }),
                                 color: 'white',
                                 '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },

@@ -1121,10 +1121,10 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                             {multiIncludes(accessControlFunctions[user?.role], ['edit_ticket']) && (
                                                 <button
                                                     type="button"
-                                                    className={`custormChatHeaderInfoAction ${css({
+                                                    className={`custormChatHeaderInfoAction btn btn-sm ${css({
                                                         ...brandKit({ bgCol: 0 }),
                                                         color: 'white',
-                                                        '&:hover': { ...brandKit({ bgCol: 30 }) },
+                                                        '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
                                                     })}`}
                                                     onClick={closeSaveTicketModal}
                                                 >
@@ -1681,11 +1681,11 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                             <div className="sendMsg">
                                                 <button
                                                     type="button"
-                                                    className={css({
+                                                    className={`btn btn-sm ${css({
                                                         ...brandKit({ bgCol: 0 }),
                                                         color: 'white',
-                                                        '&:hover': { ...brandKit({ bgCol: 30 }) },
-                                                    })}
+                                                        '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                                    })}`}
                                                     disabled={
                                                         sendingReply ? true : ticket[0].status.status === 'Closed'
                                                     }
@@ -2039,7 +2039,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                             )}
                             <div className="text-end mt-3">
                                 <Button
-                                    className={`btn px-3 py-2 ${css({
+                                    className={`btn px-4 ${css({
                                         ...brandKit({ bgCol: 0 }),
                                         color: 'white',
                                         '&:hover': { ...brandKit({ bgCol: 30 }) },

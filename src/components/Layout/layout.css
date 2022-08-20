@@ -840,7 +840,7 @@
 }
 
 /* OVERRIDES */
-button.dropdown-toggle {
+button.dropdown-toggle:not(.nav-cta) {
   padding: 0 !important;
 }
 

@@ -1080,7 +1080,7 @@ function CreateTicketModal({
                             type="button"
                             onClick={handleTicketCreation}
                             disabled={creatingTicket}
-                            className={`btn py-1 px-4 ${css({
+                            className={`btn px-4 ${css({
                                 ...brandKit({ bgCol: 0 }),
                                 color: 'white',
                                 '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
-//
+import { css } from '@emotion/css';
 import { connect } from 'react-redux';
 //
 import Row from 'react-bootstrap/Row';
@@ -12,6 +12,7 @@ import { ReactComponent as DeleteGreySvg } from '../../../../../assets/icons/Del
 //
 import { getChannels, updateChannel, addChannel } from '../../../../../reduxstore/actions/channelActions';
 import AddChannelModal from './AddChannelModal';
+import { brandKit } from './../../../../../helper';
 
 function ChannelsTab({ channels, isChannelsLoaded, getChannels, updateChannel, addChannel }) {
     const [addModalShow, setAddModalShow] = useState(false);
@@ -89,7 +90,7 @@ function ChannelsTab({ channels, isChannelsLoaded, getChannels, updateChannel, a
                             {/* <button
                                 className="btn btn-link text-decoration-none text-at-blue-light" disabled={true} onClick={openAddChannel}>+ Add Stage</button> */}
                             <button
-                                className="btn btn-link text-decoration-none btn-sm border"
+                                className={`btn text-decoration-none btn-sm border ${css({ ...brandKit({ col: 0 }) })}`}
                                 disabled={false}
                                 onClick={openAddChannel}
                             >

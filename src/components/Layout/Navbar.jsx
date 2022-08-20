@@ -42,15 +42,14 @@ function DropDown({ shouldShowUserExceededNotif }) {
                     disabled={subExpired || shouldShowUserExceededNotif}
                     variant=""
                     size=""
-                    className={`btn ${css({
+                    className={`btn nav-cta ${css({
                         ...brandKit({ bgCol: 0 }),
                         color: 'white',
                         borderRadius: '4px !important',
                         '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
                     })}`}
-                    style={{ borderRadius: '.15rem' }}
                 >
-                    <div style={{ padding: '.25rem .5rem' }}>
+                    <div>
                         <PlusIcon />
                         <span className="ps-2 pe-4">Create</span>
                         <DowncaretIcon />

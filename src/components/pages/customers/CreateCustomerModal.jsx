@@ -679,7 +679,7 @@ function CreateCustomerModal({
                         {!isEditing ? (
                             <button
                                 type="button"
-                                className={`btn py-1 px-4 ${css({
+                                className={`btn px-4 ${css({
                                     ...brandKit({ bgCol: 0 }),
                                     color: 'white',
                                     '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
@@ -692,7 +692,7 @@ function CreateCustomerModal({
                         ) : (
                             <button
                                 type="button"
-                                className={`btn bg-at-blue-light  py-1 px-4 ${css({
+                                className={`btn px-4 ${css({
                                     ...brandKit({ bgCol: 0 }),
                                     color: 'white',
                                     '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },

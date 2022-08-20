@@ -20,6 +20,7 @@ import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import { useDispatch, useSelector } from 'react-redux';
 import SimpleReactValidator from 'simple-react-validator';
+import { css } from '@emotion/css';
 // components
 // import ContactFieldList from './ContactFieldList';
 import TicketFieldList from './TicketFieldList';
@@ -33,6 +34,7 @@ import { ReactComponent as HamburgerSvg } from '../../../../assets/icons/hamburg
 // import { ReactComponent as FormMinusSvg } from '../../../../assets/icons/form-minus.svg';
 // import { ReactComponent as FormMinusNeutralSvg } from '../../../../assets/icons/form-minus-neutral.svg';
 import { getCustomFields, addCustomField } from '../../../../reduxstore/actions/customFieldActions';
+import { brandKit } from '../../../../helper';
 
 function Fields() {
     const [tabKey, setTabKey] = useState('user-field');
@@ -347,6 +349,17 @@ function Fields() {
         return NotificationManager.error(res.message, 'Error', 4000);
     };
 
+    const actionBtnStyle = css({
+        '& > li > button.active': {
+            color: `${brandKit({ col: 0 })?.color} !important`,
+            fontWeight: 600,
+            borderBottom: `2px solid ${brandKit({ bgCol: 0 })?.backgroundColor} !important`,
+        },
+        '& > li > button': {
+            borderBottom: `2px solid transparent !important`,
+        },
+    });
+
     return (
         <div>
             <div className="card card-body bg-white border-0 p-4 w-100">
@@ -361,7 +374,7 @@ function Fields() {
                 </div>
 
                 <div className="mt-4 mb-3">
-                    <ul className="nav nav-pills" id="pills-tab" role="tablist">
+                    <ul className={`nav nav-pills ${actionBtnStyle}`} id="pills-tab" role="tablist">
                         <li className="nav-item" role="presentation">
                             <button
                                 className={`nav-link ${tabKey === 'user-field' && 'active'} text-muted ps-0`}

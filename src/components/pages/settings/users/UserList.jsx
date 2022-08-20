@@ -268,7 +268,7 @@ function UserList({
                                 {tenantSubscription && (
                                     <button
                                         type="button"
-                                        className={`btn btn-sm px-4 py-2 ${css({
+                                        className={`btn btn-sm px-3 ${css({
                                             ...brandKit({ bgCol: 0 }),
                                             color: 'white',
                                             '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },

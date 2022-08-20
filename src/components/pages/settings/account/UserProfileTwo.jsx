@@ -613,7 +613,7 @@ function UserProfileTwo({
                                     <div>
                                         <label
                                             htmlFor="uploadPersonalPhotoInput"
-                                            className={`btn btn-sm px-3 py-1 mb-2 mt-1 ${css({
+                                            className={`btn btn-sm px-3 mb-2 mt-1 ${css({
                                                 ...brandKit({ bgCol: 0 }),
                                                 color: 'white',
                                                 '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
@@ -646,7 +646,7 @@ function UserProfileTwo({
                             <div className="mb-5 text-end">
                                 <button
                                     type="button"
-                                    className={`btn btn-sm text-white px-3 py-1 ${css({
+                                    className={`btn btn-sm text-white px-3 ${css({
                                         ...brandKit({ bgCol: 0 }),
                                         color: 'white',
                                         '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },

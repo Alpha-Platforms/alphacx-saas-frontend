@@ -7,6 +7,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import MoonLoader from 'react-spinners/MoonLoader';
 import { connect } from 'react-redux';
+import { css } from '@emotion/css';
 import MessageIcon from '../../../assets/svgicons/Message.svg';
 import TicketIcon from '../../../assets/svgicons/Ticket.svg';
 import TicketStar from '../../../assets/svgicons/Ticket-Star.svg';
@@ -19,7 +20,7 @@ import DiscountIcon from '../../../assets/svgicons/Discount.svg';
 import ImageDefault from '../../../assets/svgicons/image-default.svg';
 import '../../../styles/Customer.css';
 import { getCurrentCustomer } from '../../../reduxstore/actions/customerActions';
-import { getUserInitials, multiIncludes } from '../../../helper';
+import { getUserInitials, multiIncludes, brandKit } from '../../../helper';
 import TicketHistory from './components/TicketHistory';
 import Profile from './components/Profile';
 import Notes from './components/Notes';
@@ -88,6 +89,14 @@ function Customer({ isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoade
     const createNewCustomerTicket = () => {
         alert('yes');
     };
+
+    const actionBtnStyle = css({
+        '& > li > button.nav-active': {
+            color: `${brandKit({ col: 0 })?.color} !important`,
+            fontWeight: 600,
+            // borderBottom: `2px solid ${brandKit({ bgCol: 0 })?.backgroundColor} !important`,
+        },
+    });
 
     return (
         <>
@@ -217,7 +226,7 @@ function Customer({ isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoade
                         >
                             <div style={{ margin: '0 -0.5rem' }} className="px-5 py-3 d-flex justify-content-between">
                                 <div>
-                                    <ul className="nav nav-pills" id="pills-tab" role="tablist">
+                                    <ul className={`nav nav-pills ${actionBtnStyle}`} id="pills-tab" role="tablist">
                                         <li className="nav-item me-2" role="presentation">
                                             <button
                                                 className={`nav-link ${

@@ -187,7 +187,7 @@ function GroupList({ groups, categories, isGroupsLoaded, authenticatedUser, dele
                             <button
                                 onClick={handleGroupAdd}
                                 type="button"
-                                className={`btn btn-sm px-md-3 mx-1 py-1 ${css({
+                                className={`btn btn-sm px-3 mx-1 ${css({
                                     ...brandKit({ bgCol: 0 }),
                                     color: 'white',
                                     '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },

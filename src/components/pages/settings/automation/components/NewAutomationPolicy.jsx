@@ -417,7 +417,7 @@ function NewAutomationPolicy({
                                 Cancel
                             </Link>
                             <button
-                                className={`btn btn-sm ms-2 f-12 py-1 px-4 ${css({
+                                className={`btn btn-sm ms-2 f-12 px-4 ${css({
                                     ...brandKit({ bgCol: 0 }),
                                     color: 'white',
                                     '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },

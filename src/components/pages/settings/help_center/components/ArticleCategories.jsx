@@ -1,6 +1,7 @@
 /* eslint-disable */
 // @ts-nocheck
 import React, { useState } from 'react';
+import { css } from '@emotion/css';
 import RightArrow from '../../../../../assets/imgF/arrow_right.png';
 import './ArticleCategories.scss';
 import { useEffect } from 'react';
@@ -10,6 +11,7 @@ import MoonLoader from 'react-spinners/MoonLoader';
 import { Tabs, Tab } from 'react-bootstrap';
 import { httpGetMain, httpPatchMain, httpPostMain } from '../../../../../helpers/httpMethods';
 import ArticleCatTable from './ArticleCatTable';
+import { brandKit } from './../../../../../helper';
 
 function ArticleCategories() {
     const [tabKey, setTabKey] = useState('category-table');
@@ -123,6 +125,17 @@ function ArticleCategories() {
         }));
     };
 
+    const actionBtnStyle = css({
+        '& > li > button.active': {
+            color: `${brandKit({ col: 0 })?.color} !important`,
+            fontWeight: 600,
+            borderBottom: `2px solid ${brandKit({ bgCol: 0 })?.backgroundColor} !important`,
+        },
+        '& > li > button': {
+            borderBottom: `2px solid transparent !important`,
+        },
+    });
+
     return (
         <div className=" settings-email help-center-settings">
             {policyLoading && (
@@ -151,7 +164,7 @@ function ArticleCategories() {
                 </div>
 
                 <div className="mt-0">
-                    <ul className="nav nav-pills" id="fieldTabsSelector" role="tablist">
+                    <ul className={`nav nav-pills ${actionBtnStyle} mb-3`} id="fieldTabsSelector" role="tablist">
                         <li className="nav-item" role="presentation">
                             <button
                                 className={`nav-link px-0 me-5 ${tabKey === 'category-table' && 'active'} text-muted`}

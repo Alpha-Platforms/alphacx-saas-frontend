@@ -481,11 +481,11 @@ function ReportsFilter() {
             <div>
                 <button
                     type="button"
-                    className={css({
+                    className={`btn btn-sm px-3 ${css({
                         ...brandKit({ bgCol: 0 }),
                         color: 'white',
                         '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
-                    })}
+                    })}`}
                     onClick={() => !dropdownActive && setDropdownActive(true)}
                 >
                     <PlusIcon /> Add Filter
