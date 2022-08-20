@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useEffect, useState } from 'react';
-//
+import { css } from '@emotion/css';
 import { connect } from 'react-redux';
 import { useHistory, Link, useParams } from 'react-router-dom';
 import MoonLoader from 'react-spinners/MoonLoader';
@@ -19,6 +19,7 @@ import allPlaceholders from './placeholders'
 //
 import './newEmailTemplate.scss';
 import '../NotificationSettings.scss';
+import { brandKit } from './../../../../../helper';
 
 function EditEmailTemplate({
     isCurrentEmailTemplateLoaded,
@@ -118,7 +119,7 @@ function EditEmailTemplate({
         <div className="new-email-template notification-settings">
             {custLoading && (
                 <div className="cust-table-loader">
-                    <MoonLoader loading={custLoading} color="#006298" size={30} />
+                    <MoonLoader loading={custLoading} color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
             <div className="card card-body bg-white border-0 p-5">
@@ -213,11 +214,15 @@ function EditEmailTemplate({
                                     setPlaceholder={setPlaceholder}
                                 />
                             </div>
-                            <div className="text-end">
-                                <Link to="/settings/notifications" className="btn btn-sm bg-outline-custom cancel px-4">
+                            <div className="text-end mb-5">
+                                <Link to="/settings/notifications" className="btn btn-sm px-3 me-2 border reset-btn-outline">
                                     Cancel
                                 </Link>
-                                <button className="btn btn-sm acx-btn-primary ms-2 px-4" onClick={handleSubmit}>
+                                <button className={`btn btn-sm ms-2 px-3 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`} onClick={handleSubmit}>
                                     Update
                                 </button>
                             </div>
