@@ -104,9 +104,10 @@ function SocialIntegrations({ configs }) {
         e.preventDefault();
         const subdomain = 'app';
         const path = 'integrations';
+        // const integrationsUrl = `prevUrl=${window.location.href}`;
         const params = `channel=${channel}&domain=${window.localStorage.getItem(
             'domain',
-        )}&id=${window.localStorage.getItem('token')}&uid=${window.localStorage.getItem('refreshToken')}`;
+        )}&id=${window.localStorage.getItem('token')}&uid=${window.localStorage.getItem('refreshToken')}}`;
         const { protocol } = window.location;
         // eslint-disable-next-line no-shadow
         const hostname = window.location.hostname.split('.').slice(1).join('.');
