@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Badge from 'react-bootstrap/Badge';
+import { css } from '@emotion/css';
 import '../settings.css';
 import Modal from 'react-responsive-modal';
 import { NotificationManager } from 'react-notifications';
@@ -17,7 +18,7 @@ import { httpDeleteMain } from '../../../../helpers/httpMethods';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
 import AccountLightIcon from '../../../../assets/icons/Social-blurb.svg';
 import MailLightIcon from '../../../../assets/icons/mail_light.svg';
-import { hasFeatureAccess } from '../../../../helper';
+import { hasFeatureAccess, brandKit } from '../../../../helper';
 // import { hideLoader, showLoader } from '../../../helpers/loader';
 // import Breadcrumb from 'react-bootstrap/Breadcrumb';
 // import { hostname } from 'os';
@@ -114,6 +115,8 @@ function SocialIntegrations({ configs }) {
         window.location.href = `${protocol}//${subdomain}.${hostname}:${port}/${path}?${params}`;
     };
 
+    const brandBg = css({ backgroundColor: `${brandKit({ bgCol: 0 })?.backgroundColor} !important` });
+
     return (
         <div className="social-integration-page">
             <div id="mainContentHeader" className="breadcrumb">
@@ -146,7 +149,7 @@ function SocialIntegrations({ configs }) {
                                             <Badge
                                                 className={`${
                                                     !whatsappConnected
-                                                        ? 'acx-bg-primary  text-white'
+                                                        ? `${brandBg}  text-white`
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
@@ -195,7 +198,7 @@ function SocialIntegrations({ configs }) {
                                             <Badge
                                                 className={`${
                                                     !facebookConnected
-                                                        ? 'acx-bg-primary  text-white'
+                                                        ? `${brandBg}  text-white`
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
@@ -244,7 +247,7 @@ function SocialIntegrations({ configs }) {
                                             <Badge
                                                 className={`${
                                                     !instagramConnected
-                                                        ? 'acx-bg-primary  text-white'
+                                                        ? `${brandBg}  text-white`
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
@@ -291,7 +294,7 @@ function SocialIntegrations({ configs }) {
                                             <Badge
                                                 className={`${
                                                     !smsConnected
-                                                        ? 'acx-bg-primary  text-white'
+                                                        ? `${brandBg}  text-white`
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
@@ -324,7 +327,7 @@ function SocialIntegrations({ configs }) {
                                             <Badge
                                                 className={`${
                                                     !smsConnected
-                                                        ? 'acx-bg-primary  text-white'
+                                                        ? `${brandBg}  text-white`
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
@@ -357,7 +360,7 @@ function SocialIntegrations({ configs }) {
                                             <Badge
                                                 className={`${
                                                     !emailConnected
-                                                        ? 'acx-bg-primary  text-white'
+                                                        ? `${brandBg}  text-white`
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
@@ -390,7 +393,7 @@ function SocialIntegrations({ configs }) {
                                             <Badge
                                                 className={`${
                                                     !livechatConnected
-                                                        ? 'acx-bg-primary  text-white'
+                                                        ? `${brandBg}  text-white`
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
