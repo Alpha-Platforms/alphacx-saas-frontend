@@ -35,10 +35,8 @@ function Login() {
     const [tenantId, setTenantId] = useState('');
     const [loading, setLoading] = useState(false);
     const [color] = useState('#ffffff');
-    const [hostName] = useState(() => {
-        return window.location.hostname.split('.');
-    });
     const [environment] = useState(process.env.NODE_ENV);
+    const hostname = window.location.hostname.split('.');
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -57,21 +55,14 @@ function Login() {
 
     useEffect(() => {
         (async () => {
-            const hostLength = hostName.length;
-
-            if (
-                (hostName[hostLength - 2] === 'alphacx' && hostName[0] !== 'app') ||
-                (hostName[hostLength - 2] === 'qustomar' && hostLength === 3) ||
-                (hostName[hostLength - 1] === 'localhost' && hostLength !== 1)
-            ) {
-                const hostn = hostName[0].toLowerCase();
-                setDomain(hostn);
-
-                const res = await httpPost(`auth/login`, { domain: hostn });
+            if (hostname.length === 3 || hostname[1] === 'localhost') {
+                // handle netlify case later
+                const subdomain = hostname[0].toLowerCase();
+                const res = await httpPost(`auth/login`, { domain: subdomain });
 
                 if (res?.status === 'success') {
-                    window.localStorage.setItem('tenantId', res?.data?.id || '');
-                    window.localStorage.setItem('tenantToken', res?.data?.token);
+                    setDomain(res?.data?.domain);
+                    setTenantId(res?.data?.id);
                     dispatch(getSubscription(res?.data?.id));
                 }
             }
@@ -80,11 +71,8 @@ function Login() {
     }, []);
 
     useEffect(() => {
-        if (domain) {
+        if (domain || tenantId) {
             window.localStorage.setItem('domain', domain);
-        }
-
-        if (tenantId) {
             window.localStorage.setItem('tenantId', tenantId);
         }
     }, [domain, tenantId]);
@@ -93,7 +81,7 @@ function Login() {
         setUserInput({ ...userInput, [e.target.name]: e.target.value });
     };
 
-    const landingPage = () => {
+    const gotoLandingPage = () => {
         if (activation) {
             window.location.href = `/appsumo-plans`;
         } else {
@@ -102,8 +90,7 @@ function Login() {
     };
 
     const submit = async () => {
-        if (domain) {
-            // PASSWORD LOGIN
+        if (domain) { // DO PASSWORD LOGIN
 
             if (userInput.email && userInput.password) {
                 const data = {
@@ -112,42 +99,45 @@ function Login() {
                 };
 
                 setLoading(true);
-
                 const res = await httpPostMain('auth/login', data);
+                setLoading(false);
 
                 if (res.status === 'success') {
-                    setLoading(false);
                     window.localStorage.setItem('user', JSON.stringify(res.data));
                     window.localStorage.setItem('token', res.data.token);
                     window.localStorage.setItem('refreshToken', res.data.refreshToken);
-                    landingPage();
+                    gotoLandingPage();
                 } else {
                     // Login fails
-                    setLoading(false);
                     NotificationManager.error(res?.er?.message, 'Error', 4000);
                 }
-            } else {
-                // empty fields already handled by button disable attr
             }
-        } else {
-            // DOMAIN LOGIN
+        } else { // DO DOMAIN LOGIN
 
             // eslint-disable-next-line no-shadow
-            const domain = userInput.domain.toLowerCase();
+            const domain = userInput.domain.trim().toLowerCase();
 
             setLoading(true);
             const res = await httpPost(`auth/login`, { domain });
 
             if (res.status === 'success') {
+                setTenantId(res?.data?.id);
+                dispatch(getSubscription(res?.data?.id));
                 setLoading(false);
 
-                if (hostName[0] === 'app') {
-                    window.location.href = `https://${res?.data?.domain}.alphacx.co`;
-                } else if (hostName[0] === 'qustomar' || hostName[0] === 'localhost') {
-                    window.location.href = `${window.location.protocol}//${res?.data?.domain}.${window.location.hostname}:${window.location.port}`;
+                // if (res.data?.has_subdomain) {
+                if (true) {
+                    console.log('subdomain changed 🤪');
+                    window.location.href = `${window.location.protocol}//${domain}.${hostname.slice(-2).join('.')}:${
+                        window.location.port
+                    }`; // remove later for this case
+
+                    // FIND A WAY TO CHANGE THE URL NOT A REDIRECT FOR 3 CASES
+                    // window.location.href = `${window.location.protocol}//${res?.data?.domain}.${hostname
+                    //     .slice(-2)
+                    //     .join('.')}:${window.location.port}`; // remove later for this case
                 } else {
-                    setDomain(domain);
-                    setTenantId(res?.data?.id);
+                    setDomain(res?.data?.domain);
                 }
             } else {
                 setLoading(false);

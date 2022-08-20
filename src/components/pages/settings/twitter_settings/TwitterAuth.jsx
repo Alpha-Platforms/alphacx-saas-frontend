@@ -25,15 +25,9 @@ function TwitterAuth() {
     useEffect(() => {
         if (domain && oauth_token && oauth_verifier) {
             console.log(domain, oauth_token, oauth_verifier);
-            if (hostName[0] === 'app') {
-                window.location.href = `https://${domain}.alphacx.co/settings/integrations/twitter?oauth_token=${oauth_token}&oauth_verifier=${oauth_verifier}`;
-            } else if (hostName[0] === 'localhost') {
-                window.location.href = `${window.location.protocol}//${domain}.${window.location.hostname}:${window.location.port}/settings/integrations/twitter?oauth_token=${oauth_token}&oauth_verifier=${oauth_verifier}`;
-            } else if (hostName[0] === 'qustomar') {
-                window.location.href = `https://${domain}.qustomar.com/settings/integrations/twitter?oauth_token=${oauth_token}&oauth_verifier=${oauth_verifier}`;
-            } else {
-                window.location.href = `${window.location.protocol}//${window.location.hostname}:${window.location.port}/settings/integrations/twitter?oauth_token=${oauth_token}&oauth_verifier=${oauth_verifier}`;
-            }
+            const origin = window.location.origin;
+            window.location.href = `${origin}/settings/integrations/twitter?oauth_token=${oauth_token}&oauth_verifier=${oauth_verifier}`;
+           
         } else {
             window.location.href = '/';
         }

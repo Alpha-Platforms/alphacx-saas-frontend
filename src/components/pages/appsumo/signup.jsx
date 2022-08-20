@@ -109,11 +109,16 @@ function Appsumo() {
 
     const redirectToLogin = () => {
         setShowRirecting(true)
-        const protocol = window.location.protocol
-        const hostname = window.location.hostname.split(".").slice(1).join(".")
-        const port = window.location.port
-        const baseUrl = `${protocol}//${userData.domain}.${hostname}:${port}`
-        window.location.href = `${baseUrl}/login?activation=1&email=${userData.email}`
+        // TODO KEME:: domain login to check if has subdomain
+        if(false){
+            const protocol = window.location.protocol
+            const hostname = window.location.hostname.split(".").slice(1).join(".")
+            const port = window.location.port
+            const baseUrl = `${protocol}//${userData.domain}.${hostname}:${port}`
+            window.location.href = `${baseUrl}/login?activation=1&email=${userData.email}`
+        } else {
+            window.location.href = '/';
+        }
     }
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -190,7 +195,7 @@ function Appsumo() {
     };
 
     const verifyDomain = async (domain) => {
-        if (domain.length > 3) {
+        if (domain.length > 2) {
             try {
                 const res = await httpPost(`auth/login`, { domain });
                 if (res.status === 'success') {
@@ -227,7 +232,7 @@ function Appsumo() {
                 localStorage.setItem('tenantEmail', e.target.value);
             } else if (e.target.name === 'domain') {
                 clearTimeout(verifyDomainTimer);
-                if (e.target.value?.length > 3) {
+                if (e.target.value?.length > 2) {
                     setDomainChecking(true);
                     verifyDomainTimer = setTimeout(async () => {
                         verifyDomain(e.target.value);
@@ -406,7 +411,7 @@ function Appsumo() {
                                                         type="text"
                                                         required
                                                         autoComplete="off"
-                                                        placeholder="Domain"
+                                                        placeholder="Username"
                                                         // disabled={lockDomain}
                                                         onChange={(e) => handleChange(e)}
                                                         name="domain"
@@ -427,21 +432,21 @@ function Appsumo() {
                                                         ) : lockDomain ? (
                                                             <span className="">
                                                                 <i className="bi-check2-circle text-success" />
-                                                                <span> alphacx.co</span>
                                                             </span>
                                                         ) : userInput.domain.length > 3 && !lockDomain ? (
                                                             <span className="">
                                                                 <i className="bi-x-circle text-danger" />
-                                                                <span> alphacx.co</span>
                                                             </span>
                                                         ) : (
-                                                            '.alphacx.co'
+                                                            ''
                                                         )}
                                                     </InputGroup.Text>
                                                 </InputGroup>
                                                 {userInput.domain && (
                                                     <small>
-                                                        Your unique URL will be <strong>{userInput.domain}.alphacx.co</strong>
+                                                        {/* Your unique URL will be <strong>{userInput.domain}.alphacx.co</strong> */}
+                                                        Your Username may be used as your unique subdomain URL per your
+                                                        plan.
                                                     </small>
                                                 )}
                                                 {
