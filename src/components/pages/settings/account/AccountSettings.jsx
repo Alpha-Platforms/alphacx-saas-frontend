@@ -18,7 +18,7 @@ import SimpleReactValidator from 'simple-react-validator';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { css } from '@emotion/css';
-import { timezone } from '../../../shared/timezone';
+import { timezones } from '../../../shared/timezones';
 import { languages } from '../../../shared/languages';
 import { countries } from '../../../shared/countries';
 import { httpGet, httpPatch } from '../../../../helpers/httpMethods';
@@ -43,6 +43,7 @@ function AccountSettings() {
         website: '',
         profile: '',
         region: '',
+        timezone: '',
         language: '',
         two_factor: false,
         branding: {
@@ -157,7 +158,7 @@ function AccountSettings() {
         e.preventDefault();
         setAccountLoading(true);
 
-        const { company_name, email, phone_number, address, website, profile, region, language, branding } =
+        const { company_name, email, phone_number, address, website, profile, region, language, timezone, branding } =
             organisation;
 
         const gottenDomain = window.localStorage.getItem('domain');
@@ -194,6 +195,7 @@ function AccountSettings() {
                             website,
                             language,
                             region,
+                            timezone,
                             branding: {
                                 appIcon: appIconImg,
                                 appLogo: appLogoImg,
@@ -247,6 +249,7 @@ function AccountSettings() {
             website,
             language,
             region,
+            timezone,
             branding: {
                 appIcon: appIcon.image,
                 appLogo: appLogo.image,
@@ -269,6 +272,12 @@ function AccountSettings() {
 
     const triggerFileSelect = (fileRef) => {
         fileRef?.current?.click();
+    };
+
+    // {zone.offset > 0 ? `GMT +${zone.offset}`  : zone.offset < 0  ? `GMT ${zone.offset}`  : `GMT`}
+
+    const tzOffsetter = (tz) => {
+        return tz > 0 ? `GMT +${tz}` : tz < 0 ? `GMT ${tz}` : `GMT`;
     };
 
     const clearSelectedImage = (type) => {
@@ -572,22 +581,17 @@ function AccountSettings() {
                                     Timezone
                                 </label>
                                 <select
-                                    name="account-timezone"
+                                    name="timezone"
                                     id="account-timezone"
                                     className="form-select"
                                     aria-label="Default select example"
-                                    value="W. Central Africa Standard Time"
+                                    value={organisation.timezone}
+                                    onChange={handleChange}
                                 >
-                                    <option>Select time zone</option>
-                                    {timezone.map((zone, i) => (
-                                        <option key={i} value={zone.value}>
-                                            {zone.value}(
-                                            {zone.offset > 0
-                                                ? `GMT +${zone.offset}`
-                                                : zone.offset < 0
-                                                ? `GMT ${zone.offset}`
-                                                : `GMT`}
-                                            )
+                                    <option>Select Time Zone</option>
+                                    {timezones.map((zone, i) => (
+                                        <option key={i} value={`${zone.value} ${tzOffsetter(zone.offset)}`}>
+                                            {`${zone.value} ${tzOffsetter(zone.offset)}`}
                                         </option>
                                     ))}
                                 </select>

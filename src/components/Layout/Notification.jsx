@@ -105,82 +105,88 @@ function AppNotification({ userId }) {
     };
 
     return (
-        <div className="h-50 border mt-3 rounded overflow-scroll">
-            {!isUnreadNotificiations && <p className="bg-light border-bottom px-3 py-2">Notifications</p>}
-            {notifications
-                .slice(0)
-                .reverse()
-                .map((data, index) => {
-                    if ((!data.isRead && data.type === 'tickets') || data.type === 'mention') {
-                        return (
-                            <div
-                                key={index}
-                                onClick={(e) =>
-                                    goToTicket(
-                                        e,
-                                        {
-                                            notificationId: data?.id,
-                                            ticketId: data?.others?.ticketId,
-                                            ticketHistoryId: data?.others?.ticketHistoryId,
-                                        },
-                                        index,
-                                    )
-                                }
-                                className="acx-notification-item border-bottom px-2 mb-1"
-                            >
-                                <div className="d-flex justify-content-start align-items-start">
-                                    <div className="me-3 flex-shrink-0 avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center acx-bg-affair-800">
-                                        {data?.sender?.avatar == null ? (
-                                            <h3 className="text-white">
-                                                <span>
-                                                    {InitialsFromString(
-                                                        `${
-                                                            data?.sender?.firstname === 'default' || !data?.sender?.firstname
-                                                                ? ''
-                                                                : data?.sender?.firstname
-                                                        }`,
-                                                        `${
-                                                            data?.sender?.lastname === 'default' || !data?.sender?.lastname
-                                                                ? ''
-                                                                : data?.sender?.lastname
-                                                        }`,
-                                                    )}
-                                                </span>
-                                            </h3>
-                                        ) : (
-                                            <img width="40" height="auto" src={data?.sender?.avatar} alt="" />
-                                        )}
-                                    </div>
-                                    <div className="media-body flex-grow-1">
-                                        <div className="media-header d-flex justify-content-between align-items-center mb-1">
-                                            <p
-                                                className="mb-0 me-2 text-truncate"
-                                                title={data.title}
-                                                style={{ maxWidth: '130px' }}
-                                            >
-                                                {data.title}
-                                            </p>
-                                            <span className="text-muted f-12">
-                                                {moment(`${data.created_at}`).fromNow()}
-                                            </span>
+        <>
+            {!isUnreadNotificiations && 
+                <div className="h-50 border mt-3 rounded">
+                    <p className="bg-light border-bottom px-3 py-2">Notifications</p>
+                    <div className="overflow-scroll notification-items">
+                    {notifications
+                        .slice(0)
+                        .reverse()
+                        .map((data, index) => {
+                            if ((!data.isRead && data.type === 'tickets') || data.type === 'mention') {
+                                return (
+                                    <div
+                                        key={index}
+                                        onClick={(e) =>
+                                            goToTicket(
+                                                e,
+                                                {
+                                                    notificationId: data?.id,
+                                                    ticketId: data?.others?.ticketId,
+                                                    ticketHistoryId: data?.others?.ticketHistoryId,
+                                                },
+                                                index,
+                                            )
+                                        }
+                                        className="acx-notification-item border-bottom px-2 mb-1"
+                                    >
+                                        <div className="d-flex justify-content-start align-items-start">
+                                            <div className="me-3 flex-shrink-0 avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center acx-bg-affair-800">
+                                                {data?.sender?.avatar == null ? (
+                                                    <h3 className="text-white">
+                                                        <span>
+                                                            {InitialsFromString(
+                                                                `${
+                                                                    data?.sender?.firstname === 'default' || !data?.sender?.firstname
+                                                                        ? ''
+                                                                        : data?.sender?.firstname
+                                                                }`,
+                                                                `${
+                                                                    data?.sender?.lastname === 'default' || !data?.sender?.lastname
+                                                                        ? ''
+                                                                        : data?.sender?.lastname
+                                                                }`,
+                                                            )}
+                                                        </span>
+                                                    </h3>
+                                                ) : (
+                                                    <img width="40" height="auto" src={data?.sender?.avatar} alt="" />
+                                                )}
+                                            </div>
+                                            <div className="media-body flex-grow-1">
+                                                <div className="media-header d-flex justify-content-between align-items-center mb-1">
+                                                    <p
+                                                        className="mb-0 me-2 text-truncate"
+                                                        title={data.title}
+                                                        style={{ maxWidth: '130px' }}
+                                                    >
+                                                        {data.title}
+                                                    </p>
+                                                    <span className="text-muted f-12">
+                                                        {moment(`${data.created_at}`).fromNow()}
+                                                    </span>
+                                                </div>
+                                                <div className="acx-text-gray-500 small media-content">
+                                                    <div
+                                                        className="mb-0 text-wrap"
+                                                        dangerouslySetInnerHTML={
+                                                            data?.others?.response
+                                                                ? createMarkup(data?.others?.response)
+                                                                : createMarkup(data?.content)
+                                                        }
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="acx-text-gray-500 small media-content">
-                                            <div
-                                                className="mb-0 text-wrap"
-                                                dangerouslySetInnerHTML={
-                                                    data?.others?.response
-                                                        ? createMarkup(data?.others?.response)
-                                                        : createMarkup(data?.content)
-                                                }
-                                            />
-                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        );
-                    }
-                })}
-        </div>
+                                );
+                            }
+                        })
+                    }</div>
+                </div>
+            }
+        </>
     );
 }
 

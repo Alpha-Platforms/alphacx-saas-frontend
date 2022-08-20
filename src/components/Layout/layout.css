@@ -437,6 +437,10 @@
   transform: translateX(-50%);
 }
 
+.notification-items {
+  height: calc(100% - 45px);
+}
+
 .acx-notification-nav-dropdown .dropdown-menu .dropdown-item,
 .acx-notification-item {
   padding-top: 14px;

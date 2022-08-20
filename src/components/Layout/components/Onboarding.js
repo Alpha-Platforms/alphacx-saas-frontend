@@ -160,7 +160,7 @@ function OnboardingModal({
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div className="d-flex justify-content-start align-items-center list-item-icon">
                                         <img src={Livechat} alt="Livechat icon" />
-                                        <p className="small mb-0 ms-3 text-secondary">Setup Livechat</p>
+                                        <p className="small mb-0 ms-3 text-secondary">Create Livechat Widget</p>
                                     </div>
                                     <div className="">
                                         {!isConfigsLoaded ? (
@@ -182,7 +182,7 @@ function OnboardingModal({
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div className="d-flex justify-content-start align-items-center list-item-icon">
                                         <img src={Email} alt="Email icon" />
-                                        <p className="small mb-0 ms-3 text-secondary">Setup Email</p>
+                                        <p className="small mb-0 ms-3 text-secondary">Connect Email Servers</p>
                                     </div>
                                     <div className="">
                                         {!isConfigsLoaded ? (

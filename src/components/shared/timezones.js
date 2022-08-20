@@ -1,5 +1,5 @@
 /* eslint-disable */
-export const timezone = [
+export const timezones = [
     {
         value: 'Dateline Standard Time',
         abbr: 'DST',
