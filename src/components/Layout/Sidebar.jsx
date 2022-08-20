@@ -163,14 +163,18 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                     <div className="d-flex justify-content-center">
                         <button
                             type="button"
-                            className="btn btn-sm f-12 border cancel px-4"
+                            className="btn btn-sm border cancel px-3"
                             onClick={() => setIsDeleteConfirmed(false)}
                         >
                             Cancel
                         </button>
                         <button
                             type="button"
-                            className="btn btn-sm ms-2 f-12 bg-custom px-4"
+                            className={`btn btn-sm ms-3 px-3 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`}
                             onClick={(e) => {
                                 e.preventDefault();
                                 // retain onboardingSplash value
