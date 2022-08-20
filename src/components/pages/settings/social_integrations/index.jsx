@@ -16,8 +16,8 @@ import twitterImg from '../../../../assets/imgF/twitter.png';
 import termiiImg from '../../../../assets/imgF/termii.png';
 import { httpDeleteMain } from '../../../../helpers/httpMethods';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
-import AccountLightIcon from '../../../../assets/icons/Social-blurb.svg';
-import MailLightIcon from '../../../../assets/icons/mail_light.svg';
+import { ReactComponent as AccountLightIcon } from '../../../../assets/icons/Social-blurb.svg';
+import { ReactComponent as MailLightIcon } from '../../../../assets/icons/mail_light.svg';
 import { hasFeatureAccess, brandKit } from '../../../../helper';
 // import { hideLoader, showLoader } from '../../../helpers/loader';
 // import Breadcrumb from 'react-bootstrap/Breadcrumb';
@@ -347,7 +347,11 @@ function SocialIntegrations({ configs }) {
                             <Link to="/settings/integrations/email" className="d-block cursor text-decoration-none">
                                 <div className="d-flex align-items-start p-md-4 p-3">
                                     <div className="w">
-                                        <img src={MailLightIcon} alt="" width="38" />
+                                        <MailLightIcon
+                                            fill={brandKit({ bgCol: 0 })?.backgroundColor}
+                                            height={32}
+                                            width={32}
+                                        />
                                     </div>
                                     <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
                                         <div className="me-2">
@@ -380,7 +384,11 @@ function SocialIntegrations({ configs }) {
                             <Link to="/settings/integrations/livechat" className="d-block cursor text-decoration-none">
                                 <div className="d-flex align-items-start p-md-4 p-3">
                                     <div className="w">
-                                        <img src={AccountLightIcon} alt="" width="34" />
+                                        <AccountLightIcon
+                                            fill={brandKit({ bgCol: 0 })?.backgroundColor}
+                                            height={32}
+                                            width={32}
+                                        />
                                     </div>
                                     <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
                                         <div className="me-2">
@@ -415,12 +423,20 @@ function SocialIntegrations({ configs }) {
                     <div className="d-flex justify-content-center">
                         <button
                             type="button"
-                            className="btn btn-sm f-12 border cancel px-4"
+                            className="btn btn-sm border cancel px-3"
                             onClick={() => setIsDeleteConfirmed(false)}
                         >
                             Cancel
                         </button>
-                        <button type="button" className="btn btn-sm ms-2 f-12 bg-custom px-4" onClick={disconnectFBIG}>
+                        <button
+                            type="button"
+                            className={`btn btn-sm ms-2 px-3 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`}
+                            onClick={disconnectFBIG}
+                        >
                             Yes, disconnect
                         </button>
                     </div>
