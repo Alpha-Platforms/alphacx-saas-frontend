@@ -14,6 +14,7 @@ import { NotificationManager } from 'react-notifications';
 import { Link, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import MoonLoader from 'react-spinners/MoonLoader';
+import { css } from '@emotion/css';
 import axios from 'axios';
 import RightArrow from '../../../../../assets/imgF/arrow_right.png';
 import boldB from '../../../../../assets/imgF/boldB.png';
@@ -26,7 +27,7 @@ import TextAlignLeft from '../../../../../assets/imgF/TextAlignLeft.png';
 import TextAlignCenter from '../../../../../assets/imgF/TextAlignCenter.png';
 import TextAlignRight from '../../../../../assets/imgF/TextAlignRight.png';
 import { httpGetMain, httpPatchMain, httpPostMain } from '../../../../../helpers/httpMethods';
-import { allowedFiles, getAcceptValue, allowDocs, slugify } from '../../../../../helper';
+import { allowedFiles, getAcceptValue, allowDocs, slugify, brandKit } from '../../../../../helper';
 import { config } from '../../../../../config/keys';
 import './newArticle.scss';
 //
@@ -593,7 +594,7 @@ function NewArticle() {
         <div className=" settings-email help-center-settings">
             {policyLoading && (
                 <div className={`cust-table-loader ${policyLoading && 'add-loader-opacity'}`}>
-                    <MoonLoader loading={policyLoading} color="#006298" size={30} />
+                    <MoonLoader loading={policyLoading} color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
             <div className="card card-body bg-white border-0 p-5 mt-4">
@@ -770,7 +771,11 @@ function NewArticle() {
               </Link> */}
                                     <button
                                         type="button"
-                                        className="btn btn-sm me-2 py-1 f-12 bg-custom px-4"
+                                        className={`btn btn-sm me-2 px-3 ${css({
+                                            ...brandKit({ bgCol: 0 }),
+                                            color: 'white',
+                                            '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                        })}`}
                                         onClick={articleId ? handlePatchArticle : handleSubmitNewArticle}
                                         disabled={
                                             (newPost.title === '' || newPost.richText === '', newPost.folderId === '')

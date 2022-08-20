@@ -140,7 +140,7 @@ function ArticleCategories() {
         <div className=" settings-email help-center-settings">
             {policyLoading && (
                 <div className={`cust-table-loader ${policyLoading && 'add-loader-opacity'}`}>
-                    <MoonLoader loading={policyLoading} color="#006298" size={30} />
+                    <MoonLoader loading={policyLoading} color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
             <div className="card card-body bg-white border-0 p-5 mt-4">
@@ -244,7 +244,11 @@ function ArticleCategories() {
                                             </button>
                                         )}
                                         <button
-                                            className="btn btn-sm bg-at-blue-light px-3"
+                                            className={`btn btn-sm px-3 ${css({
+                                                ...brandKit({ bgCol: 0 }),
+                                                color: 'white',
+                                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                            })}`}
                                             disabled={newCategory.name === '' || !newCategory.name}
                                         >
                                             {isEditing ? 'Save Changes' : 'Add New Category'}

@@ -444,7 +444,7 @@ function AccountSettings() {
         <div className="account-settings">
             {accountLoading && (
                 <div className={`cust-table-loader ${accountLoading && 'add-loader-opacity'}`}>
-                    <MoonLoader loading={accountLoading} color="#006298" size={30} />
+                    <MoonLoader loading={accountLoading} color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
 

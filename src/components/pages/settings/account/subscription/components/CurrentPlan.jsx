@@ -7,9 +7,10 @@ import Select from 'react-select';
 import { useState, useEffect } from 'react';
 import FormCheck from 'react-bootstrap/FormCheck';
 // import moment from 'moment';
+import { css } from '@emotion/css';
 import { getRealCurrency, getRealCurrencyv2 } from './SubTop';
 import { httpPost } from '../../../../../../helpers/httpMethods';
-import { separateNum } from '../../../../../../helper';
+import { separateNum, brandKit } from '../../../../../../helper';
 // import MoonLoader from 'react-spinners/MoonLoader';
 
 function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalUsers }) {
@@ -136,7 +137,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                 )}
             </p>
             <div className="currentplan-box">
-                <div className="mb-3">
+                <div className={`mb-3 ${css({ '& > div > input:checked': { ...brandKit({ bgCol: 0 }) } })}`}>
                     <FormCheck
                         onChange={handleActionType}
                         inline
@@ -146,6 +147,7 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                         id="renew-plan"
                         disabled={disableAfterActionBtnClick}
                         checked={planState.actionType === 'renew-plan'}
+                        bg="red"
                     />
                     <FormCheck
                         onChange={handleActionType}
@@ -263,18 +265,22 @@ function CurrentPlan({ planState, tenantInfo, setPlanState, subscription, totalU
                         {disableAfterActionBtnClick || (
                             <button
                                 onClick={handleUpdatePlanBtn}
-                                className="confirm"
+                                className={`btn btn-sm me-2 px-3 ${css({
+                                    ...brandKit({ bgCol: 0 }),
+                                    color: 'white',
+                                    '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                })}`}
                                 type="button"
                                 disabled={disableAfterActionBtnClick}
                             >
-                                Continue to Payment
+                                Continue to Payments
                                 {/* {Object.keys(planState?.selectedPlan || {}).length === 0 ? 'Select Plan' : 'Update Plan'} */}
                             </button>
                         )}
 
                         {planState.isUpdatingPlan && (
                             <button
-                                className="cancel"
+                                className="btn btn-sm px-3 me-2 border reset-btn-outline"
                                 onClick={() =>
                                     setPlanState((prev) => ({
                                         ...prev,
