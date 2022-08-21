@@ -125,8 +125,8 @@ function Login() {
                 dispatch(getSubscription(res?.data?.id));
                 setLoading(false);
 
-                // if (res.data?.has_subdomain) {
-                if (true) {
+                if (res.data?.has_subdomain) {
+                // if (true) {
                     console.log('subdomain changed 🤪');
                     window.location.href = `${window.location.protocol}//${domain}.${hostname.slice(-2).join('.')}:${
                         window.location.port
@@ -165,11 +165,11 @@ function Login() {
                     <form>
                         <div className="Auth-header" style={{ marginBottom: '10px' }}>
                             <h3>Welcome Back</h3>
-                            <p>Please, enter your domain name</p>
+                            <p>Please, enter your domain or username</p>
                         </div>
 
                         <label htmlFor="domain-tenant-field" className="form-label">
-                            Domain
+                            Domain/Username
                         </label>
                         <div className="input-group">
                             <input
@@ -180,10 +180,11 @@ function Login() {
                                 onChange={handleChange}
                                 value={userInput.domain}
                                 id="domain-tenant-field"
+                                placeholder="Enter Domain or Username"
                             />
-                            <span className="input-group-text text-muted" id="basic-addon2">
+                            {/* <span className="input-group-text text-muted" id="basic-addon2">
                                 {environment === 'production' ? '.alphacx.co' : '.qustomar.com'}
-                            </span>
+                            </span> */}
                         </div>
 
                         <div className="haveAnAcco">
