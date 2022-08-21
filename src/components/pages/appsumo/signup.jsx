@@ -107,7 +107,7 @@ function Appsumo() {
 
     const redirectToLogin = async () => {
         setShowRirecting(true)
-        const res = await httpPost(`auth/login`, { domain });
+        const res = await httpPost(`auth/login`, { domain: userData.domain });
 
         if (res.status === 'success') {
             if (res.data?.has_subdomain) {
