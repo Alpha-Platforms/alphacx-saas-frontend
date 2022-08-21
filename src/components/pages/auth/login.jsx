@@ -7,7 +7,7 @@ import './login.css';
 import { NotificationManager } from 'react-notifications';
 import { Link, useLocation } from 'react-router-dom';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { wordCapitalize } from '../../../helper';
+import { wordCapitalize, getSubdomainUrl } from '../../../helper';
 import AlphaLogo from '../../../assets/imgF/alpha.png';
 import Logo from '../../../assets/imgF/logo.png';
 import showPasswordImg from '../../../assets/imgF/Show.png';
@@ -31,16 +31,18 @@ function Login() {
     });
 
     const [showPassword, setShowPassword] = useState(false);
-    const [domain, setDomain] = useState('');
+    const [domain, setDomain] = useState(window.localStorage.getItem('domain') || '');
     const [tenantId, setTenantId] = useState('');
     const [loading, setLoading] = useState(false);
     const [color] = useState('#ffffff');
     const [environment] = useState(process.env.NODE_ENV);
+    const [hasSubdomain, setHasSubdomain] = useState('');
+
     const hostname = window.location.hostname.split('.');
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const refreshToken = localStorage.getItem('refreshToken');
+        const token = window.localStorage.getItem('token');
+        const refreshToken = window.localStorage.getItem('refreshToken');
         if (token && refreshToken) {
             window.location.href = '/';
         }
@@ -55,7 +57,7 @@ function Login() {
 
     useEffect(() => {
         (async () => {
-            if (hostname.length === 3 || hostname[1] === 'localhost') {
+            if (hostname.length === 3 || hostname[1] === 'localhost') { // TODO: Uptimize later
                 // handle netlify case later
                 const subdomain = hostname[0].toLowerCase();
                 const res = await httpPost(`auth/login`, { domain: subdomain });
@@ -63,6 +65,7 @@ function Login() {
                 if (res?.status === 'success') {
                     setDomain(res?.data?.domain);
                     setTenantId(res?.data?.id);
+                    setHasSubdomain(res.data?.has_subdomain);
                     dispatch(getSubscription(res?.data?.id));
                 }
             }
@@ -124,18 +127,10 @@ function Login() {
                 setTenantId(res?.data?.id);
                 dispatch(getSubscription(res?.data?.id));
                 setLoading(false);
+                setHasSubdomain(res.data?.has_subdomain);
 
                 if (res.data?.has_subdomain) {
-                // if (true) {
-                    console.log('subdomain changed 🤪');
-                    window.location.href = `${window.location.protocol}//${domain}.${hostname.slice(-2).join('.')}:${
-                        window.location.port
-                    }`; // remove later for this case
-
-                    // FIND A WAY TO CHANGE THE URL NOT A REDIRECT FOR 3 CASES
-                    // window.location.href = `${window.location.protocol}//${res?.data?.domain}.${hostname
-                    //     .slice(-2)
-                    //     .join('.')}:${window.location.port}`; // remove later for this case
+                    window.location.href = getSubdomainUrl(domain);
                 } else {
                     setDomain(res?.data?.domain);
                 }
@@ -144,6 +139,14 @@ function Login() {
                 NotificationManager.error(wordCapitalize(res?.er?.message), 'Invalid Domain Name', 4000);
             }
         }
+    };
+
+    const logoutDomain = (e) => {
+        e.preventDefault();
+        window.localStorage.removeItem('domain');
+        if (hasSubdomain)
+            window.location.href = getSubdomainUrl(process.env.NODE_ENV === 'development' ? 'dev' : 'app');
+        setDomain('');
     };
 
     const handleSubmit = (e) => {
@@ -165,11 +168,11 @@ function Login() {
                     <form>
                         <div className="Auth-header" style={{ marginBottom: '10px' }}>
                             <h3>Welcome Back</h3>
-                            <p>Please, enter your domain or username</p>
+                            <p>Please, enter your domain</p>
                         </div>
 
                         <label htmlFor="domain-tenant-field" className="form-label">
-                            Domain/Username
+                            Domain
                         </label>
                         <div className="input-group">
                             <input
@@ -180,11 +183,8 @@ function Login() {
                                 onChange={handleChange}
                                 value={userInput.domain}
                                 id="domain-tenant-field"
-                                placeholder="Enter Domain or Username"
+                                placeholder="Enter Domain"
                             />
-                            {/* <span className="input-group-text text-muted" id="basic-addon2">
-                                {environment === 'production' ? '.alphacx.co' : '.qustomar.com'}
-                            </span> */}
                         </div>
 
                         <div className="haveAnAcco">
@@ -202,7 +202,7 @@ function Login() {
 
                 {domain && (
                     <form>
-                        <div className="Auth-header" style={{ marginBottom: '30px' }}>
+                        <div className="Auth-header" style={{ marginBottom: '20px' }}>
                             <h3>Welcome Back</h3>
                             <p>Enter login details</p>
                         </div>
@@ -233,8 +233,22 @@ function Login() {
                                 <img src={showPasswordImg} alt="" onClick={() => setShowPassword(!showPassword)} />
                             </div>
                         </div>
-                        <div className="text-end forgetPassword">
-                            <Link to="/forgot-password">Forgot password?</Link>
+                        <div className="d-flex justify-content-between forgetPassword">
+                            <div className="mt-2">
+                                <span>
+                                    <strong>{wordCapitalize(domain)}</strong>
+                                </span>
+                                <button
+                                    type="button"
+                                    onClick={logoutDomain}
+                                    className="border btn-light ms-2 px-1 rounded small"
+                                >
+                                    Change
+                                </button>
+                            </div>
+                            <Link to="/forgot-password" className="ms-auto mt-2">
+                                Forgot Password?
+                            </Link>
                         </div>
 
                         <div className="submit-auth-btn">

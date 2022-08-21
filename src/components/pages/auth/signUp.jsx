@@ -172,19 +172,6 @@ function Registration() {
         });
     };
 
-    // ONBLUR VALIDATION
-    // const handleBlur = (e) => {
-    //     if (e.target.name === 'email') {
-    //         Validate.email(e, userInput, setUserInput);
-    //     } else if (e.target.name === 'password') {
-    //         Validate.password(e, userInput, setUserInput);
-    //     } else if (e.target.name === 'firstName' || e.target.name === 'lastName' || e.target.name === 'companyName') {
-    //         Validate.length(e, userInput, setUserInput);
-    //     } else if (e.target.name === 'domain') {
-    //         Validate.noSpecialChars(e, userInput, setUserInput);
-    //     }
-    // };
-    //
     const handleSubmit = async (event) => {
         if (simpleValidator.current.allValid()) {
             setLoading(true);
@@ -389,14 +376,14 @@ function Registration() {
                                             </Form.Group>
                                             <Form.Group className="mb-4 form-group acx-form-group">
                                                 <Form.Label visuallyHidden className="mb-1">
-                                                    Username{' '}
+                                                    Domain{' '}
                                                 </Form.Label>
                                                 <InputGroup className="">
                                                     <Form.Control
                                                         type="text"
                                                         required
                                                         autoComplete="off"
-                                                        placeholder="Username"
+                                                        placeholder="Domain"
                                                         // disabled={lockDomain}
                                                         onChange={(e) => handleChange(e)}
                                                         name="domain"
@@ -430,7 +417,7 @@ function Registration() {
                                                 {userInput.domain && (
                                                     <small>
                                                         {/* Your URL will be <strong>{userInput.domain}.alphacx.co</strong> */}
-                                                        Your Username may be used as your unique subdomain URL per your
+                                                        Your domain may be used as your unique subdomain URL per your
                                                         plan.
                                                     </small>
                                                 )}
