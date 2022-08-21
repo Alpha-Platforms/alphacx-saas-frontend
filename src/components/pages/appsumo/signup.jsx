@@ -103,19 +103,19 @@ function Appsumo() {
             }
         }
 
-        // localStorage.setItem('city', '');
-
     }, []);
 
-    const redirectToLogin = () => {
+    const redirectToLogin = async () => {
         setShowRirecting(true)
-        // TODO KEME:: domain login to check if has subdomain
-        if(false){
-            const protocol = window.location.protocol
-            const hostname = window.location.hostname.split(".").slice(1).join(".")
-            const port = window.location.port
-            const baseUrl = `${protocol}//${userData.domain}.${hostname}:${port}`
-            window.location.href = `${baseUrl}/login?activation=1&email=${userData.email}`
+        const res = await httpPost(`auth/login`, { domain });
+
+        if (res.status === 'success') {
+            if (res.data?.has_subdomain) {
+                window.location.href = `${getSubdomainUrl(domain)}/login?activation=1&email=${userData.email}`;
+            } else {
+                window.localStorage.setItem('domain', res.data?.domain);
+                window.location.href = `/login?activation=1&email=${userData.email}`;
+            }
         } else {
             window.location.href = '/';
         }
@@ -411,7 +411,7 @@ function Appsumo() {
                                                         type="text"
                                                         required
                                                         autoComplete="off"
-                                                        placeholder="Username"
+                                                        placeholder="Domain"
                                                         // disabled={lockDomain}
                                                         onChange={(e) => handleChange(e)}
                                                         name="domain"
@@ -445,7 +445,7 @@ function Appsumo() {
                                                 {userInput.domain && (
                                                     <small>
                                                         {/* Your unique URL will be <strong>{userInput.domain}.alphacx.co</strong> */}
-                                                        Your Username may be used as your unique subdomain URL per your
+                                                        Your domain may be used as your unique subdomain URL per your
                                                         plan.
                                                     </small>
                                                 )}

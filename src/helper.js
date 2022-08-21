@@ -417,3 +417,11 @@ export const createEvent = (eventName, data, options = {}) => {
     const event = new CustomEvent(eventName, { detail: data, ...eventOptions });
     window.document.dispatchEvent(event);
 };
+
+export const getSubdomainUrl = (domain) => {
+    const hostnameParts = window.location.hostname.split('.');
+    if (process.env.NODE_ENV === 'development') {
+        return `${window.location.protocol}//${domain}.${hostnameParts.slice(-1).join('.')}:${window.location.port}`;
+    }
+    return `${window.location.protocol}//${domain}.${hostnameParts.slice(-2).join('.')}:${window.location.port}`;
+};
