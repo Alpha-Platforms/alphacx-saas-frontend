@@ -505,3 +505,19 @@ export const brandKit = (options) => {
     }
     return null;
 };
+export const getSubdomainOrUrl = (domain = '') => {
+    const hostnameParts = window.location.hostname.split('.');
+    if (domain) {
+        if (process.env.NODE_ENV === 'development') {
+            return `${window.location.protocol}//${domain}.${hostnameParts.slice(-1).join('.')}:${
+                window.location.port
+            }`;
+        }
+        return `${window.location.protocol}//${domain}.${hostnameParts.slice(-2).join('.')}:${window.location.port}`;
+    }
+    // Return subdomain if no arg
+    if (process.env.NODE_ENV === 'development') {
+        return hostnameParts.length === 2 ? hostnameParts[0] : '';
+    }
+    return hostnameParts.length === 3 ? hostnameParts[0] : '';
+};

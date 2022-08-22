@@ -18,7 +18,7 @@ import { httpDeleteMain } from '../../../../helpers/httpMethods';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
 import { ReactComponent as AccountLightIcon } from '../../../../assets/icons/Social-blurb.svg';
 import { ReactComponent as MailLightIcon } from '../../../../assets/icons/mail_light.svg';
-import { hasFeatureAccess, brandKit } from '../../../../helper';
+import { hasFeatureAccess, getSubdomainOrUrl, brandKit } from '../../../../helper';
 // import { hideLoader, showLoader } from '../../../helpers/loader';
 // import Breadcrumb from 'react-bootstrap/Breadcrumb';
 // import { hostname } from 'os';
@@ -105,14 +105,14 @@ function SocialIntegrations({ configs }) {
         e.preventDefault();
         const subdomain = 'app';
         const path = 'integrations';
+        const breadcrumb = window.location.href;
         const params = `channel=${channel}&domain=${window.localStorage.getItem(
             'domain',
-        )}&id=${window.localStorage.getItem('token')}&uid=${window.localStorage.getItem('refreshToken')}`;
-        const { protocol } = window.location;
+        )}&id=${window.localStorage.getItem('token')}&uid=${window.localStorage.getItem(
+            'refreshToken',
+        )}}&breadcrumb=${breadcrumb}`;
         // eslint-disable-next-line no-shadow
-        const hostname = window.location.hostname.split('.').slice(1).join('.');
-        const { port } = window.location;
-        window.location.href = `${protocol}//${subdomain}.${hostname}:${port}/${path}?${params}`;
+        window.location.href = `${getSubdomainOrUrl(subdomain)}/${path}?${params}`;
     };
 
     const brandBg = css({ backgroundColor: `${brandKit({ bgCol: 0 })?.backgroundColor} !important` });

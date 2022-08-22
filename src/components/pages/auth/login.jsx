@@ -8,7 +8,8 @@ import './login.css';
 import { NotificationManager } from 'react-notifications';
 import { Link, useLocation } from 'react-router-dom';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { wordCapitalize, brandKit } from '../../../helper';
+import { wordCapitalize, getSubdomainOrUrl, brandKit } from '../../../helper';
+
 import showPasswordImg from '../../../assets/imgF/Show.png';
 import Symbol1 from '../../../assets/imgF/symbolAuth.png';
 import Symbol2 from '../../../assets/imgF/symbolAuth2.png';
@@ -31,25 +32,17 @@ function Login() {
     });
 
     const [showPassword, setShowPassword] = useState(false);
-    const [domain, setDomain] = useState('');
+    const [domain, setDomain] = useState(window.localStorage.getItem('domain') || '');
     const [tenantId, setTenantId] = useState('');
     const [loading, setLoading] = useState(false);
     const [color] = useState('#ffffff');
-    const [hostName] = useState(() => {
-        return window.location.hostname.split('.');
-    });
-    const [environment] = useState(process.env.NODE_ENV);
+    const [hasSubdomain, setHasSubdomain] = useState('');
 
-    const hostLength = hostName.length;
-    const hostn = hostName[0].toLowerCase();
-    const isConsideredDomain =
-        (hostName[hostLength - 2] === 'alphacx' && hostName[0] !== 'app') ||
-        (hostName[hostLength - 2] === 'qustomar' && hostLength === 3) ||
-        (hostName[hostLength - 1] === 'localhost' && hostLength !== 1);
+    const hostname = window.location.hostname.split('.');
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const refreshToken = localStorage.getItem('refreshToken');
+        const token = window.localStorage.getItem('token');
+        const refreshToken = window.localStorage.getItem('refreshToken');
         if (token && refreshToken) {
             window.location.href = '/';
         }
@@ -64,16 +57,17 @@ function Login() {
 
     useEffect(() => {
         (async () => {
-            if (isConsideredDomain) {
-                setDomain(hostn);
-
-                const res = await httpPost(`auth/login`, { domain: hostn });
+            if (getSubdomainOrUrl()) {
+                // handle netlify case later
+                const subdomain = hostname[0].toLowerCase();
+                const res = await httpPost(`auth/login`, { domain: subdomain });
 
                 if (res?.status === 'success') {
-                    window.localStorage.setItem('tenantId', res?.data?.id || '');
-                    window.localStorage.setItem('tenantToken', res?.data?.token);
+                    setDomain(res?.data?.domain);
+                    setTenantId(res?.data?.id);
+                    setHasSubdomain(res.data?.has_subdomain);
                     dispatch(getSubscription(res?.data?.id));
-                    dispatch(getTenantInfo(hostn));
+                    dispatch(getTenantInfo(subdomain));
                 }
             }
         })();
@@ -81,11 +75,8 @@ function Login() {
     }, []);
 
     useEffect(() => {
-        if (domain) {
+        if (domain || tenantId) {
             window.localStorage.setItem('domain', domain);
-        }
-
-        if (tenantId) {
             window.localStorage.setItem('tenantId', tenantId);
         }
     }, [domain, tenantId]);
@@ -94,7 +85,7 @@ function Login() {
         setUserInput({ ...userInput, [e.target.name]: e.target.value });
     };
 
-    const landingPage = () => {
+    const gotoLandingPage = () => {
         if (activation) {
             window.location.href = `/appsumo-plans`;
         } else {
@@ -104,7 +95,7 @@ function Login() {
 
     const submit = async () => {
         if (domain) {
-            // PASSWORD LOGIN
+            // DO PASSWORD LOGIN
 
             if (userInput.email && userInput.password) {
                 const data = {
@@ -113,48 +104,52 @@ function Login() {
                 };
 
                 setLoading(true);
-
                 const res = await httpPostMain('auth/login', data);
+                setLoading(false);
 
                 if (res.status === 'success') {
-                    setLoading(false);
                     window.localStorage.setItem('user', JSON.stringify(res.data));
                     window.localStorage.setItem('token', res.data.token);
                     window.localStorage.setItem('refreshToken', res.data.refreshToken);
-                    landingPage();
+                    gotoLandingPage();
                 } else {
                     // Login fails
-                    setLoading(false);
                     NotificationManager.error(res?.er?.message, 'Error', 4000);
                 }
-            } else {
-                // empty fields already handled by button disable attr
             }
         } else {
-            // DOMAIN LOGIN
+            // DO DOMAIN LOGIN
 
             // eslint-disable-next-line no-shadow
-            const domain = userInput.domain.toLowerCase();
+            const domain = userInput.domain.trim().toLowerCase();
 
             setLoading(true);
             const res = await httpPost(`auth/login`, { domain });
 
             if (res.status === 'success') {
+                setTenantId(res?.data?.id);
+                dispatch(getSubscription(res?.data?.id));
                 setLoading(false);
+                setHasSubdomain(res.data?.has_subdomain);
 
-                if (hostName[0] === 'app') {
-                    window.location.href = `https://${res?.data?.domain}.alphacx.co`;
-                } else if (hostName[0] === 'qustomar' || hostName[0] === 'localhost') {
-                    window.location.href = `${window.location.protocol}//${res?.data?.domain}.${window.location.hostname}:${window.location.port}`;
+                if (res.data?.has_subdomain) {
+                    window.location.href = getSubdomainOrUrl(domain);
                 } else {
-                    setDomain(domain);
-                    setTenantId(res?.data?.id);
+                    setDomain(res?.data?.domain);
                 }
             } else {
                 setLoading(false);
                 NotificationManager.error(wordCapitalize(res?.er?.message), 'Invalid Domain Name', 4000);
             }
         }
+    };
+
+    const logoutDomain = (e) => {
+        e.preventDefault();
+        window.localStorage.removeItem('domain');
+        if (hasSubdomain)
+            window.location.href = getSubdomainOrUrl(process.env.NODE_ENV === 'development' ? 'dev' : 'app');
+        setDomain('');
     };
 
     const handleSubmit = (e) => {
@@ -164,7 +159,7 @@ function Login() {
 
     return (
         <div className={`auth-container d-flex justify-content-center ${css({ ...brandKit({ bgCol: -20 }) })}`}>
-            {!isConsideredDomain && (
+            {!hasSubdomain && (
                 <div className="symbol-wrap2">
                     <img src={Symbol2} alt="" />
                 </div>
@@ -193,10 +188,8 @@ function Login() {
                                 onChange={handleChange}
                                 value={userInput.domain}
                                 id="domain-tenant-field"
+                                placeholder="Enter Domain"
                             />
-                            <span className="input-group-text text-muted" id="basic-addon2">
-                                {environment === 'production' ? '.alphacx.co' : '.qustomar.com'}
-                            </span>
                         </div>
 
                         <div className="haveAnAcco">
@@ -221,7 +214,7 @@ function Login() {
 
                 {domain && (
                     <form>
-                        <div className="Auth-header" style={{ marginBottom: '30px' }}>
+                        <div className="Auth-header" style={{ marginBottom: '20px' }}>
                             <h3>Welcome Back</h3>
                             <p>Enter login details</p>
                         </div>
@@ -252,8 +245,22 @@ function Login() {
                                 <img src={showPasswordImg} alt="" onClick={() => setShowPassword(!showPassword)} />
                             </div>
                         </div>
-                        <div className="text-end forgetPassword">
-                            <Link to="/forgot-password">Forgot password?</Link>
+                        <div className="d-flex justify-content-between forgetPassword">
+                            <div className="mt-2">
+                                <span>
+                                    <strong>{wordCapitalize(domain)}</strong>
+                                </span>
+                                <button
+                                    type="button"
+                                    onClick={logoutDomain}
+                                    className="border btn-light ms-2 px-1 rounded small"
+                                >
+                                    Change
+                                </button>
+                            </div>
+                            <Link to="/forgot-password" className="ms-auto mt-2">
+                                Forgot Password?
+                            </Link>
                         </div>
 
                         <div className="submit-auth-btn">
@@ -283,7 +290,7 @@ function Login() {
                 )}
             </div>
 
-            {!isConsideredDomain && (
+            {!hasSubdomain && (
                 <div className="symbol-wrap">
                     <img src={Symbol1} alt="" />
                 </div>
