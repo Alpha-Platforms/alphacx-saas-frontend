@@ -7,7 +7,7 @@ import './login.css';
 import { NotificationManager } from 'react-notifications';
 import { Link, useLocation } from 'react-router-dom';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { wordCapitalize, getSubdomainUrl } from '../../../helper';
+import { wordCapitalize, getSubdomainOrUrl } from '../../../helper';
 import AlphaLogo from '../../../assets/imgF/alpha.png';
 import Logo from '../../../assets/imgF/logo.png';
 import showPasswordImg from '../../../assets/imgF/Show.png';
@@ -57,7 +57,7 @@ function Login() {
 
     useEffect(() => {
         (async () => {
-            if (hostname.length === 3 || hostname[1] === 'localhost') { // TODO: Uptimize later
+            if (getSubdomainOrUrl()) {
                 // handle netlify case later
                 const subdomain = hostname[0].toLowerCase();
                 const res = await httpPost(`auth/login`, { domain: subdomain });
@@ -130,7 +130,7 @@ function Login() {
                 setHasSubdomain(res.data?.has_subdomain);
 
                 if (res.data?.has_subdomain) {
-                    window.location.href = getSubdomainUrl(domain);
+                    window.location.href = getSubdomainOrUrl(domain);
                 } else {
                     setDomain(res?.data?.domain);
                 }
@@ -145,7 +145,7 @@ function Login() {
         e.preventDefault();
         window.localStorage.removeItem('domain');
         if (hasSubdomain)
-            window.location.href = getSubdomainUrl(process.env.NODE_ENV === 'development' ? 'dev' : 'app');
+            window.location.href = getSubdomainOrUrl(process.env.NODE_ENV === 'development' ? 'dev' : 'app');
         setDomain('');
     };
 
