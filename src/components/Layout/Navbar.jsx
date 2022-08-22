@@ -557,7 +557,7 @@ function Navbar({ pageName, user }) {
                                             }}
                                         />
                                     ) : (
-                                        <span className="nav-initials">
+                                        <span className={`nav-initials ${css({ ...brandKit({ bgCol: 0 }) })}`}>
                                             {`${user?.firstname[0] || ''}${user?.lastname[0] || ''}`
                                                 .trim()
                                                 .toUpperCase()}
