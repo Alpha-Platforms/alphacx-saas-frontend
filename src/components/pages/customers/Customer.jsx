@@ -102,7 +102,7 @@ function Customer({ isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoade
         <>
             {!isCurrentCustomerLoaded ? (
                 <div className="cust-table-loader">
-                    <MoonLoader loading color="#006298" size={30} />
+                    <MoonLoader loading color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             ) : !currentCustomer ? (
                 <div>No Customer Found.</div>
@@ -129,7 +129,7 @@ function Customer({ isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoade
                                         <img src={currentCustomer.avatar} alt="" />
                                     </div>
                                 ) : (
-                                    <div className="user-initials blue me-auto ms-auto d-flex justify-content-center align-items-center">
+                                    <div className={`user-initials me-auto ms-auto d-flex justify-content-center align-items-center ${css({ ...brandKit({ bgCol: 0 }) })}`}>
                                         {getUserInitials(
                                             `${currentCustomer.firstname} ${
                                                 currentCustomer.lastname == 'default' ? '' : currentCustomer.lastname
@@ -270,7 +270,11 @@ function Customer({ isCustomerLoaded, getCurrentCustomer, isCurrentCustomerLoade
                                                     setIsEditing(true);
                                                     setCustomerId(id);
                                                 }}
-                                                className="btn btn-sm acx-btn-primary px-md-3 py-1"
+                                                className={`btn btn-sm px-3 ${css({
+                                                    ...brandKit({ bgCol: 0 }),
+                                                    color: 'white',
+                                                    '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                                })}`}
                                             >
                                                 <div className="d-flex justify-content-between align-items-center">
                                                     <img

@@ -712,6 +712,9 @@ function AccountSettings() {
                                                 <p className="mb-0 user-select-none">{appIcon.msg}</p>
                                             </div>
                                         </div>
+                                        <span>
+                                            <small>Max dimension: 1500 x 1500</small>
+                                        </span>
                                         {
                                             /* simple validation */
                                             simpleValidator.current.message(
@@ -808,6 +811,9 @@ function AccountSettings() {
                                                 <p className="mb-0 user-select-none">{appLogo.msg}</p>
                                             </div>
                                         </div>
+                                        <span>
+                                            <small>Max dimension: 1500 x 1500</small>
+                                        </span>
                                         {
                                             /* simple validation */
                                             simpleValidator.current.message(

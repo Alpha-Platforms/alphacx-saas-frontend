@@ -4,7 +4,6 @@ import { useState, Fragment, useEffect } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { connect } from 'react-redux';
 import RSelect from 'react-select/creatable';
-// react bootstrap components
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -12,7 +11,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import Collapse from 'react-bootstrap/Collapse';
-//
+import { css } from '@emotion/css';
 import { getUserInitials } from '../../../../helper';
 import {
     httpGetMain,
@@ -21,11 +20,8 @@ import {
 } from '../../../../helpers/httpMethods';
 import { updateCustomer } from '../../../../reduxstore/actions/customerActions';
 import { countrycodes } from '../../../shared/countrycodes';
-
-// resources
 import { ExpandChat } from '../../../../assets/images/svgs';
-
-import { multiIncludes } from '../../../../helper';
+import { multiIncludes, brandKit } from '../../../../helper';
 import { accessControlFunctions } from '../../../../config/accessControlList';
 
 function Profile({ currentCustomer, customerId, updateCustomer, user, ...props }) {
@@ -422,7 +418,7 @@ function Profile({ currentCustomer, customerId, updateCustomer, user, ...props }
                                     />
                                 </div>
                             ) : (
-                                <div className="user-initials blue mx-auto d-flex justify-content-center align-items-center avatar avatar-xl rounded-3">
+                                <div className={`user-initials mx-auto d-flex justify-content-center align-items-center avatar avatar-xl rounded-3 ${css({ ...brandKit({ bgCol: 0 }) })}`}>
                                     <h1 className="">
                                         {getUserInitials(
                                             `${currentCustomer.firstname} ${
