@@ -40,6 +40,7 @@ import TicketsImg from '../../../assets/images/tickets.png';
 import ConversationsImg from '../../../assets/images/conversations.png';
 import { Capitalize } from 'components/helpers/helpers';
 import Login from '../auth/login';
+import { getSubdomainOrUrl } from 'helper';
 
 const override = {
     display: "block",
@@ -111,7 +112,7 @@ function Appsumo() {
 
         if (res.status === 'success') {
             if (res.data?.has_subdomain) {
-                window.location.href = `${getSubdomainUrl(domain)}/login?activation=1&email=${userData.email}`;
+                window.location.href = `${getSubdomainOrUrl(domain)}/login?activation=1&email=${userData.email}`;
             } else {
                 window.localStorage.setItem('domain', res.data?.domain);
                 window.location.href = `/login?activation=1&email=${userData.email}`;
