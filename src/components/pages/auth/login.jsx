@@ -85,7 +85,8 @@ function Login() {
     };
 
     const gotoLandingPage = () => {
-        if (activation) {
+        // if (activation) { // CAUSING ERROR SO... FIX LATER (App.jsx152 - setAppSocket())
+        if (false) {
             window.location.href = `/appsumo-plans`;
         } else {
             window.location.href = `/`;
