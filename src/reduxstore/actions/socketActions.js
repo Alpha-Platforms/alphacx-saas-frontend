@@ -6,7 +6,7 @@ import Socket from '../../socket';
 export const setAppSocket = () => {
     const domain = window.localStorage.getItem('domain');
     const tenantId = window.localStorage.getItem('tenantId');
-    if (!domain || !tenantId) return null;
+    if (!domain || !tenantId) return {};
 
     return { type: types.SET_APP_SOCKET, payload: new Socket(uuid(), domain, tenantId) };
 };

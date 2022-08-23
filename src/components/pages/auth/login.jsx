@@ -15,7 +15,7 @@ import Symbol1 from '../../../assets/imgF/symbolAuth.png';
 import Symbol2 from '../../../assets/imgF/symbolAuth2.png';
 import { httpPost, httpPostMain } from '../../../helpers/httpMethods';
 import { getSubscription } from '../../../reduxstore/actions/subscriptionAction';
-import { getTenantInfo } from '../../../reduxstore/actions/tenantInfoActions';
+import { getTenantInfo, setTenantInfo } from '../../../reduxstore/actions/tenantInfoActions';
 
 function Login() {
     const location = useLocation();
@@ -60,19 +60,36 @@ function Login() {
             if (getSubdomainOrUrl()) {
                 // handle netlify case later
                 const subdomain = hostname[0].toLowerCase();
-                const res = await httpPost(`auth/login`, { domain: subdomain });
-
-                if (res?.status === 'success') {
-                    setDomain(res?.data?.domain);
-                    setTenantId(res?.data?.id);
-                    setHasSubdomain(res.data?.has_subdomain);
-                    dispatch(getSubscription(res?.data?.id));
-                    dispatch(getTenantInfo(subdomain));
+                /* only login domain when domain is valid */
+                if (subdomain !== 'app' && subdomain !== 'dev') {
+                    const res = await httpPost(`auth/login`, { domain: subdomain });
+                    if (res?.status === 'success') {
+                        setDomain(res?.data?.domain);
+                        setTenantId(res?.data?.id);
+                        setHasSubdomain(res.data?.has_subdomain);
+                        dispatch(getSubscription(res?.data?.id));
+                        dispatch(getTenantInfo(subdomain));
+                    }
                 }
+            } else {
+                window.location.href = `${getSubdomainOrUrl(
+                    process.env.NODE_ENV === 'development' ? 'dev' : 'app',
+                )}/login`;
             }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        (async () => {
+            const subdomain = hostname[0].toLowerCase();
+            if ((subdomain === 'app' || subdomain === 'dev') && !domain) {
+                // reset tenantinfo
+                dispatch(setTenantInfo(null, true));
+            }
+        })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [domain]);
 
     useEffect(() => {
         if (domain || tenantId) {
@@ -129,11 +146,12 @@ function Login() {
             if (res.status === 'success') {
                 setTenantId(res?.data?.id);
                 dispatch(getSubscription(res?.data?.id));
+                dispatch(getTenantInfo(domain));
                 setLoading(false);
                 setHasSubdomain(res.data?.has_subdomain);
 
                 if (res.data?.has_subdomain) {
-                    window.location.href = getSubdomainOrUrl(domain);
+                    window.location.href = `${getSubdomainOrUrl(domain)}/login`;
                 } else {
                     setDomain(res?.data?.domain);
                 }
@@ -147,8 +165,9 @@ function Login() {
     const logoutDomain = (e) => {
         e.preventDefault();
         window.localStorage.removeItem('domain');
+        dispatch(setTenantInfo(null, true));
         if (hasSubdomain)
-            window.location.href = getSubdomainOrUrl(process.env.NODE_ENV === 'development' ? 'dev' : 'app');
+            window.location.href = `${getSubdomainOrUrl(process.env.NODE_ENV === 'development' ? 'dev' : 'app')}/login`;
         setDomain('');
     };
 

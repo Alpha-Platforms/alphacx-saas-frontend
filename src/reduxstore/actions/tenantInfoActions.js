@@ -20,8 +20,8 @@ export const getTenantInfo = (tenantDomain, success, failed) => async (dispatch)
     }
 };
 
-export const setTenantInfo = (newTenantInfo) => {
-    if (newTenantInfo)
+export const setTenantInfo = (newTenantInfo, forceTenantInfo = false) => {
+    if (newTenantInfo || forceTenantInfo)
         return {
             type: types.GET_TENANT_INFO,
             payload: newTenantInfo,
