@@ -89,11 +89,20 @@ function Appsumo() {
                 const res = await httpGet(`appsumo/sumoling?tenant=${tenantId}`, {});
                 if (res.status === 'success') {
                     // setActivationEmail(res.data.email);
-
-                    setUserInput((prev) => ({
-                        ...prev,
-                        email: res.data.email
-                    }));
+                    if(res.data.email && res.data.name && res.data.domain){
+                        setTenantExists(true)
+                        setUserInput((prev) => ({
+                            ...prev,
+                            email: res.data.email,
+                            name: res.data.name,
+                            domain: res.data.domain
+                        }));
+                    } else {
+                        setUserInput((prev) => ({
+                            ...prev,
+                            email: res.data.email
+                        }));
+                    }
 
 
                 } else {
@@ -611,6 +620,39 @@ function Appsumo() {
                 </Row>
             </Container>
         </main>
+
+
+
+        <Modal
+                open={true}
+                onClose={() => {}}
+                aria-labelledby="contained-modal-title-vcenter"
+                size="lg"
+                centered
+            >
+                {/* <Modal.Body> */}
+                <div className="rounded-3">
+                    <div className="text-center"> {/* DISPLAY CLOSE X BTN */}
+                        <div className="Auth-header"> 
+                            <div>
+                                <h3 className="">Account Exists with Alpha Trial!</h3>
+                            </div>
+                            <p className="text-center">
+                               An Account already exists with <strong>user@mail.cx</strong>.<br />
+                               Your subscription will be updated to <strong>Tier 3</strong>
+                            </p>
+                            <div className="">
+                                <Button as="a" href="https://alphacx.co" variant="primary" className="">
+                                    Yes, Continue
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/* </Modal.Body> */}
+            </Modal>
+
+
 
         {false &&
             <Modal
