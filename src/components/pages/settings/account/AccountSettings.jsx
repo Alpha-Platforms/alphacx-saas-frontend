@@ -16,6 +16,8 @@ import MoonLoader from 'react-spinners/MoonLoader';
 import RSelect from 'react-select';
 import SimpleReactValidator from 'simple-react-validator';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { css } from '@emotion/css';
 import { timezones } from '../../../shared/timezones';
 import { languages } from '../../../shared/languages';
 import { countries } from '../../../shared/countries';
@@ -23,6 +25,8 @@ import { httpGet, httpPatch } from '../../../../helpers/httpMethods';
 import ImageDefault from '../../../../assets/svgicons/image-default.svg';
 import './AccountSettings.scss';
 import { config } from '../../../../config/keys';
+import { setTenantInfo } from '../../../../reduxstore/actions/tenantInfoActions';
+import { brandKit } from '../../../../helper';
 
 function AccountSettings() {
     const [accountLoading, setAccountLoading] = useState(false);
@@ -48,6 +52,7 @@ function AccountSettings() {
         },
     });
     const [, forceUpdate] = useState(false);
+    const dispatch = useDispatch();
 
     const appIconWrapper = useRef(null);
     const appLogoWrapper = useRef(null);
@@ -204,6 +209,7 @@ function AccountSettings() {
 
                         if (res?.status === 'success') {
                             setOrganisation((prev) => ({ ...prev, ...res?.data }));
+                            dispatch(setTenantInfo(res?.data));
                             setAppIcon((prev) => ({
                                 ...prev,
                                 msg: 'Click or drag file here to add',
@@ -258,6 +264,7 @@ function AccountSettings() {
 
         if (res?.status === 'success') {
             setOrganisation((prev) => ({ ...prev, ...res?.data }));
+            dispatch(setTenantInfo(res?.data));
             return NotificationManager.success(res?.success, 'Success', 4000);
         }
         return NotificationManager.error(res?.er?.message, 'Error', 4000);
@@ -446,7 +453,7 @@ function AccountSettings() {
         <div className="account-settings">
             {accountLoading && (
                 <div className={`cust-table-loader ${accountLoading && 'add-loader-opacity'}`}>
-                    <MoonLoader loading={accountLoading} color="#006298" size={30} />
+                    <MoonLoader loading={accountLoading} color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
 
@@ -705,6 +712,9 @@ function AccountSettings() {
                                                 <p className="mb-0 user-select-none">{appIcon.msg}</p>
                                             </div>
                                         </div>
+                                        <span>
+                                            <small>Max dimension: 1500 x 1500</small>
+                                        </span>
                                         {
                                             /* simple validation */
                                             simpleValidator.current.message(
@@ -801,6 +811,9 @@ function AccountSettings() {
                                                 <p className="mb-0 user-select-none">{appLogo.msg}</p>
                                             </div>
                                         </div>
+                                        <span>
+                                            <small>Max dimension: 1500 x 1500</small>
+                                        </span>
                                         {
                                             /* simple validation */
                                             simpleValidator.current.message(
@@ -814,36 +827,50 @@ function AccountSettings() {
                                 <div className="row">
                                     <div className="form-group col-6 mb-3">
                                         <label className="f-14 mb-1">App Color</label>
-                                        <div
-                                            className="d-flex border justify-content-between align-items-center p-2"
-                                            onClick={() => document.querySelector('.organisation_app_color')?.click()}
-                                        >
-                                            <span>{organisation?.branding?.appColor || '#000000'}</span>
+                                        <div className="d-flex border justify-content-between align-items-center p-2">
                                             <input
-                                                type="color"
-                                                value={organisation?.branding?.appColor || '#000000'}
+                                                value={
+                                                    organisation?.branding?.appColor ||
+                                                    brandKit({ col: 0, default: true })?.color
+                                                }
                                                 name="appColor"
                                                 onChange={handleChange}
-                                                className="colorThemeInput"
+                                                className="border form-control-plaintext form-control me-1 px-1 rounded"
+                                            />
+                                            <input
+                                                type="color"
+                                                value={
+                                                    organisation?.branding?.appColor ||
+                                                    brandKit({ col: 0, default: true })?.color
+                                                }
+                                                name="appColor"
+                                                onChange={handleChange}
+                                                className="colorThemeInput ms-1"
                                                 id="colorThemeInput"
                                             />
                                         </div>
                                     </div>
                                     <div className="form-group col-6 mb-3">
                                         <label className="f-14 mb-1">Knowledge Base Hero Color</label>
-                                        <div
-                                            className="d-flex border justify-content-between align-items-center p-2"
-                                            onClick={() =>
-                                                document.querySelector('.organisation_kb_hero_color')?.click()
-                                            }
-                                        >
-                                            <span>{organisation?.branding?.kbHeroColor || '#000000'}</span>
+                                        <div className="d-flex border justify-content-between align-items-center p-2">
                                             <input
-                                                type="color"
-                                                value={organisation?.branding?.kbHeroColor || '#000000'}
+                                                value={
+                                                    organisation?.branding?.kbHeroColor ||
+                                                    brandKit({ col: 0, default: true })?.color
+                                                }
                                                 name="kbHeroColor"
                                                 onChange={handleChange}
-                                                className="colorThemeInput organisation_kb_hero_color"
+                                                className="border form-control-plaintext form-control me-1 px-1 rounded"
+                                            />
+                                            <input
+                                                type="color"
+                                                value={
+                                                    organisation?.branding?.kbHeroColor ||
+                                                    brandKit({ col: 0, default: true })?.color
+                                                }
+                                                name="kbHeroColor"
+                                                onChange={handleChange}
+                                                className="colorThemeInput ms-1"
                                                 id="colorThemeInput"
                                             />
                                         </div>
@@ -855,7 +882,11 @@ function AccountSettings() {
                     <div className="text-end col-md-8 mt-4 mb-4 pt-2 pb-3">
                         <button
                             type="button"
-                            className="btn btn-sm bg-at-blue-light text-white px-4"
+                            className={`btn btn-sm text-white px-3 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`}
                             onClick={updateUserInfo}
                         >
                             Save Changes

@@ -105,8 +105,8 @@
 }
 
 #pills-tab .nav-link.nav-active {
-  color: var(--at-blue-light) !important;
-  text-shadow: 0px 0px 1px var(--at-blue-light);
+  /* color: var(--at-blue-light) !important; */
+  /* text-shadow: 0px 0px 1px var(--at-blue-light); */
 }
 
 .single-cust-loader {

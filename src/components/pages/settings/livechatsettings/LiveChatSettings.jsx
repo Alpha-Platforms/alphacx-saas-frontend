@@ -4,6 +4,7 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { css } from '@emotion/css';
 import SimpleCrypto from 'simple-crypto-js';
 import './LiveChatSettings.css';
 // import ChatPreview from '../../../../assets/images/ChatWidget.png';
@@ -14,7 +15,7 @@ import MoonLoader from 'react-spinners/MoonLoader';
 import { getLivechatConfig, updateLivechatConfig } from '../../../../reduxstore/actions/livechatActions';
 import { getAgents } from '../../../../reduxstore/actions/agentActions';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
-import { getHostnamesFromString } from '../../../../helper';
+import { getHostnamesFromString, brandKit } from '../../../../helper';
 
 // eslint-disable-next-line no-shadow
 function LiveChatSettings({ getLivechatConfig, updateLivechatConfig, isUserAuthenticated }) {
@@ -200,7 +201,7 @@ function LiveChatSettings({ getLivechatConfig, updateLivechatConfig, isUserAuthe
         <div>
             {loading && (
                 <div className="cust-table-loader">
-                    <MoonLoader loading color="#006298" size={30} />
+                    <MoonLoader loading color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
             <div className="card card-body bg-white border-0 p-0 mb-4">
@@ -360,7 +361,9 @@ function LiveChatSettings({ getLivechatConfig, updateLivechatConfig, isUserAuthe
                                                         <input
                                                             id="footerBranding"
                                                             type="checkbox"
-                                                            className="form-check-input"
+                                                            className={`form-check-input ${css({
+                                                                '&:checked': { ...brandKit({ bgCol: 0 }) },
+                                                            })}`}
                                                             name="footerBranding"
                                                             checked={settings.footerBranding}
                                                             onChange={handleInputChange}
@@ -376,7 +379,14 @@ function LiveChatSettings({ getLivechatConfig, updateLivechatConfig, isUserAuthe
                                                             <span>{embedText}</span>{' '}
                                                             <button
                                                                 type="button"
-                                                                className="link-copy-btn"
+                                                                className={`link-copy-btn btn btn-sm px-3 ${css({
+                                                                    ...brandKit({ bgCol: 0 }),
+                                                                    color: 'white',
+                                                                    '&:hover': {
+                                                                        ...brandKit({ bgCol: 30 }),
+                                                                        color: 'white',
+                                                                    },
+                                                                })}`}
                                                                 onClick={handleScriptCopy}
                                                             >
                                                                 Copy
@@ -391,7 +401,11 @@ function LiveChatSettings({ getLivechatConfig, updateLivechatConfig, isUserAuthe
                                                     <button
                                                         type="button"
                                                         onClick={handleConfigSave}
-                                                        className="btn btn-sm bg-at-blue-light px-3"
+                                                        className={`btn btn-sm px-3 ${css({
+                                                            ...brandKit({ bgCol: 0 }),
+                                                            color: 'white',
+                                                            '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                                        })}`}
                                                         disabled={false}
                                                     >
                                                         Save Changes

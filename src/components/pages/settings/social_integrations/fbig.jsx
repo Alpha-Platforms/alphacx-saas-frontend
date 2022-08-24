@@ -29,27 +29,19 @@ const FBIntegration = ({location}) => {
     const [showRedirectText, setShowRedirectText] = useState(false)
     const history = useHistory()
     const [channel, setChannel] = useState("")
-
-    
-    // const params = `domain=${window.localStorage.getItem('domain')}&id=${window.localStorage.getItem('token')}&uid=${window.localStorage.getItem('refreshToken')}`
+    const [breadcrumb, setBreadcrumb] = useState('');
     
 
     useEffect(() => {
         const params = new URLSearchParams(location.search)
-        const protocol = window.location.protocol
-        const hostname = window.location.hostname.split(".").slice(1).join(".")
-        const port = window.location.port
-
-        setChannel(params.get('channel'));
 
         const domain = params.get('domain');
         const token = params.get('id');
         const uid = params.get('uid');
 
-        const baseUrl = `${protocol}//${domain}.${hostname}:${port}`
-        setBaseUrl(baseUrl)
-
         setDomain(domain)
+        setChannel(params.get('channel'));
+        setBreadcrumb(params.get('breadcrumb'));
 
         localStorage.setItem('domain', domain)
         localStorage.setItem('token', token)
@@ -70,7 +62,7 @@ const FBIntegration = ({location}) => {
     const redirectToPreviewPage = () => {
         setShowRedirectText(true)
         setTimeout(() => {
-            window.location.href = `${baseUrl}/settings/integrations`       
+            window.location.href = breadcrumb      
         }, 500);
     }
 
@@ -139,11 +131,9 @@ const FBIntegration = ({location}) => {
             <div className="border p-4 bg-white rounded social-integrating-page">
             <header id="mainContentHeader" className="breadcrumb">
                 <h6 className="text-muted f-14">
-                    <a href={`${baseUrl}/settings`}>
-                        <span className="text-custom">Settings</span>
-                    </a>{" "}
+                    <span>Settings</span>{" "}
                     <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
-                    <a href={`${baseUrl}/settings/integrations`}>
+                    <a href={breadcrumb}>
                         <span className="text-custom">Integrations</span>
                     </a>{" "}
                     <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />
@@ -184,7 +174,7 @@ const FBIntegration = ({location}) => {
         </div>
         {pageConnectStatus.connected && (
             <div className='pt-2'>
-                <button className='fs-6' onClick={() => window.location.href = `${baseUrl}/settings/integrations`}>
+                <button className='fs-6' onClick={() => window.location.href = breadcrumb}>
                     <img src={ArrowLeft} alt="ArrowLeft" /> If not automatically redirected click here to go back</button>
             </div>
         )}

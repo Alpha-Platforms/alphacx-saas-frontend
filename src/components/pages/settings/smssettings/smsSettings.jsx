@@ -2,14 +2,15 @@
 // @ts-nocheck
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { css } from '@emotion/css';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
 import './smsSettings.css';
 import { NotificationManager } from 'react-notifications';
 import { connect } from 'react-redux';
 import MoonLoader from 'react-spinners/MoonLoader';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { css } from '@emotion/react';
 import { getSmsConfig, updateSmsConfig } from '../../../../reduxstore/actions/smsActions';
+import { brandKit } from './../../../../helper';
 
 function SmsSettings({
     smsConfig,
@@ -35,7 +36,6 @@ function SmsSettings({
         }));
     };
 
-    const override = css``;
     const [color, setColor] = useState('#ffffff');
 
     useEffect(() => {
@@ -138,13 +138,17 @@ function SmsSettings({
                                 <div className="d-flex justify-content-end my-3 mt-4">
                                     <button
                                         onClick={handleConfigSave}
-                                        className="btn btn-sm bg-at-blue-light px-3"
+                                        className={`btn btn-sm px-3 ${css({
+                                            ...brandKit({ bgCol: 0 }),
+                                            color: 'white',
+                                            '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                        })}`}
                                         disabled={loading}
                                     >
                                         {loading ? (
                                             <>
                                                 <span>Saving changes...</span>
-                                                <ClipLoader color={color} loading={loading} css={override} size={15} />
+                                                <ClipLoader color={color} loading={loading} size={15} />
                                             </>
                                         ) : (
                                             'Save Changes'

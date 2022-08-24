@@ -1,11 +1,13 @@
 /* eslint-disable */
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { css } from '@emotion/css';
 import { ReactComponent as HamburgerSvg } from '../../../../../assets/icons/hamburger.svg';
 // import {ReactComponent as FormMinusSvg} from '../../../../../assets/icons/form-minus.svg';
 import { ReactComponent as DeleteGreySvg } from '../../../../../assets/icons/Delete-grey.svg';
 import { ReactComponent as EditGreySvg } from '../../../../../assets/icons/Edit-grey.svg';
 import AddStatusModal from './AddStatusModal';
+import { brandKit } from './../../../../../helper';
 
 function TicketStatusTab({ statuses }) {
     const gtcCol = { gridTemplateColumns: '210px 1fr' };
@@ -74,7 +76,7 @@ function TicketStatusTab({ statuses }) {
                                     {/* <button
                                         className="btn btn-link text-decoration-none text-at-blue-light" disabled={true} onClick={openAddStage}>+ Add Stage</button> */}
                                     <button
-                                        className="btn btn-link text-decoration-none btn-sm border"
+                                        className={`btn text-decoration-none btn-sm border ${css({ ...brandKit({ col: 0 }) })}`}
                                         disabled={false}
                                         onClick={openAddStage}
                                     >

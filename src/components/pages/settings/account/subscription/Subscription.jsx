@@ -9,6 +9,7 @@ import { connect, useDispatch } from 'react-redux';
 import MoonLoader from 'react-spinners/MoonLoader';
 import moment from 'moment';
 import { Modal } from 'react-responsive-modal';
+import { css } from '@emotion/css';
 import SubTop, { getRealCurrencyv2 } from './components/SubTop';
 import CurrentPlan from './components/CurrentPlan';
 import Summary from './components/Summary';
@@ -18,7 +19,7 @@ import PaymentHistory from './components/PaymentHistory';
 import PaymentForm from './components/PaymentForm';
 import { httpGet, httpPatch } from '../../../../../helpers/httpMethods';
 import { ReactComponent as TickIcon } from '../../../../../assets/icons/tick.svg';
-import { separateNum, uuid } from '../../../../../helper';
+import { separateNum, uuid, brandKit } from '../../../../../helper';
 import { getAgents } from '../../../../../reduxstore/actions/agentActions';
 import { getAdmins } from '../../../../../reduxstore/actions/adminActions';
 import { getSupervisors } from '../../../../../reduxstore/actions/supervisorActions';
@@ -127,7 +128,7 @@ function Subscription({ subscription }) {
         <>
             {(planState.loading || planState.isVerifying) && (
                 <div className="cust-table-loader">
-                    <MoonLoader loading color="#006298" size={30} />
+                    <MoonLoader loading color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
             {subscription?.plan && tenantInfo ? (
@@ -184,6 +185,9 @@ function Subscription({ subscription }) {
                                                     <div className="custom-toggle-wrapper d-inline-block">
                                                         <input
                                                             type="checkbox"
+                                                            className={`${css({
+                                                                '&:checked + label': { ...brandKit({ bgCol: 0 }) },
+                                                            })}`}
                                                             id="switch"
                                                             onChange={() => setIsPlanSelectionMonthly((prev) => !prev)}
                                                             checked={isPlanSelectionYearly}
@@ -201,7 +205,9 @@ function Subscription({ subscription }) {
                                                     .map((item) => (
                                                         <div
                                                             key={uuid()}
-                                                            className={`${item?.is_free ? 'free-plan' : 'alpha-plan'} ${
+                                                            className={`${css({
+                                                                borderColor: brandKit({ bgCol: 0 })?.backgroundColor,
+                                                            })} ${item?.is_free ? 'free-plan' : 'alpha-plan'} ${
                                                                 !(subExpired && !subscription?.plan?.is_free) &&
                                                                 item?.is_free
                                                                     ? 'free-plan-disabled'
@@ -231,37 +237,67 @@ function Subscription({ subscription }) {
                                                                 <ul className="features-list">
                                                                     <li>
                                                                         <span>
-                                                                            <TickIcon />
+                                                                            <TickIcon
+                                                                                stroke={
+                                                                                    brandKit({ bgCol: 0 })
+                                                                                        ?.backgroundColor
+                                                                                }
+                                                                            />
                                                                         </span>{' '}
                                                                         <span>Conversational Inbox</span>
                                                                     </li>
                                                                     <li>
                                                                         <span>
-                                                                            <TickIcon />
+                                                                            <TickIcon
+                                                                                stroke={
+                                                                                    brandKit({ bgCol: 0 })
+                                                                                        ?.backgroundColor
+                                                                                }
+                                                                            />
                                                                         </span>{' '}
                                                                         <span>Embeddable Livechat Widget</span>
                                                                     </li>
                                                                     <li>
                                                                         <span>
-                                                                            <TickIcon />
+                                                                            <TickIcon
+                                                                                stroke={
+                                                                                    brandKit({ bgCol: 0 })
+                                                                                        ?.backgroundColor
+                                                                                }
+                                                                            />
                                                                         </span>{' '}
                                                                         <span>Facebook Integration</span>
                                                                     </li>
                                                                     <li>
                                                                         <span>
-                                                                            <TickIcon />
+                                                                            <TickIcon
+                                                                                stroke={
+                                                                                    brandKit({ bgCol: 0 })
+                                                                                        ?.backgroundColor
+                                                                                }
+                                                                            />
                                                                         </span>{' '}
                                                                         <span>WhatsApp Integration</span>
                                                                     </li>
                                                                     <li>
                                                                         <span>
-                                                                            <TickIcon />
+                                                                            <TickIcon
+                                                                                stroke={
+                                                                                    brandKit({ bgCol: 0 })
+                                                                                        ?.backgroundColor
+                                                                                }
+                                                                            />
                                                                         </span>{' '}
                                                                         <span>Automation & Escalation</span>
                                                                     </li>
                                                                     <li>
                                                                         <span>
-                                                                            <TickIcon />
+                                                                            <TickIcon
+                                                                                stroke={
+                                                                                    brandKit({ bgCol: 0 })
+                                                                                        ?.backgroundColor
+                                                                                }
+                                                                            />
                                                                         </span>{' '}
                                                                         <span>Knowledge Base System</span>
                                                                     </li>
@@ -270,7 +306,17 @@ function Subscription({ subscription }) {
                                                                     {item?.is_free ? (
                                                                         <button
                                                                             type="button"
-                                                                            className="btn btn-outline-primary"
+                                                                            className={`btn px-4 border reset-btn-outline ${css(
+                                                                                {
+                                                                                    '&:hover': {
+                                                                                        backgroundColor: `${
+                                                                                            brandKit({ bgCol: 30 })
+                                                                                                ?.backgroundColor
+                                                                                        } !important`,
+                                                                                        color: 'white',
+                                                                                    },
+                                                                                },
+                                                                            )}`}
                                                                             disabled={
                                                                                 !(
                                                                                     subExpired &&
@@ -284,7 +330,14 @@ function Subscription({ subscription }) {
                                                                     ) : (
                                                                         <button
                                                                             type="button"
-                                                                            className="btn bg-at-blue-light"
+                                                                            className={`btn px-4 ${css({
+                                                                                ...brandKit({ bgCol: 0 }),
+                                                                                color: 'white',
+                                                                                '&:hover': {
+                                                                                    ...brandKit({ bgCol: 30 }),
+                                                                                    color: 'white',
+                                                                                },
+                                                                            })}`}
                                                                             style={{ color: 'white' }}
                                                                             onClick={() =>
                                                                                 setPlanState((prev) => ({
@@ -337,7 +390,7 @@ function Subscription({ subscription }) {
                 </div>
             ) : (
                 <div className="cust-table-loader">
-                    <MoonLoader loading color="#006298" size={30} />
+                    <MoonLoader loading color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
         </>

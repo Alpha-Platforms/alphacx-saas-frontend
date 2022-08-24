@@ -2,19 +2,20 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
+import { css } from '@emotion/css';
 import { useDispatch } from 'react-redux';
 import './login.css';
 import { NotificationManager } from 'react-notifications';
 import { Link, useLocation } from 'react-router-dom';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { wordCapitalize } from '../../../helper';
-import AlphaLogo from '../../../assets/imgF/alpha.png';
-import Logo from '../../../assets/imgF/logo.png';
+import { wordCapitalize, getSubdomainOrUrl, brandKit } from '../../../helper';
+
 import showPasswordImg from '../../../assets/imgF/Show.png';
 import Symbol1 from '../../../assets/imgF/symbolAuth.png';
 import Symbol2 from '../../../assets/imgF/symbolAuth2.png';
 import { httpPost, httpPostMain } from '../../../helpers/httpMethods';
 import { getSubscription } from '../../../reduxstore/actions/subscriptionAction';
+import { getTenantInfo, setTenantInfo } from '../../../reduxstore/actions/tenantInfoActions';
 
 function Login() {
     const location = useLocation();
@@ -22,7 +23,7 @@ function Login() {
     const params = new URLSearchParams(location.search);
     const email = params.get('email');
     // eslint-disable-next-line radix
-    const activation = parseInt(params.get('activation'));
+    // const activation = parseInt(params.get('activation'));
 
     const [userInput, setUserInput] = useState({
         domain: '',
@@ -31,18 +32,18 @@ function Login() {
     });
 
     const [showPassword, setShowPassword] = useState(false);
-    const [domain, setDomain] = useState('');
+    const [domain, setDomain] = useState(window.localStorage.getItem('domain') || '');
     const [tenantId, setTenantId] = useState('');
     const [loading, setLoading] = useState(false);
     const [color] = useState('#ffffff');
-    const [hostName] = useState(() => {
-        return window.location.hostname.split('.');
-    });
-    const [environment] = useState(process.env.NODE_ENV);
+    const [hasSubdomain, setHasSubdomain] = useState('');
+
+    const hostname = window.location.hostname.split('.');
+    const subdomain = hostname[0].toLowerCase();
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const refreshToken = localStorage.getItem('refreshToken');
+        const token = window.localStorage.getItem('token');
+        const refreshToken = window.localStorage.getItem('refreshToken');
         if (token && refreshToken) {
             window.location.href = '/';
         }
@@ -57,34 +58,43 @@ function Login() {
 
     useEffect(() => {
         (async () => {
-            const hostLength = hostName.length;
-
-            if (
-                (hostName[hostLength - 2] === 'alphacx' && hostName[0] !== 'app') ||
-                (hostName[hostLength - 2] === 'qustomar' && hostLength === 3) ||
-                (hostName[hostLength - 1] === 'localhost' && hostLength !== 1)
-            ) {
-                const hostn = hostName[0].toLowerCase();
-                setDomain(hostn);
-
-                const res = await httpPost(`auth/login`, { domain: hostn });
-
-                if (res?.status === 'success') {
-                    window.localStorage.setItem('tenantId', res?.data?.id || '');
-                    window.localStorage.setItem('tenantToken', res?.data?.token);
-                    dispatch(getSubscription(res?.data?.id));
+            if (getSubdomainOrUrl()) {
+                // handle netlify case later
+                /* only login domain when domain is valid */
+                if (subdomain !== 'app' && subdomain !== 'dev') {
+                    const res = await httpPost(`auth/login`, { domain: subdomain });
+                    if (res?.status === 'success') {
+                        setDomain(res?.data?.domain);
+                        setTenantId(res?.data?.id);
+                        setHasSubdomain(res.data?.has_subdomain);
+                        dispatch(getSubscription(res?.data?.id));
+                        dispatch(getTenantInfo(subdomain));
+                    } else {
+                        NotificationManager.error('', 'Invalid Domain Name', 4000);
+                    }
                 }
+            } else {
+                window.location.href = `${getSubdomainOrUrl(
+                    process.env.NODE_ENV === 'development' ? 'dev' : 'app',
+                )}/login`;
             }
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        if (domain) {
-            window.localStorage.setItem('domain', domain);
-        }
+        (async () => {
+            if ((subdomain === 'app' || subdomain === 'dev') && !domain) {
+                // reset tenantinfo
+                dispatch(setTenantInfo(null, true));
+            }
+        })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [domain]);
 
-        if (tenantId) {
+    useEffect(() => {
+        if (domain || tenantId) {
+            window.localStorage.setItem('domain', domain);
             window.localStorage.setItem('tenantId', tenantId);
         }
     }, [domain, tenantId]);
@@ -93,8 +103,9 @@ function Login() {
         setUserInput({ ...userInput, [e.target.name]: e.target.value });
     };
 
-    const landingPage = () => {
-        if (activation) {
+    const gotoLandingPage = () => {
+        // if (activation) { // CAUSING ERROR SO... FIX LATER (App.jsx152 - setAppSocket())
+        if (false) {
             window.location.href = `/appsumo-plans`;
         } else {
             window.location.href = `/`;
@@ -103,7 +114,7 @@ function Login() {
 
     const submit = async () => {
         if (domain) {
-            // PASSWORD LOGIN
+            // DO PASSWORD LOGIN
 
             if (userInput.email && userInput.password) {
                 const data = {
@@ -112,42 +123,39 @@ function Login() {
                 };
 
                 setLoading(true);
-
                 const res = await httpPostMain('auth/login', data);
+                setLoading(false);
 
                 if (res.status === 'success') {
-                    setLoading(false);
                     window.localStorage.setItem('user', JSON.stringify(res.data));
                     window.localStorage.setItem('token', res.data.token);
                     window.localStorage.setItem('refreshToken', res.data.refreshToken);
-                    landingPage();
+                    gotoLandingPage();
                 } else {
                     // Login fails
-                    setLoading(false);
                     NotificationManager.error(res?.er?.message, 'Error', 4000);
                 }
-            } else {
-                // empty fields already handled by button disable attr
             }
         } else {
-            // DOMAIN LOGIN
+            // DO DOMAIN LOGIN
 
             // eslint-disable-next-line no-shadow
-            const domain = userInput.domain.toLowerCase();
+            const domain = userInput.domain.trim().toLowerCase();
 
             setLoading(true);
             const res = await httpPost(`auth/login`, { domain });
 
             if (res.status === 'success') {
+                setTenantId(res?.data?.id);
+                dispatch(getSubscription(res?.data?.id));
+                dispatch(getTenantInfo(domain));
                 setLoading(false);
+                setHasSubdomain(res.data?.has_subdomain);
 
-                if (hostName[0] === 'app') {
-                    window.location.href = `https://${res?.data?.domain}.alphacx.co`;
-                } else if (hostName[0] === 'qustomar' || hostName[0] === 'localhost') {
-                    window.location.href = `${window.location.protocol}//${res?.data?.domain}.${window.location.hostname}:${window.location.port}`;
+                if (res.data?.has_subdomain) {
+                    window.location.href = `${getSubdomainOrUrl(domain)}/login`;
                 } else {
-                    setDomain(domain);
-                    setTenantId(res?.data?.id);
+                    setDomain(res?.data?.domain);
                 }
             } else {
                 setLoading(false);
@@ -156,18 +164,34 @@ function Login() {
         }
     };
 
+    const logoutDomain = (e) => {
+        e.preventDefault();
+        window.localStorage.removeItem('domain');
+        dispatch(setTenantInfo(null, true));
+        if (hasSubdomain)
+            window.location.href = `${getSubdomainOrUrl(process.env.NODE_ENV === 'development' ? 'dev' : 'app')}/login`;
+        if (subdomain === 'app' || subdomain === 'dev') setDomain('');
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         submit();
     };
 
     return (
-        <div className="auth-container d-flex justify-content-center">
-            <div className="symbol-wrap2">
-                <img src={Symbol2} alt="" />
-            </div>
-            <div className="login-logo">
-                <img src={AlphaLogo} alt="" /> <img src={Logo} alt="" />
+        <div
+            className={`auth-container d-flex justify-content-center ${css({
+                ...brandKit({ bgCol: -20, default: true }),
+            })}`}
+        >
+            {/* {!hasSubdomain && ( */}
+            {true && (
+                <div className="symbol-wrap2">
+                    <img src={Symbol2} alt="" />
+                </div>
+            )}
+            <div className="login-logo-main">
+                <img src={brandKit(['default'])[0]} alt="" />
             </div>
 
             <div className="login-container">
@@ -190,10 +214,8 @@ function Login() {
                                 onChange={handleChange}
                                 value={userInput.domain}
                                 id="domain-tenant-field"
+                                placeholder="Enter Domain"
                             />
-                            <span className="input-group-text text-muted" id="basic-addon2">
-                                {environment === 'production' ? '.alphacx.co' : '.qustomar.com'}
-                            </span>
                         </div>
 
                         <div className="haveAnAcco">
@@ -201,7 +223,14 @@ function Login() {
                         </div>
 
                         <div className="submit-auth-btn">
-                            <button type="submit" disabled={loading || userInput.domain === ''} onClick={handleSubmit}>
+                            <button
+                                type="submit"
+                                disabled={loading || userInput.domain === ''}
+                                onClick={handleSubmit}
+                                className={css({
+                                    ...brandKit({ bgCol: -20, default: true }),
+                                })}
+                            >
                                 {' '}
                                 {loading ? <ClipLoader color={color} loading={loading} size={30} /> : 'Continue'}
                             </button>
@@ -211,7 +240,7 @@ function Login() {
 
                 {domain && (
                     <form>
-                        <div className="Auth-header" style={{ marginBottom: '30px' }}>
+                        <div className="Auth-header" style={{ marginBottom: '20px' }}>
                             <h3>Welcome Back</h3>
                             <p>Enter login details</p>
                         </div>
@@ -242,8 +271,22 @@ function Login() {
                                 <img src={showPasswordImg} alt="" onClick={() => setShowPassword(!showPassword)} />
                             </div>
                         </div>
-                        <div className="text-end forgetPassword">
-                            <Link to="/forgot-password">Forgot password?</Link>
+                        <div className="d-flex justify-content-between forgetPassword">
+                            <div className="mt-2">
+                                <span>
+                                    <strong>{wordCapitalize(domain)}</strong>
+                                </span>
+                                <button
+                                    type="button"
+                                    onClick={logoutDomain}
+                                    className="border btn-light ms-2 px-1 rounded small"
+                                >
+                                    Change
+                                </button>
+                            </div>
+                            <Link to="/forgot-password" className="ms-auto mt-2">
+                                Forgot Password?
+                            </Link>
                         </div>
 
                         <div className="submit-auth-btn">
@@ -251,6 +294,12 @@ function Login() {
                                 type="submit"
                                 disabled={loading || userInput.email === '' || userInput.password === ''}
                                 onClick={handleSubmit}
+                                className={css({
+                                    ...brandKit({ bgCol: 10, default: true }),
+                                    '&:hover, &:focus': {
+                                        ...brandKit({ bgCol: -20, default: true }),
+                                    },
+                                })}
                             >
                                 {' '}
                                 {loading ? <ClipLoader color={color} loading={loading} size={30} /> : 'Login'}
@@ -267,9 +316,12 @@ function Login() {
                 )}
             </div>
 
-            <div className="symbol-wrap">
-                <img src={Symbol1} alt="" />
-            </div>
+            {/* {!hasSubdomain && ( */}
+            {true && (
+                <div className="symbol-wrap">
+                    <img src={Symbol1} alt="" />
+                </div>
+            )}
         </div>
     );
 }

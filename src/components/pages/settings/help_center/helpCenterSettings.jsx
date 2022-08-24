@@ -2,6 +2,7 @@
 // @ts-nocheck
 import React, { useEffect } from 'react';
 import './helpCenter.scss';
+import { css } from '@emotion/css';
 import { NotificationManager } from 'react-notifications';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -19,6 +20,8 @@ import tableIcons from '../../../../assets/materialicons/tableIcons';
 import { httpGetMain, httpPatchMain } from '../../../../helpers/httpMethods';
 import EmptyArticle from '../../../../assets/images/empty_article.png';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
+import { brandKit } from './../../../../helper';
+
 
 function HelpCenterSettings() {
     const [articles, setArticles] = useState([]);
@@ -152,7 +155,7 @@ function HelpCenterSettings() {
             render: (rowData) => (
                 <div className="form-check form-switch">
                     <input
-                        className="form-check-input form-check-input-lg mt-1"
+                        className={`form-check-input ${css({ '&:checked': { ...brandKit({ bgCol: 0 }) } })}`}
                         checked={rowData.isPublished}
                         readOnly
                         onChange={handlePublishChange.bind({
@@ -261,7 +264,7 @@ function HelpCenterSettings() {
         <div className="settings-email help-center-settings">
             {policyLoading && (
                 <div className={`cust-table-loader ${policyLoading && 'add-loader-opacity'}`}>
-                    <MoonLoader loading={policyLoading} color="#006298" size={30} />
+                    <MoonLoader loading={policyLoading} color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
             <div className="card card-body bg-white border-0 mt-4">
@@ -279,13 +282,25 @@ function HelpCenterSettings() {
                 <div className="d-flex justify-content-between flex-row">
                     <h5 className="mt-3 mb-4 fs-6 fw-bold">Knowledge Base Settings</h5>
                     <div>
-                        <Link className="btn btn-primary btn-sm ms-2 py-1" to="/settings/knowledge-base/article">
+                        <Link className={`btn btn-sm px-3 ms-2 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`} to="/settings/knowledge-base/article">
                             <span>New Article</span>
                         </Link>
-                        <Link className="btn btn-primary btn-sm py-1 ms-2" to="/settings/knowledge-base/categories">
+                        <Link className={`btn btn-sm px-3 ms-2 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`} to="/settings/knowledge-base/categories">
                             <span>Categories</span>
                         </Link>                        
-                        <Link className="btn btn-primary btn-sm py-1 ms-2" to="/knowledge-base/" target="_blank">
+                        <Link className={`btn btn-sm px-3 ms-2 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`} to="/knowledge-base/" target="_blank">
                             <span>View KB</span>
                         </Link>
                     </div>

@@ -45,18 +45,10 @@
 }
 
 .link-copy-btn {
-    font-size: 14px;
     position: absolute;
     top: 5px;
     right: 5px;
-    background: var(--at-blue-light);
     color: white;
-    padding: 0.15rem 0.35rem;
-    border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    -ms-border-radius: 5px;
-    -o-border-radius: 5px;
 }
 
 .livechat-column {

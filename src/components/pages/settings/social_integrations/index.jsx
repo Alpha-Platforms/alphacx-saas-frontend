@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Badge from 'react-bootstrap/Badge';
+import { css } from '@emotion/css';
 import '../settings.css';
 import Modal from 'react-responsive-modal';
 import { NotificationManager } from 'react-notifications';
@@ -15,9 +16,9 @@ import twitterImg from '../../../../assets/imgF/twitter.png';
 import termiiImg from '../../../../assets/imgF/termii.png';
 import { httpDeleteMain } from '../../../../helpers/httpMethods';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
-import AccountLightIcon from '../../../../assets/icons/Social-blurb.svg';
-import MailLightIcon from '../../../../assets/icons/mail_light.svg';
-import { hasFeatureAccess } from '../../../../helper';
+import { ReactComponent as AccountLightIcon } from '../../../../assets/icons/Social-blurb.svg';
+import { ReactComponent as MailLightIcon } from '../../../../assets/icons/mail_light.svg';
+import { hasFeatureAccess, getSubdomainOrUrl, brandKit } from '../../../../helper';
 // import { hideLoader, showLoader } from '../../../helpers/loader';
 // import Breadcrumb from 'react-bootstrap/Breadcrumb';
 // import { hostname } from 'os';
@@ -104,15 +105,17 @@ function SocialIntegrations({ configs }) {
         e.preventDefault();
         const subdomain = 'app';
         const path = 'integrations';
+        const breadcrumb = window.location.href;
         const params = `channel=${channel}&domain=${window.localStorage.getItem(
             'domain',
-        )}&id=${window.localStorage.getItem('token')}&uid=${window.localStorage.getItem('refreshToken')}`;
-        const { protocol } = window.location;
+        )}&id=${window.localStorage.getItem('token')}&uid=${window.localStorage.getItem(
+            'refreshToken',
+        )}}&breadcrumb=${breadcrumb}`;
         // eslint-disable-next-line no-shadow
-        const hostname = window.location.hostname.split('.').slice(1).join('.');
-        const { port } = window.location;
-        window.location.href = `${protocol}//${subdomain}.${hostname}:${port}/${path}?${params}`;
+        window.location.href = `${getSubdomainOrUrl(subdomain)}/${path}?${params}`;
     };
+
+    const brandBg = css({ backgroundColor: `${brandKit({ bgCol: 0 })?.backgroundColor} !important` });
 
     return (
         <div className="social-integration-page">
@@ -146,7 +149,7 @@ function SocialIntegrations({ configs }) {
                                             <Badge
                                                 className={`${
                                                     !whatsappConnected
-                                                        ? 'acx-bg-primary  text-white'
+                                                        ? `${brandBg}  text-white`
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
@@ -195,7 +198,7 @@ function SocialIntegrations({ configs }) {
                                             <Badge
                                                 className={`${
                                                     !facebookConnected
-                                                        ? 'acx-bg-primary  text-white'
+                                                        ? `${brandBg}  text-white`
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
@@ -244,7 +247,7 @@ function SocialIntegrations({ configs }) {
                                             <Badge
                                                 className={`${
                                                     !instagramConnected
-                                                        ? 'acx-bg-primary  text-white'
+                                                        ? `${brandBg}  text-white`
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
@@ -291,7 +294,7 @@ function SocialIntegrations({ configs }) {
                                             <Badge
                                                 className={`${
                                                     !smsConnected
-                                                        ? 'acx-bg-primary  text-white'
+                                                        ? `${brandBg}  text-white`
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
@@ -324,7 +327,7 @@ function SocialIntegrations({ configs }) {
                                             <Badge
                                                 className={`${
                                                     !smsConnected
-                                                        ? 'acx-bg-primary  text-white'
+                                                        ? `${brandBg}  text-white`
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
@@ -344,7 +347,11 @@ function SocialIntegrations({ configs }) {
                             <Link to="/settings/integrations/email" className="d-block cursor text-decoration-none">
                                 <div className="d-flex align-items-start p-md-4 p-3">
                                     <div className="w">
-                                        <img src={MailLightIcon} alt="" width="38" />
+                                        <MailLightIcon
+                                            fill={brandKit({ bgCol: 0 })?.backgroundColor}
+                                            height={32}
+                                            width={32}
+                                        />
                                     </div>
                                     <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
                                         <div className="me-2">
@@ -357,7 +364,7 @@ function SocialIntegrations({ configs }) {
                                             <Badge
                                                 className={`${
                                                     !emailConnected
-                                                        ? 'acx-bg-primary  text-white'
+                                                        ? `${brandBg}  text-white`
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
@@ -377,7 +384,11 @@ function SocialIntegrations({ configs }) {
                             <Link to="/settings/integrations/livechat" className="d-block cursor text-decoration-none">
                                 <div className="d-flex align-items-start p-md-4 p-3">
                                     <div className="w">
-                                        <img src={AccountLightIcon} alt="" width="34" />
+                                        <AccountLightIcon
+                                            fill={brandKit({ bgCol: 0 })?.backgroundColor}
+                                            height={32}
+                                            width={32}
+                                        />
                                     </div>
                                     <div className="ms-3 d-flex w-100 justify-content-between align-items-start">
                                         <div className="me-2">
@@ -390,7 +401,7 @@ function SocialIntegrations({ configs }) {
                                             <Badge
                                                 className={`${
                                                     !livechatConnected
-                                                        ? 'acx-bg-primary  text-white'
+                                                        ? `${brandBg}  text-white`
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
@@ -412,12 +423,20 @@ function SocialIntegrations({ configs }) {
                     <div className="d-flex justify-content-center">
                         <button
                             type="button"
-                            className="btn btn-sm f-12 border cancel px-4"
+                            className="btn btn-sm border cancel px-3"
                             onClick={() => setIsDeleteConfirmed(false)}
                         >
                             Cancel
                         </button>
-                        <button type="button" className="btn btn-sm ms-2 f-12 bg-custom px-4" onClick={disconnectFBIG}>
+                        <button
+                            type="button"
+                            className={`btn btn-sm ms-2 px-3 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`}
+                            onClick={disconnectFBIG}
+                        >
                             Yes, disconnect
                         </button>
                     </div>

@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import './login.css';
 import { NotificationManager } from 'react-notifications';
-import { css } from '@emotion/react';
 import { httpPost } from 'helpers/httpMethods';
 import { wordCapitalize } from 'helper';
 import { ClipLoader } from 'react-spinners';
@@ -12,8 +11,6 @@ import ThankYou from '../../../assets/imgF/thank-you.png';
 import Error from '../../../assets/icons/error-circle.png';
 import Symbol1 from '../../../assets/imgF/symbolAuth.png';
 import Symbol2 from '../../../assets/imgF/symbolAuth2.png';
-
-const override = css``;
 
 function AccountVerified({ match, ...props }) {
     const [message, setMessage] = useState('');
@@ -69,7 +66,7 @@ function AccountVerified({ match, ...props }) {
                         height: '100vh',
                     }}
                 >
-                    <ClipLoader color="#0796f7" loading css={override} size={75} />
+                    <ClipLoader color="#0796f7" loading size={75} />
                 </div>
             )}
             {isChecked ? (

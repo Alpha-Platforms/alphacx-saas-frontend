@@ -116,7 +116,7 @@ function Registration() {
     };
 
     const verifyDomain = async (domain) => {
-        if (domain.length > 3) {
+        if (domain.length > 2) {
             try {
                 const res = await httpPost(`auth/login`, { domain });
                 if (res.status === 'success') {
@@ -153,7 +153,7 @@ function Registration() {
                 localStorage.setItem('tenantEmail', e.target.value);
             } else if (e.target.name === 'domain') {
                 clearTimeout(verifyDomainTimer);
-                if (e.target.value?.length > 3) {
+                if (e.target.value?.length > 2) {
                     setDomainChecking(true);
                     verifyDomainTimer = setTimeout(async () => {
                         verifyDomain(e.target.value);
@@ -172,19 +172,6 @@ function Registration() {
         });
     };
 
-    // ONBLUR VALIDATION
-    // const handleBlur = (e) => {
-    //     if (e.target.name === 'email') {
-    //         Validate.email(e, userInput, setUserInput);
-    //     } else if (e.target.name === 'password') {
-    //         Validate.password(e, userInput, setUserInput);
-    //     } else if (e.target.name === 'firstName' || e.target.name === 'lastName' || e.target.name === 'companyName') {
-    //         Validate.length(e, userInput, setUserInput);
-    //     } else if (e.target.name === 'domain') {
-    //         Validate.noSpecialChars(e, userInput, setUserInput);
-    //     }
-    // };
-    //
     const handleSubmit = async (event) => {
         if (simpleValidator.current.allValid()) {
             setLoading(true);
@@ -417,21 +404,21 @@ function Registration() {
                                                         ) : lockDomain ? (
                                                             <span className="">
                                                                 <i className="bi-check2-circle text-success" />
-                                                                <span> alphacx.co</span>
                                                             </span>
-                                                        ) : userInput.domain.length > 3 && !lockDomain ? (
+                                                        ) : userInput.domain.length > 2 && !lockDomain ? (
                                                             <span className="">
                                                                 <i className="bi-x-circle text-danger" />
-                                                                <span> alphacx.co</span>
                                                             </span>
                                                         ) : (
-                                                            '.alphacx.co'
+                                                            ''
                                                         )}
                                                     </InputGroup.Text>
                                                 </InputGroup>
                                                 {userInput.domain && (
                                                     <small>
-                                                        Your URL will be <strong>{userInput.domain}.alphacx.co</strong>
+                                                        {/* Your URL will be <strong>{userInput.domain}.alphacx.co</strong> */}
+                                                        Your domain may be used as your unique subdomain URL per your
+                                                        plan.
                                                     </small>
                                                 )}
                                                 {

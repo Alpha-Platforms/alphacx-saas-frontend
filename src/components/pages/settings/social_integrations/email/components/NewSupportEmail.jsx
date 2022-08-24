@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
-
+import { css } from '@emotion/css';
 import './newSupportEmail.scss';
 import { NotificationManager } from 'react-notifications';
 import { Modal } from 'react-responsive-modal';
@@ -11,6 +11,7 @@ import RightArrow from '../../../../../../assets/imgF/arrow_right.png';
 import UseOwnEmail from './UseOwnEmail';
 import { getConfigs } from '../../../../../../reduxstore/actions/configActions';
 import { ClipLoader } from 'react-spinners';
+import { brandKit } from './../../../../../../helper';
 
 function NewSupportEmail({ configs, getConfigs }) {
     const { search } = useLocation();
@@ -212,7 +213,7 @@ function NewSupportEmail({ configs, getConfigs }) {
                                     <h5 className="fs-6 fw-bold me-4">Use Mail Server for:</h5>
                                     <div className="form-check">
                                         <input
-                                            className="form-check-input"
+                                            className={`form-check-input ${css({ '&:checked': { ...brandKit({ bgCol: 0 }) } })}`}
                                             name="mail-radio-1"
                                             type="radio"
                                             id="radio-1"
@@ -237,7 +238,7 @@ function NewSupportEmail({ configs, getConfigs }) {
 
                                     <div className="form-check ms-4">
                                         <input
-                                            className="form-check-input"
+                                            className={`form-check-input ${css({ '&:checked': { ...brandKit({ bgCol: 0 }) } })}`}
                                             name="mail-radio-1"
                                             type="radio"
                                             id="radio-2"
@@ -264,12 +265,16 @@ function NewSupportEmail({ configs, getConfigs }) {
                         <div className="d-flex justify-content-end my-4 mx-3 text-end">
                             <Link
                                 to="/settings/integrations/email"
-                                className="btn btn-sm px-4 bg-outline-custom cancel"
+                                className="btn btn-sm px-3 me-2 border reset-btn-outline"
                             >
                                 Cancel
                             </Link>
                             <button
-                                className="btn btn-sm px-4 bg-custom ms-3"
+                                className={`btn btn-sm px-4 ${css({
+                                    ...brandKit({ bgCol: 0 }),
+                                    color: 'white',
+                                    '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                })}`}
                                 id="save-changes"
                                 data-bs-toggle="modal"
                                 data-bs-target="#successModal"

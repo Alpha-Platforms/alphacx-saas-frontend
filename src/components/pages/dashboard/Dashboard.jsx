@@ -5,6 +5,7 @@ import { useEffect, Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import Container from 'react-bootstrap/Container';
 import MoonLoader from 'react-spinners/MoonLoader';
+import { css } from '@emotion/css';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 //
 import TicketCount from './components/TicketCount';
@@ -12,6 +13,7 @@ import TicketStatusPie from './components/TicketStatusPie';
 import TicketLineGraph from './components/TicketLineGraph';
 import TicketCategoryBar from './components/TicketCategoryBar';
 import { getAnalytics, getNewAnalytics } from '../../../reduxstore/actions/analyticsActions';
+import { brandKit } from './../../../helper';
 //
 import '../../../styles/Dashboard.css';
 
@@ -33,13 +35,16 @@ function DashboardTwo({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserAuthenticated]);
 
+    const brandingBg = brandKit({ bgCol: 0 });
+
     return (
         <div>
             <>
                 {!isAnalyticsLoaded && !isNewAnalyticsLoaded ? (
-                    <div className="text-center mt-4">
-                        <MoonLoader loading color="#006298" size={30} />
-                    </div>
+                    <div className="d-flex justify-content-center align-items-center pt-5 away">
+                    {' '}
+                    <MoonLoader color={brandingBg?.backgroundColor} loading size={30} />
+                </div>
                 ) : (
                     <div className="dashboard-main">
                         {/* Authenticated User */}
@@ -72,14 +77,14 @@ function DashboardTwo({
                                         text={`${analytics?.cSat || 0}%`}
                                         styles={buildStyles({
                                             strokeLinecap: 'butt',
-                                            pathColor: '#1E90FF',
+                                            pathColor: `${brandingBg?.backgroundColor}`,
                                             textColor: '#263238',
                                         })}
                                     />
                                 </div>
                             </div>
                             <div className="box-2">
-                                <TicketStatusPie analytics={analytics} newAnalytics={newAnalytics} />
+                                <TicketStatusPie analytics={analytics} newAnalytics={newAnalytics} brandKit={brandKit} />
                             </div>
                             <div className="box-3">
                                 <div>
@@ -88,7 +93,7 @@ function DashboardTwo({
                                 </div>
                             </div>
                             <div className="box-4">
-                                <TicketLineGraph analytics={{ newTicket: [] }} />
+                                <TicketLineGraph brandingBg={brandingBg} analytics={{ newTicket: [] }} />
                             </div>
                         </div>
                     </div>

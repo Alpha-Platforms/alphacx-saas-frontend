@@ -7,8 +7,7 @@ import ClipLoader from 'react-spinners/ClipLoader';
 import { Settings } from '@material-ui/icons';
 import { connect } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
-import { css } from '@emotion/react';
-//
+
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
@@ -38,23 +37,8 @@ function TwitterSignup({ ...props }) {
     const oauth_verifier = query.get('oauth_verifier');
 
     useEffect(() => {
-        const hostLength = hostName.length;
-        if (hostName[hostLength - 2] === 'alphacx' && hostName[0] !== 'app') {
-            setDomain('app.alphacx.co');
-        } else if (hostName[hostLength - 2] === 'qustomar' && hostLength === 3) {
-            setDomain('qustomar.com');
-        } else if (hostName[hostLength - 1] === 'localhost' && hostLength !== 1) {
-            setDomain('localhost:3000');
-        } else {
-            setDomain('76f7-197-210-70-82.ngrok.io');
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-    //
-    useEffect(() => {
         if (oauth_token && oauth_verifier) {
             // /settings/twitter/oauth/request_token
-
             const data = {
                 oauth_token,
                 oauth_verifier,
@@ -85,7 +69,7 @@ function TwitterSignup({ ...props }) {
         setProcessing(true);
         // /settings/twitter/oauth/request_token
         const data = {
-            call_back: `https://${domain}/twitter-auth`,
+            call_back: `${window.location.origin}/twitter-auth`,
         };
         const response = await httpPostMain('settings/twitter/oauth/request_token', data);
         if (response) {

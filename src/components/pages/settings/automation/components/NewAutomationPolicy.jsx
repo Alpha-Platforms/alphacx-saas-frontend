@@ -10,13 +10,14 @@ import { NotificationManager } from 'react-notifications';
 import MoonLoader from 'react-spinners/MoonLoader';
 import RSelect from 'react-select';
 import { connect } from 'react-redux';
+import { css } from '@emotion/css';
 import AutomationAction from './AutomationAction';
 import { httpGetMain, httpPatchMain, httpPostMain } from '../../../../../helpers/httpMethods';
 import EditorBox from '../../../../reusables/EditorBox';
 import AddIcon from '../../../../../assets/icons/add.svg';
 import DeleteIcon from '../../../../../assets/icons/Delete.svg';
 import RightArrow from '../../../../../assets/imgF/arrow_right.png';
-import { uuid, wordCapitalize } from '../../../../../helper';
+import { uuid, wordCapitalize, brandKit } from '../../../../../helper';
 import { getAgents } from '../../../../../reduxstore/actions/agentActions';
 
 function NewAutomationPolicy({
@@ -285,7 +286,7 @@ function NewAutomationPolicy({
         <div className="new-automation-policy">
             {policyLoading && (
                 <div className={`cust-table-loader ${policyLoading && 'add-loader-opacity'}`}>
-                    <MoonLoader loading={policyLoading} color="#006298" size={30} />
+                    <MoonLoader loading={policyLoading} color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
             <div className="card card-body bg-white border-0 p-0 ">
@@ -412,11 +413,15 @@ function NewAutomationPolicy({
                         </form>
 
                         <div className="float-end mb-5">
-                            <Link to="/settings/automations" className="btn btn-sm f-12 bg-outline-custom cancel px-4">
+                            <Link to="/settings/automations" className="btn btn-sm f-12 border cancel px-4">
                                 Cancel
                             </Link>
                             <button
-                                className="btn btn-sm ms-2 f-12 bg-custom px-4"
+                                className={`btn btn-sm ms-2 f-12 px-4 ${css({
+                                    ...brandKit({ bgCol: 0 }),
+                                    color: 'white',
+                                    '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                })}`}
                                 onClick={automationId ? updateAutomationPolicy : createAutomation}
                             >
                                 {automationId ? 'Save Changes' : 'Create'}

@@ -12,7 +12,6 @@ import Symbol2 from "../../../assets/imgF/symbolAuth2.png";
 import { NotificationManager } from "react-notifications";
 import {Validate} from "../../../helpers/validateInput";
 import { httpPost, httpPostMain, httpPostTenantAuth } from "../../../helpers/httpMethods";
-import { css } from "@emotion/react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useHistory } from 'react-router-dom';
 
@@ -138,7 +137,6 @@ const ResetPassword = ({match: {params}}) => {
                 <ClipLoader
                   color={color}
                   loading={loading}
-                  // css={override}
                   size={30}
                 />
               ) : (

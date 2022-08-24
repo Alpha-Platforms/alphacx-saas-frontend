@@ -7,10 +7,12 @@ import { Modal } from 'react-responsive-modal';
 import { NotificationManager } from 'react-notifications';
 import { connect } from 'react-redux';
 import dayjs from 'dayjs';
+import { css } from '@emotion/css';
 // import { Prev } from 'react-bootstrap/esm/PageItem';
 // import { httpGet, httpPostMain } from 'helpers/httpMethods';
 import { httpGet, httpPostMain } from '../../../helpers/httpMethods';
 import { getAdmins } from '../../../reduxstore/actions/adminActions';
+import { brandKit } from '../../../helper';
 
 function ContactAlphcxModalComponent({ contactSupportModalShow, setContactSupportModalShow }) {
     // create user modal
@@ -123,7 +125,7 @@ function ContactAlphcxModalComponent({ contactSupportModalShow, setContactSuppor
         >
             {/* <Modal.Body> */}
             <div className="rounded">
-                <header className="bg-at-blue-light rounded-top">
+                <header className={`rounded-top ${css({ ...brandKit({ bgCol: 0 }) })}`}>
                     <h6 className="fs-5 text-white p-3">Contact AlphaCX Support</h6>
                 </header>
                 <div className="saveTicketWrapModal bg-transparent pb-4">
@@ -177,7 +179,11 @@ function ContactAlphcxModalComponent({ contactSupportModalShow, setContactSuppor
                         <div className="d-flex justify-content-end mt-3">
                             <button
                                 type="button"
-                                className="btn bg-at-blue-light px-4 mt-3"
+                                className={`btn btn-sm px-4 mt-3 ${css({
+                                    ...brandKit({ bgCol: 0 }),
+                                    color: 'white',
+                                    '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                })}`}
                                 disabled={creating || !sendReady}
                                 onClick={sendMessage}
                             >
