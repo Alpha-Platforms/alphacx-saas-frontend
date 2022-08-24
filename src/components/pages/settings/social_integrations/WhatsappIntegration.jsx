@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import { NotificationManager } from 'react-notifications';
+import { css } from '@emotion/css';
 // react bootstrap components
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
@@ -18,6 +19,7 @@ import '../settings.css';
 // img assets
 import whatsappImg from '../../../../assets/imgF/WhatsApp.png';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
+import { brandKit } from './../../../../helper';
 
 export default function WhatsappIntegration() {
     const [whatsappConfig, setWhatsappConfig] = useState({
@@ -168,7 +170,11 @@ export default function WhatsappIntegration() {
                                 </Form.Group>
                             </div>
                             <div className="mt-5">
-                                <Button className="acx-btn-primary px-3 py-2" onClick={handleConnectWhatsApp}>
+                                <Button className={`btn btn-sm px-3 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`} onClick={handleConnectWhatsApp}>
                                     Connect
                                 </Button>
                             </div>

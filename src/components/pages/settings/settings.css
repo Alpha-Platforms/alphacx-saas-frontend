@@ -153,13 +153,13 @@
   border: 1px solid red;
 } */
 
-#fieldTabsSelector > li > button {
+#fieldTabsSelector > li > button:not(.active) {
     border-bottom: 2px solid transparent !important;
     border-radius: 0 !important;
 }
 
 #fieldTabsSelector > li > button.active {
-    border-bottom: 2px solid var(--at-blue-light) !important;
+    /* border-bottom: 2px solid var(--at-blue-light) !important; // TO FAVOUR BRANDING */
     border-radius: 0 !important;
 }
 

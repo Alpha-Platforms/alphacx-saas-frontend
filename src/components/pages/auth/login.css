@@ -1,8 +1,8 @@
 .auth-container {
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
-  background-color: #0d4166;
+  /* overflow: hidden; */
+  /* background-color: #0d4166; // TO FAVOUR BRANDING */
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -19,15 +19,23 @@
   opacity: 0 !important;
 }
 
-.login-logo {
-}
-
 .login-logo img:first-child {
   width: 100px;
 }
 
 .login-logo img:last-child {
   width: 50px;
+}
+
+.login-logo-main {
+  width: 171px;
+  margin: 0 auto;
+  text-align: center;
+  display: inline-block;
+}
+
+.login-logo-main > img {
+  max-width: 100%;
 }
 
 .login-container {
@@ -41,7 +49,7 @@
   height: -moz-fit-content;
   height: fit-content;
   margin-top: 30px;
-  padding: 40px;
+  padding: 30px 40px;
   position: relative;
   z-index: 3;
   margin-bottom: 30px;
@@ -229,7 +237,7 @@
 
 .submit-auth-btn button {
   width: 100%;
-  background: #0796f7;
+  /* background: #0796f7; // TO FAVOUR BRANDING */
   border-radius: 5px;
   height: 45.8px;
   color: white;
@@ -245,7 +253,7 @@
 
 .submit-auth-btn button:hover,
 .submit-auth-btn button:focus {
-  background-color: #0184dd;
+  /* background-color: #0184dd; // TO FAVOUR BRANDING */
 }
 
 .symbol-wrap {
@@ -341,9 +349,17 @@
 }
 
 .login-container {
-  overflow: hidden !important;
+  overflow-y: auto !important;
   transition: height 0.5s ease;
-  /* height: 34rem; */
+  -webkit-transition: height 0.5s ease;
+  -moz-transition: height 0.5s ease;
+  -ms-transition: height 0.5s ease;
+  -o-transition: height 0.5s ease;
+  -ms-overflow-style: none;
+  scrollbar-width: none; /* Firefox */
+}
+.login-container::-webkit-scrollbar {
+  display: none;
 }
 
 .lcon-height1 {

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { NotificationManager } from 'react-notifications';
-//
+import { css } from '@emotion/css';
 import StarRatings from 'react-star-ratings';
 //
 import Row from 'react-bootstrap/Row';
@@ -19,11 +19,11 @@ import Logo from '../../../../assets/svgicons/Logo.svg';
 import { httpPatchMain, httpGetMain } from '../../../../helpers/httpMethods';
 import '../settings.css';
 import Modal from 'react-responsive-modal';
+import { brandKit } from './../../../../helper';
 //
 
-const tenantDomain = localStorage.getItem('domain');
-
 export default function RatingsSettings() {
+    const tenantDomain = localStorage.getItem('domain');
     const [processing, setProcessing] = useState(false);
     // form field
     const [ratingsData, setRatingsData] = useState({
@@ -192,7 +192,11 @@ export default function RatingsSettings() {
                                             type="submit"
                                             onClick={handleSubmit}
                                             disabled={processing}
-                                            className="px-4 acx-btn-primary"
+                                            className={`btn btn-sm px-3 ${css({
+                                                ...brandKit({ bgCol: 0 }),
+                                                color: 'white',
+                                                '&:hover, &:disabled': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                            })}`}
                                         >
                                             {processing ? (
                                                 <span className="text-light">

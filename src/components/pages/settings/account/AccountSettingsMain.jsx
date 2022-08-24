@@ -3,11 +3,13 @@
 // @ts-nocheck
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { css } from '@emotion/css';
 import { Tabs, Tab } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
 import Subscription from './subscription/Subscription';
 import AccountSettings from './AccountSettings';
+import { brandKit } from '../../../../helper';
 
 function AccountSettingsMain({ location, tenantSubscription }) {
     const [tabKey, setTabKey] = useState('acct-settings');
@@ -18,6 +20,14 @@ function AccountSettingsMain({ location, tenantSubscription }) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    const actionBtnStyle = css({
+        '& > li > button.active': {
+            color: `${brandKit({ col: 0 })?.color} !important`,
+            fontWeight: 600,
+            borderBottom: `2px solid ${brandKit({ bgCol: 0 })?.backgroundColor} !important`,
+        },
+    });
 
     return (
         <div>
@@ -35,7 +45,7 @@ function AccountSettingsMain({ location, tenantSubscription }) {
                 </div>
                 {tenantSubscription?.plan?.plan_type !== 'appsumo' && (
                     <div className="mt-3 mb-2">
-                        <ul className="nav nav-pills" id="fieldTabsSelector" role="tablist">
+                        <ul className={`nav nav-pills ${actionBtnStyle}`} id="fieldTabsSelector" role="tablist">
                             <li className="nav-item" role="presentation">
                                 <button
                                     className={`nav-link px-0 me-5 ${

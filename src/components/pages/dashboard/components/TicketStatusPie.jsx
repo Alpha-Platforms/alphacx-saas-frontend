@@ -2,17 +2,25 @@
 // @ts-nocheck
 import { Pie } from 'react-chartjs-2';
 
-function TicketStatusPie({ newAnalytics }) {
+function TicketStatusPie({ newAnalytics, brandKit }) {
+    // const getColors = (statuses) => {
+    //     const colors = [];
+    //     let start = 23;
+    //     const interval = Math.floor((100 - start) / statuses?.length);
+
+    //     for (let i = 0; i < statuses?.length; i++) {
+    //         colors.push(`hsl(240, 100%, ${start}%)`);
+    //         start += interval;
+    //     }
+
+    //     return colors;
+    // };
+
     const getColors = (statuses) => {
         const colors = [];
-        let start = 23;
-        const interval = Math.floor((100 - start) / statuses?.length);
-
         for (let i = 0; i < statuses?.length; i++) {
-            colors.push(`hsl(240, 100%, ${start}%)`);
-            start += interval;
+            colors.push(brandKit({ bgCol: i * 20 })?.backgroundColor);
         }
-
         return colors;
     };
 

@@ -10,7 +10,6 @@ import Symbol2 from "../../../assets/imgF/symbolAuth2.png";
 import {ReactComponent as MessageIcon} from '../../../assets/icons/Message.svg';
 import { NotificationManager } from "react-notifications";
 import { httpPostTenantAuth } from "../../../helpers/httpMethods";
-import { css } from "@emotion/react";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Link, useHistory } from 'react-router-dom';
 
@@ -115,7 +114,6 @@ const ForgotPassword = ({match: {params}}) => {
                 <ClipLoader
                   color={color}
                   loading={loading}
-                  // css={override}
                   size={30}
                 />
               ) : (

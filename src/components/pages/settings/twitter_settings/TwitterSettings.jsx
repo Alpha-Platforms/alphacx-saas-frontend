@@ -7,7 +7,6 @@ import { NotificationManager } from 'react-notifications';
 import { connect } from 'react-redux';
 import MoonLoader from 'react-spinners/MoonLoader';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { css } from '@emotion/react';
 import { Settings } from '@material-ui/icons';
 import { updateTwitterConfig } from '../../../../reduxstore/actions/configActions';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
@@ -32,7 +31,6 @@ function TwitterSettings({ twitterConfig, isConfigLoaded, isConfigLoading, updat
         }));
     };
 
-    const override = css``;
     const [color, setColor] = useState('#ffffff');
 
     useEffect(() => {
@@ -190,7 +188,7 @@ function TwitterSettings({ twitterConfig, isConfigLoaded, isConfigLoading, updat
                                         {loading ? (
                                             <>
                                                 <span>Saving changes...</span>
-                                                <ClipLoader color={color} loading={loading} css={override} size={15} />
+                                                <ClipLoader color={color} loading={loading} size={15} />
                                             </>
                                         ) : (
                                             'Save Changes'

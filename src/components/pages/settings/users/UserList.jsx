@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import MaterialTable from 'material-table';
 import { connect } from 'react-redux';
+import { css } from '@emotion/css';
 import MoonLoader from 'react-spinners/MoonLoader';
 import { TablePagination } from '@material-ui/core';
 import { Link, useLocation } from 'react-router-dom';
@@ -22,7 +23,7 @@ import CreateUserModal from './components/CreateUserModal';
 import ImportUserModal from './components/ImportUserModal';
 import InviteUserModal from './components/InviteUserModal';
 // import {ReactComponent as CardDesignSvg} from '../../../../assets/icons/Card-Design.svg';
-import { wordCapitalize, getUserInitials } from '../../../../helper';
+import { wordCapitalize, getUserInitials, brandKit } from '../../../../helper';
 
 import { getAgents, negateActiveState } from '../../../../reduxstore/actions/agentActions';
 import { getAdmins } from '../../../../reduxstore/actions/adminActions';
@@ -242,7 +243,7 @@ function UserList({
         <div>
             {loading && (
                 <div className="cust-table-loader">
-                    <MoonLoader loading={loading} color="#006298" size={30} />
+                    <MoonLoader loading={loading} color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
             <div className="card card-body bg-white border-0 p-0 mb-4">
@@ -267,7 +268,11 @@ function UserList({
                                 {tenantSubscription && (
                                     <button
                                         type="button"
-                                        className="btn btn-custom btn-sm px-4 bg-at-blue-light py-2"
+                                        className={`btn btn-sm px-3 ${css({
+                                            ...brandKit({ bgCol: 0 }),
+                                            color: 'white',
+                                            '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                        })}`}
                                         onClick={() => setCreateModalShow(true)}
                                     >
                                         New User
@@ -381,7 +386,9 @@ function UserList({
                                         render: (rowData) => (
                                             <div className="form-check form-switch">
                                                 <input
-                                                    className="form-check-input form-check-input-lg mt-1"
+                                                    className={`form-check-input form-check-input-lg mt-1 ${css({
+                                                        '&:checked': { ...brandKit({ bgCol: 0 }) },
+                                                    })}`}
                                                     checked={rowData.isActivated}
                                                     onChange={handleActiveChange.bind({
                                                         name: rowData.name,
@@ -457,7 +464,7 @@ function UserList({
                     </div>
                 ) : (
                     <div className="cust-table-loader">
-                        <MoonLoader loading color="#006298" size={30} />
+                        <MoonLoader loading color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                     </div>
                 )}
             </div>

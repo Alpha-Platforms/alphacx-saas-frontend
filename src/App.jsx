@@ -28,6 +28,7 @@ import { getTags } from './reduxstore/actions/tagActions';
 import { getConfigs } from './reduxstore/actions/configActions';
 import { getCustomFields } from './reduxstore/actions/customFieldActions';
 import { getSubscription } from './reduxstore/actions/subscriptionAction';
+import { getTenantInfo } from './reduxstore/actions/tenantInfoActions';
 import { resetSocketMessage, setAppSocket, setSocketMessage } from './reduxstore/actions/socketActions';
 import { setAudioInstance } from './reduxstore/actions/audioActions';
 import CustomerList from './components/pages/customers/CustomerList';
@@ -107,6 +108,7 @@ const SiteRouter = connect(mapStateToProps, {
     getConfigs,
     getCustomFields,
     getSubscription,
+    getTenantInfo,
     setAppSocket,
     setSocketMessage,
     setAudioInstance,
@@ -123,6 +125,7 @@ const SiteRouter = connect(mapStateToProps, {
         getConfigs,
         getCustomFields,
         getSubscription,
+        getTenantInfo,
         tenantSubscription,
         appSocket,
         setAppSocket,
@@ -149,6 +152,7 @@ const SiteRouter = connect(mapStateToProps, {
                 getConfigs();
                 getCustomFields();
                 getSubscription();
+                getTenantInfo();
                 setAppSocket();
                 setAudioInstance();
             }

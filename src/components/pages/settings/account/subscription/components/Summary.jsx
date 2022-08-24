@@ -8,11 +8,12 @@ import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 import { usePaystackPayment } from 'react-paystack';
 import { NotificationManager } from 'react-notifications';
 import { loadStripe } from '@stripe/stripe-js';
+import { css } from '@emotion/css';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { CardElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
 import { httpPost } from '../../../../../../helpers/httpMethods';
 import { getRealCurrency, getRealCurrencyv2 } from './SubTop';
-import { separateNum, centToDollarCentv2 } from '../../../../../../helper';
+import { separateNum, centToDollarCentv2, brandKit } from '../../../../../../helper';
 import acxLogo from '../../../../../../assets/images/whitebg.jpg';
 import { config } from '../../../../../../config/keys';
 
@@ -69,7 +70,15 @@ function CheckoutForm({ setPlanState, planState, getSubscription }) {
     return (
         <form onSubmit={handleSubmit}>
             <CardElement />
-            <button type="submit" className="stripe-payment-btn" disabled={!stripe || !elements}>
+            <button
+                type="submit"
+                className={`stripe-payment-btn ${css({
+                    ...brandKit({ bgCol: 0 }),
+                    color: 'white',
+                    '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                })}`}
+                disabled={!stripe || !elements}
+            >
                 Make Payment
             </button>
         </form>
@@ -106,6 +115,11 @@ function FlutterWaveAction({ planState, config, setPlanState, getSubscription })
     return (
         <button
             type="button"
+            className={`${css({
+                ...brandKit({ bgCol: 0 }),
+                color: 'white',
+                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+            })}`}
             onClick={() => {
                 handleFlutterPayment({
                     callback: async (response) => {
@@ -206,7 +220,15 @@ function PayStackAction({ config, setPlanState, getSubscription }) {
     };
     return (
         <div>
-            <button type="submit" className="paystack-payment-btn" onClick={handleClick}>
+            <button
+                type="submit"
+                className={`paystack-payment-btn ${css({
+                    ...brandKit({ bgCol: 0 }),
+                    color: 'white',
+                    '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                })}`}
+                onClick={handleClick}
+            >
                 {paying && (
                     <div className="d-inline-flex justify-content-center align-items-center">
                         <ClipLoader color="#ffffff" size={15} />

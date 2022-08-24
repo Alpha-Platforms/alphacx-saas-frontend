@@ -7,11 +7,12 @@
 import { useState, useRef } from 'react';
 // import {Modal} from 'react-bootstrap';
 import { Modal } from 'react-responsive-modal';
+import { css } from '@emotion/css';
 import { connect } from 'react-redux';
 import { NotificationManager } from 'react-notifications';
 import RSelect from 'react-select';
 import SimpleReactValidator from 'simple-react-validator';
-import { textCapitalize } from '../../../../../helper';
+import { textCapitalize, brandKit } from '../../../../../helper';
 import { addAgent, getAgents, resetAgentCreated } from '../../../../../reduxstore/actions/agentActions';
 import { countrycodes } from '../../../../shared/countrycodes';
 // import { Validate } from '../../../../../helpers/validateInput';
@@ -147,7 +148,7 @@ function CreateUserModal({ createModalShow, setCreateModalShow, groups, addAgent
             centered
         >
             {/* <Modal.Body> */}
-            <div className="col-12 p-4 pb-5 mb-3 border">
+            <div className="col-12 p-4 pb-5 mb-3">
                 <div className="d-flex justify-content-between align-items-center">
                     <h3 className="f-16">Create User Record</h3>
                     <div>
@@ -313,7 +314,11 @@ function CreateUserModal({ createModalShow, setCreateModalShow, groups, addAgent
                         <div className="text-end">
                             <button
                                 type="button"
-                                className="btn btn-custom float-end w-25 mt-4 mb-4"
+                                className={`btn float-end w-25 mt-4 mb-4 ${css({
+                                    ...brandKit({ bgCol: 0 }),
+                                    color: 'white',
+                                    '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                })}`}
                                 onClick={handleUserCreation}
                                 disabled={creatingUser}
                                 id="createUser"

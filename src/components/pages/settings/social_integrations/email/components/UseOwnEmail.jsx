@@ -2,9 +2,11 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { css } from '@emotion/css';
 import Gmail from '../../../../../../assets/imgF/gmail.png';
 import OtherMail from '../../../../../../assets/imgF/otherMail.png';
 import MicrosoftOffice from '../../../../../../assets/imgF/microsoftOffice.png';
+import { brandKit } from './../../../../../../helper';
 
 function UseOwnEmail({ emailState, setEmailState, setActivateSaveBtn }) {
 
@@ -150,7 +152,7 @@ function UseOwnEmail({ emailState, setEmailState, setActivateSaveBtn }) {
                         <div className="row ms-1">
                             <div className="form-check">
                                 <input
-                                    className="form-check-input"
+                                    className={`form-check-input ${css({ '&:checked': { ...brandKit({ bgCol: 0 }) } })}`}
                                     type="checkbox"
                                     id="ssl"
                                     name="tls"
@@ -174,7 +176,7 @@ function UseOwnEmail({ emailState, setEmailState, setActivateSaveBtn }) {
                             <div className="col-md-3">
                                 <div className="form-check">
                                     <input
-                                        className="form-check-input"
+                                        className={`form-check-input ${css({ '&:checked': { ...brandKit({ bgCol: 0 }) } })}`}
                                         type="radio"
                                         id="incoming-only"
                                         name="mail-server"
@@ -198,7 +200,7 @@ function UseOwnEmail({ emailState, setEmailState, setActivateSaveBtn }) {
                             <div className="col-md-3">
                                 <div className="form-check">
                                     <input
-                                        className="form-check-input"
+                                        className={`form-check-input ${css({ '&:checked': { ...brandKit({ bgCol: 0 }) } })}`}
                                         type="radio"
                                         id="outgoing-only"
                                         name="mail-server"
@@ -328,7 +330,7 @@ function UseOwnEmail({ emailState, setEmailState, setActivateSaveBtn }) {
                                     <div className="col-md-6 pt-4">
                                         <div className="form-check mt-2">
                                             <input
-                                                className="form-check-input"
+                                                className={`form-check-input ${css({ '&:checked': { ...brandKit({ bgCol: 0 }) } })}`}
                                                 type="checkbox"
                                                 name="tls"
                                                 checked={emailState.outgoingEmailConfig.tls || false}

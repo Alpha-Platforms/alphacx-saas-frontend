@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
+import { css } from '@emotion/css';
 import { Dropdown } from 'react-bootstrap';
 import { NotificationManager } from 'react-notifications';
 import MoonLoader from 'react-spinners/MoonLoader';
@@ -16,6 +17,7 @@ import { ReactComponent as DotSvg } from '../../../../../assets/icons/dots.svg';
 import { httpPostMain } from '../../../../../helpers/httpMethods';
 import EditCatModal from './EditCatModal';
 import { getPaginatedCategories } from '../../../../../reduxstore/actions/categoryActions';
+import { brandKit } from './../../../../../helper';
 
 function TicketCategoriesTab({
     pagCategories,
@@ -142,7 +144,7 @@ function TicketCategoriesTab({
         <div className="ticket-cat-tab">
             {custLoading && (
                 <div className="cust-table-loader">
-                    <MoonLoader loading={custLoading} color="#006298" size={30} />
+                    <MoonLoader loading={custLoading} color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
 
