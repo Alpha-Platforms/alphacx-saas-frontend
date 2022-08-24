@@ -488,11 +488,12 @@ export const brandKit = (options) => {
         return options?.map((item) => {
             if (item === 'icon') return appIcon;
             if (item === 'logo') return appLogo;
+            if (item === 'default') return AlpacxLogoMain;
             return '';
         });
     }
     if (isValidObject(options)) {
-        const colorToUse = options?.kb ? kbHeroColor : appColor;
+        const colorToUse = options?.default ? defaultColor : options?.kb ? kbHeroColor : appColor;
         const validColor = isHexColor(colorToUse) ? colorToUse : defaultColor;
         const style = {};
         if (options.hasOwnProperty('col')) {

@@ -23,7 +23,7 @@ function Login() {
     const params = new URLSearchParams(location.search);
     const email = params.get('email');
     // eslint-disable-next-line radix
-    const activation = parseInt(params.get('activation'));
+    // const activation = parseInt(params.get('activation'));
 
     const [userInput, setUserInput] = useState({
         domain: '',
@@ -39,6 +39,7 @@ function Login() {
     const [hasSubdomain, setHasSubdomain] = useState('');
 
     const hostname = window.location.hostname.split('.');
+    const subdomain = hostname[0].toLowerCase();
 
     useEffect(() => {
         const token = window.localStorage.getItem('token');
@@ -59,7 +60,6 @@ function Login() {
         (async () => {
             if (getSubdomainOrUrl()) {
                 // handle netlify case later
-                const subdomain = hostname[0].toLowerCase();
                 /* only login domain when domain is valid */
                 if (subdomain !== 'app' && subdomain !== 'dev') {
                     const res = await httpPost(`auth/login`, { domain: subdomain });
@@ -82,7 +82,6 @@ function Login() {
 
     useEffect(() => {
         (async () => {
-            const subdomain = hostname[0].toLowerCase();
             if ((subdomain === 'app' || subdomain === 'dev') && !domain) {
                 // reset tenantinfo
                 dispatch(setTenantInfo(null, true));
@@ -169,7 +168,7 @@ function Login() {
         dispatch(setTenantInfo(null, true));
         if (hasSubdomain)
             window.location.href = `${getSubdomainOrUrl(process.env.NODE_ENV === 'development' ? 'dev' : 'app')}/login`;
-        setDomain('');
+        if (subdomain === 'app' || subdomain === 'dev') setDomain('');
     };
 
     const handleSubmit = (e) => {
@@ -178,14 +177,19 @@ function Login() {
     };
 
     return (
-        <div className={`auth-container d-flex justify-content-center ${css({ ...brandKit({ bgCol: -20 }) })}`}>
-            {!hasSubdomain && (
+        <div
+            className={`auth-container d-flex justify-content-center ${css({
+                ...brandKit({ bgCol: -20, default: true }),
+            })}`}
+        >
+            {/* {!hasSubdomain && ( */}
+            {true && (
                 <div className="symbol-wrap2">
                     <img src={Symbol2} alt="" />
                 </div>
             )}
             <div className="login-logo-main">
-                <img src={brandKit(['logo'])[0]} alt="" />
+                <img src={brandKit(['default'])[0]} alt="" />
             </div>
 
             <div className="login-container">
@@ -222,7 +226,7 @@ function Login() {
                                 disabled={loading || userInput.domain === ''}
                                 onClick={handleSubmit}
                                 className={css({
-                                    ...brandKit({ bgCol: -20 }),
+                                    ...brandKit({ bgCol: -20, default: true }),
                                 })}
                             >
                                 {' '}
@@ -289,9 +293,9 @@ function Login() {
                                 disabled={loading || userInput.email === '' || userInput.password === ''}
                                 onClick={handleSubmit}
                                 className={css({
-                                    ...brandKit({ bgCol: 10 }),
+                                    ...brandKit({ bgCol: 10, default: true }),
                                     '&:hover, &:focus': {
-                                        ...brandKit({ bgCol: -20 }),
+                                        ...brandKit({ bgCol: -20, default: true }),
                                     },
                                 })}
                             >
@@ -310,7 +314,8 @@ function Login() {
                 )}
             </div>
 
-            {!hasSubdomain && (
+            {/* {!hasSubdomain && ( */}
+            {true && (
                 <div className="symbol-wrap">
                     <img src={Symbol1} alt="" />
                 </div>

@@ -476,7 +476,11 @@ function Navbar({ pageName, user }) {
                                 )}{' '}
                                 <Link
                                     to="/settings/account?tab=subscription"
-                                    className="btn btn-sm bg-at-blue-light sub-notif-get"
+                                    className={`btn btn-sm px-3 sub-notif-get ${css({
+                                        ...brandKit({ bgCol: 0 }),
+                                        color: 'white',
+                                        '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                    })}`}
                                 >
                                     Get Alpha Plan Now
                                 </Link>{' '}

@@ -26,5 +26,5 @@ export const setTenantInfo = (newTenantInfo, forceTenantInfo = false) => {
             type: types.GET_TENANT_INFO,
             payload: newTenantInfo,
         };
-    return {};
+    return { type: 'INVALID' };
 };
