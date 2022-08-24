@@ -827,36 +827,50 @@ function AccountSettings() {
                                 <div className="row">
                                     <div className="form-group col-6 mb-3">
                                         <label className="f-14 mb-1">App Color</label>
-                                        <div
-                                            className="d-flex border justify-content-between align-items-center p-2"
-                                            onClick={() => document.querySelector('.organisation_app_color')?.click()}
-                                        >
-                                            <span>{organisation?.branding?.appColor || '#000000'}</span>
+                                        <div className="d-flex border justify-content-between align-items-center p-2">
                                             <input
-                                                type="color"
-                                                value={organisation?.branding?.appColor || '#000000'}
+                                                value={
+                                                    organisation?.branding?.appColor ||
+                                                    brandKit({ col: 0, default: true })?.color
+                                                }
                                                 name="appColor"
                                                 onChange={handleChange}
-                                                className="colorThemeInput"
+                                                className="border form-control-plaintext form-control me-1 px-1 rounded"
+                                            />
+                                            <input
+                                                type="color"
+                                                value={
+                                                    organisation?.branding?.appColor ||
+                                                    brandKit({ col: 0, default: true })?.color
+                                                }
+                                                name="appColor"
+                                                onChange={handleChange}
+                                                className="colorThemeInput ms-1"
                                                 id="colorThemeInput"
                                             />
                                         </div>
                                     </div>
                                     <div className="form-group col-6 mb-3">
                                         <label className="f-14 mb-1">Knowledge Base Hero Color</label>
-                                        <div
-                                            className="d-flex border justify-content-between align-items-center p-2"
-                                            onClick={() =>
-                                                document.querySelector('.organisation_kb_hero_color')?.click()
-                                            }
-                                        >
-                                            <span>{organisation?.branding?.kbHeroColor || '#000000'}</span>
+                                        <div className="d-flex border justify-content-between align-items-center p-2">
                                             <input
-                                                type="color"
-                                                value={organisation?.branding?.kbHeroColor || '#000000'}
+                                                value={
+                                                    organisation?.branding?.kbHeroColor ||
+                                                    brandKit({ col: 0, default: true })?.color
+                                                }
                                                 name="kbHeroColor"
                                                 onChange={handleChange}
-                                                className="colorThemeInput organisation_kb_hero_color"
+                                                className="border form-control-plaintext form-control me-1 px-1 rounded"
+                                            />
+                                            <input
+                                                type="color"
+                                                value={
+                                                    organisation?.branding?.kbHeroColor ||
+                                                    brandKit({ col: 0, default: true })?.color
+                                                }
+                                                name="kbHeroColor"
+                                                onChange={handleChange}
+                                                className="colorThemeInput ms-1"
                                                 id="colorThemeInput"
                                             />
                                         </div>

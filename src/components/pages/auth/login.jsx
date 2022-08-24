@@ -69,6 +69,8 @@ function Login() {
                         setHasSubdomain(res.data?.has_subdomain);
                         dispatch(getSubscription(res?.data?.id));
                         dispatch(getTenantInfo(subdomain));
+                    } else {
+                        NotificationManager.error('', 'Invalid Domain Name', 4000);
                     }
                 }
             } else {
