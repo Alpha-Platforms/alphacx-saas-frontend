@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable react/jsx-filename-extension */
 // @ts-nocheck
@@ -11,6 +12,8 @@ import jwt_decode from 'jwt-decode';
 import dayjs from 'dayjs';
 import { config } from './config/keys';
 import store from './reduxstore/store';
+import AlpacxLogoMain from './assets/images/alphacx-logo-main.png';
+import AlpacxIconMain from './assets/images/alphacx-app-icon-white.png';
 
 // function to return axios configuration with tenant token
 export const tenantTokenConfig = (getState) => {
@@ -418,6 +421,91 @@ export const createEvent = (eventName, data, options = {}) => {
     window.document.dispatchEvent(event);
 };
 
+/**
+ * Lighten (+ve) or darken (-ve) color.
+ *
+ * @param {string} col Color
+ * @param {number} amt Intensity of light
+ */
+export const lightenColor = (col = '#000000', amt = 0) => {
+    let usePound = false;
+
+    if (col[0] === '#') {
+        // eslint-disable-next-line no-param-reassign
+        col = col.slice(1);
+        usePound = true;
+    }
+
+    const num = parseInt(col, 16);
+
+    let r = (num >> 16) + amt;
+
+    if (r > 255) r = 255;
+    else if (r < 0) r = 0;
+
+    let b = ((num >> 8) & 0x00ff) + amt;
+
+    if (b > 255) b = 255;
+    else if (b < 0) b = 0;
+
+    let g = (num & 0x0000ff) + amt;
+
+    if (g > 255) g = 255;
+    else if (g < 0) g = 0;
+    const hexVal = (g | (b << 8) | (r << 16)).toString(16);
+    let newHexVal = hexVal;
+
+    for (let i = 0; i < 6 - hexVal.length; i += 1) {
+        newHexVal = `0${newHexVal}`;
+    }
+
+    return (usePound ? '#' : '') + newHexVal;
+};
+
+export const isHexColor = (color) => {
+    const hexColorRegex = /^#([0-9a-f]{3}){1,2}$/i;
+    return hexColorRegex.test(color);
+};
+
+/**
+ * Get all branding information from the store.
+ * +ve lightens or -ve darkens.
+ *
+ * @param {object | array} options obj = { col: (number), bgCol: number, kb: boolean } arr = ['icon', 'logo']
+ *
+ * @returns {object} object arguement ? { color: string, backgroundColor: string }
+ * @returns {array} array argument ? ['icon', 'logo']
+ */
+export const brandKit = (options) => {
+    const storeState = store.getState();
+    const defaultColor = '#006298';
+    const branding = storeState?.tenantInfo?.tenantInfo?.branding;
+    const appColor = branding?.appColor || defaultColor;
+    const kbHeroColor = branding?.kbHeroColor || defaultColor;
+    const appIcon = branding?.appIcon || AlpacxIconMain;
+    const appLogo = branding?.appLogo || AlpacxLogoMain;
+    if (Array.isArray(options)) {
+        return options?.map((item) => {
+            if (item === 'icon') return appIcon;
+            if (item === 'logo') return appLogo;
+            if (item === 'default') return AlpacxLogoMain;
+            return '';
+        });
+    }
+    if (isValidObject(options)) {
+        const colorToUse = options?.default ? defaultColor : options?.kb ? kbHeroColor : appColor;
+        const validColor = isHexColor(colorToUse) ? colorToUse : defaultColor;
+        const style = {};
+        if (options.hasOwnProperty('col')) {
+            style.color = lightenColor(validColor, typeof options?.col === 'number' ? options?.col : 0);
+        }
+        if (options.hasOwnProperty('bgCol')) {
+            style.backgroundColor = lightenColor(validColor, typeof options?.bgCol === 'number' ? options.bgCol : 0);
+        }
+        return style;
+    }
+    return null;
+};
 export const getSubdomainOrUrl = (domain = '') => {
     const hostnameParts = window.location.hostname.split('.');
     if (domain) {

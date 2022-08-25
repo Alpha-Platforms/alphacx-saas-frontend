@@ -10,6 +10,7 @@ import React, { useState, useEffect, memo } from 'react';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import MaterialTable from 'material-table';
 import { Link } from 'react-router-dom';
+import { css } from '@emotion/css';
 import dayjs from 'dayjs';
 import { TablePagination } from '@material-ui/core';
 import MoonLoader from 'react-spinners/MoonLoader';
@@ -22,7 +23,7 @@ import '../../../styles/ReportsFilter.scss';
 import tableIcons from '../../../assets/materialicons/tableIcons';
 import { PlusIcon } from '../../../assets/SvgIconsSet';
 import { ExportDropdown } from '../tickets/TicketList';
-import { exportTable, textCapitalize } from '../../../helper';
+import { exportTable, textCapitalize, brandKit } from '../../../helper';
 
 const tableTheme = createTheme({
     palette: {
@@ -478,7 +479,15 @@ function ReportsFilter() {
             <h2>Filter Options</h2>
             <p>Select the Add Filter button to filter and generate your reports</p>
             <div>
-                <button type="button" onClick={() => !dropdownActive && setDropdownActive(true)}>
+                <button
+                    type="button"
+                    className={`btn btn-sm px-3 ${css({
+                        ...brandKit({ bgCol: 0 }),
+                        color: 'white',
+                        '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                    })}`}
+                    onClick={() => !dropdownActive && setDropdownActive(true)}
+                >
                     <PlusIcon /> Add Filter
                 </button>
                 {filters.map((item) => (
@@ -534,7 +543,7 @@ function ReportsFilter() {
             </div>
             {loading && (
                 <div className={`cust-table-loader ${true && 'add-loader-opacity'}`}>
-                    <MoonLoader loading color="#006298" size={30} />
+                    <MoonLoader loading color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
         </div>

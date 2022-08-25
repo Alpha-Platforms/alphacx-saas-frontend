@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import './login.css';
 import { NotificationManager } from 'react-notifications';
 import swal from 'sweetalert';
-import { css } from '@emotion/react';
 import ClipLoader from 'react-spinners/ClipLoader';
 import AlphaLogo from '../../../assets/imgF/alpha.png';
 import Logo from '../../../assets/imgF/logo.png';
@@ -12,8 +11,6 @@ import Symbol1 from '../../../assets/imgF/symbolAuth.png';
 import Symbol2 from '../../../assets/imgF/symbolAuth2.png';
 import { ValidateEmail, validatePassword } from '../../../helpers/validateInput';
 import { httpPostMain } from '../../../helpers/httpMethods';
-
-const override = css``;
 
 function Login({ match, history }) {
     const [userInput, setUserInput] = useState({
@@ -113,7 +110,7 @@ function Login({ match, history }) {
                         <button disabled={loading} onClick={handleSubmit}>
                             {' '}
                             {loading ? (
-                                <ClipLoader color={color} loading={loading} css={override} size={30} />
+                                <ClipLoader color={color} loading={loading} size={30} />
                             ) : (
                                 'Login'
                             )}

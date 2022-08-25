@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
+import { css } from '@emotion/css';
 import { Tabs, Tab } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
 import ChannelsTab from './components/ChannelsTab';
@@ -8,7 +9,7 @@ import TicketStatusTab from './components/TicketStatusTab';
 import TicketSettingsTab from './components/TicketSettingsTab';
 import TicketCategoriesTab from './components/TicketCategoriesTab';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
-import { hasFeatureAccess } from '../../../../helper';
+import { hasFeatureAccess, brandKit } from '../../../../helper';
 
 function TicketSettings() {
     const location = useLocation();
@@ -18,6 +19,14 @@ function TicketSettings() {
             setTabKey(location.state.historyTabKey);
         }
     }, [location]);
+
+    const actionBtnStyle = css({
+        '& > li > button.active': {
+            color: `${brandKit({ col: 0 })?.color} !important`,
+            fontWeight: 600,
+            borderBottom: `2px solid ${brandKit({ bgCol: 0 })?.backgroundColor} !important`,
+        },
+    });
     return (
         <div>
             <div className="card card-body bg-white border-0 p-0 mb-4">
@@ -33,7 +42,7 @@ function TicketSettings() {
                     </h6>
                 </div>
                 <div className="mt-4">
-                    <ul className="nav nav-pills" id="fieldTabsSelector" role="tablist">
+                    <ul className={`nav nav-pills ${actionBtnStyle}`} id="fieldTabsSelector" role="tablist">
                         <li className="nav-item" role="presentation">
                             <button
                                 className={`nav-link px-0 me-5 ${tabKey === 'ticket-settings' && 'active'} text-muted`}

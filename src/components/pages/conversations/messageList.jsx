@@ -3,12 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import MoonLoader from 'react-spinners/MoonLoader';
 import moment from 'moment';
+import { css } from '@emotion/css';
 import truncateWithEllipses from '../../helpers/truncate';
 import { timeFormater } from '../../helpers/dateFormater';
 import capitalizeFirstLetter from '../../helpers/capitalizeFirstLetter';
 import InitialsFromString from '../../helpers/InitialsFromString';
 import ChatBubble from '../../../assets/svgicons/chatBubble.svg';
-import { scrollToView } from '../../../helper';
+import { scrollToView, brandKit } from '../../../helper';
 
 function EmptyMessageList(){
     return (
@@ -106,7 +107,7 @@ export default function MessageList({
             {loadingTickets || !ticketsLoaded ? (
                 <div className="d-flex justify-content-center align-items-center pt-5 away">
                     {' '}
-                    <MoonLoader color="#0d4166" loading size={30} />
+                    <MoonLoader color={brandKit({ bgCol: 0 })?.backgroundColor} loading size={30} />
                 </div>
             ) : Array.isArray(renderTicket) ? (
                 renderTicket.length == 0 ? (
@@ -118,7 +119,9 @@ export default function MessageList({
                             <div
                                 key={index}
                                 className={`message-listmain ${
-                                    data?.id === activeChat ? 'message-listmain-active' : ''
+                                    data?.id === activeChat ? `${css`
+                                        border-left: 2.7px solid ${brandKit({ bgCol: 0 })?.backgroundColor}
+                                    `}` : ''
                                 }`}
                                 onClick={() => {
                                     scrollToView('#lastMsg');
@@ -131,7 +134,13 @@ export default function MessageList({
                             >
                                 <div className="message-user-img">
                                     {data?.customer?.avatar == null ? (
-                                        <div className="message-user-noimg">
+                                        <div className={`message-user-noimg ${css`
+                                            background: linear-gradient(
+                                                180deg,
+                                                ${brandKit({ bgCol: 0 })?.backgroundColor} -93.06%,
+                                                ${brandKit({ bgCol: -120 })?.backgroundColor} 100%
+                                            );
+                                        `}`}>
                                             <span>
                                                 {InitialsFromString(
                                                     `${

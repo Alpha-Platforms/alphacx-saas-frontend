@@ -32,6 +32,7 @@ function DefaultLayoutRoute({ component: Component, routeType, fullProps, pageNa
     const [valid, setValid] = useState('loading');
     const userRole = useSelector((state) => state?.userAuth?.user?.role);
     const tenantSubscription = useSelector((state) => state?.subscription?.subscription);
+    const tenantInfo = useSelector((state) => state?.tenantInfo?.tenantInfo);
 
     const history = useHistory();
     const location = useLocation();
@@ -46,6 +47,8 @@ function DefaultLayoutRoute({ component: Component, routeType, fullProps, pageNa
             await refreshUserTokens(true);
         })();
     }, []);
+
+    useEffect(() => {}, [tenantInfo]);
 
     return (
         <Route

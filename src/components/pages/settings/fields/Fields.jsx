@@ -20,6 +20,7 @@ import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
 import { useDispatch, useSelector } from 'react-redux';
 import SimpleReactValidator from 'simple-react-validator';
+import { css } from '@emotion/css';
 // components
 // import ContactFieldList from './ContactFieldList';
 import TicketFieldList from './TicketFieldList';
@@ -33,6 +34,7 @@ import { ReactComponent as HamburgerSvg } from '../../../../assets/icons/hamburg
 // import { ReactComponent as FormMinusSvg } from '../../../../assets/icons/form-minus.svg';
 // import { ReactComponent as FormMinusNeutralSvg } from '../../../../assets/icons/form-minus-neutral.svg';
 import { getCustomFields, addCustomField } from '../../../../reduxstore/actions/customFieldActions';
+import { brandKit } from '../../../../helper';
 
 function Fields() {
     const [tabKey, setTabKey] = useState('user-field');
@@ -347,6 +349,17 @@ function Fields() {
         return NotificationManager.error(res.message, 'Error', 4000);
     };
 
+    const actionBtnStyle = css({
+        '& > li > button.active': {
+            color: `${brandKit({ col: 0 })?.color} !important`,
+            fontWeight: 600,
+            borderBottom: `2px solid ${brandKit({ bgCol: 0 })?.backgroundColor} !important`,
+        },
+        '& > li > button': {
+            borderBottom: `2px solid transparent !important`,
+        },
+    });
+
     return (
         <div>
             <div className="card card-body bg-white border-0 p-4 w-100">
@@ -361,7 +374,7 @@ function Fields() {
                 </div>
 
                 <div className="mt-4 mb-3">
-                    <ul className="nav nav-pills" id="pills-tab" role="tablist">
+                    <ul className={`nav nav-pills ${actionBtnStyle}`} id="pills-tab" role="tablist">
                         <li className="nav-item" role="presentation">
                             <button
                                 className={`nav-link ${tabKey === 'user-field' && 'active'} text-muted ps-0`}
@@ -418,7 +431,9 @@ function Fields() {
                                     <div className="mb-2 mt-4">
                                         <button
                                             type="button"
-                                            className="btn btn-sm acx-btn-outline-primary border px-3 me-3"
+                                            className={`btn text-decoration-none btn-sm border ${css({
+                                                ...brandKit({ col: 0 }),
+                                            })}`}
                                             onClick={() => {
                                                 setIsEdit(false);
                                                 setModalShow(true);
@@ -547,7 +562,9 @@ function Fields() {
                                                         type="button"
                                                         className="sort-btn btn no-focus btn-link ps-0 ms-0 move-cursor"
                                                     >
-                                                        <HamburgerSvg />
+                                                        <HamburgerSvg
+                                                            stroke={brandKit({ bgCol: 0 })?.backgroundColor}
+                                                        />
                                                     </button>
                                                     <div className="flex-grow-1 mx-1">
                                                         <Form.Control
@@ -583,7 +600,7 @@ function Fields() {
                                 <Row className="my-3">
                                     <Col sm="auto">
                                         <Form.Group className="acx-form-group form-group">
-                                            <Form.Check
+                                            {/* <Form.Check
                                                 onChange={handleSwitch}
                                                 checked={customFields.required}
                                                 value={customFields.required}
@@ -591,7 +608,26 @@ function Fields() {
                                                 id="required"
                                                 name="required"
                                                 label="Make field required"
-                                            />
+                                                className={`thin ${css({
+                                                    '&:checked': { ...brandKit({ bgCol: 0 }) },
+                                                })}`}
+                                            /> */}
+                                            <div className="form-check form-switch d-flex justify-content-center">
+                                                <input
+                                                    className={`legendInput legend-input form-check-input form-check-input-lg mt-1 ${css(
+                                                        { '&:checked': { ...brandKit({ bgCol: 0 }) } },
+                                                    )}`}
+                                                    type="checkbox"
+                                                    onChange={handleSwitch}
+                                                    id="required"
+                                                    name="required"
+                                                    label="Make field required"
+                                                    checked={customFields.required}
+                                                />
+                                                <label className="form-check-label f-14 ms-2" htmlFor="required">
+                                                    Make field required
+                                                </label>
+                                            </div>
                                         </Form.Group>
                                         {customFields.required}
                                     </Col>
@@ -614,20 +650,38 @@ function Fields() {
                                     )}
                                 </Row>
                                 <div className="text-end">
-                                    <Button
+                                    {/* <Button
                                         onClick={() => {
                                             setIsEdit(false);
                                             setModalShow(false);
                                         }}
                                         type="button"
-                                        className="acx-btn-outline-primary border px-4 me-3"
+                                        className="btn btn-sm px-3 me-2 border reset-btn-outline"
                                     >
                                         Cancel
-                                    </Button>
+                                    </Button> */}
+                                    <button
+                                        style={{ borderColor: 'var(--at-blue-light)' }}
+                                        className="btn btn-sm px-3 me-2 border reset-btn-outline"
+                                        type="button"
+                                        onClick={() => {
+                                            setIsEdit(false);
+                                            setModalShow(false);
+                                        }}
+                                    >
+                                        Cancel
+                                    </button>
                                     {isEdit ? (
                                         <Button
                                             type="button"
-                                            className="acx-btn-primary px-4"
+                                            className={`btn btn-sm px-3 ${css({
+                                                ...brandKit({ bgCol: 0 }),
+                                                color: 'white',
+                                                '&:hover, &:disabled, &:focus': {
+                                                    ...brandKit({ bgCol: 30 }),
+                                                    color: 'white',
+                                                },
+                                            })}`}
                                             disabled={processing}
                                             onClick={handleEdit}
                                         >
@@ -650,7 +704,14 @@ function Fields() {
                                     ) : (
                                         <Button
                                             type="button"
-                                            className="acx-btn-primary px-4"
+                                            className={`btn btn-sm px-3 ${css({
+                                                ...brandKit({ bgCol: 0 }),
+                                                color: 'white',
+                                                '&:hover, &:disabled, &:focus': {
+                                                    ...brandKit({ bgCol: 30 }),
+                                                    color: 'white',
+                                                },
+                                            })}`}
                                             disabled={processing}
                                             onClick={handleSubmit}
                                         >

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import './login.css';
 import { NotificationManager } from 'react-notifications';
 import swal from 'sweetalert';
-import { css } from '@emotion/react';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { CSSTransition } from 'react-transition-group';
 import RSelect from 'react-select';
@@ -17,8 +16,6 @@ import { httpPost } from '../../../helpers/httpMethods';
 import { countries } from '../../shared/countries';
 import ThankYou from '../../../assets/imgF/thank-you.png';
 import { ReactComponent as ApproveIcon } from '../../../assets/icons/check-green.svg';
-
-const override = css``;
 
 function Login({ history }) {
     const [userInput, setUserInput] = useState({
@@ -293,7 +290,6 @@ function Login({ history }) {
                                                     <ClipLoader
                                                         color={color}
                                                         loading={domainChecking}
-                                                        css={override}
                                                         size={20}
                                                     />
                                                 ) : lockDomain ? (
@@ -338,7 +334,7 @@ function Login({ history }) {
                                         <button disabled={loading} onClick={handleSubmit}>
                                             {' '}
                                             {loading ? (
-                                                <ClipLoader color={color} loading={loading} css={override} size={30} />
+                                                <ClipLoader color={color} loading={loading} size={30} />
                                             ) : (
                                                 'Register'
                                             )}

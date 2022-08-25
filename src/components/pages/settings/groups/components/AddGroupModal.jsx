@@ -12,11 +12,13 @@ import { NotificationManager } from 'react-notifications';
 // import MoonLoader from 'react-spinners/MoonLoader';
 import SimpleReactValidator from 'simple-react-validator';
 import { connect } from 'react-redux';
+import { css } from '@emotion/css';
 // import RSelect from 'react-select';
 import AsyncSelect from 'react-select/async';
 import { httpPostMain, httpGetMain } from '../../../../../helpers/httpMethods';
 import { getGroups, updateGroup } from '../../../../../reduxstore/actions/groupActions';
 import '../../../../../styles/ModalCustomStyle.css';
+import { brandKit } from '../../../../../helper';
 
 let categoriesFetchTimer;
 
@@ -291,7 +293,11 @@ function AddGroupModal({
                         <div className="d-flex justify-content-end mt-3">
                             <button
                                 type="button"
-                                className="btn bg-at-blue-light px-4 mt-3"
+                                className={`btn px-4 mt-3 ${css({
+                                    ...brandKit({ bgCol: 0 }),
+                                    color: 'white',
+                                    '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                })}`}
                                 disabled={editing || creating}
                                 onClick={isEditing ? updateTeam : submitNewTeam}
                             >

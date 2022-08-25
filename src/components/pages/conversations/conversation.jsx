@@ -35,6 +35,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { NotificationManager } from 'react-notifications';
+import { css } from '@emotion/css';
 // import debounce from 'debounce';
 import OnboardingModal from '../../Layout/components/Onboarding';
 import AppNotification from '../../Layout/Notification';
@@ -65,6 +66,7 @@ import {
     scrollToView,
     subscribeToEvent,
     unsuscribeFromEvent,
+    brandKit,
 } from '../../../helper';
 import { accessControlFunctions } from '../../../config/accessControlList';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -1119,7 +1121,11 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                             {multiIncludes(accessControlFunctions[user?.role], ['edit_ticket']) && (
                                                 <button
                                                     type="button"
-                                                    className="custormChatHeaderInfoAction"
+                                                    className={`custormChatHeaderInfoAction btn btn-sm ${css({
+                                                        ...brandKit({ bgCol: 0 }),
+                                                        color: 'white',
+                                                        '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                                    })}`}
                                                     onClick={closeSaveTicketModal}
                                                 >
                                                     <StarIconTicket /> Update
@@ -1207,7 +1213,11 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                             id={`${data?.id}`}
                                                         >
                                                             <div className="message-container">
-                                                                <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                                                <div
+                                                                    className={`avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center ${css(
+                                                                        { ...brandKit({ bgCol: 0 }) },
+                                                                    )}`}
+                                                                >
                                                                     {data?.user?.avatar ? (
                                                                         <img
                                                                             className="avatar-img"
@@ -1327,7 +1337,11 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                         id={`${data?.id}`}
                                                     >
                                                         <div className="message-container">
-                                                            <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                                            <div
+                                                                className={`avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center ${css(
+                                                                    { ...brandKit({ bgCol: 0 }) },
+                                                                )}`}
+                                                            >
                                                                 {data?.user?.avatar ? (
                                                                     <img
                                                                         className="avatar-img"
@@ -1445,7 +1459,11 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                         id={`${data?.id}`}
                                                     >
                                                         <div className="message-container">
-                                                            <div className="avatar avatar-md rounded-circle overflow-hidden acx-bg-primary d-flex justify-content-center align-items-center">
+                                                            <div
+                                                                className={`avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center ${css(
+                                                                    { ...brandKit({ bgCol: 0 }) },
+                                                                )}`}
+                                                            >
                                                                 {data?.user?.avatar ? (
                                                                     <img
                                                                         className="avatar-img"
@@ -1663,6 +1681,11 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                             <div className="sendMsg">
                                                 <button
                                                     type="button"
+                                                    className={`btn btn-sm ${css({
+                                                        ...brandKit({ bgCol: 0 }),
+                                                        color: 'white',
+                                                        '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                                    })}`}
                                                     disabled={
                                                         sendingReply ? true : ticket[0].status.status === 'Closed'
                                                     }
@@ -2016,7 +2039,11 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                             )}
                             <div className="text-end mt-3">
                                 <Button
-                                    className="btn acx-btn-primary px-3 py-2"
+                                    className={`btn px-4 ${css({
+                                        ...brandKit({ bgCol: 0 }),
+                                        color: 'white',
+                                        '&:hover': { ...brandKit({ bgCol: 30 }) },
+                                    })}`}
                                     disabled={processing}
                                     type="submit"
                                     onClick={updateTicket}

@@ -1,7 +1,7 @@
 /* eslint-disable */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-//
+import { css } from '@emotion/css';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 //
@@ -14,7 +14,7 @@ import { ReactComponent as FormMinusSvg } from '../../../../../assets/icons/form
 // import {ReactComponent as EditGreySvg} from '../../../../../assets/icons/Edit-grey.svg';
 // import {ReactComponent as DeleteGreySvg} from '../../../../../assets/icons/Delete-grey.svg';
 //
-import { uuid } from '../../../../../helper';
+import { uuid, brandKit } from '../../../../../helper';
 import { setCurrentAgentLoading } from '../../../../../reduxstore/actions/agentActions';
 import { updateChannel, addChannel } from '../../../../../reduxstore/actions/channelActions';
 
@@ -121,7 +121,7 @@ function AddChannelModal({
                         <div className="text-end">
                             <button
                                 style={{ borderColor: 'var(--at-blue-light)' }}
-                                className="btn btn-sm btn-outline-secondary px-3 me-2 text-at-blue-light reset-btn-outline"
+                                className="btn btn-sm border px-3 me-2 reset-btn-outline"
                                 type="button"
                                 onClick={handleCancelClick}
                             >
@@ -132,7 +132,11 @@ function AddChannelModal({
                                 <button
                                     onClick={handleChannelUpdate}
                                     type="button"
-                                    className="btn btn-custom btn-sm  px-3 d-inline-block"
+                                    className={`btn btn-custom btn-sm  px-3 d-inline-block ${css({
+                                        ...brandKit({ bgCol: 0 }),
+                                        color: 'white',
+                                        '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                    })}`}
                                 >
                                     Add Channel
                                 </button>
@@ -141,7 +145,11 @@ function AddChannelModal({
                                     onClick={handleChannelUpdate}
                                     type="button"
                                     disabled={editing}
-                                    className="btn btn-custom btn-sm  px-3 d-inline-block"
+                                    className={`btn btn-custom btn-sm  px-3 d-inline-block ${css({
+                                        ...brandKit({ bgCol: 0 }),
+                                        color: 'white',
+                                        '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                    })}`}
                                 >
                                     {editing ? 'Editing...' : 'Edit'} Channel
                                 </button>

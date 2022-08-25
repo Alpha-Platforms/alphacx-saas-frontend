@@ -7,6 +7,7 @@ import MaterialTable from 'material-table';
 import { TablePagination } from '@material-ui/core';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import MoonLoader from 'react-spinners/MoonLoader';
+import { css } from '@emotion/css';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import tableIcons from '../../../../assets/materialicons/tableIcons';
@@ -21,6 +22,7 @@ import TripleDot from '../../../../assets/imgF/triple_dot.png';
 import { getEmailTemplates } from '../../../../reduxstore/actions/emailTemplateActions';
 import { ReactComponent as DeleteRedIcon } from '../../../../assets/icons/Delete-red.svg';
 import { ReactComponent as EditIcon } from '../../../../assets/icons/Edit.svg';
+import { brandKit } from './../../../../helper';
 
 function NotificationSettings({ getEmailTemplates, isEmailTemplatesLoaded, emailTemplates }) {
     const history = useHistory();
@@ -169,7 +171,7 @@ function NotificationSettings({ getEmailTemplates, isEmailTemplatesLoaded, email
         <div className="notification-settings">
             {custLoading && (
                 <div className="cust-table-loader">
-                    <MoonLoader loading={custLoading} color="#006298" size={30} />
+                    <MoonLoader loading={custLoading} color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
             <div className="card card-body bg-white border-0 ">
@@ -187,7 +189,11 @@ function NotificationSettings({ getEmailTemplates, isEmailTemplatesLoaded, email
                 <div className="d-flex justify-content-between align-baseline">
                     <h5 className="mt-3 mb-4 f-16 fw-bold">Notification Management</h5>
                     <div>
-                        <Link className="btn btn-sm acx-btn-primary px-4" to="/settings/notifications/email-template">
+                        <Link className={`btn btn-sm px-3 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`} to="/settings/notifications/email-template">
                             Add Notification
                         </Link>
                     </div>

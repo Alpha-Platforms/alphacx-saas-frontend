@@ -915,18 +915,20 @@ input.search-input-right {
     box-shadow: none;
 }
 
+.form-check .form-check-input:checked {
+    border-color: transparent !important;
+}
+
 /* Form check input */
 /* form check default and primary */
 .acx-form-group.acx-form-group-primary .form-check .form-check-input:checked,
-.list-group-item .form-check-input:checked,
-.form-check .form-check-input:checked {
+.list-group-item .form-check-input:checked  {
     background-color: var(--color-primary);
     border-color: var(--color-primary);
 }
 
 .acx-form-group.acx-form-group-primary .form-check .form-check-input:focus,
-.list-group-item .form-check-input:focus,
-.form-check .form-check-input:focus {
+.list-group-item .form-check-input:focus {
     border-color: var(--color-primary-light);
     outline: 0;
     box-shadow: 0 0 0 0.25rem var(--color-primary-25);

@@ -439,7 +439,7 @@
     display: block;
     width: 100%;
     padding: 10px;
-    background: var(--at-blue-light);
+    // background: var(--at-blue-light);
     color: white;
     font-size: 16px;
     border-radius: 4px;
@@ -473,15 +473,15 @@
 
         & > button {
             display: inline-block;
-            border: 1px solid #006298 !important;
+            // border: 1px solid #006298 !important;
             box-sizing: border-box;
             border-radius: 4px;
             width: 149px;
-            color: #006298 !important;
-            &:hover {
-                background: #006298 !important;
-                color: white !important;
-            }
+            // color: #006298 !important;
+            // &:hover {
+            //     background: #006298 !important;
+            //     color: white !important;
+            // }
         }
     }
 
@@ -498,7 +498,7 @@
         margin-top: 29px;
 
         & > button {
-            border: 1px solid #006298 !important;
+            border: 1px solid transparent !important;
             box-sizing: border-box;
             border-radius: 4px;
             width: 149px;
@@ -515,7 +515,8 @@
     text-align: center;
     padding: 50px 60px;
     background: rgba(249, 252, 255, 0.03);
-    border: 0.5px solid #036298;
+    border-width: 0.5px;
+    border-style: solid;
     box-sizing: border-box;
     border-radius: 8px;
     -webkit-border-radius: 8px;
@@ -616,7 +617,7 @@ iframe {
         transition: 0.3s;
     }
     input:checked + label {
-        background: var(--at-blue-light);
+        // background: var(--at-blue-light);
     }
     input:checked + label:after {
         left: calc(100% - calc(5px / var(--toggle-ratio)));

@@ -95,7 +95,7 @@
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  background: linear-gradient(180deg, #0074b3 -93.06%, #1a1d33 100%);
+  /* background: linear-gradient(180deg, #0074b3 -93.06%, #1a1d33 100%); TO FAVOUR BRANDING  */
   color: white;
   display: flex;
   align-items: center;
@@ -432,7 +432,7 @@
 .sendMsg button {
   width: 85px;
   height: 30px;
-  background-color: #006298;
+  /* background-color: #006298; // TO FAVOUR BRANDING */
   border-radius: 4px;
   color: white;
   font-size: 15px;
@@ -488,7 +488,7 @@
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  background: #006298;
+  /* background: #006298; // TO FAVOUR BRANDING */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1121,7 +1121,7 @@ select {
   color: white;
   font-size: 11.5px;
   cursor: pointer;
-  background-color: #006298;
+  /* background-color: #006298; // TO FAVOUR BRANDING */
   border: none;
   outline: none;
 }

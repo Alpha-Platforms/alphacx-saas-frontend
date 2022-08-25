@@ -14,6 +14,7 @@ import { NotificationManager } from 'react-notifications';
 import MoonLoader from 'react-spinners/MoonLoader';
 import Dropdown from 'react-bootstrap/Dropdown';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { css } from '@emotion/css';
 import { LayoutContext } from '../../context/layoutContext';
 import { NotificationBellEmpty, NotificationBellNew } from '../../assets/images/svgs';
 // import userIcon from "../../assets/images/user.png";
@@ -26,7 +27,7 @@ import '../../styles/Navbar.css';
 import { httpGetMain, httpPatchMain } from '../../helpers/httpMethods';
 // import AccordionLink from "components/pages/help_center/components/accordion/AccordionLink";
 import { accessControlFunctions } from '../../config/accessControlList';
-import { hasFeatureAccess, multiIncludes } from '../../helper';
+import { hasFeatureAccess, multiIncludes, brandKit } from '../../helper';
 import GlobalSearch from './components/GlobalSearch';
 
 function DropDown({ shouldShowUserExceededNotif }) {
@@ -41,10 +42,14 @@ function DropDown({ shouldShowUserExceededNotif }) {
                     disabled={subExpired || shouldShowUserExceededNotif}
                     variant=""
                     size=""
-                    className="btn acx-btn-primary"
-                    style={{ borderRadius: '.15rem' }}
+                    className={`btn nav-cta ${css({
+                        ...brandKit({ bgCol: 0 }),
+                        color: 'white',
+                        borderRadius: '4px !important',
+                        '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                    })}`}
                 >
-                    <div style={{ padding: '.25rem .5rem' }}>
+                    <div>
                         <PlusIcon />
                         <span className="ps-2 pe-4">Create</span>
                         <DowncaretIcon />
@@ -471,7 +476,11 @@ function Navbar({ pageName, user }) {
                                 )}{' '}
                                 <Link
                                     to="/settings/account?tab=subscription"
-                                    className="btn btn-sm bg-at-blue-light sub-notif-get"
+                                    className={`btn btn-sm px-3 sub-notif-get ${css({
+                                        ...brandKit({ bgCol: 0 }),
+                                        color: 'white',
+                                        '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                    })}`}
                                 >
                                     Get Alpha Plan Now
                                 </Link>{' '}
@@ -552,7 +561,7 @@ function Navbar({ pageName, user }) {
                                             }}
                                         />
                                     ) : (
-                                        <span className="nav-initials">
+                                        <span className={`nav-initials ${css({ ...brandKit({ bgCol: 0 }) })}`}>
                                             {`${user?.firstname[0] || ''}${user?.lastname[0] || ''}`
                                                 .trim()
                                                 .toUpperCase()}

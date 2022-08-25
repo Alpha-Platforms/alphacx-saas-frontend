@@ -2,11 +2,13 @@
 // @ts-nocheck
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { css } from '@emotion/css';
 import { NotificationManager } from 'react-notifications';
 import MoonLoader from 'react-spinners/MoonLoader';
 import { httpPostMain } from '../../../../../helpers/httpMethods';
 import { getCategories, getPaginatedCategories } from '../../../../../reduxstore/actions/categoryActions';
 import { getSubCategories } from '../../../../../reduxstore/actions/subCategoryActions';
+import { brandKit } from './../../../../../helper';
 
 function NewCategoryTab({ categories, meta, getCategories, getPaginatedCategories, getSubCategories, isCatLoading }) {
     const [newCategory, setNewCategory] = useState({
@@ -125,7 +127,11 @@ function NewCategoryTab({ categories, meta, getCategories, getPaginatedCategorie
                     </div>
                     <div className="my-3 mt-4 text-end">
                         <button
-                            className="btn btn-sm bg-at-blue-light px-3"
+                            className={`btn btn-sm px-3 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`}
                             disabled={newCategory?.name === '' || !newCategory?.name}
                         >
                             Add New Category

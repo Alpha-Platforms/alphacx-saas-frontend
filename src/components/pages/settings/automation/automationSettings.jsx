@@ -5,6 +5,7 @@ import '../help_center/helpCenter.scss';
 import './automationSettings.scss';
 import { Link, useHistory } from 'react-router-dom';
 import MaterialTable from 'material-table';
+import { css } from '@emotion/css';
 import { TablePagination } from '@material-ui/core';
 import { Dropdown } from 'react-bootstrap';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
@@ -19,6 +20,7 @@ import TripleDot from '../../../../assets/imgF/triple_dot.png';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
 import { ReactComponent as DeleteRedIcon } from '../../../../assets/icons/Delete-red.svg';
 import { ReactComponent as EditIcon } from '../../../../assets/icons/Edit.svg';
+import { brandKit } from './../../../../helper';
 
 function AutomationSettings() {
     const history = useHistory();
@@ -202,7 +204,7 @@ function AutomationSettings() {
         <div className="help-center-settings automation-settings">
             {policyLoading && (
                 <div className={`cust-table-loader ${policyLoading && 'add-loader-opacity'}`}>
-                    <MoonLoader loading={policyLoading} color="#006298" size={30} />
+                    <MoonLoader loading={policyLoading} color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
             <Modal open={openDeleteActionModal} onClose={() => setOpenDeleteActionModal(false)} center>
@@ -247,7 +249,11 @@ function AutomationSettings() {
                                 First matching automation policy will be applied to tickets wuth matching conditions
                             </p>
                         </div>
-                        <Link className="btn btn-sm bg-custom" to="automation">
+                        <Link className={`btn btn-sm bg-custom px-3 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`} to="automation">
                             Add Automation
                         </Link>
                     </div>

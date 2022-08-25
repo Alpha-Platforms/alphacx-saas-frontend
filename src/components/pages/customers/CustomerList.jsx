@@ -5,6 +5,7 @@ import { ReactComponent as UploadSvg } from '../../../assets/svgicons/Upload.svg
 import { Modal, Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { css } from '@emotion/css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../../../styles/Customer.css';
 import MoonLoader from 'react-spinners/MoonLoader';
@@ -13,7 +14,7 @@ import MaterialTable from 'material-table';
 import { TablePagination } from '@material-ui/core';
 
 import SaveAlt from '@material-ui/icons/SaveAlt';
-import { exportTable, getUserInitials, multiIncludes } from '../../../helper';
+import { exportTable, getUserInitials, multiIncludes, brandKit } from '../../../helper';
 import CreateCustomerModal from './CreateCustomerModal';
 import tableIcons from '../../../assets/materialicons/tableIcons';
 import { ReactComponent as DotSvg } from '../../../assets/icons/dots.svg';
@@ -271,7 +272,7 @@ function CustomerList({
         <div>
             {custLoading && (
                 <div className="cust-table-loader">
-                    <MoonLoader loading={custLoading} color="#006298" size={30} />
+                    <MoonLoader loading={custLoading} color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
 

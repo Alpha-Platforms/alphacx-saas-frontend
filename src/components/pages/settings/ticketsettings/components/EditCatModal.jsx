@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'react-responsive-modal';
 import { NotificationManager } from 'react-notifications';
+import { css } from '@emotion/css';
 import { connect } from 'react-redux';
 import { updateCategory, getPaginatedCategories } from '../../../../../reduxstore/actions/categoryActions';
+import { brandKit } from '../../../../../helper';
 
 // eslint-disable-next-line no-shadow
 function EditCatModal({ createModalShow, setCreateModalShow, currentCatInfo, updateCategory, getPaginatedCategories }) {
@@ -82,7 +84,11 @@ function EditCatModal({ createModalShow, setCreateModalShow, currentCatInfo, upd
                     <div className="mt-4 text-end">
                         <button
                             type="button"
-                            className="btn bg-at-blue-light  py-1 px-4"
+                            className={`btn btn-sm py-1 px-4 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`}
                             disabled={editingCat}
                             onClick={handleCatUpdate}
                         >
