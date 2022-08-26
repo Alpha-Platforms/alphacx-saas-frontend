@@ -15,7 +15,7 @@ import Symbol1 from '../../../assets/imgF/symbolAuth.png';
 import Symbol2 from '../../../assets/imgF/symbolAuth2.png';
 import { httpPost, httpPostMain } from '../../../helpers/httpMethods';
 import { getSubscription } from '../../../reduxstore/actions/subscriptionAction';
-import { getTenantInfo, setTenantInfo } from '../../../reduxstore/actions/tenantInfoActions';
+import { setTenantInfo } from '../../../reduxstore/actions/tenantInfoActions';
 
 function Login() {
     const location = useLocation();
@@ -68,7 +68,7 @@ function Login() {
                         setTenantId(res?.data?.id);
                         setHasSubdomain(res.data?.has_subdomain);
                         dispatch(getSubscription(res?.data?.id));
-                        dispatch(getTenantInfo(subdomain));
+                        dispatch(setTenantInfo(res?.data?.tenantInfo));
                     } else {
                         NotificationManager.error('', 'Invalid Domain Name', 4000);
                     }
@@ -148,7 +148,7 @@ function Login() {
             if (res.status === 'success') {
                 setTenantId(res?.data?.id);
                 dispatch(getSubscription(res?.data?.id));
-                dispatch(getTenantInfo(domain));
+                dispatch(setTenantInfo(res?.data?.tenantInfo));
                 setLoading(false);
                 setHasSubdomain(res.data?.has_subdomain);
 
