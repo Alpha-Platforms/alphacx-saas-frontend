@@ -301,6 +301,13 @@ function AccountSettings() {
               }));
     };
 
+    const clearSelectedBrandColor = (type) => {
+        type === 'kbHeroColor'
+            ? setOrganisation((prev) => ({ ...prev, branding: { ...prev.branding, kbHeroColor: '' } }))
+            : type === 'appColor' &&
+              setOrganisation((prev) => ({ ...prev, branding: { ...prev.branding, appColor: '' } }));
+    };
+
     const handleImgSelect = function (files, type) {
         // create a store for the current dimension and default info
         const maxReqDimensions = {
@@ -827,7 +834,16 @@ function AccountSettings() {
                                 <div className="row">
                                     <div className="form-group col-6 mb-3">
                                         <label className="f-14 mb-1">App Color</label>
-                                        <div className="d-flex border justify-content-between align-items-center p-2">
+                                        <div className="d-flex border justify-content-between align-items-center p-2 position-relative">
+                                            {organisation?.branding?.appColor && (
+                                                <button
+                                                    type="button"
+                                                    className="clear-branding-color-btn"
+                                                    onClick={() => clearSelectedBrandColor('appColor')}
+                                                >
+                                                    ×
+                                                </button>
+                                            )}
                                             <input
                                                 value={
                                                     organisation?.branding?.appColor ||
@@ -852,7 +868,16 @@ function AccountSettings() {
                                     </div>
                                     <div className="form-group col-6 mb-3">
                                         <label className="f-14 mb-1">Knowledge Base Hero Color</label>
-                                        <div className="d-flex border justify-content-between align-items-center p-2">
+                                        <div className="d-flex border justify-content-between align-items-center p-2 position-relative">
+                                            {organisation?.branding?.kbHeroColor && (
+                                                <button
+                                                    type="button"
+                                                    className="clear-branding-color-btn"
+                                                    onClick={() => clearSelectedBrandColor('kbHeroColor')}
+                                                >
+                                                    ×
+                                                </button>
+                                            )}
                                             <input
                                                 value={
                                                     organisation?.branding?.kbHeroColor ||
