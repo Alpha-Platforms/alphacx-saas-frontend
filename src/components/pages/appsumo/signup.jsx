@@ -41,6 +41,8 @@ import ConversationsImg from '../../../assets/images/conversations.png';
 import { Capitalize } from 'components/helpers/helpers';
 import Login from '../auth/login';
 import { getSubdomainOrUrl } from 'helper';
+import { getSubscription } from 'reduxstore/actions/subscriptionAction';
+import { useDispatch } from 'react-redux';
 
 const override = {
     display: "block",
@@ -51,7 +53,7 @@ const override = {
 let verifyDomainTimer;
 
 function Appsumo() {
-
+    const dispatch = useDispatch();
     const { search } = useLocation();
 
     const [userInput, setUserInput] = useState({
@@ -72,12 +74,12 @@ function Appsumo() {
     const [lockDomain, setLockDomain] = useState(false);
     const [, forceUpdate] = useState();
     const [domainAvail, setDomainAvail] = useState(false);
-
     const [showModal, setShowModal] = useState(false)
-
     const [showRirecting, setShowRirecting] = useState(false)
-
-    const [userData, setUserData] = useState({email: "", domain: ""})
+    const [userData, setUserData] = useState({email: '', domain: ''})
+    const [tenantExists, setTenantExists] = useState(false)
+    const [openTenantExistsModal, setOpenTenantExistsModal] = useState(false)
+    const [planName, setPlanName] = useState('')
 
 
     useEffect(async () => {
@@ -90,10 +92,25 @@ function Appsumo() {
                 if (res.status === 'success') {
                     // setActivationEmail(res.data.email);
 
-                    setUserInput((prev) => ({
-                        ...prev,
-                        email: res.data.email
-                    }));
+                    if(res.data?.email && res.data?.name && res.data?.domain){
+                        setTenantExists(true)
+                        setOpenTenantExistsModal(true)
+                        setLockDomain(true)
+                        setPlanName(res.data?.planName)
+                        setPasswordShown(true)
+                        setUserInput((prev) => ({
+                            ...prev,
+                            email: res.data?.email,
+                            fullname: res.data?.name,
+                            domain: res.data?.domain,
+                            password: 'Your old password remains valid'
+                        }));
+                    } else {
+                        setUserInput((prev) => ({
+                            ...prev,
+                            email: res.data.email
+                        }));
+                    }
 
 
                 } else {
@@ -111,8 +128,10 @@ function Appsumo() {
         const res = await httpPost(`auth/login`, { domain: userData.domain });
 
         if (res.status === 'success') {
+            dispatch(getSubscription(res?.data?.id));
+            // return null;
             if (res.data?.has_subdomain) {
-                window.location.href = `${getSubdomainOrUrl(domain)}/login?activation=1&email=${userData.email}`;
+                window.location.href = `${getSubdomainOrUrl(res.data?.domain)}/login?activation=1&email=${userData.email}`;
             } else {
                 window.localStorage.setItem('domain', res.data?.domain);
                 window.location.href = `/login?activation=1&email=${userData.email}`;
@@ -228,7 +247,7 @@ function Appsumo() {
                 ...prev,
                 [e.target.name]: e.target?.name === 'domain' ? e.target.value?.toLowerCase() : e.target.value,
             }));
-
+            
             if (e.target.name === 'email') {
                 localStorage.setItem('tenantEmail', e.target.value);
             } else if (e.target.name === 'domain') {
@@ -244,13 +263,6 @@ function Appsumo() {
             }
         }
     };
-    //
-    const handleRSChange = ({ value }, { name }) => {
-        setUserInput({
-            ...userInput,
-            [name]: value,
-        });
-    };
 
     const handleSubmit = async (event) => {
         event.preventDefault()
@@ -263,23 +275,21 @@ function Appsumo() {
             const data = {
                 domain: userInput.domain.toLowerCase(),
                 name: userInput.fullname,
-                // firstName: userInput.fullname.split(' ')[0],
-                // lastName: userInput.fullname.split(' ').length > 1? userInput.fullname.split(' ')[userInput.fullname.split(' ').length - 1] : " ",
                 email: userInput.email.toLowerCase(),
-                password: userInput.password
+                password: userInput.password,
+                tenantExists
             };
 
             const res = await httpPost('appsumo/activate', data);
-            // const res = {status: 'success'};
-            
+
             if (res.status === 'success') {
                 setUserData(res.data)
-                setShowModal(true)
+                tenantExists? setIsLoggedIn(true) : setShowModal(true)
                 setLoading(false);
                 setIsVerified(true);
             } else {
                 setLoading(false);
-                NotificationManager.error(res?.er?.message, 'An error occured', 4000);
+                NotificationManager.error(res?.er?.message, 'Activation failed, try again', 4000);
             }
         } else {
             // show all errors if exist
@@ -339,6 +349,7 @@ function Appsumo() {
                                                             name="fullname"
                                                             value={userInput.fullname}
                                                             onChange={(e) => handleChange(e)}
+                                                            disabled={tenantExists}
                                                             className="bg-light acx-form-control"
                                                             placeholder="Your Full Name"
                                                         />
@@ -377,10 +388,10 @@ function Appsumo() {
                                                     <Form.Control
                                                         type={passwordShown ? 'text' : 'password'}
                                                         autoComplete="off"
-                                                        required
                                                         className="bg-light acx-form-control"
                                                         placeholder="Password"
                                                         onChange={(e) => handleChange(e)}
+                                                        disabled={tenantExists}
                                                         name="password"
                                                         value={userInput.password}
                                                     />
@@ -413,10 +424,9 @@ function Appsumo() {
                                                         required
                                                         autoComplete="off"
                                                         placeholder="Domain"
-                                                        // disabled={lockDomain}
                                                         onChange={(e) => handleChange(e)}
+                                                        disabled={lockDomain}
                                                         name="domain"
-                                                        // onBlur={(e) => verifyDomain(e)}
                                                         value={userInput.domain}
                                                         className="bg-light acx-form-control"
                                                     />
@@ -456,7 +466,7 @@ function Appsumo() {
                                                         'Domain',
                                                         {
                                                             val: userInput.domain,
-                                                            domainAvail,
+                                                            domainAvail: domainAvail || tenantExists,
                                                         },
                                                         'domain_required|domain_min_length|domain_alpha_numeric|domain_available',
                                                     )
@@ -556,11 +566,19 @@ function Appsumo() {
                                             <Image src={ThankYou} alt="" />
                                         </div>
                                         <div className="Auth-header mb-2">
-                                            <h3 className="mb-3">Congratulations!</h3>
-                                            <p className="text-center">
-                                                Your account has been created successfully. <br />
-                                                An activation mail has been sent to <strong>{userInput?.email}</strong>
-                                            </p>
+                                            {
+                                                tenantExists? (
+                                                    <>
+                                                        <h3 className="mb-3 text-center">Subscription updated successfully!</h3>
+                                                        <p className="text-center">You're now being redirected to Login.</p>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <h3 className="mb-3 text-center">Congratulations!</h3>
+                                                        <p className="text-center">Your account has been created successfully. <br />You're now being redirected to Login.</p>
+                                                    </>
+                                                )                                                
+                                            }
                                         </div>
                                     </div>
                                 )
@@ -611,6 +629,39 @@ function Appsumo() {
                 </Row>
             </Container>
         </main>
+
+
+
+        <Modal
+            open={openTenantExistsModal}
+            onClose={() => {}}
+            aria-labelledby="contained-modal-title-vcenter"
+            size="lg"
+            centered
+        >
+            {/* <Modal.Body> */}
+            <div className="rounded-3">
+                <div className="text-center"> {/* DISPLAY CLOSE X BTN */}
+                    <div className=""> 
+                        <div className="bg-at-blue-light p-4 pb-2 rounded-top-04">
+                            <h5 className="">Account Already Exists</h5>
+                        </div>
+                        <p className="text-center px-5 py-4">
+                            An Account already exists with <strong>{userInput.email}</strong><br />
+                            Your subscription will be updated to <strong>{planName} License</strong>
+                        </p>
+                        <div className="mb-4">
+                            <Button as="button" onClick={() => setOpenTenantExistsModal(false)} variant="" className="bg-at-blue-light">
+                                Yes, Continue
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* </Modal.Body> */}
+        </Modal>
+
+
 
         {false &&
             <Modal
