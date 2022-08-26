@@ -528,7 +528,7 @@ function Navbar({ pageName, user }) {
                                         style={{ borderRadius: '.15rem' }}
                                     >
                                         <div style={{ padding: '.25rem .5rem' }}>
-                                            <HelpIcon />
+                                            <HelpIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} stroke="white" />
                                         </div>
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu>
