@@ -1,16 +1,18 @@
-/* eslint-disable */
+/* eslint-disable react/prop-types */
 import React from 'react';
+import { css } from '@emotion/css';
 import { useScrollDetect } from '../helpers/helpers';
 import Logo from '../../assets/imgF/logo.png';
 import AlphaLogo from '../../assets/imgF/alpha.png';
 import './helpnav.scss';
-import { Link } from 'react-router-dom';
-import ManImg from '../../assets/images/man.jpg';
+import { kbBrandKit } from '../../helper';
+// import { Link } from 'react-router-dom';
+// import ManImg from '../../assets/images/man.jpg';
 
 function HelpNavBar({ activeBG }) {
     const { shadow: scroll } = useScrollDetect();
     return (
-        <div className={`help-nav  ${scroll || activeBG ? 'onScroll' : ''}`}>
+        <div className={`help-nav  ${scroll || activeBG ? `onScroll ${css({ ...kbBrandKit({ bgCol: 0 }) })}` : ''}`}>
             <div className="logo">
                 <img src={AlphaLogo} alt="" />
                 <img src={Logo} alt="" />

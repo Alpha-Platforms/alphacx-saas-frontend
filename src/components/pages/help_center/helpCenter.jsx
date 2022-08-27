@@ -5,17 +5,21 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { NotificationManager } from 'react-notifications';
 import { Link } from 'react-router-dom';
 import MoonLoader from 'react-spinners/MoonLoader';
+import { css } from '@emotion/css';
+import { useDispatch } from 'react-redux';
 import { SearchIconNavbr, SendIcon } from '../../../assets/images/svgs';
 import HelpNavBar from '../../Layout/helpNavBar';
 import AccordionLink from './components/accordion/AccordionLink';
 import NavCard from './components/navCard/navCard';
 import './helpCenter.scss';
-import LogoBG from '../../../assets/imgF/logoBG.png';
+// import LogoBG from '../../../assets/imgF/logoBG.png';
 import { httpGetMainKB, invalidTenant } from '../../../helpers/httpMethods';
-// import { kbBrandKit } from '../../../helper';
+import { setKbBrandKit } from '../../../reduxstore/actions/tenantInfoActions';
+import { kbBrandKit } from '../../../helper';
 import NotFound from '../error/NotFound';
 
 function HelpCenter() {
+    const dispatch = useDispatch();
     const [categories, setCategories] = useState([]);
     const [shouldReturn404, setShouldReturn404] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -29,6 +33,7 @@ function HelpCenter() {
 
     const fetchCategories = async () => {
         const res = await httpGetMainKB('articles/categories');
+        dispatch(setKbBrandKit(res?.branding));
         setLoading(false);
         if (res === invalidTenant) {
             setShouldReturn404(true);
@@ -42,10 +47,7 @@ function HelpCenter() {
 
     const fetchPopularArticles = async () => {
         const res = await httpGetMainKB('articles/most-popular');
-        setLoading(false);
-        if (res === invalidTenant) {
-            setShouldReturn404(true);
-        } else if (res?.status === 'success') {
+        if (res?.status === 'success') {
             setPopularArticle(res?.data);
         } else {
             return NotificationManager.error(res?.er?.message, 'Error', 4000);
@@ -55,17 +57,18 @@ function HelpCenter() {
     useEffect(() => {
         fetchCategories();
         fetchPopularArticles();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return loading ? (
         <div className="cust-table-loader">
-            <MoonLoader loading={loading} color="#006298" size={30} />
+            <MoonLoader loading={loading} color={kbBrandKit({ bgCol: 0, default: true })?.backgroundColor} size={30} />
         </div>
     ) : !shouldReturn404 ? (
         <>
             <HelpNavBar />
             <div className="help-center">
-                <div className="search-container">
-                    <img src={LogoBG} alt="" className="logo-bg" />
+                <div className={`search-container ${css({ ...kbBrandKit({ bgCol: 0 }) })}`}>
+                    {/* <img src={LogoBG} alt="" className="logo-bg" /> */}
                     {/* COMMENT SEARCH FIELD */}
                     <h3>Knowledge Base</h3>
                     <div className="searchbar">
@@ -79,8 +82,8 @@ function HelpCenter() {
                                 placeholder="Search knowledge base"
                                 onChange={handleChange}
                             />
-                            <button type="button">
-                                <SendIcon size={30} />
+                            <button type="button" className={`${css({ ...kbBrandKit({ bgCol: 0 }) })}`}>
+                                <SendIcon size={30} fill={kbBrandKit({ bgCol: 0 })?.backgroundColor} />
                             </button>
                         </form>
                     </div>
@@ -113,7 +116,11 @@ function HelpCenter() {
                             <div>
                                 <Link
                                     to="/knowledge-base/categories"
-                                    className="show-all-cat btn py-2 px-3 bg-at-blue-light"
+                                    className={`show-all-cat btn py-2 px-3 bg-at-blue-light ${css({
+                                        ...kbBrandKit({ bgCol: 0 }),
+                                        color: 'white',
+                                        '&:hover': { ...kbBrandKit({ bgCol: 30 }), color: 'white' },
+                                    })}`}
                                 >
                                     View all categories
                                 </Link>
