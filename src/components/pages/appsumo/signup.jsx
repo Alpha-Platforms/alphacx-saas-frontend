@@ -134,7 +134,7 @@ function Appsumo() {
                 window.location.href = `${getSubdomainOrUrl(res.data?.domain)}/login?activation=1&email=${userData.email}`;
             } else {
                 window.localStorage.setItem('domain', res.data?.domain);
-                window.location.href = `/login?activation=1&email=${userData.email}`;
+                window.location.href = `/login?activation=1&email=${userData.email}&domain=${res?.data?.domain}`;
             }
         } else {
             window.location.href = '/';

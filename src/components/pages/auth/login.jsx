@@ -22,6 +22,7 @@ function Login() {
     const dispatch = useDispatch();
     const params = new URLSearchParams(location.search);
     const email = params.get('email');
+    const domainParam = params.get('domain');
     // eslint-disable-next-line radix
     // const activation = parseInt(params.get('activation'));
 
@@ -61,8 +62,11 @@ function Login() {
             if (getSubdomainOrUrl()) {
                 // handle netlify case later
                 /* only login domain when domain is valid */
-                if (subdomain !== 'app' && subdomain !== 'dev') {
-                    const res = await httpPost(`auth/login`, { domain: subdomain });
+                if (
+                    (subdomain !== 'app' && subdomain !== 'dev') ||
+                    ((subdomain === 'app' || subdomain === 'dev') && domainParam)
+                ) {
+                    const res = await httpPost(`auth/login`, { domain: domainParam || subdomain });
                     if (res?.status === 'success') {
                         setDomain(res?.data?.domain);
                         setTenantId(res?.data?.id);
