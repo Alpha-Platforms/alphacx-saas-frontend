@@ -1,26 +1,29 @@
-/* eslint-disable */
+/* eslint-disable react/prop-types */
+// @ts-nocheck
 import React, { useState } from 'react';
-
 import { Link } from 'react-router-dom';
+import { css } from '@emotion/css';
 import { SendIcon, CancelIconC } from '../../../../../assets/images/svgs';
 import './accordion.scss';
-import { slugify } from '../../../../../helper';
+import { slugify, kbBrandKit } from '../../../../../helper';
 
 function AccordionLink({ question, solution, category }) {
-    const [open, setOpen] = useState(false);
+    const [open /* , setOpen */] = useState(false);
 
-    const handleAction = () => {
-        console.log('actioned');
-        // setOpen(!open);
-    };
+    // const handleAction = () => {
+    //     // console.log('actioned');
+    //     // setOpen(!open);
+    // };
     return (
         <Link
             to={`/knowledge-base/${slugify(category || '')}/${slugify(question || '')}`}
-            className={`accordion ${open ? 'expand' : ''}`}
+            className={`accordion ${open ? 'expand' : ''} ${css({ '&:hover': { ...kbBrandKit({ col: 0 }) } })}`}
         >
-            <div className="question" onClick={handleAction}>
+            <div className="question" /* onClick={handleAction} */>
                 <p>{question}</p>
-                <button>{open ? <CancelIconC /> : <SendIcon size={30} />}</button>
+                <button type="button">
+                    {open ? <CancelIconC /> : <SendIcon size={30} fill={kbBrandKit({ bgCol: 0 })?.backgroundColor} />}
+                </button>
             </div>
             <div className="solution">
                 <p>{solution}</p>

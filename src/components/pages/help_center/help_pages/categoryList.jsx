@@ -1,44 +1,35 @@
-/* eslint-disable */
+/* eslint-disable consistent-return */
 // @ts-nocheck
-import React from 'react';
-import { useEffect, Fragment } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { useLocation, useParams, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { css } from '@emotion/css';
+import { useDispatch } from 'react-redux';
 import MoonLoader from 'react-spinners/MoonLoader';
-import { HelpNavIcon } from '../../../../assets/images/svgs';
-import { httpGetMain, httpGetMainKB, invalidTenant } from '../../../../helpers/httpMethods';
+import { httpGetMainKB, invalidTenant } from '../../../../helpers/httpMethods';
 import HelpNavBar from '../../../Layout/helpNavBar';
 import TopBar from '../components/topBar/topBar';
-import { faqs, navigation } from '../faq';
 import './articleList.scss';
-import { slugify } from '../../../../helper';
+import { slugify, uuid, kbBrandKit } from '../../../../helper';
 import { ReactComponent as Folder } from '../../../../assets/icons/Folder.svg';
 import NotFound from '../../error/NotFound';
+import { setKbBrandKit } from '../../../../reduxstore/actions/tenantInfoActions';
 
 function ArticleCategoryList() {
-    const query = useQuery();
-    const { category } = useParams();
-    const pageUrl = useLocation().pathname;
-    const info = navigation.filter((i) => pageUrl.includes(i.link));
+    const dispatch = useDispatch;
     const [categories, setCategories] = useState([]);
-    const [policyLoading, setPolicyLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     const [shouldReturn404, setShouldReturn404] = useState(false);
-
-    function useQuery() {
-        return new URLSearchParams(useLocation().search);
-    }
 
     const fetchCategories = async () => {
         const res = await httpGetMainKB('articles/categories');
-        setPolicyLoading(false);
+        dispatch(setKbBrandKit(res?.branding));
+        setLoading(false);
         if (res === invalidTenant) {
             setShouldReturn404(true);
-        } else if (res?.status == 'success') {
-            const categories = res?.data;
-            console.clear();
-            // console.log(categories);
-            setCategories(categories);
+        } else if (res?.status === 'success') {
+            const gottenCategories = res?.data;
+            setCategories(gottenCategories);
         } else {
             return NotificationManager.error(res?.er?.message, 'Error', 4000);
         }
@@ -46,48 +37,54 @@ function ArticleCategoryList() {
 
     useEffect(() => {
         fetchCategories();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return (
+    return loading ? (
+        <div className="cust-table-loader">
+            <MoonLoader loading color={kbBrandKit({ bgCol: 0, default: true })?.backgroundColor} size={30} />
+        </div>
+    ) : !shouldReturn404 ? (
         <>
-            {policyLoading ? (
-                <div className="cust-table-loader">
-                    <MoonLoader loading={policyLoading} color="#006298" size={30} />
-                </div>
-            ) : !shouldReturn404 ? (
-                <>
-                    <HelpNavBar activeBG />
-                    <TopBar />
+            <HelpNavBar activeBG />
+            <TopBar />
 
-                    <div className="article-list">
-                        <h3 className="nav-info mb-0 pb-3">Categories</h3>
-                        <div className="articles">
-                            {categories.map((item, i) => (
-                                <Link key={i} to={`/knowledge-base/${slugify(item?.name?.toLowerCase())}`}>
-                                    <div className="article-link category-link">
-                                        <p className="title">
-                                            <div>
-                                                <Folder />{' '}
-                                                <span className="d-inline-block ms-2">{item?.name}</span>
-                                            </div>
-                                            <span className="d-inline-block ms-2">{item?.folders[0]?.__meta__?.totalPublishedArticles} Article{Number(item?.folders[0]?.__meta__?.totalPublishedArticles) > 1 ? 's' : ''}</span>
-                                        </p>
-                                        {/* <p className="description">{item.solution}</p> */}
+            <div className="article-list">
+                <h3 className="nav-info mb-0 pb-3">Categories</h3>
+                <div className="articles">
+                    {categories.map((item) => (
+                        <Link
+                            key={uuid()}
+                            to={`/knowledge-base/${slugify(item?.name?.toLowerCase())}`}
+                            className={`${css({ '&:hover': { ...kbBrandKit({ col: 0 }) } })}`}
+                        >
+                            <div className="article-link category-link">
+                                <p className="title">
+                                    <div>
+                                        <Folder fill={kbBrandKit({ bgCol: 0 })?.backgroundColor} />{' '}
+                                        <span className="d-inline-block ms-2">{item?.name}</span>
                                     </div>
-                                </Link>
-                                // /${item.title   .toLowerCase()   .replaceAll(" ", "-")}?id=${item.id}
-                            ))}
-                            {!policyLoading && categories.length === 0 && <h4>No Articles Found.</h4>}
-                        </div>
-                        {/* <div className="sidebar">
+                                    <span className="d-inline-block ms-2">
+                                        {item?.folders[0]?.__meta__?.totalPublishedArticles} Article
+                                        {Number(item?.folders[0]?.__meta__?.totalPublishedArticles) > 1 ? 's' : ''}
+                                    </span>
+                                </p>
+                                {/* <p className="description">{item.solution}</p> */}
+                            </div>
+                        </Link>
+                        // /${item.title   .toLowerCase()   .replaceAll(" ", "-")}?id=${item.id}
+                    ))}
+                    {!loading && categories.length === 0 && <h4>No Articles Found.</h4>}
+                </div>
+                {/* <div className="sidebar">
                                     <p className="header">Need Support?</p>
                                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                                     <button>Contact Support</button>
                                 </div> */}
-                    </div>
-                </>
-            ) : <NotFound showCta={false} />}
+            </div>
         </>
+    ) : (
+        <NotFound showCta={false} />
     );
 }
 

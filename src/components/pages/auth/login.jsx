@@ -15,13 +15,14 @@ import Symbol1 from '../../../assets/imgF/symbolAuth.png';
 import Symbol2 from '../../../assets/imgF/symbolAuth2.png';
 import { httpPost, httpPostMain } from '../../../helpers/httpMethods';
 import { getSubscription } from '../../../reduxstore/actions/subscriptionAction';
-import { getTenantInfo, setTenantInfo } from '../../../reduxstore/actions/tenantInfoActions';
+import { setTenantInfo } from '../../../reduxstore/actions/tenantInfoActions';
 
 function Login() {
     const location = useLocation();
     const dispatch = useDispatch();
     const params = new URLSearchParams(location.search);
     const email = params.get('email');
+    const domainParam = params.get('domain');
     // eslint-disable-next-line radix
     // const activation = parseInt(params.get('activation'));
 
@@ -61,14 +62,22 @@ function Login() {
             if (getSubdomainOrUrl()) {
                 // handle netlify case later
                 /* only login domain when domain is valid */
-                if (subdomain !== 'app' && subdomain !== 'dev') {
-                    const res = await httpPost(`auth/login`, { domain: subdomain });
+                if (
+                    (subdomain !== 'app' && subdomain !== 'dev') ||
+                    ((subdomain === 'app' || subdomain === 'dev') && domainParam) ||
+                    ((subdomain === 'app' || subdomain === 'dev') && domain)
+                ) {
+                    const res = await httpPost(`auth/login`, {
+                        domain:
+                            domainParam ||
+                            ((subdomain === 'app' || subdomain === 'dev') && domain ? domain : subdomain),
+                    });
                     if (res?.status === 'success') {
                         setDomain(res?.data?.domain);
                         setTenantId(res?.data?.id);
                         setHasSubdomain(res.data?.has_subdomain);
                         dispatch(getSubscription(res?.data?.id));
-                        dispatch(getTenantInfo(subdomain));
+                        dispatch(setTenantInfo(res?.data?.tenantInfo));
                     } else {
                         NotificationManager.error('', 'Invalid Domain Name', 4000);
                     }
@@ -148,7 +157,7 @@ function Login() {
             if (res.status === 'success') {
                 setTenantId(res?.data?.id);
                 dispatch(getSubscription(res?.data?.id));
-                dispatch(getTenantInfo(domain));
+                dispatch(setTenantInfo(res?.data?.tenantInfo));
                 setLoading(false);
                 setHasSubdomain(res.data?.has_subdomain);
 
