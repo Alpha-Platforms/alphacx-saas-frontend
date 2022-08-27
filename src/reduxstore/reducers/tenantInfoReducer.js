@@ -5,6 +5,9 @@ const initialState = {
     tenantInfo: null,
     tenantInfoLoading: true,
     tenantInfoLoaded: false,
+    kbBrandKit: null,
+    kbBrandKitLoading: false,
+    kbBrandKitLoaded: false,
 };
 
 const tenantInfoReducer = (state = initialState, action) => {
@@ -15,6 +18,13 @@ const tenantInfoReducer = (state = initialState, action) => {
                 tenantInfo: action.payload,
                 tenantInfoLoading: false,
                 tenantInfoLoaded: true,
+            };
+        case types.GET_KB_BRAND_KIT:
+            return {
+                ...state,
+                kbBrandKit: action.payload,
+                kbBrandKitLoading: false,
+                kbBrandKitLoaded: true,
             };
         default:
             return state;
