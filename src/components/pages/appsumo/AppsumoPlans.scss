@@ -20,15 +20,15 @@
 }
 
 .appsumo__card {
-    border-radius: 12px;
-    -webkit-border-radius: 12px;
-    -moz-border-radius: 12px;
-    -ms-border-radius: 12px;
-    -o-border-radius: 12px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
     padding: 60px 50px;
     
-    background-color: #D0EAFF;
-    color: #004882;
+    // background-color: #D0EAFF;
+    // color: #004882;
 
     & > h4:first-child {
         font-size: 25px;
@@ -57,8 +57,8 @@
         -moz-border-radius: 6px;
         -ms-border-radius: 6px;
         -o-border-radius: 6px;
-        background-color: #004882;
-        color: #D0EAFF;
+        // background-color: #004882;
+        // color: #FFF;
 }
 
     & > .appsumo__card--features {
@@ -76,14 +76,4 @@
          }
     }
 
-}
-
-.appsumo__card:nth-child(even) {
-    background: #0E0E2C;
-    color: #FFFFFF;
-
-    & > .appsumo__card--cta {
-        background-color: #FFFFFF;
-        color: #0E0E2C;
-    }
 }

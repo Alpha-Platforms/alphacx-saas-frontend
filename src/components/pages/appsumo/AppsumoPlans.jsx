@@ -5,7 +5,9 @@ import { connect } from 'react-redux';
 import { httpGet } from '../../../helpers/httpMethods';
 import { TickeCircle } from '../../../assets/images/svgs';
 import './AppsumoPlans.scss';
+import { brandKit } from '../../../helper';
 import FormCheckIcon from '../../../assets/icons/form-check.svg';
+import { css } from '@emotion/css';
 
 function AppsumoPlans({ currentPlan }) {
     const [plans, setPlans] = useState([{ name: '' }]);
@@ -75,9 +77,9 @@ function AppsumoPlans({ currentPlan }) {
 
     return (
         <div className="appsumo-plans-page mt-5">
-            <div className="row mt-4  mx-5 flex justify-content-center">
-                <div className="border col-5 p-0">
-                    <p className="bg-at-blue-light fw-bold p-3">Feature Included</p>
+            <div className="row mt-4  mx-5 flex justify-content-center gap-3">
+                <div className="border col-5 p-0 rounded-3">
+                    <p className="fw-bold p-3 border-bottom rounded-top-04 bg-light text-dark">Feature Included</p>
                     <ul className="appsumo__card--features list-unstyled p-3">
                         {FeaturesIncluded.map((item, idx) => (
                             <li key={idx} className="mb-2">
@@ -94,8 +96,8 @@ function AppsumoPlans({ currentPlan }) {
                     </ul>
                 </div>
 
-                <div className="border col-5 p-0">
-                    <p className="bg-at-blue-lighter fw-bold p-3">Deal Terms</p>
+                <div className="border col-5 p-0 rounded-3">
+                    <p className="fw-bold p-3 border-bottom rounded-top-04 bg-light text-dark">Deal Terms</p>
                     <ul className="appsumo__card--features list-unstyled p-3">
                         {dealTerms.map((item, idx) => (
                             <li key={idx} className="mb-2">
@@ -116,7 +118,13 @@ function AppsumoPlans({ currentPlan }) {
             <div className="appsumo__section--two">
                 {plans.map((plan, index) => {
                     return (
-                        <div className="appsumo__card" key={index}>
+                        <div
+                            className={`appsumo__card ${index !== 1 ? 'bg-transparent border' : ''} ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: index === 1 ? 'white' : '',
+                            })}`}
+                            key={index}
+                        >
                             <div className="text-center">
                                 <h5>{plan.name}</h5>
                                 <h5 className="fw-bold">${plan.yearly_amount} </h5>
@@ -127,7 +135,7 @@ function AppsumoPlans({ currentPlan }) {
                                     return (
                                         <li key={idx}>
                                             <span>
-                                                <TickeCircle color={index % 2 === 0 ? '#004882' : '#ffffff'} />
+                                                <TickeCircle color={index % 2 === 0 ? '#3d3d3d' : '#ffffff'} />
                                             </span>
                                             <span>{idx === 2 ? item[index] : item}</span>
                                         </li>
@@ -137,7 +145,13 @@ function AppsumoPlans({ currentPlan }) {
                             <a
                                 href={`https://appsumo.com/account/redemption/${productUrl}`}
                                 target="_blank"
-                                className={`appsumo__card--cta btn ${plan.name === currentPlan ? 'disabled' : ''} `}
+                                className={`appsumo__card--cta btn ${index === 1 ? 'border-white' : ''} ${plan.name === currentPlan ? 'disabled' : ''} ${css(
+                                    {
+                                        ...brandKit({ bgCol: 0 }),
+                                        color: 'white',
+                                    },
+                                )}
+                                `}
                                 type="button"
                                 rel="noreferrer"
                             >
