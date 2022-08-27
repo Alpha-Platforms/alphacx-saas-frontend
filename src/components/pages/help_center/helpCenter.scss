@@ -79,20 +79,20 @@ iframe {
       width: 100%;
       text-align: center;
       
-      &::after {
-        content: "";
-        position: absolute;
-        bottom: -90px;
-        width: 70%;
-        height: 1px;
-        background: #0000001a;
-        left: 50%;
-        transform: translateX(-50%);
-        -webkit-transform: translateX(-50%);
-        -moz-transform: translateX(-50%);
-        -ms-transform: translateX(-50%);
-        -o-transform: translateX(-50%);
-}
+//       &::after {
+//         content: "";
+//         position: absolute;
+//         bottom: -90px;
+//         width: 70%;
+//         height: 1px;
+//         background: #0000001a;
+//         left: 50%;
+//         transform: translateX(-50%);
+//         -webkit-transform: translateX(-50%);
+//         -moz-transform: translateX(-50%);
+//         -ms-transform: translateX(-50%);
+//         -o-transform: translateX(-50%);
+// }
     }
 
     .popular-questions {
