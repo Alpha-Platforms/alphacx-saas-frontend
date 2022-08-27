@@ -64,9 +64,14 @@ function Login() {
                 /* only login domain when domain is valid */
                 if (
                     (subdomain !== 'app' && subdomain !== 'dev') ||
-                    ((subdomain === 'app' || subdomain === 'dev') && domainParam)
+                    ((subdomain === 'app' || subdomain === 'dev') && domainParam) ||
+                    ((subdomain === 'app' || subdomain === 'dev') && domain)
                 ) {
-                    const res = await httpPost(`auth/login`, { domain: domainParam || subdomain });
+                    const res = await httpPost(`auth/login`, {
+                        domain:
+                            domainParam ||
+                            ((subdomain === 'app' || subdomain === 'dev') && domain ? domain : subdomain),
+                    });
                     if (res?.status === 'success') {
                         setDomain(res?.data?.domain);
                         setTenantId(res?.data?.id);
