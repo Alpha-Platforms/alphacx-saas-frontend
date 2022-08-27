@@ -2,8 +2,6 @@
 import React from 'react';
 import { css } from '@emotion/css';
 import { useScrollDetect } from '../helpers/helpers';
-import Logo from '../../assets/imgF/logo.png';
-import AlphaLogo from '../../assets/imgF/alpha.png';
 import './helpnav.scss';
 import { kbBrandKit } from '../../helper';
 // import { Link } from 'react-router-dom';
@@ -14,8 +12,7 @@ function HelpNavBar({ activeBG }) {
     return (
         <div className={`help-nav  ${scroll || activeBG ? `onScroll ${css({ ...kbBrandKit({ bgCol: 0 }) })}` : ''}`}>
             <div className="logo">
-                <img src={AlphaLogo} alt="" />
-                <img src={Logo} alt="" />
+                <img src={kbBrandKit(['logo'])[0]} alt="" />
             </div>
             {/* COMMENTED TOP LINKS */}
             {/* <div className="nav-links">

@@ -18,13 +18,13 @@ import { setKbBrandKit } from '../../../../reduxstore/actions/tenantInfoActions'
 function ArticleCategoryList() {
     const dispatch = useDispatch;
     const [categories, setCategories] = useState([]);
-    const [policyLoading, setPolicyLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     const [shouldReturn404, setShouldReturn404] = useState(false);
 
     const fetchCategories = async () => {
         const res = await httpGetMainKB('articles/categories');
         dispatch(setKbBrandKit(res?.branding));
-        setPolicyLoading(false);
+        setLoading(false);
         if (res === invalidTenant) {
             setShouldReturn404(true);
         } else if (res?.status === 'success') {
@@ -40,13 +40,9 @@ function ArticleCategoryList() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return policyLoading ? (
+    return loading ? (
         <div className="cust-table-loader">
-            <MoonLoader
-                loading={policyLoading}
-                color={kbBrandKit({ bgCol: 0, default: true })?.backgroundColor}
-                size={30}
-            />
+            <MoonLoader loading color={kbBrandKit({ bgCol: 0, default: true })?.backgroundColor} size={30} />
         </div>
     ) : !shouldReturn404 ? (
         <>
@@ -78,7 +74,7 @@ function ArticleCategoryList() {
                         </Link>
                         // /${item.title   .toLowerCase()   .replaceAll(" ", "-")}?id=${item.id}
                     ))}
-                    {!policyLoading && categories.length === 0 && <h4>No Articles Found.</h4>}
+                    {!loading && categories.length === 0 && <h4>No Articles Found.</h4>}
                 </div>
                 {/* <div className="sidebar">
                                     <p className="header">Need Support?</p>
