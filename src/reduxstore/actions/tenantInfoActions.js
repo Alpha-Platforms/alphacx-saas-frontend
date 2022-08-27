@@ -28,3 +28,12 @@ export const setTenantInfo = (newTenantInfo, forceTenantInfo = false) => {
         };
     return { type: 'INVALID' };
 };
+
+export const setKbBrandKit = (kbBrandKit) => {
+    if (kbBrandKit)
+        return {
+            type: types.GET_KB_BRAND_KIT,
+            payload: kbBrandKit,
+        };
+    return { type: 'INVALID' };
+};

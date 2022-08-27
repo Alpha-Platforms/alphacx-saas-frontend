@@ -2,7 +2,7 @@
 /* eslint-disable no-shadow */
 // @ts-nocheck
 import React, { useEffect } from 'react';
-import { Route, Switch, BrowserRouter } from 'react-router-dom';
+import { Route, Switch, BrowserRouter, useLocation } from 'react-router-dom';
 import { NotificationContainer } from 'react-notifications';
 import { Provider, connect } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -135,15 +135,34 @@ const SiteRouter = connect(mapStateToProps, {
     }) => {
         const isOnline = useNavigatorOnLine();
 
+        const location = useLocation();
+
         const siteUser = JSON.parse(localStorage.getItem('user'));
 
         useEffect(() => {
             siteUser && loadUser(siteUser);
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [siteUser]);
-
         useEffect(() => {
-            if (isUserAuthenticated) {
+            /* these should not be called in routes like onboarding, kb, etc and when the user is not authenticated */
+            if (
+                isUserAuthenticated &&
+                ![
+                    '/knowledge-base',
+                    '/login',
+                    '/sign-up',
+                    '/forgot-password',
+                    '/reset-password',
+                    '/feedback',
+                    '/account-verified',
+                    '/twitter-auth',
+                    '/customer-portal',
+                    '/no-customers',
+                    '/instagram',
+                    '/integrations',
+                    '/appsumo',
+                ].some((item) => location.pathname.startsWith(item))
+            ) {
                 getPriorities();
                 getCategories();
                 getStatuses();

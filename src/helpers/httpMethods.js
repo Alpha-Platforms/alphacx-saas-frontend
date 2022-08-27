@@ -242,7 +242,6 @@ export const httpGetMainKB = async (url) => {
                 'Content-Type': 'application/json',
             },
         });
-        console.log('From try block');
         return res.data;
     } catch (error) {
         if (error.response.data.error?.substr(-14) === 'does not exist') {
