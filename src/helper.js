@@ -506,6 +506,44 @@ export const brandKit = (options) => {
     }
     return null;
 };
+
+/**
+ * Get all branding information from the store.
+ * +ve lightens or -ve darkens.
+ *
+ * @param {object | array} options obj = { col: (number), bgCol: number, kb: boolean } arr = ['icon', 'logo']
+ *
+ * @returns {object} object arguement ? { color: string, backgroundColor: string }
+ * @returns {array} array argument ? ['icon', 'logo']
+ */
+export const kbBrandKit = (options) => {
+    const storeState = store.getState();
+    const defaultColor = '#363738';
+    const branding = storeState?.tenantInfo?.kbBrandKit;
+    const kbHeroColor = branding?.kbHeroColor || defaultColor;
+    const appLogo = branding?.appLogo || AlpacxLogoMain;
+    if (Array.isArray(options)) {
+        return options?.map((item) => {
+            if (item === 'logo') return appLogo;
+            if (item === 'default') return AlpacxLogoMain;
+            return '';
+        });
+    }
+    if (isValidObject(options)) {
+        const colorToUse = options?.default ? defaultColor : kbHeroColor;
+        const validColor = isHexColor(colorToUse) ? colorToUse : defaultColor;
+        const style = {};
+        if (options.hasOwnProperty('col')) {
+            style.color = lightenColor(validColor, typeof options?.col === 'number' ? options?.col : 0);
+        }
+        if (options.hasOwnProperty('bgCol')) {
+            style.backgroundColor = lightenColor(validColor, typeof options?.bgCol === 'number' ? options.bgCol : 0);
+        }
+        return style;
+    }
+    return null;
+};
+
 export const getSubdomainOrUrl = (domain = '') => {
     const hostnameParts = window.location.hostname.split('.');
     if (domain) {

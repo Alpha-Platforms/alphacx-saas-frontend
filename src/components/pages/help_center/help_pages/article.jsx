@@ -4,14 +4,16 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, useParams } from 'react-router-dom';
 import MoonLoader from 'react-spinners/MoonLoader';
+import { NotificationManager } from 'react-notifications';
 import HelpNavBar from '../../../Layout/helpNavBar';
 import TopBar from '../components/topBar/topBar';
 import Approve from '../../../../assets/icons/approve.png';
 import Reject from '../../../../assets/icons/reject.png';
 import { httpGetMainKB, invalidTenant } from '../../../../helpers/httpMethods';
-import { uuid } from '../../../../helper';
+import { uuid, kbBrandKit } from '../../../../helper';
 import NotFound from '../../error/NotFound';
 import { addHelpfulArticle } from '../../../../reduxstore/actions/kbAction';
+import { setKbBrandKit } from '../../../../reduxstore/actions/tenantInfoActions';
 import './article.scss';
 
 function Article() {
@@ -24,7 +26,7 @@ function Article() {
     const query = useQuery();
     // const file_name = "blog-one.md";
 
-    const [policyLoading, setPolicyLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     const [articleContent, setArticleContent] = useState({});
     const [shouldReturn404, setShouldReturn404] = useState(false);
     const helpfulArticles = useSelector((state) => state.kb?.helpfulArticles);
@@ -43,7 +45,8 @@ function Article() {
 
     const fetchArticleDetails = async () => {
         const res = await httpGetMainKB(`article?slug=${slug}`);
-        setPolicyLoading(false);
+        dispatch(setKbBrandKit(res?.branding));
+        setLoading(false);
         if (res === invalidTenant) {
             setShouldReturn404(true);
         } else if (res?.status === 'success' && res?.data?.isPublished) {
@@ -60,7 +63,7 @@ function Article() {
     }, []);
 
     useEffect(() => {
-        if (!policyLoading) {
+        if (!loading) {
             if (!headings) {
                 setTimeout(() => {
                     const h1s = window.document.querySelectorAll('#postBody h1');
@@ -84,7 +87,7 @@ function Article() {
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [policyLoading]);
+    }, [loading]);
 
     // const handleHeadingClick = (heading) => {
     //     window.scrollTo(0, (heading?.distanceToTop || 150) - 150);
@@ -92,11 +95,12 @@ function Article() {
 
     const handleHelpful = () => {
         dispatch(addHelpfulArticle(slug));
+        NotificationManager.success('', 'Thanks for your feedback.', 3000);
     };
 
-    return policyLoading ? (
+    return loading ? (
         <div className="cust-table-loader">
-            <MoonLoader loading={policyLoading} color="#006298" size={30} />
+            <MoonLoader loading color={kbBrandKit({ bgCol: 0, default: true })?.backgroundColor} size={30} />
         </div>
     ) : !shouldReturn404 ? (
         <>
