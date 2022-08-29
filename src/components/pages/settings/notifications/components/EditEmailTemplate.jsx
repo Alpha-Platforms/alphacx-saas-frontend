@@ -59,7 +59,7 @@ function EditEmailTemplate({
     }, [id]);
 
     useEffect(() => {
-        getPlaceholders(currentEmailTemplate.type);
+        getPlaceholders(currentEmailTemplate?.type);
     }, [currentEmailTemplate])
     
 
@@ -195,7 +195,7 @@ function EditEmailTemplate({
                             <div className="form-group mt-3 mb-4">
                                 <label className="f-14 mb-1">Available Placeholders</label>
                                 <div className="available-placeholders">
-                                    {specificPlaceholders.map((item, i) => (
+                                    {specificPlaceholders?.map((item, i) => (
                                         <p key={i} onClick={() => insertPlaceholder(i)}>
                                             {item.title}
                                         </p>
