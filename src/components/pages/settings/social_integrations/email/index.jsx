@@ -24,6 +24,7 @@ function EmailSettings({ configs, isConfigsLoaded, tenantInfo }) {
     const { action } = useParams();
     const [pageAction, setPageAction] = useState(action);
     const [hasEmailConfig, setHasEmailConfig] = useState(false);
+    const [showOnOffToggle, setShowOnOffToggle] = useState(false)
 
     const dispatch = useDispatch();
 
@@ -82,10 +83,12 @@ function EmailSettings({ configs, isConfigsLoaded, tenantInfo }) {
     ];
 
     useEffect(() => {
-        if (isConfigsLoaded) {
+        if (isConfigsLoaded) {            
             if (!configs?.email_config?.email && !configs?.email_config?.host && !configs?.email_config?.port) {
                 history.push('/settings/integrations/email/email-form');
             }
+
+            if(configs?.email_config?.email ) setShowOnOffToggle(true)
         }
     }, [isConfigsLoaded]);
 
@@ -150,7 +153,7 @@ function EmailSettings({ configs, isConfigsLoaded, tenantInfo }) {
                     <h5 className="mt-3 mb-4 fs-6 fw-bold">Email Settings</h5>
                 </div>
 
-                <div className="form-check form-switch d-flex justify-content-end mb-2">
+                {showOnOffToggle && <div className="form-check form-switch d-flex justify-content-end mb-2">
                     <label htmlFor="" className="fw-bold">Email to Ticket</label>
                     <input
                         className={`form-check-input form-check-input-lg ms-1 ${css({
@@ -161,7 +164,7 @@ function EmailSettings({ configs, isConfigsLoaded, tenantInfo }) {
                         readOnly
                         type="checkbox"
                     />
-                </div>
+                </div>}
 
 
 
