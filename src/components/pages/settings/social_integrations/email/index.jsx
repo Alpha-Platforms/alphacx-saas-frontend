@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 import { useParams, Link, useHistory } from 'react-router-dom';
 
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import MaterialTable from 'material-table';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import { Dropdown } from 'react-bootstrap';
@@ -12,18 +12,23 @@ import tableIcons from '../../../../../assets/materialicons/tableIcons';
 import NewSupportEmail from './components/NewSupportEmail';
 import { ReactComponent as DotSvg } from '../../../../../assets/icons/dots.svg';
 import { ReactComponent as EditIcon } from '../../../../../assets/icons/Edit.svg';
-
+import { setTenantInfo } from '../../../../../reduxstore/actions/tenantInfoActions';
 import './settingsEmail.scss';
+import { brandKit, wordCapitalize } from 'helper';
+import Swal from 'sweetalert2';
+import { css } from '@emotion/css';
+import { httpPatch } from 'helpers/httpMethods';
 
-function EmailSettings({ configs, isConfigsLoaded }) {
+function EmailSettings({ configs, isConfigsLoaded, tenantInfo }) {
     const history = useHistory();
     const { action } = useParams();
     const [pageAction, setPageAction] = useState(action);
+    const [hasEmailConfig, setHasEmailConfig] = useState(false);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setPageAction(action);
-        console.clear();
-        // console.log(action);
     }, [action]);
 
     const tableTheme = createTheme({
@@ -81,10 +86,45 @@ function EmailSettings({ configs, isConfigsLoaded }) {
             if (!configs?.email_config?.email && !configs?.email_config?.host && !configs?.email_config?.port) {
                 history.push('/settings/integrations/email/email-form');
             }
-
-            // console.log('EMAIL CONFIGS => ', configs);
         }
     }, [isConfigsLoaded]);
+
+    useEffect(() => {
+        setHasEmailConfig(tenantInfo?.tenantInfo?.has_email_config);
+    }, [tenantInfo]);
+
+    const patchHasEmailConfig = async () => {
+        const res = await httpPatch(`auth/tenant-info/${tenantInfo?.tenantInfo?.domain}`, {hasEmailConfig: !hasEmailConfig});
+        if (res.status === 'success') {
+            dispatch(setTenantInfo(res?.data));
+        }
+    }
+
+    async function handleActiveChange () {
+        Swal.fire({
+            title: '',
+            text: `Do you want to turn ${hasEmailConfig? 'off' : 'on'} Email to Ticket?`,
+            showCancelButton: true,
+            confirmButtonColor: '#006298',
+            cancelButtonColor: '#ffffff',
+            cancelButtonText: 'Cancel',
+            confirmButtonText: 'Yes',
+            customClass: {
+                cancelButton: 'user-activation-cancel-btn',
+                confirmButton: 'user-activation-confirm-btn',
+                container: 'user-activation-container',
+                popup: 'user-activation-popup',
+                validationMessage: 'user-activation-validation-msg',
+                htmlContainer: 'user-activation-html-container',
+            },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                patchHasEmailConfig()
+                setHasEmailConfig(!hasEmailConfig);
+                
+            }
+        });
+    }
 
     return pageAction === 'email-form' ? (
         <NewSupportEmail />
@@ -110,20 +150,21 @@ function EmailSettings({ configs, isConfigsLoaded }) {
                     <h5 className="mt-3 mb-4 fs-6 fw-bold">Email Settings</h5>
                 </div>
 
-                {/* <div className="text-center empty-state">
-                        <div className="my-5 mb-4">
-                          <EmailEmptySvg />
-                        </div>
+                <div className="form-check form-switch d-flex justify-content-end mb-2">
+                    <label htmlFor="" className="fw-bold">Email to Ticket</label>
+                    <input
+                        className={`form-check-input form-check-input-lg ms-1 ${css({
+                            '&:checked': { ...brandKit({ bgCol: 0 }) },
+                        })}`}
+                        checked={hasEmailConfig}
+                        onChange={handleActiveChange}
+                        readOnly
+                        type="checkbox"
+                    />
+                </div>
 
-                        <p className="text-center">
-                            You currently have no Email record at
-                            <br/>
-                            the moment
-                        </p>
-                        <Link className="btn btn-sm btn-primary" to="/settings/email/email-form">
-                            New support email
-                        </Link>
-                    </div> */}
+
+
                 <div id="result" />
 
                 <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
@@ -185,6 +226,7 @@ function EmailSettings({ configs, isConfigsLoaded }) {
 const mapStateToProps = (state, ownProps) => ({
     configs: state.config.configs,
     isConfigsLoaded: state.config.isConfigsLoaded,
+    tenantInfo: state.tenantInfo,
 });
 
 export default connect(mapStateToProps, null)(EmailSettings);
