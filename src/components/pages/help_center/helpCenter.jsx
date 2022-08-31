@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import MoonLoader from 'react-spinners/MoonLoader';
 import { css } from '@emotion/css';
 import { useDispatch } from 'react-redux';
-import { SearchIconNavbr, SendIcon } from '../../../assets/images/svgs';
 import HelpNavBar from '../../Layout/helpNavBar';
 import AccordionLink from './components/accordion/AccordionLink';
 import NavCard from './components/navCard/navCard';
@@ -26,11 +25,6 @@ function HelpCenter() {
     const [loading, setLoading] = useState(true);
     const [popularArticle, setPopularArticle] = useState([]);
     const icons = ['work', 'account', 'subscription', 'users', 'settings', 'document'];
-    const [search, setSearch] = useState('');
-
-    const handleChange = (e) => {
-        setSearch(e.value);
-    };
 
     const fetchCategories = async () => {
         const res = await httpGetMainKB('articles/categories');

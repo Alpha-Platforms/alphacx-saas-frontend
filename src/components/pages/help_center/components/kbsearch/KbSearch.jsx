@@ -126,9 +126,9 @@ function KbSearch({ isHome }) {
                                         <Link
                                             key={uuid()}
                                             onClick={closeDropdown}
-                                            to={`/knowledge-base/${slugify(item?.category || 'general')}/${slugify(
-                                                item?.title,
-                                            )}`}
+                                            to={`/knowledge-base/${slugify(
+                                                item?.folders?.[0]?.category || 'general',
+                                            )}/${slugify(item?.title)}`}
                                         >
                                             {item?.title}
                                         </Link>
