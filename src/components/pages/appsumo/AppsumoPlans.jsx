@@ -1,13 +1,13 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-array-index-key */
 import React, { useEffect, useState } from 'react';
+import { css } from '@emotion/css';
 import { connect } from 'react-redux';
 import { httpGet } from '../../../helpers/httpMethods';
 import { TickeCircle } from '../../../assets/images/svgs';
 import './AppsumoPlans.scss';
 import { brandKit } from '../../../helper';
 import FormCheckIcon from '../../../assets/icons/form-check.svg';
-import { css } from '@emotion/css';
 
 function AppsumoPlans({ currentPlan }) {
     const [plans, setPlans] = useState([{ name: '' }]);
@@ -145,12 +145,12 @@ function AppsumoPlans({ currentPlan }) {
                             <a
                                 href={`https://appsumo.com/account/redemption/${productUrl}`}
                                 target="_blank"
-                                className={`appsumo__card--cta btn ${index === 1 ? 'border-white' : ''} ${plan.name === currentPlan ? 'disabled' : ''} ${css(
-                                    {
-                                        ...brandKit({ bgCol: 0 }),
-                                        color: 'white',
-                                    },
-                                )}
+                                className={`appsumo__card--cta btn ${index === 1 ? 'border-white' : ''} ${
+                                    plan.name === currentPlan ? 'disabled' : ''
+                                } ${css({
+                                    ...brandKit({ bgCol: 0 }),
+                                    color: 'white',
+                                })}
                                 `}
                                 type="button"
                                 rel="noreferrer"

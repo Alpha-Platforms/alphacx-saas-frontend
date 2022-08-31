@@ -81,7 +81,7 @@ function NewCategoryTab({ categories, meta, getCategories, getPaginatedCategorie
         <div className="ticket-cat-tab">
             {(policyLoading || isCatLoading) && (
                 <div className={`cust-table-loader ${policyLoading && 'add-loader-opacity'}`}>
-                    <MoonLoader loading={policyLoading} color="#006298" size={30} />
+                    <MoonLoader loading={policyLoading} color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             )}
             <div className="w-75">

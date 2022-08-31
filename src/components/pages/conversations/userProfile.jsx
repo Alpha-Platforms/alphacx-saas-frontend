@@ -37,7 +37,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
 
     useEffect(() => {
         // getTickets();
-        sortMsges(ticket[0].history);
+        sortMsges(ticket?.history);
     }, []);
 
     function CircleIcon(props) {
@@ -62,32 +62,32 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
             <div className="user-profile-conversation-page">
                 <div className="userProfileTwoColFormat">
                     <div className="userProfilePicCon">
-                        {ticket[0]?.customer?.avatar ? (
-                            <img src={ticket[0]?.customer?.avatar} alt="" />
+                        {ticket?.customer?.avatar ? (
+                            <img src={ticket?.customer?.avatar} alt="" />
                         ) : (
                             // <img src={userImg} alt="" />
                             <div className={`userProfilePicConNoImgj ${css({ ...brandKit({ bgCol: 0 }) })}`}>
                                 <p className="text-capitalize" style={{ fontSize: '30px!important' }}>
                                     {InitialsFromString(
                                         `${
-                                            ticket[0]?.customer?.firstname == 'default' ||
-                                            !ticket[0]?.customer?.firstname
+                                            ticket?.customer?.firstname == 'default' ||
+                                            !ticket?.customer?.firstname
                                                 ? ''
-                                                : ticket[0]?.customer?.firstname
+                                                : ticket?.customer?.firstname
                                         }`,
                                         `${
-                                            ticket[0]?.customer?.lastname == 'default' || !ticket[0]?.customer?.lastname
+                                            ticket?.customer?.lastname == 'default' || !ticket?.customer?.lastname
                                                 ? ''
-                                                : ticket[0]?.customer?.lastname
+                                                : ticket?.customer?.lastname
                                         }`,
                                     )}
                                 </p>
                             </div>
                         )}
                         <h6 className="mb-0 text-capitalize mt-2 pb-0">
-                            <Link to={`/customers/${ticket[0]?.customer.id}`} className="text-at-blue">
-                                {`${capitalize(ticket[0]?.customer?.firstname || '')} 
-                  ${UserInfo?.lastname == 'default' ? '' : capitalize(ticket[0]?.customer?.lastname || '')}`}
+                            <Link to={`/customers/${ticket?.customer.id}`} className="text-at-blue">
+                                {`${capitalize(ticket?.customer?.firstname || '')} 
+                  ${UserInfo?.lastname == 'default' ? '' : capitalize(ticket?.customer?.lastname || '')}`}
                             </Link>
                         </h6>
                         {isTicketDetails && (
@@ -111,8 +111,8 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                     </p>
 
                                     <p style={{ textTransform: 'uppercase' }}>
-                                        <Link to={`tickets/${ticket[0]?.id}`} className="text-at-blue">
-                                            #{ticket[0]?.ticket_id}
+                                        <Link to={`tickets/${ticket?.id}`} className="text-at-blue">
+                                            #{ticket?.ticket_id}
                                         </Link>
                                     </p>
                                 </div>
@@ -126,17 +126,17 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                     }}
                                 >
                                     <div className="psvgIcon__" style={{ marginRight: 17 }}>
-                                        {ticket[0]?.assignee == null ? (
+                                        {ticket?.assignee == null ? (
                                             <div className="avatar avatar-sm rounded-circle overflow-hidden acx-bg-secondary d-flex justify-content-center align-items-center">
                                                 <p className="fs-6 mb-0 text-white">
                                                     <i className="bi-person-x" />
                                                 </p>
                                             </div>
-                                        ) : ticket[0]?.assignee?.avatar ? (
+                                        ) : ticket?.assignee?.avatar ? (
                                             <img
-                                                // src={ticket[0]?.assignee?.avatar || 'love'}
-                                                src={ticket[0]?.assignee?.avatar}
-                                                alt={`${ticket[0]?.assignee?.firstname} ${ticket[0]?.assignee?.lastname}`}
+                                                // src={ticket?.assignee?.avatar || 'love'}
+                                                src={ticket?.assignee?.avatar}
+                                                alt={`${ticket?.assignee?.firstname} ${ticket?.assignee?.lastname}`}
                                                 style={{
                                                     width: '30px',
                                                     height: '30px',
@@ -147,11 +147,11 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                         ) : (
                                             <div className="avatar avatar-sm rounded-circle overflow-hidden acx-bg-secondary d-flex justify-content-center align-items-center">
                                                 <p className="fs-6 mb-0 text-white">{`${capitalize(
-                                                    ticket[0]?.assignee?.firstname?.slice(0, 1),
+                                                    ticket?.assignee?.firstname?.slice(0, 1),
                                                 )}${
-                                                    ticket[0]?.assignee?.lastname == 'default'
+                                                    ticket?.assignee?.lastname == 'default'
                                                         ? ''
-                                                        : capitalize(ticket[0]?.assignee?.lastname?.slice(0, 1))
+                                                        : capitalize(ticket?.assignee?.lastname?.slice(0, 1))
                                                 }`}</p>
                                             </div>
                                         )}
@@ -159,13 +159,13 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
 
                                     <div>
                                         <p className="acx-fs-8">Assigned to</p>
-                                        {ticket[0]?.assignee ? (
+                                        {ticket?.assignee ? (
                                             <Link
-                                                to={`/settings/profile/${ticket[0]?.assignee?.id}`}
+                                                to={`/settings/profile/${ticket?.assignee?.id}`}
                                                 className="text-at-blue"
                                             >
-                                                {`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(
-                                                    ticket[0]?.assignee?.lastname,
+                                                {`${capitalize(ticket?.assignee?.firstname)} ${capitalize(
+                                                    ticket?.assignee?.lastname,
                                                 )}`}
                                             </Link>
                                         ) : (
@@ -203,11 +203,11 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                             <>
                                 <div className="aboutUserColConv__ d-flex align-items-center mb-3">
                                     <div className="psvgIcon__" style={{ marginRight: 17 }}>
-                                        {ticket[0]?.assignee?.avatar ? (
+                                        {ticket?.assignee?.avatar ? (
                                             <img
-                                                // src={ticket[0]?.assignee?.avatar || 'love'}
-                                                src={ticket[0]?.assignee?.avatar}
-                                                alt={`${ticket[0]?.assignee?.firstname} ${ticket[0]?.assignee?.lastname}`}
+                                                // src={ticket?.assignee?.avatar || 'love'}
+                                                src={ticket?.assignee?.avatar}
+                                                alt={`${ticket?.assignee?.firstname} ${ticket?.assignee?.lastname}`}
                                                 style={{
                                                     width: '30px',
                                                     height: '30px',
@@ -218,12 +218,12 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                         ) : (
                                             <div className="avatar avatar-sm rounded-circle overflow-hidden acx-bg-secondary d-flex justify-content-center align-items-center">
                                                 <p className="small mb-0 text-white">
-                                                    {ticket[0]?.assignee
-                                                        ? `${capitalize(ticket[0]?.assignee?.firstname?.slice(0, 1))}${
-                                                              ticket[0]?.assignee?.lastname == 'default'
+                                                    {ticket?.assignee
+                                                        ? `${capitalize(ticket?.assignee?.firstname?.slice(0, 1))}${
+                                                              ticket?.assignee?.lastname == 'default'
                                                                   ? ''
                                                                   : capitalize(
-                                                                        ticket[0]?.assignee?.lastname?.slice(0, 1),
+                                                                        ticket?.assignee?.lastname?.slice(0, 1),
                                                                     )
                                                           }`
                                                         : ''}
@@ -234,15 +234,15 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
 
                                     <div>
                                         <p className="acx-fs-8 mb-0">Assigned to</p>
-                                        {ticket[0]?.assignee ? (
+                                        {ticket?.assignee ? (
                                             <Link
-                                                to={`/settings/profile/${ticket[0]?.assignee?.id}`}
+                                                to={`/settings/profile/${ticket?.assignee?.id}`}
                                                 className="text-at-blue"
                                             >
-                                                {`${capitalize(ticket[0]?.assignee?.firstname)} ${capitalize(
-                                                    ticket[0]?.assignee?.lastname,
+                                                {`${capitalize(ticket?.assignee?.firstname)} ${capitalize(
+                                                    ticket?.assignee?.lastname,
                                                 )}`}
-                                            </Link>
+                                             </Link>
                                         ) : (
                                             <span>Unassigned</span>
                                         )}
@@ -254,8 +254,8 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                         <CircleIcon color="rgba(108, 65, 129, 0.25)" icon={TicketIdIcon} />
                                         <div>
                                             <p className="pb-0 mb-0 f-12 text-muted op-9">Conversation ID</p>
-                                            <p className="text-muted f-13 text-uppercase" title={`${ticket[0]?.id}`}>
-                                                #{ticket[0]?.ticket_id}
+                                            <p className="text-muted f-13 text-uppercase" title={`${ticket?.id}`}>
+                                                #{ticket?.ticket_id}
                                             </p>
                                         </div>
                                     </li>
@@ -265,7 +265,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                         <div>
                                             <p className="pb-0 mb-0 f-12 text-muted op-9">Priority</p>
                                             <p className="text-muted f-13 text-capitalize">
-                                                {ticket[0]?.priority?.name}
+                                                {ticket?.priority?.name}
                                             </p>
                                         </div>
                                     </li>
@@ -274,7 +274,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                         <CircleIcon color="rgba(7, 1100, 247, 0.25)" icon={TicketStageIcon} />
                                         <div>
                                             <p className="pb-0 mb-0 f-12 text-muted op-9">Stage</p>
-                                            <p className="text-muted f-13">{ticket[0]?.status?.status}</p>
+                                            <p className="text-muted f-13">{ticket?.status?.status}</p>
                                         </div>
                                     </li>
 
@@ -282,7 +282,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                         <CircleIcon color="rgba(255, 159, 67, 0.25)" icon={TicketCategoriesIcon} />
                                         <div>
                                             <p className="pb-0 mb-0 f-12 text-muted op-9">Categories</p>
-                                            <p className="text-muted f-13">{ticket[0]?.category.name}</p>
+                                            <p className="text-muted f-13">{ticket?.category.name}</p>
                                         </div>
                                     </li>
 
@@ -298,7 +298,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                         <CircleIcon color="rgba(17, 63, 100, 0.25)" icon={TicketSourceIcon} />
                                         <div>
                                             <p className="pb-0 mb-0 f-12 text-muted op-9">Ticket Source</p>
-                                            <p className="text-muted f-13">{ticket[0]?.channel}</p>
+                                            <p className="text-muted f-13">{ticket?.channel}</p>
                                         </div>
                                     </li>
                                 </ul>
@@ -375,7 +375,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                             </>
                         )}
                         <div className="ticktTagsgfs3 d-flex justify-content-center border-top pt-2">
-                            {ticket[0]?.tags === null || ticket[0]?.tags.length === 0?(
+                            {ticket?.tags === null || ticket?.tags.length === 0?(
                                 <p
                                     style={{
                                         fontSize: '11px',
@@ -386,7 +386,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                     No tag found
                                 </p>
                             ) : (
-                                ticket[0]?.tags?.map((data) => {
+                                ticket?.tags?.map((data) => {
                                     return <div key={data}>{data}</div>;
                                 })
                             )}
@@ -403,20 +403,20 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                             <div className="textTimeLineSec">
                                 <span>
                                     This message is assigned to{' '}
-                                    {`${capitalize(ticket[0]?.assignee?.firstname || '')} ${capitalize(
-                                        ticket[0]?.assignee?.lastname || '',
+                                    {`${capitalize(ticket?.assignee?.firstname || '')} ${capitalize(
+                                        ticket?.assignee?.lastname || '',
                                     )}`}
                                 </span>
                                 <div className="timeLinehashtags">
                                     <div style={{ textTransform: 'uppercase' }}>
-                                        #{ticket[0]?.id.slice(ticket[0]?.id?.length - 8)}
+                                        #{ticket?.id.slice(ticket?.id?.length - 8)}
                                     </div>
-                                    <div>{dateFormater(ticket[0].created_at)}</div>
+                                    <div>{dateFormater(ticket?.created_at)}</div>
                                 </div>
                             </div>
                         </div>
 
-                        {ticket[0].history.length === 0 ? (
+                        {ticket?.history.length === 0 ? (
                             ''
                         ) : (
                             <div className="box">
@@ -426,17 +426,17 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                 </div>
                                 <div className="textTimeLineSec">
                                     <span>
-                                        {`${capitalize(ticket[0]?.assignee?.firstname || '')} ${capitalize(
-                                            ticket[0]?.assignee?.lastname || '',
+                                        {`${capitalize(ticket?.assignee?.firstname || '')} ${capitalize(
+                                            ticket?.assignee?.lastname || '',
                                         )}`}{' '}
                                         picked up this chat
                                     </span>
                                     <div className="timeLinehashtags">
                                         <div style={{ textTransform: 'uppercase' }}>
-                                            #{ticket[0]?.id.slice(ticket[0]?.id?.length - 8)}
+                                            #{ticket?.id.slice(ticket?.id?.length - 8)}
                                         </div>
-                                        <div>{dateFormater(ticket[0].created_at)}</div>
-                                        {/* {console.log(ticket[0])} */}
+                                        <div>{dateFormater(ticket?.created_at)}</div>
+                                        {/* {console.log(ticket)} */}
                                     </div>
                                 </div>
                             </div>

@@ -100,7 +100,7 @@ function HelpCenterSettings() {
             title: '',
             text: `Do you want to ${isPublished ? 'unpublish' : 'publish'} "${title}"?`,
             showCancelButton: true,
-            confirmButtonColor: isPublished ? '#ff0e0e' : '#006298',
+            confirmButtonColor: isPublished ? '#ff0e0e' : brandKit({ bgCol: 0 })?.backgroundColor,
             cancelButtonColor: '#ffffff',
             cancelButtonText: 'Cancel',
             confirmButtonText: 'Confirm',

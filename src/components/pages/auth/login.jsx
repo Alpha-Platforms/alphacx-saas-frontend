@@ -33,7 +33,7 @@ function Login() {
     });
 
     const [showPassword, setShowPassword] = useState(false);
-    const [domain, setDomain] = useState(window.localStorage.getItem('domain') || '');
+    const [domain, setDomain] = useState(domainParam || window.localStorage.getItem('domain') || '');
     const [tenantId, setTenantId] = useState('');
     const [loading, setLoading] = useState(false);
     const [color] = useState('#ffffff');
