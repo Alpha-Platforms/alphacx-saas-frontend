@@ -39,7 +39,7 @@ import Smiley from '../../../assets/imgF/Smiley.png';
 import BackArrow from '../../../assets/imgF/back.png';
 import editorImg from '../../../assets/imgF/editorImg.png';
 import LinkImg from '../../../assets/imgF/insertLink.png';
-import { multiIncludes, brandKit } from '../../../helper';
+import { multiIncludes, brandKit, getSubdomainOrUrl } from '../../../helper';
 import UserProfile from '../conversations/userProfile';
 import TicketTimeline from '../conversations/TicketTimeline';
 import { dateFormater } from '../../helpers/dateFormater';
@@ -458,9 +458,15 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user, 
 
     const updateTicketStatus = async () => {
         if (RSTicketStage.label === 'Closed') {
+            let subdomain;
+            if (getSubdomainOrUrl() === 'app' || getSubdomainOrUrl() === 'dev') {
+                subdomain = window.localStorage.getItem('domain');
+            }
             // get url and replace domain
             const base_url = window.location.origin;
-            const complete_url = `${base_url}/feedback/${ticket.id}/${ticket.customer.id}`;
+            const complete_url = `${base_url}/feedback/${ticket.id}/${ticket.customer.id}${
+                subdomain ? `?domain=${subdomain}` : ''
+            }`;
             const rich_text = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation : <a target='_blank' href='${complete_url}'>Click here to rate us</a></p>`;
             const ReplyTicket = {
                 richText: rich_text,
