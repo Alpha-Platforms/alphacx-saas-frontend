@@ -2,6 +2,7 @@
 import { useState, useEffect, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import MaterialTable from 'material-table';
+import { css } from '@emotion/css';
 import { TablePagination } from '@material-ui/core';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
@@ -9,6 +10,7 @@ import moment from 'moment';
 import MoonLoader from 'react-spinners/MoonLoader';
 import { getPaginatedCurrentCustomerTickets } from '../../../../reduxstore/actions/customerActions';
 import ShowIcon from '../../../../assets/icons/Show.svg';
+import { brandKit } from '../../../../helper';
 
 import tableIcons from '../../../../assets/materialicons/tableIcons';
 
@@ -190,7 +192,7 @@ function TicketHistory({
             >
                 {!isCurrentCustomerTicketsLoaded ? (
                     <div className="text-center">
-                        <MoonLoader loading={ticketLoading} color="#006298" size={30} />
+                        <MoonLoader loading={ticketLoading} color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                     </div>
                 ) : (
                     <MuiThemeProvider theme={tableTheme}>
