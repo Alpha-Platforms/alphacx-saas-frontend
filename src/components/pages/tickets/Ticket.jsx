@@ -20,6 +20,7 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
+import { css } from '@emotion/css';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import draftToHtml from 'draftjs-to-html';
@@ -38,7 +39,7 @@ import Smiley from '../../../assets/imgF/Smiley.png';
 import BackArrow from '../../../assets/imgF/back.png';
 import editorImg from '../../../assets/imgF/editorImg.png';
 import LinkImg from '../../../assets/imgF/insertLink.png';
-import { multiIncludes } from '../../../helper';
+import { multiIncludes, brandKit } from '../../../helper';
 import UserProfile from '../conversations/userProfile';
 import TicketTimeline from '../conversations/TicketTimeline';
 import { dateFormater } from '../../helpers/dateFormater';
@@ -667,7 +668,7 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user, 
         <>
             {!isCurrentTicketLoaded ? (
                 <div className="cust-table-loader">
-                    <MoonLoader loading color="#006298" size={30} />
+                    <MoonLoader loading color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 </div>
             ) : !currentTicket ? (
                 <div>No Conversation Found.</div>
@@ -696,12 +697,16 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user, 
                         {/* CHAT COL TWO */}
                         {firstTimeLoad ? (
                             <div className="cust-table-loader">
-                                <MoonLoader loading color="#006298" size={30} />
+                                <MoonLoader loading color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                             </div>
                         ) : loadSingleTicket ? (
                             <div className="d-flex justify-content-center align-items-center mt-5 w-100">
                                 {' '}
-                                <MoonLoader color="#0d4166" loading={loadSingleTicket} size={30} />
+                                <MoonLoader
+                                    color={brandKit({ bgCol: 0 })?.backgroundColor}
+                                    loading={loadSingleTicket}
+                                    size={30}
+                                />
                             </div>
                         ) : (
                             <div className="conversation-layout-col-two-chatCol">
@@ -1250,6 +1255,11 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user, 
                                             <div className="sendMsg">
                                                 <button
                                                     type="button"
+                                                    className={`btn btn-sm ${css({
+                                                        ...brandKit({ bgCol: 0 }),
+                                                        color: 'white',
+                                                        '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                                    })}`}
                                                     disabled={sendingReply ? true : ticket?.status?.status === 'Closed'}
                                                     onClick={() => replyTicket(ReplyTicket, 'attachment')}
                                                 >

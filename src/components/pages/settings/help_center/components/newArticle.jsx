@@ -104,7 +104,7 @@ function NewArticle() {
             title: publishGlobal ? 'Unpublish?' : 'Publish?',
             text: `Do you want to ${publishGlobal ? 'unpublish' : 'publish'} Article on Save?`,
             showCancelButton: true,
-            confirmButtonColor: '#006298',
+            confirmButtonColor: brandKit({ bgCol: 0 })?.backgroundColor,
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes',
             cancelButtonText: 'No',

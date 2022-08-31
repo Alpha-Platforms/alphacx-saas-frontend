@@ -4,12 +4,12 @@
 /* eslint-disabled */
 import { useState, useEffect } from 'react';
 import { capitalize } from '@material-ui/core';
-//
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import MoonLoader from 'react-spinners/MoonLoader';
 import { ReactComponent as HamburgerSvg } from '../../../../assets/icons/hamburger.svg';
+import { brandKit } from '../../../../helper';
 
 function UserFieldList({ fieldData, editCustomField, deleteCustomField, isLoading }) {
     const [userFields, setUserFields] = useState([]);
@@ -22,7 +22,7 @@ function UserFieldList({ fieldData, editCustomField, deleteCustomField, isLoadin
         <div className="text-center">
             <div className={!isLoading ? `fieldsWrapper` : ''} id="userFieldWrapper">
                 {isLoading ? (
-                    <MoonLoader loading color="#006298" size={30} />
+                    <MoonLoader loading color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                 ) : userFields.length > 0 ? (
                     userFields.map((data) => {
                         return (

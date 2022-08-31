@@ -170,7 +170,7 @@ function UserList({
             title: '',
             text: `Do you want to ${isActivated ? 'deactivate' : 'activate'} ${wordCapitalize(name)}?`,
             showCancelButton: true,
-            confirmButtonColor: '#006298',
+            confirmButtonColor: brandKit({ bgCol: 0 })?.backgroundColor,
             cancelButtonColor: '#ffffff',
             cancelButtonText: 'Cancel',
             confirmButtonText: 'Confirm',

@@ -108,7 +108,7 @@ function EmailSettings({ configs, isConfigsLoaded, tenantInfo }) {
             title: '',
             text: `Do you want to turn ${hasEmailConfig? 'off' : 'on'} Email to Ticket?`,
             showCancelButton: true,
-            confirmButtonColor: '#006298',
+            confirmButtonColor: brandKit({ bgCol: 0 })?.backgroundColor,
             cancelButtonColor: '#ffffff',
             cancelButtonText: 'Cancel',
             confirmButtonText: 'Yes',
