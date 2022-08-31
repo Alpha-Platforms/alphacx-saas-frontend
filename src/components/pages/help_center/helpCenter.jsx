@@ -17,6 +17,7 @@ import { httpGetMainKB, invalidTenant } from '../../../helpers/httpMethods';
 import { setKbBrandKit } from '../../../reduxstore/actions/tenantInfoActions';
 import { kbBrandKit } from '../../../helper';
 import NotFound from '../error/NotFound';
+import KbSearch from './components/kbsearch/KbSearch';
 
 function HelpCenter() {
     const dispatch = useDispatch();
@@ -71,7 +72,7 @@ function HelpCenter() {
                     {/* <img src={LogoBG} alt="" className="logo-bg" /> */}
                     {/* COMMENT SEARCH FIELD */}
                     <h3>Knowledge Base</h3>
-                    <div className="searchbar">
+                    {/* <div className="searchbar">
                         <div className="icon">
                             <SearchIconNavbr />
                         </div>
@@ -86,6 +87,9 @@ function HelpCenter() {
                                 <SendIcon size={30} fill={kbBrandKit({ bgCol: 0 })?.backgroundColor} />
                             </button>
                         </form>
+                    </div> */}
+                    <div className="kb-home-search-bar mt-4">
+                        <KbSearch isHome />
                     </div>
                 </div>
                 {categories.length === 0 ? (
