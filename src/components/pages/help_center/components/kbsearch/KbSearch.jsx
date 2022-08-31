@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
 import React, { useRef, useState, useEffect } from 'react';
+import { css } from '@emotion/css';
 import MoonLoader from 'react-spinners/MoonLoader';
 import { Link } from 'react-router-dom';
-import { isObjectEmpty, uuid, slugify } from '../../../../../helper';
+import { isObjectEmpty, uuid, slugify, kbBrandKit } from '../../../../../helper';
 import { httpGetMain } from '../../../../../helpers/httpMethods';
 import searchIcon from '../../../../../assets/imgF/Search.png';
 import './KbSearch.scss';
@@ -75,7 +76,11 @@ function KbSearch({ isHome }) {
             <div className="kb-search-input-wrapper">
                 <input
                     ref={searchRef}
-                    className={`kb-search-input ${isHome ? 'is-home' : ''} ${dropdownActive ? 'active' : ''}`}
+                    className={`kb-search-input ${css({
+                        '&.active, &:focus': {
+                            outlineColor: kbBrandKit({ bgCol: 0 })?.backgroundColor,
+                        },
+                    })} ${isHome ? 'is-home' : ''} ${dropdownActive ? 'active' : ''}`}
                     placeholder="Search knowledge base"
                     type="text"
                     onChange={handleKbSearch}
@@ -100,7 +105,7 @@ function KbSearch({ isHome }) {
                 >
                     {loading && (
                         <div className="kb-search-loader">
-                            <MoonLoader size={15} color="#006298" />
+                            <MoonLoader size={15} color={kbBrandKit({ bgCol: 0 })?.backgroundColor} />
                         </div>
                     )}
                     {!isObjectEmpty(searchResult) && (

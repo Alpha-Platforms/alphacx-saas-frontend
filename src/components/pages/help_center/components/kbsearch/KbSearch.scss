@@ -18,13 +18,13 @@
 .kb-search-input:not(.is-home).active,
 .kb-search-input:not(.is-home):focus {
     width: 28rem;
-    outline-color: var(--at-blue-light);
+    // outline-color: var(--at-blue-light); TO FAVOUR BRANDING
 }
 
 .kb-search-input.is-home.active,
 .kb-search-input.is-home:focus {
     width: 32rem;
-    outline-color: var(--at-blue-light);
+    // outline-color: var(--at-blue-light); TO FAVOUR BRANDING
 }
 
 
