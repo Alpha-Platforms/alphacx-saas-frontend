@@ -67,6 +67,7 @@ import {
     subscribeToEvent,
     unsuscribeFromEvent,
     brandKit,
+    getSubdomainOrUrl,
 } from '../../../helper';
 import { accessControlFunctions } from '../../../config/accessControlList';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -845,9 +846,15 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
 
     const updateTicketStatus = async () => {
         if (RSTicketStage.label === 'Closed' && hasFeatureAccess('rating')) {
+            let subdomain;
+            if (getSubdomainOrUrl() === 'app' || getSubdomainOrUrl() === 'dev') {
+                subdomain = window.localStorage.getItem('domain');
+            }
             // get url and replace domain
             const baseUrl = window.location.origin;
-            const completedUrl = `${baseUrl}/feedback/${singleTicketFullInfo?.id}/${singleTicketFullInfo?.customer.id}`;
+            const completedUrl = `${baseUrl}/feedback/${singleTicketFullInfo?.id}/${singleTicketFullInfo?.customer.id}${
+                subdomain ? `?domain=${subdomain}` : ''
+            }`;
             const richText = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation : <a target='_blank' href='${completedUrl}'>Click here to rate us</a></p>`;
             const reply = {
                 richText,
