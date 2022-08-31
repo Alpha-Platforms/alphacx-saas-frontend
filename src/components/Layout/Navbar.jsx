@@ -237,7 +237,11 @@ function Notification({ userId }) {
                     {notificationsLoaded === false ? (
                         <NavDropdown.Item as="div">
                             <div className="d-flex justify-content-center align-items-center py-5 ps-1 notification-loader-indicator">
-                                <MoonLoader color="#0d4166" loading={notificationsLoaded === false} size={30} />
+                                <MoonLoader
+                                    color={brandKit({ bgCol: 0 })?.backgroundColor}
+                                    loading={notificationsLoaded === false}
+                                    size={30}
+                                />
                             </div>
                         </NavDropdown.Item>
                     ) : notifications.length === 0 || notifications == null || notifications === undefined ? (

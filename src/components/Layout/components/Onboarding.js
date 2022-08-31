@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-//
+import { css } from '@emotion/css';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Modal from 'react-bootstrap/Modal';
@@ -27,6 +27,7 @@ import Facebook from '../../../assets/imgF/facebook-outline.png'
 import Instagram from '../../../assets/imgF/instagram-outline.png'
 import Livechat from '../../../assets/imgF/livechat.png'
 import Email from '../../../assets/imgF/email-outline.png'
+import { brandKit } from '../../../helper';
 
 function OnboardingModal({
     user,
@@ -100,11 +101,11 @@ function OnboardingModal({
                                     </div>
                                     <div className="">
                                         {!isAgentsLoaded ? (
-                                            <ArrowRightCircleIcon />
+                                            <ArrowRightCircleIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                         ) : agents?.length > 0 ? (
                                             <CheckCircleFilledIcon />
                                         ) : (
-                                            <ArrowRightCircleIcon />
+                                            <ArrowRightCircleIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                         )}
                                     </div>
                                 </div>
@@ -121,11 +122,11 @@ function OnboardingModal({
                                     </div>
                                     <div className="">
                                         {!isConfigsLoaded ? (
-                                            <ArrowRightCircleIcon />
+                                            <ArrowRightCircleIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                         ) : Object.entries(configs?.facebook_config || {}).length > 0 ? (
                                             <CheckCircleFilledIcon />
                                         ) : (
-                                            <ArrowRightCircleIcon />
+                                            <ArrowRightCircleIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                         )}
                                     </div>
                                 </div>
@@ -142,11 +143,11 @@ function OnboardingModal({
                                     </div>
                                     <div className="">
                                         {!isConfigsLoaded ? (
-                                            <ArrowRightCircleIcon />
+                                            <ArrowRightCircleIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                         ) : Object.entries(configs?.instagram_config || {}).length > 0 ? (
                                             <CheckCircleFilledIcon />
                                         ) : (
-                                            <ArrowRightCircleIcon />
+                                            <ArrowRightCircleIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                         )}
                                     </div>
                                 </div>
@@ -164,11 +165,11 @@ function OnboardingModal({
                                     </div>
                                     <div className="">
                                         {!isConfigsLoaded ? (
-                                            <ArrowRightCircleIcon />
+                                            <ArrowRightCircleIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                             ) : Object.entries(configs?.livechat_config || {}).length > 0 ? (
                                             <CheckCircleFilledIcon />
                                         ) : (
-                                            <ArrowRightCircleIcon />
+                                            <ArrowRightCircleIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                         )}
                                     </div>
                                 </div>
@@ -186,11 +187,11 @@ function OnboardingModal({
                                     </div>
                                     <div className="">
                                         {!isConfigsLoaded ? (
-                                            <ArrowRightCircleIcon />
+                                            <ArrowRightCircleIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                             ) : Object.entries(configs?.email_config || {}).length > 0 ? (
                                             <CheckCircleFilledIcon />
                                         ) : (
-                                            <ArrowRightCircleIcon />
+                                            <ArrowRightCircleIcon fill={brandKit({ bgCol: 0 })?.backgroundColor} />
                                         )}
                                     </div>
                                 </div>

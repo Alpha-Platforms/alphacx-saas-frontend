@@ -2,10 +2,11 @@
 // @ts-nocheck
 import React, { useState, useRef, useEffect } from 'react';
 import MoonLoader from 'react-spinners/MoonLoader';
+import { css } from '@emotion/css';
 import { Link } from 'react-router-dom';
 import { httpGetMain } from '../../../helpers/httpMethods';
 import searchIcon from '../../../assets/imgF/Search.png';
-import { isObjectEmpty, getUserInitials, uuid } from '../../../helper';
+import { isObjectEmpty, getUserInitials, uuid, brandKit } from '../../../helper';
 import './GlobalSearch.scss';
 
 let globalSearchTimer;
@@ -80,7 +81,11 @@ function GlobalSearch() {
             <div className="global-search-input-wrapper">
                 <input
                     ref={searchRef}
-                    className={`global-search-input ${dropdownActive ? 'active' : ''}`}
+                    className={`global-search-input ${css({
+                        '&.active, &:focus': {
+                            outlineColor: brandKit({ bgCol: 0 })?.backgroundColor,
+                        },
+                    })} ${dropdownActive ? 'active' : ''}`}
                     placeholder="Search"
                     type="text"
                     onChange={handleGlobalSearch}
@@ -105,7 +110,7 @@ function GlobalSearch() {
                 >
                     {loading && (
                         <div className="global-search-loader">
-                            <MoonLoader size={15} color="#006298" />
+                            <MoonLoader size={15} color={brandKit({ bgCol: 0 })?.backgroundColor} />
                         </div>
                     )}
                     {(!isObjectEmpty(searchResult?.users) || !isObjectEmpty(searchResult?.tickets)) && (
