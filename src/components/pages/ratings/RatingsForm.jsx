@@ -20,6 +20,7 @@ import { httpPostNoAuth, httpGetMainNoAuth } from '../../../helpers/httpMethods'
 import Buke from '../../../assets/svgicons/Buke.svg';
 import Logo from '../../../assets/svgicons/Logo.svg';
 import '../settings/settings.css';
+import { getSubdomainOrUrl } from 'helper';
 
 export default function RatingsForm() {
     const [rating, setRating] = useState(0);
@@ -33,19 +34,20 @@ export default function RatingsForm() {
     });
     //
     const [showModal, setShowModal] = useState(false);
-    //
+    
     const { ticketId, customerId } = useParams();
-    //
+
+    const urlQueryParams = new URLSearchParams(window.location.search);
 
     useEffect(() => {
-        getRatingConfig(location.hostname.split('.')[0]);
-    }, [ticketId, customerId ]);
+        let sub = getSubdomainOrUrl();
+        if (sub === 'app' || sub === 'dev') sub = urlQueryParams.get('domain');
+
+        getRatingConfig(sub);
+    }, []);
 
     const getRatingConfig = async (domain) => {
-        const headers = {
-            domain,
-        };
-        const res = await httpGetMainNoAuth(`settings/rating-config`, headers);
+        const res = await httpGetMainNoAuth(`settings/rating-config?domain=${domain}`, {});
         if (res?.status === 'success') {
             setRatingsConfig({
                 ...ratingsConfig,
@@ -195,8 +197,8 @@ export default function RatingsForm() {
                         </Col>
                     </Row>
                     <footer className="">
-                        <p className="text-center">
-                            <Image src={Logo} className="me-2" height="16" width="auto" /> We care with AlphaCX
+                        <p className="text-center small">
+                        We Care <Image src={Logo} className="me-2" height="16" width="auto" />
                         </p>
                     </footer>
                 </Container>
