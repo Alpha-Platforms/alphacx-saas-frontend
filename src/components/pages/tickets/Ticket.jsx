@@ -680,7 +680,7 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user, 
                     <div className="pt-2" style={{ backgroundColor: '#fafafa', borderRight: '1px solid #f1f1f1' }}>
                         <UserProfile
                             UserInfo={UserInfo}
-                            ticket={[currentTicket]}
+                            ticket={currentTicket}
                             isTicketDetails
                             timeLine={false}
                             showAttachment={false}
