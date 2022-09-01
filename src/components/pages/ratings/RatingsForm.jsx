@@ -20,12 +20,14 @@ import { httpPostNoAuth, httpGetMainNoAuth } from '../../../helpers/httpMethods'
 import Buke from '../../../assets/svgicons/Buke.svg';
 import Logo from '../../../assets/svgicons/Logo.svg';
 import '../settings/settings.css';
+import { getSubdomainOrUrl } from 'helper';
 
 export default function RatingsForm() {
     const [rating, setRating] = useState(0);
     const [npsScore, setNpsScore] = useState(0);
     const [comment, setComment] = useState('');
     const [processing, setProcessing] = useState(false);
+    const [domain, setDomain] = useState('')
     const [ratingsConfig, setRatingsConfig] = useState({
         ratingLabel: 'Satisfied with our customer support service? Click on the stars below to rate us.',
         commentLabel: 'Tell us what we can improved upon',
@@ -33,19 +35,20 @@ export default function RatingsForm() {
     });
     //
     const [showModal, setShowModal] = useState(false);
-    //
+    
     const { ticketId, customerId } = useParams();
-    //
+
+    const urlQueryParams = new URLSearchParams(window.location.search);
 
     useEffect(() => {
-        getRatingConfig(location.hostname.split('.')[0]);
-    }, [ticketId, customerId ]);
+        let sub = getSubdomainOrUrl();
+        if (sub === 'app' || sub === 'dev') sub = urlQueryParams.get('domain');
+        setDomain(sub);
+        getRatingConfig(sub);
+    }, []);
 
-    const getRatingConfig = async (domain) => {
-        const headers = {
-            domain,
-        };
-        const res = await httpGetMainNoAuth(`settings/rating-config`, headers);
+    const getRatingConfig = async (sub) => {
+        const res = await httpGetMainNoAuth(`settings/rating-config?domain=${sub}`, {});
         if (res?.status === 'success') {
             setRatingsConfig({
                 ...ratingsConfig,
@@ -78,10 +81,8 @@ export default function RatingsForm() {
             customerId,
             comment,
         };
-        const headers = {
-            domain: location.hostname.split('.')[0],
-        };
-        const res = await httpPostNoAuth(`ratings`, data, headers);
+        
+        const res = await httpPostNoAuth(`ratings?domain=${domain}`, data, {});
         if (res?.status === 'success') {
             setProcessing(false);
             setShowModal(true);
@@ -195,8 +196,8 @@ export default function RatingsForm() {
                         </Col>
                     </Row>
                     <footer className="">
-                        <p className="text-center">
-                            <Image src={Logo} className="me-2" height="16" width="auto" /> We care with AlphaCX
+                        <p className="text-center small">
+                        We Care <Image src={Logo} className="me-2" height="16" width="auto" />
                         </p>
                     </footer>
                 </Container>

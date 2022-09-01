@@ -67,6 +67,7 @@ import {
     subscribeToEvent,
     unsuscribeFromEvent,
     brandKit,
+    getSubdomainOrUrl,
 } from '../../../helper';
 import { accessControlFunctions } from '../../../config/accessControlList';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -196,11 +197,10 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
     const [ticketsLoaded, setTicketsLoaded] = useState(false);
     const [, setMeta] = useState({});
     const [filterTicketsState, setFilterTicketsState] = useState('');
-    const [ticket, setTicket] = useState([]);
     const [loadingTicks, setLoadingTicks] = useState(true);
     const [loadSingleTicket, setLoadSingleTicket] = useState(false);
     const [SenderInfo, setSenderInfo] = useState(false);
-    const [singleTicketFullInfo, setSingleTicketFullInfo] = useState(false);
+    const [singleTicketFullInfo, setSingleTicketFullInfo] = useState(null);
     const [Category, setCategory] = useState([]);
     const [Priority, setPriority] = useState([]);
     const [Tags, setTags] = useState([]);
@@ -321,11 +321,11 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
     };
 
     const loadSingleMessage = async ({ id, customer, subject }) => {
+        setLoadSingleTicket(true);
         setAchiveMsges([]);
         getUser(customer.id);
-        setLoadSingleTicket(true);
         setSenderInfo({ customer, subject });
-        setTicket([]);
+        setSingleTicketFullInfo(null);
 
         /* 
         FIXME:  handle with http if ought to
@@ -336,7 +336,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
         const res = await httpGetMain(`tickets/${id}`);
         setfirstTimeLoad(false);
         if (res.status === 'success') {
-            setTicket(res?.data);
+            setSingleTicketFullInfo(res?.data?.[0]);
             setMsgHistory(res?.data[0]?.history);
             // update the unread count of item to be loaded to zero since it is being loaded
             setTickets((prev) =>
@@ -466,13 +466,15 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
         // ticketHistoryId
         if (tickets?.length > 0 && location.state && location.state.hasOwnProperty('ticketId')) {
             const currentTicket = tickets?.find((item) => item.id === location.state.ticketId);
-            setSingleTicketFullInfo(currentTicket);
-            loadSingleMessage(currentTicket);
-            setTicketId(location.state.ticketId);
-            setActiveChat(location.state.ticketId);
-            /* No idea what this does */
-            if (location.state.ticketHistoryId) {
-                scrollToView(`#${location.state.ticketHistoryId}`);
+            if (currentTicket) {
+                loadSingleMessage(currentTicket);
+                setSingleTicketFullInfo(currentTicket);
+                setTicketId(location.state.ticketId);
+                setActiveChat(location.state.ticketId);
+                /* No idea what this does */
+                if (location.state.ticketHistoryId) {
+                    scrollToView(`#${location.state.ticketHistoryId}`);
+                }
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -547,7 +549,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                     history: ticketItem.history?.filter((item) => item?.id !== data?.reply?.id),
                                     __metaticketItem__: {
                                         ...ticketItem?.__meta__,
-                                        history_count: Number(ticket?.__meta__?.history_count) - 1,
+                                        history_count: Number(singleTicketFullInfo?.__meta__?.history_count) - 1,
                                     },
                                 };
                                 return newTicket;
@@ -603,7 +605,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
     useEffect(() => {
         setCustomFieldIsSet(false);
         setRSTicketCustomFields(null);
-        const ticketCustomFields = ticket[0]?.custom_fields || {};
+        const ticketCustomFields = singleTicketFullInfo?.custom_fields || {};
         const mergedCustomUserFields = customFieldConfig.map((element) => {
             if (ticketCustomFields.hasOwnProperty(element.id)) {
                 setRSTicketCustomFields((prevState) => ({
@@ -662,7 +664,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
         setCustomFieldIsSet(true);
         setCustomFieldsGroup([...groupedCustomFields]);
         // if (ticket?.length > 0) {
-        //     const loadedTicket = ticket[0];
+        //     const loadedTicket = singleTicketFullInfo;
         //     if (loadedTicket?.channel?.toLowerCase() === 'instagram') {
         //         setTimeout(() => {
 
@@ -670,7 +672,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
         //     }
         // }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ticket]);
+    }, [singleTicketFullInfo]);
 
     const convoMain = document.querySelector('#conversationMain');
 
@@ -844,9 +846,15 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
 
     const updateTicketStatus = async () => {
         if (RSTicketStage.label === 'Closed' && hasFeatureAccess('rating')) {
+            let subdomain;
+            if (getSubdomainOrUrl() === 'app' || getSubdomainOrUrl() === 'dev') {
+                subdomain = window.localStorage.getItem('domain');
+            }
             // get url and replace domain
             const baseUrl = window.location.origin;
-            const completedUrl = `${baseUrl}/feedback/${ticket[0].id}/${ticket[0].customer.id}`;
+            const completedUrl = `${baseUrl}/feedback/${singleTicketFullInfo?.id}/${singleTicketFullInfo?.customer.id}${
+                subdomain ? `?domain=${subdomain}` : ''
+            }`;
             const richText = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation : <a target='_blank' href='${completedUrl}'>Click here to rate us</a></p>`;
             const reply = {
                 richText,
@@ -854,7 +862,9 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             };
             replyTicket(reply, 'attachment', 'reply');
         }
-        const statusRes = await httpPatchMain(`tickets-status/${ticket[0].id}`, { statusId: RSTicketStage.value });
+        const statusRes = await httpPatchMain(`tickets-status/${singleTicketFullInfo?.id}`, {
+            statusId: RSTicketStage.value,
+        });
         if (statusRes.status === 'success') {
             const replyData = {
                 type: 'reply',
@@ -863,7 +873,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                 created_at: new Date(),
                 plain_response: `Ticket Stage has been marked as ${RSTicketStage.label}`,
                 response: `Ticket Stage has been marked as ${RSTicketStage.label}`,
-                user: ticket[0]?.assignee,
+                user: singleTicketFullInfo?.assignee,
             };
 
             setMsgHistory((item) => [...item, replyData]);
@@ -894,12 +904,12 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             description: [],
             category: '',
         });
-        setRSTicketPriority(ticket[0].priority.id);
-        setRSTicketCategory(ticket[0].category.id);
-        setRSTicketSubject(ticket[0].subject);
-        setRSTicketRemarks(ticket[0].description);
-        setRSTicketTags(ticket[0].tags);
-        setRSTicketAssignee(ticket[0]?.assignee?.id);
+        setRSTicketPriority(singleTicketFullInfo?.priority.id);
+        setRSTicketCategory(singleTicketFullInfo?.category.id);
+        setRSTicketSubject(singleTicketFullInfo?.subject);
+        setRSTicketRemarks(singleTicketFullInfo?.description);
+        setRSTicketTags(singleTicketFullInfo?.tags);
+        setRSTicketAssignee(singleTicketFullInfo?.assignee?.id);
     };
 
     const updateTicket = async () => {
@@ -916,7 +926,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             updateTicketStatus();
             setRSTicketStage({});
         }
-        const res = await httpPatchMain(`tickets/${ticket[0].id}`, data);
+        const res = await httpPatchMain(`tickets/${singleTicketFullInfo?.id}`, data);
         if (res.status === 'success') {
             setProcessing(false);
             closeSaveTicketModal();
@@ -928,9 +938,9 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             const socketData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
             AppSocket.io.emit(`ws_tickets`, socketData);
  */
-            const ticketRes = await httpGetMain(`tickets/${ticket[0].id}`);
+            const ticketRes = await httpGetMain(`tickets/${singleTicketFullInfo?.id}`);
             if (ticketRes.status === 'success') {
-                setTicket(ticketRes?.data);
+                singleTicketFullInfo(ticketRes?.data?.[0]);
             } else {
                 setLoadSingleTicket(false);
                 NotificationManager.info('please refresh your page to see changes');
@@ -1088,7 +1098,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                 }}
                             >
                                 {' '}
-                                <MoonLoader color="#0d4166" loading={loadSingleTicket} size={30} />
+                                <MoonLoader color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                             </div>
                         ) : (
                             <div className="conversation-layout-col-two-chatCol vgb">
@@ -1097,7 +1107,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                     <div className="conversationHeaderMainV2">
                                         <div className="custormChatHeaderInfo">
                                             <div className="custormChatHeaderInfoData">
-                                                <h1>{ticket[0]?.subject}</h1>
+                                                <h1>{singleTicketFullInfo?.subject}</h1>
                                                 <p>
                                                     {`${
                                                         !SenderInfo?.customer?.firstname
@@ -1115,7 +1125,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                               } 
                               ${!SenderInfo?.customer?.email ? 'N/A' : capitalize(SenderInfo?.customer?.email)}`}
                                                     <span className="custormChatHeaderDot d-block" />{' '}
-                                                    <span>{dateFormater(ticket[0]?.updated_at)}</span>
+                                                    <span>{dateFormater(singleTicketFullInfo?.updated_at)}</span>
                                                 </p>
                                             </div>
                                             {multiIncludes(accessControlFunctions[user?.role], ['edit_ticket']) && (
@@ -1155,13 +1165,13 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
 
                                         <div className="chatDateHeaderTitle">
                                             <span>
-                                                {moment(ticket[0].created_at).format('DD/MM/YYYY') ===
+                                                {moment(singleTicketFullInfo?.created_at).format('DD/MM/YYYY') ===
                                                 moment(new Date()).format('DD/MM/YYYY')
                                                     ? 'Today'
-                                                    : moment(ticket[0].created_at).format('DD/MM/YYYY') ===
+                                                    : moment(singleTicketFullInfo?.created_at).format('DD/MM/YYYY') ===
                                                       moment().add(-1, 'days').format('DD/MM/YYYY')
                                                     ? 'Yesterday'
-                                                    : moment(ticket[0].created_at).fromNow()}
+                                                    : moment(singleTicketFullInfo?.created_at).fromNow()}
                                             </span>{' '}
                                         </div>
                                         <div className="chatDateHeaderhr2" />
@@ -1173,9 +1183,9 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                         This message is assigned to{' '}
                                         <span>
                                             {' '}
-                                            {`${capitalize(ticket[0]?.assignee?.firstname || '')} ${capitalize(
-                                                ticket[0]?.assignee?.lastname || '',
-                                            )}`}
+                                            {`${capitalize(
+                                                singleTicketFullInfo?.assignee?.firstname || '',
+                                            )} ${capitalize(singleTicketFullInfo?.assignee?.lastname || '')}`}
                                         </span>
                                     </div>
 
@@ -1185,15 +1195,16 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                     >
                                         <span>
                                             {' '}
-                                            {`${capitalize(ticket[0]?.assignee?.firstname || '')} ${capitalize(
-                                                ticket[0]?.assignee?.lastname || '',
-                                            )}`}
+                                            {`${capitalize(
+                                                singleTicketFullInfo?.assignee?.firstname || '',
+                                            )} ${capitalize(singleTicketFullInfo?.assignee?.lastname || '')}`}
                                         </span>{' '}
                                         picked up this chat
                                     </div>
 
                                     <div className="msgAssingedToee3">
-                                        Conversation Status has been marked as <span> {ticket[0].status.status}</span>
+                                        Conversation Status has been marked as{' '}
+                                        <span> {singleTicketFullInfo?.status.status}</span>
                                     </div>
 
                                     <div className="">
@@ -1271,7 +1282,8 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                                                         />
                                                                                     </div>
                                                                                 ) : null}
-                                                                                {ticket[0]?.channel === 'email' &&
+                                                                                {singleTicketFullInfo?.channel ===
+                                                                                    'email' &&
                                                                                 data?.user?.role === 'Customer' ? (
                                                                                     <div className="message-text-content">
                                                                                         <ReactMarkdown
@@ -1394,7 +1406,8 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                                                     />
                                                                                 </div>
                                                                             ) : null}
-                                                                            {ticket[0]?.channel === 'email' &&
+                                                                            {singleTicketFullInfo?.channel ===
+                                                                                'email' &&
                                                                             data?.user?.role === 'Customer' ? (
                                                                                 <div className="message-text-content">
                                                                                     <ReactMarkdown
@@ -1516,7 +1529,8 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                                                     />
                                                                                 </div>
                                                                             ) : null}
-                                                                            {ticket[0]?.channel === 'email' &&
+                                                                            {singleTicketFullInfo?.channel ===
+                                                                                'email' &&
                                                                             data?.user?.role === 'Customer' ? (
                                                                                 <div className="message-text-content">
                                                                                     <ReactMarkdown
@@ -1555,7 +1569,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                     <span id="lastMsg" />
                                 </div>
                                 {/* CHAT COMMENT BOX SECTION */}
-                                {ticket[0].status.status === 'Closed' ? (
+                                {singleTicketFullInfo?.status.status === 'Closed' ? (
                                     ''
                                 ) : (
                                     <div className="conversationCommentBox">
@@ -1579,14 +1593,14 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                 </Tabs>
                                             </div>
                                             <Editor
-                                                disabled={ticket[0].status.status === 'Closed'}
-                                                readOnly={ticket[0].status.status === 'Closed'}
+                                                disabled={singleTicketFullInfo?.status.status === 'Closed'}
+                                                readOnly={singleTicketFullInfo?.status.status === 'Closed'}
                                                 editorState={editorState}
                                                 toolbar={{
                                                     // options: ['emoji', 'inline', 'image', 'link'],
                                                     options:
-                                                        ticket[0]?.channel === 'facebook' ||
-                                                        ticket[0]?.channel === 'instagram'
+                                                        singleTicketFullInfo?.channel === 'facebook' ||
+                                                        singleTicketFullInfo?.channel === 'instagram'
                                                             ? ['emoji', 'image', 'link']
                                                             : ['emoji', 'inline', 'image', 'link'],
 
@@ -1687,7 +1701,9 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                         '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
                                                     })}`}
                                                     disabled={
-                                                        sendingReply ? true : ticket[0].status.status === 'Closed'
+                                                        sendingReply
+                                                            ? true
+                                                            : singleTicketFullInfo?.status.status === 'Closed'
                                                     }
                                                     onClick={() => replyTicket(ReplyTicket, 'attachment')}
                                                 >
@@ -1720,10 +1736,10 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                 }}
                             >
                                 {' '}
-                                <MoonLoader color="#0d4166" loading={loadSingleTicket} size={30} />
+                                <MoonLoader color={brandKit({ bgCol: 0 })?.backgroundColor} size={30} />
                             </div>
                         ) : (
-                            <UserProfile UserInfo={UserInfo} ticket={ticket} />
+                            <UserProfile UserInfo={UserInfo} ticket={singleTicketFullInfo} />
                         )}
                     </div>
                     {/* CHAT COL THREE END */}
@@ -1749,8 +1765,8 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                     <Form.Label className="mb-0">Customer</Form.Label>
                                     <Form.Control
                                         value={`${capitalizeFirstLetter(
-                                            ticket[0]?.customer?.firstname,
-                                        )} ${capitalizeFirstLetter(ticket[0]?.customer?.lastname)}`}
+                                            singleTicketFullInfo?.customer?.firstname,
+                                        )} ${capitalizeFirstLetter(singleTicketFullInfo?.customer?.lastname)}`}
                                         type="text"
                                         disabled
                                     />
@@ -1766,8 +1782,8 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                             setRSTicketCategory(newValue.value);
                                         }}
                                         defaultValue={{
-                                            value: ticket[0]?.category?.id,
-                                            label: ticket[0]?.category?.name,
+                                            value: singleTicketFullInfo?.category?.id,
+                                            label: singleTicketFullInfo?.category?.name,
                                         }}
                                         options={
                                             // populate 'options' prop from $Category, with names remapped
@@ -1791,8 +1807,8 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                         }}
                                         isClearable={false}
                                         defaultValue={{
-                                            value: ticket[0]?.status?.id,
-                                            label: ticket[0]?.status?.status,
+                                            value: singleTicketFullInfo?.status?.id,
+                                            label: singleTicketFullInfo?.status?.status,
                                         }}
                                         options={
                                             // populate 'options' prop from $Category, with names remapped
@@ -1813,8 +1829,8 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                         }}
                                         isClearable={false}
                                         defaultValue={{
-                                            value: ticket[0]?.priority?.id,
-                                            label: ticket[0]?.priority?.name,
+                                            value: singleTicketFullInfo?.priority?.id,
+                                            label: singleTicketFullInfo?.priority?.name,
                                         }}
                                         options={
                                             // populate 'options' prop from $Statuses, with names remapped
@@ -1830,7 +1846,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                 <Form.Label className="mb-0">Subject</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    defaultValue={`${ticket[0]?.subject}`}
+                                    defaultValue={`${singleTicketFullInfo?.subject}`}
                                     onChange={(e) => setRSTicketSubject(e.target.value)}
                                 />
                             </Form.Group>
@@ -1840,7 +1856,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                 <Form.Control
                                     as="textarea"
                                     rows={5}
-                                    defaultValue={ticket[0]?.plain_description}
+                                    defaultValue={singleTicketFullInfo?.plain_description}
                                     onChange={(e) => setRSTicketRemarks(e.target.value)}
                                 />
                             </Form.Group>
@@ -1867,8 +1883,8 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                     setRSTicketAssignee(newValue.value);
                                                 }}
                                                 defaultValue={{
-                                                    value: ticket[0]?.assignee?.id,
-                                                    label: `${ticket[0]?.assignee?.firstname}  ${ticket[0]?.assignee?.lastname}`,
+                                                    value: singleTicketFullInfo?.assignee?.id,
+                                                    label: `${singleTicketFullInfo?.assignee?.firstname}  ${singleTicketFullInfo?.assignee?.lastname}`,
                                                 }}
                                                 options={
                                                     // populate 'options' prop from $Category, with names remapped
@@ -1896,8 +1912,8 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                 );
                                             }}
                                             defaultValue={
-                                                ticket[0]?.tags
-                                                    ? ticket[0]?.tags.map((data) => {
+                                                singleTicketFullInfo?.tags
+                                                    ? singleTicketFullInfo?.tags.map((data) => {
                                                           return { value: data, label: data };
                                                       })
                                                     : null
