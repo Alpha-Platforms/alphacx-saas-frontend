@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { css } from '@emotion/css';
 import MoonLoader from 'react-spinners/MoonLoader';
 import { Link } from 'react-router-dom';
-import { isObjectEmpty, uuid, slugify, kbBrandKit } from '../../../../../helper';
+import { isObjectEmpty, uuid, slugify, kbBrandKit, isSubdomainApp } from '../../../../../helper';
 import { httpGetMainKB } from '../../../../../helpers/httpMethods';
 import searchIcon from '../../../../../assets/imgF/Search.png';
 import './KbSearch.scss';
@@ -34,6 +34,7 @@ function KbSearch({ isHome }) {
     const [searchResult, setSearchResult] = useState(null);
     const [loading, setLoading] = useState(false);
     const searchRef = useRef(null);
+    const urlDomain = new URLSearchParams(window.location.search).get('domain');
 
     const clearInput = () => {
         if (searchRef?.current?.value) {
@@ -128,7 +129,9 @@ function KbSearch({ isHome }) {
                                             onClick={closeDropdown}
                                             to={`/knowledge-base/${slugify(
                                                 item?.folders?.[0]?.category?.name || 'general',
-                                            )}/${slugify(item?.title)}`}
+                                            )}/${slugify(item?.title)}${
+                                                isSubdomainApp ? `?domain=${urlDomain || ''}` : ''
+                                            }`}
                                         >
                                             {item?.title}
                                         </Link>
