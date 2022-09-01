@@ -9,7 +9,7 @@ import { httpGetMainKB, invalidTenant } from '../../../../helpers/httpMethods';
 import HelpNavBar from '../../../Layout/helpNavBar';
 import TopBar from '../components/topBar/topBar';
 import './articleList.scss';
-import { slugify, kbBrandKit, uuid } from '../../../../helper';
+import { slugify, kbBrandKit, uuid, isSubdomainApp } from '../../../../helper';
 import { ReactComponent as Paper } from '../../../../assets/icons/Paper.svg';
 import { ReactComponent as Folder } from '../../../../assets/icons/Folder.svg';
 import NotFound from '../../error/NotFound';
@@ -23,6 +23,7 @@ function ArticleList() {
     const [loading, setLoading] = useState(true);
     const [shouldReturn404, setShouldReturn404] = useState(false);
     const [catName, setCatName] = useState('');
+    const urlDomain = new URLSearchParams(window.location.search).get('domain');
 
     const fetchAllArticles = async () => {
         const res = await httpGetMainKB(`articles/category?slug=${category}`);
@@ -60,7 +61,12 @@ function ArticleList() {
                     {articles
                         ?.filter((item) => item?.isPublished)
                         ?.map((item) => (
-                            <Link key={uuid()} to={`${pageUrl}/${slugify(item?.title?.toLowerCase())}`}>
+                            <Link
+                                key={uuid()}
+                                to={`${pageUrl}/${slugify(item?.title?.toLowerCase())}${
+                                    isSubdomainApp ? `?domain=${urlDomain || ''}` : ''
+                                }`}
+                            >
                                 <div className="article-link">
                                     <p className="title">
                                         <Paper /> <span className="d-inline-block ms-2">{item?.title}</span>

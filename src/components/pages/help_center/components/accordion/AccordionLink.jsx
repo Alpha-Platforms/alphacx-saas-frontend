@@ -5,10 +5,11 @@ import { Link } from 'react-router-dom';
 import { css } from '@emotion/css';
 import { SendIcon, CancelIconC } from '../../../../../assets/images/svgs';
 import './accordion.scss';
-import { slugify, kbBrandKit } from '../../../../../helper';
+import { slugify, kbBrandKit, isSubdomainApp } from '../../../../../helper';
 
 function AccordionLink({ question, solution, category }) {
     const [open /* , setOpen */] = useState(false);
+    const urlDomain = new URLSearchParams(window.location.search).get('domain');
 
     // const handleAction = () => {
     //     // console.log('actioned');
@@ -16,7 +17,9 @@ function AccordionLink({ question, solution, category }) {
     // };
     return (
         <Link
-            to={`/knowledge-base/${slugify(category || '')}/${slugify(question || '')}`}
+            to={`/knowledge-base/${slugify(category || '')}/${slugify(question || '')}${
+                isSubdomainApp ? `?domain=${urlDomain || ''}` : ''
+            }`}
             className={`accordion ${open ? 'expand' : ''} ${css({ '&:hover': { ...kbBrandKit({ col: 0 }) } })}`}
         >
             <div className="question" /* onClick={handleAction} */>
