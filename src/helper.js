@@ -560,3 +560,8 @@ export const getSubdomainOrUrl = (domain = '') => {
     }
     return hostnameParts.length === 3 ? hostnameParts[0] : '';
 };
+
+export const isSubdomainApp = () => {
+    const subdomain = window.location.hostname.split('.')?.[0].toLowerCase();
+    return subdomain === 'app' || subdomain === 'dev';
+};

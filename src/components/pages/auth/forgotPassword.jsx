@@ -12,6 +12,8 @@ import { NotificationManager } from "react-notifications";
 import { httpPostTenantAuth } from "../../../helpers/httpMethods";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Link, useHistory } from 'react-router-dom';
+import { brandKit } from "helper";
+import { css } from "@emotion/css";
 
 const ForgotPassword = ({match: {params}}) => {
 
@@ -46,14 +48,17 @@ const ForgotPassword = ({match: {params}}) => {
   
       } else {
         // Password recovery fails
-        NotificationManager.error(res?.er?.message, "Password Error", 4000);
+        NotificationManager.error(res?.er?.errors?.email, "Validation Error", 4000);
       }
 
     }
   }
 
   return (
-    <div className="auth-container d-flex justify-content-center">
+    <div className={`auth-container d-flex justify-content-center ${css({
+          ...brandKit({ bgCol: -20, default: true }),
+      })}`}
+    >
       <div className="symbol-wrap2">
         <img src={Symbol2} alt="" />
       </div>
@@ -70,12 +75,7 @@ const ForgotPassword = ({match: {params}}) => {
           </div>
           <div className="Auth-header mb-2">
             <h3>Check your email</h3>
-            <p className="text-center">We have sent a password recovery instrustion <br /> to your email</p>
-          </div>
-
-          <div className="haveAnAccou">
-            <span className="f-11 d-block text-center mb-1"><small>Not registered yet?</small></span>
-              <a href="https://app.alphacx.co/sign-up">Create an account</a>
+            <p className="text-center">We have sent a password recovery link to your email.</p>
           </div>
         </>
 
@@ -90,7 +90,7 @@ const ForgotPassword = ({match: {params}}) => {
 
           <div className="input-main-wrap">
             <div className="input-wrap">
-              <label htmlFor="">Your work email</label>
+              <label htmlFor="">Account Email</label>
               <input
                 type="email"
                 onChange={handleChange}                
@@ -102,13 +102,14 @@ const ForgotPassword = ({match: {params}}) => {
           </div>          
 
 
-          <div className="text-end forgetPassword">    
-              <Link to="/login">Back to Login</Link>
-          </div>
 
-
-          <div className="submit-auth-btn">
-            <button  disabled={loading || (userInput.email === "")} onClick={handleSubmit}>
+          <div className="submit-auth-btn pb-0">
+            <button
+              disabled={loading || (userInput.email === "")} 
+              onClick={handleSubmit}
+              className={`mt-2 ${css({
+                ...brandKit({ bgCol: 0, default: true }),
+            })}`}>
               {" "}
               {loading ? (
                 <ClipLoader
@@ -122,9 +123,8 @@ const ForgotPassword = ({match: {params}}) => {
             </button>
           </div>
 
-          <div className="haveAnAccou">
-            <span className="f-11 d-block text-center mb-1"><small>Not yet registered?</small></span>
-              <Link to="/sign-up">Create an account</Link>
+          <div className="text-end forgetPassword">    
+              <Link to="/login">Back to Login</Link>
           </div>
 
         </form>

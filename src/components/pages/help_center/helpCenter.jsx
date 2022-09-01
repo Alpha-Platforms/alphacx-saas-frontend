@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import MoonLoader from 'react-spinners/MoonLoader';
 import { css } from '@emotion/css';
 import { useDispatch } from 'react-redux';
-import { SearchIconNavbr, SendIcon } from '../../../assets/images/svgs';
 import HelpNavBar from '../../Layout/helpNavBar';
 import AccordionLink from './components/accordion/AccordionLink';
 import NavCard from './components/navCard/navCard';
@@ -15,8 +14,9 @@ import './helpCenter.scss';
 // import LogoBG from '../../../assets/imgF/logoBG.png';
 import { httpGetMainKB, invalidTenant } from '../../../helpers/httpMethods';
 import { setKbBrandKit } from '../../../reduxstore/actions/tenantInfoActions';
-import { kbBrandKit } from '../../../helper';
+import { kbBrandKit, isSubdomainApp } from '../../../helper';
 import NotFound from '../error/NotFound';
+import KbSearch from './components/kbsearch/KbSearch';
 
 function HelpCenter() {
     const dispatch = useDispatch();
@@ -25,11 +25,7 @@ function HelpCenter() {
     const [loading, setLoading] = useState(true);
     const [popularArticle, setPopularArticle] = useState([]);
     const icons = ['work', 'account', 'subscription', 'users', 'settings', 'document'];
-    const [search, setSearch] = useState('');
-
-    const handleChange = (e) => {
-        setSearch(e.value);
-    };
+    const urlDomain = new URLSearchParams(window.location.search).get('domain');
 
     const fetchCategories = async () => {
         const res = await httpGetMainKB('articles/categories');
@@ -49,8 +45,6 @@ function HelpCenter() {
         const res = await httpGetMainKB('articles/most-popular');
         if (res?.status === 'success') {
             setPopularArticle(res?.data);
-        } else {
-            return NotificationManager.error(res?.er?.message, 'Error', 4000);
         }
     };
 
@@ -71,7 +65,7 @@ function HelpCenter() {
                     {/* <img src={LogoBG} alt="" className="logo-bg" /> */}
                     {/* COMMENT SEARCH FIELD */}
                     <h3>Knowledge Base</h3>
-                    <div className="searchbar">
+                    {/* <div className="searchbar">
                         <div className="icon">
                             <SearchIconNavbr />
                         </div>
@@ -86,6 +80,9 @@ function HelpCenter() {
                                 <SendIcon size={30} fill={kbBrandKit({ bgCol: 0 })?.backgroundColor} />
                             </button>
                         </form>
+                    </div> */}
+                    <div className="kb-home-search-bar mt-4">
+                        <KbSearch isHome />
                     </div>
                 </div>
                 {categories.length === 0 ? (
@@ -115,7 +112,9 @@ function HelpCenter() {
                         {categories.length > 8 && (
                             <div>
                                 <Link
-                                    to="/knowledge-base/categories"
+                                    to={`/knowledge-base/categories${
+                                        isSubdomainApp ? `?domain=${urlDomain || ''}` : ''
+                                    }`}
                                     className={`show-all-cat btn py-2 px-3 bg-at-blue-light ${css({
                                         ...kbBrandKit({ bgCol: 0 }),
                                         color: 'white',

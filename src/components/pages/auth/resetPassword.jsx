@@ -11,11 +11,16 @@ import Symbol1 from "../../../assets/imgF/symbolAuth.png";
 import Symbol2 from "../../../assets/imgF/symbolAuth2.png";
 import { NotificationManager } from "react-notifications";
 import {Validate} from "../../../helpers/validateInput";
-import { httpPost, httpPostMain, httpPostTenantAuth } from "../../../helpers/httpMethods";
+import { httpPostNoAuth } from "../../../helpers/httpMethods";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useHistory } from 'react-router-dom';
+import { brandKit, getSubdomainOrUrl } from "helper";
+import { css } from "@emotion/css";
 
 const ResetPassword = ({match: {params}}) => {
+
+
+  const urlQueryParams = new URLSearchParams(window.location.search);
 
   const [userInput, setUserInput] = useState({
     password: ""
@@ -27,7 +32,14 @@ const ResetPassword = ({match: {params}}) => {
   const history = useHistory();
   const [isSuccessful, setIsSuccessful] = useState(false)
   const [message, setMessage] = useState()
+  const [domain, setDomain] = useState('')
 
+  useEffect(() => {
+    let sub = getSubdomainOrUrl();
+    if (sub === 'app' || sub === 'dev') sub = urlQueryParams.get('domain');
+    setDomain(sub);
+  }, [])
+  
 
   const handleChange = (e) => {
     setUserInput({ ...userInput, [e.target.name]: e.target.value });
@@ -46,17 +58,15 @@ const ResetPassword = ({match: {params}}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if(userInput.password && userInput.password.length >= 8){
+    if(userInput.password && userInput.password.length >= 6){
     
       const data = {
         ...params,
         newPassword: userInput.password
       };
-
   
       setLoading(true);
-
-      const res = await httpPostTenantAuth("auth/reset-password", data);     
+      const res = await httpPostNoAuth(`auth/reset-password`, data, {domain});     
 
       setLoading(false);
 
@@ -70,11 +80,16 @@ const ResetPassword = ({match: {params}}) => {
         NotificationManager.error(res?.er?.message, "Password Error", 4000);
       }
 
+    } else {
+      return NotificationManager.error('Password must be longer than 6 characters', "Validation Error", 4000);
     }
   }
 
   return (
-    <div className="auth-container d-flex justify-content-center">
+    <div className={`auth-container d-flex justify-content-center ${css({
+          ...brandKit({ bgCol: -20, default: true }),
+      })}`}
+    >
       <div className="symbol-wrap2">
         <img src={Symbol2} alt="" />
       </div>
@@ -98,7 +113,9 @@ const ResetPassword = ({match: {params}}) => {
             </div>
 
             <div className="submit-auth-btn">
-              <button onClick={login}>
+              <button onClick={login} className={`mt-2 ${css({
+                ...brandKit({ bgCol: 0, default: true }),
+              })}`}>
                   Continue to Login
               </button>
             </div>
@@ -131,7 +148,12 @@ const ResetPassword = ({match: {params}}) => {
           </div>         
 
           <div className="submit-auth-btn">
-            <button  disabled={loading || (userInput.password === "")} onClick={handleSubmit}>
+            <button
+              disabled={loading || (userInput.password === "")} 
+              onClick={handleSubmit}
+              className={`mt-2 ${css({
+                ...brandKit({ bgCol: 0, default: true }),
+            })}`}>
               {" "}
               {loading ? (
                 <ClipLoader
@@ -140,7 +162,7 @@ const ResetPassword = ({match: {params}}) => {
                   size={30}
                 />
               ) : (
-                "Send"
+                "Create New Password"
               )}
             </button>
           </div>
