@@ -27,7 +27,7 @@ import TextAlignLeft from '../../../../../assets/imgF/TextAlignLeft.png';
 import TextAlignCenter from '../../../../../assets/imgF/TextAlignCenter.png';
 import TextAlignRight from '../../../../../assets/imgF/TextAlignRight.png';
 import { httpGetMain, httpPatchMain, httpPostMain } from '../../../../../helpers/httpMethods';
-import { allowedFiles, getAcceptValue, allowDocs, slugify, brandKit } from '../../../../../helper';
+import { allowedFiles, getAcceptValue, allowDocs, slugify, brandKit, isSubdomainApp } from '../../../../../helper';
 import { config } from '../../../../../config/keys';
 import './newArticle.scss';
 //
@@ -788,7 +788,11 @@ function NewArticle() {
                                             className="btn btn-sm btn-outline ms-2 py-1 f-12 px-4"
                                             href={`/knowledge-base/${slugify(postInfo?.category)}/${slugify(
                                                 postInfo?.title,
-                                            )}`}
+                                            )}${
+                                                isSubdomainApp
+                                                    ? `?domain=${window.localStorage.getItem('domain') || ''}`
+                                                    : ''
+                                            }`}
                                             target="_blank"
                                             rel="noreferrer"
                                         >

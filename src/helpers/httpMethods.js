@@ -39,7 +39,7 @@ export const splitHostname = (hostname) => {
 };
 
 // get the tenant domain from the url
-export const getTenantDomain = () => {
+export const getTenantDomainForKb = () => {
     // const fallbackTenant = 'techpoint';
 
     // get hostname
@@ -48,24 +48,25 @@ export const getTenantDomain = () => {
     // get splitted hostname
 
     const splittedHostname = splitHostname(hostname);
+    const urlDomain = new URLSearchParams(window.location.search).get('domain');
 
     if (splittedHostname) {
         const { subDomains, domain, topLevelDomains } = splittedHostname;
         // check for stagin and prod deployment
         if (domain === 'alphacx' || domain === 'qustomar') {
             // return the first subdomain
-            if (subDomains[0]) {
-                return subDomains[0];
-            }
+            if (subDomains[0] && subDomains[0] !== 'dev' && subDomains[0] !== 'app') return subDomains[0];
+            if ((subDomains[0] === 'dev' || subDomains[0] === 'app') && urlDomain) return urlDomain;
             return invalidTenant;
         }
         return invalidTenant;
     }
     // domain is likely to be dev localhost
     const splitLocal = hostname.split('.')[0];
-    if (splitLocal.slice(0, 9) === 'localhost') {
+    if (splitLocal.slice(0, 9) === 'localhost' || ((splitLocal === 'dev' || splitLocal === 'app') && !urlDomain)) {
         return invalidTenant;
     }
+    if ((splitLocal === 'dev' || splitLocal === 'app') && urlDomain) return urlDomain
     return splitLocal;
 };
 
@@ -234,17 +235,19 @@ export const httpGetMainKB = async (url) => {
         return NotificationManager.error('Please check your internet', 'Opps!', 3000);
     }
     try {
+        const tenantDomain = getTenantDomainForKb();
+        if (tenantDomain === invalidTenant) return invalidTenant; 
         const res = await axios.get(`${baseUrlMain}/${url}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
-                domain: localStorage.getItem('domain') || getTenantDomain(),
+                domain: tenantDomain,
                 'Access-Control-Allow-Origin': '*',
                 'Content-Type': 'application/json',
             },
         });
         return res.data;
     } catch (error) {
-        if (error.response.data.error?.substr(-14) === 'does not exist') {
+        if (error.response?.data?.error?.indexOf('does not exist') !== -1) {
             return invalidTenant;
         }
         if (error.response.data?.message === 'Unauthorized, Your token is invalid or expired') {

@@ -10,16 +10,18 @@ import { httpGetMainKB, invalidTenant } from '../../../../helpers/httpMethods';
 import HelpNavBar from '../../../Layout/helpNavBar';
 import TopBar from '../components/topBar/topBar';
 import './articleList.scss';
-import { slugify, uuid, kbBrandKit } from '../../../../helper';
+import { slugify, uuid, kbBrandKit, isSubdomainApp } from '../../../../helper';
 import { ReactComponent as Folder } from '../../../../assets/icons/Folder.svg';
 import NotFound from '../../error/NotFound';
 import { setKbBrandKit } from '../../../../reduxstore/actions/tenantInfoActions';
 
 function ArticleCategoryList() {
-    const dispatch = useDispatch;
+    const dispatch = useDispatch();
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [shouldReturn404, setShouldReturn404] = useState(false);
+
+    const urlDomain = new URLSearchParams(window.location.search).get('domain');
 
     const fetchCategories = async () => {
         const res = await httpGetMainKB('articles/categories');
@@ -55,7 +57,9 @@ function ArticleCategoryList() {
                     {categories.map((item) => (
                         <Link
                             key={uuid()}
-                            to={`/knowledge-base/${slugify(item?.name?.toLowerCase())}`}
+                            to={`/knowledge-base/${slugify(item?.name?.toLowerCase())}${
+                                isSubdomainApp ? `?domain=${urlDomain || ''}` : ''
+                            }`}
                             className={`${css({ '&:hover': { ...kbBrandKit({ col: 0 }) } })}`}
                         >
                             <div className="article-link category-link">

@@ -20,7 +20,7 @@ import tableIcons from '../../../../assets/materialicons/tableIcons';
 import { httpGetMain, httpPatchMain } from '../../../../helpers/httpMethods';
 import EmptyArticle from '../../../../assets/images/empty_article.png';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
-import { brandKit } from './../../../../helper';
+import { brandKit, isSubdomainApp } from './../../../../helper';
 
 
 function HelpCenterSettings() {
@@ -300,7 +300,7 @@ function HelpCenterSettings() {
                                 ...brandKit({ bgCol: 0 }),
                                 color: 'white',
                                 '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
-                            })}`} to="/knowledge-base/" target="_blank">
+                            })}`} to={`/knowledge-base${isSubdomainApp ? `?domain=${window.localStorage.getItem('domain') || ''}` : ''}`} target="_blank">
                             <span>View KB</span>
                         </Link>
                     </div>
