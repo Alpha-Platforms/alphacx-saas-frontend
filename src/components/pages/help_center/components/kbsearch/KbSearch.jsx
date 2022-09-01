@@ -4,7 +4,7 @@ import { css } from '@emotion/css';
 import MoonLoader from 'react-spinners/MoonLoader';
 import { Link } from 'react-router-dom';
 import { isObjectEmpty, uuid, slugify, kbBrandKit } from '../../../../../helper';
-import { httpGetMain } from '../../../../../helpers/httpMethods';
+import { httpGetMainKB } from '../../../../../helpers/httpMethods';
 import searchIcon from '../../../../../assets/imgF/Search.png';
 import './KbSearch.scss';
 
@@ -17,7 +17,7 @@ const getKbSearchResult = async (userInput) => {
         clearTimeout(KbSearchTimer);
         KbSearchTimer = setTimeout(async () => {
             try {
-                const res = await httpGetMain(`search/articles?query=${userInput}`);
+                const res = await httpGetMainKB(`search/articles?query=${userInput}`);
                 if (res.status?.toLowerCase() === 'success') {
                     resolve(res?.data);
                 }
@@ -127,7 +127,7 @@ function KbSearch({ isHome }) {
                                             key={uuid()}
                                             onClick={closeDropdown}
                                             to={`/knowledge-base/${slugify(
-                                                item?.folders?.[0]?.category || 'general',
+                                                item?.folders?.[0]?.category?.name || 'general',
                                             )}/${slugify(item?.title)}`}
                                         >
                                             {item?.title}

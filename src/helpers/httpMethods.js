@@ -54,7 +54,7 @@ export const getTenantDomain = () => {
         // check for stagin and prod deployment
         if (domain === 'alphacx' || domain === 'qustomar') {
             // return the first subdomain
-            if (subDomains[0]) {
+            if (subDomains[0] && subDomains[0] !== 'dev' && subDomains[0] !== 'app') {
                 return subDomains[0];
             }
             return invalidTenant;
