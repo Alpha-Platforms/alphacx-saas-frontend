@@ -5,6 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { SearchIconNavbr } from '../../../../../assets/images/svgs';
 import './topBar.scss';
 import { slugify } from '../../../../../helper';
+import KbSearch from '../kbsearch/KbSearch';
 
 function TopBar({ categoryId }) {
     const location = useLocation();
@@ -32,13 +33,16 @@ function TopBar({ categoryId }) {
                     </p>
                 ))}
             </div>
-            <div className="search-bar">
+            {/* <div className="search-bar">
                 <div className="icon">
                     <SearchIconNavbr />
                 </div>
                 <form>
                     <input type="text" placeholder="Search help center" />
                 </form>
+            </div> */}
+            <div className="kb-search-bar">
+                <KbSearch />
             </div>
         </div>
     );
