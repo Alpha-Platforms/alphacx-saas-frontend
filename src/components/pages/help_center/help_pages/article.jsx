@@ -19,9 +19,11 @@ import './article.scss';
 function Article() {
     const { slug } = useParams();
     const dispatch = useDispatch();
+    const location = useLocation();
+    const pageUrl = location.pathname;
 
     function useQuery() {
-        return new URLSearchParams(useLocation().search);
+        return new URLSearchParams(location.search);
     }
     const query = useQuery();
     // const file_name = "blog-one.md";
@@ -44,6 +46,7 @@ function Article() {
     // };
 
     const fetchArticleDetails = async () => {
+        setLoading(true);
         const res = await httpGetMainKB(`article?slug=${slug}`);
         dispatch(setKbBrandKit(res?.branding));
         setLoading(false);
@@ -60,7 +63,7 @@ function Article() {
     useEffect(() => {
         fetchArticleDetails();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [pageUrl]);
 
     useEffect(() => {
         if (!loading) {

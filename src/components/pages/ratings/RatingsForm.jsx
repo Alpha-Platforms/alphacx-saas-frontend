@@ -27,6 +27,7 @@ export default function RatingsForm() {
     const [npsScore, setNpsScore] = useState(0);
     const [comment, setComment] = useState('');
     const [processing, setProcessing] = useState(false);
+    const [domain, setDomain] = useState('')
     const [ratingsConfig, setRatingsConfig] = useState({
         ratingLabel: 'Satisfied with our customer support service? Click on the stars below to rate us.',
         commentLabel: 'Tell us what we can improved upon',
@@ -42,12 +43,12 @@ export default function RatingsForm() {
     useEffect(() => {
         let sub = getSubdomainOrUrl();
         if (sub === 'app' || sub === 'dev') sub = urlQueryParams.get('domain');
-
+        setDomain(sub);
         getRatingConfig(sub);
     }, []);
 
-    const getRatingConfig = async (domain) => {
-        const res = await httpGetMainNoAuth(`settings/rating-config?domain=${domain}`, {});
+    const getRatingConfig = async (sub) => {
+        const res = await httpGetMainNoAuth(`settings/rating-config?domain=${sub}`, {});
         if (res?.status === 'success') {
             setRatingsConfig({
                 ...ratingsConfig,
@@ -80,10 +81,8 @@ export default function RatingsForm() {
             customerId,
             comment,
         };
-        const headers = {
-            domain: location.hostname.split('.')[0],
-        };
-        const res = await httpPostNoAuth(`ratings`, data, headers);
+        
+        const res = await httpPostNoAuth(`ratings?domain=${domain}`, data, {});
         if (res?.status === 'success') {
             setProcessing(false);
             setShowModal(true);
