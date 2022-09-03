@@ -88,7 +88,7 @@ import FBIGIntegration from './components/pages/settings/social_integrations/fbi
 import AppsumoSignup from './components/pages/appsumo/signup';
 import Instagram from './components/pages/settings/social_integrations/Instagram';
 import AppsumoPlans from './components/pages/appsumo/AppsumoPlans';
-import { hasFeatureAccess } from './helper';
+import { hasFeatureAccess, isSubdomainApp } from './helper';
 import useNavigatorOnLine from './hooks/useNavigatorOnline';
 import NotFound from './components/pages/error/NotFound';
 
@@ -167,6 +167,7 @@ const SiteRouter = connect(mapStateToProps, {
                 getCategories();
                 getStatuses();
                 getGroups();
+
                 getTags();
                 getConfigs();
                 getCustomFields();
@@ -215,10 +216,38 @@ const SiteRouter = connect(mapStateToProps, {
                                 {/* forgot password */}
                                 <Route exact path="/reset-password/:resetToken" component={ResetPassword} />{' '}
                                 {/* reset password */}
-                                <Route exact path="/knowledge-base" component={HelpCenter} />
-                                <Route exact path="/knowledge-base/categories" component={ArticleCategoryList} />
-                                <Route exact path="/knowledge-base/:category" component={ArticleList} />
-                                <Route exact path="/knowledge-base/:category/:slug" component={Article} />
+                                <Route
+                                    exact
+                                    path={isSubdomainApp ? '/:tenantdomain/knowledge-base' : '/knowledge-base'}
+                                    component={HelpCenter}
+                                />
+                                <Route
+                                    exact
+                                    path={
+                                        isSubdomainApp
+                                            ? '/:tenantdomain/knowledge-base/categories'
+                                            : '/knowledge-base/categories'
+                                    }
+                                    component={ArticleCategoryList}
+                                />
+                                <Route
+                                    exact
+                                    path={
+                                        isSubdomainApp
+                                            ? '/:tenantdomain/knowledge-base/:category'
+                                            : '/knowledge-base/:category'
+                                    }
+                                    component={ArticleList}
+                                />
+                                <Route
+                                    exact
+                                    path={
+                                        isSubdomainApp
+                                            ? '/:tenantdomain/knowledge-base/:category/:slug'
+                                            : '/knowledge-base/:category/:slug'
+                                    }
+                                    component={Article}
+                                />
                                 <Route exact path="/feedback/:ticketId/:customerId" component={RatingsForm} />
                                 <Route exact path="/feedback/preview" component={RatingsForm} />
                                 {/* help pages end */}
