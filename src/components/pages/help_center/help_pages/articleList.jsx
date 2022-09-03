@@ -2,7 +2,7 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { useLocation, useParams, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import MoonLoader from 'react-spinners/MoonLoader';
 import { useDispatch } from 'react-redux';
 import { httpGetMainKB, invalidTenant } from '../../../../helpers/httpMethods';
@@ -18,7 +18,6 @@ import { setKbBrandKit } from '../../../../reduxstore/actions/tenantInfoActions'
 function ArticleList() {
     const dispatch = useDispatch();
     const { category, tenantdomain } = useParams();
-    const pageUrl = useLocation().pathname;
     const [articles, setArticles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [shouldReturn404, setShouldReturn404] = useState(false);
