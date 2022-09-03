@@ -2,7 +2,7 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { useLocation, useParams, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import MoonLoader from 'react-spinners/MoonLoader';
 import { useDispatch } from 'react-redux';
 import { httpGetMainKB, invalidTenant } from '../../../../helpers/httpMethods';
@@ -17,13 +17,11 @@ import { setKbBrandKit } from '../../../../reduxstore/actions/tenantInfoActions'
 
 function ArticleList() {
     const dispatch = useDispatch();
-    const { category } = useParams();
-    const pageUrl = useLocation().pathname;
+    const { category, tenantdomain } = useParams();
     const [articles, setArticles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [shouldReturn404, setShouldReturn404] = useState(false);
     const [catName, setCatName] = useState('');
-    const urlDomain = new URLSearchParams(window.location.search).get('domain');
 
     const fetchAllArticles = async () => {
         const res = await httpGetMainKB(`articles/category?slug=${category}`);
@@ -63,9 +61,9 @@ function ArticleList() {
                         ?.map((item) => (
                             <Link
                                 key={uuid()}
-                                to={`${pageUrl}/${slugify(item?.title?.toLowerCase())}${
-                                    isSubdomainApp ? `?domain=${urlDomain || ''}` : ''
-                                }`}
+                                to={`${isSubdomainApp() ? `/${tenantdomain || ''}` : ''}/knowledgebase/${slugify(
+                                    catName,
+                                )}/${slugify(item?.title?.toLowerCase())}`}
                             >
                                 <div className="article-link">
                                     <p className="title">

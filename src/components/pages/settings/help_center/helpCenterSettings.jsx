@@ -300,7 +300,11 @@ function HelpCenterSettings() {
                                 ...brandKit({ bgCol: 0 }),
                                 color: 'white',
                                 '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
-                            })}`} to={`/knowledge-base${isSubdomainApp ? `?domain=${window.localStorage.getItem('domain') || ''}` : ''}`} target="_blank">
+                            })}`} to={`${
+                                isSubdomainApp()
+                                    ? `/${window.localStorage.getItem('domain') || ''}`
+                                    : ''
+                            }/knowledgebase`} target="_blank">
                             <span>View KB</span>
                         </Link>
                     </div>
