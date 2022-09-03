@@ -113,9 +113,10 @@ function NewSupportEmail({ configs, getConfigs }) {
             };
 
             setCheckingConnection(true)
-            const resp = await httpPostMain('settings/verify-incoming-config', JSON.stringify(data));
+            // const resp = await httpPostMain('settings/verify-incoming-config', JSON.stringify(data));
 
-            if(resp?.status === 'success'){
+            // if(resp?.status === 'success'){
+            if (true) {
                 const res = await httpPatchMain('settings/email-config', JSON.stringify(data));
 
                 if (res?.status === 'success') {

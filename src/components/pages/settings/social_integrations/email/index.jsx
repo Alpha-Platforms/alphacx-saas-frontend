@@ -31,7 +31,6 @@ function EmailSettings({ configs, isConfigsLoaded, tenantInfo, getConfigs }) {
     const [showOnOffToggle, setShowOnOffToggle] = useState(false)
     const [deleteConfirm, setDeleteConfirm] = useState(false);
     const [configToDelete, setConfigToDelete] = useState('');
-    // const [emailConfigData, setEmailConfigData] = useState([configs?.email_config, configs?.outgoing_email_config]);
     const [emailConfigData, setEmailConfigData] = useState({incoming: null, outgoing: null});
 
     const dispatch = useDispatch();
@@ -41,19 +40,18 @@ function EmailSettings({ configs, isConfigsLoaded, tenantInfo, getConfigs }) {
     }, [action]);
 
     useEffect(() => {
-        if (isConfigsLoaded) {            
+        if (isConfigsLoaded) {
             if (!configs?.email_config?.email && !configs?.outgoing_email_config) {
                 history.push('/settings/integrations/email/email-form');
             }
 
             if (configs?.email_config) {
                 setShowOnOffToggle(true);
-                setEmailConfigData((prev) => ({...prev, incoming: configs?.email_config}));
             }
-
-            if(configs?.outgoing_email_config) setEmailConfigData((prev) => ({...prev, outgoing: configs?.outgoing_email_config}));
+            
+            setEmailConfigData((prev) => ({...prev, incoming: configs?.email_config, outgoing: configs?.outgoing_email_config}));
         }
-    }, [isConfigsLoaded]);
+    }, [isConfigsLoaded, configs]);
 
     useEffect(() => {
         setHasEmailConfig(tenantInfo?.tenantInfo?.has_email_config);
@@ -210,7 +208,14 @@ function EmailSettings({ configs, isConfigsLoaded, tenantInfo, getConfigs }) {
 
                 <div id="result" />
 
-                <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
+                <div className="ticket-table-wrapper" style={{ paddingTop: 10 }}>
+                    {(!emailConfigData?.incoming || !emailConfigData?.outgoing) && 
+                        <Link to="/settings/integrations/email/email-form" className={`btn btn-sm me-2 float-end ${css({
+                            ...brandKit({ bgCol: 0 }),
+                            color: 'white',
+                            '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                        })}`}>Add Config</Link>
+                    }
                     <div
                         id="alphacxMTable"
                         className="pb-5 acx-ticket-cust-table acx-ticket-table acx-user-table-2 p-4 fit-content"
@@ -222,21 +227,19 @@ function EmailSettings({ configs, isConfigsLoaded, tenantInfo, getConfigs }) {
                                     title=""
                                     icons={tableIcons}
                                     data={
-                                        Object.values(emailConfigData).length > 0
-                                            ? Object.values(emailConfigData).filter(i => i !== null).map(
-                                                  (emailConfig, idx) => ({
-                                                      name:
-                                                      emailConfig?.type
-                                                              ? 'Outgoing Mail Server'
-                                                              : 'Incoming Mail Server',
-                                                      email: emailConfig?.email,
-                                                      host: emailConfig?.host,
-                                                      port: emailConfig?.port,
-                                                      idx,
-                                                      type: emailConfig?.type,
-                                                  }),
-                                              )
-                                            : []
+                                         Object.values(emailConfigData).filter(i => i !== null).map(
+                                            (emailConfig, idx) => ({
+                                                name:
+                                                emailConfig?.type
+                                                        ? 'Outgoing Mail Server'
+                                                        : 'Incoming Mail Server',
+                                                email: emailConfig?.email,
+                                                host: emailConfig?.host,
+                                                port: emailConfig?.port,
+                                                idx,
+                                                type: emailConfig?.type,
+                                            })
+                                        )
                                     }
                                     options={{
                                         search: true,
