@@ -22,13 +22,13 @@ function TopBar({ categoryId }) {
     return (
         <div className="top-bar">
             <div className="breadcrumbs">
-                <Link to={`/knowledge-base${isSubdomainApp ? `?domain=${urlDomain || ''}` : ''}`}>
+                <Link to={`/knowledgebase${isSubdomainApp ? `?domain=${urlDomain || ''}` : ''}`}>
                     <p className="link active">Home</p>
                 </Link>
                 {links.map((link, i) => (
                     <p key={i} className={`link ${i === links.length - 2 ? 'active' : ''}`}>
                         {i === links.length - 2 ? (
-                            <Link to={`/knowledge-base/${slugify(link)}${isSubdomainApp ? `?domain=${urlDomain || ''}` : ''}`}>{link.replaceAll('-', ' ')}</Link>
+                            <Link to={`/knowledgebase/${slugify(link)}${isSubdomainApp ? `?domain=${urlDomain || ''}` : ''}`}>{link.replaceAll('-', ' ')}</Link>
                         ) : (
                             link.replaceAll('-', ' ')
                         )}

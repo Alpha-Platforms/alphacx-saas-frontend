@@ -114,7 +114,7 @@ function HelpCenter() {
                         {categories.length > 8 && (
                             <div>
                                 <Link
-                                    to={`/knowledge-base/categories${
+                                    to={`/knowledgebase/categories${
                                         isSubdomainApp ? `?domain=${urlDomain || ''}` : ''
                                     }`}
                                     className={`show-all-cat btn py-2 px-3 bg-at-blue-light ${css({

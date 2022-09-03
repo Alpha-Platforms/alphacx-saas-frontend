@@ -57,7 +57,7 @@ function ArticleCategoryList() {
                     {categories.map((item) => (
                         <Link
                             key={uuid()}
-                            to={`/knowledge-base/${slugify(item?.name?.toLowerCase())}${
+                            to={`/knowledgebase/${slugify(item?.name?.toLowerCase())}${
                                 isSubdomainApp ? `?domain=${urlDomain || ''}` : ''
                             }`}
                             className={`${css({ '&:hover': { ...kbBrandKit({ col: 0 }) } })}`}

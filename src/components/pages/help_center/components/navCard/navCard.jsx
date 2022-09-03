@@ -11,9 +11,9 @@ function NavCard({ title, folders }) {
         <div className="nav-card">
             <Link
                 to={
-                    `/knowledge-base/${slugify(title.toLowerCase())}${
+                    `/knowledgebase/${slugify(title.toLowerCase())}${
                         isSubdomainApp ? `?domain=${urlDomain || ''}` : ''
-                    }` || '/knowledge-base'
+                    }` || '/knowledgebase'
                 }
             >
                 <div className="nav-icon">

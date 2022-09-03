@@ -127,7 +127,7 @@ function KbSearch({ isHome }) {
                                         <Link
                                             key={uuid()}
                                             onClick={closeDropdown}
-                                            to={`/knowledge-base/${slugify(
+                                            to={`/knowledgebase/${slugify(
                                                 item?.folders?.[0]?.category?.name || 'general',
                                             )}/${slugify(item?.title)}${
                                                 isSubdomainApp ? `?domain=${urlDomain || ''}` : ''

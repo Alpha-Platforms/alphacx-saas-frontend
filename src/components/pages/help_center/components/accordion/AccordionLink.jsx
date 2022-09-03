@@ -17,7 +17,7 @@ function AccordionLink({ question, solution, category }) {
     // };
     return (
         <Link
-            to={`/knowledge-base/${slugify(category || '')}/${slugify(question || '')}${
+            to={`/knowledgebase/${slugify(category || '')}/${slugify(question || '')}${
                 isSubdomainApp ? `?domain=${urlDomain || ''}` : ''
             }`}
             className={`accordion ${open ? 'expand' : ''} ${css({ '&:hover': { ...kbBrandKit({ col: 0 }) } })}`}
