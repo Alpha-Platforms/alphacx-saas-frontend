@@ -144,26 +144,25 @@ const SiteRouter = connect(mapStateToProps, {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [siteUser]);
         useEffect(() => {
+            const pathsToAvoid = [
+                '/knowledge-base',
+                '/login',
+                '/sign-up',
+                '/forgot-password',
+                '/reset-password',
+                '/feedback',
+                '/account-verified',
+                '/twitter-auth',
+                '/customer-portal',
+                '/no-customers',
+                '/instagram',
+                '/integrations',
+                '/appsumo',
+            ];
+            const shouldAvoidPage = pathsToAvoid.some((item) => location.pathname.startsWith(item));
+            const isKbPublicRoute = location.pathname.indexOf('knowledgebase') !== -1;
             /* these should not be called in routes like onboarding, kb, etc and when the user is not authenticated */
-            if (
-                isUserAuthenticated &&
-                ![
-                    '/knowledge-base',
-                    '/login',
-                    '/sign-up',
-                    '/forgot-password',
-                    '/reset-password',
-                    '/feedback',
-                    '/account-verified',
-                    '/twitter-auth',
-                    '/customer-portal',
-                    '/no-customers',
-                    '/instagram',
-                    '/integrations',
-                    '/appsumo',
-                ].some((item) => location.pathname.startsWith(item)) &&
-                !location.pathname.indexOf('knowledgebase')
-            ) {
+            if (isUserAuthenticated && !shouldAvoidPage && !isKbPublicRoute) {
                 getPriorities();
                 getCategories();
                 getStatuses();
