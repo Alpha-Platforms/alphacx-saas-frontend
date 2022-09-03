@@ -4,7 +4,7 @@ import { css } from '@emotion/css';
 import './newSupportEmail.scss';
 import { NotificationManager } from 'react-notifications';
 import { Modal } from 'react-responsive-modal';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { httpPatchMain, httpPostMain } from '../../../../../../helpers/httpMethods';
 import RightArrow from '../../../../../../assets/imgF/arrow_right.png';
@@ -15,11 +15,11 @@ import { brandKit } from './../../../../../../helper';
 
 function NewSupportEmail({ configs, getConfigs }) {
     const { search } = useLocation();
+    const history = useHistory();
     const type = new URLSearchParams(search).get('type');
 
     const [defaultServer, setDefaultServer] = useState(false);
     const [activateSaveBtn, setActivateSaveBtn] = useState(false);
-    const [show, setShow] = useState(false);
     const [passwordChanged, setPasswordChanged] = useState(false);
     const [checkingConnection, setCheckingConnection] = useState(false)
     const [emailState, setEmailState] = useState({
@@ -58,10 +58,8 @@ function NewSupportEmail({ configs, getConfigs }) {
     useEffect(() => {        
         const { email, port, tls, host, password } = emailState.emailConfig;
         if(email && port && host && password){
-            console.log(emailState.emailConfig);
             setActivateSaveBtn(true)
         } else if(activateSaveBtn) {
-            console.log("no activate");
             setActivateSaveBtn(false)
         }
     }, [emailState.emailConfig])
@@ -93,12 +91,6 @@ function NewSupportEmail({ configs, getConfigs }) {
             }));
         }
     }, [configs]);
-    
-    const handleClose = () => {
-        setShow(false);
-        window.location.href = '/settings/integrations/email';
-    };
-    const handleShow = () => setShow(true);
 
     const handleServerChange = (e) => {
         if (e.target.checked) {
@@ -108,7 +100,6 @@ function NewSupportEmail({ configs, getConfigs }) {
 
     const handleSubmit = async () => {
         if (emailState.mailServer === 'incoming-only') {
-            // console.log('Executing incoming only');
             const { email, port, tls, host, password } = emailState.emailConfig;
 
             const data = {
@@ -128,8 +119,10 @@ function NewSupportEmail({ configs, getConfigs }) {
                 const res = await httpPatchMain('settings/email-config', JSON.stringify(data));
 
                 if (res?.status === 'success') {
-                    handleShow();
                     getConfigs();
+                    NotificationManager.success('Settings successfull saved!', 'Error', 4000);
+                    history.push('/settings/integrations/email');
+
                 } else {
                     NotificationManager.error(res?.er?.message, 'Error', 4000);
                 }
@@ -142,7 +135,7 @@ function NewSupportEmail({ configs, getConfigs }) {
 
             
         } else {
-            // console.log('executing outgoing only');
+            // executing outgoing only
             const { email, password, port, tls, host, from, apiKey, type } = emailState.outgoingEmailConfig;
 
             if (type === 'api') {
@@ -173,8 +166,10 @@ function NewSupportEmail({ configs, getConfigs }) {
             const res = await httpPatchMain('settings/outgoing-email-config', JSON.stringify(data));
 
             if (res?.status === 'success') {
-                handleShow();
                 getConfigs();
+                NotificationManager.success('Settings successfull saved!', 'Email Configuration', 4000);
+                history.push('/settings/integrations/email');
+
             } else {
                 return NotificationManager.error(res?.er?.message, 'Error', 4000);
             }
@@ -290,21 +285,6 @@ function NewSupportEmail({ configs, getConfigs }) {
                     </div>
                 </div>
             </div>
-
-            <Modal open={show} onClose={handleClose} center>
-                <div className="p-5 w-100">
-                    <h6 className="mb-5">Your mail server setup was sucess</h6>
-                    <div className="d-flex justify-content-center">
-                        <Link
-                            to="/settings/integrations/email"
-                            className="btn btn-sm bg-at-blue-light text-white px-5 f-16"
-                            id="continue"
-                        >
-                            Continue
-                        </Link>
-                    </div>
-                </div>
-            </Modal>
         </div>
     );
 }
