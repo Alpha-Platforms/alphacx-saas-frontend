@@ -162,7 +162,7 @@ const SiteRouter = connect(mapStateToProps, {
                     '/integrations',
                     '/appsumo',
                 ].some((item) => location.pathname.startsWith(item)) &&
-                !location.pathname.indexOf('knowledgebase')
+                location.pathname.indexOf('knowledgebase') === -1
             ) {
                 getPriorities();
                 getCategories();
