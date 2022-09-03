@@ -2,7 +2,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { css } from '@emotion/css';
 import MoonLoader from 'react-spinners/MoonLoader';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { isObjectEmpty, uuid, slugify, kbBrandKit, isSubdomainApp } from '../../../../../helper';
 import { httpGetMainKB } from '../../../../../helpers/httpMethods';
 import searchIcon from '../../../../../assets/imgF/Search.png';
@@ -34,7 +34,7 @@ function KbSearch({ isHome }) {
     const [searchResult, setSearchResult] = useState(null);
     const [loading, setLoading] = useState(false);
     const searchRef = useRef(null);
-    const urlDomain = new URLSearchParams(window.location.search).get('domain');
+    const { tenantdomain } = useParams();
 
     const clearInput = () => {
         if (searchRef?.current?.value) {
@@ -127,11 +127,11 @@ function KbSearch({ isHome }) {
                                         <Link
                                             key={uuid()}
                                             onClick={closeDropdown}
-                                            to={`/knowledge-base/${slugify(
+                                            to={`${
+                                                isSubdomainApp() ? `/${tenantdomain || ''}` : ''
+                                            }/knowledgebase/${slugify(
                                                 item?.folders?.[0]?.category?.name || 'general',
-                                            )}/${slugify(item?.title)}${
-                                                isSubdomainApp ? `?domain=${urlDomain || ''}` : ''
-                                            }`}
+                                            )}/${slugify(item?.title)}`}
                                         >
                                             {item?.title}
                                         </Link>
