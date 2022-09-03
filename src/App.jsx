@@ -161,7 +161,8 @@ const SiteRouter = connect(mapStateToProps, {
                     '/instagram',
                     '/integrations',
                     '/appsumo',
-                ].some((item) => location.pathname.startsWith(item))
+                ].some((item) => location.pathname.startsWith(item)) &&
+                !location.pathname.indexOf('knowledgebase')
             ) {
                 getPriorities();
                 getCategories();
@@ -391,13 +392,13 @@ const SiteRouter = connect(mapStateToProps, {
                                 {/* KNOWLEDGEBASE PUBLIC ROUTES */}
                                 <Route
                                     exact
-                                    path={isSubdomainApp ? '/:tenantdomain/knowledgebase' : '/knowledgebase'}
+                                    path={isSubdomainApp() ? '/:tenantdomain/knowledgebase' : '/knowledgebase'}
                                     component={HelpCenter}
                                 />
                                 <Route
                                     exact
                                     path={
-                                        isSubdomainApp
+                                        isSubdomainApp()
                                             ? '/:tenantdomain/knowledgebase/categories'
                                             : '/knowledgebase/categories'
                                     }
@@ -406,7 +407,7 @@ const SiteRouter = connect(mapStateToProps, {
                                 <Route
                                     exact
                                     path={
-                                        isSubdomainApp
+                                        isSubdomainApp()
                                             ? '/:tenantdomain/knowledgebase/:category'
                                             : '/knowledgebase/:category'
                                     }
@@ -415,7 +416,7 @@ const SiteRouter = connect(mapStateToProps, {
                                 <Route
                                     exact
                                     path={
-                                        isSubdomainApp
+                                        isSubdomainApp()
                                             ? '/:tenantdomain/knowledgebase/:category/:slug'
                                             : '/knowledgebase/:category/:slug'
                                     }

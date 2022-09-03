@@ -2,7 +2,7 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import { NotificationManager } from 'react-notifications';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { css } from '@emotion/css';
 import { useDispatch } from 'react-redux';
 import MoonLoader from 'react-spinners/MoonLoader';
@@ -20,8 +20,7 @@ function ArticleCategoryList() {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [shouldReturn404, setShouldReturn404] = useState(false);
-
-    const urlDomain = new URLSearchParams(window.location.search).get('domain');
+    const { tenantdomain } = useParams();
 
     const fetchCategories = async () => {
         const res = await httpGetMainKB('articles/categories');
@@ -57,9 +56,9 @@ function ArticleCategoryList() {
                     {categories.map((item) => (
                         <Link
                             key={uuid()}
-                            to={`/knowledgebase/${slugify(item?.name?.toLowerCase())}${
-                                isSubdomainApp ? `?domain=${urlDomain || ''}` : ''
-                            }`}
+                            to={`${isSubdomainApp() ? `/${tenantdomain || ''}` : ''}/knowledgebase/${slugify(
+                                item?.name?.toLowerCase(),
+                            )}`}
                             className={`${css({ '&:hover': { ...kbBrandKit({ col: 0 }) } })}`}
                         >
                             <div className="article-link category-link">

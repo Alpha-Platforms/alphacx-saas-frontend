@@ -25,9 +25,7 @@ function HelpCenter() {
     const [loading, setLoading] = useState(true);
     const [popularArticle, setPopularArticle] = useState([]);
     const icons = ['work', 'account', 'subscription', 'users', 'settings', 'document'];
-    const urlDomain = new URLSearchParams(window.location.search).get('domain');
     const { tenantdomain } = useParams();
-    console.log('TENANT DOMAIN => ', tenantdomain);
 
     const fetchCategories = async () => {
         const res = await httpGetMainKB('articles/categories');
@@ -114,9 +112,7 @@ function HelpCenter() {
                         {categories.length > 8 && (
                             <div>
                                 <Link
-                                    to={`/knowledgebase/categories${
-                                        isSubdomainApp ? `?domain=${urlDomain || ''}` : ''
-                                    }`}
+                                    to={`${isSubdomainApp() ? `/${tenantdomain || ''}` : ''}/knowledgebase/categories`}
                                     className={`show-all-cat btn py-2 px-3 bg-at-blue-light ${css({
                                         ...kbBrandKit({ bgCol: 0 }),
                                         color: 'white',

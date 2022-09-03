@@ -786,13 +786,11 @@ function NewArticle() {
                                     {articleId && (
                                         <a
                                             className="btn btn-sm btn-outline ms-2 py-1 f-12 px-4"
-                                            href={`/knowledge-base/${slugify(postInfo?.category)}/${slugify(
-                                                postInfo?.title,
-                                            )}${
-                                                isSubdomainApp
-                                                    ? `?domain=${window.localStorage.getItem('domain') || ''}`
+                                            href={`${
+                                                isSubdomainApp()
+                                                    ? `/${window.localStorage.getItem('domain') || ''}`
                                                     : ''
-                                            }`}
+                                            }/knowledgebase/${slugify(postInfo?.category)}/${slugify(postInfo?.title)}`}
                                             target="_blank"
                                             rel="noreferrer"
                                         >
