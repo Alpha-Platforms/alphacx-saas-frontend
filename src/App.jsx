@@ -216,38 +216,6 @@ const SiteRouter = connect(mapStateToProps, {
                                 {/* forgot password */}
                                 <Route exact path="/reset-password/:resetToken" component={ResetPassword} />{' '}
                                 {/* reset password */}
-                                <Route
-                                    exact
-                                    path={isSubdomainApp ? '/:tenantdomain/knowledge-base' : '/knowledge-base'}
-                                    component={HelpCenter}
-                                />
-                                <Route
-                                    exact
-                                    path={
-                                        isSubdomainApp
-                                            ? '/:tenantdomain/knowledge-base/categories'
-                                            : '/knowledge-base/categories'
-                                    }
-                                    component={ArticleCategoryList}
-                                />
-                                <Route
-                                    exact
-                                    path={
-                                        isSubdomainApp
-                                            ? '/:tenantdomain/knowledge-base/:category'
-                                            : '/knowledge-base/:category'
-                                    }
-                                    component={ArticleList}
-                                />
-                                <Route
-                                    exact
-                                    path={
-                                        isSubdomainApp
-                                            ? '/:tenantdomain/knowledge-base/:category/:slug'
-                                            : '/knowledge-base/:category/:slug'
-                                    }
-                                    component={Article}
-                                />
                                 <Route exact path="/feedback/:ticketId/:customerId" component={RatingsForm} />
                                 <Route exact path="/feedback/preview" component={RatingsForm} />
                                 {/* help pages end */}
@@ -420,6 +388,40 @@ const SiteRouter = connect(mapStateToProps, {
                                         component={NewArticle}
                                     />
                                 )}
+                                {/* KNOWLEDGEBASE PUBLIC ROUTES */}
+                                <Route
+                                    exact
+                                    path={isSubdomainApp ? '/:tenantdomain/knowledgebase' : '/knowledgebase'}
+                                    component={HelpCenter}
+                                />
+                                <Route
+                                    exact
+                                    path={
+                                        isSubdomainApp
+                                            ? '/:tenantdomain/knowledgebase/categories'
+                                            : '/knowledgebase/categories'
+                                    }
+                                    component={ArticleCategoryList}
+                                />
+                                <Route
+                                    exact
+                                    path={
+                                        isSubdomainApp
+                                            ? '/:tenantdomain/knowledgebase/:category'
+                                            : '/knowledgebase/:category'
+                                    }
+                                    component={ArticleList}
+                                />
+                                <Route
+                                    exact
+                                    path={
+                                        isSubdomainApp
+                                            ? '/:tenantdomain/knowledgebase/:category/:slug'
+                                            : '/knowledgebase/:category/:slug'
+                                    }
+                                    component={Article}
+                                />
+                                {/* END: KNOWLEDGEBASE PUBLIC ROUTES */}
                                 <SettingsLayoutRoute
                                     exact
                                     path="/settings/tickets"
