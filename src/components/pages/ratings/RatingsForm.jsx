@@ -24,17 +24,24 @@ import { getSubdomainOrUrl } from 'helper';
 
 export default function RatingsForm() {
     const [rating, setRating] = useState(0);
-    const [npsScore, setNpsScore] = useState(0);
+    const [npsScore, setNpsScore] = useState(null);
     const [comment, setComment] = useState('');
     const [processing, setProcessing] = useState(false);
     const [domain, setDomain] = useState('')
+    // const [ratingsConfig, setRatingsConfig] = useState({
+    //     ratingLabel: 'Satisfied with our customer support service? Click on the stars below to rate us.',
+    //     commentLabel: 'Tell us what we can improved upon',
+    //     npsLabel: 'How likely are you to recommend us to a friend or colleague?',
+    // });
+
     const [ratingsConfig, setRatingsConfig] = useState({
-        ratingLabel: 'Satisfied with our customer support service? Click on the stars below to rate us.',
-        commentLabel: 'Tell us what we can improved upon',
-        npsLabel: 'How likely are you to recommend us to a friend or colleague?',
+        ratingLabel: '',
+        commentLabel: '',
+        npsLabel: '',
     });
-    //
-    const [showModal, setShowModal] = useState(false);
+    const [appLogo, setAppLogo] = useState('');
+
+    const [showSuccessScreen, setShowSuccessScreen] = useState(false);
     
     const { ticketId, customerId } = useParams();
 
@@ -45,6 +52,15 @@ export default function RatingsForm() {
         if (sub === 'app' || sub === 'dev') sub = urlQueryParams.get('domain');
         setDomain(sub);
         getRatingConfig(sub);
+
+        if (urlQueryParams.get('preview') === 'true') {
+            setRatingsConfig({
+                npsLabel: window.localStorage.getItem('npsLabel'),
+                ratingLabel: window.localStorage.getItem('ratingLabel'),
+                commentLabel: window.localStorage.getItem('commentLabel')
+            })
+        }
+
     }, []);
 
     const getRatingConfig = async (sub) => {
@@ -54,9 +70,9 @@ export default function RatingsForm() {
                 ...ratingsConfig,
                 npsLabel: res?.data.npsLabel,
                 ratingLabel: res?.data.ratingLabel,
-                commentLabel: res?.data.commentLabel,
+                commentLabel: res?.data.commentLabel,                
             });
-        } else {
+            setAppLogo(res?.data?.branding?.appLogo);
         }
     };
 
@@ -85,26 +101,23 @@ export default function RatingsForm() {
         const res = await httpPostNoAuth(`ratings?domain=${domain}`, data, {});
         if (res?.status === 'success') {
             setProcessing(false);
-            setShowModal(true);
+            setShowSuccessScreen(true);
             return NotificationManager.success('Thanks for your feedback 😃', 'Success');
         }
         setProcessing(false);
         return NotificationManager.error(res?.er?.message, 'Error', 4000);
     };
 
-    const handleHideModal = () => {
-        setShowModal(false);
-    };
-
     return (
         <>
-            <section className="ratings-page bg-white min-vh-100">
-                <Container fluid className="py-5">
+            <section className="ratings-page bg-white min-vh-100 d-flex flex-column justify-content-center">
+                <Container fluid className="">
                     <Row className="justify-content-center">
-                        <Col sm={12} md={8} lg={6}>
+                        {!showSuccessScreen?
+                        (<Col sm={12} md={8} lg={6}>
                             <Form className="mt-3" onSubmit={(e) => e.preventDefault()}>
                                 <div className="text-center mb-4">
-                                    <h1 className="mb-3">Rate Your Experience</h1>
+                                    <h3 className="mb-3">Rate Your Experience</h3>
                                     <p className="">{ratingsConfig.ratingLabel}</p>
                                 </div>
                                 <div className="p-3 mb-4">
@@ -193,45 +206,31 @@ export default function RatingsForm() {
                                     </Button>
                                 </div>
                             </Form>
+                        </Col>)
+                        :
+                        <Col>
+                            <div className="text-center">
+                                <div className="d-flex justify-content-center my-4">
+                                    <Image src={Buke} alt="" />
+                                </div>
+                                <div className="Auth-header mb-2">
+                                    <h3 className="mb-3">Rating Submitted!</h3>
+                                    <p className="text-center">
+                                        Thank you for rating our services.
+                                    </p>
+                                    <div className="text-black-50">
+                                        Check out <Link to="https://alphacx.co" className="text-black-50 fw-bold">AlphaCX</Link>
+                                    </div>
+                                </div>
+                            </div>
                         </Col>
+                        }
                     </Row>
-                    <footer className="">
-                        <p className="text-center small">
-                        We Care <Image src={Logo} className="me-2" height="16" width="auto" />
-                        </p>
+                    <footer className="text-center mb-3">
+                        <Image src={appLogo} height="20" width="auto" />
                     </footer>
                 </Container>
             </section>
-            <Modal
-                open={showModal}
-                onClose={handleHideModal}
-                aria-labelledby="contained-modal-title-vcenter"
-                size="lg"
-                centered
-            >
-                {/* <Modal.Body> */}
-                <div className="p-4 saveTicketWrapModal">
-                    <div className="text-center">
-                        <div className="d-flex justify-content-center my-4">
-                            <Image src={Buke} alt="" />
-                        </div>
-                        <div className="Auth-header mb-2">
-                            <h3 className="mb-3">Review Submitted!</h3>
-                            <p className="text-center">
-                                Thank you for taking out time
-                                <br />
-                                to rate us
-                            </p>
-                            <div className="">
-                                <Button as="a" href="https://alphacx.co" variant="success" className="">
-                                    Continue
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {/* </Modal.Body> */}
-            </Modal>
         </>
     );
 }
