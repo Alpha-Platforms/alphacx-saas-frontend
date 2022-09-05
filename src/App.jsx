@@ -216,8 +216,8 @@ const SiteRouter = connect(mapStateToProps, {
                                 {/* forgot password */}
                                 <Route exact path="/reset-password/:resetToken" component={ResetPassword} />{' '}
                                 {/* reset password */}
+                                <Route exact path="/feedback" component={RatingsForm} />
                                 <Route exact path="/feedback/:ticketId/:customerId" component={RatingsForm} />
-                                <Route exact path="/feedback/preview" component={RatingsForm} />
                                 {/* help pages end */}
                                 <Route exact path="/account-verified" component={AccountVerified} />{' '}
                                 {/* Customer Portal */}
