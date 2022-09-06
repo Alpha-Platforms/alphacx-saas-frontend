@@ -21,7 +21,7 @@ import { brandKit } from './../../../../helper';
 //
 
 export default function RatingsSettings() {
-    const tenantDomain = localStorage.getItem('domain');
+    const [isChanged, setIsChanged] = useState(false);
     const [processing, setProcessing] = useState(false);
     const [ratingsData, setRatingsData] = useState({
         npsLabel: '',
@@ -30,13 +30,17 @@ export default function RatingsSettings() {
     });
 
     useEffect(() => {
-      console.log(ratingsData)
-    }, [ratingsData])
-    
-
-    useEffect(() => {
         getRatingsConfig();
     }, []);
+
+    useEffect(() => {
+        if (window.localStorage.getItem('ratingLabel') && window.localStorage.getItem('commentLabel')) {
+            setIsChanged(true);
+        } else {
+            setIsChanged(false);
+        }
+    }, [ratingsData])
+    
 
     const getRatingsConfig = async () => {
         const res = await httpGetMain(`settings/config?type=rating`);
@@ -177,13 +181,13 @@ export default function RatingsSettings() {
                                     <div className="text-center">
 
 
-                                    {(ratingsData.ratingLabel && ratingsData.commentLabel) &&
+                                    {isChanged &&
                                         <Link to="/feedback?preview=true" className="btn border me-2" target="_blank">Preview</Link>
                                     }
                                         <Button
                                             type="submit"
                                             onClick={handleSubmit}
-                                            disabled={processing || !ratingsData.ratingLabel || !ratingsData.commentLabel}
+                                            disabled={processing || !isChanged}
                                             className={`btn px-4 ${css({
                                                 ...brandKit({ bgCol: 0 }),
                                                 color: 'white',
