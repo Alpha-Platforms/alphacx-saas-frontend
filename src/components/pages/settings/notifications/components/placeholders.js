@@ -1,4 +1,4 @@
-const allPlaceholders = {
+export const allPlaceholders = {
     agentEmailAutoRespond: [
         {
             title: 'Ticket ID',
@@ -83,4 +83,10 @@ const allPlaceholders = {
     ],
 };
 
-export default allPlaceholders;
+export const templateTypes = [
+    { value: 'statusAutoResponse', text: 'Status Auto Response' },
+    { value: 'ticketStatusClosed', text: 'Ticket Status Closed' },
+    { value: 'agentEmailAutoRespond', text: 'Agent Ticket Assignment' },
+    { value: 'mentionEmailNotification', text: 'Mention Email Notification' },
+    { value: 'customerInitiateResponse', text: 'Customer Initial Response' },
+];

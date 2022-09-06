@@ -64,7 +64,7 @@ export default function RatingsForm() {
     }, []);
 
     const getRatingConfig = async (sub) => {
-        const res = await httpGetMainNoAuth(`settings/rating-config?domain=${sub}`, {});
+        const res = await httpGetMainNoAuth(`settings/rating-config`, {domain: sub});
         if (res?.status === 'success') {
             setRatingsConfig({
                 ...ratingsConfig,
