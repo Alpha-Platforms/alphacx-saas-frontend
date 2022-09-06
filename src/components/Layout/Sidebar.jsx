@@ -137,15 +137,19 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                     </li>
 
                     {tenantSubscription?.plan?.plan_type === 'appsumo' && (
-                        <li
-                            onClick={() => customBrowserRouter(`/appsumo-plans`)}
-                            className={`sidebar-list--item ${currentRoute.includes('/appsumo-plans') ? 'active' : ''}`}
-                        >
-                            <span className="sidebar-list--icon">
-                                <DiscountWhite activeRoute={false} />
-                            </span>
-                            <span className="sidebar-list--text">AppSumo Plans</span>
-                        </li>
+                        <AccessControl>
+                            <li
+                                onClick={() => customBrowserRouter(`/appsumo-plans`)}
+                                className={`sidebar-list--item ${
+                                    currentRoute.includes('/appsumo-plans') ? 'active' : ''
+                                }`}
+                            >
+                                <span className="sidebar-list--icon">
+                                    <DiscountWhite activeRoute={false} />
+                                </span>
+                                <span className="sidebar-list--text">AppSumo Plans</span>
+                            </li>
+                        </AccessControl>
                     )}
                 </ul>
                 <ul className="sidebar-list mt-auto">

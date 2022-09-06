@@ -15,7 +15,7 @@ import RightArrow from '../../../../../assets/imgF/arrow_right.png';
 //
 import { getCurrentEmailTemplate, updateEmailTemplate } from '../../../../../reduxstore/actions/emailTemplateActions';
 
-import allPlaceholders from './placeholders'
+import {allPlaceholders} from './placeholders'
 //
 import './newEmailTemplate.scss';
 import '../NotificationSettings.scss';
