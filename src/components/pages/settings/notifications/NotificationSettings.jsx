@@ -106,7 +106,6 @@ function NotificationSettings({ getEmailTemplates, isEmailTemplatesLoaded, email
                     >
                         <EditIcon />
                     </button>
-                    {/* TURN OFF UNTIL DELETE IMPLEMENTATION IS READY. API IS READY */}
                     <button
                         type="submit"
                         className="user-delete-btn ms-3 d-inline-block"

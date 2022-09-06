@@ -140,7 +140,9 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                         <AccessControl>
                             <li
                                 onClick={() => customBrowserRouter(`/appsumo-plans`)}
-                                className={`sidebar-list--item ${currentRoute.includes('/appsumo-plans') ? 'active' : ''}`}
+                                className={`sidebar-list--item ${
+                                    currentRoute.includes('/appsumo-plans') ? 'active' : ''
+                                }`}
                             >
                                 <span className="sidebar-list--icon">
                                     <DiscountWhite activeRoute={false} />
