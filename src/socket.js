@@ -5,26 +5,14 @@ import { config } from './config/keys';
 // import { uuid } from './helper';
 
 class Socket {
-    socket;
-
     socketUrl = config.socketUrl;
-
-    userId;
-
-    defaultLiveSteamMsg;
-
-    defaultAuthyMsg;
-
-    domain;
-
-    tenantId;
 
     constructor(userId, domain, tenantId, accounttype = 'agent') {
         this.userId = userId;
         this.domain = domain;
         this.tenantId = tenantId;
 
-        this.defaultLiveSteamMsg = {
+        this.defaultLiveStreamMsg = {
             msgid: domain,
             action: 'liveStream',
             msglocation: '',
@@ -34,6 +22,7 @@ class Socket {
                 msgsenderdevice: navigator.userAgent,
                 msgsenderid: userId,
                 domain,
+                domainId: domain,
                 tenantid: domain,
                 accounttype,
             },
@@ -58,6 +47,39 @@ class Socket {
                 tenantid: domain,
                 msgsenderid: userId,
                 domain,
+                domainId: domain,
+                accounttype,
+            },
+        };
+
+        this.defaultWhatsappInit = {
+            msgid: domain,
+            action: 'whatsappInit',
+            msglocation: '',
+            msgplatform: 'web',
+            msgtimestamp: new Date(),
+            msgsender: {
+                msgsenderdevice: navigator.userAgent,
+                tenantid: domain,
+                msgsenderid: userId,
+                domain,
+                domainId: domain,
+                accounttype,
+            },
+        };
+
+        this.defaultWhatsappSend = {
+            msgid: domain,
+            action: 'whatsappsendmessage',
+            msglocation: '',
+            msgplatform: 'web',
+            msgtimestamp: new Date(),
+            msgsender: {
+                msgsenderdevice: navigator.userAgent,
+                msgsenderid: userId,
+                domain,
+                domainId: domain,
+                tenantid: domain,
                 accounttype,
             },
         };
@@ -113,14 +135,14 @@ class Socket {
      */
     sendLiveStreamMessage(newMsgObj = {}) {
         const msgObj = {
-            ...this.defaultLiveSteamMsg,
+            ...this.defaultLiveStreamMsg,
             ...newMsgObj,
             msgsender: {
-                ...this.defaultLiveSteamMsg.msgsender,
+                ...this.defaultLiveStreamMsg.msgsender,
                 ...newMsgObj?.msgsender,
             },
             msgreciever: {
-                ...this.defaultLiveSteamMsg.msgreciever,
+                ...this.defaultLiveStreamMsg.msgreciever,
                 ...newMsgObj?.msgreciever,
             },
         };
@@ -142,6 +164,42 @@ class Socket {
 
         // console.log('%csocket.js line:121 AUTHY MESSAGE', 'color: white; background-color: #007acc;', msgObj);
         this.socket.send(JSON.stringify(msgObj));
+    }
+
+    /**
+     *
+     * @param {*} newMsgObj
+     * @memberof Socket
+     */
+    triggerWhatsappInit(newMsgObj = {}) {
+        const msgObj = {
+            ...this.defaultWhatsappInit,
+            ...newMsgObj,
+            msgsender: {
+                ...this.defaultWhatsappInit.msgsender,
+                ...newMsgObj?.msgsender,
+            },
+        };
+
+        this.socket.send(JSON.stringify(msgObj, null, 4));
+    }
+
+    /**
+     *
+     * @param {*} newMsgObj
+     * @memberof Socket
+     */
+    sendWhatsappMessage(newMsgObj = {}) {
+        const msgObj = {
+            ...this.defaultWhatsappSend,
+            ...newMsgObj,
+            msgsender: {
+                ...this.defaultWhatsappSend.msgsender,
+                ...newMsgObj?.msgsender,
+            },
+        };
+
+        this.socket.send(JSON.stringify(msgObj, null, 4));
     }
 }
 

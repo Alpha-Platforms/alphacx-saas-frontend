@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import '../settings.css';
 import whatsappImg from '../../../../assets/imgF/WhatsApp.png';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
-import WhatsappTwilio from './whatsapp/WhatsappTwilio';
+// import WhatsappTwilio from './whatsapp/WhatsappTwilio';
+import WhatsappCx from './whatsapp/WhatsappCx';
 
 export default function WhatsappIntegration() {
     return (
@@ -36,7 +37,8 @@ export default function WhatsappIntegration() {
                                 </p>
                             </div>
                         </div>
-                        <WhatsappTwilio />
+                        {/* <WhatsappTwilio /> */}
+                        <WhatsappCx />
                     </div>
                 </section>
             </div>
