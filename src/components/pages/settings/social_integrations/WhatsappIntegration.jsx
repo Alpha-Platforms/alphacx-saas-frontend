@@ -1,25 +1,16 @@
-/* eslint-disable */
+/* eslint-disable consistent-return */
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import { NotificationManager } from 'react-notifications';
 import { css } from '@emotion/css';
-// react bootstrap components
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-//
-import { httpPatchMain, httpPostMain, httpGetMain } from '../../../../helpers/httpMethods';
-// js assets
+import { httpPatchMain, httpGetMain } from '../../../../helpers/httpMethods';
 import { hideLoader, showLoader } from '../../../helpers/loader';
-// css assets
 import '../settings.css';
-// img assets
 import whatsappImg from '../../../../assets/imgF/WhatsApp.png';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
-import { brandKit } from './../../../../helper';
+import { brandKit } from '../../../../helper';
 
 export default function WhatsappIntegration() {
     const [whatsappConfig, setWhatsappConfig] = useState({
@@ -27,31 +18,24 @@ export default function WhatsappIntegration() {
         twillo_auth_token: '',
         twillo_no: '',
     });
-    const [configData, setConfigData] = useState([]);
-    const [loadingConfig, setLoadingConfig] = useState(true);
-    //
-    useEffect(() => {
-        setLoadingConfig(true);
-        getConfig();
-        setLoadingConfig(true);
-    }, []);
-    //
+
     const getConfig = async () => {
         const res = await httpGetMain(`settings/config?type=whatsapp`);
         if (res.status === 'success') {
-            setLoadingConfig(true);
-            setConfigData(res?.data);
             setWhatsappConfig({
                 ...whatsappConfig,
                 twillo_account_sid: res?.data?.twillo_account_sid,
                 twillo_auth_token: res?.data?.twillo_auth_token,
                 twillo_no: res?.data?.twillo_no,
             });
-            setLoadingConfig(false);
-        } else {
-            setLoadingConfig(false);
         }
     };
+
+    useEffect(() => {
+        getConfig();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const handleWhatsappChange = (e) => {
         setWhatsappConfig({ ...whatsappConfig, [e.target.name]: e.target.value });
     };
@@ -115,12 +99,15 @@ export default function WhatsappIntegration() {
                             <div className="connectViaInstText">
                                 <p>Connect Whatsapp to your Open Channel</p>
                                 <p>
-                                    Use the following <span className="">instruction</span> to connect a Whatsapp Account
+                                    Use the following <span className="">instruction</span> to connect a Whatsapp
+                                    Account
                                 </p>
                             </div>
                         </div>
 
-                        <p className="mt-3"><strong>Connect via Twillio</strong></p>
+                        <p className="mt-3">
+                            <strong>Connect via Twillio</strong>
+                        </p>
 
                         <div className="mt-4 mb-5 col-md-8">
                             {/* <div className="inputContainInter">
@@ -170,11 +157,14 @@ export default function WhatsappIntegration() {
                                 </Form.Group>
                             </div>
                             <div className="mt-5">
-                                <Button className={`btn btn-sm px-3 ${css({
-                                ...brandKit({ bgCol: 0 }),
-                                color: 'white',
-                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
-                            })}`} onClick={handleConnectWhatsApp}>
+                                <Button
+                                    className={`btn btn-sm px-3 ${css({
+                                        ...brandKit({ bgCol: 0 }),
+                                        color: 'white',
+                                        '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                    })}`}
+                                    onClick={handleConnectWhatsApp}
+                                >
                                     Connect
                                 </Button>
                             </div>
