@@ -1,80 +1,12 @@
 /* eslint-disable consistent-return */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { NotificationManager } from 'react-notifications';
-import { css } from '@emotion/css';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import { httpPatchMain, httpGetMain } from '../../../../helpers/httpMethods';
-import { hideLoader, showLoader } from '../../../helpers/loader';
 import '../settings.css';
 import whatsappImg from '../../../../assets/imgF/WhatsApp.png';
 import RightArrow from '../../../../assets/imgF/arrow_right.png';
-import { brandKit } from '../../../../helper';
+import WhatsappTwilio from './whatsapp/WhatsappTwilio';
 
 export default function WhatsappIntegration() {
-    const [whatsappConfig, setWhatsappConfig] = useState({
-        twillo_account_sid: '',
-        twillo_auth_token: '',
-        twillo_no: '',
-    });
-
-    const getConfig = async () => {
-        const res = await httpGetMain(`settings/config?type=whatsapp`);
-        if (res.status === 'success') {
-            setWhatsappConfig({
-                ...whatsappConfig,
-                twillo_account_sid: res?.data?.twillo_account_sid,
-                twillo_auth_token: res?.data?.twillo_auth_token,
-                twillo_no: res?.data?.twillo_no,
-            });
-        }
-    };
-
-    useEffect(() => {
-        getConfig();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const handleWhatsappChange = (e) => {
-        setWhatsappConfig({ ...whatsappConfig, [e.target.name]: e.target.value });
-    };
-    const handleConnectWhatsApp = async () => {
-        if (whatsappConfig.twillo_account_sid === '') {
-            return NotificationManager.error('Account SID Is required!');
-        }
-
-        if (whatsappConfig.twillo_auth_token === '') {
-            return NotificationManager.error('Auth Token Is required!');
-        }
-
-        if (whatsappConfig.twillo_no === '') {
-            return NotificationManager.error('Account number Is required!');
-        }
-        showLoader();
-        const data = {
-            whatsapp_config: {
-                ...whatsappConfig,
-            },
-        };
-        const res = await httpPatchMain('settings/whatsapp-config', data);
-        if (res) {
-            hideLoader();
-            if (res.er) {
-                hideLoader();
-                return NotificationManager.error(res.er);
-            }
-            // NotificationManager.success("Page successfully connected");
-            NotificationManager.success('WhatsApp account successfully connected');
-            setWhatsappConfig({
-                twillo_account_sid: '',
-                twillo_auth_token: '',
-                twillo_no: '',
-            });
-        }
-        // hideLoader();
-    };
-
     return (
         <div className="social-integrating-page">
             <header id="mainContentHeader" className="breadcrumb">
@@ -104,71 +36,7 @@ export default function WhatsappIntegration() {
                                 </p>
                             </div>
                         </div>
-
-                        <p className="mt-3">
-                            <strong>Connect via Twillio</strong>
-                        </p>
-
-                        <div className="mt-4 mb-5 col-md-8">
-                            {/* <div className="inputContainInter">
-                            <label htmlFor="">
-                                Specify this address in the Webhook field in console:
-                            </label>
-                            <input type="text" name="" />
-                            </div> */}
-
-                            <div className="mb-3">
-                                <Form.Group className="form-group acx-form-group mb-3">
-                                    <Form.Label htmlFor="twillo_account_sid">Account SID:</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        name="twillo_account_sid"
-                                        onChange={handleWhatsappChange}
-                                        defaultValue={whatsappConfig.twillo_account_sid}
-                                        className="form-control"
-                                        id="twillo_account_sid"
-                                    />
-                                </Form.Group>
-                                <Form.Group className="form-group acx-form-group mb-3">
-                                    <Form.Label htmlFor="twillo_auth_token" className="form-label">
-                                        Auth Token:
-                                    </Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        name="twillo_auth_token"
-                                        onChange={handleWhatsappChange}
-                                        defaultValue={whatsappConfig.twillo_auth_token}
-                                        className="form-control"
-                                        id="twillo_auth_token"
-                                    />
-                                </Form.Group>
-                                <Form.Group className="form-group acx-form-group mb-3">
-                                    <Form.Label htmlFor="twillo_no" className="form-label">
-                                        Account phone number:
-                                    </Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        name="twillo_no"
-                                        onChange={handleWhatsappChange}
-                                        defaultValue={whatsappConfig.twillo_no}
-                                        className="form-control"
-                                        id="twillo_no"
-                                    />
-                                </Form.Group>
-                            </div>
-                            <div className="mt-5">
-                                <Button
-                                    className={`btn btn-sm px-3 ${css({
-                                        ...brandKit({ bgCol: 0 }),
-                                        color: 'white',
-                                        '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
-                                    })}`}
-                                    onClick={handleConnectWhatsApp}
-                                >
-                                    Connect
-                                </Button>
-                            </div>
-                        </div>
+                        <WhatsappTwilio />
                     </div>
                 </section>
             </div>
