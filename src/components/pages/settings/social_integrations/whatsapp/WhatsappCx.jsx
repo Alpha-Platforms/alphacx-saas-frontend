@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
+// @ts-nocheck
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { css } from '@emotion/css';
 import Spinner from 'react-bootstrap/Spinner';
 
 function WhatsappCx() {
+    const appSocket = useSelector((state) => state.socket.appSocket);
+    const socketMessage = useSelector((state) => state.socket.socketMessage);
     const [isInitiating, setIsInitiating] = useState(false);
 
     const initiateWhatsapp = () => {
         console.log('Attempting to initiate whatsapp');
+        appSocket?.triggerWhatsappInit();
+        console.log('appsocket => ', appSocket);
     };
+
+    useEffect(() => {
+        console.log('socketMessage => ', socketMessage);
+    }, [socketMessage]);
+
     return (
         <>
             <p className="mt-3">

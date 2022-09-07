@@ -60,11 +60,12 @@ class Socket {
             msgtimestamp: new Date(),
             msgsender: {
                 msgsenderdevice: navigator.userAgent,
-                tenantid: domain,
+                tenantId,
                 msgsenderid: userId,
-                domain,
                 domainId: domain,
                 accounttype,
+                // tenantid: tenantId,
+                // domain,
             },
         };
 
@@ -77,10 +78,11 @@ class Socket {
             msgsender: {
                 msgsenderdevice: navigator.userAgent,
                 msgsenderid: userId,
-                domain,
+                tenantId,
                 domainId: domain,
-                tenantid: domain,
                 accounttype,
+                // tenantid: tenantId,
+                // domain,
             },
         };
     }
@@ -172,6 +174,7 @@ class Socket {
      * @memberof Socket
      */
     triggerWhatsappInit(newMsgObj = {}) {
+        console.log('should trigger whatsapp intialization');
         const msgObj = {
             ...this.defaultWhatsappInit,
             ...newMsgObj,
