@@ -2058,7 +2058,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                     className={`btn px-4 ${css({
                                         ...brandKit({ bgCol: 0 }),
                                         color: 'white',
-                                        '&:hover': { ...brandKit({ bgCol: 30 }) },
+                                        '&:hover, &:disabled, &:focus': { ...brandKit({ bgCol: 30 }) },
                                     })}`}
                                     disabled={processing}
                                     type="submit"
