@@ -913,6 +913,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
     };
 
     const updateTicket = async () => {
+        setProcessing(true);
         const data = {
             priorityId: RSTicketPriority,
             categoryId: RSTicketCategory,
@@ -940,7 +941,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
  */
             const ticketRes = await httpGetMain(`tickets/${singleTicketFullInfo?.id}`);
             if (ticketRes.status === 'success') {
-                singleTicketFullInfo(ticketRes?.data?.[0]);
+                setSingleTicketFullInfo(ticketRes?.data?.[0]);
             } else {
                 setLoadSingleTicket(false);
                 NotificationManager.info('please refresh your page to see changes');
