@@ -855,10 +855,10 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             const completedUrl = `${baseUrl}/feedback/${singleTicketFullInfo?.id}/${singleTicketFullInfo?.customer.id}${
                 subdomain ? `?domain=${subdomain}` : ''
             }`;
-            const richText = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation : <a target='_blank' href='${completedUrl}'>Click here to rate us</a></p>`;
+            const richText = `<p>Your conversation has been marked as Closed, Please, click on the link to rate it: <a target='_blank' href='${completedUrl}'>Click here to rate us</a></p>`;
             const reply = {
                 richText,
-                plainText: `Your ticket has been marked as closed, Please click on the link to rate this conversation ${completedUrl}`,
+                plainText: `Your conversation has been marked as Closed, Please, rate your experience with this link: ${completedUrl}`,
             };
             replyTicket(reply, 'attachment', 'reply');
         }
@@ -871,8 +871,8 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                 status_action: true,
                 attachment: null,
                 created_at: new Date(),
-                plain_response: `Ticket Stage has been marked as ${RSTicketStage.label}`,
-                response: `Ticket Stage has been marked as ${RSTicketStage.label}`,
+                plain_response: `Conversation Status has been marked as ${RSTicketStage.label}`,
+                response: `Conversation Status has been marked as ${RSTicketStage.label}`,
                 user: singleTicketFullInfo?.assignee,
             };
 
@@ -1757,7 +1757,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             >
                 <Modal.Body className="p-2">
                     <Form className="p-3 bg-white" onSubmit={(e) => e.preventDefault()}>
-                        <h5 className="acx-text-gray-800 mb-3">Kindly update ticket before closing the chat</h5>
+                        <h5 className="acx-text-gray-800 mb-3">Update ticket before closing the chat</h5>
 
                         <div className="">
                             <Row md={6} className="mb-3">
@@ -1794,7 +1794,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                     />
                                 </Col>
                                 <Col md={6}>
-                                    <label htmlFor="">Stage</label>
+                                    <label htmlFor="">Status</label>
                                     <RSelect
                                         className="rselectfield"
                                         style={{ fontSize: '12px' }}
