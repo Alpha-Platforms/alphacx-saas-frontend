@@ -7,8 +7,6 @@ import MoonLoader from 'react-spinners/MoonLoader';
 import { NotificationManager } from 'react-notifications';
 import HelpNavBar from '../../../Layout/helpNavBar';
 import TopBar from '../components/topBar/topBar';
-import Approve from '../../../../assets/icons/approve.png';
-import Reject from '../../../../assets/icons/reject.png';
 import { httpGetMainKB, invalidTenant } from '../../../../helpers/httpMethods';
 import { uuid, kbBrandKit } from '../../../../helper';
 import NotFound from '../../error/NotFound';
@@ -129,11 +127,9 @@ function Article() {
                             <p>{}</p>
                             <div>
                                 <button type="button" onClick={handleHelpful}>
-                                    {/* <img src={Approve} alt="" /> */}
                                     <span>👍</span>
                                 </button>
                                 <button type="button" onClick={handleHelpful}>
-                                    {/* <img src={Reject} alt="" /> */}
                                     <span>👎</span>
                                 </button>
                             </div>
