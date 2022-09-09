@@ -749,12 +749,17 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user, 
                                                 </p>
                                             </div>
                                             {multiIncludes(accessControlFunctions[user?.role], ['edit_ticket']) && (
-                                                <div
-                                                    className="custormChatHeaderInfoAction"
+                                                <button
+                                                    type="button"
+                                                    className={`custormChatHeaderInfoAction btn btn-sm ${css({
+                                                        ...brandKit({ bgCol: 0 }),
+                                                        color: 'white',
+                                                        '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                                                    })}`}
                                                     onClick={closeSaveTicketModal}
                                                 >
                                                     <StarIconTicket /> Update
-                                                </div>
+                                                </button>
                                             )}
                                         </div>
                                     </div>
@@ -1617,7 +1622,11 @@ function Ticket({ getCurrentTicket, isCurrentTicketLoaded, currentTicket, user, 
                             )}
                             <div className="text-end mt-3">
                                 <Button
-                                    className="btn acx-btn-primary px-3 py-2"
+                                    className={`btn px-4 ${css({
+                                        ...brandKit({ bgCol: 0 }),
+                                        color: 'white',
+                                        '&:hover, &:disabled, &:focus': { ...brandKit({ bgCol: 30 }) },
+                                    })}`}
                                     disabled={processing}
                                     type="submit"
                                     onClick={updateTicket}
