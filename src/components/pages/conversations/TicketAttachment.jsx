@@ -45,7 +45,7 @@ function TicketAttachment({ ticket, className }) {
                         textAlign: 'center',
                     }}
                 >
-                    Attachments
+                    {ticketAttachments.length < 0 ? 'Attachments' : 'No Attachments'}
                 </p>
             </div>
 

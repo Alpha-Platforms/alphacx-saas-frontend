@@ -121,14 +121,20 @@ function Article() {
                         }}
                     />
                     {helpfulArticles.indexOf(slug) === -1 && (
-                        <div className="rating">
+                        <div
+                            className="rating bg-light"
+                            style={{ borderColor: kbBrandKit({ bgCol: 0, default: false })?.backgroundColor }}
+                        >
                             <p>Was this article helpful?</p>
+                            <p>{}</p>
                             <div>
                                 <button type="button" onClick={handleHelpful}>
-                                    <img src={Approve} alt="" />
+                                    {/* <img src={Approve} alt="" /> */}
+                                    <span>👍</span>
                                 </button>
                                 <button type="button" onClick={handleHelpful}>
-                                    <img src={Reject} alt="" />
+                                    {/* <img src={Reject} alt="" /> */}
+                                    <span>👎</span>
                                 </button>
                             </div>
                         </div>
