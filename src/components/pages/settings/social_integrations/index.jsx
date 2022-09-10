@@ -41,7 +41,7 @@ function SocialIntegrations({ configs }) {
         if (configs.sms_config) {
             setSmsConnected(true);
         }
-        if (configs.email_config?.email) {
+        if (configs.email_config !== null || configs.outgoing_email_config !== null) {
             setEmailConnected(true);
         }
         if (configs.facebook_config?.id) {
@@ -56,10 +56,6 @@ function SocialIntegrations({ configs }) {
         if (configs.whatsapp_config?.twillo_account_sid) {
             setWhatsappConnected(true);
         }
-
-        // console.log(configs);
-
-        // console.log(Math.random());
     }, [configs]);
 
     // useEffect(() => {
@@ -153,7 +149,7 @@ function SocialIntegrations({ configs }) {
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
-                                                {!whatsappConnected ? 'Connect' : 'Disconnect'}
+                                                {!whatsappConnected ? 'Connect' : 'Connected'}
                                             </Badge>
                                         </div>
                                     </div>
@@ -202,7 +198,7 @@ function SocialIntegrations({ configs }) {
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
-                                                {!facebookConnected ? 'Connect' : 'Disconnect'}
+                                                {!facebookConnected ? 'Connect' : 'Connected'}
                                             </Badge>
                                         </div>
                                     </div>
@@ -251,7 +247,7 @@ function SocialIntegrations({ configs }) {
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
-                                                {!instagramConnected ? 'Connect' : 'Disconnect'}
+                                                {!instagramConnected ? 'Connect' : 'Connected'}
                                             </Badge>
                                         </div>
                                     </div>
@@ -298,7 +294,7 @@ function SocialIntegrations({ configs }) {
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
-                                                {!smsConnected ? 'Connect' : 'Disconnect'}
+                                                {!smsConnected ? 'Connect' : 'Connected'}
                                             </Badge>
                                         </div>
                                     </div>
@@ -331,7 +327,7 @@ function SocialIntegrations({ configs }) {
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
-                                                {!smsConnected ? 'Connect' : 'Disconnect'}
+                                                {!smsConnected ? 'Connect' : 'Connected'}
                                             </Badge>
                                         </div>
                                     </div>
@@ -368,7 +364,7 @@ function SocialIntegrations({ configs }) {
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
-                                                {!emailConnected ? 'Connect' : 'Disconnect'}
+                                                {!emailConnected ? 'Connect' : 'Connected'}
                                             </Badge>
                                         </div>
                                     </div>
@@ -405,7 +401,7 @@ function SocialIntegrations({ configs }) {
                                                         : 'acx-bg-gray-100 text-muted fw-light'
                                                 } px-3 py-2`}
                                             >
-                                                {!livechatConnected ? 'Connect' : 'Disconnect'}
+                                                {!livechatConnected ? 'Connect' : 'Connected'}
                                             </Badge>
                                         </div>
                                     </div>

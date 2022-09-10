@@ -22,6 +22,8 @@ import ShowIcon from '../../../../assets/icons/Show.svg';
 import AddGroupModal from './components/AddGroupModal';
 import AddMemberModal from './components/AddMemberModal';
 import { ReactComponent as DotSvg } from '../../../../assets/icons/dots.svg';
+import { ReactComponent as DeleteRedIcon } from '../../../../assets/icons/Delete-red.svg';
+import { ReactComponent as EditIcon } from '../../../../assets/icons/Edit.svg';
 import { httpGetMain } from '../../../../helpers/httpMethods';
 import AccessControl from 'components/pages/auth/accessControl';
 import { deleteGroup } from '../../../../reduxstore/actions/groupActions';
@@ -207,7 +209,7 @@ function GroupList({ groups, categories, isGroupsLoaded, authenticatedUser, dele
                                 icons={tableIcons}
                                 columns={[
                                     {
-                                        title: 'Unit',
+                                        title: 'Name',
                                         field: 'name',
                                     },
                                     {
@@ -243,33 +245,22 @@ function GroupList({ groups, categories, isGroupsLoaded, authenticatedUser, dele
                                         title: 'Action',
                                         field: 'action',
                                         render: (rowData) => (
-                                            <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
-                                                <Dropdown.Toggle variant="transparent" size="sm">
-                                                    <span className="cust-table-dots">
-                                                        <DotSvg />
-                                                    </span>
-                                                </Dropdown.Toggle>
-                                                <Dropdown.Menu>
-                                                    <Dropdown.Item
-                                                        eventKey="1"
-                                                        onClick={handleGroupEdit.bind({ id: rowData.id })}
-                                                    >
-                                                        <Link to="#">
-                                                            <span className="black-text">Edit</span>
-                                                        </Link>
-                                                    </Dropdown.Item>
-                                                    <Dropdown.Item
-                                                        eventKey="2"
-                                                        onClick={() => {
-                                                            setShowDeleteConfirm(true);
-                                                            setGroupToDelete(rowData.id);
-                                                        }}
-                                                        role="button"
-                                                    >
-                                                        <span className="black-text">Delete</span>
-                                                    </Dropdown.Item>
-                                                </Dropdown.Menu>
-                                            </Dropdown>
+                                            <div className="form-check form-switch">
+                                                <button
+                                                    type="submit"
+                                                    className="user-delete-btn me-2 d-inline-block"
+                                                    onClick={handleGroupEdit.bind({ id: rowData.id })}
+                                                >
+                                                    <EditIcon />
+                                                </button>
+                                                <button
+                                                    type="submit"
+                                                    className="user-delete-btn ms-3 d-inline-block"
+                                                    onClick={() => {setShowDeleteConfirm(true); setGroupToDelete(rowData?.id)}}
+                                                >
+                                                    <DeleteRedIcon />
+                                                </button>
+                                            </div>
                                         ),
                                     },
                                 ]}
@@ -302,20 +293,6 @@ function GroupList({ groups, categories, isGroupsLoaded, authenticatedUser, dele
                         </MuiThemeProvider>
                     )}
                 </div>
-
-                {/* <div className="text-center empty-state" id="agent-empty">
-                    <CardDesignSvg/>
-                    <p className="text-center f-16">
-                        You currently have no Agent record at
-                        <br/>
-                        the moment
-                    </p>
-                    <button
-                        className="btn btn-sm px-5 btn-custom"
-                        onClick={() => setCreateModalShow(true)}>
-                        New User
-                    </button>
-                </div> */}
             </div>
 
             <AddGroupModal

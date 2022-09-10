@@ -88,7 +88,7 @@ import FBIGIntegration from './components/pages/settings/social_integrations/fbi
 import AppsumoSignup from './components/pages/appsumo/signup';
 import Instagram from './components/pages/settings/social_integrations/Instagram';
 import AppsumoPlans from './components/pages/appsumo/AppsumoPlans';
-import { hasFeatureAccess } from './helper';
+import { hasFeatureAccess, isSubdomainApp } from './helper';
 import useNavigatorOnLine from './hooks/useNavigatorOnline';
 import NotFound from './components/pages/error/NotFound';
 
@@ -144,29 +144,30 @@ const SiteRouter = connect(mapStateToProps, {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [siteUser]);
         useEffect(() => {
+            const pathsToAvoid = [
+                '/knowledge-base',
+                '/login',
+                '/sign-up',
+                '/forgot-password',
+                '/reset-password',
+                '/feedback',
+                '/account-verified',
+                '/twitter-auth',
+                '/customer-portal',
+                '/no-customers',
+                '/instagram',
+                '/integrations',
+                '/appsumo',
+            ];
+            const shouldAvoidPage = pathsToAvoid.some((item) => location.pathname.startsWith(item));
+            const isKbPublicRoute = location.pathname.indexOf('knowledgebase') !== -1;
             /* these should not be called in routes like onboarding, kb, etc and when the user is not authenticated */
-            if (
-                isUserAuthenticated &&
-                ![
-                    '/knowledge-base',
-                    '/login',
-                    '/sign-up',
-                    '/forgot-password',
-                    '/reset-password',
-                    '/feedback',
-                    '/account-verified',
-                    '/twitter-auth',
-                    '/customer-portal',
-                    '/no-customers',
-                    '/instagram',
-                    '/integrations',
-                    '/appsumo',
-                ].some((item) => location.pathname.startsWith(item))
-            ) {
+            if (isUserAuthenticated && !shouldAvoidPage && !isKbPublicRoute) {
                 getPriorities();
                 getCategories();
                 getStatuses();
                 getGroups();
+
                 getTags();
                 getConfigs();
                 getCustomFields();
@@ -215,12 +216,8 @@ const SiteRouter = connect(mapStateToProps, {
                                 {/* forgot password */}
                                 <Route exact path="/reset-password/:resetToken" component={ResetPassword} />{' '}
                                 {/* reset password */}
-                                <Route exact path="/knowledge-base" component={HelpCenter} />
-                                <Route exact path="/knowledge-base/categories" component={ArticleCategoryList} />
-                                <Route exact path="/knowledge-base/:category" component={ArticleList} />
-                                <Route exact path="/knowledge-base/:category/:slug" component={Article} />
+                                <Route exact path="/feedback" component={RatingsForm} />
                                 <Route exact path="/feedback/:ticketId/:customerId" component={RatingsForm} />
-                                <Route exact path="/feedback/preview" component={RatingsForm} />
                                 {/* help pages end */}
                                 <Route exact path="/account-verified" component={AccountVerified} />{' '}
                                 {/* Customer Portal */}
@@ -391,6 +388,40 @@ const SiteRouter = connect(mapStateToProps, {
                                         component={NewArticle}
                                     />
                                 )}
+                                {/* KNOWLEDGEBASE PUBLIC ROUTES */}
+                                <Route
+                                    exact
+                                    path={isSubdomainApp() ? '/:tenantdomain/knowledgebase' : '/knowledgebase'}
+                                    component={HelpCenter}
+                                />
+                                <Route
+                                    exact
+                                    path={
+                                        isSubdomainApp()
+                                            ? '/:tenantdomain/knowledgebase/categories'
+                                            : '/knowledgebase/categories'
+                                    }
+                                    component={ArticleCategoryList}
+                                />
+                                <Route
+                                    exact
+                                    path={
+                                        isSubdomainApp()
+                                            ? '/:tenantdomain/knowledgebase/:category'
+                                            : '/knowledgebase/:category'
+                                    }
+                                    component={ArticleList}
+                                />
+                                <Route
+                                    exact
+                                    path={
+                                        isSubdomainApp()
+                                            ? '/:tenantdomain/knowledgebase/:category/:slug'
+                                            : '/knowledgebase/:category/:slug'
+                                    }
+                                    component={Article}
+                                />
+                                {/* END: KNOWLEDGEBASE PUBLIC ROUTES */}
                                 <SettingsLayoutRoute
                                     exact
                                     path="/settings/tickets"

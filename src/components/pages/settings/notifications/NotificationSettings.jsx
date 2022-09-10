@@ -23,6 +23,10 @@ import { getEmailTemplates } from '../../../../reduxstore/actions/emailTemplateA
 import { ReactComponent as DeleteRedIcon } from '../../../../assets/icons/Delete-red.svg';
 import { ReactComponent as EditIcon } from '../../../../assets/icons/Edit.svg';
 import { brandKit } from './../../../../helper';
+import { templateTypes } from './components/placeholders';
+import { NotificationManager } from 'react-notifications';
+import { httpDeleteMain } from 'helpers/httpMethods';
+import Modal from 'react-responsive-modal';
 
 function NotificationSettings({ getEmailTemplates, isEmailTemplatesLoaded, emailTemplates }) {
     const history = useHistory();
@@ -39,57 +43,55 @@ function NotificationSettings({ getEmailTemplates, isEmailTemplatesLoaded, email
 
     const [changingRow, setChangingRow] = useState(false);
     const [custLoading, setCustLoading] = useState(false);
-
     const [notifications, setNotifications] = useState(null);
+    const [isAllTemplatesSet, setIsAllTemplatesSet] = useState(false)
+    const [deleteConfirm, setDeleteConfirm] = useState(false)
+    const [templateId, setTemplateId] = useState()
+    
 
     useEffect(() => {
         if (isEmailTemplatesLoaded) {
             setCustLoading(false);
+            setIsAllTemplatesSet(emailTemplates.length === templateTypes.length)
         } else {
             setCustLoading(true);
         }
     }, [isEmailTemplatesLoaded]);
 
-    //
     useEffect(() => {
         setCustLoading(true);
         getEmailTemplates();
     }, []);
 
+    const handleDelete = async () => {
+        setDeleteConfirm(false)
+        const res = await httpDeleteMain(`settings/email-template/${templateId}`);
+        if (res.status === 'success') {
+            getEmailTemplates()
+        } else {
+            NotificationManager.error('Template could not be deleted', 'Delete Failed', 4000);
+        }
+    }
+
     const tableColumns = [
         {
             title: 'Title',
             field: 'name',
-            // render: (rowData) => (
-            //   <Link to="#" style={{ textTransform: "capitalize" }}>
-            //     {rowData.name}
-            //   </Link>
-            // ),
+            render: (rowData) => (
+                <button
+                    className="btn-link text-decoration-none text-capitalize"
+                    onClick={() => 
+                        history.push(`/settings/notifications/email-template/${rowData?.dropdownAction}`)
+                    }
+                >{rowData.name}
+                </button>
+            ),
         },
-        // {
-        //   title: "Notification Category",
-        //   field: "category",
-        //   width: "20px",
-        //   // render: (rowData) => (
-        //   //   <Link
-        //   //     to={`/tickets/${rowData.ticketId}`}
-        //   //     style={{ textTransform: "uppercase" }}
-        //   //   >
-        //   //     {rowData.ticketId.slice(-8)}
-        //   //   </Link>
-
-        //   // ),
-        // },
         {
             title: 'Subject',
             field: 'subject',
             width: '40%',
         },
-        // {
-        //   title: "Description",
-        //   field: "description",
-        //   width: "20%",
-        // },
         {
             title: 'Action',
             field: 'dropdownAction',
@@ -107,27 +109,11 @@ function NotificationSettings({ getEmailTemplates, isEmailTemplatesLoaded, email
                     <button
                         type="submit"
                         className="user-delete-btn ms-3 d-inline-block"
+                        onClick={() => {setDeleteConfirm(true); setTemplateId(rowData?.dropdownAction)}}
                     >
                         <DeleteRedIcon />
                     </button>
                 </div>
-                // <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
-                //     <Dropdown.Toggle variant="transparent" size="sm">
-                //         <span className="cust-table-dots">
-                //             <DotSvg />
-                //         </span>
-                //     </Dropdown.Toggle>
-                //     <Dropdown.Menu>
-                //         <Dropdown.Item eventKey="1">
-                //             <Link to={`/settings/notifications/email-template/${rowData?.dropdownAction}`}>
-                //                 <span className="black-text">Edit</span>
-                //             </Link>
-                //         </Dropdown.Item>
-                //         <Dropdown.Item eventKey="2">
-                //             <span className="black-text">Delete</span>
-                //         </Dropdown.Item>
-                //     </Dropdown.Menu>
-                // </Dropdown>
             ),
         },
     ];
@@ -189,13 +175,13 @@ function NotificationSettings({ getEmailTemplates, isEmailTemplatesLoaded, email
                 <div className="d-flex justify-content-between align-baseline">
                     <h5 className="mt-3 mb-4 f-16 fw-bold">Notification Management</h5>
                     <div>
-                        <Link className={`btn btn-sm px-3 ${css({
+                        {!isAllTemplatesSet && <Link className={`btn btn-sm px-3 ${css({
                                 ...brandKit({ bgCol: 0 }),
                                 color: 'white',
                                 '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
                             })}`} to="/settings/notifications/email-template">
                             Add Notification
-                        </Link>
+                        </Link>}
                     </div>
                 </div>
                 <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
@@ -240,18 +226,33 @@ function NotificationSettings({ getEmailTemplates, isEmailTemplatesLoaded, email
                         </MuiThemeProvider>
                     </div>
                 </div>
-                {/* <div className="articleList">
-          <div className="header">
-            <p>Name</p>
-            <p>Notification Category</p>
-            <p>Subject</p>
-            <p>Description </p>
-          </div>
-          {notifications?.map((not, i) => (
-            <TableItem key={i} not={not} />
-          ))}
-        </div> */}
             </div>
+            {/* confirm modal */}
+            <Modal open={deleteConfirm} onClose={() => setDeleteConfirm(false)} center>
+                <div className="p-5 w-100">
+                    <h6 className="mb-5">Are you sure you want to delete this template?</h6>
+                    <div className="d-flex justify-content-center">
+                        <button
+                            type="button"
+                            className="btn btn-sm border cancel px-3"
+                            onClick={() => setDeleteConfirm(false)}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="button"
+                            className={`btn btn-sm ms-2 px-3 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`}
+                            onClick={handleDelete}
+                        >
+                            Yes
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 }

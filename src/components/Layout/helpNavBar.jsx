@@ -17,7 +17,7 @@ function HelpNavBar({ activeBG }) {
             {/* COMMENTED TOP LINKS */}
             {/* <div className="nav-links">
                 <p className="link">FAQ</p>
-                <Link to="/knowledge-base/tickets">
+                <Link to="/knowledgebase/tickets">
                   <p className="link">Submit a ticket</p>
                 </Link>
                 <Link to="/register">

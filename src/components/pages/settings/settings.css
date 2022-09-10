@@ -207,5 +207,7 @@
 .ratings-page footer {
     position: absolute;
     bottom: 0;
-    left: calc(50% - 36px);
+    left: 0;
+    right: 0;
+    margin: auto;
 }

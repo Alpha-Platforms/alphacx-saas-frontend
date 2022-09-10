@@ -11,19 +11,24 @@ import AddIcon from '../../../../../assets/icons/add.svg';
 import DeleteIcon from '../../../../../assets/icons/Delete.svg';
 import RightArrow from '../../../../../assets/imgF/arrow_right.png';
 import { addEmailTemplate } from '../../../../../reduxstore/actions/emailTemplateActions';
-import allPlaceholders from './placeholders'
+import { allPlaceholders,  templateTypes} from './placeholders'
 import './newEmailTemplate.scss';
 import '../NotificationSettings.scss';
 import { brandKit } from './../../../../../helper';
 
-function NewEmailTemplate({ addEmailTemplate }) {
-    //
-    const [specificPlaceholders, setSpecificPlaceholders] = useState([]);
+function NewEmailTemplate({ addEmailTemplate, emailTemplates }) {
 
-    // const specificPlaceholders = ["ticket", "customer", "status", "category"];
+    const history = useHistory();
+
+    const [specificPlaceholders, setSpecificPlaceholders] = useState([]);
     const [placeholder, setPlaceholder] = useState('');
     const [custLoading, setCustLoading] = useState(false);
     const [newTemplate, setNewTemplate] = useState({ title: '', subject: '', text: '', type: '' });
+    const [existingTypes, setExistingTypes] = useState([]);
+
+    useEffect(() => {
+      setExistingTypes(emailTemplates.map(i => i.type))
+    }, [emailTemplates])
 
     const insertPlaceholder = (i) => {
         const shortCode = `{${specificPlaceholders[i].placeHolder}}`;
@@ -35,7 +40,7 @@ function NewEmailTemplate({ addEmailTemplate }) {
     };
 
     const getPlaceholders = (value) => {
-        if(value) setSpecificPlaceholders(allPlaceholders[value]);
+        setSpecificPlaceholders(allPlaceholders[value]);
     }
 
     const handleChange = (e) => {
@@ -45,34 +50,39 @@ function NewEmailTemplate({ addEmailTemplate }) {
             [name]: value,
         });
 
-        getPlaceholders(value)
+        if(name === 'type') getPlaceholders(value)
     };
-
-    const history = useHistory();
 
     const redirectUser = () => {
         history.push('/settings/notifications');
     };
 
     const handleSubmit = () => {
-        setCustLoading(true);
-        const newEmailTemplate = {
-            title: newTemplate.title,
-            subject: newTemplate.subject,
-            body: newTemplate.text,
-            type: newTemplate.type,
-        };
-        addEmailTemplate(
-            newEmailTemplate,
-            () => {
-                setCustLoading(false);
-                NotificationManager.success('Template created successfully', 'Success');
-            },
-            (errMsg) => {
-                setCustLoading(false);
-                NotificationManager.error(errMsg, 'An error occured', 4000);
-            },
-        );
+
+        if (newTemplate.title && newTemplate.subject && newTemplate.text && newTemplate.type) {
+            setCustLoading(true);
+            const newEmailTemplate = {
+                title: newTemplate.title,
+                subject: newTemplate.subject,
+                body: newTemplate.text,
+                type: newTemplate.type,
+            };
+            
+            addEmailTemplate(
+                newEmailTemplate,
+                () => {
+                    setCustLoading(false);
+                    NotificationManager.success('Template created successfully', 'Success');
+                    redirectUser();
+                },
+                (errMsg) => {
+                    setCustLoading(false);
+                    NotificationManager.error(errMsg, 'An error occured', 4000);
+                },
+            );
+        } else {
+            NotificationManager.error('All fields are required', 'Validation Error', 4000);
+        }
     };
 
     return (
@@ -141,18 +151,15 @@ function NewEmailTemplate({ addEmailTemplate }) {
                                     <option value="">
                                         Select category
                                     </option>
-                                    <option value="statusAutoResponse">Status Auto Response</option>
-                                    <option value="ticketStatusClosed">Ticket Status Closed</option>
-                                    <option value="agentEmailAutoRespond">Agent Ticket Assignment</option>
-                                    <option value="mentionEmailNotification">Mention Email Notification</option>
-                                    <option value="customerInitiateResponse">Customer Initial Response</option>
+                                    {templateTypes.filter((i) => !existingTypes.includes(i.value)).map((item) => <option value={item.value}>{item.text}</option>)}
+                                    
                                 </select>
                             </div>
                             <div className="form-group mt-3 mb-4">
                                 <label className="f-14 mb-1">Available Placeholders</label>
                                 <div className="available-placeholders">
                                     {specificPlaceholders.map((item, i) => (
-                                        <p key={i} onClick={() => insertPlaceholder(i)}>
+                                        <p className={`${css({...brandKit({ col: 0 })})}`} key={i} onClick={() => insertPlaceholder(i)}>
                                             {item.title}
                                         </p>
                                     ))}
@@ -201,6 +208,11 @@ function NewEmailTemplate({ addEmailTemplate }) {
     );
 }
 
-const mapStateToProps = (state, ownProps) => ({ configs: state.config.configs });
+const mapStateToProps = (state, ownProps) => (
+    { 
+        configs: state.config.configs,
+        emailTemplates: state.emailTemplate.emailTemplates,
+    }
+);
 
 export default connect(mapStateToProps, { addEmailTemplate })(NewEmailTemplate);

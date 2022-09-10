@@ -12,25 +12,105 @@ import tableIcons from '../../../../../assets/materialicons/tableIcons';
 import NewSupportEmail from './components/NewSupportEmail';
 import { ReactComponent as DotSvg } from '../../../../../assets/icons/dots.svg';
 import { ReactComponent as EditIcon } from '../../../../../assets/icons/Edit.svg';
+import { ReactComponent as DeleteRedIcon } from '../../../../../assets/icons/Delete-red.svg';
 import { setTenantInfo } from '../../../../../reduxstore/actions/tenantInfoActions';
+import { getConfigs } from '../../../../../reduxstore/actions/configActions';
 import './settingsEmail.scss';
 import { brandKit, wordCapitalize } from 'helper';
 import Swal from 'sweetalert2';
 import { css } from '@emotion/css';
-import { httpPatch } from 'helpers/httpMethods';
+import { httpPatch, httpDeleteMain } from 'helpers/httpMethods';
+import Modal from 'react-responsive-modal';
+import { NotificationManager } from 'react-notifications';
 
-function EmailSettings({ configs, isConfigsLoaded, tenantInfo }) {
+function EmailSettings({ configs, isConfigsLoaded, tenantInfo, getConfigs }) {
     const history = useHistory();
     const { action } = useParams();
     const [pageAction, setPageAction] = useState(action);
     const [hasEmailConfig, setHasEmailConfig] = useState(false);
     const [showOnOffToggle, setShowOnOffToggle] = useState(false)
+    const [deleteConfirm, setDeleteConfirm] = useState(false);
+    const [configToDelete, setConfigToDelete] = useState('');
+    const [emailConfigData, setEmailConfigData] = useState({incoming: null, outgoing: null});
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         setPageAction(action);
     }, [action]);
+
+    useEffect(() => {
+        if (isConfigsLoaded) {
+            if (!configs?.email_config?.email && !configs?.outgoing_email_config) {
+                history.push('/settings/integrations/email/email-form');
+            }
+
+            if (configs?.email_config) {
+                setShowOnOffToggle(true);
+            }
+            
+            setEmailConfigData((prev) => ({...prev, incoming: configs?.email_config, outgoing: configs?.outgoing_email_config}));
+        }
+    }, [isConfigsLoaded, configs]);
+
+    useEffect(() => {
+        setHasEmailConfig(tenantInfo?.tenantInfo?.has_email_config);
+    }, [tenantInfo]);
+
+    const patchHasEmailConfig = async () => {
+        const res = await httpPatch(`auth/tenant-info/${tenantInfo?.tenantInfo?.domain}`, {hasEmailConfig: !hasEmailConfig});
+        if (res.status === 'success') {
+            dispatch(setTenantInfo(res?.data));
+        }
+    }
+
+    const handleConfigDelete = async () => {
+        // There's nothing else to differentiate incoming/outgoing, so for now...
+        setDeleteConfirm(false)
+        if (configToDelete) {
+            const res = await httpDeleteMain(`settings/outgoing-email-config`);
+            if (res.status === 'success') {
+                getConfigs();
+                return NotificationManager.success(res.message, 'Email Configuration');
+            } else {
+                return NotificationManager.error(res.er.message);
+            }
+        } else {
+            const res = await httpDeleteMain(`settings/email-config`);
+            if (res.status === 'success') {
+                getConfigs();
+                return NotificationManager.success(res.message, 'Email Configuration');
+            } else {
+                return NotificationManager.error(res.er.message);
+            }
+        }
+    }
+
+    async function handleActiveChange () {
+        Swal.fire({
+            title: '',
+            text: `Do you want to turn ${hasEmailConfig? 'off' : 'on'} Email to Ticket?`,
+            showCancelButton: true,
+            confirmButtonColor: brandKit({ bgCol: 0 })?.backgroundColor,
+            cancelButtonColor: '#ffffff',
+            cancelButtonText: 'Cancel',
+            confirmButtonText: 'Yes',
+            customClass: {
+                cancelButton: 'user-activation-cancel-btn',
+                confirmButton: 'user-activation-confirm-btn',
+                container: 'user-activation-container',
+                popup: 'user-activation-popup',
+                validationMessage: 'user-activation-validation-msg',
+                htmlContainer: 'user-activation-html-container',
+            },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                patchHasEmailConfig()
+                setHasEmailConfig(!hasEmailConfig);
+                
+            }
+        });
+    }
 
     const tableTheme = createTheme({
         palette: {
@@ -66,68 +146,28 @@ function EmailSettings({ configs, isConfigsLoaded, tenantInfo }) {
             field: 'port',
         },
         {
-            title: '',
+            title: 'Action',
             field: 'dropdownAction',
-            render: (rowData) => (<button
-                onClick={() => 
-                    history.push(
+            render: (rowData) => (
+                <>
+                    <button
+                        onClick={() => history.push(
                         `/settings/integrations/email/email-form${
                             rowData?.idx === 1 ? '?type=outgoing' : ''
-                        }`,
-                    )
-                }><EditIcon /></button>
+                        }`)}>
+                        <EditIcon />
+                    </button>
+                    <button 
+                        className="ms-3"
+                        onClick={() => {setDeleteConfirm(true); setConfigToDelete(rowData?.type)}}>
+                        <DeleteRedIcon />
+                    </button>
+                </>
                         
                             
             ),
         },
     ];
-
-    useEffect(() => {
-        if (isConfigsLoaded) {            
-            if (!configs?.email_config?.email && !configs?.email_config?.host && !configs?.email_config?.port) {
-                history.push('/settings/integrations/email/email-form');
-            }
-
-            if(configs?.email_config?.email ) setShowOnOffToggle(true)
-        }
-    }, [isConfigsLoaded]);
-
-    useEffect(() => {
-        setHasEmailConfig(tenantInfo?.tenantInfo?.has_email_config);
-    }, [tenantInfo]);
-
-    const patchHasEmailConfig = async () => {
-        const res = await httpPatch(`auth/tenant-info/${tenantInfo?.tenantInfo?.domain}`, {hasEmailConfig: !hasEmailConfig});
-        if (res.status === 'success') {
-            dispatch(setTenantInfo(res?.data));
-        }
-    }
-
-    async function handleActiveChange () {
-        Swal.fire({
-            title: '',
-            text: `Do you want to turn ${hasEmailConfig? 'off' : 'on'} Email to Ticket?`,
-            showCancelButton: true,
-            confirmButtonColor: brandKit({ bgCol: 0 })?.backgroundColor,
-            cancelButtonColor: '#ffffff',
-            cancelButtonText: 'Cancel',
-            confirmButtonText: 'Yes',
-            customClass: {
-                cancelButton: 'user-activation-cancel-btn',
-                confirmButton: 'user-activation-confirm-btn',
-                container: 'user-activation-container',
-                popup: 'user-activation-popup',
-                validationMessage: 'user-activation-validation-msg',
-                htmlContainer: 'user-activation-html-container',
-            },
-        }).then((result) => {
-            if (result.isConfirmed) {
-                patchHasEmailConfig()
-                setHasEmailConfig(!hasEmailConfig);
-                
-            }
-        });
-    }
 
     return pageAction === 'email-form' ? (
         <NewSupportEmail />
@@ -144,8 +184,6 @@ function EmailSettings({ configs, isConfigsLoaded, tenantInfo }) {
                             <span className="text-custom">Integrations</span>
                         </Link>{' '}
                         <img src={RightArrow} alt="" className="img-fluid mx-2 me-3" />{' '}
-                        {/* <object data="../assets/alphatickets/icons/right-arrow.svg"
-                            className="img-fluid mx-2 me-3"></object> */}
                         <span>Email</span>
                     </h6>
                 </div>
@@ -170,7 +208,14 @@ function EmailSettings({ configs, isConfigsLoaded, tenantInfo }) {
 
                 <div id="result" />
 
-                <div className="ticket-table-wrapper" style={{ paddingTop: 70 }}>
+                <div className="ticket-table-wrapper" style={{ paddingTop: 10 }}>
+                    {(!emailConfigData?.incoming || !emailConfigData?.outgoing) && 
+                        <Link to="/settings/integrations/email/email-form" className={`btn btn-sm me-2 float-end ${css({
+                            ...brandKit({ bgCol: 0 }),
+                            color: 'white',
+                            '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                        })}`}>Add Config</Link>
+                    }
                     <div
                         id="alphacxMTable"
                         className="pb-5 acx-ticket-cust-table acx-ticket-table acx-user-table-2 p-4 fit-content"
@@ -182,22 +227,19 @@ function EmailSettings({ configs, isConfigsLoaded, tenantInfo }) {
                                     title=""
                                     icons={tableIcons}
                                     data={
-                                        configs?.email_config
-                                            ? [configs?.email_config, configs?.outgoing_email_config].map(
-                                                  (emailConfig, idx) => ({
-                                                      name:
-                                                          idx === 0
-                                                              ? 'Incoming Mail Server'
-                                                              : idx === 1
-                                                              ? 'Outgoing Mail Server'
-                                                              : '',
-                                                      email: emailConfig?.email,
-                                                      host: emailConfig?.host,
-                                                      port: emailConfig?.port,
-                                                      idx,
-                                                  }),
-                                              )
-                                            : []
+                                         Object.values(emailConfigData).filter(i => i !== null).map(
+                                            (emailConfig, idx) => ({
+                                                name:
+                                                emailConfig?.type
+                                                        ? 'Outgoing Mail Server'
+                                                        : 'Incoming Mail Server',
+                                                email: emailConfig?.email,
+                                                host: emailConfig?.host,
+                                                port: emailConfig?.port,
+                                                idx,
+                                                type: emailConfig?.type,
+                                            })
+                                        )
                                     }
                                     options={{
                                         search: true,
@@ -222,6 +264,33 @@ function EmailSettings({ configs, isConfigsLoaded, tenantInfo }) {
                     </div>
                 </div>
             </div>
+
+            {/* confirm modal */}
+            <Modal open={deleteConfirm} onClose={() => setDeleteConfirm(false)} center>
+                <div className="p-5 w-100">
+                    <h6 className="mb-5">Are you sure you want to delete this setting?</h6>
+                    <div className="d-flex justify-content-center">
+                        <button
+                            type="button"
+                            className="btn btn-sm border cancel px-3"
+                            onClick={() => setDeleteConfirm(false)}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            type="button"
+                            className={`btn btn-sm ms-2 px-3 ${css({
+                                ...brandKit({ bgCol: 0 }),
+                                color: 'white',
+                                '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
+                            })}`}
+                            onClick={handleConfigDelete}
+                        >
+                            Yes
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 }
@@ -232,4 +301,4 @@ const mapStateToProps = (state, ownProps) => ({
     tenantInfo: state.tenantInfo,
 });
 
-export default connect(mapStateToProps, null)(EmailSettings);
+export default connect(mapStateToProps, {getConfigs})(EmailSettings);

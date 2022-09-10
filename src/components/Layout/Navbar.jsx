@@ -521,7 +521,7 @@ function Navbar({ pageName, user }) {
                             <Notification userId={user?.id} />
 
                             {hasFeatureAccess('knowledgebase') && (
-                                // <Link to="/knowledge-base" target="_blank">
+                                // <Link to="/knowledgebase" target="_blank">
                                 //     <HelpIcon />
                                 // </Link>
                                 <Dropdown className="ticket-status-dropdown help-dropdown">

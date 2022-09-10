@@ -4,6 +4,7 @@
 // import { hideLoader } from '../helpers/loader';
 import { NotificationManager } from 'react-notifications';
 import { parseDomain, ParseResultType } from 'parse-domain';
+import { matchPath } from 'react-router-dom';
 import { customAxios as axios } from '../helper';
 import { config } from '../config/keys';
 
@@ -38,17 +39,20 @@ export const splitHostname = (hostname) => {
     return false;
 };
 
-// get the tenant domain from the url
-export const getTenantDomainForKb = () => {
-    // const fallbackTenant = 'techpoint';
+const getUrlDomain = () => {
+    const matchedPath = matchPath(window.location.pathname, { path: '/:tenantdomain/knowledgebase/' }) || {};
+    const { tenantdomain } = matchedPath?.params || {};
+    return tenantdomain;
+}
 
+// get the tenant domain from the url
+export const getTenantDomainForKb = () => {    
     // get hostname
     const { hostname } = window.location;
-
+    
     // get splitted hostname
-
     const splittedHostname = splitHostname(hostname);
-    const urlDomain = new URLSearchParams(window.location.search).get('domain');
+    const urlDomain = getUrlDomain();
 
     if (splittedHostname) {
         const { subDomains, domain, topLevelDomains } = splittedHostname;
