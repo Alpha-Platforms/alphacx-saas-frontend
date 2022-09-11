@@ -9,7 +9,7 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable react/prop-types */
 // @ts-nocheck
-import React, { useState, useEffect, useRef, Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import remarkGfm from 'remark-gfm';
@@ -1242,7 +1242,8 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                                     className={`avatar avatar-md ${
                                                                         !data?.user?.avatar ? 'avatar-border' : ''
                                                                     } rounded-circle overflow-hidden d-flex justify-content-center align-items-center text-uppercase ${css`
-                                                                        color: ${brandKit({ bgCol: 0 })?.backgroundColor};
+                                                                        color: ${brandKit({ bgCol: 0 })
+                                                                            ?.backgroundColor};
                                                                     `}`}
                                                                 >
                                                                     {data?.user?.avatar ? (
