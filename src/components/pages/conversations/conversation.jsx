@@ -9,7 +9,7 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable react/prop-types */
 // @ts-nocheck
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import remarkGfm from 'remark-gfm';
@@ -663,6 +663,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
         //
         setCustomFieldIsSet(true);
         setCustomFieldsGroup([...groupedCustomFields]);
+        console.log('singleTicketFullInfo', singleTicketFullInfo);
         // if (ticket?.length > 0) {
         //     const loadedTicket = singleTicketFullInfo;
         //     if (loadedTicket?.channel?.toLowerCase() === 'instagram') {
@@ -844,59 +845,8 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editorEditableBox, ReplyTicket]);
 
-    const updateTicketStatus = async () => {
-        if (RSTicketStage.label === 'Closed' && hasFeatureAccess('rating')) {
-            let subdomain;
-            if (getSubdomainOrUrl() === 'app' || getSubdomainOrUrl() === 'dev') {
-                subdomain = window.localStorage.getItem('domain');
-            }
-            // get url and replace domain
-            const baseUrl = window.location.origin;
-            const completedUrl = `${baseUrl}/feedback/${singleTicketFullInfo?.id}/${singleTicketFullInfo?.customer.id}${
-                subdomain ? `?domain=${subdomain}` : ''
-            }`;
-            const richText = `<p>Your ticket has been marked as closed, Please click on the link to rate this conversation : <a target='_blank' href='${completedUrl}'>Click here to rate us</a></p>`;
-            const reply = {
-                richText,
-                plainText: `Your ticket has been marked as closed, Please click on the link to rate this conversation ${completedUrl}`,
-            };
-            replyTicket(reply, 'attachment', 'reply');
-        }
-        const statusRes = await httpPatchMain(`tickets-status/${singleTicketFullInfo?.id}`, {
-            statusId: RSTicketStage.value,
-        });
-        if (statusRes.status === 'success') {
-            const replyData = {
-                type: 'reply',
-                status_action: true,
-                attachment: null,
-                created_at: new Date(),
-                plain_response: `Ticket Stage has been marked as ${RSTicketStage.label}`,
-                response: `Ticket Stage has been marked as ${RSTicketStage.label}`,
-                user: singleTicketFullInfo?.assignee,
-            };
-
-            setMsgHistory((item) => [...item, replyData]);
-
-            /*
-            FIXME:  handle with http if ought to
-            const channelData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
-            AppSocket.io.emit(`ws_tickets`, channelData); */
-
-            return NotificationManager.success('Conversation status successfully updated', 'Success');
-        }
-        return NotificationManager.error(statusRes.er.message, 'Error', 4000);
-    };
-
-    const handleCustomFieldChange = (e) => {
-        const { name, value } = e.target;
-        setRSTicketCustomFields((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
-    };
-
     const closeSaveTicketModal = () => {
+        console.log('closeSaveTicketModal called');
         setOpenSaveTicketModal(!openSaveTicketModal);
         setSaveTicket({
             customer: '',
@@ -912,7 +862,89 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
         setRSTicketAssignee(singleTicketFullInfo?.assignee?.id);
     };
 
-    const updateTicket = async () => {
+    const ticketUpdateRequest = async (data) => {
+        const res = await httpPatchMain(`tickets/${singleTicketFullInfo?.id}`, data);
+        if (res.status === 'success') {
+            setProcessing(false);
+            closeSaveTicketModal();
+            NotificationManager.success('Ticket successfully updated', 'Success');
+
+            /*
+                FIXME: handle with http if ought to 
+                AppSocket.createConnection();
+                const socketData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
+                AppSocket.io.emit(`ws_tickets`, socketData);
+            */
+            const ticketRes = await httpGetMain(`tickets/${singleTicketFullInfo?.id}`);
+            if (ticketRes.status === 'success') {
+                setSingleTicketFullInfo(ticketRes?.data?.[0]);
+            } else {
+                setLoadSingleTicket(false);
+                NotificationManager.info('Please refresh your page for changes');
+            }
+        } else {
+            setProcessing(false);
+            NotificationManager.error(res.er.message, 'Update Error', 4000);
+        }
+    };
+
+    const updateTicketStatus = async (data) => {
+        let reply;
+        const featureAndClosedCheck = RSTicketStage.label === 'Closed' && hasFeatureAccess('rating');
+        if (featureAndClosedCheck) {
+            let subdomain;
+            if (getSubdomainOrUrl() === 'app' || getSubdomainOrUrl() === 'dev') {
+                subdomain = window.localStorage.getItem('domain');
+            }
+            // get url and replace domain
+            const baseUrl = window.location.origin;
+            const completedUrl = `${baseUrl}/feedback/${singleTicketFullInfo?.id}/${singleTicketFullInfo?.customer.id}${
+                subdomain ? `?domain=${subdomain}` : ''
+            }`;
+            const richText = `<p>Your conversation has been marked as Closed, Please, click on the link to rate it: <a target='_blank' href='${completedUrl}'>Click here to rate us</a></p>`;
+            reply = {
+                richText,
+                plainText: `Your conversation has been marked as Closed, Please, rate your experience with this link: ${completedUrl}`,
+            };
+        }
+        const statusRes = await httpPatchMain(`tickets-status/${singleTicketFullInfo?.id}`, {
+            statusId: RSTicketStage.value,
+        });
+        if (statusRes.status === 'success') {
+            ticketUpdateRequest(data);
+            if (featureAndClosedCheck) replyTicket(reply, 'attachment', 'reply');
+            const replyData = {
+                type: 'reply',
+                status_action: true,
+                attachment: null,
+                created_at: new Date(),
+                plain_response: `Conversation Status has been marked as ${RSTicketStage.label}`,
+                response: `Conversation Status has been marked as ${RSTicketStage.label}`,
+                user: singleTicketFullInfo?.assignee,
+            };
+
+            setMsgHistory((item) => [...item, replyData]);
+
+            /*
+            FIXME:  handle with http if ought to
+            const channelData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
+            AppSocket.io.emit(`ws_tickets`, channelData); */
+
+            return NotificationManager.success('Conversation status successfully updated', 'Success');
+        }
+        setOpenSaveTicketModal(false);
+        NotificationManager.error(statusRes.er.message, 'Status Update Error', 4000);
+    };
+
+    const handleCustomFieldChange = (e) => {
+        const { name, value } = e.target;
+        setRSTicketCustomFields((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    const updateTicket = () => {
         setProcessing(true);
         const data = {
             priorityId: RSTicketPriority,
@@ -923,32 +955,13 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             tags: !Array.isArray(RSTicketTags) || !RSTicketTags.length ? null : RSTicketTags,
             customField: RSTicketCustomFields,
         };
-        if (Object.keys(RSTicketStage).length > 0) {
-            updateTicketStatus();
-            setRSTicketStage({});
-        }
-        const res = await httpPatchMain(`tickets/${singleTicketFullInfo?.id}`, data);
-        if (res.status === 'success') {
-            setProcessing(false);
-            closeSaveTicketModal();
-            NotificationManager.success('Ticket successfully updated', 'Success');
 
-            /*
-            FIXME: handle with http if ought to 
-            AppSocket.createConnection();
-            const socketData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
-            AppSocket.io.emit(`ws_tickets`, socketData);
- */
-            const ticketRes = await httpGetMain(`tickets/${singleTicketFullInfo?.id}`);
-            if (ticketRes.status === 'success') {
-                setSingleTicketFullInfo(ticketRes?.data?.[0]);
-            } else {
-                setLoadSingleTicket(false);
-                NotificationManager.info('please refresh your page to see changes');
-            }
+        if (Object.keys(RSTicketStage).length > 0) {
+            updateTicketStatus(data);
+            setRSTicketStage({});
         } else {
-            setProcessing(false);
-            NotificationManager.error(res.er.message, 'Error', 4000);
+            // if status wasn't touched
+            ticketUpdateRequest(data);
         }
     };
 
@@ -1154,7 +1167,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                             {AchiveMsges.length === 0 &&
                                             TodayMsges.length === 0 &&
                                             YesterdayMsges.length === 0 ? (
-                                                <span> No response found ({AchiveMsges.length})</span>
+                                                <span> No responses found ({AchiveMsges.length})</span>
                                             ) : (
                                                 <span> </span>
                                             )}
@@ -1212,7 +1225,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                         {AchiveMsges.map((data) => {
                                             return (
                                                 <React.Fragment key={data?.id}>
-                                                    {data?.response.includes('Ticket Stage has been marked') ||
+                                                    {data?.response.includes('Conversation Status has been marked') ||
                                                     data?.statusAction ? (
                                                         <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
                                                             <span> {`${data?.response}`}</span>
@@ -1226,9 +1239,11 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                         >
                                                             <div className="message-container">
                                                                 <div
-                                                                    className={`avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center ${css(
-                                                                        { ...brandKit({ bgCol: 0 }) },
-                                                                    )}`}
+                                                                    className={`avatar avatar-md ${
+                                                                        !data?.user?.avatar ? 'avatar-border' : ''
+                                                                    } rounded-circle overflow-hidden d-flex justify-content-center align-items-center text-uppercase ${css`
+                                                                        color: ${brandKit({ bgCol: 0 })?.backgroundColor};
+                                                                    `}`}
                                                                 >
                                                                     {data?.user?.avatar ? (
                                                                         <img
@@ -1239,7 +1254,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                                         />
                                                                     ) : (
                                                                         <div className="">
-                                                                            <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(
+                                                                            <p className="mb-0">{`${data?.user?.firstname?.slice(
                                                                                 0,
                                                                                 1,
                                                                             )}${
@@ -1337,7 +1352,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                     {YesterdayMsges.map((data) => {
                                         return (
                                             <React.Fragment key={data?.id}>
-                                                {data?.response.includes('Ticket Stage has been marked') ||
+                                                {data?.response.includes('Conversation Status has been marked') ||
                                                 data?.statusAction ? (
                                                     <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
                                                         <span> {`${data?.response}`}</span>
@@ -1351,9 +1366,11 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                     >
                                                         <div className="message-container">
                                                             <div
-                                                                className={`avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center ${css(
-                                                                    { ...brandKit({ bgCol: 0 }) },
-                                                                )}`}
+                                                                className={`avatar avatar-md ${
+                                                                    !data?.user?.avatar ? 'avatar-border' : ''
+                                                                } rounded-circle overflow-hidden d-flex justify-content-center align-items-center text-uppercase ${css`
+                                                                    color: ${brandKit({ bgCol: 0 })?.backgroundColor};
+                                                                `}`}
                                                             >
                                                                 {data?.user?.avatar ? (
                                                                     <img
@@ -1364,7 +1381,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                                     />
                                                                 ) : (
                                                                     <div className="">
-                                                                        <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(
+                                                                        <p className="mb-0">{`${data?.user?.firstname?.slice(
                                                                             0,
                                                                             1,
                                                                         )}${
@@ -1460,7 +1477,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                     {TodayMsges.map((data) => {
                                         return (
                                             <React.Fragment key={data?.id}>
-                                                {data?.response?.includes('Ticket Stage has been marked') ||
+                                                {data?.response?.includes('Conversation Status has been marked') ||
                                                 data?.statusAction ? (
                                                     <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
                                                         <span> {`${data?.response}`}</span>
@@ -1474,9 +1491,11 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                     >
                                                         <div className="message-container">
                                                             <div
-                                                                className={`avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center ${css(
-                                                                    { ...brandKit({ bgCol: 0 }) },
-                                                                )}`}
+                                                                className={`avatar avatar-md ${
+                                                                    !data?.user?.avatar ? 'avatar-border' : ''
+                                                                } rounded-circle overflow-hidden d-flex justify-content-center align-items-center text-uppercase ${css`
+                                                                    color: ${brandKit({ bgCol: 0 })?.backgroundColor};
+                                                                `}`}
                                                             >
                                                                 {data?.user?.avatar ? (
                                                                     <img
@@ -1487,7 +1506,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                                     />
                                                                 ) : (
                                                                     <div className="">
-                                                                        <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(
+                                                                        <p className="mb-0">{`${data?.user?.firstname?.slice(
                                                                             0,
                                                                             1,
                                                                         )}${
@@ -1758,7 +1777,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             >
                 <Modal.Body className="p-2">
                     <Form className="p-3 bg-white" onSubmit={(e) => e.preventDefault()}>
-                        <h5 className="acx-text-gray-800 mb-3">Kindly update ticket before closing the chat</h5>
+                        <h5 className="acx-text-gray-800 mb-3">Update ticket before closing the chat</h5>
 
                         <div className="">
                             <Row md={6} className="mb-3">
@@ -1795,7 +1814,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                     />
                                 </Col>
                                 <Col md={6}>
-                                    <label htmlFor="">Stage</label>
+                                    <label htmlFor="">Status</label>
                                     <RSelect
                                         className="rselectfield"
                                         style={{ fontSize: '12px' }}
@@ -2059,7 +2078,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                     className={`btn px-4 ${css({
                                         ...brandKit({ bgCol: 0 }),
                                         color: 'white',
-                                        '&:hover, &:disabled, &:focus': { ...brandKit({ bgCol: 30 }) },
+                                        '&:hover': { ...brandKit({ bgCol: 30 }) },
                                     })}`}
                                     disabled={processing}
                                     type="submit"

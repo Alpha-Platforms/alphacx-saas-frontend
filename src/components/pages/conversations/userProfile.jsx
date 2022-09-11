@@ -67,7 +67,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                         ) : (
                             // <img src={userImg} alt="" />
                             <div className={`userProfilePicConNoImgj ${css({ ...brandKit({ bgCol: 0 }) })}`}>
-                                <p className="text-capitalize" style={{ fontSize: '30px!important' }}>
+                                <p className="text-capitalize">
                                     {InitialsFromString(
                                         `${
                                             ticket?.customer?.firstname == 'default' ||
@@ -383,7 +383,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                         // margin: "auto",
                                     }}
                                 >
-                                    No tag found
+                                    No Tags
                                 </p>
                             ) : (
                                 ticket?.tags?.map((data) => {
