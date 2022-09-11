@@ -51,6 +51,7 @@ function UseOwnEmail({ emailState, setEmailState, setActivateSaveBtn }) {
             && emailState.outgoingEmailConfig.host 
             && emailState.outgoingEmailConfig.password 
             && emailState.outgoingEmailConfig.port
+            && emailState.outgoingEmailConfig.from
         ){
             setActivateSaveBtn(true)
         } else if(emailState.outgoingEmailConfig.email && emailState.outgoingEmailConfig.apiKey) {
@@ -93,7 +94,7 @@ function UseOwnEmail({ emailState, setEmailState, setActivateSaveBtn }) {
                                     onChange={handleConfigChange}
                                 />
                                 <p className="description-text f-12 text-muted mt-1">
-                                    <small>This serves as your Return-to address e.g bayo@yourcompany.com</small>
+                                    <small>This serves as your Return-to address e.g tayo@example.com</small>
                                 </p>
                             </div>
                             <div className="form-group mt-2 col-6">
@@ -311,13 +312,13 @@ function UseOwnEmail({ emailState, setEmailState, setActivateSaveBtn }) {
                                     <div className="col-md-6">
                                         <div className="form-group">
                                             <label htmlFor="outgoing-mail" className="form-label">
-                                                Sender Name
+                                                From Email
                                                 <span className="text-danger"> *</span>
                                             </label>
                                             <input
                                                 type="text"
                                                 className="form-control"
-                                                placeholder="John Doe"
+                                                placeholder="tayo@example.com"
                                                 name="from"
                                                 value={emailState.outgoingEmailConfig.from || ''}
                                                 onChange={handleOutgoingConfig}
@@ -374,7 +375,7 @@ function UseOwnEmail({ emailState, setEmailState, setActivateSaveBtn }) {
                                         />
                                         <p className="description-text f-12 text-muted mt-1">
                                             <small>
-                                                This serves as your Return-to address e.g bayo@yourcompany.com
+                                                This serves as your Return-to address e.g tayo@example.com
                                             </small>
                                         </p>
                                     </div>

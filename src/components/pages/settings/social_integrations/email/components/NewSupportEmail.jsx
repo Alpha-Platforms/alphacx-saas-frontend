@@ -139,9 +139,9 @@ function NewSupportEmail({ configs, getConfigs }) {
             const { email, password, port, tls, host, from, apiKey, type } = emailState.outgoingEmailConfig;
 
             if (type === 'api') {
-                if (!email || !apiKey) return NotificationManager.error('Fill up required fields', 'Error', 4000);
+                if (!email || !apiKey) return NotificationManager.error('Complete all required fields', 'Input Error', 4000);
             } else if (!email && !password && !port && !host)
-                return NotificationManager.error('Fill up required fields', 'Error', 4000);
+                return NotificationManager.error('Complete all required fields', 'Input Error', 4000);
 
             const data = {
                 outgoingEmailConfig:
@@ -163,16 +163,26 @@ function NewSupportEmail({ configs, getConfigs }) {
                           },
             };
 
-            const res = await httpPatchMain('settings/outgoing-email-config', JSON.stringify(data));
+            // outgoing verify
+            setCheckingConnection(true)
+            const verifyRes = await httpPostMain('settings/verify-outgoing-config', JSON.stringify(data));
 
-            if (res?.status === 'success') {
-                getConfigs();
-                NotificationManager.success('Settings successfull saved!', 'Email Configuration', 4000);
-                history.push('/settings/integrations/email');
+            if (verifyRes?.status === 'success') {
 
-            } else {
-                return NotificationManager.error(res?.er?.message, 'Error', 4000);
+                const res = await httpPatchMain('settings/outgoing-email-config', JSON.stringify(data));
+
+                if (res?.status === 'success') {
+                    getConfigs();
+                    NotificationManager.success('Settings successfull saved!', 'Email Configuration', 4000);
+                    history.push('/settings/integrations/email');
+
+                } else {
+                    NotificationManager.error(res?.er?.message, 'Error', 4000);
+                }
+            } else { // verify failed
+                    NotificationManager.error(verifyRes?.er?.message, 'Error', 4000);
             }
+            setCheckingConnection(false)
         }
     };
 
