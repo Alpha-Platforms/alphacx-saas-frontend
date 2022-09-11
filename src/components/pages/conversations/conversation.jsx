@@ -663,6 +663,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
         //
         setCustomFieldIsSet(true);
         setCustomFieldsGroup([...groupedCustomFields]);
+        console.log('singleTicketFullInfo', singleTicketFullInfo);
         // if (ticket?.length > 0) {
         //     const loadedTicket = singleTicketFullInfo;
         //     if (loadedTicket?.channel?.toLowerCase() === 'instagram') {
@@ -876,7 +877,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             */
             const ticketRes = await httpGetMain(`tickets/${singleTicketFullInfo?.id}`);
             if (ticketRes.status === 'success') {
-                singleTicketFullInfo(ticketRes?.data?.[0]);
+                setSingleTicketFullInfo(ticketRes?.data?.[0]);
             } else {
                 setLoadSingleTicket(false);
                 NotificationManager.info('Please refresh your page for changes');
@@ -1166,7 +1167,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                             {AchiveMsges.length === 0 &&
                                             TodayMsges.length === 0 &&
                                             YesterdayMsges.length === 0 ? (
-                                                <span> No response found ({AchiveMsges.length})</span>
+                                                <span> No responses found ({AchiveMsges.length})</span>
                                             ) : (
                                                 <span> </span>
                                             )}
@@ -1224,7 +1225,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                         {AchiveMsges.map((data) => {
                                             return (
                                                 <React.Fragment key={data?.id}>
-                                                    {data?.response.includes('Ticket Stage has been marked') ||
+                                                    {data?.response.includes('Conversation Status has been marked') ||
                                                     data?.statusAction ? (
                                                         <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
                                                             <span> {`${data?.response}`}</span>
@@ -1238,9 +1239,11 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                         >
                                                             <div className="message-container">
                                                                 <div
-                                                                    className={`avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center ${css(
-                                                                        { ...brandKit({ bgCol: 0 }) },
-                                                                    )}`}
+                                                                    className={`avatar avatar-md ${
+                                                                        !data?.user?.avatar ? 'avatar-border' : ''
+                                                                    } rounded-circle overflow-hidden d-flex justify-content-center align-items-center text-uppercase ${css`
+                                                                        color: ${brandKit({ bgCol: 0 })?.backgroundColor};
+                                                                    `}`}
                                                                 >
                                                                     {data?.user?.avatar ? (
                                                                         <img
@@ -1251,7 +1254,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                                         />
                                                                     ) : (
                                                                         <div className="">
-                                                                            <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(
+                                                                            <p className="mb-0">{`${data?.user?.firstname?.slice(
                                                                                 0,
                                                                                 1,
                                                                             )}${
@@ -1349,7 +1352,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                     {YesterdayMsges.map((data) => {
                                         return (
                                             <React.Fragment key={data?.id}>
-                                                {data?.response.includes('Ticket Stage has been marked') ||
+                                                {data?.response.includes('Conversation Status has been marked') ||
                                                 data?.statusAction ? (
                                                     <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
                                                         <span> {`${data?.response}`}</span>
@@ -1363,9 +1366,11 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                     >
                                                         <div className="message-container">
                                                             <div
-                                                                className={`avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center ${css(
-                                                                    { ...brandKit({ bgCol: 0 }) },
-                                                                )}`}
+                                                                className={`avatar avatar-md ${
+                                                                    !data?.user?.avatar ? 'avatar-border' : ''
+                                                                } rounded-circle overflow-hidden d-flex justify-content-center align-items-center text-uppercase ${css`
+                                                                    color: ${brandKit({ bgCol: 0 })?.backgroundColor};
+                                                                `}`}
                                                             >
                                                                 {data?.user?.avatar ? (
                                                                     <img
@@ -1376,7 +1381,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                                     />
                                                                 ) : (
                                                                     <div className="">
-                                                                        <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(
+                                                                        <p className="mb-0">{`${data?.user?.firstname?.slice(
                                                                             0,
                                                                             1,
                                                                         )}${
@@ -1472,7 +1477,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                     {TodayMsges.map((data) => {
                                         return (
                                             <React.Fragment key={data?.id}>
-                                                {data?.response?.includes('Ticket Stage has been marked') ||
+                                                {data?.response?.includes('Conversation Status has been marked') ||
                                                 data?.statusAction ? (
                                                     <div className="msgAssingedToee3 my-3" id={`${data?.id}`}>
                                                         <span> {`${data?.response}`}</span>
@@ -1486,9 +1491,11 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                     >
                                                         <div className="message-container">
                                                             <div
-                                                                className={`avatar avatar-md rounded-circle overflow-hidden d-flex justify-content-center align-items-center ${css(
-                                                                    { ...brandKit({ bgCol: 0 }) },
-                                                                )}`}
+                                                                className={`avatar avatar-md ${
+                                                                    !data?.user?.avatar ? 'avatar-border' : ''
+                                                                } rounded-circle overflow-hidden d-flex justify-content-center align-items-center text-uppercase ${css`
+                                                                    color: ${brandKit({ bgCol: 0 })?.backgroundColor};
+                                                                `}`}
                                                             >
                                                                 {data?.user?.avatar ? (
                                                                     <img
@@ -1499,7 +1506,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                                     />
                                                                 ) : (
                                                                     <div className="">
-                                                                        <p className="fs-6 mb-0 text-white">{`${data?.user?.firstname?.slice(
+                                                                        <p className="mb-0">{`${data?.user?.firstname?.slice(
                                                                             0,
                                                                             1,
                                                                         )}${

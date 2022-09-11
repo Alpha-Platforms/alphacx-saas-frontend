@@ -91,6 +91,10 @@
   border-radius: 50%;
 }
 
+.avatar-border {
+  border: solid 1px;
+}
+
 .message-user-img .message-user-noimg {
   width: 40px;
   height: 40px;
@@ -463,14 +467,14 @@
 }
 
 .userProfilePicCon img {
-  width: 90px;
-  height: 90px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
 }
 
 .userProfilePicConNoImg {
-  width: 90px;
-  height: 90px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background: #006298;
   display: flex;
@@ -486,8 +490,8 @@
 }
 
 .userProfilePicConNoImgj {
-  width: 90px;
-  height: 90px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   /* background: #006298; // TO FAVOUR BRANDING */
   display: flex;
@@ -497,8 +501,7 @@
 
 .userProfilePicConNoImgj p {
   color: white !important;
-  font-weight: 600 !important;
-  font-size: 30px !important;
+  font-size: 1.25rem !important;
   margin-bottom: 0;
   text-transform: capitalize;
 }
