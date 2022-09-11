@@ -9,7 +9,7 @@
 /* eslint-disable react/no-danger */
 /* eslint-disable react/prop-types */
 // @ts-nocheck
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import remarkGfm from 'remark-gfm';
@@ -844,8 +844,53 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editorEditableBox, ReplyTicket]);
 
-    const updateTicketStatus = async () => {
-        if (RSTicketStage.label === 'Closed' && hasFeatureAccess('rating')) {
+    const closeSaveTicketModal = () => {
+        console.log('closeSaveTicketModal called');
+        setOpenSaveTicketModal(!openSaveTicketModal);
+        setSaveTicket({
+            customer: '',
+            subject: '',
+            description: [],
+            category: '',
+        });
+        setRSTicketPriority(singleTicketFullInfo?.priority.id);
+        setRSTicketCategory(singleTicketFullInfo?.category.id);
+        setRSTicketSubject(singleTicketFullInfo?.subject);
+        setRSTicketRemarks(singleTicketFullInfo?.description);
+        setRSTicketTags(singleTicketFullInfo?.tags);
+        setRSTicketAssignee(singleTicketFullInfo?.assignee?.id);
+    };
+
+    const ticketUpdateRequest = async (data) => {
+        const res = await httpPatchMain(`tickets/${singleTicketFullInfo?.id}`, data);
+        if (res.status === 'success') {
+            setProcessing(false);
+            closeSaveTicketModal();
+            NotificationManager.success('Ticket successfully updated', 'Success');
+
+            /*
+                FIXME: handle with http if ought to 
+                AppSocket.createConnection();
+                const socketData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
+                AppSocket.io.emit(`ws_tickets`, socketData);
+            */
+            const ticketRes = await httpGetMain(`tickets/${singleTicketFullInfo?.id}`);
+            if (ticketRes.status === 'success') {
+                singleTicketFullInfo(ticketRes?.data?.[0]);
+            } else {
+                setLoadSingleTicket(false);
+                NotificationManager.info('Please refresh your page for changes');
+            }
+        } else {
+            setProcessing(false);
+            NotificationManager.error(res.er.message, 'Update Error', 4000);
+        }
+    };
+
+    const updateTicketStatus = async (data) => {
+        let reply;
+        const featureAndClosedCheck = RSTicketStage.label === 'Closed' && hasFeatureAccess('rating');
+        if (featureAndClosedCheck) {
             let subdomain;
             if (getSubdomainOrUrl() === 'app' || getSubdomainOrUrl() === 'dev') {
                 subdomain = window.localStorage.getItem('domain');
@@ -856,16 +901,17 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                 subdomain ? `?domain=${subdomain}` : ''
             }`;
             const richText = `<p>Your conversation has been marked as Closed, Please, click on the link to rate it: <a target='_blank' href='${completedUrl}'>Click here to rate us</a></p>`;
-            const reply = {
+            reply = {
                 richText,
                 plainText: `Your conversation has been marked as Closed, Please, rate your experience with this link: ${completedUrl}`,
             };
-            replyTicket(reply, 'attachment', 'reply');
         }
         const statusRes = await httpPatchMain(`tickets-status/${singleTicketFullInfo?.id}`, {
             statusId: RSTicketStage.value,
         });
         if (statusRes.status === 'success') {
+            ticketUpdateRequest(data);
+            if (featureAndClosedCheck) replyTicket(reply, 'attachment', 'reply');
             const replyData = {
                 type: 'reply',
                 status_action: true,
@@ -885,7 +931,8 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
 
             return NotificationManager.success('Conversation status successfully updated', 'Success');
         }
-        return NotificationManager.error(statusRes.er.message, 'Error', 4000);
+        setOpenSaveTicketModal(false);
+        NotificationManager.error(statusRes.er.message, 'Status Update Error', 4000);
     };
 
     const handleCustomFieldChange = (e) => {
@@ -896,23 +943,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
         }));
     };
 
-    const closeSaveTicketModal = () => {
-        setOpenSaveTicketModal(!openSaveTicketModal);
-        setSaveTicket({
-            customer: '',
-            subject: '',
-            description: [],
-            category: '',
-        });
-        setRSTicketPriority(singleTicketFullInfo?.priority.id);
-        setRSTicketCategory(singleTicketFullInfo?.category.id);
-        setRSTicketSubject(singleTicketFullInfo?.subject);
-        setRSTicketRemarks(singleTicketFullInfo?.description);
-        setRSTicketTags(singleTicketFullInfo?.tags);
-        setRSTicketAssignee(singleTicketFullInfo?.assignee?.id);
-    };
-
-    const updateTicket = async () => {
+    const updateTicket = () => {
         setProcessing(true);
         const data = {
             priorityId: RSTicketPriority,
@@ -923,32 +954,13 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
             tags: !Array.isArray(RSTicketTags) || !RSTicketTags.length ? null : RSTicketTags,
             customField: RSTicketCustomFields,
         };
-        if (Object.keys(RSTicketStage).length > 0) {
-            updateTicketStatus();
-            setRSTicketStage({});
-        }
-        const res = await httpPatchMain(`tickets/${singleTicketFullInfo?.id}`, data);
-        if (res.status === 'success') {
-            setProcessing(false);
-            closeSaveTicketModal();
-            NotificationManager.success('Ticket successfully updated', 'Success');
 
-            /*
-            FIXME: handle with http if ought to 
-            AppSocket.createConnection();
-            const socketData = { channel: filterTicketsState === '' ? 'All' : filterTicketsState, per_page: 100 };
-            AppSocket.io.emit(`ws_tickets`, socketData);
- */
-            const ticketRes = await httpGetMain(`tickets/${singleTicketFullInfo?.id}`);
-            if (ticketRes.status === 'success') {
-                setSingleTicketFullInfo(ticketRes?.data?.[0]);
-            } else {
-                setLoadSingleTicket(false);
-                NotificationManager.info('please refresh your page to see changes');
-            }
+        if (Object.keys(RSTicketStage).length > 0) {
+            updateTicketStatus(data);
+            setRSTicketStage({});
         } else {
-            setProcessing(false);
-            NotificationManager.error(res.er.message, 'Error', 4000);
+            // if status wasn't touched
+            ticketUpdateRequest(data);
         }
     };
 
@@ -2059,7 +2071,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                     className={`btn px-4 ${css({
                                         ...brandKit({ bgCol: 0 }),
                                         color: 'white',
-                                        '&:hover, &:disabled, &:focus': { ...brandKit({ bgCol: 30 }) },
+                                        '&:hover': { ...brandKit({ bgCol: 30 }) },
                                     })}`}
                                     disabled={processing}
                                     type="submit"

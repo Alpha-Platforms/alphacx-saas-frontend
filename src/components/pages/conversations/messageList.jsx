@@ -135,12 +135,16 @@ export default function MessageList({
                                 <div className="message-user-img">
                                     {data?.customer?.avatar == null ? (
                                         <div className={`message-user-noimg ${css`
-                                            background: linear-gradient(
-                                                180deg,
-                                                ${brandKit({ bgCol: 0 })?.backgroundColor} -93.06%,
-                                                ${brandKit({ bgCol: -120 })?.backgroundColor} 100%
-                                            );
+                                                color: ${brandKit({ bgCol: 0 })?.backgroundColor}
                                         `}`}>
+
+                                        {/* // <div className={`message-user-noimg ${css`
+                                        //     background: linear-gradient(
+                                        //         180deg,
+                                        //         ${brandKit({ bgCol: 0 })?.backgroundColor} -93.06%,
+                                        //         ${brandKit({ bgCol: -120 })?.backgroundColor} 100%
+                                        //     );
+                                        // `}`}> */}
                                             <span>
                                                 {InitialsFromString(
                                                     `${
