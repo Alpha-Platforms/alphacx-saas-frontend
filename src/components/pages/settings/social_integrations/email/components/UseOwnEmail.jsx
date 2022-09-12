@@ -302,7 +302,7 @@ function UseOwnEmail({ emailState, setEmailState, setActivateSaveBtn }) {
                                                 name="port"
                                                 value={emailState.outgoingEmailConfig.port || ''}
                                                 onChange={handleOutgoingConfig}
-                                                placeholder="993"
+                                                placeholder="587 or 465"
                                             />
                                         </div>
                                     </div>
@@ -327,9 +327,30 @@ function UseOwnEmail({ emailState, setEmailState, setActivateSaveBtn }) {
                                             <p className="description-text f-12 text-muted mt-1">
                                             </p>
                                         </div>
+                                    </div>                                    
+                                    <div className="col-md-6">
+                                        <div className="form-group">
+                                            <label htmlFor="outgoing-mail" className="form-label">
+                                                Sender Name
+                                            </label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="AlphaCX Support"
+                                                name="sender"
+                                                value={emailState.outgoingEmailConfig?.sender || ''}
+                                                onChange={handleOutgoingConfig}
+                                                id="outgoing-from"
+                                            />
+                                            <p className="description-text f-12 text-muted mt-1">
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="col-md-6 pt-4">
-                                        <div className="form-check mt-2">
+                                </div>
+
+                                <div className="row mt-2">
+                                    <div className="col-md-6">
+                                        <div className="form-check">
                                             <input
                                                 className={`form-check-input ${css({ '&:checked': { ...brandKit({ bgCol: 0 }) } })}`}
                                                 type="checkbox"
@@ -344,6 +365,7 @@ function UseOwnEmail({ emailState, setEmailState, setActivateSaveBtn }) {
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         ) : (
                             <div className='px-3'>

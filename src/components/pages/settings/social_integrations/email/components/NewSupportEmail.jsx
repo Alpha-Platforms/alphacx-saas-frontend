@@ -42,6 +42,7 @@ function NewSupportEmail({ configs, getConfigs }) {
             port: '',
             apiKey: '',
             type: 'smtp',
+            sender: '',
         },
     });
 
@@ -87,6 +88,7 @@ function NewSupportEmail({ configs, getConfigs }) {
                     type: configs?.outgoing_email_config?.type || 'smtp',
                     apiKey: configs?.outgoing_email_config?.apiKey || '',
                     from: configs?.outgoing_email_config?.from || '',
+                    sender: configs?.outgoing_email_config?.sender || '',
                 },
             }));
         }
@@ -136,7 +138,7 @@ function NewSupportEmail({ configs, getConfigs }) {
             
         } else {
             // executing outgoing only
-            const { email, password, port, tls, host, from, apiKey, type } = emailState.outgoingEmailConfig;
+            const { email, password, port, tls, host, from, apiKey, type, sender } = emailState.outgoingEmailConfig;
 
             if (type === 'api') {
                 if (!email || !apiKey) return NotificationManager.error('Complete all required fields', 'Input Error', 4000);
@@ -160,6 +162,7 @@ function NewSupportEmail({ configs, getConfigs }) {
                               tls,
                               apiKey: apiKey || null,
                               type,
+                              sender,
                           },
             };
 
