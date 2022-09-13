@@ -106,7 +106,7 @@ function AddStatusModal({
         <Modal show={createModalShow} onHide={handleModalHide} aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Body>
                 <div className="modal-body ">
-                    <h3 className="f-16 text-black">{isEditing ? 'Edit' : 'Add New'} Ticket Stage</h3>
+                    <h3 className="f-16 text-black">{isEditing ? 'Edit' : 'Add New'} Ticket Status</h3>
                     <form action="">
                         <div className="" id="ticketFieldWrapper">
                             <div className="d-flex my-4">
@@ -142,7 +142,7 @@ function AddStatusModal({
                                         '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
                                     })}`}
                                 >
-                                    Add Stage
+                                    Add Status
                                 </button>
                             ) : (
                                 <button
@@ -155,7 +155,7 @@ function AddStatusModal({
                                         '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },
                                     })}`}
                                 >
-                                    {editing ? 'Editing...' : 'Edit'} Stage
+                                    {editing ? 'Editing...' : 'Edit'} Status
                                 </button>
                             )}
                         </div>

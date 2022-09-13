@@ -265,7 +265,7 @@ function ReportsFilter() {
             field: 'category',
         },
         {
-            title: 'Stage',
+            title: 'Status',
             field: 'status',
             render: (rowData) => (
                 <div className={`ticket-state ${getStatusColor(rowData.status, rowData.statusId)}`}>

@@ -17,8 +17,8 @@ function HelpNavBar({ activeBG }) {
                           `background-image: linear-gradient(${kbBrandKit({ bgCol: 0 })?.backgroundColor}1a, ${
                               kbBrandKit({ bgCol: 0 })?.backgroundColor
                           }1a), linear-gradient(#FFF, #FFF); border-bottom: solid 1px ${
-                            kbBrandKit({ bgCol: 0 })?.backgroundColor
-                        }40`,
+                              kbBrandKit({ bgCol: 0 })?.backgroundColor
+                          }40`,
                       )}`
                     : ''
             }`}

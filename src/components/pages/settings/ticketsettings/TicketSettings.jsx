@@ -69,7 +69,7 @@ function TicketSettings() {
                                     aria-controls="ticket-categoriese-view"
                                     aria-selected="false"
                                 >
-                                    Conversation Stage
+                                    Conversation Status
                                 </button>
                             </li>
                         )}

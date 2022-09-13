@@ -50,7 +50,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
 
     const sortMsges = (msgs) => {
         const resultTimestamps = msgs.filter((observation) => {
-            return observation.response.includes('Ticket Stage has been marked');
+            return observation.response.includes('Conversation status has been marked');
         });
         setTimeStampsMsg(resultTimestamps);
     };
@@ -273,7 +273,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                     <li className="ms-0">
                                         <CircleIcon color="rgba(7, 1100, 247, 0.25)" icon={TicketStageIcon} />
                                         <div>
-                                            <p className="pb-0 mb-0 f-12 text-muted op-9">Stage</p>
+                                            <p className="pb-0 mb-0 f-12 text-muted op-9">Status</p>
                                             <p className="text-muted f-13">{ticket?.status?.status}</p>
                                         </div>
                                     </li>
@@ -459,7 +459,7 @@ export default function UserProfile({ ticket, UserInfo, isTicketDetails, timeLin
                                             <div>
                                                 <a href={`#${data?.id}`} className="acx-link-primary d-block">
                                                     Ticket{' '}
-                                                    {`${data.response.replace('Ticket Stage has been marked as ', '')}`}
+                                                    {`${data.response.replace('Conversation Status has been marked as ', '')}`}
                                                 </a>
                                             </div>
                                             <div>{dateFormater(data.created_at)}</div>

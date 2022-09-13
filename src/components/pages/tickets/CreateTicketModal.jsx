@@ -768,7 +768,7 @@ function CreateTicketModal({
 
                         <div className="col-6 mt-2">
                             <label htmlFor="status" className="form-label">
-                                Stage
+                                Status
                             </label>
                             <RSelect
                                 className="rselectfield"
