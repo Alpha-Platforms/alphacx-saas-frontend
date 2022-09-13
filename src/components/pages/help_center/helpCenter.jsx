@@ -61,26 +61,12 @@ function HelpCenter() {
         <>
             <HelpNavBar />
             <div className="help-center">
-                <div className={`search-container ${css({ ...kbBrandKit({ bgCol: 0 }) })}`}>
-                    {/* <img src={LogoBG} alt="" className="logo-bg" /> */}
-                    {/* COMMENT SEARCH FIELD */}
+                <div
+                    className={`search-container ${css(`
+                    background-color: ${kbBrandKit({ bgCol: 0 })?.backgroundColor}1a
+                `)}`}
+                >
                     <h3>Knowledge Base</h3>
-                    {/* <div className="searchbar">
-                        <div className="icon">
-                            <SearchIconNavbr />
-                        </div>
-                        <form>
-                            <input
-                                type="text"
-                                value={search}
-                                placeholder="Search knowledge base"
-                                onChange={handleChange}
-                            />
-                            <button type="button" className={`${css({ ...kbBrandKit({ bgCol: 0 }) })}`}>
-                                <SendIcon size={30} fill={kbBrandKit({ bgCol: 0 })?.backgroundColor} />
-                            </button>
-                        </form>
-                    </div> */}
                     <div className="kb-home-search-bar mt-4">
                         <KbSearch isHome />
                     </div>

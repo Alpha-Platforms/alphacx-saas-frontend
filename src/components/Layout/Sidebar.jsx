@@ -54,6 +54,13 @@ export default function Sidebar({ browserRouter, currentRoute }) {
     return (
         <>
             <menu
+                // className={`sidebar-wrap ${appReduceSidebarWidth === true ? '' : 'collapsed'} ${css`
+                //     background: linear-gradient(
+                //         180deg,
+                //         ${brandKit({ bgCol: 0 })?.backgroundColor} -93.06%,
+                //         ${brandKit({ bgCol: -130 })?.backgroundColor} 100%
+                //     );
+                // `}`}
                 className={`sidebar-wrap ${appReduceSidebarWidth === true ? '' : 'collapsed'} ${css`
                     background: linear-gradient(
                         180deg,
@@ -63,9 +70,12 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                 `}`}
             >
                 <header
-                    className={`sidebar-header ${css({
-                        ...brandKit({ bgCol: 10 }),
-                    })}`}
+                    className={`sidebar-header ${css(`
+                        // ...brandKit({ bgCol: 230 }),
+                        background-image: linear-gradient(${brandKit({ bgCol: 0 })?.backgroundColor}1a, ${
+                        brandKit({ bgCol: 0 })?.backgroundColor
+                    }1a), linear-gradient(#FFF, #FFF)
+                    `)}`}
                 >
                     <span className="sidebar-header--full-logo">
                         <img src={brandKit(['logo'])[0]} alt="App logo" />

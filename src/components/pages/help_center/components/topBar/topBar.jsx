@@ -36,14 +36,6 @@ function TopBar({ categoryId }) {
                     </p>
                 ))}
             </div>
-            {/* <div className="search-bar">
-                <div className="icon">
-                    <SearchIconNavbr />
-                </div>
-                <form>
-                    <input type="text" placeholder="Search help center" />
-                </form>
-            </div> */}
             <div className="kb-search-bar">
                 <KbSearch />
             </div>
