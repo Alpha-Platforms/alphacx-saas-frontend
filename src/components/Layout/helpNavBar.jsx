@@ -10,32 +10,22 @@ import { kbBrandKit } from '../../helper';
 function HelpNavBar({ activeBG }) {
     const { shadow: scroll } = useScrollDetect();
     return (
-        <div className={`help-nav  ${scroll || activeBG ? `onScroll ${css({ ...kbBrandKit({ bgCol: 0 }) })}` : ''}`}>
+        <div
+            className={`help-nav  ${
+                scroll || activeBG
+                    ? `onScroll ${css(
+                          `background-image: linear-gradient(${kbBrandKit({ bgCol: 0 })?.backgroundColor}1a, ${
+                              kbBrandKit({ bgCol: 0 })?.backgroundColor
+                          }1a), linear-gradient(#FFF, #FFF); border-bottom: solid 1px ${
+                            kbBrandKit({ bgCol: 0 })?.backgroundColor
+                        }40`,
+                      )}`
+                    : ''
+            }`}
+        >
             <div className="logo">
                 <img src={kbBrandKit(['logo'])[0]} alt="" />
             </div>
-            {/* COMMENTED TOP LINKS */}
-            {/* <div className="nav-links">
-                <p className="link">FAQ</p>
-                <Link to="/knowledgebase/tickets">
-                  <p className="link">Submit a ticket</p>
-                </Link>
-                <Link to="/register">
-                    <p className="link">Sign in</p>
-                </Link>
-                <Link to={`#`}>
-                  <img
-                    src={ManImg}
-                    alt=""
-                    style={{
-                      width: 30,
-                      borderRadius: "50%",
-                      marginLeft: '2rem',
-                      transform: 'translateY(-0.3rem)'
-                    }}
-                  />
-                </Link>
-            </div> */}
         </div>
     );
 }

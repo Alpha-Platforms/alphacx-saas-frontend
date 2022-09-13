@@ -932,6 +932,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
 
             return NotificationManager.success('Conversation status successfully updated', 'Success');
         }
+        setProcessing(false);
         setOpenSaveTicketModal(false);
         NotificationManager.error(statusRes.er.message, 'Status Update Error', 4000);
     };
@@ -1905,7 +1906,9 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                                 }}
                                                 defaultValue={{
                                                     value: singleTicketFullInfo?.assignee?.id,
-                                                    label: `${singleTicketFullInfo?.assignee?.firstname}  ${singleTicketFullInfo?.assignee?.lastname}`,
+                                                    label: `${singleTicketFullInfo?.assignee?.firstname || ''}  ${
+                                                        singleTicketFullInfo?.assignee?.lastname || ''
+                                                    }`,
                                                 }}
                                                 options={
                                                     // populate 'options' prop from $Category, with names remapped

@@ -78,15 +78,13 @@ function KbSearch({ isHome }) {
                 <input
                     ref={searchRef}
                     className={`kb-search-input ${css({
-                        '&.active, &:focus': {
-                            outlineColor: kbBrandKit({ bgCol: 0 })?.backgroundColor,
-                        },
+                        outline: `solid 1px ${kbBrandKit({ bgCol: 0 })?.backgroundColor}`,
                     })} ${isHome ? 'is-home' : ''} ${dropdownActive ? 'active' : ''}`}
                     placeholder="Search knowledge base"
                     type="text"
                     onChange={handleKbSearch}
                     style={{
-                        borderRadius: isHome ? '10rem' : 10,
+                        borderRadius: '10rem',
                         border: 'solid 0.5px #ddd',
                         padding: isHome ? '1rem 3rem' : '0.6rem 2rem',
                         backgroundImage: `url(${searchIcon})`,

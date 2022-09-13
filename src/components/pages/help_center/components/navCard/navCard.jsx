@@ -17,7 +17,7 @@ function NavCard({ title, folders }) {
                     <Folder fill={kbBrandKit({ bgCol: 0 })?.backgroundColor} />
                 </div>
                 <div>
-                    <p className="title">{title}</p>
+                    <p className="title text-capitalize">{title}</p>
                     <div className="description">{/* <p>{folders[0]?.name}</p> */}</div>
                 </div>
                 <p className="article-count">{folders[0]?.__meta__?.totalPublishedArticles}</p>

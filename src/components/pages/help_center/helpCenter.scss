@@ -4,6 +4,7 @@ iframe {
 
 .help-center {
   background-color: #ffffff;
+  min-height: 100vh;
   button,
   input {
     border: none !important;
@@ -25,11 +26,7 @@ iframe {
       right: 0;
       z-index: 0;
     }
-    h3 {
-      color: white;
-      font-size: 2rem;
-      z-index: 5;
-    }
+    
     .searchbar {
       z-index: 6;
       margin-top: 30px;
