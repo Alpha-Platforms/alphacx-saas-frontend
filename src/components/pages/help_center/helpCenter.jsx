@@ -98,16 +98,19 @@ function HelpCenter() {
                 ) : (
                     <div className="navigation-cards">
                         <div className="nav-cards">
-                            {categories?.slice(0, 8)?.map((cat, i) => (
-                                <NavCard
-                                    key={`item-${i + 1}`}
-                                    icon={icons[i]}
-                                    title={cat.name}
-                                    folders={cat.folders}
-                                    id={cat.id}
-                                    // link={nav.link}
-                                />
-                            ))}
+                            {categories
+                                ?.filter((item) => item?.folders[0]?.__meta__?.totalPublishedArticles > 0)
+                                ?.slice(0, 8)
+                                ?.map((cat, i) => (
+                                    <NavCard
+                                        key={`item-${i + 1}`}
+                                        icon={icons[i]}
+                                        title={cat.name}
+                                        folders={cat.folders}
+                                        id={cat.id}
+                                        // link={nav.link}
+                                    />
+                                ))}
                         </div>
                         {categories.length > 8 && (
                             <div>
