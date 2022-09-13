@@ -1053,7 +1053,7 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
                                         }}
                                         value={status}
                                     >
-                                        <MenuItem value="All">Stages</MenuItem>
+                                        <MenuItem value="All">Status</MenuItem>
                                         {Statuses?.map((data) => {
                                             return (
                                                 <MenuItem key={data.id} value={data.id}>
