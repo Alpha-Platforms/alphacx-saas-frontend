@@ -35,7 +35,7 @@ function TicketStatusTab({ statuses }) {
                 <div style={gtcCol} className="mb-4 mt-4 d-grid align-items-start">
                     <div>
                         <label htmlFor="ticket-supplt" className="form-label d-inline-block">
-                            Conversation Stage:
+                            Conversation Status:
                         </label>
                     </div>
                     <div>
@@ -80,7 +80,7 @@ function TicketStatusTab({ statuses }) {
                                         disabled={false}
                                         onClick={openAddStage}
                                     >
-                                        + Add Stage
+                                        + Add Status
                                     </button>
                                 </div>
                             </div>
