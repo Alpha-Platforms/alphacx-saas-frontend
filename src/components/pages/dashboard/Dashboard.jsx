@@ -73,8 +73,8 @@ function DashboardTwo({
                                 </div>
                                 <div className="csat-progress">
                                     <CircularProgressbar
-                                        value={analytics?.cSat || 0}
-                                        text={`${analytics?.cSat || 0}%`}
+                                        value={newAnalytics?.csat || 0}
+                                        text={`${newAnalytics?.csat || 0}%`}
                                         styles={buildStyles({
                                             strokeLinecap: 'butt',
                                             pathColor: `${brandingBg?.backgroundColor}`,
