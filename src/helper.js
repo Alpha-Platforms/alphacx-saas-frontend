@@ -12,8 +12,10 @@ import jwt_decode from 'jwt-decode';
 import dayjs from 'dayjs';
 import { config } from './config/keys';
 import store from './reduxstore/store';
-import AlpacxLogoMain from './assets/images/alphacx-logo-main.png';
-import AlpacxIconMain from './assets/images/alphacx-app-icon-white.png';
+// import AlpacxLogoMain from './assets/images/alphacx-logo-main.png';
+// import AlpacxIconMain from './assets/images/alphacx-app-icon-white.png';
+import AlpacxLogoMain from './assets/images/alphacx-logo.png';
+import AlpacxIconMain from './assets/imgF/AlphaCXLogo.png';
 
 // function to return axios configuration with tenant token
 export const tenantTokenConfig = (getState) => {
