@@ -11,8 +11,6 @@ function TicketLineGraph({ newAnalytics, brandingBg }) {
 
     const channelData = newAnalytics?.channelsDeltaDaysTicketsCounts;
 
-    console.log('ANALYTICS => ', newAnalytics);
-
     const lineColors = ['#016298', '#6C4181', '#ECBA41', '#51B74F', '#4DCACA', '#C16473'];
 
     const legendColorClassNames = [
@@ -52,8 +50,6 @@ function TicketLineGraph({ newAnalytics, brandingBg }) {
               };
           })
         : [];
-
-    console.log('datasetsArr => ', datasetsArr);
 
     const numOfDefaultActiveLine = Math.ceil(Number(allChannels.length) / 2);
 
@@ -110,18 +106,12 @@ function TicketLineGraph({ newAnalytics, brandingBg }) {
         },
     };
 
-    // const defaultToggleInputs = Array.isArray(allChannels)
-    //     ? allChannels?.map((channel, idx) => ({ [channel]: idx > numOfDefaultActiveLine - 1 }))
-    //     : [];
-
     const defaultToggleInputs = Array.isArray(allChannels)
         ? allChannels?.reduce(
               (prev, _, idx, channels) => ({ ...prev, [channels[idx]]: idx > numOfDefaultActiveLine - 1 }),
               {},
           )
         : [];
-
-    console.log('defaultToggleInputs => ', defaultToggleInputs);
 
     const [toggleInputs, setToggleInputs] = useState({});
 
@@ -147,14 +137,6 @@ function TicketLineGraph({ newAnalytics, brandingBg }) {
             setToggleInputs((prev) => ({ ...prev, [name]: false }));
         }
     };
-
-    console.log(
-        (Array.isArray(allChannels) ? allChannels : [])?.map((channel) => {
-            console.log('channel +> ', channel);
-            console.log('toggleINputs => ', toggleInputs);
-            return { checked: toggleInputs[channel] };
-        }),
-    );
 
     return (
         <div>
