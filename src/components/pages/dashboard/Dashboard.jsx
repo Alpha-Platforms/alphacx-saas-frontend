@@ -93,7 +93,7 @@ function DashboardTwo({
                                 </div>
                             </div>
                             <div className="box-4">
-                                <TicketLineGraph brandingBg={brandingBg} analytics={{ newTicket: [] }} />
+                                <TicketLineGraph brandingBg={brandingBg} newAnalytics={newAnalytics} analytics={{ newTicket: [] }} />
                             </div>
                         </div>
                     </div>
