@@ -12,7 +12,7 @@ export default function TicketTimeline({ ticket, timeLine = true }) {
 
     const sortMsges = (msgs) => {
         const resultTimestamps = msgs.filter((observation) => {
-            return observation.response.includes('Ticket Stage has been marked');
+            return observation.response.includes('Conversation status has been marked');
         });
         setTimeStampsMsg(resultTimestamps);
     };
@@ -92,7 +92,7 @@ export default function TicketTimeline({ ticket, timeLine = true }) {
                                                 <a href={`#${data?.id}`} className="acx-link-primary d-block">
                                                     Conversation{' '}
                                                     {`${data.response.replace(
-                                                        'Conversation Stage has been marked as ',
+                                                        'Conversation Status has been marked as ',
                                                         '',
                                                     )}`}
                                                 </a>
