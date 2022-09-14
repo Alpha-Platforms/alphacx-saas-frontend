@@ -1039,10 +1039,6 @@ a object {
   border-radius: 10px;
 }
 
-.logo {
-  transform: scale(0.9);
-}
-
 @media screen and (max-width: 480px) {
   .header {
     height: 190px !important;
