@@ -21,7 +21,8 @@ const customerReducer = (state = initialState, action) => {
         case types.GET_CUSTOMERS:
             return {
                 ...state,
-                customers: action.payload.users || [],
+                // customers: action.payload.users || [],
+                customers: action.payload.customers || [],
                 meta: action.payload.meta,
                 isCustomersLoading: false,
                 isCustomersLoaded: true,
