@@ -42,6 +42,7 @@ function NewSupportEmail({ configs, getConfigs }) {
             port: '',
             apiKey: '',
             type: 'smtp',
+            sender: '',
         },
     });
 
@@ -87,6 +88,7 @@ function NewSupportEmail({ configs, getConfigs }) {
                     type: configs?.outgoing_email_config?.type || 'smtp',
                     apiKey: configs?.outgoing_email_config?.apiKey || '',
                     from: configs?.outgoing_email_config?.from || '',
+                    sender: configs?.outgoing_email_config?.sender || '',
                 },
             }));
         }
@@ -136,12 +138,12 @@ function NewSupportEmail({ configs, getConfigs }) {
             
         } else {
             // executing outgoing only
-            const { email, password, port, tls, host, from, apiKey, type } = emailState.outgoingEmailConfig;
+            const { email, password, port, tls, host, from, apiKey, type, sender } = emailState.outgoingEmailConfig;
 
             if (type === 'api') {
-                if (!email || !apiKey) return NotificationManager.error('Fill up required fields', 'Error', 4000);
+                if (!email || !apiKey) return NotificationManager.error('Complete all required fields', 'Input Error', 4000);
             } else if (!email && !password && !port && !host)
-                return NotificationManager.error('Fill up required fields', 'Error', 4000);
+                return NotificationManager.error('Complete all required fields', 'Input Error', 4000);
 
             const data = {
                 outgoingEmailConfig:
@@ -160,19 +162,30 @@ function NewSupportEmail({ configs, getConfigs }) {
                               tls,
                               apiKey: apiKey || null,
                               type,
+                              sender,
                           },
             };
 
-            const res = await httpPatchMain('settings/outgoing-email-config', JSON.stringify(data));
+            // outgoing verify
+            setCheckingConnection(true)
+            const verifyRes = await httpPostMain('settings/verify-outgoing-config', JSON.stringify(data));
 
-            if (res?.status === 'success') {
-                getConfigs();
-                NotificationManager.success('Settings successfull saved!', 'Email Configuration', 4000);
-                history.push('/settings/integrations/email');
+            if (verifyRes?.status === 'success') {
 
-            } else {
-                return NotificationManager.error(res?.er?.message, 'Error', 4000);
+                const res = await httpPatchMain('settings/outgoing-email-config', JSON.stringify(data));
+
+                if (res?.status === 'success') {
+                    getConfigs();
+                    NotificationManager.success('Settings successfull saved!', 'Email Configuration', 4000);
+                    history.push('/settings/integrations/email');
+
+                } else {
+                    NotificationManager.error(res?.er?.message, 'Error', 4000);
+                }
+            } else { // verify failed
+                    NotificationManager.error(verifyRes?.er?.message, 'Error', 4000);
             }
+            setCheckingConnection(false)
         }
     };
 

@@ -159,7 +159,7 @@ function NewEmailTemplate({ addEmailTemplate, emailTemplates }) {
                                 <label className="f-14 mb-1">Available Placeholders</label>
                                 <div className="available-placeholders">
                                     {specificPlaceholders.map((item, i) => (
-                                        <p key={i} onClick={() => insertPlaceholder(i)}>
+                                        <p className={`${css({...brandKit({ col: 0 })})}`} key={i} onClick={() => insertPlaceholder(i)}>
                                             {item.title}
                                         </p>
                                     ))}

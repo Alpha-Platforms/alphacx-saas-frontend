@@ -37,7 +37,7 @@ export const searchTypeChecker = (query) => {
     } else if (/\S+@\S+\.\S+/.test(query)) {
         searchType = 'email';
     } else {
-        searchType = 'lastname';
+        searchType = 'name';
     }
     return searchType;
 };
@@ -768,7 +768,7 @@ function CreateTicketModal({
 
                         <div className="col-6 mt-2">
                             <label htmlFor="status" className="form-label">
-                                Stage
+                                Status
                             </label>
                             <RSelect
                                 className="rselectfield"
