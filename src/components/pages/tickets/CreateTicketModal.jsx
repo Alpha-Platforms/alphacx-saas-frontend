@@ -53,11 +53,11 @@ export const getSearchedCustomers = async (userInput) => {
         clearTimeout(customerFetchTimer);
         customerFetchTimer = setTimeout(async () => {
             try {
-                const res = await httpGetMain(`users?role=Customer&searchType=${searchType}&search=${userInput}`);
+                const res = await httpGetMain(`customers?searchType=${searchType}&search=${userInput}`);
 
                 if (res.status === 'success') {
                     const remappedData = [];
-                    res.data.users.forEach((item) => {
+                    res.data.customers.forEach((item) => {
                         if (item?.role === 'Customer')
                             remappedData.push({ label: `${item.firstname} ${item.lastname}`, value: item.id });
                     });
