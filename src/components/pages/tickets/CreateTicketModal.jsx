@@ -37,7 +37,7 @@ export const searchTypeChecker = (query) => {
     } else if (/\S+@\S+\.\S+/.test(query)) {
         searchType = 'email';
     } else {
-        searchType = 'lastname';
+        searchType = 'name';
     }
     return searchType;
 };
