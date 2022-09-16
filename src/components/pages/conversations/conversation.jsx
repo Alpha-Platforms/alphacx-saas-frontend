@@ -663,7 +663,6 @@ function Conversation({ user, appSocket, socketMessage, agents, configs, isAgent
         //
         setCustomFieldIsSet(true);
         setCustomFieldsGroup([...groupedCustomFields]);
-        console.log('singleTicketFullInfo', singleTicketFullInfo);
         // if (ticket?.length > 0) {
         //     const loadedTicket = singleTicketFullInfo;
         //     if (loadedTicket?.channel?.toLowerCase() === 'instagram') {
