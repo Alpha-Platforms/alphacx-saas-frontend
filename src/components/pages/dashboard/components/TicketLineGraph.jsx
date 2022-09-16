@@ -1,307 +1,64 @@
-/* eslint-disable */
+/* eslint-disable react/prop-types */
 // @ts-nocheck
+import React, { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
-import { Dropdown } from 'react-bootstrap';
-import { useState, useEffect } from 'react';
 import { css } from '@emotion/css';
-import moment from 'moment';
+import { textCapitalize } from '../../../../helper';
 
-function TicketLineGraph({ analytics, brandingBg }) {
-    window.acxTickets = analytics?.allTickets;
+function TicketLineGraph({ newAnalytics, brandingBg }) {
+    // top 6 channels available in current tenant
+    const allChannels = newAnalytics?.allChannels?.slice(0, 6)?.map((channel) => channel?.name);
 
-    const emailTickets = analytics?.allTickets?.filter((x) => x.channel === 'email') || [];
-    const facebookTickets = analytics?.allTickets?.filter((x) => x.channel === 'facebook') || [];
-    const whatsappTickets = analytics?.allTickets?.filter((x) => x.channel === 'whatsapp') || [];
-    const helpdeskTickets = analytics?.allTickets?.filter((x) => x.channel === 'helpdesk') || [];
-    const systemTickets = analytics?.allTickets?.filter((x) => x.channel === 'system') || [];
-    const callTickets = analytics?.allTickets?.filter((x) => x.channel === 'call') || [];
-    const liveChatTickets = analytics?.allTickets?.filter((x) => x.channel === 'livechat') || [];
-    const servicePortalTickets =
-        analytics?.allTickets?.filter((x) => x.channel === 'system' || x.channel === 'helpdesk') || [];
+    const channelData = newAnalytics?.channelsDeltaDaysTicketsCounts;
 
-    // function to get the date of a given number of days back
-    const getDayDate = (daysBack) => {
-        const date = new Date();
-        return new Date(date.getTime() - daysBack * 24 * 60 * 60 * 1000);
-    };
+    const lineColors = ['#016298', '#6C4181', '#ECBA41', '#51B74F', '#4DCACA', '#C16473'];
 
-    const datasetsArr = [
-        {
-            id: 'emailLegend',
-            type: 'line',
-            label: 'Email',
-            // data: [
-            //     80,
-            //     75,
-            //     120,
-            //     110,
-            //     170,
-            //     140,
-            //     160
-            // ],
-            data: [
-                emailTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(7)).format('DD/MM/YYYY'),
-                ).length || 0,
-                emailTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(6)).format('DD/MM/YYYY'),
-                ).length || 0,
-                emailTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(5)).format('DD/MM/YYYY'),
-                ).length || 0,
-                emailTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(4)).format('DD/MM/YYYY'),
-                ).length || 0,
-                emailTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(3)).format('DD/MM/YYYY'),
-                ).length || 0,
-                emailTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(2)).format('DD/MM/YYYY'),
-                ).length || 0,
-                emailTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(1)).format('DD/MM/YYYY'),
-                ).length || 0,
-            ],
-            borderColor: '#016298',
-            backgroundColor: '#016298',
-            borderWidth: 2,
-            fill: false,
-            showLine: true,
-            pointRadius: 4,
-            pointBorderColor: 'rgba(0, 0, 0, 0)',
-            pointBackgroundColor: 'rgba(0, 0, 0, 0)',
-            pointHoverBorderColor: '#016298',
-            pointHoverBackgroundColor: '#016298',
-            lineTension: 0.4,
-            yAxisID: 'yAxes',
-        },
-        {
-            id: 'livechatLegend',
-            type: 'line',
-            label: 'LiveChat',
-            data: [
-                liveChatTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(7)).format('DD/MM/YYYY'),
-                ).length || 0,
-                liveChatTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(6)).format('DD/MM/YYYY'),
-                ).length || 0,
-                liveChatTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(5)).format('DD/MM/YYYY'),
-                ).length || 0,
-                liveChatTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(4)).format('DD/MM/YYYY'),
-                ).length || 0,
-                liveChatTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(3)).format('DD/MM/YYYY'),
-                ).length || 0,
-                liveChatTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(2)).format('DD/MM/YYYY'),
-                ).length || 0,
-                liveChatTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(1)).format('DD/MM/YYYY'),
-                ).length || 0,
-            ],
-            borderColor: '#6C4181',
-            backgroundColor: '#6C4181',
-            borderWidth: 2,
-            fill: false,
-            showLine: true,
-            pointRadius: 4,
-            pointBorderColor: 'rgba(0, 0, 0, 0)',
-            pointBackgroundColor: 'rgba(0, 0, 0, 0)',
-            pointHoverBorderColor: '#6C4181',
-            pointHoverBackgroundColor: '#6C4181',
-            lineTension: 0.4,
-        },
-        {
-            id: 'callLegend',
-            type: 'line',
-            label: 'Calls',
-            data: [
-                callTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(7)).format('DD/MM/YYYY'),
-                ).length || 0,
-                callTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(6)).format('DD/MM/YYYY'),
-                ).length || 0,
-                callTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(5)).format('DD/MM/YYYY'),
-                ).length || 0,
-                callTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(4)).format('DD/MM/YYYY'),
-                ).length || 0,
-                callTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(3)).format('DD/MM/YYYY'),
-                ).length || 0,
-                callTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(2)).format('DD/MM/YYYY'),
-                ).length || 0,
-                callTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(1)).format('DD/MM/YYYY'),
-                ).length || 0,
-            ],
-            borderColor: '#ECBA41',
-            backgroundColor: '#ECBA41',
-            borderWidth: 2,
-            fill: false,
-            showLine: true,
-            pointRadius: 4,
-            pointBorderColor: 'rgba(0, 0, 0, 0)',
-            pointBackgroundColor: 'rgba(0, 0, 0, 0)',
-            pointHoverBorderColor: '#ECBA41',
-            pointHoverBackgroundColor: '#ECBA41',
-            lineTension: 0.4,
-        },
-        {
-            id: 'whatsappLegend',
-            type: 'line',
-            label: 'WhatsApp',
-            data: [
-                whatsappTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(7)).format('DD/MM/YYYY'),
-                ).length || 0,
-                whatsappTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(6)).format('DD/MM/YYYY'),
-                ).length || 0,
-                whatsappTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(5)).format('DD/MM/YYYY'),
-                ).length || 0,
-                whatsappTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(4)).format('DD/MM/YYYY'),
-                ).length || 0,
-                whatsappTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(3)).format('DD/MM/YYYY'),
-                ).length || 0,
-                whatsappTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(2)).format('DD/MM/YYYY'),
-                ).length || 0,
-                whatsappTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(1)).format('DD/MM/YYYY'),
-                ).length || 0,
-            ],
-            borderColor: '#51B74F',
-            backgroundColor: '#51B74F',
-            borderWidth: 2,
-            fill: false,
-            showLine: true,
-            pointRadius: 4,
-            pointBorderColor: 'rgba(0, 0, 0, 0)',
-            pointBackgroundColor: 'rgba(0, 0, 0, 0)',
-            pointHoverBorderColor: '#51B74F',
-            pointHoverBackgroundColor: '#51B74F',
-            lineTension: 0.4,
-        },
-        {
-            id: 'facebookLegend',
-            type: 'line',
-            label: 'Facebook',
-            data: [
-                facebookTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(7)).format('DD/MM/YYYY'),
-                ).length || 0,
-                facebookTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(6)).format('DD/MM/YYYY'),
-                ).length || 0,
-                facebookTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(5)).format('DD/MM/YYYY'),
-                ).length || 0,
-                facebookTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(4)).format('DD/MM/YYYY'),
-                ).length || 0,
-                facebookTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(3)).format('DD/MM/YYYY'),
-                ).length || 0,
-                facebookTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(2)).format('DD/MM/YYYY'),
-                ).length || 0,
-                facebookTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(1)).format('DD/MM/YYYY'),
-                ).length || 0,
-            ],
-            borderColor: '#4DCACA',
-            backgroundColor: '#4DCACA',
-            borderWidth: 2,
-            fill: false,
-            showLine: true,
-            pointRadius: 4,
-            pointBorderColor: 'rgba(0, 0, 0, 0)',
-            pointBackgroundColor: 'rgba(0, 0, 0, 0)',
-            pointHoverBorderColor: '#4DCACA',
-            pointHoverBackgroundColor: '#4DCACA',
-            lineTension: 0.4,
-        },
-        {
-            id: 'servicePortalLegend',
-            type: 'line',
-            label: 'Service Portal',
-            data: [
-                servicePortalTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(7)).format('DD/MM/YYYY'),
-                ).length || 0,
-                servicePortalTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(6)).format('DD/MM/YYYY'),
-                ).length || 0,
-                servicePortalTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(5)).format('DD/MM/YYYY'),
-                ).length || 0,
-                servicePortalTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(4)).format('DD/MM/YYYY'),
-                ).length || 0,
-                servicePortalTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(3)).format('DD/MM/YYYY'),
-                ).length || 0,
-                servicePortalTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(2)).format('DD/MM/YYYY'),
-                ).length || 0,
-                servicePortalTickets.filter(
-                    (x) => moment(x.created_at).format('DD/MM/YYYY') === moment(getDayDate(1)).format('DD/MM/YYYY'),
-                ).length || 0,
-            ],
-            borderColor: '#C16473',
-            backgroundColor: '#C16473',
-            borderWidth: 2,
-            fill: false,
-            showLine: true,
-            pointRadius: 4,
-            pointBorderColor: 'rgba(0, 0, 0, 0)',
-            pointBackgroundColor: 'rgba(0, 0, 0, 0)',
-            pointHoverBorderColor: '#C16473',
-            pointHoverBackgroundColor: '#C16473',
-            lineTension: 0.4,
-        },
+    const legendColorClassNames = [
+        'legend-bg-blue',
+        'legend-bg-purple',
+        'legend-bg-yellow',
+        'legend-bg-green',
+        'legend-bg-blue-light',
+        'legend-bg-red',
     ];
 
-    const [allDataSet, setAllDataSet] = useState();
+    const datasetsArr = Array.isArray(allChannels)
+        ? allChannels?.map((channel, idx) => {
+              return {
+                  id: `${channel}Legend`,
+                  type: 'line',
+                  label: textCapitalize(channel),
+                  data: Array.isArray(channelData)
+                      ? channelData?.map((data) =>
+                            Number(
+                                data?.counts?.find((item) => item?.name?.toLowerCase() === channel.toLowerCase())
+                                    ?.__meta__?.ticket_count ?? 0,
+                            ),
+                        )
+                      : [],
+                  borderColor: lineColors[idx],
+                  backgroundColor: lineColors[idx],
+                  borderWidth: 2,
+                  fill: false,
+                  showLine: true,
+                  pointRadius: 4,
+                  pointBorderColor: 'rgba(0, 0, 0, 0)',
+                  pointBackgroundColor: 'rgba(0, 0, 0, 0)',
+                  pointHoverBorderColor: lineColors[idx],
+                  pointHoverBackgroundColor: lineColors[idx],
+                  lineTension: 0.4,
+              };
+          })
+        : [];
 
-    useEffect(() => {
-        setAllDataSet(
-            datasetsArr.filter(
-                ({ id }) => id === 'whatsappLegend' || id === 'facebookLegend' || id === 'servicePortalLegend',
-            ),
-        );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    const numOfDefaultActiveLine = Math.ceil(Number(allChannels.length) / 2);
+
+    const [allDataSet, setAllDataSet] = useState([]);
 
     const data = {
-        // labels: [
-        //     "Mon",
-        //     "Tues",
-        //     "Wed",
-        //     "Thu",
-        //     "Fri",
-        //     "Sat",
-        //     "Sun"
-        // ],
-        labels: [
-            moment(getDayDate(7)).format('ddd'),
-            moment(getDayDate(6)).format('ddd'),
-            moment(getDayDate(5)).format('ddd'),
-            moment(getDayDate(4)).format('ddd'),
-            moment(getDayDate(3)).format('ddd'),
-            moment(getDayDate(2)).format('ddd'),
-            moment(getDayDate(1)).format('ddd'),
-        ],
+        labels: Array.isArray(channelData)
+            ? channelData?.map((item) => textCapitalize(item?.day?.slice(0, 3) ?? ''))
+            : [],
         datasets: allDataSet,
     };
 
@@ -349,14 +106,20 @@ function TicketLineGraph({ analytics, brandingBg }) {
         },
     };
 
-    const [toggleInputs, setToggleInputs] = useState({
-        email: false,
-        livechat: false,
-        call: false,
-        whatsapp: true,
-        facebook: true,
-        serviceportal: true,
-    });
+    const defaultToggleInputs = Array.isArray(allChannels)
+        ? allChannels?.reduce(
+              (prev, _, idx, channels) => ({ ...prev, [channels[idx]]: idx > numOfDefaultActiveLine - 1 }),
+              {},
+          )
+        : [];
+
+    const [toggleInputs, setToggleInputs] = useState({});
+
+    useEffect(() => {
+        setAllDataSet(datasetsArr.slice(-1 * Number(allChannels.length - numOfDefaultActiveLine)));
+        setToggleInputs(defaultToggleInputs);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleChartToggle = (e) => {
         const { id, checked, name } = e.target;
@@ -379,134 +142,30 @@ function TicketLineGraph({ analytics, brandingBg }) {
         <div>
             <div className="dashboard-box-top ps-2 pt-3">
                 <div>Conversation Sources</div>
-                <div>
-                    {/* <Dropdown id="cust-table-dropdown" className="ticket-status-dropdown">
-                        <Dropdown.Toggle variant="transparent" size="sm">
-                            <span className="">Days</span>
-                            <i className="bi bi-chevron-expand"></i>
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                            <Dropdown.Item eventKey="1">
-                                <span className="black-text">--</span>
-                            </Dropdown.Item>
-                            <Dropdown.Item eventKey="2">
-                                <span className="black-text">--</span>
-                            </Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown> */}
-                </div>
             </div>
-            {/* <div className="tclinegraph-wrapper">
-                {allDataSet && <Line data={data} options={options} height={130}/>}
-            </div> */}
             {/*  Line graph check and legend */}
             <div className="d-flex justify-content-center align-items-center flex-wrap mt-0">
-                {/* Email legend */}
-                <div className="mx-3 my-2">
-                    <div className="form-check form-switch d-flex justify-content-center">
-                        <input
-                            className={`legendInput legend-input form-check-input form-check-input-lg mt-1 ${css({ '&:checked': { ...brandingBg } })}`}
-                            type="checkbox"
-                            onChange={handleChartToggle}
-                            id="emailLegend"
-                            name="email"
-                            checked={toggleInputs.email}
-                        />
-                    </div>
-                    <div className="text-center">
-                        <span className="legend-circle legend-bg-blue" />
-                        &nbsp;Email
-                    </div>
-                </div>
-
-                {/*  Livechat legend */}
-                <div className="mx-3 my-2">
-                    <div className="form-check form-switch d-flex justify-content-center">
-                        <input
-                            className={`legendInput legend-input form-check-input form-check-input-lg mt-1 ${css({ '&:checked': { ...brandingBg } })}`}
-                            type="checkbox"
-                            onChange={handleChartToggle}
-                            id="livechatLegend"
-                            name="livechat"
-                            checked={toggleInputs.livechat}
-                        />
-                    </div>
-                    <div className="text-center">
-                        <span className="legend-circle legend-bg-purple" />
-                        &nbsp;LiveChat
-                    </div>
-                </div>
-
-                {/* calls legend */}
-                {/* <div className="mx-3 my-2">
-                    <div className="form-check form-switch d-flex justify-content-center">
-                        <input
-                            className="legendInput legend-input form-check-input form-check-input-lg mt-1"
-                            type="checkbox"
-                            onChange={handleChartToggle}
-                            id="callLegend"
-                            name="call"
-                            checked={toggleInputs.call}
+                {/* ALL TOGGLE */}
+                {(Array.isArray(allChannels) ? allChannels : [])?.map((channel, idx) => (
+                    <div className="mx-3 my-2">
+                        <div className="form-check form-switch d-flex justify-content-center">
+                            <input
+                                className={`legendInput legend-input form-check-input form-check-input-lg mt-1 ${css({
+                                    '&:checked': { ...brandingBg },
+                                })}`}
+                                type="checkbox"
+                                onChange={handleChartToggle}
+                                id={`${channel}Legend`}
+                                name={channel}
+                                checked={toggleInputs[channel]}
                             />
+                        </div>
+                        <div className="text-center">
+                            <span className={`legend-circle ${legendColorClassNames[idx]}`} />
+                            &nbsp;{textCapitalize(channel)}
+                        </div>
                     </div>
-                    <div className="text-center">
-                        <span className="legend-circle legend-bg-yellow"></span>&nbsp;Call
-                    </div>
-                </div> */}
-
-                {/* Whatsapp legend */}
-                <div className="mx-3 my-2">
-                    <div className="form-check form-switch d-flex justify-content-center">
-                        <input
-                            className={`legendInput legend-input form-check-input form-check-input-lg mt-1 ${css({ '&:checked': { ...brandingBg } })}`}
-                            type="checkbox"
-                            onChange={handleChartToggle}
-                            id="whatsappLegend"
-                            name="whatsapp"
-                            checked={toggleInputs.whatsapp}
-                        />
-                    </div>
-                    <div className="text-center">
-                        <span className="legend-circle legend-bg-green" />
-                        &nbsp;WhatsApp
-                    </div>
-                </div>
-
-                {/*  Facebook legend  */}
-                <div className="mx-3 my-2">
-                    <div className="form-check form-switch d-flex justify-content-center">
-                        <input
-                            className={`legendInput legend-input form-check-input form-check-input-lg mt-1 ${css({ '&:checked': { ...brandingBg } })}`}
-                            type="checkbox"
-                            onChange={handleChartToggle}
-                            id="facebookLegend"
-                            name="facebook"
-                            checked={toggleInputs.facebook}
-                        />
-                    </div>
-                    <div className="text-center">
-                        <span className="legend-circle legend-bg-blue-light" />
-                        &nbsp;Facebook
-                    </div>
-                </div>
-
-                {/* <!-- Service Portal legend --> */}
-                <div className="mx-3 my-2">
-                    <div className="form-check form-switch d-flex justify-content-center">
-                        <input
-                            className={`legendInput legend-input form-check-input form-check-input-lg mt-1 ${css({ '&:checked': { ...brandingBg } })}`}
-                            type="checkbox"
-                            onChange={handleChartToggle}
-                            id="servicePortalLegend"
-                            name="serviceportal"
-                            checked={toggleInputs.serviceportal}
-                        />
-                    </div>
-                    <div className="text-center">
-                        <span className="legend-circle legend-bg-red" />
-                        &nbsp;Service Portal
-                    </div>
-                </div>
+                ))}
             </div>
 
             <div className="tclinegraph-wrapper">
