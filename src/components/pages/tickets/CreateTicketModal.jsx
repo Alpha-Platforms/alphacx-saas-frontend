@@ -37,7 +37,7 @@ export const searchTypeChecker = (query) => {
     } else if (/\S+@\S+\.\S+/.test(query)) {
         searchType = 'email';
     } else {
-        searchType = 'lastname';
+        searchType = 'name';
     }
     return searchType;
 };
@@ -53,11 +53,11 @@ export const getSearchedCustomers = async (userInput) => {
         clearTimeout(customerFetchTimer);
         customerFetchTimer = setTimeout(async () => {
             try {
-                const res = await httpGetMain(`users?role=Customer&searchType=${searchType}&search=${userInput}`);
+                const res = await httpGetMain(`customers?searchType=${searchType}&search=${userInput}`);
 
                 if (res.status === 'success') {
                     const remappedData = [];
-                    res.data.users.forEach((item) => {
+                    res.data.customers.forEach((item) => {
                         if (item?.role === 'Customer')
                             remappedData.push({ label: `${item.firstname} ${item.lastname}`, value: item.id });
                     });
@@ -768,7 +768,7 @@ function CreateTicketModal({
 
                         <div className="col-6 mt-2">
                             <label htmlFor="status" className="form-label">
-                                Stage
+                                Status
                             </label>
                             <RSelect
                                 className="rselectfield"

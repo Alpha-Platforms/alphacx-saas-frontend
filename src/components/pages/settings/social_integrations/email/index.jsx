@@ -204,13 +204,11 @@ function EmailSettings({ configs, isConfigsLoaded, tenantInfo, getConfigs }) {
                     />
                 </div>}
 
-
-
                 <div id="result" />
 
                 <div className="ticket-table-wrapper" style={{ paddingTop: 10 }}>
                     {(!emailConfigData?.incoming || !emailConfigData?.outgoing) && 
-                        <Link to="/settings/integrations/email/email-form" className={`btn btn-sm me-2 float-end ${css({
+                        <Link to={`/settings/integrations/email/email-form${emailConfigData?.incoming?.email ? '?type=outgoing' : '?type=incoming'}`} className={`btn btn-sm me-2 float-end ${css({
                             ...brandKit({ bgCol: 0 }),
                             color: 'white',
                             '&:hover': { ...brandKit({ bgCol: 30 }), color: 'white' },

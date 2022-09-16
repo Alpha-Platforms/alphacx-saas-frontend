@@ -61,26 +61,12 @@ function HelpCenter() {
         <>
             <HelpNavBar />
             <div className="help-center">
-                <div className={`search-container ${css({ ...kbBrandKit({ bgCol: 0 }) })}`}>
-                    {/* <img src={LogoBG} alt="" className="logo-bg" /> */}
-                    {/* COMMENT SEARCH FIELD */}
+                <div
+                    className={`search-container ${css(`
+                    background-color: ${kbBrandKit({ bgCol: 0 })?.backgroundColor}1a
+                `)}`}
+                >
                     <h3>Knowledge Base</h3>
-                    {/* <div className="searchbar">
-                        <div className="icon">
-                            <SearchIconNavbr />
-                        </div>
-                        <form>
-                            <input
-                                type="text"
-                                value={search}
-                                placeholder="Search knowledge base"
-                                onChange={handleChange}
-                            />
-                            <button type="button" className={`${css({ ...kbBrandKit({ bgCol: 0 }) })}`}>
-                                <SendIcon size={30} fill={kbBrandKit({ bgCol: 0 })?.backgroundColor} />
-                            </button>
-                        </form>
-                    </div> */}
                     <div className="kb-home-search-bar mt-4">
                         <KbSearch isHome />
                     </div>
@@ -98,16 +84,19 @@ function HelpCenter() {
                 ) : (
                     <div className="navigation-cards">
                         <div className="nav-cards">
-                            {categories?.slice(0, 8)?.map((cat, i) => (
-                                <NavCard
-                                    key={`item-${i + 1}`}
-                                    icon={icons[i]}
-                                    title={cat.name}
-                                    folders={cat.folders}
-                                    id={cat.id}
-                                    // link={nav.link}
-                                />
-                            ))}
+                            {categories
+                                ?.filter((item) => item?.folders[0]?.__meta__?.totalPublishedArticles > 0)
+                                ?.slice(0, 8)
+                                ?.map((cat, i) => (
+                                    <NavCard
+                                        key={`item-${i + 1}`}
+                                        icon={icons[i]}
+                                        title={cat.name}
+                                        folders={cat.folders}
+                                        id={cat.id}
+                                        // link={nav.link}
+                                    />
+                                ))}
                         </div>
                         {categories.length > 8 && (
                             <div>
