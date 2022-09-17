@@ -108,7 +108,7 @@ export default function TicketTimeline({ ticket, timeLine = true }) {
                     ''
                 )}
             </div>
-            <TicketAttachment ticket={ticket} />
+            <TicketAttachment ticket={ticket[0]} />
         </div>
     );
 }
