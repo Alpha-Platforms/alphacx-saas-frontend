@@ -16,7 +16,7 @@ export const getCustomers = () => (dispatch, getState) => {
     }
     dispatch(setCustomersLoading());
     axios
-        .get(`${config.stagingBaseUrl}/users?role=Customer`, userTokenConfig(getState))
+    .get(`${config.stagingBaseUrl}/customers`, userTokenConfig(getState))
         .then((res) =>
             dispatch({
                 type: types.GET_CUSTOMERS,
@@ -34,7 +34,7 @@ export const getInstantSearchedCustomers = async (term) => {
     const searchStr = term.replace(/\W+/gi, ' ').replace(/\s+/gi, '%20');
     try {
         const res = await axios.get(
-            `${config.stagingBaseUrl}/users?role=Customer&per_page=50&search=${searchStr}`,
+            `${config.stagingBaseUrl}/customers?per_page=50&search=${searchStr}`,
             userTokenConfig(getState),
         );
         return res?.data;
@@ -68,7 +68,7 @@ export const getPaginatedCustomers = (itemsPerPage, currentPage) => (dispatch, g
     dispatch(setCustomersLoading());
     axios
         .get(
-            `${config.stagingBaseUrl}/users?role=Customer&per_page=${itemsPerPage}&page=${currentPage}`,
+            `${config.stagingBaseUrl}/customers?per_page=${itemsPerPage}&page=${currentPage}`,
             userTokenConfig(getState),
         )
         .then((res) =>

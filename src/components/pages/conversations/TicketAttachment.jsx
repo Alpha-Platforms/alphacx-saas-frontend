@@ -14,9 +14,9 @@ function TicketAttachment({ ticket, className }) {
         idx: 0,
         isOpen: false,
     });
-    /* ticket attachment logic */
 
-    const ticketAttachments = [ticket[0]?.attachment]
+    /* ticket attachment logic */
+    const ticketAttachments = [ticket?.attachment]
         .filter((x) => !!x)
         .map((file) => {
             const fileSplit = file.split('.');
@@ -45,7 +45,7 @@ function TicketAttachment({ ticket, className }) {
                         textAlign: 'center',
                     }}
                 >
-                    {ticketAttachments.length < 0 ? 'Attachments' : 'No Attachments'}
+                    {ticketAttachments.length > 0 ? 'Attachments' : 'No Attachments'}
                 </p>
             </div>
 
