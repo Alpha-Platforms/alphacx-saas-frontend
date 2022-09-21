@@ -29,8 +29,8 @@ class Socket {
             msgreciever: {
                 domain,
                 msgrecieverid: tenantId,
-                // tenantid: tenantId,
-                tenantid: domain,
+                // tenantId: tenantId,
+                tenantId: domain,
             },
             data: {},
         };
@@ -43,7 +43,7 @@ class Socket {
             msgtimestamp: new Date(),
             msgsender: {
                 msgsenderdevice: navigator.userAgent,
-                // tenantid: tenantId,
+                // tenantId: tenantId,
                 tenantid: domain,
                 msgsenderid: userId,
                 domain,
@@ -60,11 +60,11 @@ class Socket {
             msgtimestamp: new Date(),
             msgsender: {
                 msgsenderdevice: navigator.userAgent,
-                tenantId,
+                // tenantId,
                 msgsenderid: userId,
                 domainId: domain,
                 accounttype,
-                // tenantid: tenantId,
+                tenantId: domain,
                 // domain,
             },
         };
@@ -78,10 +78,10 @@ class Socket {
             msgsender: {
                 msgsenderdevice: navigator.userAgent,
                 msgsenderid: userId,
-                tenantId,
+                // tenantId: domain,
                 domainId: domain,
                 accounttype,
-                // tenantid: tenantId,
+                tenantId: domain,
                 // domain,
             },
         };
