@@ -37,6 +37,12 @@ function DashboardTwo({
 
     const brandingBg = brandKit({ bgCol: 0 });
 
+    const csatVal = newAnalytics?.csat || 0;
+
+    const csatValLen = csatVal.toString().length;
+
+    const csatTextClassName = csatValLen <= 1 ? 'csat-text-1' : csatValLen === 2 ? 'csat-text-2' : 'csat-text-3';
+
     return (
         <div>
             <>
@@ -73,13 +79,16 @@ function DashboardTwo({
                                 </div>
                                 <div className="csat-progress">
                                     <CircularProgressbar
-                                        value={newAnalytics?.csat || 0}
-                                        text={`${newAnalytics?.csat || 0}%`}
+                                        // value={newAnalytics?.csat || 0}
+                                        // text={`${newAnalytics?.csat || 0}%`}
+                                        value={csatVal}
+                                        text={`${csatVal}%`}
                                         styles={buildStyles({
                                             strokeLinecap: 'butt',
                                             pathColor: `${brandingBg?.backgroundColor}`,
                                             textColor: '#263238',
                                         })}
+                                        classes={{ text: csatTextClassName }}
                                     />
                                 </div>
                             </div>
