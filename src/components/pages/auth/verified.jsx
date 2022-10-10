@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import './login.css';
 import { NotificationManager } from 'react-notifications';
 import { httpPost } from 'helpers/httpMethods';
-import { wordCapitalize } from 'helper';
+import { brandKit, wordCapitalize } from 'helper';
 import { ClipLoader } from 'react-spinners';
 import AlphaLogo from '../../../assets/imgF/alpha.png';
 import Logo from '../../../assets/imgF/logo.png';
@@ -11,6 +11,7 @@ import ThankYou from '../../../assets/imgF/thank-you.png';
 import Error from '../../../assets/icons/error-circle.png';
 import Symbol1 from '../../../assets/imgF/symbolAuth.png';
 import Symbol2 from '../../../assets/imgF/symbolAuth2.png';
+import { css } from '@emotion/css';
 
 function AccountVerified({ match, ...props }) {
     const [message, setMessage] = useState('');
@@ -70,7 +71,11 @@ function AccountVerified({ match, ...props }) {
                 </div>
             )}
             {isChecked ? (
-                <div className="auth-container d-flex justify-content-center">
+                <div
+                    className={`auth-container d-flex justify-content-center ${css({
+                        ...brandKit({ bgCol: -20, default: true }),
+                    })}`}
+                >
                     <div className="symbol-wrap2">
                         <img src={Symbol2} alt="" />
                     </div>
@@ -93,7 +98,14 @@ function AccountVerified({ match, ...props }) {
                                 </div>
 
                                 <div className="submit-auth-btn">
-                                    <button onClick={handleChange}>Continue to Login</button>
+                                    <button 
+                                        onClick={handleChange}
+                                        className={css({
+                                            ...brandKit({ bgCol: -20, default: true }),
+                                        })}
+                                    >
+                                        Continue to Login
+                                    </button>
                                 </div>
                             </form>
                         ) : (
