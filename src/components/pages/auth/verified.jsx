@@ -52,7 +52,8 @@ function AccountVerified({ match, ...props }) {
         } else {
             setLoading(false);
             setIsChecked(true);
-            NotificationManager.error(wordCapitalize(res?.er?.message), 'Domain not verified', 4000);
+            // wordCapitalize(res?.er?.message) #raw sql, ask BE to fix
+            NotificationManager.error('Account verification failed', 'Account Verification', 4000);
         }
     };
 
