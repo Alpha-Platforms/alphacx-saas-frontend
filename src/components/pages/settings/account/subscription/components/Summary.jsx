@@ -10,7 +10,7 @@ import { NotificationManager } from 'react-notifications';
 import { loadStripe } from '@stripe/stripe-js';
 import { css } from '@emotion/css';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { CardElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
+import { CardElement, PaymentElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
 import { httpPost } from '../../../../../../helpers/httpMethods';
 import { getRealCurrency, getRealCurrencyv2 } from './SubTop';
 import { separateNum, centToDollarCentv2, brandKit } from '../../../../../../helper';
@@ -35,7 +35,7 @@ function CheckoutForm({ setPlanState, planState, getSubscription }) {
         // Get a reference to a mounted CardElement. Elements knows how
         // to find your CardElement because there can only ever be one of
         // each type of element.
-        const cardElement = elements.getElement(CardElement);
+        const cardElement = elements.getElement(PaymentElement);
 
         setPlanState((prev) => ({ ...prev, isVerifying: true }));
 
@@ -69,7 +69,7 @@ function CheckoutForm({ setPlanState, planState, getSubscription }) {
 
     return (
         <form onSubmit={handleSubmit}>
-            <CardElement />
+            <PaymentElement />
             <button
                 type="submit"
                 className={`stripe-payment-btn ${css({
@@ -245,166 +245,174 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
     const numOfAgentsToPayFor = planState.numOfAgents;
     return (
         <div className="summary-box">
-            <h5>Summary</h5>
+            <div className="p-4">
+                <h5>Summary</h5>
 
-            {/* <div className="summary-divider"/> */}
+                {/* <div className="summary-divider"/> */}
 
-            <div className="sbox-2">
-                <div>
-                    <span>{planState?.selectedPlan?.name}</span>
-                    <span>
-                        {numOfAgentsToPayFor} Agent{numOfAgentsToPayFor > 1 ? 's' : ''}
-                    </span>
-                </div>
-                <div>
-                    {/* <span>{`${separateNum(
-                        planState?.amount
-                            ? planState?.amount
-                            : numOfAgentsToPayFor * plan[planState?.billingCycle?.value],
-                    )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span> */}
-                    <span>
-                        {`${getRealCurrencyv2(tenantInfo?.currency || '')}${
-                            getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState?.flutterwaveConfig
-                                ? separateNum(Number(planState?.flutterwaveConfig?.amount))
-                                : getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState?.paystackConfig
-                                ? separateNum(Number(planState?.paystackConfig?.amount))
-                                : getRealCurrency(tenantInfo?.currency || '') === 'USD'
-                                ? centToDollarCentv2(Number(planState?.stripeConfig?.amount))
-                                : 'N/A'
-                        }`.trim()}
-                    </span>
-                </div>
-            </div>
-
-            {getRealCurrency(tenantInfo?.currency || '') === 'NGN' && (
-                <div className="sbox-2 mt-3">
+                <div className="sbox-2">
                     <div>
-                        <span>VAT</span>
+                        <span>{planState?.selectedPlan?.name}</span>
+                        <span>
+                            {numOfAgentsToPayFor} Agent{numOfAgentsToPayFor > 1 ? 's' : ''}
+                        </span>
                     </div>
                     <div>
-                        <span>{`${getRealCurrencyv2(tenantInfo?.currency || '')}${
-                            getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState?.flutterwaveConfig
-                                ? separateNum(Number(planState?.flutterwaveConfig?.vat))
-                                : getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState?.paystackConfig
-                                ? separateNum(Number(planState?.paystackConfig?.vat))
-                                : getRealCurrency(tenantInfo?.currency || '') === 'USD'
-                                ? centToDollarCentv2(Number(planState?.stripeConfig?.vat))
-                                : 'N/A'
-                        }`}</span>
+                        {/* <span>{`${separateNum(
+                            planState?.amount
+                                ? planState?.amount
+                                : numOfAgentsToPayFor * plan[planState?.billingCycle?.value],
+                        )} ${getRealCurrency(tenantInfo?.currency || '')}`}</span> */}
+                        <span>
+                            {`${getRealCurrencyv2(tenantInfo?.currency || '')}${
+                                getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState?.flutterwaveConfig
+                                    ? separateNum(Number(planState?.flutterwaveConfig?.amount))
+                                    : getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState?.paystackConfig
+                                    ? separateNum(Number(planState?.paystackConfig?.amount))
+                                    : getRealCurrency(tenantInfo?.currency || '') === 'USD'
+                                    ? centToDollarCentv2(Number(planState?.stripeConfig?.amount))
+                                    : 'N/A'
+                            }`.trim()}
+                        </span>
                     </div>
                 </div>
-            )}
 
-            <div className="summary-divider" />
-
-            <div className="sbox-3">
-                <div>
-                    <span>Subtotal</span>
-                </div>
-                <div>
-                    <span>
-                        {`${getRealCurrencyv2(tenantInfo?.currency || '')}${
-                            getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState.flutterwaveConfig
-                                ? separateNum(
-                                      Number(planState?.flutterwaveConfig?.amount + planState?.flutterwaveConfig?.vat),
-                                  )
-                                : getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState.paystackConfig
-                                ? separateNum(
-                                      Number(planState?.paystackConfig?.amount + planState?.paystackConfig?.vat),
-                                  )
-                                : getRealCurrency(tenantInfo?.currency || '') === 'USD'
-                                ? centToDollarCentv2(
-                                      Number(planState?.stripeConfig?.amount + planState?.stripeConfig?.vat),
-                                  )
-                                : 'N/A'
-                        }`.trim()}
-                    </span>
-                </div>
-            </div>
-
-            <div className="sbox-4">
-                <label htmlFor="coupoun">Coupons</label>
-                <div>
-                    <input
-                        disabled
-                        type="text"
-                        className="form-control"
-                        name="coupoun"
-                        id="coupoun"
-                        placeholder="Enter Coupon Code"
-                    />
-                    <button type="button" disabled>
-                        Apply
-                    </button>
-                </div>
-            </div>
-
-            <div className="summary-divider" />
-
-            <div className="sbox-5">
-                <div>
-                    <span>Discount</span>
-                    <span>0%</span>
-                </div>
-                <div>
-                    <span>
-                        {getRealCurrencyv2(tenantInfo?.currency || '')}
-                        {getRealCurrency(tenantInfo?.currency || '') === 'NGN' ? '0' : '0.00'}
-                    </span>
-                </div>
-            </div>
-
-            <div className="summary-divider" />
-
-            <div className="sbox-6">
-                <div>
-                    <span>Total</span>
-                </div>
-                <div>
-                    <span>
-                        {`${getRealCurrencyv2(tenantInfo?.currency || '')}${
-                            getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState.flutterwaveConfig
-                                ? separateNum(
-                                      Number(planState?.flutterwaveConfig?.amount + planState?.flutterwaveConfig?.vat),
-                                  )
-                                : getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState.paystackConfig
-                                ? separateNum(
-                                      Number(planState?.paystackConfig?.amount + planState?.paystackConfig?.vat),
-                                  )
-                                : getRealCurrency(tenantInfo?.currency || '') === 'USD'
-                                ? centToDollarCentv2(
-                                      Number(planState?.stripeConfig?.amount + planState?.stripeConfig?.vat),
-                                  )
-                                : 'N/A'
-                        }`.trim()}
-                    </span>
-                </div>
-            </div>
-
-            <div className="sbox-7">
-                {/* {!flutterwaveConfig && <button onClick={handleInitiatePayment}>{ !isContinuing ? 'Continue' : <ClipLoader color={"#ffffff"} size={30} height={14} width={2} margin={1} />}</button>} */}
-                {planState.flutterwaveConfig && (
-                    <FlutterWaveAction
-                        planState={planState}
-                        config={planState.flutterwaveConfig}
-                        setPlanState={setPlanState}
-                        getSubscription={getSubscription}
-                    />
+                {getRealCurrency(tenantInfo?.currency || '') === 'NGN' && (
+                    <div className="sbox-2 mt-3">
+                        <div>
+                            <span>VAT</span>
+                        </div>
+                        <div>
+                            <span>{`${getRealCurrencyv2(tenantInfo?.currency || '')}${
+                                getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState?.flutterwaveConfig
+                                    ? separateNum(Number(planState?.flutterwaveConfig?.vat))
+                                    : getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState?.paystackConfig
+                                    ? separateNum(Number(planState?.paystackConfig?.vat))
+                                    : getRealCurrency(tenantInfo?.currency || '') === 'USD'
+                                    ? centToDollarCentv2(Number(planState?.stripeConfig?.vat))
+                                    : 'N/A'
+                            }`}</span>
+                        </div>
+                    </div>
                 )}
-                {planState.paystackConfig && (
-                    <PayStackAction
-                        planState={planState}
-                        config={planState.paystackConfig}
-                        setPlanState={setPlanState}
-                        getSubscription={getSubscription}
-                    />
-                )}
+
+                <div className="summary-divider" />
+
+                <div className="sbox-3">
+                    <div>
+                        <span>Subtotal</span>
+                    </div>
+                    <div>
+                        <span>
+                            {`${getRealCurrencyv2(tenantInfo?.currency || '')}${
+                                getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState.flutterwaveConfig
+                                    ? separateNum(
+                                        Number(planState?.flutterwaveConfig?.amount + planState?.flutterwaveConfig?.vat),
+                                    )
+                                    : getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState.paystackConfig
+                                    ? separateNum(
+                                        Number(planState?.paystackConfig?.amount + planState?.paystackConfig?.vat),
+                                    )
+                                    : getRealCurrency(tenantInfo?.currency || '') === 'USD'
+                                    ? centToDollarCentv2(
+                                        Number(planState?.stripeConfig?.amount + planState?.stripeConfig?.vat),
+                                    )
+                                    : 'N/A'
+                            }`.trim()}
+                        </span>
+                    </div>
+                </div>
+
+                <div className="sbox-4">
+                    <label htmlFor="coupoun">Coupons</label>
+                    <div>
+                        <input
+                            disabled
+                            type="text"
+                            className="form-control"
+                            name="coupoun"
+                            id="coupoun"
+                            placeholder="Enter Coupon Code"
+                        />
+                        <button type="button" disabled>
+                            Apply
+                        </button>
+                    </div>
+                </div>
+
+                <div className="summary-divider" />
+
+                <div className="sbox-5">
+                    <div>
+                        <span>Discount</span>
+                        <span>0%</span>
+                    </div>
+                    <div>
+                        <span>
+                            {getRealCurrencyv2(tenantInfo?.currency || '')}
+                            {getRealCurrency(tenantInfo?.currency || '') === 'NGN' ? '0' : '0.00'}
+                        </span>
+                    </div>
+                </div>
+
+                <div className="summary-divider" />
+
+                <div className="sbox-6">
+                    <div>
+                        <span>Total</span>
+                    </div>
+                    <div>
+                        <span>
+                            {`${getRealCurrencyv2(tenantInfo?.currency || '')}${
+                                getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState.flutterwaveConfig
+                                    ? separateNum(
+                                        Number(planState?.flutterwaveConfig?.amount + planState?.flutterwaveConfig?.vat),
+                                    )
+                                    : getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState.paystackConfig
+                                    ? separateNum(
+                                        Number(planState?.paystackConfig?.amount + planState?.paystackConfig?.vat),
+                                    )
+                                    : getRealCurrency(tenantInfo?.currency || '') === 'USD'
+                                    ? centToDollarCentv2(
+                                        Number(planState?.stripeConfig?.amount + planState?.stripeConfig?.vat),
+                                    )
+                                    : 'N/A'
+                            }`.trim()}
+                        </span>
+                    </div>
+                </div>
+
+                <div className="sbox-7">
+                    {/* {!flutterwaveConfig && <button onClick={handleInitiatePayment}>{ !isContinuing ? 'Continue' : <ClipLoader color={"#ffffff"} size={30} height={14} width={2} margin={1} />}</button>} */}
+                    {planState.flutterwaveConfig && (
+                        <FlutterWaveAction
+                            planState={planState}
+                            config={planState.flutterwaveConfig}
+                            setPlanState={setPlanState}
+                            getSubscription={getSubscription}
+                        />
+                    )}
+                    {planState.paystackConfig && (
+                        <PayStackAction
+                            planState={planState}
+                            config={planState.paystackConfig}
+                            setPlanState={setPlanState}
+                            getSubscription={getSubscription}
+                        />
+                    )}
+                </div>
             </div>
-            <div>
+
+            <div className="p-4 bg-light border-top">
                 {planState.stripeConfig && (
                     <Elements
                         stripe={loadStripe(planState.stripeConfig?.STRIPE_PUBLIC_KEY)}
-                        options={{ clientSecret: planState.stripeConfig?.clientSecret }}
+                        options={{
+                            clientSecret: planState.stripeConfig?.clientSecret,
+                            appearance: {
+                                theme: 'stripe',
+                            },
+                        }}
                     >
                         <CheckoutForm
                             planState={planState}
