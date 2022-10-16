@@ -24,7 +24,7 @@ const { csrlBaseUrl } = config;
 // }
 // THE ABOVE COMMENTED CODE ISN'T NECESSARY ANYMORE. CSRL TOKEN IS RETURNED FROM LOGIN
 
-export const httpOnpremGet = async (url) => {
+export default async function httpOnpremGet(url) {
     // getCSRLAccessToken()
 
     if (!navigator.onLine) {
@@ -54,4 +54,4 @@ export const httpOnpremGet = async (url) => {
     } catch (error) {
         return { error };
     }
-};
+}

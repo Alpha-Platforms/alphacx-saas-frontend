@@ -1,27 +1,21 @@
+/* eslint-disable no-unused-vars */
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-//
+import { useHistory } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-//
-import { Link, useHistory } from 'react-router-dom';
-
-import '../../../styles/Customer.css';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import MaterialTable from 'material-table';
 import { TablePagination } from '@material-ui/core';
 import { Dropdown } from 'react-bootstrap';
 import SaveAlt from '@material-ui/icons/SaveAlt';
-import { httpGetMain } from 'helpers/httpMethods';
-import { httpOnpremGet } from 'helpers/httpMethodsOnprem';
 import { NotificationManager } from 'react-notifications';
 import RSelect from 'react-select';
 import AsyncSelect from 'react-select/async';
-import { DowncaretIcon, FilterIcon } from 'assets/SvgIconsSet';
 import searchIcon from '../../../assets/imgF/Search.png';
 import { exportTable, getUserInitials } from '../../../helper';
 import CreateCustomerModal from './CreateCustomerModal';
@@ -29,16 +23,16 @@ import Filter from '../../../assets/icons/Filter.svg';
 import tableIcons from '../../../assets/materialicons/tableIcons';
 import { getCustomers, getPaginatedCustomers } from '../../../reduxstore/actions/customerActions';
 import { ReactComponent as UploadSvg } from '../../../assets/svgicons/Upload.svg';
+import { httpGetMain } from '../../../helpers/httpMethods';
+import httpOnpremGet from '../../../helpers/httpMethodsOnprem';
 //
+import '../../../styles/Customer.css';
 import { StarIconTicket } from '../../../assets/images/svgs';
 import CustomerFilter from './components/CustomerFilter';
-import { config } from '../../../config/keys';
-
-const { platform } = config;
 
 export const custStorageKey = 'persist:fetched_customers';
 
-function CustomerList({
+function CustomerSearch({
     isCustomersLoaded,
     customers,
     getCustomers,
@@ -241,10 +235,9 @@ function CustomerList({
                 // return {...prev, data: [{...prev.data, ...res.data}], meta: {loadCustomer: true}}
                 return { ...prev, data: res.data, meta: { loadCustomer: true } };
             });
-        } else {
-            setCustLoading(false);
-            return NotificationManager.error('Could not get Customer Details', 'Error', 4000);
         }
+        setCustLoading(false);
+        return NotificationManager.error('Could not get Customer Details', 'Error', 4000);
     };
 
     const handleSelectionChange = (rows) => {
@@ -264,13 +257,20 @@ function CustomerList({
         },
     });
 
-    const handleEditClick = () => {
-        setCustomerId(this.customerId);
-        setCreateModalShow(true);
-    };
-
     const filterRegisters = (options, inputValue) => {
         return options.filter((i) => i.label.toLowerCase().includes(inputValue.toLowerCase()));
+    };
+
+    // checks if customer exist
+    const checkCustomer = async (accountNumber, registerID) => {
+        const res = await httpGetMain(
+            `users?customValues=${accountNumber}_${registerID}&custom=accountNumber_registerID&search=${accountNumber}_${registerID}`,
+        );
+        if (res?.status === 'success') {
+            history.push(`/customers/${res?.data?.users[0]?.id}`);
+        } else {
+            history.push(`/customer/${accountNumber}/${registerID}`);
+        }
     };
 
     function AlphacxMTPagination2(props) {
@@ -340,17 +340,6 @@ function CustomerList({
         },
     ];
 
-    // checks if customer exist
-    const checkCustomer = async (accountNumber, registerID) => {
-        const res = await httpGetMain(
-            `users?customValues=${accountNumber}_${registerID}&custom=accountNumber_registerID&search=${accountNumber}_${registerID}`,
-        );
-        if (res?.status === 'success') {
-            history.push(`/customers/${res?.data?.users[0]?.id}`);
-        } else {
-            history.push(`/customer/${accountNumber}/${registerID}`);
-        }
-    };
 
     return (
         <div className="mt-5 px-3">
@@ -503,7 +492,7 @@ function CustomerList({
                                     exportButton: false,
                                     tableLayout: 'auto',
                                     paging: true,
-                                    pageSize: isCustomersLoaded && meta?.itemsPerPage ? meta?.itemsPerPage : 10,
+                                    pageSize: isCustomersLoaded && meta?.itemsPerPage ? meta?.itemsPerPage : 20,
                                     headerStyle: {
                                         backgroundColor: '#fefdfd',
                                     },
@@ -544,4 +533,4 @@ const mapStateToProps = (state) => ({
     isUserAuthenticated: state.userAuth.isUserAuthenticated,
 });
 
-export default connect(mapStateToProps, { getCustomers, getPaginatedCustomers })(CustomerList);
+export default connect(mapStateToProps, { getCustomers, getPaginatedCustomers })(CustomerSearch);

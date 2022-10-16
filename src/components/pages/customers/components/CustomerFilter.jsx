@@ -2,6 +2,7 @@
 import React, { Fragment, useState } from 'react';
 // import {custStorageKey} from '../CustomerSearch';
 
+// eslint-disable-next-line react/prop-types, no-unused-vars
 function CustomerFilter({ showUpdate, setShowUpdate, cust, setCust, setExtraColumns, custData, setIsFiltering }) {
     const [filterInput, setFilterInput] = useState({
         FullName: '',
@@ -28,83 +29,84 @@ function CustomerFilter({ showUpdate, setShowUpdate, cust, setCust, setExtraColu
     const handleCustFilter = () => {
         // const custLocalData = JSON.parse(window.localStorage.getItem(custStorageKey));
 
+        // eslint-disable-next-line react/prop-types
         const customers = custData?.data || [];
 
         if (custData) {
             const filteredCust = customers
-                .filter((cust) => {
+                .filter((customer) => {
                     if (filterInput.ResidenceStateId.trim()) {
-                        return cust.ResidenceStateId?.toString()
+                        return customer.ResidenceStateId?.toString()
                             ?.toLowerCase()
                             ?.includes(filterInput.ResidenceStateId?.toLowerCase());
                     }
                     return true;
                 })
-                .filter((cust) => {
+                .filter((customer) => {
                     if (filterInput.BankBv.trim()) {
-                        return cust.BankBv?.toString()?.toLowerCase()?.includes(filterInput.BankBv?.toLowerCase());
+                        return customer.BankBv?.toString()?.toLowerCase()?.includes(filterInput.BankBv?.toLowerCase());
                     }
                     return true;
                 })
-                .filter((cust) => {
+                .filter((customer) => {
                     if (filterInput.HolderTypeId.trim()) {
-                        return cust.ResidenceStateId?.toString()
+                        return customer.ResidenceStateId?.toString()
                             ?.toLowerCase()
                             ?.includes(filterInput.HolderTypeId?.toLowerCase());
                     }
                     return true;
                 })
-                .filter((cust) => {
+                .filter((customer) => {
                     if (filterInput.OccupationId.trim()) {
-                        return cust.ResidenceStateId?.toString()
+                        return customer.ResidenceStateId?.toString()
                             ?.toLowerCase()
                             ?.includes(filterInput.OccupationId?.toLowerCase());
                     }
                     return true;
                 })
-                .filter((cust) => {
+                .filter((customer) => {
                     if (filterInput.BankAccountNumber.trim()) {
-                        return cust.ResidenceStateId?.toString()
+                        return customer.ResidenceStateId?.toString()
                             ?.toLowerCase()
                             ?.includes(filterInput.BankAccountNumber?.toLowerCase());
                     }
                     return true;
                 })
-                .filter((cust) => {
+                .filter((customer) => {
                     if (filterInput.SortCode.trim()) {
-                        return cust.ResidenceStateId?.toString()
+                        return customer.ResidenceStateId?.toString()
                             ?.toLowerCase()
                             ?.includes(filterInput.SortCode?.toLowerCase());
                     }
                     return true;
                 })
-                .filter((cust) => {
+                .filter((customer) => {
                     if (filterInput.OriginStateId.trim()) {
-                        return cust.ResidenceStateId?.toString()
+                        return customer.ResidenceStateId?.toString()
                             ?.toLowerCase()
                             ?.includes(filterInput.OriginStateId?.toLowerCase());
                     }
                     return true;
                 })
-                .filter((cust) => {
+                .filter((customer) => {
                     if (filterInput.NIN.trim()) {
-                        return cust.ResidenceStateId?.toString()
+                        return customer.ResidenceStateId?.toString()
                             ?.toLowerCase()
                             ?.includes(filterInput.NIN?.toLowerCase());
                     }
                     return true;
                 })
-                .filter((cust) => {
+                .filter((customer) => {
                     if (filterInput.FullName.trim()) {
-                        return `${cust.FirstName?.toString()?.toLowerCase()} ${cust.LastName?.toString()?.toLowerCase()}`?.includes(
+                        return `${customer.FirstName?.toString()?.toLowerCase()} ${customer.LastName?.toString()?.toLowerCase()}`?.includes(
                             filterInput.FullName?.toLowerCase(),
                         );
                     }
                     return true;
                 })
-                .filter((cust) => {
+                .filter((customer) => {
                     if (filterInput.Email.trim()) {
-                        return cust.Email?.toString()?.toLowerCase()?.includes(filterInput.Email?.toLowerCase());
+                        return customer.Email?.toString()?.toLowerCase()?.includes(filterInput.Email?.toLowerCase());
                     }
                     return true;
                 });
@@ -174,8 +176,9 @@ function CustomerFilter({ showUpdate, setShowUpdate, cust, setCust, setExtraColu
     };
 
     return (
+        // eslint-disable-next-line react/jsx-no-comment-textnodes
         <>
-            {/* Profile Update OffCanvas */}
+            // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
             <div className={showUpdate ? 'update-backdrop' : ''} onClick={() => setShowUpdate(false)} />
             <div
                 className="offcanvas offcanvas-end show"
