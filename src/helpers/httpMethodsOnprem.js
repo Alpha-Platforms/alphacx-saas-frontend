@@ -1,5 +1,6 @@
 // @ts-nocheck
 import axios from 'axios';
+// eslint-disable-next-line camelcase
 import jwt_decode from 'jwt-decode';
 import dayjs from 'dayjs';
 import { NotificationManager } from 'react-notifications';
