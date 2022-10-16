@@ -32,28 +32,41 @@ function CheckoutForm({ setPlanState, planState, getSubscription }) {
             return;
         }
 
-        // Get a reference to a mounted CardElement. Elements knows how
-        // to find your CardElement because there can only ever be one of
-        // each type of element.
-        const cardElement = elements.getElement(PaymentElement);
-
         setPlanState((prev) => ({ ...prev, isVerifying: true }));
+
+        // Get a reference to a mounted CardElement. Elements knows how to find your CardElement
+        // because there can only ever be one of each type of element.
+
+        // get stripe's card element
+        /* const cardElement = elements.getElement(CardElement);
 
         // get stripe's payment intent
         const stripeRes = await stripe.confirmCardPayment(planState.stripeConfig?.clientSecret, {
             payment_method: {
                 card: cardElement,
             },
+        }); */
+        // this was commented in favour of PaymentElement, which is a better UI from Stripe
+        // to reverse make sure to replace PaymentElement in <form> with CardElement
+
+        const stripeRes = await stripe.confirmPayment({
+            elements,
+            confirmParams: {
+                return_url: window.location.href,
+                payment_method_data: {},
+            },
+            redirect: 'if_required',
         });
 
         if (!stripeRes?.error) {
             const verifyPaymentRes = await httpPost(`subscriptions/verify-payment`, stripeRes?.paymentIntent);
             setPlanState((prev) => ({ ...prev, isVerifying: false }));
             if (verifyPaymentRes?.status === 'success') {
-                NotificationManager.success('', 'Transaction successful', 4000);
+                NotificationManager.success('Payment', 'Transaction successful', 4000);
                 dispatch(
                     getSubscription(null, () => {
-                        window.location.href = `/settings/account?tab=subscription`;
+                        // do nothing
+                        // window.location.href = `/settings/account?tab=subscription`;
                     }),
                 );
                 // window.location.href = `/settings/account?tab=subscription`;
@@ -64,6 +77,7 @@ function CheckoutForm({ setPlanState, planState, getSubscription }) {
             setPlanState((prev) => ({ ...prev, isVerifying: false }));
             // eslint-disable-next-line no-console
             console.error(stripeRes?.error);
+            NotificationManager.error('Payment', 'Payment Failed', 4000);
         }
     };
 
@@ -409,9 +423,7 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
                         stripe={loadStripe(planState.stripeConfig?.STRIPE_PUBLIC_KEY)}
                         options={{
                             clientSecret: planState.stripeConfig?.clientSecret,
-                            appearance: {
-                                theme: 'stripe',
-                            },
+                            appearance: { theme: 'stripe' },
                         }}
                     >
                         <CheckoutForm
