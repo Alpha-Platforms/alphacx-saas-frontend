@@ -10,6 +10,7 @@ import { NotificationManager } from 'react-notifications';
 import { loadStripe } from '@stripe/stripe-js';
 import { css } from '@emotion/css';
 import ClipLoader from 'react-spinners/ClipLoader';
+// eslint-disable-next-line no-unused-vars
 import { CardElement, PaymentElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
 import { httpPost } from '../../../../../../helpers/httpMethods';
 import { getRealCurrency, getRealCurrencyv2 } from './SubTop';
@@ -19,6 +20,7 @@ import { config } from '../../../../../../config/keys';
 
 const { paystackPublicKey, flutterwavePublicKey } = config;
 
+// eslint-disable-next-line no-unused-vars
 function CheckoutForm({ setPlanState, planState, getSubscription }) {
     const stripe = useStripe();
     const elements = useElements();
@@ -321,16 +323,18 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
                             {`${getRealCurrencyv2(tenantInfo?.currency || '')}${
                                 getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState.flutterwaveConfig
                                     ? separateNum(
-                                        Number(planState?.flutterwaveConfig?.amount + planState?.flutterwaveConfig?.vat),
-                                    )
+                                          Number(
+                                              planState?.flutterwaveConfig?.amount + planState?.flutterwaveConfig?.vat,
+                                          ),
+                                      )
                                     : getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState.paystackConfig
                                     ? separateNum(
-                                        Number(planState?.paystackConfig?.amount + planState?.paystackConfig?.vat),
-                                    )
+                                          Number(planState?.paystackConfig?.amount + planState?.paystackConfig?.vat),
+                                      )
                                     : getRealCurrency(tenantInfo?.currency || '') === 'USD'
                                     ? centToDollarCentv2(
-                                        Number(planState?.stripeConfig?.amount + planState?.stripeConfig?.vat),
-                                    )
+                                          Number(planState?.stripeConfig?.amount + planState?.stripeConfig?.vat),
+                                      )
                                     : 'N/A'
                             }`.trim()}
                         </span>
@@ -380,16 +384,18 @@ function Summary({ planState, setPlanState, tenantInfo, getSubscription }) {
                             {`${getRealCurrencyv2(tenantInfo?.currency || '')}${
                                 getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState.flutterwaveConfig
                                     ? separateNum(
-                                        Number(planState?.flutterwaveConfig?.amount + planState?.flutterwaveConfig?.vat),
-                                    )
+                                          Number(
+                                              planState?.flutterwaveConfig?.amount + planState?.flutterwaveConfig?.vat,
+                                          ),
+                                      )
                                     : getRealCurrency(tenantInfo?.currency || '') === 'NGN' && planState.paystackConfig
                                     ? separateNum(
-                                        Number(planState?.paystackConfig?.amount + planState?.paystackConfig?.vat),
-                                    )
+                                          Number(planState?.paystackConfig?.amount + planState?.paystackConfig?.vat),
+                                      )
                                     : getRealCurrency(tenantInfo?.currency || '') === 'USD'
                                     ? centToDollarCentv2(
-                                        Number(planState?.stripeConfig?.amount + planState?.stripeConfig?.vat),
-                                    )
+                                          Number(planState?.stripeConfig?.amount + planState?.stripeConfig?.vat),
+                                      )
                                     : 'N/A'
                             }`.trim()}
                         </span>
