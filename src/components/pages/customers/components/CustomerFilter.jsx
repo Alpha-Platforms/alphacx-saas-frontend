@@ -1,3 +1,4 @@
+/* eslint-disable */
 // @ts-nocheck
 import React, { Fragment, useState } from 'react';
 // import {custStorageKey} from '../CustomerSearch';
@@ -176,9 +177,7 @@ function CustomerFilter({ showUpdate, setShowUpdate, cust, setCust, setExtraColu
     };
 
     return (
-        // eslint-disable-next-line react/jsx-no-comment-textnodes
         <>
-            // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
             <div className={showUpdate ? 'update-backdrop' : ''} onClick={() => setShowUpdate(false)} />
             <div
                 className="offcanvas offcanvas-end show"

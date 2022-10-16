@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable */
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
@@ -32,14 +32,7 @@ import CustomerFilter from './components/CustomerFilter';
 
 export const custStorageKey = 'persist:fetched_customers';
 
-function CustomerSearch({
-    isCustomersLoaded,
-    customers,
-    getCustomers,
-    meta,
-    getPaginatedCustomers,
-    isUserAuthenticated,
-}) {
+function CustomerSearch({ isCustomersLoaded, customers, getCustomers, meta, getPaginatedCustomers, isUserAuthenticated}) {
     const [createModalShow, setCreateModalShow] = useState(false);
     const [uploadModalShow, setUploadModalShow] = useState(false);
     const [custLoading, setCustLoading] = useState(false);
@@ -279,13 +272,11 @@ function CustomerSearch({
         return (
             <TablePagination
                 {...tablePaginationProps}
-                // @ts-expect-error onChangePage was renamed to onPageChange
                 onPageChange={onChangePage}
                 onRowsPerPageChange={onChangeRowsPerPage}
                 ActionsComponent={(subprops) => {
                     const { onPageChange, ...actionsComponentProps } = subprops;
                     return (
-                        // @ts-expect-error ActionsComponent is provided by material-table
                         <ActionsComponent {...actionsComponentProps} onChangePage={onPageChange} />
                     );
                 }}
