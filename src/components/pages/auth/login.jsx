@@ -126,8 +126,14 @@ function Login() {
             // DO PASSWORD LOGIN
 
             if (userInput.email && userInput.password) {
+                const loginKey = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+                    userInput.email,
+                )
+                    ? 'email'
+                    : 'username';
+
                 const data = {
-                    email: userInput.email.trim().toLowerCase(),
+                    [loginKey]: userInput.email.trim().toLowerCase(),
                     password: userInput.password,
                 };
 
@@ -139,6 +145,7 @@ function Login() {
                     window.localStorage.setItem('user', JSON.stringify(res.data));
                     window.localStorage.setItem('token', res.data.token);
                     window.localStorage.setItem('refreshToken', res.data.refreshToken);
+                    window.localStorage.setItem('accessToken', res.data.accessToken);
                     gotoLandingPage();
                 } else {
                     // Login fails
