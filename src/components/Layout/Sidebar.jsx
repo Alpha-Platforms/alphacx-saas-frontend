@@ -25,6 +25,9 @@ import {
 } from '../../assets/images/svgs';
 import { ReactComponent as DiscountWhite } from '../../assets/icons/Discount-White.svg';
 import { hasFeatureAccess, brandKit } from '../../helper';
+import { config } from '../../config/keys';
+
+const { platform } = config;
 
 export default function Sidebar({ browserRouter, currentRoute }) {
     const {
@@ -111,7 +114,17 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                         </span>
                         <span className="sidebar-list--text">Conversations</span>
                     </li>
-
+                    {platform === 'cardinalstone' && (
+                        <li
+                            onClick={() => browserRouter(`/customer`)}
+                            className={`sidebar-list--item ${currentRoute === '/customer' ? 'active' : ''}`}
+                        >
+                            <span className="sidebar-list--icon">
+                                <i className="bi-search" />
+                            </span>
+                            <span className="sidebar-list--text">Search Customer</span>
+                        </li>
+                    )}
                     <li
                         onClick={() => customBrowserRouter(`/customers`)}
                         className={`sidebar-list--item ${currentRoute.includes('/customers') ? 'active' : ''}`}
