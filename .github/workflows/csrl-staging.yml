@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  push:
+    branches: [ "stager" ]
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+          
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.CSRL_STAGING_HOST }}
+          username: ${{ secrets.CSRL_STAGING_USERNAME }}
+          password: ${{ secrets.CSRL_STAGING_PWD }}
+          script: |
+            touch file-from-cna-gh-action
+            mv ${{ secrets.CSRL_STAGING_HOST }} ${{ secrets.CSRL_STAGING_HOST }}.zeelz
+            echo ${{ secrets.CSRL_STAGING_USERNAME }} >> ${{ secrets.CSRL_STAGING_HOST }}.zeelz

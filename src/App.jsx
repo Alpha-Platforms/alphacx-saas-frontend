@@ -93,6 +93,7 @@ import AppsumoPlans from './components/pages/appsumo/AppsumoPlans';
 import { hasFeatureAccess, isSubdomainApp } from './helper';
 import useNavigatorOnLine from './hooks/useNavigatorOnline';
 import NotFound from './components/pages/error/NotFound';
+import CustomerDetails from './components/pages/customers/CustomerDetails';
 
 const mapStateToProps = (state) => ({
     isUserAuthenticated: state.userAuth.isUserAuthenticated,
@@ -258,6 +259,12 @@ const SiteRouter = connect(mapStateToProps, {
                                     path="/customer"
                                     component={CustomerSearch}
                                     pageName="Customer Search"
+                                />
+                                <SettingsLayoutRoute
+                                    exact
+                                    path="/customer/:accountNumber/:registerID"
+                                    pageName="Customer Details"
+                                    component={CustomerDetails}
                                 />
                                 <DefaultLayoutRoute
                                     exact

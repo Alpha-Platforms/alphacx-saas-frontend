@@ -1,0 +1,23 @@
+FROM node:gallium-alpine AS base
+WORKDIR /frontend
+COPY package.json .
+RUN yarn install
+COPY . .
+RUN yarn build
+WORKDIR /frontend/build
+
+FROM nginx
+WORKDIR /usr/share/nginx/html
+RUN rm -rf ./*
+COPY --from=base /frontend/build .
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
+
+
+# FROM node:gallium-alpine
+# WORKDIR /reactapp
+# COPY package.json .
+# RUN npm install --legacy-peer-deps
+# COPY . .
+# EXPOSE 3000
+# CMD ["npm", "start"]

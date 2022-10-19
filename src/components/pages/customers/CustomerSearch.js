@@ -259,6 +259,7 @@ function CustomerSearch({ isCustomersLoaded, customers, getCustomers, meta, getP
         const res = await httpGetMain(
             `users?customValues=${accountNumber}_${registerID}&custom=accountNumber_registerID&search=${accountNumber}_${registerID}`,
         );
+
         if (res?.status === 'success') {
             history.push(`/customers/${res?.data?.users[0]?.id}`);
         } else {

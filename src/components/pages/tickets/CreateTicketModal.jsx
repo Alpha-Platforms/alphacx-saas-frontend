@@ -109,7 +109,8 @@ function CreateTicketModal({
     resetTicketCreated,
     customerId,
     customer,
-    isEditing = false,
+    customerDetails,
+    isEditing,
     tags,
     createTags,
     channels,
@@ -149,7 +150,7 @@ function CreateTicketModal({
     // const custInputRef = useRef(null);
 
     const [modalInputs, setModalInputs] = useState({
-        customer: '',
+        customer: customerId || '',
         priority: '',
         stage: '',
         subject: '',
@@ -172,18 +173,6 @@ function CreateTicketModal({
     const [isAdditionalOptionVisible, setIsAdditionalOptionVisible] = useState(false);
     // const [assignType, setAssignType] = useState('teams');
     const [, setCategoriesAndSubs] = useState([]);
-
-    /* UPDATE MODAL FORM VALUES */
-    // const [RSCustomerName, setRSCustomerName] = useState('');
-    // const [RSTicketCate, setRSTicketCate] = useState('');
-    // const [RSTickeSubject, setRSTickeSubject] = useState('');
-    // const [RSTicketStage, setRSTicketStage] = useState('');
-    // const [RSTicketPriority, setRSTicketPriority] = useState('');
-    // const [RSTicketRemarks, setRSTicketRemarks] = useState('');
-    // const [RSTicketAssignedAgent, setRSTicketAssignedAgent] = useState('');
-    // const [RSTicketDueDate, setRSTicketDueDate] = useState('');
-    // const [, setRSTeams] = useState([]);
-
     const [, forceUpdate] = useState();
 
     const simpleValidator = useRef(
@@ -357,70 +346,6 @@ function CreateTicketModal({
             forceUpdate(1);
         }
     };
-
-    // OLD GET CUSTOMER SEARCH, JUST IN CASE //
-    // const timeBeforeSearch = 1500;
-    // let timeoutId;
-    // const handleCustomerSearch = (e) => {
-    //     if (!navigator.onLine)
-    //         return;
-
-    //     // return NotificationManager.error('Check your network', 'Oops');
-    //     const {value} = e.target;
-
-    //     if (!value) {
-    //         setCustSearch(prev => ({
-    //             ...prev,
-    //             openPreview: false
-    //         }))
-    //     }
-
-    //     if (timeoutId)
-    //         clearTimeout(timeoutId);
-
-    //     timeoutId = setTimeout(async() => {
-    //         if (value) {
-    //             setCustSearch(prev => ({
-    //                 ...prev,
-    //                 openPreview: true,
-    //                 isLoading: true
-    //             }));
-
-    //             const res = await getInstantSearchedCustomers(value);
-    //             if (res
-    //                 ?.data) {
-    //                 setCustSearch(prev => ({
-    //                     ...prev,
-    //                     isLoading: false,
-    //                     isLoaded: true,
-    //                     gottenCust: res.data.users
-    //                 }));
-    //             }
-
-    //         } else {
-    //             setCustSearch(prev => ({
-    //                 ...prev,
-    //                 openPreview: false
-    //             }));
-    //         }
-
-    //     }, timeBeforeSearch);
-
-    // }
-
-    // const handleCustClick = function () {
-    //     const { id, firstname, lastname } = this;
-    //     const custInput = custInputRef.current;
-    //     setModalInputs((prev) => ({
-    //         ...prev,
-    //         customer: id,
-    //     }));
-    //     custInput.value = `${wordCapitalize(firstname)} ${wordCapitalize(lastname)}`;
-    //     setCustSearch((prev) => ({
-    //         ...prev,
-    //         openPreview: false,
-    //     }));
-    // };
 
     const handleModalHide = () => {
         setCreateModalShow(false);
@@ -748,7 +673,11 @@ function CreateTicketModal({
                                 isDisabled={isEditing}
                                 loadOptions={getSearchedCustomers}
                                 name="customer"
-                                placeholder="Lastname, Email or Phone"
+                                placeholder={
+                                    customerId
+                                        ? `${customerDetails?.FirstName} ${customerDetails?.MiddleName} ${customerDetails?.LastName}`
+                                        : 'Lastname, Email or Phone'
+                                }
                                 onChange={handleRSInput}
                                 defaultValue={
                                     isEditing
@@ -762,6 +691,7 @@ function CreateTicketModal({
                             />
                             {
                                 /* simple validation */
+                                // reactivate later
                                 simpleValidator.current.message('Customer', modalInputs.customer, 'required')
                             }
                         </div>
