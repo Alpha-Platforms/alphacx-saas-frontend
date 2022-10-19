@@ -21,3 +21,7 @@ jobs:
             touch file-from-cna-gh-action
             mv ${{ secrets.CSRL_STAGING_HOST }} ${{ secrets.CSRL_STAGING_HOST }}.zeelz
             echo ${{ secrets.CSRL_STAGING_USERNAME }} >> ${{ secrets.CSRL_STAGING_HOST }}.zeelz
+            
+            cd /home/frontend
+            touch new-file-oct-19
+            git pull --rebase origin development
