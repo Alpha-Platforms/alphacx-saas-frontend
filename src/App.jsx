@@ -6,8 +6,10 @@ import { Route, Switch, BrowserRouter, useLocation } from 'react-router-dom';
 import { NotificationContainer } from 'react-notifications';
 import { Provider, connect } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import CustomerSearch from './components/pages/customers/CustomerSearch';
 import { LayoutProvider } from './context/layoutContext';
 import { UserDataProvider } from './context/userContext';
+
 import DefaultLayoutRoute from './components/DefaultLayout/DefaultLayoutRoute';
 import SettingsLayoutRoute from './components/DefaultLayout/SettingsLayoutRoute';
 import Login from './components/pages/auth/login';
@@ -250,6 +252,12 @@ const SiteRouter = connect(mapStateToProps, {
                                     path="/organisations"
                                     pageName="Organisations"
                                     component={OrganisationList}
+                                />
+                                <SettingsLayoutRoute
+                                    exact
+                                    path="/customer"
+                                    component={CustomerSearch}
+                                    pageName="Customer Search"
                                 />
                                 <DefaultLayoutRoute
                                     exact
