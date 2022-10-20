@@ -30,3 +30,4 @@ package-lock.json*
 /.cert
 
 /.husky
+nginx.conf
