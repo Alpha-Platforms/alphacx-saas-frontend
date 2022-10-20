@@ -122,7 +122,7 @@ export default function Sidebar({ browserRouter, currentRoute }) {
                             <span className="sidebar-list--icon">
                                 <i className="bi-search" />
                             </span>
-                            <span className="sidebar-list--text">Search Customer</span>
+                            <span className="sidebar-list--text">Search Customers</span>
                         </li>
                     )}
                     <li
