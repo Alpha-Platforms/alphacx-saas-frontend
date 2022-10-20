@@ -228,9 +228,10 @@ function CustomerSearch({ isCustomersLoaded, customers, getCustomers, meta, getP
                 // return {...prev, data: [{...prev.data, ...res.data}], meta: {loadCustomer: true}}
                 return { ...prev, data: res.data, meta: { loadCustomer: true } };
             });
+        } else {
+            setCustLoading(false);
+            return NotificationManager.error('Could not get Customer Details', 'Error', 4000);
         }
-        setCustLoading(false);
-        return NotificationManager.error('Could not get Customer Details', 'Error', 4000);
     };
 
     const handleSelectionChange = (rows) => {
